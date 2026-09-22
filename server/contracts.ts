@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { ResearchConfig } from './config.ts';
 
 export const researchInput = z.object({
   entity: z.string().trim().min(2).max(120),
@@ -31,6 +32,7 @@ export type RunRecord = {
   startedAt: string; finishedAt: string | null; durationMs: number | null;
   costUsd: number | null; costStatus: 'unknown' | 'priced' | 'fixture';
   usage: Record<string, unknown> | null;
+  settings?: ResearchConfig;
 };
 export type ExperimentRecord = {
   id: string; candidateId: string; mode: RunMode;
@@ -39,4 +41,12 @@ export type ExperimentRecord = {
   maxSpendUsd: number; fixtureDelayMs: number; createdAt: string; updatedAt: string;
   cancelRequested: boolean; error: string | null;
   steps: { at: string; message: string }[];
+  settings?: ResearchConfig;
+};
+export type OptimizationRecord = {
+  id: string; mode: RunMode; status: 'running' | 'completed' | 'failed';
+  baselineExperimentId: string; candidateExperimentId: string; candidateId: string;
+  settings: ResearchConfig; createdAt: string; updatedAt: string;
+  investigation: string; proposal: string; decision: 'pending' | 'accepted' | 'no-improvement' | 'rejected';
+  challenge: string; error: string | null;
 };
