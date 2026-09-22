@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", "lib": ["ES2022", "DOM"], "module": "ESNext",
+    "moduleResolution": "Bundler", "jsx": "react-jsx", "strict": true,
+    "skipLibCheck": true, "allowImportingTsExtensions": true,
+    "noEmit": true, "types": ["node"]
+  },
+  "include": ["server", "web", "sapiom-agent", "vite.config.ts"]
+}

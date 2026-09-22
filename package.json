@@ -1,0 +1,28 @@
+{
+  "name": "ablatrix",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch server/index.ts",
+    "build": "tsc --noEmit && vite build",
+    "start": "node --import tsx server/index.ts",
+    "test": "node --import tsx --test server/*.test.ts"
+  },
+  "dependencies": {
+    "@sapiom/agent": "0.14.2",
+    "@sapiom/tools": "0.38.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "@types/node": "24.10.1",
+    "@types/react": "19.2.8",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.2",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3",
+    "vite": "8.0.13"
+  }
+}
