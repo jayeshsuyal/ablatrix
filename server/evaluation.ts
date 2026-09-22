@@ -27,6 +27,9 @@ export function taskForRun(id: string): Pick<Task, 'id' | 'split' | 'entity' | '
   const task = suite.tasks.find(item => item.id === id && item.split !== 'holdout');
   return task ? { id: task.id, split: task.split, entity: task.entity, question: task.question } : null;
 }
+export function sourceUrlForTask(id: string): string | null {
+  return suite.tasks.find(item => item.id === id && item.split !== 'holdout')?.evidenceUrl ?? null;
+}
 
 export type Evaluation = {
   taskId: string; split: Task['split']; completed: boolean; correct: boolean;
