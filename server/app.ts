@@ -9,10 +9,18 @@ import { publicTasks, taskForRun, report } from './evaluation.ts';
 import { executeResearch } from './research.ts';
 import { ExperimentRunner } from './experiments.ts';
 import { OptimizationRunner } from './optimizations.ts';
+import { comparison, exportArtifacts } from './comparison.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
   res.end(JSON.stringify(value));
+}
+function download(res: ServerResponse, filename: string, value: string, mime: string): void {
+  res.writeHead(200, {
+    'content-type': `${mime}; charset=utf-8`, 'content-disposition': `attachment; filename="${filename}"`,
+    'cache-control': 'no-store', 'x-content-type-options': 'nosniff'
+  });
+  res.end(value);
 }
 
 async function body(req: IncomingMessage): Promise<unknown> {
@@ -29,7 +37,8 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture')
   const optimizer = new OptimizationRunner(store, runner, mode);
   return createServer(async (req, res) => {
     try {
-      const path = new URL(req.url ?? '/', 'http://localhost').pathname;
+      const url = new URL(req.url ?? '/', 'http://localhost');
+      const path = url.pathname;
       if (req.method === 'GET' && path === '/api/health') return json(res, 200, { ok: true, mode });
       if (req.method === 'GET' && path === '/api/runs') return json(res, 200, { runs: store.list() });
       if (req.method === 'GET' && path === '/api/tasks') return json(res, 200, publicTasks());
@@ -37,6 +46,24 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture')
       if (req.method === 'GET' && path === '/api/experiments') return json(res, 200, { experiments: store.listExperiments() });
       if (req.method === 'GET' && path === '/api/optimizations') return json(res, 200, { optimizations: optimizer.list() });
       if (req.method === 'POST' && path === '/api/optimizations') return json(res, 201, await optimizer.create(await body(req)));
+      if (req.method === 'GET' && /^\/api\/optimizations\/[a-f0-9-]{36}\/comparison$/.test(path)) {
+        const record = store.getOptimization(path.split('/')[3]);
+        return json(res, record ? 200 : 404, record ? comparison(optimizer.refresh(record), store) : { error: 'Optimization not found' });
+      }
+      if (req.method === 'GET' && /^\/api\/optimizations\/[a-f0-9-]{36}\/export$/.test(path)) {
+        const id = path.split('/')[3];
+        const record = store.getOptimization(id);
+        if (!record) return json(res, 404, { error: 'Optimization not found' });
+        const artifacts = exportArtifacts(optimizer.refresh(record), store);
+        const format = url.searchParams.get('format') ?? 'bundle';
+        if (format === 'original') return download(res, 'research.baseline.json', artifacts.original, 'application/json');
+        const label = record.decision === 'accepted' ? 'candidate' : 'unvalidated-candidate';
+        if (format === 'candidate') return download(res, `research.${label}.json`, artifacts.candidate, 'application/json');
+        if (format === 'patch') return download(res, `research.${label}.patch`, artifacts.patch, 'text/plain');
+        if (format === 'manifest') return download(res, 'reproducibility.json', `${JSON.stringify(artifacts.manifest, null, 2)}\n`, 'application/json');
+        if (format === 'bundle') return download(res, 'ablatrix-export.json', `${JSON.stringify(artifacts, null, 2)}\n`, 'application/json');
+        return json(res, 400, { error: 'Unknown export format' });
+      }
       if (req.method === 'POST' && path === '/api/experiments') return json(res, 201, runner.create(await body(req)));
       if (req.method === 'GET' && /^\/api\/experiments\/[a-f0-9-]{36}$/.test(path)) {
         const record = store.getExperiment(path.slice('/api/experiments/'.length));
