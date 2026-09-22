@@ -2,13 +2,12 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { extname, join, resolve } from 'node:path';
-import { randomUUID } from 'node:crypto';
 import { ZodError } from 'zod';
-import { researchInput, researchOutput, type RunRecord } from './contracts.ts';
-import { runFixture } from './fixture.ts';
-import { runSapiom } from './sapiom.ts';
+import { researchInput } from './contracts.ts';
 import { RunStore } from './store.ts';
 import { publicTasks, taskForRun, report } from './evaluation.ts';
+import { executeResearch } from './research.ts';
+import { ExperimentRunner } from './experiments.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -25,6 +24,7 @@ async function body(req: IncomingMessage): Promise<unknown> {
 }
 
 export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture') {
+  const runner = new ExperimentRunner(store, mode);
   return createServer(async (req, res) => {
     try {
       const path = new URL(req.url ?? '/', 'http://localhost').pathname;
@@ -32,37 +32,30 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture')
       if (req.method === 'GET' && path === '/api/runs') return json(res, 200, { runs: store.list() });
       if (req.method === 'GET' && path === '/api/tasks') return json(res, 200, publicTasks());
       if (req.method === 'GET' && path === '/api/report') return json(res, 200, report(store.list()));
+      if (req.method === 'GET' && path === '/api/experiments') return json(res, 200, { experiments: store.listExperiments() });
+      if (req.method === 'POST' && path === '/api/experiments') return json(res, 201, runner.create(await body(req)));
+      if (req.method === 'GET' && /^\/api\/experiments\/[a-f0-9-]{36}$/.test(path)) {
+        const record = store.getExperiment(path.slice('/api/experiments/'.length));
+        return json(res, record ? 200 : 404, record ?? { error: 'Experiment not found' });
+      }
+      if (req.method === 'POST' && /^\/api\/experiments\/[a-f0-9-]{36}\/cancel$/.test(path)) {
+        const id = path.split('/')[3];
+        const record = runner.cancel(id);
+        return json(res, record ? 200 : 404, record ?? { error: 'Experiment not found' });
+      }
       if (req.method === 'GET' && /^\/api\/runs\/[a-f0-9-]{36}$/.test(path)) {
         const run = store.get(path.slice('/api/runs/'.length));
         return json(res, run ? 200 : 404, run ?? { error: 'Run not found' });
       }
       if (req.method === 'POST' && path === '/api/runs') {
+        if (mode === 'live') return json(res, 403, { error: 'Direct live runs are disabled until metering is available; use a bounded experiment.' });
         const input = researchInput.parse(await body(req));
         const benchmarkTask = input.taskId ? taskForRun(input.taskId) : null;
         if (input.taskId && input.taskId.endsWith('-v1') && !benchmarkTask) return json(res, 400, { error: 'Unknown benchmark task' });
         if (benchmarkTask && (benchmarkTask.entity !== input.entity || benchmarkTask.question !== input.question)) {
           return json(res, 400, { error: 'Benchmark task input does not match its versioned definition' });
         }
-        const now = Date.now();
-        const run: RunRecord = {
-          id: randomUUID(), taskId: input.taskId ?? randomUUID(), candidateId: 'baseline', mode,
-          provider: mode === 'live' ? 'sapiom' : 'fixture', model: null, status: 'running',
-          input, output: null, error: null, startedAt: new Date(now).toISOString(), finishedAt: null,
-          durationMs: null, costUsd: null, costStatus: mode === 'live' ? 'unknown' : 'fixture', usage: null
-        };
-        store.save(run);
-        try {
-          const result = mode === 'live' ? await runSapiom(input, run.id) : { output: await runFixture(input), usage: {} };
-          run.output = researchOutput.parse(result.output);
-          run.usage = result.usage;
-          run.status = 'completed';
-        } catch (error) {
-          run.error = error instanceof Error ? error.message : String(error);
-          run.status = 'failed';
-        }
-        run.finishedAt = new Date().toISOString();
-        run.durationMs = Date.now() - now;
-        store.save(run);
+        const run = await executeResearch(store, input, mode);
         return json(res, run.status === 'completed' ? 201 : 502, run);
       }
       if (req.method === 'GET' && !path.startsWith('/api/')) {
@@ -77,7 +70,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture')
       }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {
-      const status = error instanceof ZodError || error instanceof SyntaxError ? 400 : 500;
+      const status = error instanceof ZodError || error instanceof SyntaxError || error instanceof Error && /task|budget|Duplicate|queue is halted/.test(error.message) ? 400 : 500;
       return json(res, status, { error: error instanceof Error ? error.message : 'Unknown error' });
     }
   });

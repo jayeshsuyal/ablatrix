@@ -3,7 +3,8 @@ import { z } from 'zod/v4';
 
 const inputSchema = z.object({
   entity: z.string().min(2).max(120),
-  question: z.string().min(8).max(500)
+  question: z.string().min(8).max(500),
+  sourceUrl: z.url()
 });
 
 function publicHttps(value: string): boolean {
@@ -23,16 +24,13 @@ const research = defineStep({
     const search = await ctx.sapiom.search.webSearch({
       query: `${input.entity}: ${input.question}`, intent: 'answer', depth: 'standard'
     });
-    const sources = search.results.filter(result => publicHttps(result.url)).slice(0, 3);
-    if (!sources.length || !search.answer) throw new Error('No cited answer was returned');
-    const read = await Promise.allSettled(sources.slice(0, 2).map(result =>
-      ctx.sapiom.search.scrape({ url: result.url, formats: ['markdown'], onlyMainContent: true })));
-    const readSources = sources.map((source, index) => ({
-      ...source,
-      snippet: read[index]?.status === 'fulfilled'
-        ? (read[index].value.markdown ?? source.snippet).slice(0, 500)
-        : source.snippet
-    }));
+    if (!publicHttps(input.sourceUrl) || !search.answer) throw new Error('No safe cited answer was returned');
+    const page = await ctx.sapiom.search.scrape({ url: input.sourceUrl, formats: ['markdown'], onlyMainContent: true });
+    const readSources = [{
+      title: page.metadata.title ?? input.entity,
+      url: input.sourceUrl,
+      snippet: (page.markdown ?? '').slice(0, 500)
+    }];
     return terminate({
       answer: search.answer,
       facts: readSources.map(source => ({

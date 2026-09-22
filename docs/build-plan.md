@@ -3,8 +3,8 @@
 | Slice | Acceptance criteria | Status |
 | --- | --- | --- |
 | PR1 Baseline | Research contract, durable runs, fixture and Sapiom paths, connected baseline UI | Merged: #1, `7ebf32e`; CI and local smoke pass; live pending |
-| PR2 Evaluation | Versioned curated tasks, rubrics, held-out evaluation, honest quality views | In progress |
-| PR3 Runner | Persistent bounded candidate jobs, cancellation, retries, recovery | Pending |
+| PR2 Evaluation | Versioned curated tasks, rubrics, held-out evaluation, honest quality views | Merged: #2, `60a9811`; CI and browser smoke pass |
+| PR3 Runner | Persistent bounded candidate jobs, cancellation, retries, recovery | In progress |
 | PR4 Optimizer | Structured bounded proposals, deterministic checks, comparison and no-improvement | Pending |
 | PR5 Dashboard | Responsive real-data views and reproducible redacted export | Pending |
 | PR6 Release | Browser E2E, restart/security checks, docs, release evidence | Pending |

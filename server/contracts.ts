@@ -32,3 +32,11 @@ export type RunRecord = {
   costUsd: number | null; costStatus: 'unknown' | 'priced' | 'fixture';
   usage: Record<string, unknown> | null;
 };
+export type ExperimentRecord = {
+  id: string; candidateId: string; mode: RunMode;
+  status: 'queued' | 'running' | 'completed' | 'failed' | 'cancelled' | 'interrupted';
+  taskIds: string[]; runIds: string[]; maxAttempts: number; maxDurationMs: number;
+  maxSpendUsd: number; fixtureDelayMs: number; createdAt: string; updatedAt: string;
+  cancelRequested: boolean; error: string | null;
+  steps: { at: string; message: string }[];
+};
