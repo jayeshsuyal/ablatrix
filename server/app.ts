@@ -8,6 +8,7 @@ import { researchInput, researchOutput, type RunRecord } from './contracts.ts';
 import { runFixture } from './fixture.ts';
 import { runSapiom } from './sapiom.ts';
 import { RunStore } from './store.ts';
+import { publicTasks, taskForRun, report } from './evaluation.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -29,12 +30,19 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture')
       const path = new URL(req.url ?? '/', 'http://localhost').pathname;
       if (req.method === 'GET' && path === '/api/health') return json(res, 200, { ok: true, mode });
       if (req.method === 'GET' && path === '/api/runs') return json(res, 200, { runs: store.list() });
+      if (req.method === 'GET' && path === '/api/tasks') return json(res, 200, publicTasks());
+      if (req.method === 'GET' && path === '/api/report') return json(res, 200, report(store.list()));
       if (req.method === 'GET' && /^\/api\/runs\/[a-f0-9-]{36}$/.test(path)) {
         const run = store.get(path.slice('/api/runs/'.length));
         return json(res, run ? 200 : 404, run ?? { error: 'Run not found' });
       }
       if (req.method === 'POST' && path === '/api/runs') {
         const input = researchInput.parse(await body(req));
+        const benchmarkTask = input.taskId ? taskForRun(input.taskId) : null;
+        if (input.taskId && input.taskId.endsWith('-v1') && !benchmarkTask) return json(res, 400, { error: 'Unknown benchmark task' });
+        if (benchmarkTask && (benchmarkTask.entity !== input.entity || benchmarkTask.question !== input.question)) {
+          return json(res, 400, { error: 'Benchmark task input does not match its versioned definition' });
+        }
         const now = Date.now();
         const run: RunRecord = {
           id: randomUUID(), taskId: input.taskId ?? randomUUID(), candidateId: 'baseline', mode,
