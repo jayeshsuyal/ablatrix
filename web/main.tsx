@@ -10,6 +10,8 @@ type Run = {
   }; error: string | null; durationMs: number | null; costUsd: number | null;
   costStatus: string; startedAt: string;
 };
+type Task = { id: string; split: string; entity: string; question: string };
+type Report = { sampleSize: number; correct: number; qualityRate: number | null; costPerCorrectUsd: number | null; uncertainty: string; evaluations: { taskId: string; split: string; correct: boolean; fixture: boolean; deterministic: { answerTermsPresent: boolean; approvedSourcePresent: boolean; citationsResolve: boolean } }[] };
 
 function App() {
   const [mode, setMode] = useState<'fixture' | 'live'>('fixture');
@@ -19,9 +21,12 @@ function App() {
   const [question, setQuestion] = useState('What products does this company make?');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [taskId, setTaskId] = useState('');
+  const [report, setReport] = useState<Report | null>(null);
   useEffect(() => {
-    Promise.all([fetch('/api/health').then(r => r.json()), fetch('/api/runs').then(r => r.json())])
-      .then(([health, list]) => { setMode(health.mode); setRuns(list.runs); setSelected(list.runs[0]?.id ?? null); })
+    Promise.all([fetch('/api/health').then(r => r.json()), fetch('/api/runs').then(r => r.json()), fetch('/api/tasks').then(r => r.json()), fetch('/api/report').then(r => r.json())])
+      .then(([health, list, suite, summary]) => { setMode(health.mode); setRuns(list.runs); setSelected(list.runs[0]?.id ?? null); setTasks([...suite.development, ...suite.validation]); setReport(summary); })
       .catch(() => setError('Could not connect to the Ablatrix backend.'));
   }, []);
   const current = runs.find(run => run.id === selected);
@@ -31,14 +36,21 @@ function App() {
     try {
       const response = await fetch('/api/runs', {
         method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ entity, question })
+        body: JSON.stringify({ entity, question, ...(taskId ? { taskId } : {}) })
       });
       const run = await response.json() as Run;
       if (!run.id) throw new Error('The backend did not return a run.');
       setRuns(previous => [run, ...previous]); setSelected(run.id);
+      fetch('/api/report').then(r => r.json()).then(setReport).catch(() => {});
       if (!response.ok) setError(run.error ?? 'Research failed.');
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'Request failed.'); }
     finally { setBusy(false); }
+  }
+
+  function selectTask(id: string) {
+    setTaskId(id);
+    const task = tasks.find(item => item.id === id);
+    if (task) { setEntity(task.entity); setQuestion(task.question); }
   }
 
   return <div className="shell">
@@ -57,8 +69,9 @@ function App() {
         {mode === 'fixture' && <div className="notice"><strong>Synthetic demonstration</strong><span>Fixture responses are for testing the workflow. They are not live research or benchmark evidence.</span></div>}
         <section className="panel form-panel"><div className="section-label">01 / CONFIGURE TASK</div><h2>Launch a baseline</h2>
           <form onSubmit={submit}>
-            <label>Company or product<input value={entity} onChange={e => setEntity(e.target.value)} minLength={2} maxLength={120} required /></label>
-            <label>Research question<textarea value={question} onChange={e => setQuestion(e.target.value)} minLength={8} maxLength={500} rows={3} required /></label>
+            <label>Curated evaluation task<select value={taskId} onChange={e => selectTask(e.target.value)}><option value="">Custom task</option>{tasks.map(task => <option key={task.id} value={task.id}>{task.entity} · {task.split}</option>)}</select></label>
+            <label>Company or product<input value={entity} onChange={e => setEntity(e.target.value)} minLength={2} maxLength={120} required readOnly={!!taskId} /></label>
+            <label>Research question<textarea value={question} onChange={e => setQuestion(e.target.value)} minLength={8} maxLength={500} rows={3} required readOnly={!!taskId} /></label>
             <button className="primary" disabled={busy}>{busy ? 'Running research…' : 'Run baseline'} <span aria-hidden="true">↗</span></button>
           </form>
         </section>
@@ -70,6 +83,11 @@ function App() {
             {current.error && <p className="error">{current.error}</p>}
             {current.output && <><div className="answer"><span className="section-label">ANSWER</span><p>{current.output.answer}</p></div><div className="sources"><span className="section-label">SOURCES</span>{current.output.sources.map(source => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><strong>{source.title}</strong><span>{source.url}</span><p>{source.snippet}</p></a>)}</div></>}
           </>}
+        </section>
+        <section className="panel quality-panel"><div className="section-label">03 / EVALUATION</div><h2>Quality evidence</h2>
+          <div className="metrics"><div><span>Live sample</span><strong>{report?.sampleSize ?? 0}</strong></div><div><span>Correct</span><strong>{report?.correct ?? 0}</strong></div><div><span>Cost / correct</span><strong>{report?.costPerCorrectUsd === null || report?.costPerCorrectUsd === undefined ? 'Unknown' : `$${report.costPerCorrectUsd.toFixed(4)}`}</strong></div></div>
+          <p className="muted-text">{report?.uncertainty ?? 'No report yet.'}</p>
+          {report?.evaluations.map(item => <div className="eval-row" key={item.taskId}><strong>{item.taskId}</strong><span>{item.fixture ? 'Fixture · excluded' : item.correct ? 'Passed checks' : 'Failed checks'}</span><small>Answer terms {item.deterministic.answerTermsPresent ? '✓' : '×'} · Approved source {item.deterministic.approvedSourcePresent ? '✓' : '×'} · Citations {item.deterministic.citationsResolve ? '✓' : '×'}</small></div>)}
         </section>
       </div>
     </main>

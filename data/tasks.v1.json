@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "reviewedAt": "2026-09-22",
+  "tasks": [
+    {
+      "id": "github-platform-v1", "split": "development", "entity": "GitHub",
+      "question": "What does GitHub provide for software teams?",
+      "expectedFact": "GitHub provides a developer platform for building and delivering software.",
+      "answerTerms": ["developer", "platform"], "sourceHost": "github.com",
+      "evidenceUrl": "https://github.com/about", "labelKind": "human-checked"
+    },
+    {
+      "id": "cloudflare-workers-v1", "split": "validation", "entity": "Cloudflare",
+      "question": "What is Cloudflare Workers?",
+      "expectedFact": "Cloudflare Workers is a serverless functions platform.",
+      "answerTerms": ["Workers", "serverless"], "sourceHost": "cloudflare.com",
+      "evidenceUrl": "https://www.cloudflare.com/products/workers/", "labelKind": "human-checked"
+    },
+    {
+      "id": "mozilla-firefox-v1", "split": "holdout", "entity": "Mozilla",
+      "question": "Which browser does Mozilla offer?",
+      "expectedFact": "Mozilla offers the Firefox browser.",
+      "answerTerms": ["Firefox", "browser"], "sourceHost": "mozilla.org",
+      "evidenceUrl": "https://www.mozilla.org/en-US/products/", "labelKind": "human-checked"
+    }
+  ]
+}
