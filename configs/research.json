@@ -1,0 +1,7 @@
+{
+  "modelAssignment": "search-native",
+  "promptStyle": "full",
+  "cacheTtlMinutes": 0,
+  "maxSources": 1,
+  "parallelReads": false
+}

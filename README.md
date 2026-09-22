@@ -1,6 +1,6 @@
 # Ablatrix
 
-A local-first performance lab for one built-in, citation-bearing company/product research agent. The current baseline slice records each run and shows its answer, sources, timing, and cost status in a connected UI. Optimization and evaluation are planned in [the six-PR ledger](docs/build-plan.md).
+A local-first performance lab for one built-in, citation-bearing company/product research agent. It stores runs, evaluates a curated task suite, queues bounded experiments, and compares a candidate configuration with its baseline. See [the six-PR ledger](docs/build-plan.md) for release evidence.
 
 ## Run locally
 
@@ -27,6 +27,10 @@ The experiment runner stores jobs and steps in SQLite. It accepts only curated d
 ## Bounded optimization
 
 The optimizer investigates development results, proposes one allowlisted configuration change, runs the same development and validation tasks through the persistent runner, and challenges each task against its baseline. Supported settings cover Sapiom model routing (`search-native` or `small`), prompt pruning, a ten-minute cache capped by each task's freshness window, and parallel reads of two checked source URLs. The challenger rejects a regression on any baseline-correct task and only accepts lower **priced** cost per correct task. Fixture or unpriced results produce an explicit no-improvement outcome. Candidate and baseline runs retain their settings, citations, provider, and task IDs. Live optimization is blocked pending unified accounting for Sapiom Router proposal calls and experiment spend; the Router adapter is present but does not run without that gate. No holdout answer is available to proposal selection.
+
+## Comparison and export
+
+The dashboard compares the latest optimization's paired tasks, including failed attempts, elapsed time, source links, quality checks, and priced costs when available. It shows experiment cost and break-even as unknown until all required metering exists. Downloads include the original and candidate configurations, a patch for `configs/research.json`, and a reproducibility manifest with suite version, checksum, task/run IDs, and source URLs. The manifest lists required environment variable names but contains no credentials. Fixture comparisons are demonstrations, not evidence of a live gain.
 
 ## Live Sapiom path
 
