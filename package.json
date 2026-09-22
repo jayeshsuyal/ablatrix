@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "tsx watch server/index.ts",
     "build": "tsc --noEmit && vite build",
-    "start": "node --import tsx server/index.ts",
-    "test": "node --import tsx --test server/*.test.ts"
+    "start": "node --env-file-if-exists=.env --import tsx server/index.ts",
+    "test": "node --import tsx --test server/*.test.ts",
+    "test:e2e": "npm run build && playwright test",
+    "local": "npm run build && npm start"
   },
   "dependencies": {
     "@sapiom/agent": "0.14.2",
@@ -17,12 +19,19 @@
     "zod": "4.5.4"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@types/node": "24.10.1",
     "@types/react": "19.2.8",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.0.2",
     "tsx": "4.21.0",
     "typescript": "5.9.3",
-    "vite": "8.0.13"
+    "vite": "8.3.0"
+  },
+  "overrides": {
+    "esbuild": "0.28.2"
+  },
+  "engines": {
+    "node": ">=24.10.0"
   }
 }

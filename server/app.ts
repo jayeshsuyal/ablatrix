@@ -37,6 +37,19 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture')
   const optimizer = new OptimizationRunner(store, runner, mode);
   return createServer(async (req, res) => {
     try {
+      const host = req.headers.host ?? '';
+      if (!/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(host)) return json(res, 403, { error: 'Local host required.' });
+      if (req.method === 'POST') {
+        const origin = req.headers.origin;
+        if (origin) {
+          let originHost = '';
+          try { const parsed = new URL(origin); if (parsed.protocol === 'http:') originHost = parsed.host; } catch { /* reject below */ }
+          if (originHost !== host) return json(res, 403, { error: 'Same-origin request required.' });
+        }
+        if (!req.url?.endsWith('/cancel') && !req.headers['content-type']?.toLowerCase().startsWith('application/json')) {
+          return json(res, 415, { error: 'JSON content type required.' });
+        }
+      }
       const url = new URL(req.url ?? '/', 'http://localhost');
       const path = url.pathname;
       if (req.method === 'GET' && path === '/api/health') return json(res, 200, { ok: true, mode });
@@ -101,8 +114,14 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture')
       }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {
-      const status = error instanceof ZodError || error instanceof SyntaxError || error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted/.test(error.message) ? 400 : 500;
-      return json(res, status, { error: error instanceof Error ? error.message : 'Unknown error' });
+      if (error instanceof ZodError) return json(res, 400, { error: 'Invalid request fields.' });
+      if (error instanceof SyntaxError) return json(res, 400, { error: 'Invalid JSON body.' });
+      if (error instanceof Error && error.message === 'Request body too large') return json(res, 413, { error: error.message });
+      if (error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted|Live optimization/.test(error.message)) {
+        return json(res, 400, { error: error.message });
+      }
+      console.error('Ablatrix request failed:', error);
+      return json(res, 500, { error: 'Internal server error.' });
     }
   });
 }

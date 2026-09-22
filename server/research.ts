@@ -29,7 +29,9 @@ export async function executeResearch(store: RunStore, input: ResearchInput, mod
     else if (mode === 'live' && ttl > 0) store.cacheResearch(cacheKey, run.output, ttl);
     run.status = 'completed';
   } catch (error) {
-    run.error = error instanceof Error ? error.message : String(error);
+    const message = error instanceof Error ? error.message : '';
+    run.error = mode === 'live' && !/^Live mode requires|^Live research currently requires|^Sapiom run did not complete\./.test(message)
+      ? 'Sapiom research failed; inspect server logs and provider usage.' : message || 'Research failed.';
     run.status = 'failed';
   }
   run.finishedAt = new Date().toISOString();
