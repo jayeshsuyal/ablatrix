@@ -1,0 +1,11 @@
+# Architecture and tradeoffs
+
+Ablatrix is a single local Node process serving a React UI and JSON API. SQLite stores runs, experiment queues, optimization records, and cache entries. The browser reads persisted state on load and polls while jobs run. The process listens on `127.0.0.1`; there is no remote account or multi-user authorization layer.
+
+The built-in research definition in `sapiom-agent/index.ts` uses Sapiom search and checked source URLs. The deployed-agent adapter in `server/sapiom.ts` requires a slug, API key, approved cap, and upstream budget rule. Fixture mode uses deterministic synthetic output and is marked throughout the UI and exports. Live direct runs are disabled. Live experiments stop after unpriced or interrupted calls; live optimization is blocked until proposal and experiment spend can share enforceable metering.
+
+The evaluation suite has three manually checked official-source tasks, split by entity and source into development, validation, and a sealed holdout. The public API exposes only development and validation prompts, without expected answers. The deterministic rubric is a narrow proxy: required terms, approved source host, and consistent citations. It does not verify every claim semantically. The optimizer proposes one allowlisted settings change and rejects any regression on a baseline-correct task. It reports no improvement for fixture or unpriced data.
+
+Exports include baseline and candidate configurations, a patch against `configs/research.json`, task-suite checksum, run metadata, and source URLs. They omit credentials. A live run cannot be reproduced exactly because web content changes and the deployed Sapiom agent version, cache-hit state, and provider usage are not captured. The manifest marks those fields unavailable. Candidate downloads are labeled unvalidated unless the challenger accepted them.
+
+The local app trusts its user. Keep `.env` and the SQLite database private; both may contain inputs or provider metadata. The server binds to loopback, caps request body size, validates structured input, restricts live scrape URLs to the curated suite, and avoids returning raw provider errors. SQLite uses `CREATE TABLE IF NOT EXISTS` for current schema; a future schema change will require a versioned migration.

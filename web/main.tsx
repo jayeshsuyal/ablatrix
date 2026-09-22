@@ -62,6 +62,11 @@ function App() {
     }, 500);
     return () => window.clearInterval(timer);
   }, [experiments, optimizations]);
+  useEffect(() => {
+    if (baselineExperimentId) return;
+    const baseline = experiments.find(item => item.status === 'completed' && item.candidateId === 'baseline' && item.runIds.length >= 2);
+    if (baseline) setBaselineExperimentId(baseline.id);
+  }, [experiments, baselineExperimentId]);
   const current = runs.find(run => run.id === selected);
 
   async function submit(event: React.FormEvent) {
@@ -72,6 +77,7 @@ function App() {
         body: JSON.stringify({ entity, question, ...(taskId ? { taskId } : {}) })
       });
       const run = await response.json() as Run;
+      if (!response.ok && !run.id) throw new Error(run.error ?? 'Research failed.');
       if (!run.id) throw new Error('The backend did not return a run.');
       setRuns(previous => [run, ...previous]); setSelected(run.id);
       fetch('/api/report').then(r => r.json()).then(setReport).catch(() => {});

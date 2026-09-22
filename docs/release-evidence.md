@@ -1,0 +1,17 @@
+# Release evidence
+
+## Demonstrated locally
+
+- API and persistence tests cover saved runs across database reopen, fixture queue completion/cancellation/recovery, halted live recovery, evaluation split boundaries, optimizer rejection, and export accounting.
+- Chromium browser tests cover fixture baseline → experiment → optimizer → export → reload; provider failure display; hidden-task rejection; mobile run history; and cancellation with persisted state after reload.
+- Security checks cover loopback Host and same-origin mutation boundaries, JSON-only mutation bodies, request size, hidden task output, and direct live-run rejection.
+- The production build and dependency audit pass with pinned package versions. GitHub Actions runs tests, build, Chromium E2E, and audit on PRs and merged main.
+- `./start.sh` installs from the lockfile if needed, builds, and serves on loopback.
+
+## Observed fixture result
+
+The fixture workflow completes and the optimizer reports **no improvement**. The quality dashboard excludes fixture runs from live sample size and cost per correct task. These observations establish UI and persistence behavior only.
+
+## Pending live acceptance
+
+No paid Sapiom call, real latency measurement, live quality comparison, provider price attribution, break-even calculation, or deployment of the agent definition has been performed. Live acceptance requires user-provided credentials and an approved spend cap, an enforceable Sapiom spending rule, and metering for both proposal and experiment calls. Until then, the release is a working local fixture-mode product with a guarded live adapter, not a validated performance win.

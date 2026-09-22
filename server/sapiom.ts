@@ -17,6 +17,6 @@ export async function runSapiom(input: ResearchInput, attemptId: string, setting
     definition: slug, input: { entity: input.entity, question: input.question, sourceUrls, settings },
     idempotencyKey: attemptId
   });
-  if (result.status !== 'completed') throw new Error(`Sapiom run ${result.status}: ${String(result.error ?? 'unknown error')}`);
+  if (result.status !== 'completed') throw new Error('Sapiom run did not complete.');
   return { output: researchOutput.parse(result.output), usage: { executionId: result.executionId } };
 }

@@ -4,15 +4,13 @@ A local-first performance lab for one built-in, citation-bearing company/product
 
 ## Run locally
 
-Requires Node.js 24.10 or later. Copy `.env.example` to `.env` if you want to change defaults; the server does not load `.env` automatically, so export settings in your shell or use an env loader.
+Requires Node.js 24.10 or later. From a clone, run:
 
 ```sh
-npm ci
-npm run build
-npm start
+./start.sh
 ```
 
-Open `http://127.0.0.1:4173`. Fixture mode is the default and does not call Sapiom or prove research quality. The SQLite database is stored at `.data/ablatrix.sqlite`. `npm test` runs the API and persistence check.
+Open `http://127.0.0.1:4173`. The script installs locked dependencies if needed, builds, and starts the local server. Copy `.env.example` to `.env` to change defaults; `npm start` loads it automatically. Fixture mode is the default and does not call Sapiom or prove research quality. The SQLite database is stored at `.data/ablatrix.sqlite`. `npm test` runs API and persistence checks; `npm run test:e2e` runs browser tests after `npx playwright install chromium`.
 
 For UI development, run `npm run dev` for the backend and `npx vite --host 127.0.0.1` for the frontend on port 5173.
 
@@ -37,3 +35,5 @@ The dashboard compares the latest optimization's paired tasks, including failed 
 The research definition lives in `sapiom-agent/index.ts`. It uses Sapiom `search.webSearch` and `search.scrape` inside a deployed agent run. The scrape URL comes from the curated task's checked source, never from the search results or browser input. Deploy that definition through Sapiom Agent Studio or MCP. After configuring an enforceable spending rule in Sapiom, set `ABLATRIX_MODE=live`, `SAPIOM_AGENT_SLUG`, `SAPIOM_API_KEY`, `ABLATRIX_SPEND_CAP_USD`, and `SAPIOM_BUDGET_ENFORCED=1` for the server. The backend calls the deployed agent through the official `@sapiom/tools` `agents.run` SDK. The code has not been deployed or exercised with paid capabilities. Sapiom must enforce actual spend. Live cost remains **unknown** until usage/prices can be verified. The synthesized answer is shown alongside source excerpts; it is not yet claim-by-claim verified.
 
 Sapiom search and agent SDK contracts were checked against the installed pinned package types and [official search documentation](https://docs.sapiom.ai/capabilities/search). Sapiom's [call-surface guide](https://docs.sapiom.ai/guides/choose-a-call-surface) describes deployed agent runs.
+
+See [architecture and tradeoffs](docs/architecture.md) and [release evidence](docs/release-evidence.md) for the implemented boundaries, test results, and remaining live validation work.

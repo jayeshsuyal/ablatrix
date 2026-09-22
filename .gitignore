@@ -5,3 +5,5 @@ dist/
 *.sqlite*
 work/
 outputs/
+test-results/
+playwright-report/
