@@ -8,6 +8,7 @@ import { RunStore } from './store.ts';
 import { publicTasks, taskForRun, report } from './evaluation.ts';
 import { executeResearch } from './research.ts';
 import { ExperimentRunner } from './experiments.ts';
+import { OptimizationRunner } from './optimizations.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -25,6 +26,7 @@ async function body(req: IncomingMessage): Promise<unknown> {
 
 export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture') {
   const runner = new ExperimentRunner(store, mode);
+  const optimizer = new OptimizationRunner(store, runner, mode);
   return createServer(async (req, res) => {
     try {
       const path = new URL(req.url ?? '/', 'http://localhost').pathname;
@@ -33,6 +35,8 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture')
       if (req.method === 'GET' && path === '/api/tasks') return json(res, 200, publicTasks());
       if (req.method === 'GET' && path === '/api/report') return json(res, 200, report(store.list()));
       if (req.method === 'GET' && path === '/api/experiments') return json(res, 200, { experiments: store.listExperiments() });
+      if (req.method === 'GET' && path === '/api/optimizations') return json(res, 200, { optimizations: optimizer.list() });
+      if (req.method === 'POST' && path === '/api/optimizations') return json(res, 201, await optimizer.create(await body(req)));
       if (req.method === 'POST' && path === '/api/experiments') return json(res, 201, runner.create(await body(req)));
       if (req.method === 'GET' && /^\/api\/experiments\/[a-f0-9-]{36}$/.test(path)) {
         const record = store.getExperiment(path.slice('/api/experiments/'.length));
@@ -70,7 +74,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture')
       }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {
-      const status = error instanceof ZodError || error instanceof SyntaxError || error instanceof Error && /task|budget|Duplicate|queue is halted/.test(error.message) ? 400 : 500;
+      const status = error instanceof ZodError || error instanceof SyntaxError || error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted/.test(error.message) ? 400 : 500;
       return json(res, status, { error: error instanceof Error ? error.message : 'Unknown error' });
     }
   });

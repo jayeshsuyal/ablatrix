@@ -7,7 +7,7 @@ const taskSchema = z.object({
   id: z.string(), split: z.enum(['development', 'validation', 'holdout']),
   entity: z.string(), question: z.string(), expectedFact: z.string(),
   answerTerms: z.array(z.string()).min(1), sourceHost: z.string(),
-  evidenceUrl: z.url(), labelKind: z.literal('human-checked')
+  evidenceUrl: z.url(), supplementalUrl: z.url().optional(), freshnessMinutes: z.number().int().positive(), labelKind: z.literal('human-checked')
 });
 const suiteSchema = z.object({ version: z.number(), reviewedAt: z.string(), tasks: z.array(taskSchema) });
 const suitePath = fileURLToPath(new URL('../data/tasks.v1.json', import.meta.url));
@@ -27,8 +27,12 @@ export function taskForRun(id: string): Pick<Task, 'id' | 'split' | 'entity' | '
   const task = suite.tasks.find(item => item.id === id && item.split !== 'holdout');
   return task ? { id: task.id, split: task.split, entity: task.entity, question: task.question } : null;
 }
-export function sourceUrlForTask(id: string): string | null {
-  return suite.tasks.find(item => item.id === id && item.split !== 'holdout')?.evidenceUrl ?? null;
+export function sourceUrlsForTask(id: string): string[] {
+  const task = suite.tasks.find(item => item.id === id && item.split !== 'holdout');
+  return task ? [task.evidenceUrl, ...(task.supplementalUrl ? [task.supplementalUrl] : [])] : [];
+}
+export function maxCacheTtlForTask(id: string): number {
+  return suite.tasks.find(item => item.id === id && item.split !== 'holdout')?.freshnessMinutes ?? 0;
 }
 
 export type Evaluation = {

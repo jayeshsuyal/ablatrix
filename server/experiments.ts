@@ -4,13 +4,15 @@ import { type ExperimentRecord, type RunMode } from './contracts.ts';
 import { taskForRun } from './evaluation.ts';
 import { executeResearch } from './research.ts';
 import { RunStore } from './store.ts';
+import { allowedCandidateChange, baselineConfig, candidateId, researchConfig } from './config.ts';
 
 export const experimentInput = z.object({
   taskIds: z.array(z.string()).min(1).max(2),
   maxAttempts: z.number().int().min(1).max(2).default(1),
   maxDurationMs: z.number().int().min(1_000).max(120_000).default(30_000),
   maxSpendUsd: z.number().nonnegative().max(100).default(0),
-  fixtureDelayMs: z.number().int().min(0).max(5_000).default(0)
+  fixtureDelayMs: z.number().int().min(0).max(5_000).default(0),
+  settings: researchConfig.default(baselineConfig)
 }).strict();
 
 function step(record: ExperimentRecord, message: string): void {
@@ -51,6 +53,7 @@ export class ExperimentRunner {
   create(raw: unknown): ExperimentRecord {
     if (this.halted && this.mode === 'live') throw new Error('Live queue is halted after an interrupted paid attempt; inspect provider usage before continuing');
     const input = experimentInput.parse(raw);
+    if (!allowedCandidateChange(input.settings)) throw new Error('Candidate settings exceed the allowlisted one-change boundary');
     if (new Set(input.taskIds).size !== input.taskIds.length) throw new Error('Duplicate task ID');
     if (input.taskIds.some(id => !taskForRun(id))) throw new Error('Only development and validation tasks are allowed');
     if (this.mode === 'live') {
@@ -61,11 +64,11 @@ export class ExperimentRunner {
     }
     const at = new Date().toISOString();
     const record: ExperimentRecord = {
-      id: randomUUID(), candidateId: 'baseline', mode: this.mode,
+      id: randomUUID(), candidateId: JSON.stringify(input.settings) === JSON.stringify(baselineConfig) ? 'baseline' : candidateId(input.settings), mode: this.mode,
       status: 'queued', taskIds: input.taskIds, runIds: [],
       maxAttempts: input.maxAttempts, maxDurationMs: input.maxDurationMs,
       maxSpendUsd: input.maxSpendUsd, fixtureDelayMs: input.fixtureDelayMs,
-      createdAt: at, updatedAt: at, cancelRequested: false, error: null,
+      createdAt: at, updatedAt: at, cancelRequested: false, error: null, settings: input.settings,
       steps: [{ at, message: 'Experiment queued.' }]
     };
     this.store.saveExperiment(record);
@@ -122,7 +125,7 @@ export class ExperimentRunner {
         record.runIds.push(runId);
         this.store.saveExperiment(record);
         const remainingMs = Math.max(1, deadline - Date.now());
-        const runPromise = executeResearch(this.store, { entity: task.entity, question: task.question, taskId }, this.mode, 'baseline', runId);
+        const runPromise = executeResearch(this.store, { entity: task.entity, question: task.question, taskId }, this.mode, record.candidateId, runId, record.settings ?? baselineConfig);
         let timer: ReturnType<typeof setTimeout> | undefined;
         const timed = new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error('Provider call exceeded experiment time budget; remote billing may continue.')), remainingMs); });
         let run;

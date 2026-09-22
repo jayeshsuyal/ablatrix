@@ -12,7 +12,8 @@ type Run = {
 };
 type Task = { id: string; split: string; entity: string; question: string };
 type Report = { sampleSize: number; correct: number; qualityRate: number | null; costPerCorrectUsd: number | null; uncertainty: string; evaluations: { taskId: string; split: string; correct: boolean; fixture: boolean; deterministic: { answerTermsPresent: boolean; approvedSourcePresent: boolean; citationsResolve: boolean } }[] };
-type Experiment = { id: string; status: string; taskIds: string[]; runIds: string[]; steps: { at: string; message: string }[]; error: string | null; maxAttempts: number; maxDurationMs: number; cancelRequested: boolean };
+type Experiment = { id: string; candidateId: string; status: string; taskIds: string[]; runIds: string[]; steps: { at: string; message: string }[]; error: string | null; maxAttempts: number; maxDurationMs: number; cancelRequested: boolean };
+type Optimization = { id: string; status: string; baselineExperimentId: string; candidateExperimentId: string; candidateId: string; settings: { modelAssignment: string; promptStyle: string; cacheTtlMinutes: number; maxSources: number; parallelReads: boolean }; investigation: string; proposal: string; decision: string; challenge: string; error: string | null };
 
 function App() {
   const [mode, setMode] = useState<'fixture' | 'live'>('fixture');
@@ -26,25 +27,28 @@ function App() {
   const [taskId, setTaskId] = useState('');
   const [report, setReport] = useState<Report | null>(null);
   const [experiments, setExperiments] = useState<Experiment[]>([]);
+  const [optimizations, setOptimizations] = useState<Optimization[]>([]);
   const [experimentBusy, setExperimentBusy] = useState(false);
   const [maxAttempts, setMaxAttempts] = useState(1);
   const [maxDurationMs, setMaxDurationMs] = useState(30_000);
   const [maxSpendUsd, setMaxSpendUsd] = useState(1);
   const [fixtureDelayMs, setFixtureDelayMs] = useState(0);
+  const [optimizationBusy, setOptimizationBusy] = useState(false);
+  const [baselineExperimentId, setBaselineExperimentId] = useState('');
   useEffect(() => {
-    Promise.all([fetch('/api/health').then(r => r.json()), fetch('/api/runs').then(r => r.json()), fetch('/api/tasks').then(r => r.json()), fetch('/api/report').then(r => r.json()), fetch('/api/experiments').then(r => r.json())])
-      .then(([health, list, suite, summary, jobs]) => { setMode(health.mode); setRuns(list.runs); setSelected(list.runs[0]?.id ?? null); setTasks([...suite.development, ...suite.validation]); setReport(summary); setExperiments(jobs.experiments); })
+    Promise.all([fetch('/api/health').then(r => r.json()), fetch('/api/runs').then(r => r.json()), fetch('/api/tasks').then(r => r.json()), fetch('/api/report').then(r => r.json()), fetch('/api/experiments').then(r => r.json()), fetch('/api/optimizations').then(r => r.json())])
+      .then(([health, list, suite, summary, jobs, changes]) => { setMode(health.mode); setRuns(list.runs); setSelected(list.runs[0]?.id ?? null); setTasks([...suite.development, ...suite.validation]); setReport(summary); setExperiments(jobs.experiments); setOptimizations(changes.optimizations); setBaselineExperimentId(jobs.experiments.find((item: Experiment) => item.status === 'completed' && item.candidateId === 'baseline' && item.runIds.length >= 2)?.id ?? ''); })
       .catch(() => setError('Could not connect to the Ablatrix backend.'));
   }, []);
   useEffect(() => {
-    if (!experiments.some(item => item.status === 'queued' || item.status === 'running')) return;
+    if (!experiments.some(item => item.status === 'queued' || item.status === 'running') && !optimizations.some(item => item.status === 'running')) return;
     const timer = window.setInterval(() => {
-      Promise.all([fetch('/api/experiments').then(r => r.json()), fetch('/api/runs').then(r => r.json()), fetch('/api/report').then(r => r.json())])
-        .then(([jobs, list, summary]) => { setExperiments(jobs.experiments); setRuns(list.runs); setReport(summary); })
+      Promise.all([fetch('/api/experiments').then(r => r.json()), fetch('/api/runs').then(r => r.json()), fetch('/api/report').then(r => r.json()), fetch('/api/optimizations').then(r => r.json())])
+        .then(([jobs, list, summary, changes]) => { setExperiments(jobs.experiments); setRuns(list.runs); setReport(summary); setOptimizations(changes.optimizations); })
         .catch(() => setError('Could not refresh experiment progress.'));
     }, 500);
     return () => window.clearInterval(timer);
-  }, [experiments]);
+  }, [experiments, optimizations]);
   const current = runs.find(run => run.id === selected);
 
   async function submit(event: React.FormEvent) {
@@ -86,6 +90,19 @@ function App() {
     const record = await response.json();
     if (!response.ok) { setError(record.error ?? 'Cancellation failed.'); return; }
     setExperiments(previous => previous.map(item => item.id === id ? record : item));
+  }
+  async function startOptimization() {
+    setOptimizationBusy(true); setError('');
+    try {
+      const response = await fetch('/api/optimizations', {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ baselineExperimentId })
+      });
+      const record = await response.json();
+      if (!response.ok) throw new Error(record.error ?? 'Optimizer could not start.');
+      setOptimizations(previous => [record, ...previous]);
+    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Optimizer failed.'); }
+    finally { setOptimizationBusy(false); }
   }
 
   return <div className="shell">
@@ -134,6 +151,15 @@ function App() {
             <div className="experiment-head"><strong>{item.status}</strong><span>{item.runIds.length}/{item.taskIds.length} tasks</span>{(item.status === 'queued' || item.status === 'running') && <button onClick={() => cancelExperiment(item.id)}>Cancel</button>}</div>
             {item.error && <p className="error">{item.error}</p>}
             <ol>{item.steps.map((step, index) => <li key={index}>{step.message}</li>)}</ol>
+          </div>)}
+        </section>
+        <section className="panel quality-panel"><div className="section-label">05 / OPTIMIZE</div><h2>Investigate → propose → challenge</h2>
+          <p className="muted-text">The modifier can change only one approved workflow setting. The challenger requires priced cost and no quality regression before accepting it.</p>
+          <div className="opt-controls"><label>Baseline experiment<select value={baselineExperimentId} onChange={e => setBaselineExperimentId(e.target.value)}><option value="">Choose a completed baseline</option>{experiments.filter(item => item.status === 'completed' && item.candidateId === 'baseline' && item.runIds.length >= 2).map(item => <option key={item.id} value={item.id}>{item.id.slice(0, 8)} · {item.runIds.length} runs</option>)}</select></label><button className="primary" disabled={!baselineExperimentId || optimizationBusy} onClick={startOptimization}>{optimizationBusy ? 'Proposing…' : 'Propose candidate'} <span aria-hidden="true">↗</span></button></div>
+          {optimizations.length === 0 && <p className="muted-text">No proposals yet.</p>}
+          {optimizations.map(item => <div className="optimization" key={item.id}><div className="experiment-head"><strong>{item.candidateId}</strong><span>{item.status} · {item.decision}</span></div>
+            <div className="opt-stages"><div><span>INVESTIGATOR</span><p>{item.investigation}</p></div><div><span>MODIFIER</span><p>{item.proposal}</p><code>{JSON.stringify(item.settings)}</code></div><div><span>CHALLENGER</span><p>{item.challenge}</p></div></div>
+            {item.error && <p className="error">{item.error}</p>}
           </div>)}
         </section>
       </div>
