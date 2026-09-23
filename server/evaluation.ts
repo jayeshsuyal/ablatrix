@@ -7,20 +7,24 @@ const taskSchema = z.object({
   id: z.string(), split: z.enum(['development', 'validation', 'holdout']),
   entity: z.string(), question: z.string(), expectedFact: z.string(),
   answerTerms: z.array(z.string()).min(1), sourceHost: z.string(),
-  evidenceUrl: z.url(), supplementalUrl: z.url().optional(), freshnessMinutes: z.number().int().positive(), labelKind: z.literal('human-checked')
+  evidenceUrl: z.url(), supplementalUrl: z.url().optional(), freshnessMinutes: z.number().int().positive(), labelKind: z.literal('source-grounded-unreviewed')
 });
-const suiteSchema = z.object({ version: z.number(), reviewedAt: z.string(), tasks: z.array(taskSchema) });
-const suitePath = fileURLToPath(new URL('../data/tasks.v1.json', import.meta.url));
+const suiteSchema = z.object({ version: z.number(), draftedAt: z.string(), labelNote: z.string(), tasks: z.array(taskSchema) });
+const suitePath = fileURLToPath(new URL('../data/tasks.v2.json', import.meta.url));
 const suite = suiteSchema.parse(JSON.parse(readFileSync(suitePath, 'utf8')));
 type Task = z.infer<typeof taskSchema>;
 
 export function publicTasks() {
   return {
-    version: suite.version, reviewedAt: suite.reviewedAt,
+    version: suite.version, draftedAt: suite.draftedAt, labelNote: suite.labelNote,
     development: suite.tasks.filter(task => task.split === 'development').map(({ id, split, entity, question }) => ({ id, split, entity, question })),
     validation: suite.tasks.filter(task => task.split === 'validation').map(({ id, split, entity, question }) => ({ id, split, entity, question })),
     holdoutCount: suite.tasks.filter(task => task.split === 'holdout').length
   };
+}
+
+export function holdoutTasksForFinal() {
+  return suite.tasks.filter(task => task.split === 'holdout').map(({ id, entity, question }) => ({ id, entity, question }));
 }
 
 export function taskForRun(id: string): Pick<Task, 'id' | 'split' | 'entity' | 'question'> | null {
@@ -38,7 +42,7 @@ export function maxCacheTtlForTask(id: string): number {
 export type Evaluation = {
   taskId: string; split: Task['split']; completed: boolean; correct: boolean;
   deterministic: { answerTermsPresent: boolean; approvedSourcePresent: boolean; citationsResolve: boolean };
-  labelKind: 'human-checked'; modelJudge: null;
+  labelKind: 'source-grounded-unreviewed'; modelJudge: null;
   evidenceUrl: string; expectedFact: string | null; fixture: boolean;
 };
 
@@ -74,7 +78,7 @@ export function report(runs: RunRecord[]) {
   const pricedRuns = runs.filter(run => run.mode === 'live' && run.costStatus === 'priced' && run.costUsd !== null);
   const allLivePriced = runs.filter(run => run.mode === 'live').length === pricedRuns.length;
   return {
-    version: suite.version, sampleSize: live.length, correct: liveCorrect,
+    version: suite.version, labelNote: suite.labelNote, sampleSize: live.length, correct: liveCorrect,
     qualityRate: live.length ? liveCorrect / live.length : null,
     costPerCorrectUsd: allLivePriced && liveCorrect > 0 ? pricedRuns.reduce((sum, run) => sum + (run.costUsd ?? 0), 0) / liveCorrect : null,
     costNote: 'Unknown when any live run is unpriced or no task is correctly completed; fixture cost is excluded.',

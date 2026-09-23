@@ -5,6 +5,7 @@ import type { ExperimentRecord, OptimizationRecord, RunRecord } from './contract
 import { evaluate } from './evaluation.ts';
 import { ExperimentRunner } from './experiments.ts';
 import { RunStore } from './store.ts';
+import { SapiomLiveProvider, validatedCharge, type MeteredLiveProvider } from './live-provider.ts';
 
 const requestSchema = z.object({ baselineExperimentId: z.uuid() }).strict();
 
@@ -31,38 +32,92 @@ function score(experiment: ExperimentRecord, store: RunStore) {
 }
 
 export class OptimizationRunner {
-  constructor(private store: RunStore, private experiments: ExperimentRunner, private mode: 'fixture' | 'live') {}
+  private provider: MeteredLiveProvider;
+  constructor(private store: RunStore, private experiments: ExperimentRunner, private mode: 'fixture' | 'live', provider?: MeteredLiveProvider) {
+    this.provider = provider ?? new SapiomLiveProvider();
+  }
   async create(raw: unknown): Promise<OptimizationRecord> {
-    if (this.mode === 'live') throw new Error('Live optimizer is blocked until total Router and experiment costs can be metered within one enforced budget');
+    if (this.mode === 'live' && (!this.provider.readiness().ready || !this.provider.readiness().remoteCapEvidence)) {
+      throw new Error(`Live optimization unavailable: ${this.provider.readiness().reason}`);
+    }
     const input = requestSchema.parse(raw);
     const baseline = this.store.getExperiment(input.baselineExperimentId);
     if (!baseline || baseline.status !== 'completed' || baseline.candidateId !== 'baseline' || baseline.mode !== this.mode || baseline.taskIds.length < 2) {
       throw new Error('A completed two-task baseline experiment in the current mode is required');
     }
+    if (this.mode === 'live') {
+      const readiness = this.provider.readiness();
+      const candidateWorstCase = baseline.taskIds.length * baseline.maxAttempts * readiness.maxResearchCents;
+      if (candidateWorstCase > Math.round(baseline.maxSpendUsd * 100) ||
+          this.store.budgetSummary(readiness.approvedCapCents).availableCents < readiness.maxProposalCents + candidateWorstCase) {
+        throw new Error('Approved budget cannot reserve the proposal and bounded candidate experiment.');
+      }
+    }
     const developmentRuns = baseline.runIds.map(id => this.store.get(id)).filter((run): run is RunRecord => !!run && evaluate(run)?.split === 'development');
     const developmentPasses = developmentRuns.filter(run => evaluate(run)?.correct).length;
-    const investigation = `Development baseline: ${developmentRuns.length} attempt(s), ${developmentPasses} deterministic pass(es); fixture cost only. Validation is reserved for challenge.`;
-    const proposed = fixtureProposal(baseline, this.store);
-    const settings = researchConfig.parse(proposed);
-    if (!allowedCandidateChange(settings) || candidateId(settings) === candidateId(baselineConfig)) throw new Error('Modifier proposal exceeds the allowlisted one-change boundary');
-    const candidate = this.experiments.create({
-      taskIds: baseline.taskIds, maxAttempts: baseline.maxAttempts,
-      maxDurationMs: baseline.maxDurationMs, maxSpendUsd: baseline.maxSpendUsd,
-      fixtureDelayMs: baseline.fixtureDelayMs, settings
-    });
+    const investigation = `Development baseline: ${developmentRuns.length} attempt(s), ${developmentPasses} deterministic pass(es); ${this.mode === 'fixture' ? 'fixture cost only' : 'priced runs'}; proposal context excludes validation and holdout.`;
     const at = new Date().toISOString();
     const record: OptimizationRecord = {
       id: randomUUID(), mode: this.mode, status: 'running',
-      baselineExperimentId: baseline.id, candidateExperimentId: candidate.id,
-      candidateId: candidateId(settings), settings, createdAt: at, updatedAt: at,
-      investigation, proposal: `Change from baseline: ${JSON.stringify(settings)}.`,
-      decision: 'pending', challenge: 'Waiting for candidate evidence.', error: null
+      baselineExperimentId: baseline.id, candidateExperimentId: '',
+      candidateId: 'pending', settings: baselineConfig, createdAt: at, updatedAt: at,
+      investigation, proposal: 'Proposal pending.', decision: 'pending',
+      challenge: 'Waiting for a bounded proposal.', error: null
     };
+    this.store.saveOptimization(record);
+    let proposalChargeId: string | undefined;
+    let proposalMetadata: OptimizationRecord['proposalMetadata'];
+    let proposed: ResearchConfig;
+    if (this.mode === 'live') {
+      const readiness = this.provider.readiness();
+      proposalChargeId = randomUUID();
+      record.proposalChargeId = proposalChargeId;
+      this.store.saveOptimization(record);
+      try {
+        this.store.reserveCharge(proposalChargeId, 'proposal', readiness.maxProposalCents, readiness.approvedCapCents, record.id);
+        const result = await this.provider.propose(investigation, proposalChargeId);
+        const charge = validatedCharge(result.charge);
+        this.store.settleCharge(proposalChargeId, charge.cents, charge.reference);
+        if (this.store.getCharge(proposalChargeId)?.status !== 'settled') throw new Error('Proposal exceeded its verified charge bound.');
+        proposed = result.settings;
+        proposalMetadata = { model: result.model, requestId: result.requestId,
+          inputTokens: typeof result.usage?.inputTokens === 'number' ? result.usage.inputTokens : null,
+          outputTokens: typeof result.usage?.outputTokens === 'number' ? result.usage.outputTokens : null };
+      } catch (error) {
+        if (this.store.getCharge(proposalChargeId)?.status !== 'settled') this.store.markChargeUnknown(proposalChargeId);
+        record.status = 'failed'; record.error = error instanceof Error ? error.message : String(error);
+        record.updatedAt = new Date().toISOString(); this.store.saveOptimization(record);
+        throw error;
+      }
+    } else proposed = fixtureProposal(baseline, this.store);
+    const settings = researchConfig.parse(proposed);
+    if (!allowedCandidateChange(settings) || candidateId(settings) === candidateId(baselineConfig)) {
+      record.status = 'failed'; record.error = 'Modifier proposal exceeds the allowlisted one-change boundary';
+      this.store.saveOptimization(record); throw new Error(record.error);
+    }
+    let candidate: ExperimentRecord;
+    try {
+      candidate = this.experiments.create({
+        taskIds: baseline.taskIds, maxAttempts: baseline.maxAttempts,
+        maxDurationMs: baseline.maxDurationMs, maxSpendUsd: baseline.maxSpendUsd,
+        fixtureDelayMs: baseline.fixtureDelayMs, settings
+      });
+    } catch (error) {
+      record.status = 'failed'; record.error = error instanceof Error ? error.message : String(error);
+      record.updatedAt = new Date().toISOString(); this.store.saveOptimization(record);
+      throw error;
+    }
+    record.candidateExperimentId = candidate.id;
+    record.candidateId = candidateId(settings); record.settings = settings;
+    record.proposal = `Change from baseline: ${JSON.stringify(settings)}.`;
+    record.challenge = 'Waiting for candidate evidence.'; record.proposalMetadata = proposalMetadata;
+    record.updatedAt = new Date().toISOString();
     this.store.saveOptimization(record);
     return record;
   }
   refresh(record: OptimizationRecord): OptimizationRecord {
     if (record.status !== 'running') return record;
+    if (!record.candidateExperimentId) return record;
     const baseline = this.store.getExperiment(record.baselineExperimentId);
     const candidate = this.store.getExperiment(record.candidateExperimentId);
     if (!baseline || !candidate) {

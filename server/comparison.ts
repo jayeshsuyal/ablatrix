@@ -46,18 +46,28 @@ export function comparison(record: OptimizationRecord, store: RunStore) {
   });
   const first = metrics(rows.map(row => row.baseline));
   const second = metrics(rows.map(row => row.candidate));
+  const proposalCharge = record.proposalChargeId ? store.getCharge(record.proposalChargeId) : null;
+  const proposalCostUsd = record.mode === 'fixture' ? null : proposalCharge?.status === 'settled' && proposalCharge.actualCents !== null
+    ? proposalCharge.actualCents / 100 : null;
+  const experimentCostUsd = record.mode === 'live' && first.costUsd !== null && second.costUsd !== null && proposalCostUsd !== null
+    ? first.costUsd + second.costUsd + proposalCostUsd : null;
+  const savings = first.costPerCorrectUsd !== null && second.costPerCorrectUsd !== null
+    ? first.costPerCorrectUsd - second.costPerCorrectUsd : null;
   return {
     id: record.id, mode: record.mode, status: record.status, decision: record.decision,
     baseline: first, candidate: second, rows,
-    experimentCostUsd: null,
-    breakEvenTasks: null,
+    experimentCostUsd,
+    proposalCostUsd,
+    breakEvenTasks: experimentCostUsd !== null && savings !== null && savings > 0 && record.decision === 'accepted'
+      ? Math.ceil(experimentCostUsd / savings) : null,
     uncertainty: `Only ${rows.length} paired tasks; this cannot establish a general performance gain.`,
-    costNote: record.mode === 'fixture' ? 'Synthetic fixture data; costs and performance are not live evidence.' : 'Provider and optimizer cost may be unpriced. Break-even requires measured experiment cost.'
+    costNote: record.mode === 'fixture' ? 'Synthetic fixture data; costs and performance are not live evidence.' : 'All attempts and proposal charges must be settled before cost and break-even are known.'
   };
 }
 
 export function exportArtifacts(record: OptimizationRecord, store: RunStore) {
   const result = comparison(record, store);
+  const proposalCharge = record.proposalChargeId ? store.getCharge(record.proposalChargeId) : null;
   const original = `${JSON.stringify(baselineConfig, null, 2)}\n`;
   const candidate = `${JSON.stringify(record.settings, null, 2)}\n`;
   const baselineLines = original.trimEnd().split('\n');
@@ -69,7 +79,7 @@ export function exportArtifacts(record: OptimizationRecord, store: RunStore) {
     ...baselineLines.map(line => `-${line}`), ...candidateLines.map(line => `+${line}`), ''
   ].join('\n');
   const suite = publicTasks();
-  const fixturePath = fileURLToPath(new URL('../data/tasks.v1.json', import.meta.url));
+  const fixturePath = fileURLToPath(new URL('../data/tasks.v2.json', import.meta.url));
   const summarizeExperiment = (id: string) => {
     const experiment = store.getExperiment(id);
     if (!experiment) return null;
@@ -86,8 +96,13 @@ export function exportArtifacts(record: OptimizationRecord, store: RunStore) {
           status: run.status, provider: run.provider, model: run.model,
           startedAt: run.startedAt, finishedAt: run.finishedAt, durationMs: run.durationMs,
           costUsd: run.costUsd, costStatus: run.costStatus, settings: run.settings ?? null,
+          cacheHit: run.usage?.cacheHit === true,
+          executionId: typeof run.usage?.executionId === 'string' ? run.usage.executionId : null,
+          agentVersion: typeof run.usage?.agentVersion === 'string' ? run.usage.agentVersion : null,
+          chargeReference: typeof run.usage?.chargeReference === 'string' ? run.usage.chargeReference : null,
           outputSha256: run.output ? createHash('sha256').update(JSON.stringify(run.output)).digest('hex') : null,
-          sourceUrls: run.output?.sources.map(source => source.url) ?? []
+          sourceEvidence: run.output?.sources.map(source => ({ url: source.url, title: source.title,
+            snippetSha256: createHash('sha256').update(source.snippet).digest('hex') })) ?? []
         };
       })
     };
@@ -100,13 +115,14 @@ export function exportArtifacts(record: OptimizationRecord, store: RunStore) {
     taskIds: result.rows.map(row => row.taskId),
     baselineExperiment: summarizeExperiment(record.baselineExperimentId),
     candidateExperiment: summarizeExperiment(record.candidateExperimentId),
+    proposalCharge: proposalCharge ? { status: proposalCharge.status, actualCents: proposalCharge.actualCents,
+      evidence: proposalCharge.evidence } : null,
+    proposalMetadata: record.proposalMetadata ?? null,
     sources: result.rows.flatMap(row => [...row.baseline.sources, ...row.candidate.sources].map(source => source.url)),
     requiredEnvNamesForLive: ['SAPIOM_API_KEY', 'SAPIOM_AGENT_SLUG', 'ABLATRIX_SPEND_CAP_USD', 'SAPIOM_BUDGET_ENFORCED'],
     codeCommit: process.env.ABLATRIX_BUILD_SHA ?? null,
     deployedAgentVersion: null,
-    cacheHitPerRun: null,
-    usagePerRun: null,
-    reproducibilityLimit: 'No source snapshot or deployed agent version is captured. Live web results can change; usage and cache-hit metadata are unavailable.',
+    reproducibilityLimit: 'Source snapshots are not captured. Live web results can change; provider usage and deployed version appear only when returned by the metered adapter.',
     qualityLimit: result.uncertainty,
     costLimit: result.costNote
   };

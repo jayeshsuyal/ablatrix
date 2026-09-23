@@ -7,6 +7,7 @@
 | PR3 Runner | Persistent bounded candidate jobs, cancellation, retries, recovery | Merged: #3, `6b1eeb5`; CI and browser smoke pass |
 | PR4 Optimizer | Structured bounded proposals, deterministic checks, comparison and no-improvement | Merged: #4, `142751f`; CI and browser smoke pass |
 | PR5 Dashboard | Responsive real-data views and reproducible redacted export | Merged: #5, `031522c`; CI and browser smoke pass |
-| PR6 Release | Browser E2E, restart/security checks, docs, release evidence | In progress |
+| PR6 Release | Browser E2E, restart/security checks, docs, release evidence | Merged: #6, `5407b04`; CI and local smoke pass; paid acceptance pending |
+| Corrective follow-up | Durable shared budget, metered orchestration test path, paired synthetic holdout, honest live readiness | In progress; production dispatch remains blocked pending Sapiom charge and cap contracts |
 
-Each slice needs tests, build, review, merged-main verification, and a smoke test. Fixture observations never count as live benchmark evidence. Live acceptance needs credentials and an approved spend cap.
+Each slice needs tests, build, review, merged-main verification, and a smoke test. Fixture observations never count as live benchmark evidence. Paid acceptance requires credentials, a numeric cap, a verified remote spending rule, and a supported settled charge source for both agent and Router calls.

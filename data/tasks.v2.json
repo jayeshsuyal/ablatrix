@@ -1,0 +1,49 @@
+{
+  "version": 2,
+  "draftedAt": "2026-09-22",
+  "labelNote": "Model-drafted, source-grounded pilot labels; not independently human-checked.",
+  "tasks": [
+    {
+      "id": "github-platform-v1", "split": "development", "entity": "GitHub",
+      "question": "What does GitHub provide for software teams?",
+      "expectedFact": "GitHub provides a developer platform for building and delivering software.",
+      "answerTerms": ["developer", "platform"], "sourceHost": "github.com",
+      "evidenceUrl": "https://github.com/about", "supplementalUrl": "https://docs.github.com/en/get-started/using-git/about-git", "freshnessMinutes": 60, "labelKind": "source-grounded-unreviewed"
+    },
+    {
+      "id": "github-actions-v2", "split": "development", "entity": "GitHub",
+      "question": "What can GitHub Actions automate?",
+      "expectedFact": "GitHub Actions automates software workflows such as build, test, and deployment.",
+      "answerTerms": ["automate", "workflow"], "sourceHost": "github.com",
+      "evidenceUrl": "https://github.com/features/actions", "supplementalUrl": "https://docs.github.com/en/actions/get-started/quickstart", "freshnessMinutes": 60, "labelKind": "source-grounded-unreviewed"
+    },
+    {
+      "id": "cloudflare-workers-v1", "split": "validation", "entity": "Cloudflare",
+      "question": "What is Cloudflare Workers?",
+      "expectedFact": "Cloudflare Workers is a serverless functions platform.",
+      "answerTerms": ["Workers", "serverless"], "sourceHost": "cloudflare.com",
+      "evidenceUrl": "https://www.cloudflare.com/products/workers/", "supplementalUrl": "https://developers.cloudflare.com/workers/", "freshnessMinutes": 60, "labelKind": "source-grounded-unreviewed"
+    },
+    {
+      "id": "cloudflare-pages-v2", "split": "validation", "entity": "Cloudflare",
+      "question": "What does Cloudflare Pages deploy from a connected Git repository?",
+      "expectedFact": "Cloudflare Pages builds and deploys websites from a connected Git repository.",
+      "answerTerms": ["Pages", "deploy"], "sourceHost": "cloudflare.com",
+      "evidenceUrl": "https://developers.cloudflare.com/pages/get-started/git-integration/", "freshnessMinutes": 60, "labelKind": "source-grounded-unreviewed"
+    },
+    {
+      "id": "mozilla-firefox-v1", "split": "holdout", "entity": "Mozilla",
+      "question": "Which browser does Mozilla offer?",
+      "expectedFact": "Mozilla offers the Firefox browser.",
+      "answerTerms": ["Firefox", "browser"], "sourceHost": "mozilla.org",
+      "evidenceUrl": "https://www.mozilla.org/en-US/products/", "freshnessMinutes": 60, "labelKind": "source-grounded-unreviewed"
+    },
+    {
+      "id": "mozilla-vpn-v2", "split": "holdout", "entity": "Mozilla",
+      "question": "What does Mozilla VPN do for an internet connection?",
+      "expectedFact": "Mozilla VPN encrypts an internet connection to add privacy protection.",
+      "answerTerms": ["VPN", "encrypt"], "sourceHost": "mozilla.org",
+      "evidenceUrl": "https://www.mozilla.org/en-US/products/vpn/desktop/", "freshnessMinutes": 60, "labelKind": "source-grounded-unreviewed"
+    }
+  ]
+}

@@ -1,12 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync } from 'node:fs';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { baselineConfig } from './config.ts';
 import { baselineConfigMatchesFile, comparison, exportArtifacts } from './comparison.ts';
 import type { ExperimentRecord, OptimizationRecord, RunRecord } from './contracts.ts';
 import { RunStore } from './store.ts';
+import { loadCandidateConfig } from './replay.ts';
 
 test('comparison counts failed attempt cost and export is a reproducible secret-free patch', () => {
   const directory = mkdtempSync(join(tmpdir(), 'ablatrix-export-'));
@@ -47,8 +48,11 @@ test('comparison counts failed attempt cost and export is a reproducible secret-
     assert.equal(result.candidate.costPerCorrectUsd, 0.04);
     assert.equal(result.baseline.failures, 1);
     const artifacts = exportArtifacts(record, store);
+    const candidatePath = join(directory, 'candidate.json');
+    writeFileSync(candidatePath, artifacts.candidate);
+    assert.equal(loadCandidateConfig(candidatePath).promptStyle, 'compact');
     assert.match(artifacts.patch, /\+  "promptStyle": "compact"/);
-    assert.equal(artifacts.manifest.taskSuiteVersion, 1);
+    assert.equal(artifacts.manifest.taskSuiteVersion, 2);
     assert.equal(artifacts.manifest.baselineExperiment?.runs.length, 2);
     assert.equal(artifacts.manifest.candidateExperiment?.runs.length, 1);
     assert.equal(artifacts.manifest.baselineExperiment?.limits.maxAttempts, 2);

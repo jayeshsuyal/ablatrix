@@ -15,3 +15,9 @@ The fixture workflow completes and the optimizer reports **no improvement**. The
 ## Pending live acceptance
 
 No paid Sapiom call, real latency measurement, live quality comparison, provider price attribution, break-even calculation, or deployment of the agent definition has been performed. Live acceptance requires user-provided credentials and an approved spend cap, an enforceable Sapiom spending rule, and metering for both proposal and experiment calls. Until then, the release is a working local fixture-mode product with a guarded live adapter, not a validated performance win.
+
+The corrective follow-up adds a fake metered provider test path and shared SQLite reservations. It does not unlock the real provider: see [the accounting boundary](sapiom-accounting.md). Passing injected-provider tests proves the orchestration and accounting assumptions in code, not Sapiom's actual charge or cap behavior.
+
+The pilot suite has six model-drafted source-grounded tasks, including two sealed holdouts. The suite is too small for a general performance claim, and its labels need independent review before any benchmark publication. Fake-provider tests cover successful priced comparison, no improvement, quality regression, malformed/timed-out proposal, unknown research charge, and budget refusal. Browser tests cover blocked live readiness and a one-time synthetic holdout after candidate selection.
+
+The deterministic rubric detects missing required terms, an unapproved source host, and citations absent from returned sources. A negative sentence containing the required terms can still pass; a regression test preserves that known false-positive example. A human semantic review or stronger independent grader is required before treating pilot pass rate as truth.
