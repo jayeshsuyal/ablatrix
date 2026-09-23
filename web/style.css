@@ -212,3 +212,60 @@ dialog{background:#1c211f;color:#f0f1ec;border:1px solid #68766e;border-radius:8
 @media(max-width:760px){.topbar{padding:10px 16px;gap:9px}.wordmark{font-size:20px}.agent-label{display:none}.mode-pill{font-size:10px}.rb-shell .rb-inspector{min-height:400px}.rb-shell .rb-inspector-top{padding-top:20px}.rb-shell .rb-mobile-back{display:block;background:none;border:0;color:var(--rb-text);text-decoration:underline;padding:8px 0;margin-top:10px;font-size:12px}.rb-shell .rb-analysis{scroll-margin-top:10px}.rb-shell .rb-case{min-height:95px}.empty-state{padding:6vh 20px}.bottom{padding:12px 20px}.bottom .readiness{margin-left:0}.run-grid{display:block}.run-grid nav{border-right:0;border-bottom:1px solid #343c38;max-height:170px;overflow:auto}.secondary-view{padding:22px}}
 @media(max-width:440px){.topbar{min-height:65px}.experiment-picker{order:4}.utility-nav{order:5}.mode-pill{order:3}.new-button{order:2;font-size:11px;padding:7px}.rb-shell .rb-case-info{justify-content:space-between}.rb-shell .rb-case-state{font-size:11px}.rb-shell .rb-plot{grid-column:1;grid-row:2}.rb-shell .rb-delta{grid-column:2;grid-row:2}.rb-shell .rb-inspector-top{padding:20px 16px}.rb-shell .rb-tabs{padding-inline:16px}.rb-shell .rb-detail-body{padding:20px 16px}.rb-shell .rb-answer-head small{font-size:10px}.empty-tasks>div{grid-template-columns:82px 1fr}.empty-tasks>div span:last-child{grid-column:2}.form-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* Review hierarchy: one decision, a compact scan of cases, detail on request. */
+.rb-shell{--rb-bg:#141715;--rb-panel:#202521;--rb-soft:#2a332c;--rb-text:#f5f5ef;--rb-muted:#b7c0b8;--rb-line:#3d4640;--rb-accent:#b7f0d2;--rb-rose:#f0ad9c}
+.rb-shell .rb-layout{grid-template-columns:minmax(0,1fr) 380px}
+.rb-shell .rb-intro{padding:43px 36px 31px}
+.rb-shell .rb-intro-meta{margin-bottom:18px}
+.rb-shell h1{font-size:clamp(36px,4vw,54px);font-weight:620;line-height:1.04;letter-spacing:-.06em;max-width:800px}
+.rb-shell .rb-decision{display:flex;align-items:baseline;gap:14px;border-left:0;padding:0;margin-top:27px}
+.rb-shell .rb-decision>span{color:var(--rb-muted);font-size:12px}
+.rb-shell .rb-decision>strong{font-size:19px;font-weight:620;color:var(--rb-rose)}
+.rb-shell .rb-decision:not(.rb-decision-concern)>strong{color:var(--rb-text)}
+.rb-shell .rb-decision>button{border:0;background:none;color:var(--rb-accent);font-size:12px;text-decoration:underline;text-underline-offset:4px;padding:4px}
+.rb-shell .rb-quickstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--rb-line);border-bottom:1px solid var(--rb-line);margin-top:30px}
+.rb-shell .rb-quickstats>div{padding:17px 14px 18px 0;min-height:92px;display:flex;flex-direction:column;justify-content:center}
+.rb-shell .rb-quickstats>div+div{border-left:1px solid var(--rb-line);padding-left:23px}
+.rb-shell .rb-quickstats strong{font-size:29px;font-weight:580;line-height:1;font-variant-numeric:tabular-nums}
+.rb-shell .rb-quickstats span{font-size:11px;color:var(--rb-muted);margin-top:8px;line-height:1.3}
+.rb-shell .rb-config{margin-top:16px;font-size:12px;color:var(--rb-muted)}
+.rb-shell .rb-config summary{cursor:pointer;color:var(--rb-text);display:list-item;list-style-position:inside}
+.rb-shell .rb-config summary span{float:right;color:var(--rb-muted)}
+.rb-shell .rb-config .rb-diff{margin-top:15px}
+.rb-shell .rb-analysis{padding:6px 36px 28px}
+.rb-shell .rb-sectionbar{margin-bottom:21px}
+.rb-shell .rb-sectionbar h2{font-size:21px}
+.rb-shell .rb-chart-meta{font-size:12px;margin-bottom:13px}
+.rb-shell .rb-chart-head{font-size:11px}
+.rb-shell .rb-case{min-height:103px;padding-block:18px}
+.rb-shell .rb-case-name{font-size:15px;font-weight:600;align-items:baseline}
+.rb-shell .rb-case-state{font-size:12px;margin-top:8px}
+.rb-shell .rb-case[aria-pressed="true"]{background:#2b352e}
+.rb-shell .rb-case[aria-pressed="true"]::before{background:var(--rb-accent);width:3px;top:0;bottom:0}
+.rb-shell .rb-chart-note{margin-top:15px;font-size:11px}
+.rb-shell .rb-zero{font:12px/1 Consolas,monospace;color:var(--rb-muted);padding-left:3px}
+.rb-shell .rb-footing{margin-inline:36px;margin-top:0;margin-bottom:16px}
+.rb-shell .rb-reading-notes{max-width:500px;color:var(--rb-muted);font-size:12px}
+.rb-shell .rb-reading-notes summary,.rb-shell .rb-inspector-foot summary{cursor:pointer;color:var(--rb-text)}
+.rb-shell .rb-reading-notes p{margin-top:9px}
+.rb-shell .rb-inspector-top{padding:37px 28px 24px}
+.rb-shell .rb-inspector h2{font-size:28px;margin-top:28px}
+.rb-shell .rb-inspector-status{font-size:12px;margin-top:5px}
+.rb-shell .rb-question{font-size:16px;line-height:1.45;margin-top:20px!important}
+.rb-shell .rb-tabs{padding-inline:28px;gap:25px}
+.rb-shell .rb-tabs button{font-size:13px}
+.rb-shell .rb-detail-body{padding:27px 28px;min-height:0}
+.rb-shell .rb-answer{padding-bottom:25px}
+.rb-shell .rb-answer+.rb-answer{padding-top:25px}
+.rb-shell .rb-answer-text{font-size:16px;line-height:1.52}
+.rb-shell .rb-claims{margin-top:15px;font-size:12px;color:var(--rb-muted)}
+.rb-shell .rb-claims summary{cursor:pointer;color:var(--rb-accent)}
+.rb-shell .rb-claims p{color:var(--rb-text);margin-top:12px;line-height:1.5}
+.rb-shell .rb-check-note{margin-top:15px}
+.rb-shell .rb-inspector-foot{display:block;padding:17px 28px;font-size:11px}
+.rb-shell .rb-inspector-foot p{margin-top:8px}
+@media(max-width:1199px){.rb-shell .rb-layout{grid-template-columns:minmax(0,1fr) 320px}.rb-shell .rb-intro,.rb-shell .rb-analysis{padding-inline:24px}.rb-shell .rb-footing{margin-inline:24px}}
+@media(max-width:900px){.rb-shell .rb-layout{grid-template-columns:minmax(0,1fr) 290px}.rb-shell h1{font-size:37px}.rb-shell .rb-quickstats strong{font-size:25px}.rb-shell .rb-inspector-top,.rb-shell .rb-detail-body{padding-inline:20px}.rb-shell .rb-tabs{padding-inline:20px}}
+@media(max-width:760px){.rb-shell .rb-layout{grid-template-columns:1fr}.rb-shell .rb-intro{padding:34px 20px 25px}.rb-shell .rb-analysis{padding-inline:20px}.rb-shell .rb-footing{margin-inline:20px}.rb-shell .rb-inspector:not(.rb-inspector-open){display:none}.rb-shell .rb-inspector-top{padding:27px 20px}.rb-shell .rb-quickstats{margin-top:25px}.rb-shell .rb-case{min-height:104px}}
+@media(max-width:440px){.rb-shell h1{font-size:38px}.rb-shell .rb-intro{padding-inline:18px}.rb-shell .rb-analysis{padding-inline:18px}.rb-shell .rb-footing{margin-inline:18px}.rb-shell .rb-quickstats>div{padding-right:7px;min-height:85px}.rb-shell .rb-quickstats>div+div{padding-left:11px}.rb-shell .rb-quickstats strong{font-size:25px}.rb-shell .rb-quickstats span{font-size:10px}.rb-shell .rb-case-name{font-size:15px}.rb-shell .rb-case-state{margin-top:0}.rb-shell .rb-inspector h2{margin-top:22px}}

@@ -30,11 +30,16 @@ test('approved chart binds real settings, case selection, tabs, links, deep link
   await expect(page.locator('.rb-case')).toHaveCount(4);
   await expect(page.locator('.rb-change')).toHaveCount(2);
   await expect(page.getByRole('heading', { name: /Read 2 sources in parallel/ })).toBeVisible();
-  await expect(page.getByText('Recorded attempt time · milliseconds')).toBeVisible();
+  await expect(page.getByText('Total attempt time · ms')).toBeVisible();
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(page.getByRole('complementary', { name: 'Selected case evidence' })).toBeHidden();
   const first = page.locator('.rb-case').first();
   await first.click();
+  await expect(page.getByRole('complementary', { name: 'Selected case evidence' })).toBeVisible();
+  await page.setViewportSize({ width: 1440, height: 900 });
   await expect(page).toHaveURL(/github-platform-v1$/);
   await expect(page.getByRole('complementary', { name: 'Selected case evidence' })).toContainText('What does GitHub provide for software teams?');
+  await page.getByText('Claims & citations · 1').first().click();
   await page.getByRole('button', { name: 'Inspect baseline source 1' }).click();
   await expect(page.getByRole('button', { name: 'Sources' })).toHaveAttribute('aria-pressed','true');
   await expect(page.getByRole('button', { name: 'Sources' })).toBeFocused();
@@ -99,7 +104,8 @@ test('pending and failed proposals never present stale candidate evidence', asyn
   record.status='failed';record.decision='rejected';record.error='Provider proposal failed.';
   await page.reload();
   await expect(page.getByText('Proposal failed before candidate evidence was recorded.')).toBeVisible();
-  await expect(page.locator('.rb-decision')).toContainText('Provider proposal failed.');
+  await page.getByRole('button', { name: 'Read decision details' }).click();
+  await expect(page.getByRole('dialog', { name: 'Review brief' })).toContainText('Provider proposal failed.');
 });
 
 test('zero priced cost differs from unknown; missing attempt has no success bar or time delta', async ({ page, request }) => {
