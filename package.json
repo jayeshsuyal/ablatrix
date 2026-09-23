@@ -9,7 +9,9 @@
     "start": "node --env-file-if-exists=.env --import tsx server/index.ts",
     "test": "node --import tsx --test server/*.test.ts",
     "test:e2e": "npm run build && playwright test",
-    "local": "npm run build && npm start"
+    "local": "npm run build && npm start",
+    "replay": "node --import tsx server/replay.ts",
+    "holdout": "node --import tsx server/holdout.ts"
   },
   "dependencies": {
     "@sapiom/agent": "0.14.2",

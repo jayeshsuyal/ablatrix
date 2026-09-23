@@ -5,9 +5,10 @@ import { taskForRun } from './evaluation.ts';
 import { executeResearch } from './research.ts';
 import { RunStore } from './store.ts';
 import { allowedCandidateChange, baselineConfig, candidateId, researchConfig } from './config.ts';
+import { SapiomLiveProvider, type MeteredLiveProvider } from './live-provider.ts';
 
 export const experimentInput = z.object({
-  taskIds: z.array(z.string()).min(1).max(2),
+  taskIds: z.array(z.string()).min(1).max(4),
   maxAttempts: z.number().int().min(1).max(2).default(1),
   maxDurationMs: z.number().int().min(1_000).max(120_000).default(30_000),
   maxSpendUsd: z.number().nonnegative().max(100).default(0),
@@ -23,7 +24,9 @@ function step(record: ExperimentRecord, message: string): void {
 export class ExperimentRunner {
   private active = false;
   private halted = false;
-  constructor(private store: RunStore, private mode: RunMode) {
+  private provider: MeteredLiveProvider;
+  constructor(private store: RunStore, private mode: RunMode, provider?: MeteredLiveProvider) {
+    this.provider = provider ?? new SapiomLiveProvider();
     this.halted = mode === 'live' && store.hasInterruptedLiveExperiment();
     for (const record of store.pendingExperiments()) {
       if (record.status === 'running') {
@@ -50,6 +53,7 @@ export class ExperimentRunner {
     }
     if (!this.halted && store.pendingExperiments().some(item => item.status === 'queued')) queueMicrotask(() => this.drain());
   }
+  readiness() { return this.provider.readiness(); }
   create(raw: unknown): ExperimentRecord {
     if (this.halted && this.mode === 'live') throw new Error('Live queue is halted after an interrupted paid attempt; inspect provider usage before continuing');
     const input = experimentInput.parse(raw);
@@ -57,10 +61,9 @@ export class ExperimentRunner {
     if (new Set(input.taskIds).size !== input.taskIds.length) throw new Error('Duplicate task ID');
     if (input.taskIds.some(id => !taskForRun(id))) throw new Error('Only development and validation tasks are allowed');
     if (this.mode === 'live') {
-      const approved = Number(process.env.ABLATRIX_SPEND_CAP_USD);
-      if (!Number.isFinite(approved) || approved <= 0 || input.maxSpendUsd <= 0 || input.maxSpendUsd > approved || process.env.SAPIOM_BUDGET_ENFORCED !== '1') {
-        throw new Error('Live experiment budget must be positive, at most the approved cap, and enforced upstream by Sapiom');
-      }
+      const readiness = this.provider.readiness();
+      if (!readiness.ready || !readiness.remoteCapEvidence) throw new Error(`Live budget unavailable: ${readiness.reason}`);
+      if (input.maxSpendUsd <= 0 || Math.round(input.maxSpendUsd * 100) > readiness.approvedCapCents) throw new Error('Live experiment budget exceeds approved cap');
     }
     const at = new Date().toISOString();
     const record: ExperimentRecord = {
@@ -122,10 +125,28 @@ export class ExperimentRunner {
           if (this.store.getExperiment(id)?.cancelRequested || Date.now() >= deadline) break;
         }
         const runId = randomUUID();
+        if (this.mode === 'live') {
+          const readiness = this.provider.readiness();
+          const spent = record.runIds.reduce((sum, id) => {
+            const charge = this.store.getCharge(id);
+            return sum + (charge?.status === 'settled' ? charge.actualCents ?? 0 : charge?.maxCents ?? 0);
+          }, 0);
+          if (spent + readiness.maxResearchCents > Math.round(record.maxSpendUsd * 100)) {
+            record.error = 'Experiment budget exhausted before next paid attempt.';
+            this.store.saveExperiment(record);
+            break;
+          }
+          try { this.store.reserveCharge(runId, 'research', readiness.maxResearchCents, readiness.approvedCapCents, record.id); }
+          catch (error) {
+            record.error = error instanceof Error ? error.message : 'Budget reservation failed.';
+            this.store.saveExperiment(record);
+            break;
+          }
+        }
         record.runIds.push(runId);
         this.store.saveExperiment(record);
         const remainingMs = Math.max(1, deadline - Date.now());
-        const runPromise = executeResearch(this.store, { entity: task.entity, question: task.question, taskId }, this.mode, record.candidateId, runId, record.settings ?? baselineConfig);
+        const runPromise = executeResearch(this.store, { entity: task.entity, question: task.question, taskId }, this.mode, record.candidateId, runId, record.settings ?? baselineConfig, this.provider);
         let timer: ReturnType<typeof setTimeout> | undefined;
         const timed = new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error('Provider call exceeded experiment time budget; remote billing may continue.')), remainingMs); });
         let run;
@@ -134,18 +155,35 @@ export class ExperimentRunner {
           record = this.store.getExperiment(id)!;
           record.error = error instanceof Error ? error.message : String(error);
           this.halted = this.mode === 'live';
+          if (this.mode === 'live') this.store.markChargeUnknown(runId);
           step(record, record.error);
           this.store.saveExperiment(record);
           break;
         } finally { if (timer) clearTimeout(timer); }
         record = this.store.getExperiment(id)!;
+        if (this.mode === 'live') {
+          const reference = typeof run.usage?.chargeReference === 'string' ? run.usage.chargeReference : '';
+          if (run.costStatus === 'priced' && run.costUsd !== null && reference) {
+            try {
+              this.store.settleCharge(runId, Math.round(run.costUsd * 100), reference);
+              if (this.store.getCharge(runId)?.status !== 'settled') this.halted = true;
+            } catch {
+              this.store.markChargeUnknown(runId);
+              this.halted = true;
+              record.error = 'Charge reconciliation failed; further paid attempts stopped.';
+            }
+          } else {
+            this.store.markChargeUnknown(runId);
+            this.halted = true;
+          }
+        }
         step(record, `${taskId} attempt ${attempt}: ${run.status}.`);
         this.store.saveExperiment(record);
-        if (run.status === 'completed') break;
-        if (this.mode === 'live' && run.costStatus === 'unknown') {
-          record.error = 'Live usage is unpriced; further paid attempts stopped.';
+        if (this.mode === 'live' && this.halted) {
+          record.error ??= 'Live usage is unpriced or over its reserved bound; further paid attempts stopped.';
           break;
         }
+        if (run.status === 'completed') break;
       }
       if (Date.now() >= deadline && !record.cancelRequested) record.error = 'Experiment time budget exhausted.';
       const taskRuns = record.runIds.map(runId => this.store.get(runId)).filter(run => run?.taskId === taskId);
@@ -153,10 +191,6 @@ export class ExperimentRunner {
         record.error = `${taskId} failed after ${taskRuns.length} attempt(s).`;
       }
       if (record.error) break;
-      if (this.mode === 'live') {
-        record.error = 'Live usage is unpriced; further paid tasks stopped.';
-        break;
-      }
     }
     const finalRecord = this.store.getExperiment(id)!;
     if (record.error) finalRecord.error = record.error;

@@ -49,4 +49,9 @@ export type OptimizationRecord = {
   settings: ResearchConfig; createdAt: string; updatedAt: string;
   investigation: string; proposal: string; decision: 'pending' | 'accepted' | 'no-improvement' | 'rejected';
   challenge: string; error: string | null;
+  proposalChargeId?: string;
+  proposalMetadata?: { model: string | null; requestId: string | null; inputTokens: number | null; outputTokens: number | null };
+  holdoutRunIds?: string[];
+  holdoutBaselineRunIds?: string[];
+  holdoutStatus?: 'running' | 'completed' | 'failed';
 };

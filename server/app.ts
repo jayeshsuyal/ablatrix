@@ -10,6 +10,8 @@ import { executeResearch } from './research.ts';
 import { ExperimentRunner } from './experiments.ts';
 import { OptimizationRunner } from './optimizations.ts';
 import { comparison, exportArtifacts } from './comparison.ts';
+import { SapiomLiveProvider, type MeteredLiveProvider } from './live-provider.ts';
+import { finalHoldoutAssessment, runFinalFixtureHoldout } from './holdout.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -32,9 +34,9 @@ async function body(req: IncomingMessage): Promise<unknown> {
   return JSON.parse(text || '{}') as unknown;
 }
 
-export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture') {
-  const runner = new ExperimentRunner(store, mode);
-  const optimizer = new OptimizationRunner(store, runner, mode);
+export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider()) {
+  const runner = new ExperimentRunner(store, mode, provider);
+  const optimizer = new OptimizationRunner(store, runner, mode, provider);
   return createServer(async (req, res) => {
     try {
       const host = req.headers.host ?? '';
@@ -53,20 +55,33 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture')
       const url = new URL(req.url ?? '/', 'http://localhost');
       const path = url.pathname;
       if (req.method === 'GET' && path === '/api/health') return json(res, 200, { ok: true, mode });
+      if (req.method === 'GET' && path === '/api/live-readiness') return json(res, 200, {
+        ...provider.readiness(), budget: store.budgetSummary(provider.readiness().approvedCapCents)
+      });
       if (req.method === 'GET' && path === '/api/runs') return json(res, 200, { runs: store.list() });
       if (req.method === 'GET' && path === '/api/tasks') return json(res, 200, publicTasks());
       if (req.method === 'GET' && path === '/api/report') return json(res, 200, report(store.list()));
       if (req.method === 'GET' && path === '/api/experiments') return json(res, 200, { experiments: store.listExperiments() });
       if (req.method === 'GET' && path === '/api/optimizations') return json(res, 200, { optimizations: optimizer.list() });
+      if (/^\/api\/optimizations\/[a-f0-9-]{36}\/holdout$/.test(path)) {
+        const id = path.split('/')[3];
+        if (req.method === 'GET') {
+          const result = finalHoldoutAssessment(store, id);
+          return json(res, result ? 200 : 404, result ?? { error: 'Holdout assessment not found' });
+        }
+        if (req.method === 'POST') return json(res, 201, await runFinalFixtureHoldout(store, id));
+      }
       if (req.method === 'POST' && path === '/api/optimizations') return json(res, 201, await optimizer.create(await body(req)));
       if (req.method === 'GET' && /^\/api\/optimizations\/[a-f0-9-]{36}\/comparison$/.test(path)) {
         const record = store.getOptimization(path.split('/')[3]);
+        if (record && !record.candidateExperimentId) return json(res, 409, { error: 'Candidate experiment is not ready.' });
         return json(res, record ? 200 : 404, record ? comparison(optimizer.refresh(record), store) : { error: 'Optimization not found' });
       }
       if (req.method === 'GET' && /^\/api\/optimizations\/[a-f0-9-]{36}\/export$/.test(path)) {
         const id = path.split('/')[3];
         const record = store.getOptimization(id);
         if (!record) return json(res, 404, { error: 'Optimization not found' });
+        if (!record.candidateExperimentId) return json(res, 409, { error: 'Candidate experiment is not ready.' });
         const artifacts = exportArtifacts(optimizer.refresh(record), store);
         const format = url.searchParams.get('format') ?? 'bundle';
         if (format === 'original') return download(res, 'research.baseline.json', artifacts.original, 'application/json');
@@ -117,7 +132,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture')
       if (error instanceof ZodError) return json(res, 400, { error: 'Invalid request fields.' });
       if (error instanceof SyntaxError) return json(res, 400, { error: 'Invalid JSON body.' });
       if (error instanceof Error && error.message === 'Request body too large') return json(res, 413, { error: error.message });
-      if (error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted|Live optimization/.test(error.message)) {
+      if (error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted|Live optimization|holdout|frozen completed/.test(error.message)) {
         return json(res, 400, { error: error.message });
       }
       console.error('Ablatrix request failed:', error);

@@ -1,13 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import { researchOutput, type ResearchInput, type RunMode, type RunRecord } from './contracts.ts';
 import { runFixture } from './fixture.ts';
-import { runSapiom } from './sapiom.ts';
+import { validatedCharge, type MeteredLiveProvider } from './live-provider.ts';
 import { RunStore } from './store.ts';
 import { createHash } from 'node:crypto';
 import { baselineConfig, type ResearchConfig } from './config.ts';
 import { maxCacheTtlForTask } from './evaluation.ts';
 
-export async function executeResearch(store: RunStore, input: ResearchInput, mode: RunMode, candidateId = 'baseline', runId = randomUUID(), settings: ResearchConfig = baselineConfig): Promise<RunRecord> {
+export async function executeResearch(store: RunStore, input: ResearchInput, mode: RunMode, candidateId = 'baseline', runId = randomUUID(), settings: ResearchConfig = baselineConfig, liveProvider?: MeteredLiveProvider): Promise<RunRecord> {
   const now = Date.now();
   const run: RunRecord = {
     id: runId, taskId: input.taskId ?? randomUUID(), candidateId, mode,
@@ -20,14 +20,26 @@ export async function executeResearch(store: RunStore, input: ResearchInput, mod
     const ttl = input.taskId ? Math.min(settings.cacheTtlMinutes, maxCacheTtlForTask(input.taskId)) : 0;
     const cacheKey = createHash('sha256').update(JSON.stringify({ input, settings })).digest('hex');
     const cached = mode === 'live' && ttl > 0 ? store.cachedResearch(cacheKey) : null;
-    const result = cached
-      ? { output: researchOutput.parse(cached), usage: { cacheHit: true } }
-      : mode === 'live' ? await runSapiom(input, run.id, settings) : { output: await runFixture(input, settings), usage: {} };
-    run.output = researchOutput.parse(result.output);
-    run.usage = result.usage;
+    if (mode === 'live' && !cached) {
+      if (!liveProvider?.readiness().ready) throw new Error('Live provider accounting is unavailable.');
+      const result = await liveProvider.research(input, run.id, settings);
+      const charge = validatedCharge(result.charge);
+      run.costUsd = charge.cents / 100;
+      run.costStatus = 'priced';
+      run.model = result.model;
+      run.usage = { ...result.usage, executionId: result.executionId, agentVersion: result.agentVersion,
+        chargeReference: charge.reference };
+      if (result.status === 'failed') {
+        run.error = 'Provider research failed.';
+        run.status = 'failed';
+      } else run.output = researchOutput.parse(result.output);
+    } else {
+      run.output = cached ? researchOutput.parse(cached) : researchOutput.parse(await runFixture(input, settings));
+      run.usage = cached ? { cacheHit: true, chargeReference: `local-cache:${run.id}` } : {};
+    }
     if (cached) { run.provider = 'local-cache'; run.costUsd = 0; run.costStatus = 'priced'; }
-    else if (mode === 'live' && ttl > 0) store.cacheResearch(cacheKey, run.output, ttl);
-    run.status = 'completed';
+    else if (mode === 'live' && ttl > 0 && run.output) store.cacheResearch(cacheKey, run.output, ttl);
+    if (run.status !== 'failed') run.status = 'completed';
   } catch (error) {
     const message = error instanceof Error ? error.message : '';
     run.error = mode === 'live' && !/^Live mode requires|^Live research currently requires|^Sapiom run did not complete\./.test(message)

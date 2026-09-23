@@ -12,15 +12,18 @@ test('fixture baseline, experiment, optimizer, export, and reload', async ({ pag
   await page.getByRole('button', { name: 'Propose candidate' }).click();
   await expect(page.getByRole('heading', { name: 'Baseline vs candidate' })).toBeVisible();
   await expect(page.getByText(/Unvalidated candidate export/)).toBeVisible();
+  await page.getByRole('button', { name: 'Run final fixture holdout' }).click();
+  await expect(page.getByText(/Final holdout: 0\/2 passed deterministic checks/)).toBeVisible();
   const manifestUrl = await page.getByRole('link', { name: 'Reproducibility data' }).getAttribute('href');
   const response = await request.get(manifestUrl!);
   expect(response.ok()).toBeTruthy();
   const manifest = await response.json();
   expect(manifest.mode).toBe('fixture');
-  expect(manifest.baselineExperiment.runs.length).toBe(2);
-  expect(manifest.candidateExperiment.runs.length).toBe(2);
+  expect(manifest.baselineExperiment.runs.length).toBe(4);
+  expect(manifest.candidateExperiment.runs.length).toBe(4);
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Baseline vs candidate' })).toBeVisible();
+  await expect(page.getByText(/Final holdout: 0\/2 passed deterministic checks/)).toBeVisible();
   await expect(page.getByRole('button', { name: /GitHub completed/ }).first()).toBeVisible();
 });
 
@@ -51,4 +54,13 @@ test('cancelled fixture experiment persists and does not start another task', as
   await expect(page.getByText('Experiment cancelled.')).toBeVisible();
   const cancelled = page.locator('.experiment').first();
   await expect(cancelled).not.toContainText('Starting cloudflare-workers-v1');
+});
+
+test('live readiness clearly blocks paid controls without verified accounting', async ({ page }) => {
+  await page.route('**/api/health', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, mode: 'live' }) }));
+  await page.goto('/');
+  await expect(page.getByText('Live spending blocked')).toBeVisible();
+  await expect(page.getByText(/Remote cap: not verified/)).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Run experiment' })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Propose candidate' })).toBeDisabled();
 });

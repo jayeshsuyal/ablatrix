@@ -18,6 +18,10 @@ test('live gates, invalid input, and static routing do not disclose credentials'
     const base = `http://127.0.0.1:${address.port}`;
     const direct = await fetch(`${base}/api/runs`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' });
     assert.equal(direct.status, 403);
+    const unmetered = await fetch(`${base}/api/experiments`, { method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ taskIds: ['github-platform-v1', 'cloudflare-workers-v1'], maxSpendUsd: 1 }) });
+    assert.equal(unmetered.status, 400);
+    assert.match((await unmetered.json()).error, /Live budget unavailable/);
     const badJson = await fetch(`${base}/api/experiments`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{' });
     assert.equal(badJson.status, 400);
     assert.equal((await badJson.json()).error, 'Invalid JSON body.');
