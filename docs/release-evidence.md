@@ -1,5 +1,14 @@
 # Release evidence
 
+## Focused search experiment — 2026-09-24
+
+- `/pilot` provides the single-change search experiment, responsive comparison, progress/cancellation, persisted reports, anonymous answer review, and evidence export.
+- Frozen protocol: same requested `gpt-luna` alias and controls; one search toggle; eight distinct evaluation questions, two repetitions, 32 calls. Four separate questions are reserved for development. Every official excerpt and reference quote has a verified SHA-256/membership check. Labels were checked by an agent and still require human confirmation.
+- `server/pilot-workflow.ts` implements the search plus named Router call through injected transports. Request controls, alias checks, truncation and malformed output handling, and exact source quotes are tested without network calls.
+- Full verification: **48 tests passed, 6 Chromium browser tests passed, production build passed**. Browser checks include the synthetic pilot/export/reload/mobile path and explicit anonymous-review submission. A separate fake metered provider exercises successful and rejected live-shaped comparisons, charge holds, failures, cancellation, and model-identity changes.
+- `npm run pilot` completed all 32 synthetic slots and wrote `outputs/search-ablation-40f22b96-036d-45ad-9312-6fad8f4f98be.json`. Its verdict is **inconclusive**, with no live timing, cost, or quality claim. Source snapshots and the complete schedule are included in the artifact.
+- No new paid calls were made for this implementation. Read-only Sapiom investigation did not establish the required provider-enforced $10 cap or whole-call settlement contract. Production dispatch remains disabled. See [protocol and live boundary](search-ablation.md).
+
 ## Demonstrated locally
 
 - API and persistence tests cover saved runs across database reopen, fixture queue completion/cancellation/recovery, halted live recovery, evaluation split boundaries, optimizer rejection, and export accounting.

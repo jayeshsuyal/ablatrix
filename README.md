@@ -2,6 +2,10 @@
 
 A local-first performance lab for one built-in, citation-bearing company/product research agent. It stores runs, evaluates a curated task suite, queues bounded experiments, and compares a candidate configuration with its baseline. See [the six-PR ledger](docs/build-plan.md) for release evidence.
 
+## Focused search experiment
+
+Open `/pilot` for the focused GitHub Actions experiment: compare the same requested answer model and frozen official excerpt with and without an extra web search. Twelve contextual documentation examples provide four development questions and eight evaluation questions; two paired repetitions yield 32 measured slots. The local demo exercises persistence, anonymous answer review, comparison, and export using clearly labeled synthetic answers. `npm run pilot` writes the same rehearsal as an evidence bundle. The real search/Router workflow is implemented with injectable transports; paid dispatch remains blocked until Sapiom's spending, settlement, and model preflight evidence are available. See [the frozen protocol and limits](docs/search-ablation.md).
+
 ## Run locally
 
 Requires Node.js 24.10 or later. From a clone, run:

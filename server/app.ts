@@ -12,6 +12,7 @@ import { OptimizationRunner } from './optimizations.ts';
 import { comparison, exportArtifacts } from './comparison.ts';
 import { SapiomLiveProvider, type MeteredLiveProvider } from './live-provider.ts';
 import { finalHoldoutAssessment, runFinalFixtureHoldout } from './holdout.ts';
+import { PilotRunner, PilotStore } from './pilot.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -34,10 +35,10 @@ async function body(req: IncomingMessage): Promise<unknown> {
   return JSON.parse(text || '{}') as unknown;
 }
 
-export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider()) {
+export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore())) {
   const runner = new ExperimentRunner(store, mode, provider);
   const optimizer = new OptimizationRunner(store, runner, mode, provider);
-  return createServer(async (req, res) => {
+  const server = createServer(async (req, res) => {
     try {
       const host = req.headers.host ?? '';
       if (!/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(host)) return json(res, 403, { error: 'Local host required.' });
@@ -54,6 +55,16 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       }
       const url = new URL(req.url ?? '/', 'http://localhost');
       const path = url.pathname;
+      if (req.method === 'GET' && path === '/api/pilot') return json(res, 200, pilot.overview());
+      if (req.method === 'POST' && path === '/api/pilot/runs') return json(res, 201, pilot.create(await body(req)));
+      if (/^\/api\/pilot\/runs\/[a-f0-9-]{36}(\/(cancel|review|export))?$/.test(path)) {
+        const id = path.split('/')[4], action = path.split('/')[5];
+        if (req.method === 'GET' && !action) { const run = pilot.get(id); return json(res, run ? 200 : 404, run ?? { error: 'Pilot run not found.' }); }
+        if (req.method === 'POST' && action === 'cancel') return json(res, 200, pilot.cancel(id));
+        if (req.method === 'GET' && action === 'review') return json(res, 200, { cards: pilot.reviewCards(id) });
+        if (req.method === 'POST' && action === 'review') return json(res, 200, pilot.review(id, await body(req)));
+        if (req.method === 'GET' && action === 'export') return download(res, `ablatrix-search-pilot-${id}.json`, `${JSON.stringify(pilot.export(id), null, 2)}\n`, 'application/json');
+      }
       if (req.method === 'GET' && path === '/api/health') return json(res, 200, { ok: true, mode });
       if (req.method === 'GET' && path === '/api/live-readiness') return json(res, 200, {
         ...provider.readiness(), budget: store.budgetSummary(provider.readiness().approvedCapCents)
@@ -132,6 +143,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (error instanceof ZodError) return json(res, 400, { error: 'Invalid request fields.' });
       if (error instanceof SyntaxError) return json(res, 400, { error: 'Invalid JSON body.' });
       if (error instanceof Error && error.message === 'Request body too large') return json(res, 413, { error: error.message });
+      if (error instanceof Error && error.message.startsWith('Pilot')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted|Live optimization|holdout|frozen completed/.test(error.message)) {
         return json(res, 400, { error: error.message });
       }
@@ -139,4 +151,6 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       return json(res, 500, { error: 'Internal server error.' });
     }
   });
+  server.on('close', () => { void pilot.close(); });
+  return server;
 }

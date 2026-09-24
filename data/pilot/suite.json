@@ -1,0 +1,244 @@
+{
+  "version": 1,
+  "scope": "Small source-given GitHub Actions documentation Q&A pilot: 4 development and 8 evaluation tasks with disjoint source pages. Agent-authored questions and source-checked labels; human review is pending. This does not measure web search, retrieval, or general factual accuracy.",
+  "labelStatus": "source-checked-by-agent; human-review-pending",
+  "sources": [
+    {
+      "id": "github-docs-permissions",
+      "title": "Workflow syntax for GitHub Actions",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions",
+      "capturedAt": "2026-09-24T20:17:52Z",
+      "text": "When a workflow is triggered by the `pull_request_target` event, the `GITHUB_TOKEN` is granted read/write repository permission, even when it is triggered from a public fork. For more information, see Events that trigger workflows.\n\nFor each of the available permissions, shown in the table below, you can assign one of the access levels: `read` (if applicable), `write`, or `none`. `write` includes `read`. If you specify the access for any of these permissions, all of those that are not specified are set to `none`.",
+      "sha256": "6b4c9a38aa14f5f4711a727515577f4afe732b8b77af1de68b777569850937d6"
+    },
+    {
+      "id": "github-docs-concurrency",
+      "title": "Control the concurrency of workflows and jobs",
+      "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-when-workflows-run/control-workflow-concurrency",
+      "capturedAt": "2026-09-24T20:17:51Z",
+      "text": "The concurrency group name is case insensitive. For example, `prod` and `Prod` will be treated as the same concurrency group.\n\nJobs or workflow runs in the same concurrency group are processed in first-in-first-out (FIFO) order according to the time each one started waiting on the concurrency group, not the time each workflow was dispatched. Since the actual start time of a job or run may vary, ordering is not guaranteed.",
+      "sha256": "7f3f5f5f43771aa5889b402104be64b2d650a2b4b630d106a2f2338ad25a4c10"
+    },
+    {
+      "id": "github-docs-reusable-secrets",
+      "title": "Reuse workflows",
+      "url": "https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows#passing-secrets-to-nested-workflows",
+      "capturedAt": "2026-09-24T20:17:51Z",
+      "text": "Passing secrets to nested workflows\n\nYou can use `jobs.<job_id>.secrets` in a calling workflow to pass named secrets to a directly called workflow. Alternatively, you can use `jobs.<job_id>.secrets.inherit` to pass all of the calling workflow's secrets to a directly called workflow. For more information, see the section Reuse workflows above, and the reference article Workflow syntax for GitHub Actions. Secrets are only passed to directly called workflow, so in the workflow chain A > B > C, workflow C will only receive secrets from A if they have been passed from A to B, and then from B to C.\n\nIn the following example, workflow A passes all of its secrets to workflow B, by using the `inherit` keyword, but workflow B only passes one secret to workflow C. Any of the other secrets passed to workflow B are not available to workflow C.",
+      "sha256": "527961e3b973c8bb75554b6f8de002b3e9ee1f72c956a4a515e651bc63db93bb"
+    },
+    {
+      "id": "github-docs-matrix-parallelism",
+      "title": "Running variations of jobs in a workflow",
+      "url": "https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/run-job-variations#defining-the-maximum-number-of-concurrent-jobs",
+      "capturedAt": "2026-09-24T20:17:51Z",
+      "text": "Defining the maximum number of concurrent jobs\n\nTo set the maximum number of jobs that can run simultaneously when using a `matrix` job strategy, use `jobs.<job_id>.strategy.max-parallel`.\n\nFor example, the following workflow will run a maximum of two jobs at a time, even if there are runners available to run all six jobs at once.",
+      "sha256": "c393de7bfd143abf6936f2a0523f6737a287f530a9e9a70c340b6271a654d413"
+    },
+    {
+      "id": "github-docs-manual-trigger",
+      "title": "Manually running a workflow",
+      "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow#configuring-a-workflow-to-run-manually",
+      "capturedAt": "2026-09-24T20:17:51Z",
+      "text": "Configuring a workflow to run manually\n\nTo run a workflow manually, the workflow must be configured to run on the `workflow_dispatch` event.\n\nTo trigger the `workflow_dispatch` event, your workflow must be in the default branch. For more information about configuring the `workflow_dispatch` event, see Events that trigger workflows.\n\nWrite access to the repository is required to perform these steps.",
+      "sha256": "505c68f0e8ca296537c9cdc498ed848e5c1b3fa241394f13f49f213e9e3f9797"
+    },
+    {
+      "id": "github-docs-environment-wait",
+      "title": "Deployments and environments",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/deployments-and-environments#wait-timer",
+      "capturedAt": "2026-09-24T20:17:51Z",
+      "text": "Wait timer\n\nUse a wait timer to delay a job for a specific amount of time after the job is initially triggered. The time (in minutes) must be an integer between 1 and 43,200 (30 days). Wait time will not count towards your billable time.\n\nNote\n\nIf you are on a GitHub Free, GitHub Pro, or GitHub Team plan, wait timers are only available for public repositories.",
+      "sha256": "7a818927c6940878e45ceb8606f5abf7e81e125532752f87d04c7f93289575a1"
+    },
+    {
+      "id": "github-docs-cache-update",
+      "title": "Dependency caching reference",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching",
+      "capturedAt": "2026-09-24T20:17:51Z",
+      "text": "If there is an exact match to the provided `key`, this is considered a cache hit. If no cache exactly matches the provided `key`, this is considered a cache miss. On a cache miss, the action automatically creates a new cache if the job completes successfully. The new cache will use the `key` you provided and contains the files you specify in `path`. For more information about how this is handled, see Cache hits and misses.\n\nYou cannot change the contents of an existing cache. Instead, you can create a new cache with a new key.",
+      "sha256": "63cc17f39349f031b90905ff881fe54b0cd4d992aa9fc179dc315837cfa402eb"
+    },
+    {
+      "id": "github-docs-artifact-retention",
+      "title": "Store and share data with workflow artifacts",
+      "url": "https://docs.github.com/en/actions/tutorials/store-and-share-data#configuring-a-custom-artifact-retention-period",
+      "capturedAt": "2026-09-24T20:17:51Z",
+      "text": "Configuring a custom artifact retention period\n\nYou can define a custom retention period for individual artifacts created by a workflow. When using a workflow to create a new artifact, you can use `retention-days` with the `upload-artifact` action. This example demonstrates how to set a custom retention period of 5 days for the artifact named `my-artifact`:\n\n```yaml\n  - name: 'Upload Artifact'\n    uses: actions/upload-artifact@v4\n    with:\n      name: my-artifact\n      path: my_file.txt\n      retention-days: 5\n```\n\nThe `retention-days` value cannot exceed the retention limit set by the repository, organization, or enterprise.",
+      "sha256": "38b3917c4cd1cfaa7f10962ee9cb3cc5f89ae77a09c1252fc8ba336b1935790e"
+    },
+    {
+      "id": "github-docs-oidc-permission",
+      "title": "Configuring OpenID Connect in Amazon Web Services",
+      "url": "https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws#updating-your-github-actions-workflow",
+      "capturedAt": "2026-09-24T20:17:51Z",
+      "text": "The job or workflow run requires a `permissions` setting with `id-token: write` to allow GitHub's OIDC provider to create a JSON Web Token for every run.\n\nNote\n\nSetting `id-token: write` in the workflow’s permissions does not give the workflow permission to modify or write to any resources. Instead, it only allows the workflow to request (fetch) and use (set) an OIDC token for an action or step. This token is then used to authenticate with external services using a short-lived access token.\n\nFor detailed information on required permissions, configuration examples, and advanced scenarios, see OpenID Connect reference.",
+      "sha256": "5e7ce28bb01095b0c0289d827d5eb66be27b72b7d9560eac8d4a657d687fc231"
+    },
+    {
+      "id": "github-docs-service-hostname",
+      "title": "Communicating with Docker service containers",
+      "url": "https://docs.github.com/en/actions/tutorials/use-containerized-services/use-docker-service-containers#running-jobs-in-a-container",
+      "capturedAt": "2026-09-24T20:17:51Z",
+      "text": "Running jobs in a container\n\nWhen you run jobs in a container, GitHub connects service containers to the job using Docker's user-defined bridge networks. For more information, see Bridge network driver in the Docker documentation.\n\nRunning the job and services in a container simplifies network access. You can access a service container using the label you configure in the workflow. The hostname of the service container is automatically mapped to the label name. For example, if you create a service container with the label `redis`, the hostname of the service container is `redis`.\n\nYou don't need to configure any ports for service containers. By default, all containers that are part of the same Docker network expose all ports to each other, and no ports are exposed outside of the Docker network.",
+      "sha256": "b43726e5e79e3aa6992837e595ff5b59ecc7c162b4b4decf107df07fd7282b28"
+    },
+    {
+      "id": "github-docs-env-creator-step",
+      "title": "Workflow commands for GitHub Actions",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-commands#setting-an-environment-variable",
+      "capturedAt": "2026-09-24T20:17:51Z",
+      "text": "You can make an environment variable available to any subsequent steps in a workflow job by defining or updating the environment variable and writing this to the `GITHUB_ENV` environment file. The step that creates or updates the environment variable does not have access to the new value, but all subsequent steps in a job will have access.\n\nYou can't overwrite the value of the default environment variables named `GITHUB_*` and `RUNNER_*`. Currently you can overwrite the value of the `CI` variable. However, it's not guaranteed that this will always be possible. For more information about the default environment variables, see Variables reference.",
+      "sha256": "99ab5ccdae293098e57a9df533517d54ef8075171466b65e35538ea488dabe7e"
+    },
+    {
+      "id": "github-docs-hashfiles-no-match",
+      "title": "Evaluate expressions in workflows and actions",
+      "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/expressions#hashfiles",
+      "capturedAt": "2026-09-24T20:17:51Z",
+      "text": "hashFiles\n\n`hashFiles(path)`\n\nReturns a single hash for the set of files that matches the `path` pattern. You can provide a single `path` pattern or multiple `path` patterns separated by commas. The `path` is relative to the `GITHUB_WORKSPACE` directory and can only include files inside of the `GITHUB_WORKSPACE`. This function calculates an individual SHA-256 hash for each matched file, and then uses those hashes to calculate a final SHA-256 hash for the set of files. If the `path` pattern does not match any files, this returns an empty string. For more information about SHA-256, see SHA-2.\n\nYou can use pattern matching characters to match file names. Pattern matching for `hashFiles` follows glob pattern matching and is case-insensitive on Windows. For more information about supported pattern matching characters, see the Patterns section in the `@actions/glob` documentation.",
+      "sha256": "cd86e9dd54e8087d040d476937b25591932df1c87ca3c0bc314457b0b6dfaf14"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "gha-permissions-v1",
+      "split": "development",
+      "question": "A GitHub Actions job sets permissions to contents: read and specifies no other token permissions. What access does its GITHUB_TOKEN have to the issues permission?",
+      "sourceId": "github-docs-permissions",
+      "expectedAnswer": "The issues permission is none because an explicitly configured permissions map disables permissions that it omits.",
+      "requiredFacts": [
+        "The issues permission is none.",
+        "Permissions omitted from an explicit permissions map are disabled."
+      ],
+      "supportQuote": "If you specify the access for any of these permissions, all of those that are not specified are set to `none`."
+    },
+    {
+      "id": "gha-concurrency-v1",
+      "split": "development",
+      "question": "Two workflow runs in the same repository use concurrency groups Deploy and deploy. Does changing the capitalization put them in different groups?",
+      "sourceId": "github-docs-concurrency",
+      "expectedAnswer": "No. Deploy and deploy identify the same concurrency group because group names ignore letter case.",
+      "requiredFacts": [
+        "Deploy and deploy identify the same concurrency group.",
+        "Concurrency group names are case insensitive."
+      ],
+      "supportQuote": "The concurrency group name is case insensitive. For example, `prod` and `Prod` will be treated as the same concurrency group."
+    },
+    {
+      "id": "gha-reusable-secrets-v1",
+      "split": "development",
+      "question": "Workflow A passes a secret to reusable workflow B, and B calls reusable workflow C without forwarding that secret. Does C automatically receive the secret from A?",
+      "sourceId": "github-docs-reusable-secrets",
+      "expectedAnswer": "No. B must pass the secret to C because secret passing reaches only the directly called workflow.",
+      "requiredFacts": [
+        "C does not automatically receive the secret from A.",
+        "B must pass the secret to C."
+      ],
+      "supportQuote": "Secrets are only passed to directly called workflow"
+    },
+    {
+      "id": "gha-matrix-parallelism-v1",
+      "split": "development",
+      "question": "A matrix expands into twelve job runs, but only three should execute simultaneously even when runners are free. Which job strategy setting should be used, and with what value?",
+      "sourceId": "github-docs-matrix-parallelism",
+      "expectedAnswer": "Set jobs.<job_id>.strategy.max-parallel to 3 to cap concurrent matrix jobs at three.",
+      "requiredFacts": [
+        "Use jobs.<job_id>.strategy.max-parallel.",
+        "Set its value to 3."
+      ],
+      "supportQuote": "To set the maximum number of jobs that can run simultaneously when using a `matrix` job strategy, use `jobs.<job_id>.strategy.max-parallel`."
+    },
+    {
+      "id": "gha-manual-trigger-v1",
+      "split": "evaluation",
+      "question": "A newly added workflow declares workflow_dispatch but exists only on a feature branch. What branch requirement is missing before its manual trigger can be used?",
+      "sourceId": "github-docs-manual-trigger",
+      "expectedAnswer": "The workflow file must also exist on the repository default branch.",
+      "requiredFacts": [
+        "The workflow must exist on the default branch."
+      ],
+      "supportQuote": "To trigger the `workflow_dispatch` event, your workflow must be in the default branch."
+    },
+    {
+      "id": "gha-environment-wait-v1",
+      "split": "evaluation",
+      "question": "An environment has a configured wait timer that delays a deployment job for 20 minutes. Does that waiting period add 20 minutes to billable execution time?",
+      "sourceId": "github-docs-environment-wait",
+      "expectedAnswer": "No. Time spent waiting on the environment wait timer is excluded from billable time.",
+      "requiredFacts": [
+        "The environment wait timer duration is not billable time."
+      ],
+      "supportQuote": "Wait time will not count towards your billable time."
+    },
+    {
+      "id": "gha-cache-update-v1",
+      "split": "evaluation",
+      "question": "A workflow needs to save changed dependency contents after a cache already exists. Can it modify that existing cache in place, or what must it create?",
+      "sourceId": "github-docs-cache-update",
+      "expectedAnswer": "It cannot modify the existing cache contents. It must create a new cache under a new key.",
+      "requiredFacts": [
+        "An existing cache cannot be modified.",
+        "Create a new cache with a new key."
+      ],
+      "supportQuote": "You cannot change the contents of an existing cache. Instead, you can create a new cache with a new key."
+    },
+    {
+      "id": "gha-artifact-retention-v1",
+      "split": "evaluation",
+      "question": "The applicable artifact retention limit is 30 days. Can an upload-artifact step override that limit by requesting retention-days: 60?",
+      "sourceId": "github-docs-artifact-retention",
+      "expectedAnswer": "No. The requested retention-days cannot be greater than the applicable 30-day retention limit.",
+      "requiredFacts": [
+        "retention-days: 60 cannot override a 30-day retention limit.",
+        "Requested artifact retention cannot exceed the applicable retention limit."
+      ],
+      "supportQuote": "The `retention-days` value cannot exceed the retention limit set by the repository, organization, or enterprise."
+    },
+    {
+      "id": "gha-oidc-permission-v1",
+      "split": "evaluation",
+      "question": "A workflow adds id-token: write for OpenID Connect. Does that permission alone authorize the workflow to modify AWS resources?",
+      "sourceId": "github-docs-oidc-permission",
+      "expectedAnswer": "No. Granting id-token: write does not itself grant permission to modify AWS resources.",
+      "requiredFacts": [
+        "id-token: write alone does not grant resource modification permission."
+      ],
+      "supportQuote": "Setting `id-token: write` in the workflow’s permissions does not give the workflow permission to modify or write to any resources."
+    },
+    {
+      "id": "gha-service-hostname-v1",
+      "split": "evaluation",
+      "question": "A job runs inside a Docker container and defines a service container with the workflow label database. Which hostname should the job use for that service?",
+      "sourceId": "github-docs-service-hostname",
+      "expectedAnswer": "Use database as the hostname, matching the service label in the workflow.",
+      "requiredFacts": [
+        "The service hostname is database.",
+        "A service container hostname matches its workflow label."
+      ],
+      "supportQuote": "The hostname of the service container is automatically mapped to the label name."
+    },
+    {
+      "id": "gha-env-creator-step-v1",
+      "split": "evaluation",
+      "question": "A step appends COLOR=green to GITHUB_ENV. Does that write make the new environment variable value available to the same step that writes it?",
+      "sourceId": "github-docs-env-creator-step",
+      "expectedAnswer": "No. The step that writes the environment file does not gain access to the new value from that write.",
+      "requiredFacts": [
+        "Writing GITHUB_ENV does not expose the new value to the creating step."
+      ],
+      "supportQuote": "The step that creates or updates the environment variable does not have access to the new value"
+    },
+    {
+      "id": "gha-hashfiles-no-match-v1",
+      "split": "evaluation",
+      "question": "The expression hashFiles('**/package-lock.json') matches no files in the workspace. What value does hashFiles return?",
+      "sourceId": "github-docs-hashfiles-no-match",
+      "expectedAnswer": "It returns an empty string.",
+      "requiredFacts": [
+        "hashFiles returns an empty string when no files match."
+      ],
+      "supportQuote": "If the `path` pattern does not match any files, this returns an empty string."
+    }
+  ]
+}

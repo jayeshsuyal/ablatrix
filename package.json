@@ -11,7 +11,8 @@
     "test:e2e": "npm run build && playwright test",
     "local": "npm run build && npm start",
     "replay": "node --import tsx server/replay.ts",
-    "holdout": "node --import tsx server/holdout.ts"
+    "holdout": "node --import tsx server/holdout.ts",
+    "pilot": "node --import tsx server/pilot-cli.ts"
   },
   "dependencies": {
     "@sapiom/agent": "0.14.2",

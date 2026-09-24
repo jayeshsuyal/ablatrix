@@ -7,7 +7,7 @@ export default defineConfig({
   reporter: 'list',
   use: { baseURL: 'http://127.0.0.1:4174', browserName: 'chromium', headless: true },
   webServer: {
-    command: 'mkdir -p work && rm -f work/e2e.sqlite* && PORT=4174 ABLATRIX_DB=work/e2e.sqlite ABLATRIX_MODE=fixture npm start',
+    command: 'mkdir -p work && rm -f work/e2e.sqlite* work/e2e-pilot.sqlite* && PORT=4174 ABLATRIX_DB=work/e2e.sqlite ABLATRIX_PILOT_DB=work/e2e-pilot.sqlite ABLATRIX_MODE=fixture npm start',
     url: 'http://127.0.0.1:4174/api/health',
     reuseExistingServer: false,
     timeout: 30_000
