@@ -32,7 +32,7 @@ The dashboard compares the latest optimization's paired tasks, including failed 
 
 ## Live Sapiom path
 
-The research definition lives in `sapiom-agent/index.ts`. It uses Sapiom `search.webSearch` and `search.scrape` inside a deployed agent run. The scrape URL comes from the curated task's checked source, never from search results or browser input. The existing SDK adapter can call a deployed agent, but the application does not invoke it because its result lacks priced usage. Environment flags alone do not unlock paid calls. See [the accounting boundary](docs/sapiom-accounting.md) for the exact missing provider contracts. No paid Sapiom call or deployment has been made.
+The research definition lives in `sapiom-agent/index.ts`. It scrapes only curated checked URLs. The `search-native` setting also obtains a search hypothesis, but both settings draft the answer from checked excerpts and require an exact supporting quote from a returned source. Quote presence is a provenance check, not semantic proof that the answer is correct. The existing SDK adapter can call a deployed agent, but the application does not invoke it because its result lacks priced usage. Environment flags alone do not unlock paid calls. See [the accounting boundary](docs/sapiom-accounting.md) for the exact missing provider contracts. No paid Sapiom call or deployment has been made.
 
 Sapiom search and agent SDK contracts were checked against the installed pinned package types and [official search documentation](https://docs.sapiom.ai/capabilities/search). Sapiom's [call-surface guide](https://docs.sapiom.ai/guides/choose-a-call-surface) describes deployed agent runs.
 

@@ -35,6 +35,12 @@ export class OptimizationRunner {
   private provider: MeteredLiveProvider;
   constructor(private store: RunStore, private experiments: ExperimentRunner, private mode: 'fixture' | 'live', provider?: MeteredLiveProvider) {
     this.provider = provider ?? new SapiomLiveProvider();
+    for (const record of store.pendingOptimizations()) {
+      record.status = 'failed';
+      record.error = 'Proposal was interrupted before a candidate experiment was queued.';
+      record.updatedAt = new Date().toISOString();
+      store.saveOptimization(record);
+    }
   }
   async create(raw: unknown): Promise<OptimizationRecord> {
     if (this.mode === 'live' && (!this.provider.readiness().ready || !this.provider.readiness().remoteCapEvidence)) {
@@ -90,7 +96,15 @@ export class OptimizationRunner {
         throw error;
       }
     } else proposed = fixtureProposal(baseline, this.store);
-    const settings = researchConfig.parse(proposed);
+    let settings: ResearchConfig;
+    try { settings = researchConfig.parse(proposed); }
+    catch (error) {
+      record.status = 'failed';
+      record.error = 'Modifier returned invalid candidate settings.';
+      record.updatedAt = new Date().toISOString();
+      this.store.saveOptimization(record);
+      throw error;
+    }
     if (!allowedCandidateChange(settings) || candidateId(settings) === candidateId(baselineConfig)) {
       record.status = 'failed'; record.error = 'Modifier proposal exceeds the allowlisted one-change boundary';
       this.store.saveOptimization(record); throw new Error(record.error);

@@ -11,7 +11,7 @@ type Run = {
   costStatus: string; startedAt: string;
 };
 type Task = { id: string; split: string; entity: string; question: string };
-type Report = { labelNote: string; sampleSize: number; correct: number; qualityRate: number | null; costPerCorrectUsd: number | null; uncertainty: string; evaluations: { taskId: string; split: string; correct: boolean; fixture: boolean; deterministic: { answerTermsPresent: boolean; approvedSourcePresent: boolean; citationsResolve: boolean } }[] };
+type Report = { labelNote: string; sampleSize: number; correct: number; qualityRate: number | null; costPerCorrectUsd: number | null; costNote: string; uncertainty: string; evaluations: { taskId: string; split: string; correct: boolean; fixture: boolean; deterministic: { answerTermsPresent: boolean; approvedSourcePresent: boolean; citationsResolve: boolean } }[] };
 type Experiment = { id: string; candidateId: string; mode: 'fixture' | 'live'; status: string; taskIds: string[]; runIds: string[]; steps: { at: string; message: string }[]; error: string | null; maxAttempts: number; maxDurationMs: number; maxSpendUsd: number; cancelRequested: boolean };
 type Optimization = { id: string; status: string; baselineExperimentId: string; candidateExperimentId: string; candidateId: string; settings: { modelAssignment: string; promptStyle: string; cacheTtlMinutes: number; maxSources: number; parallelReads: boolean }; investigation: string; proposal: string; decision: string; challenge: string; error: string | null };
 type ComparisonSide = { status: string; correct: boolean; attempts: number; durationMs: number | null; costUsd: number | null; errors: number; sources: { title: string; url: string }[] };
@@ -177,6 +177,7 @@ function App() {
         <section className="panel quality-panel"><div className="section-label">03 / EVALUATION</div><h2>Quality evidence</h2>
           <div className="metrics"><div><span>Live sample</span><strong>{report?.sampleSize ?? 0}</strong></div><div><span>Correct</span><strong>{report?.correct ?? 0}</strong></div><div><span>Cost / correct</span><strong>{report?.costPerCorrectUsd === null || report?.costPerCorrectUsd === undefined ? 'Unknown' : `$${report.costPerCorrectUsd.toFixed(4)}`}</strong></div></div>
           <p className="muted-text">{report?.uncertainty ?? 'No report yet.'}</p>
+          {report && <p className="muted-text">{report.costNote}</p>}
           {report && <p className="muted-text">{report.labelNote}</p>}
           {report?.evaluations.map(item => <div className="eval-row" key={item.taskId}><strong>{item.taskId}</strong><span>{item.fixture ? 'Fixture · excluded' : item.correct ? 'Passed checks' : 'Failed checks'}</span><small>Answer terms {item.deterministic.answerTermsPresent ? '✓' : '×'} · Approved source {item.deterministic.approvedSourcePresent ? '✓' : '×'} · Citations {item.deterministic.citationsResolve ? '✓' : '×'}</small></div>)}
         </section>

@@ -93,3 +93,25 @@ test('interrupted paired fixture holdout resumes without rerunning completed arm
     assert.equal(store.getOptimization(proposed.id)?.holdoutRunIds?.length, 2);
   } finally { store.close(); rmSync(directory, { recursive: true, force: true }); }
 });
+
+test('an interrupted proposal is marked failed on startup', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'ablatrix-proposal-recovery-'));
+  const path = join(directory, 'runs.sqlite');
+  let store = new RunStore(path);
+  try {
+    const at = new Date().toISOString();
+    store.saveOptimization({
+      id: 'pending', mode: 'fixture', status: 'running', baselineExperimentId: 'baseline',
+      candidateExperimentId: '', candidateId: 'pending',
+      settings: { modelAssignment: 'search-native', promptStyle: 'full', cacheTtlMinutes: 0,
+        maxSources: 1, parallelReads: false }, createdAt: at, updatedAt: at,
+      investigation: '', proposal: '', decision: 'pending', challenge: '', error: null
+    });
+    store.close();
+    store = new RunStore(path);
+    const runner = new ExperimentRunner(store, 'fixture');
+    new OptimizationRunner(store, runner, 'fixture');
+    assert.equal(store.getOptimization('pending')?.status, 'failed');
+    assert.match(store.getOptimization('pending')?.error ?? '', /interrupted/);
+  } finally { store.close(); rmSync(directory, { recursive: true, force: true }); }
+});

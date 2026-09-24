@@ -47,3 +47,24 @@ test('pilot rubric catches missing terms and citation/source mismatch but cannot
   assert.equal(evaluate({ ...base, output: { ...base.output!, answer: 'GitHub is not a developer platform.' } })?.correct, true);
   assert.equal(evaluate({ ...base, status: 'failed', output: null })?.correct, false);
 });
+
+test('a newer fixture run does not erase a live sample or add holdout cost', () => {
+  const at = new Date().toISOString();
+  const live: RunRecord = {
+    id: 'live', taskId: 'github-platform-v1', candidateId: 'baseline', mode: 'live',
+    provider: 'metered', model: 'test', status: 'completed',
+    input: { entity: 'GitHub', question: 'What does GitHub provide for software teams?' },
+    output: { answer: 'GitHub is a developer platform.',
+      facts: [{ claim: 'developer platform', sourceUrls: ['https://github.com/about'] }],
+      sources: [{ title: 'GitHub', url: 'https://github.com/about', snippet: '' }] },
+    error: null, startedAt: at, finishedAt: at, durationMs: 1,
+    costUsd: 0.1, costStatus: 'priced', usage: null
+  };
+  const fixture = { ...live, id: 'fixture', mode: 'fixture' as const, costUsd: null,
+    costStatus: 'fixture' as const };
+  const holdout = { ...live, id: 'holdout', taskId: 'mozilla-firefox-v1', costUsd: 0.9 };
+  const summary = report([fixture, live, holdout]);
+  assert.equal(summary.sampleSize, 1);
+  assert.equal(summary.correct, 1);
+  assert.equal(summary.costPerCorrectUsd, 0.1);
+});

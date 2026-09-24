@@ -62,6 +62,10 @@ export class RunStore {
     return (this.db.prepare('SELECT document FROM runs ORDER BY started_at DESC LIMIT 100').all() as { document: string }[])
       .map(row => JSON.parse(row.document) as RunRecord);
   }
+  allRunsForReport(): RunRecord[] {
+    return (this.db.prepare('SELECT document FROM runs ORDER BY started_at DESC').all() as { document: string }[])
+      .map(row => JSON.parse(row.document) as RunRecord);
+  }
   saveExperiment(experiment: ExperimentRecord): void {
     this.db.prepare(`INSERT INTO experiments (id,status,created_at,document) VALUES (?,?,?,?)
       ON CONFLICT(id) DO UPDATE SET status=excluded.status, document=excluded.document`)
@@ -101,6 +105,11 @@ export class RunStore {
   listOptimizations(): OptimizationRecord[] {
     return (this.db.prepare('SELECT document FROM optimizations ORDER BY created_at DESC LIMIT 100').all() as { document: string }[])
       .map(row => JSON.parse(row.document) as OptimizationRecord);
+  }
+  pendingOptimizations(): OptimizationRecord[] {
+    return (this.db.prepare('SELECT document FROM optimizations').all() as { document: string }[])
+      .map(row => JSON.parse(row.document) as OptimizationRecord)
+      .filter(item => item.status === 'running' && !item.candidateExperimentId);
   }
   reserveCharge(id: string, kind: 'research' | 'proposal', maxCents: number, capCents: number, ownerId = id): void {
     if (!Number.isSafeInteger(maxCents) || maxCents <= 0 || !Number.isSafeInteger(capCents) || capCents <= 0) throw new Error('Invalid budget reservation');

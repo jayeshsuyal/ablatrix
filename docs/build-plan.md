@@ -10,4 +10,6 @@
 | PR6 Release | Browser E2E, restart/security checks, docs, release evidence | Merged: #6, `5407b04`; CI and local smoke pass; paid acceptance pending |
 | Corrective follow-up | Durable shared budget, metered orchestration test path, paired synthetic holdout, honest live readiness | Merged: #7, `dd7b0fd`; CI and merged-main tests/build pass; paid acceptance pending Sapiom charge and cap contracts |
 
+Current audit follow-up on `codex/goated-demo`: live-report fixture isolation and full-history diagnostics, interrupted and malformed proposal recovery, and checked-source quote provenance are implemented locally. The branch passes 25 API tests, four Chromium browser tests, and a TypeScript/Vite build. Paid acceptance remains gated on verified Sapiom charge and cap contracts.
+
 Each slice needs tests, build, review, merged-main verification, and a smoke test. Fixture observations never count as live benchmark evidence. Paid acceptance requires credentials, a numeric cap, a verified remote spending rule, and a supported settled charge source for both agent and Router calls.

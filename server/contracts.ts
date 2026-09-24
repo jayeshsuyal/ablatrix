@@ -15,12 +15,13 @@ export const source = z.object({
 
 export const researchOutput = z.object({
   answer: z.string().min(1),
-  facts: z.array(z.object({ claim: z.string().min(1), sourceUrls: z.array(z.url()).min(1) })).min(1),
+  facts: z.array(z.object({ claim: z.string().min(1), sourceUrls: z.array(z.url()).min(1), supportQuote: z.string().min(1).optional() })).min(1),
   sources: z.array(source).min(1)
 }).refine(value => {
-  const urls = new Set(value.sources.map(item => item.url));
-  return value.facts.every(fact => fact.sourceUrls.every(url => urls.has(url)));
-}, 'Every fact citation must match a returned source');
+  const sourcesByUrl = new Map(value.sources.map(item => [item.url, item.snippet]));
+  return value.facts.every(fact => fact.sourceUrls.every(url => sourcesByUrl.has(url)) &&
+    (!fact.supportQuote || fact.sourceUrls.some(url => sourcesByUrl.get(url)?.includes(fact.supportQuote!))));
+}, 'Every fact citation and support quote must match a returned source');
 
 export type ResearchInput = z.infer<typeof researchInput>;
 export type ResearchOutput = z.infer<typeof researchOutput>;

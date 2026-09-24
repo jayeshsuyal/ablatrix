@@ -60,7 +60,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       });
       if (req.method === 'GET' && path === '/api/runs') return json(res, 200, { runs: store.list() });
       if (req.method === 'GET' && path === '/api/tasks') return json(res, 200, publicTasks());
-      if (req.method === 'GET' && path === '/api/report') return json(res, 200, report(store.list()));
+      if (req.method === 'GET' && path === '/api/report') return json(res, 200, report(store.allRunsForReport()));
       if (req.method === 'GET' && path === '/api/experiments') return json(res, 200, { experiments: store.listExperiments() });
       if (req.method === 'GET' && path === '/api/optimizations') return json(res, 200, { optimizations: optimizer.list() });
       if (/^\/api\/optimizations\/[a-f0-9-]{36}\/holdout$/.test(path)) {
