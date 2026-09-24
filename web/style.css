@@ -1,7 +1,394 @@
-:root{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e9edf2;background:#0b1018;font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,input,textarea{font:inherit}button{cursor:pointer}.shell{display:grid;grid-template-columns:260px 1fr;min-height:100vh}.sidebar{background:#101721;border-right:1px solid #26313d;padding:28px 18px;display:flex;flex-direction:column}.brand{display:flex;gap:12px;align-items:center;padding:0 10px 48px}.brand strong{display:block;font-size:21px;letter-spacing:-.05em}.brand small{display:block;color:#7f91a4;font-size:11px;letter-spacing:.09em;text-transform:uppercase}.mark{width:34px;height:34px;display:grid;place-items:center;background:#b4f089;color:#102219;border-radius:9px;font-size:21px;font-weight:700}.sidebar-heading,.section-label,.eyebrow{font-size:11px;letter-spacing:.16em;color:#7890a0;font-weight:700}.sidebar-heading{padding:0 10px 12px}.muted{color:#788999;font-size:13px;padding:0 10px}.run-list{display:grid;gap:6px}.run-item{text-align:left;border:1px solid transparent;background:transparent;color:#bdc8d0;border-radius:9px;padding:11px}.run-item.active{background:#1b2a2b;border-color:#41604a;color:#eaf8e7}.run-item strong,.run-item span{display:block}.run-item strong{font-size:13px}.run-item span{font-size:11px;color:#84949f;margin-top:5px}.sidebar-foot{margin-top:auto;padding:20px 10px 0;border-top:1px solid #26313d;color:#6e8091;font-size:12px;line-height:1.7}main{min-width:0}header{display:flex;justify-content:space-between;gap:20px;padding:39px clamp(24px,5vw,72px) 34px;border-bottom:1px solid #25313c}h1,h2,p{margin-top:0}h1,h2{letter-spacing:-.045em}h1{font-size:34px;margin:9px 0 9px}header p{color:#90a0ae;font-size:14px;margin:0}.mode{align-self:flex-start;padding:8px 11px;border-radius:100px;font-size:12px;white-space:nowrap}.mode.fixture{background:#39311e;color:#e9c578}.mode.live{background:#1b3928;color:#a5e0af}.content{max-width:1180px;margin:auto;padding:36px clamp(24px,5vw,72px);display:grid;grid-template-columns:minmax(285px,.87fr) minmax(360px,1.13fr);gap:22px}.notice{grid-column:1/-1;display:flex;gap:15px;align-items:center;background:#332a1b;border:1px solid #5a4826;color:#e8c884;padding:14px 18px;border-radius:10px;font-size:13px}.notice span{color:#c3b499}.panel{background:#121c27;border:1px solid #283746;border-radius:14px;padding:25px;min-height:380px}h2{font-size:23px;margin:11px 0 23px}form{display:grid;gap:20px}label{display:grid;gap:9px;color:#bccbd4;font-size:13px;font-weight:600}input,textarea{background:#0d1520;border:1px solid #334555;border-radius:8px;color:#f0f5f5;padding:12px 13px;outline:none;resize:vertical}input:focus,textarea:focus{border-color:#a8e57e;box-shadow:0 0 0 3px #a8e57e22}.primary{background:#b4f089;border:0;color:#112017;border-radius:8px;padding:13px 16px;font-weight:700;display:flex;justify-content:space-between;align-items:center}.primary:hover{background:#c7ffa1}.primary:disabled{opacity:.55;cursor:wait}.result-top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}.result-top h2{margin-bottom:5px}.result-top p{font-size:13px;color:#91a3b0}.status{text-transform:capitalize;font-size:11px;padding:6px 9px;border-radius:5px;background:#20402c;color:#a9edb1}.status.failed{background:#4a292a;color:#f2a1a1}.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0;border-top:1px solid #2a3946;border-bottom:1px solid #2a3946;padding:17px 0}.metrics div{display:grid;gap:8px}.metrics span{font-size:10px;text-transform:uppercase;color:#768d9e;letter-spacing:.1em}.metrics strong{font-size:14px}.mono{font-family:monospace}.answer{margin-top:28px}.answer p{font-size:15px;line-height:1.65;margin-top:13px;color:#e5eced}.sources{margin-top:28px}.sources a{display:block;color:#d9ebda;text-decoration:none;border:1px solid #31424a;border-radius:8px;padding:13px;margin-top:11px}.sources a:hover{border-color:#a8e57e}.sources a strong,.sources a span{display:block}.sources a strong{font-size:13px}.sources a span{font-size:11px;color:#9fc688;overflow-wrap:anywhere;margin-top:4px}.sources a p{font-size:12px;color:#8797a3;margin:8px 0 0}.empty{text-align:center;color:#8093a0;padding:53px 15px}.empty-icon{font-size:40px;color:#a8e57e}.empty h2{color:#dce7e9;margin:12px 0}.empty p{font-size:13px}.error{grid-column:1/-1;color:#f0a7a7;background:#3c252b;border:1px solid #70404a;padding:12px;border-radius:8px;font-size:13px}@media(max-width:900px){.content{grid-template-columns:1fr}.notice{display:block}.notice span{display:block;margin-top:4px}}@media(max-width:620px){.shell{grid-template-columns:1fr}.sidebar{padding:15px;border-right:0;border-bottom:1px solid #26313d}.brand{padding:0}.sidebar-heading,.run-list,.sidebar-foot,.sidebar .muted{display:none}header{padding:26px 22px;flex-wrap:wrap}h1{font-size:30px}.content{padding:22px}.panel{min-height:0}}
-select{background:#0d1520;border:1px solid #334555;border-radius:8px;color:#f0f5f5;padding:12px 13px}select:focus{outline:2px solid #a8e57e}.quality-panel{grid-column:1/-1;min-height:0}.quality-panel h2{margin-bottom:8px}.quality-panel .metrics{max-width:700px}.muted-text{color:#91a3b0;font-size:13px}.eval-row{display:grid;grid-template-columns:1fr auto;gap:5px;border-top:1px solid #2a3946;padding:12px 0;font-size:13px}.eval-row span{color:#b7c7b7}.eval-row small{grid-column:1/-1;color:#8093a0}
-.experiment-start{width:240px;margin:18px 0 20px}.experiment{border-top:1px solid #2a3946;padding:16px 0}.experiment-head{display:flex;gap:15px;align-items:center;text-transform:capitalize;font-size:13px}.experiment-head span{color:#91a3b0}.experiment-head button{margin-left:auto;background:#273543;color:#dce7e9;border:1px solid #526373;border-radius:6px;padding:6px 10px}.experiment ol{color:#8395a2;font-size:12px;line-height:1.8;padding-left:20px;margin-bottom:0}
-.runner-settings{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}.runner-settings label{font-size:12px}.runner-settings select,.runner-settings input{min-width:0;width:100%}@media(max-width:700px){.runner-settings{grid-template-columns:1fr}}
-.opt-controls{display:flex;gap:14px;align-items:end;margin:20px 0}.opt-controls label{flex:1}.opt-controls button{min-width:220px}.optimization{border-top:1px solid #2a3946;padding:18px 0}.opt-stages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}.opt-stages>div{background:#0d1520;border:1px solid #2a3946;border-radius:8px;padding:14px;min-width:0}.opt-stages span{font-size:10px;color:#a8e57e;letter-spacing:.12em;font-weight:700}.opt-stages p{font-size:12px;color:#b3c1c8;line-height:1.5;margin:9px 0}.opt-stages code{display:block;white-space:normal;overflow-wrap:anywhere;color:#879ca7;font-size:11px}@media(max-width:800px){.opt-stages{grid-template-columns:1fr}.opt-controls{display:grid}.opt-controls button{min-width:0}}
-.comparison-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}.comparison-summary>div{background:#0d1520;border:1px solid #31404a;border-radius:9px;padding:17px;display:grid;gap:9px}.comparison-summary span{font-size:10px;color:#8ba2ae;letter-spacing:.13em}.comparison-summary strong{font-size:20px;text-transform:capitalize}.comparison-summary small{color:#91a2ad}.comparison-rows{border-top:1px solid #2a3946;margin-top:20px}.comparison-row{padding:16px 0;border-bottom:1px solid #2a3946}.comparison-row.regression{border-left:3px solid #e58c84;padding-left:12px}.comparison-row>strong{display:block;font-size:14px;margin-bottom:9px}.comparison-row>div:nth-child(2){display:flex;gap:16px;color:#a7b6c0;font-size:12px;flex-wrap:wrap}.source-links{display:flex;gap:12px;margin-top:9px}.source-links a{color:#a8e57e;font-size:12px}.export-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.export-actions a{color:#c7edb5;text-decoration:none;border:1px solid #587047;border-radius:7px;padding:9px 12px;font-size:12px}.export-actions a:hover{background:#23352b}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #d2ffad;outline-offset:2px}@media(max-width:800px){.comparison-summary{grid-template-columns:1fr}}
-@media(max-width:620px){.sidebar-heading{display:block;padding:15px 0 6px}.run-list{display:flex;overflow-x:auto;gap:6px}.run-item{min-width:170px;flex:0 0 auto}.run-item span{white-space:nowrap}.sidebar{min-width:0}}
+
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#f0f1ec;background:#151817;font-size:14px;color-scheme:dark}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#151817}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed}a{color:inherit}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible,[tabindex="-1"]:focus-visible{outline:2px solid #a8deca;outline-offset:3px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.skip-link{position:absolute;top:-100px;left:12px;background:#a8deca;color:#101312;padding:10px;z-index:100}.skip-link:focus{top:8px}.app{min-height:100vh;background:#151817}.topbar{min-height:65px;background:#101312;border-bottom:1px solid #343c38;display:flex;align-items:center;gap:18px;padding:12px 25px}.wordmark{text-decoration:none;font-size:23px;font-weight:650;letter-spacing:-1px;white-space:nowrap}.wordmark span{color:#a8deca}.agent-label{color:#aeb9b2;font-size:12px;white-space:nowrap}.agent-label i{font-style:normal;padding:0 9px}.experiment-picker{min-width:165px;max-width:240px;margin-left:auto}.experiment-picker select{width:100%;border:1px solid #68766e;border-radius:4px;padding:7px 10px;background:#1c211f;color:#f0f1ec;font-size:11px}.utility-nav{display:flex;gap:4px}.utility-nav button{background:none;border:0;color:#aeb9b2;padding:8px;font-size:11px;white-space:nowrap}.utility-nav button:hover,.utility-nav button.active{color:#f0f1ec;text-decoration:underline;text-underline-offset:5px}.new-button,.primary{border:1px solid #a8deca;border-radius:4px;color:#101312;background:#a8deca;padding:8px 11px;font-size:12px;font-weight:700;white-space:nowrap}.new-button:hover,.primary:hover{background:#bee9d9}.new-button:disabled,.primary:disabled{opacity:.45}.mode-pill{color:#a8deca;font-size:10px;letter-spacing:.06em;white-space:nowrap}.mode-pill.blocked{color:#dfabb8}.global-error{display:flex;align-items:center;gap:10px;background:#35272b;color:#f0f1ec;border-left:2px solid #dfabb8;padding:10px 24px;font-size:12px}.global-error button{margin-left:auto;border:0;background:none;color:#f0f1ec;font-size:20px}.loading{padding:18px 28px;color:#aeb9b2}.bottom{background:#101312;border-top:1px solid #343c38;display:flex;align-items:flex-start;gap:22px;flex-wrap:wrap;padding:12px 25px;color:#aeb9b2;font-size:11px}.bottom>span:first-child{font-family:Consolas,monospace;letter-spacing:.08em}.bottom .readiness{margin-left:auto;max-width:400px}.readiness summary{cursor:pointer}.readiness p{line-height:1.5}.readiness dl div{display:flex;justify-content:space-between;gap:15px;padding:3px 0}.readiness dd{margin:0}.empty-state{max-width:880px;min-height:calc(100vh - 122px);padding:9vh 28px;margin:auto}.empty-state h1{font-size:clamp(30px,4vw,43px);font-weight:550;letter-spacing:-.04em;margin:6px 0}.empty-state>p{font-size:14px;color:#aeb9b2;max-width:560px;line-height:1.6}.empty-tasks{margin-top:50px;border-top:1px solid #343c38}.empty-tasks h2{font-size:16px;font-weight:550}.empty-tasks>div{display:grid;grid-template-columns:95px 135px 1fr;gap:14px;padding:11px 0;border-top:1px solid #343c38;font-size:12px}.empty-tasks span{color:#aeb9b2}.secondary-view{min-height:calc(100vh - 122px);padding:30px;max-width:1160px;margin:auto}.secondary-head{display:flex;justify-content:space-between;gap:20px;align-items:start;margin-bottom:25px}.secondary-head h1{font-size:36px;font-weight:550;margin:4px 0}.secondary-head p,.secondary-view>p{color:#aeb9b2}.run-grid{display:grid;grid-template-columns:230px minmax(0,1fr);gap:25px}.run-grid nav{border-right:1px solid #343c38}.run-grid nav button{display:block;width:100%;padding:12px 8px;border:0;border-bottom:1px solid #343c38;background:none;text-align:left;color:#f0f1ec}.run-grid nav button.selected{background:#27302b}.run-grid nav strong,.run-grid nav span{display:block}.run-grid nav span{font-size:11px;color:#aeb9b2}.run-detail{min-width:0}.run-detail p{color:#aeb9b2}.evidence-pane{padding:14px 0;border-top:1px solid #343c38}.pane-heading,.pane-facts{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:9px}.pane-facts,.field-label{font-size:11px;color:#aeb9b2}.answer-block p{color:#f0f1ec}.claims small{display:block;color:#aeb9b2}.source-list>div{padding:10px 0;border-top:1px solid #343c38}.source-list a{display:block;color:#a8deca;overflow-wrap:anywhere}.source-list p{font-size:12px}.attempts{margin-top:15px}.attempt{display:grid;gap:3px;padding:10px;border-top:1px solid #343c38;font-size:12px}.attempt span{color:#aeb9b2}.report-summary,.report-list>div{display:flex;gap:20px;border-top:1px solid #343c38;padding:12px 0}.report-list span,.board-note{color:#aeb9b2}.muted,.rb-muted{color:#aeb9b2}.inline-error,.rb-concern{color:#dfabb8}
+dialog{background:#1c211f;color:#f0f1ec;border:1px solid #68766e;border-radius:8px;width:min(540px,calc(100vw - 24px));max-height:88vh;padding:0}dialog::backdrop{background:#050706bd}.dialog-head{display:flex;justify-content:space-between;gap:15px;align-items:start;padding:20px 24px;border-bottom:1px solid #343c38}.dialog-head h2{font-size:24px;font-weight:550;margin:4px 0}.dialog-head button{border:0;background:none;color:#f0f1ec;font-size:24px}dialog form{padding:20px 24px;overflow:auto;max-height:calc(88vh - 90px)}dialog form>p{color:#aeb9b2;font-size:12px}dialog label{display:block;margin-bottom:12px;font-size:12px}dialog input:not([type=checkbox]),dialog select,dialog textarea{display:block;width:100%;margin-top:5px;padding:9px;background:#151817;border:1px solid #68766e;border-radius:4px;color:#f0f1ec}dialog textarea{min-height:90px}dialog fieldset{border:1px solid #343c38;margin-bottom:15px}dialog legend{font-size:11px}.task-check{display:flex;gap:10px;margin:0;padding:6px 0}.task-check strong,.task-check small{display:block}.task-check small{font-size:11px;color:#aeb9b2}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}dialog summary{cursor:pointer}
+
+  .rb-shell {
+    --rb-bg: #151817; --rb-top: #101312; --rb-panel: #1c211f;
+    --rb-soft: #242b27; --rb-text: #f0f1ec; --rb-muted: #aeb9b2;
+    --rb-line: #343c38; --rb-control: #68766e; --rb-accent: #a8deca;
+    --rb-rose: #dfabb8; --rb-row: 91px;
+    color-scheme: dark; color: var(--rb-text); background: var(--rb-bg);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    width: 100%; min-width: 0; overflow-wrap: break-word;
+  }
+  .rb-shell * { box-sizing: border-box; }
+  .rb-shell [hidden] { display: none !important; }
+  .rb-shell h1, .rb-shell h2, .rb-shell h3,
+  .rb-shell p { margin: 0; }
+  .rb-shell button { font: inherit; color: inherit; }
+  .rb-shell button { -webkit-tap-highlight-color: transparent; }
+  .rb-shell .rb-mono { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-variant-numeric: tabular-nums; }
+  .rb-shell .rb-kicker { font: 11px/1.5 "SFMono-Regular", Consolas, monospace; letter-spacing: .09em; text-transform: uppercase; color: var(--rb-muted); }
+  .rb-shell .rb-topbar { display: flex; align-items: center; gap: 24px; min-height: 65px; padding: 16px 25px; border-bottom: 1px solid var(--rb-line); background: var(--rb-top); }
+  .rb-shell .rb-wordmark { font-size: 23px; font-weight: 650; letter-spacing: -1px; line-height: 1; }
+  .rb-shell .rb-wordmark span { color: var(--rb-accent); padding-left: 2px; }
+  .rb-shell .rb-breadcrumb { display: flex; gap: 12px; align-items: center; color: var(--rb-muted); font-size: 12px; }
+  .rb-shell .rb-breadcrumb b { color: var(--rb-text); font-weight: 500; }
+  .rb-shell .rb-sample { margin-left: auto; color: var(--rb-muted); display: flex; gap: 8px; align-items: center; font-size: 11px; letter-spacing: .06em; white-space: nowrap; }
+  .rb-shell .rb-sample::before { content: ""; width: 5px; height: 5px; background: var(--rb-muted); border-radius: 50%; }
+  .rb-shell .rb-layout { display: grid; grid-template-columns: minmax(0, 1fr) 318px; }
+  .rb-shell .rb-workspace { min-width: 0; }
+  .rb-shell .rb-intro { padding: 29px 28px 23px; }
+  .rb-shell .rb-intro-meta { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .rb-shell .rb-unvalidated { padding: 3px 7px; border: 1px solid var(--rb-control); font-size: 11px; letter-spacing: .025em; border-radius: 3px; color: var(--rb-muted); }
+  .rb-shell h1 { max-width: 620px; font-size: clamp(28px, 3.5vw, 42px); line-height: 1.1; font-weight: 550; letter-spacing: -.055em; }
+  .rb-shell .rb-subtitle { color: var(--rb-muted); font-size: 13px; margin-top: 12px; }
+  .rb-shell .rb-decision { margin-top: 27px; border-left: 2px solid var(--rb-rose); padding: 1px 0 2px 13px; }
+  .rb-shell .rb-decision-title { display: flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 550; }
+  .rb-shell .rb-decision-title i, .rb-shell .rb-decision-title svg { color: var(--rb-rose); flex: 0 0 auto; }
+  .rb-shell .rb-decision p { color: var(--rb-muted); margin-top: 5px; font-size: 12px; }
+  .rb-shell .rb-diff { margin-top: 24px; display: grid; grid-template-columns: 1fr 1.35fr; border-block: 1px solid var(--rb-line); }
+  .rb-shell .rb-change { padding: 12px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; font-size: 12px; }
+  .rb-shell .rb-change + .rb-change { border-left: 1px solid var(--rb-line); padding-left: 18px; }
+  .rb-shell .rb-change-key { color: var(--rb-muted); }
+  .rb-shell .rb-from { color: var(--rb-muted); }
+  .rb-shell .rb-to { color: var(--rb-accent); }
+  .rb-shell .rb-arrow { color: var(--rb-muted); margin: 0 7px; }
+  .rb-shell .rb-diff-note { display: flex; gap: 7px; align-items: center; margin-top: 8px; color: var(--rb-muted); font-size: 11px; }
+  .rb-shell .rb-analysis { padding: 0 28px 22px; }
+  .rb-shell .rb-sectionbar { display: flex; justify-content: space-between; gap: 14px; align-items: center; padding-top: 4px; margin-bottom: 17px; }
+  .rb-shell h2 { font-size: 17px; letter-spacing: -.035em; font-weight: 550; }
+  .rb-shell .rb-segments { display: flex; gap: 2px; padding: 3px; background: var(--rb-top); border: 1px solid var(--rb-control); border-radius: 5px; }
+  .rb-shell .rb-segments button { padding: 4px 8px; background: transparent; border: 0; border-radius: 2px; font-size: 11px; color: var(--rb-muted); }
+  .rb-shell .rb-segments button[aria-pressed="true"] { color: var(--rb-text); background: var(--rb-soft); }
+  .rb-shell .rb-segments button:hover { color: var(--rb-text); }
+  .rb-shell .rb-chart-meta { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 7px 15px; font-size: 11px; color: var(--rb-muted); margin-bottom: 12px; }
+  .rb-shell .rb-legend { display: flex; gap: 14px; }
+  .rb-shell .rb-legend span { display: inline-flex; gap: 5px; align-items: center; }
+  .rb-shell .rb-key-a { width: 14px; height: 3px; background: var(--rb-muted); }
+  .rb-shell .rb-key-b { width: 14px; height: 7px; background: var(--rb-accent); }
+  .rb-shell .rb-chart-head { display: grid; grid-template-columns: 164px minmax(0, 1fr) 60px; gap: 10px; padding: 0 11px 8px; color: var(--rb-muted); font-size: 11px; border-bottom: 1px solid var(--rb-line); }
+  .rb-shell .rb-axis { display: flex; justify-content: space-between; padding-right: 30px; }
+  .rb-shell .rb-delta-head { text-align: right; }
+  .rb-shell .rb-cases { display: grid; }
+  .rb-shell .rb-case { position: relative; border: 0; border-bottom: 1px solid var(--rb-line); text-align: left; padding: 15px 11px; width: 100%; min-height: var(--rb-row); display: grid; grid-template-columns: 164px minmax(0, 1fr) 60px; align-items: center; gap: 10px; background: transparent; }
+  .rb-shell .rb-case:hover { background: #202623; }
+  .rb-shell .rb-case[aria-pressed="true"] { background: #272e29; }
+  .rb-shell .rb-case[aria-pressed="true"]::before { content: ""; position: absolute; top: 13px; bottom: 13px; left: -1px; width: 2px; background: var(--rb-text); }
+  .rb-shell .rb-case-name { display: flex; gap: 8px; font-size: 13px; font-weight: 550; line-height: 1.4; }
+  .rb-shell .rb-case-num { color: var(--rb-muted); font-size: 11px; font-weight: 400; padding-top: 2px; }
+  .rb-shell .rb-case-state { margin-top: 6px; margin-left: 21px; color: var(--rb-muted); font-size: 11px; display: flex; gap: 5px; align-items: center; }
+  .rb-shell .rb-case-state.rb-attention { color: var(--rb-rose); }
+  .rb-shell .rb-case-state svg { flex: 0 0 auto; width: 12px; height: 12px; }
+  .rb-shell .rb-plot { position: relative; padding-right: 30px; min-width: 0; }
+  .rb-shell .rb-guides { position: absolute; inset: -17px 30px -17px 0; display: flex; justify-content: space-between; pointer-events: none; }
+  .rb-shell .rb-guides span { display: block; width: 1px; height: 100%; background: var(--rb-line); opacity: .65; }
+  .rb-shell .rb-bar-track { position: relative; height: 23px; display: flex; align-items: center; }
+  .rb-shell .rb-bar { height: 3px; background: var(--rb-muted); position: relative; width: var(--rb-w); min-width: 1px; }
+  .rb-shell .rb-bar.rb-b { height: 8px; background: var(--rb-accent); }
+  .rb-shell .rb-bar-value { position: absolute; left: calc(var(--rb-w) + 6px); font-size: 11px; line-height: 1; white-space: nowrap; }
+  .rb-shell .rb-delta { font-size: 13px; text-align: right; }
+  .rb-shell .rb-delta small { display: block; color: var(--rb-muted); font-size: 11px; margin-top: 3px; }
+  .rb-shell .rb-chart-note { color: var(--rb-muted); font-size: 11px; margin-top: 12px; max-width: 530px; }
+  .rb-shell .rb-footing { margin: 2px 28px 25px; padding-top: 16px; border-top: 1px solid var(--rb-line); display: flex; gap: 18px; align-items: center; justify-content: space-between; }
+  .rb-shell .rb-footing p { color: var(--rb-muted); font-size: 11px; }
+  .rb-shell .rb-quiet-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; background: transparent; border: 1px solid var(--rb-control); padding: 8px 10px; border-radius: 4px; font-size: 12px; white-space: nowrap; }
+  .rb-shell .rb-quiet-button:hover { background: var(--rb-soft); }
+  .rb-shell .rb-inspector { min-width: 0; background: var(--rb-panel); border-left: 1px solid var(--rb-line); display: flex; flex-direction: column; }
+  .rb-shell .rb-inspector-top { padding: 25px 22px 19px; }
+  .rb-shell .rb-inspector-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 19px; }
+  .rb-shell .rb-pagination { display: flex; gap: 4px; align-items: center; }
+  .rb-shell .rb-pagination button { width: 29px; height: 29px; padding: 0; border: 1px solid var(--rb-control); background: transparent; border-radius: 3px; display: grid; place-items: center; }
+  .rb-shell .rb-pagination button:disabled { opacity: .3; }
+  .rb-shell .rb-pagination span { font-size: 11px; color: var(--rb-muted); margin-right: 5px; }
+  .rb-shell .rb-inspector h2 { font-size: 22px; letter-spacing: -.04em; margin-bottom: 8px; }
+  .rb-shell .rb-inspector-status { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: var(--rb-muted); }
+  .rb-shell .rb-inspector-status.rb-attention { color: var(--rb-rose); }
+  .rb-shell .rb-question { margin-top: 18px !important; font-size: 14px; line-height: 1.55; }
+  .rb-shell .rb-tabs { display: flex; gap: 22px; padding: 0 22px; border-bottom: 1px solid var(--rb-line); }
+  .rb-shell .rb-tabs button { font-size: 12px; padding: 11px 0 12px; margin-bottom: -1px; color: var(--rb-muted); border: 0; border-bottom: 2px solid transparent; background: transparent; }
+  .rb-shell .rb-tabs button[aria-pressed="true"] { color: var(--rb-text); border-bottom-color: var(--rb-text); }
+  .rb-shell .rb-detail-body { padding: 22px; flex: 1; min-height: 306px; }
+  .rb-shell .rb-answer { padding-bottom: 22px; }
+  .rb-shell .rb-answer + .rb-answer { border-top: 1px solid var(--rb-line); padding-top: 20px; }
+  .rb-shell .rb-answer-label { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .rb-shell .rb-letter { display: inline-grid; place-items: center; width: 20px; height: 20px; border: 1px solid var(--rb-control); font: 11px/1 "SFMono-Regular", Consolas, monospace; border-radius: 2px; }
+  .rb-shell .rb-letter.rb-candidate { border-color: var(--rb-accent); background: var(--rb-accent); color: var(--rb-top); }
+  .rb-shell .rb-answer-label strong { font-size: 11px; text-transform: uppercase; letter-spacing: .045em; font-weight: 500; }
+  .rb-shell .rb-answer-label small { font-size: 11px; color: var(--rb-muted); margin-left: auto; }
+  .rb-shell .rb-answer-text { font-size: 15px; line-height: 1.65; letter-spacing: -.01em; }
+  .rb-shell .rb-citation { padding: 0 2px; border: 0; background: transparent; color: var(--rb-accent); text-decoration: underline; text-underline-offset: 3px; }
+  .rb-shell .rb-answer-check { font-size: 11px; color: var(--rb-muted); margin-top: 10px !important; display: flex; gap: 5px; align-items: center; }
+  .rb-shell .rb-answer-check.rb-attention { color: var(--rb-rose); }
+  .rb-shell .rb-insight { font-size: 12px; color: var(--rb-muted); border-top: 1px solid var(--rb-line); padding-top: 14px; }
+  .rb-shell .rb-text-button { border: 0; padding: 0; margin-top: 12px; background: transparent; color: var(--rb-text); display: inline-flex; align-items: center; gap: 6px; font-size: 12px; text-decoration: underline; text-underline-offset: 4px; }
+  .rb-shell .rb-inspector-foot { border-top: 1px solid var(--rb-line); padding: 15px 22px; display: flex; align-items: center; gap: 8px; color: var(--rb-muted); font-size: 11px; }
+  .rb-shell .rb-source-head { display: flex; justify-content: space-between; font-size: 11px; color: var(--rb-muted); margin-bottom: 12px; }
+  .rb-shell .rb-source { border-left: 1px solid var(--rb-control); padding-left: 12px; margin-bottom: 22px; }
+  .rb-shell .rb-source h3 { font-size: 14px; font-weight: 500; margin-bottom: 3px; }
+  .rb-shell .rb-source-domain { font-size: 11px; color: var(--rb-muted); }
+  .rb-shell .rb-source p { font-size: 13px; line-height: 1.7; margin-top: 12px; }
+  .rb-shell .rb-source .rb-snippet-label { margin-top: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--rb-muted); }
+  .rb-shell .rb-mapping { display: grid; gap: 0; margin-top: 10px; }
+  .rb-shell .rb-mapping div { display: flex; align-items: center; gap: 8px; padding: 12px 0; border-top: 1px solid var(--rb-line); font-size: 12px; }
+  .rb-shell .rb-mapping .rb-attention { color: var(--rb-rose); }
+  .rb-shell .rb-attempt-group + .rb-attempt-group { margin-top: 22px; }
+  .rb-shell .rb-attempt { display: grid; grid-template-columns: 20px 1fr auto; gap: 9px; align-items: start; border-top: 1px solid var(--rb-line); padding: 13px 0; }
+  .rb-shell .rb-attempt-num { color: var(--rb-muted); font-size: 11px; padding-top: 2px; }
+  .rb-shell .rb-attempt strong { font-size: 12px; font-weight: 500; }
+  .rb-shell .rb-attempt p { color: var(--rb-muted); font-size: 11px; margin-top: 2px; }
+  .rb-shell .rb-attempt .rb-time { font-size: 12px; }
+  .rb-shell .rb-attempt .rb-attention { color: var(--rb-rose); }
+  .rb-shell .rb-bottom { background: var(--rb-top); padding: 12px 25px; border-top: 1px solid var(--rb-line); display: flex; align-items: center; flex-wrap: wrap; gap: 8px 20px; color: var(--rb-muted); font-size: 11px; letter-spacing: .015em; }
+  .rb-shell .rb-bottom .rb-live { margin-left: auto; display: flex; gap: 5px; align-items: center; }
+  .rb-shell .rb-dialog { width: min(530px, calc(100% - 30px)); padding: 0; border: 1px solid var(--rb-control); border-radius: 8px; background: var(--rb-panel); color: var(--rb-text); max-height: 90vh; }
+  .rb-shell .rb-dialog::backdrop { background: #050706bd; }
+  .rb-shell .rb-dialog-inner { padding: 26px; }
+  .rb-shell .rb-dialog-head { display: flex; gap: 16px; align-items: center; justify-content: space-between; margin-bottom: 22px; }
+  .rb-shell .rb-dialog h2 { font-size: 25px; }
+  .rb-shell .rb-dialog h3 { font-size: 16px; font-weight: 500; margin-bottom: 8px; }
+  .rb-shell .rb-dialog p { color: var(--rb-muted); font-size: 13px; }
+  .rb-shell .rb-ledger { margin: 20px 0; }
+  .rb-shell .rb-ledger div { display: grid; grid-template-columns: 120px 1fr; gap: 15px; padding: 10px 0; border-top: 1px solid var(--rb-line); font-size: 12px; }
+  .rb-shell .rb-ledger dt { color: var(--rb-muted); }
+  .rb-shell .rb-ledger dd { margin: 0; }
+  .rb-shell .rb-dialog-foot { border-top: 1px solid var(--rb-line); padding-top: 16px; }
+  .rb-shell .rb-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+  @media (min-width: 1200px) {
+    .rb-shell .rb-layout { grid-template-columns: minmax(0, 1fr) 350px; }
+    .rb-shell .rb-intro { padding-inline: 36px; }
+    .rb-shell .rb-analysis { padding-inline: 36px; }
+    .rb-shell .rb-footing { margin-inline: 36px; }
+    .rb-shell .rb-chart-head, .rb-shell .rb-case { grid-template-columns: 180px minmax(0, 1fr) 68px; }
+  }
+  @media (max-width: 900px) {
+    .rb-shell .rb-layout { grid-template-columns: minmax(0, 1fr) 290px; }
+    .rb-shell .rb-intro { padding-inline: 20px; }
+    .rb-shell .rb-analysis { padding-inline: 20px; }
+    .rb-shell .rb-footing { margin-inline: 20px; }
+    .rb-shell .rb-chart-head, .rb-shell .rb-case { grid-template-columns: 135px minmax(0, 1fr) 48px; gap: 8px; }
+    .rb-shell .rb-case-name { font-size: 12px; }
+    .rb-shell .rb-case-num { display: none; }
+    .rb-shell .rb-case-state { margin-left: 0; }
+    .rb-shell .rb-change { gap: 5px; }
+    .rb-shell .rb-change + .rb-change { padding-left: 12px; }
+  }
+  @media (max-width: 760px) {
+    .rb-shell .rb-layout { grid-template-columns: 1fr; }
+    .rb-shell h1 { font-size: 35px; }
+    .rb-shell .rb-inspector { border-left: 0; border-top: 1px solid var(--rb-control); }
+    .rb-shell .rb-inspector-top { padding: 24px; }
+    .rb-shell .rb-detail-body { min-height: 0; padding: 24px; }
+    .rb-shell .rb-topbar { padding: 17px 20px; gap: 16px; }
+    .rb-shell .rb-breadcrumb { display: none; }
+    .rb-shell .rb-chart-head, .rb-shell .rb-case { grid-template-columns: 150px minmax(0, 1fr) 54px; }
+    .rb-shell .rb-inspector h2 { font-size: 26px; }
+    .rb-shell .rb-answer-text { max-width: 580px; }
+    .rb-shell .rb-tabs { padding-inline: 24px; }
+    .rb-shell .rb-bottom { padding-inline: 20px; }
+  }
+  @media (max-width: 440px) {
+    .rb-shell .rb-intro { padding: 24px 16px 20px; }
+    .rb-shell h1 { font-size: 32px; max-width: 320px; }
+    .rb-shell .rb-analysis { padding-inline: 16px; }
+    .rb-shell .rb-chart-head { grid-template-columns: 1fr 50px; }
+    .rb-shell .rb-chart-head > span:first-child { display: none; }
+    .rb-shell .rb-case { grid-template-columns: minmax(0, 1fr) 50px; padding: 14px 9px; gap: 11px; }
+    .rb-shell .rb-case-info { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 7px 10px; align-items: center; justify-content: space-between; }
+    .rb-shell .rb-case-name { font-size: 13px; }
+    .rb-shell .rb-case-state { margin: 0; }
+    .rb-shell .rb-diff { grid-template-columns: 1fr; }
+    .rb-shell .rb-change + .rb-change { border-left: 0; border-top: 1px solid var(--rb-line); padding-left: 0; }
+    .rb-shell .rb-change { justify-content: space-between; padding: 10px 0; }
+    .rb-shell .rb-sectionbar { align-items: flex-start; flex-direction: column; gap: 10px; }
+    .rb-shell .rb-chart-meta { margin-top: 13px; }
+    .rb-shell .rb-footing { margin: 0 16px 20px; align-items: flex-start; }
+    .rb-shell .rb-topbar { padding-inline: 16px; gap: 12px; }
+    .rb-shell .rb-sample { font-size: 11px; letter-spacing: 0; }
+    .rb-shell .rb-bottom .rb-live { margin-left: 0; }
+    .rb-shell .rb-dialog-inner { padding: 20px; }
+    .rb-shell .rb-ledger div { grid-template-columns: 90px 1fr; }
+  }
+  @media (pointer: coarse) {
+    .rb-shell .rb-pagination button { width: 44px; height: 44px; }
+    .rb-shell .rb-tabs button, .rb-shell .rb-segments button, .rb-shell .rb-quiet-button, .rb-shell .rb-text-button { min-height: 44px; }
+    .rb-shell .rb-citation { min-width: 44px; min-height: 44px; }
+  }
+
+.rb-shell{--rb-bg:#151817;--rb-top:#101312;--rb-panel:#1c211f;--rb-soft:#242b27;--rb-text:#f0f1ec;--rb-muted:#aeb9b2;--rb-line:#343c38;--rb-control:#68766e;--rb-accent:#a8deca;--rb-rose:#dfabb8;color-scheme:dark}
+.rb-shell .rb-workspace{min-width:0}.rb-shell .rb-intro{padding-top:25px}.rb-shell .rb-intro-meta{margin-bottom:11px}.rb-shell .rb-subtitle{margin-top:10px}.rb-shell .rb-decision strong{font-size:15px;font-weight:550}.rb-shell .rb-decision small{display:block;color:var(--rb-muted);font-size:11px;margin-top:5px}.rb-shell .rb-decision-concern{border-left-color:var(--rb-rose)}.rb-shell .rb-diff>p{grid-column:1/-1;padding:12px;color:var(--rb-muted)}.rb-shell .rb-diff-note{margin-bottom:4px}.rb-shell .rb-analysis{padding-top:9px}.rb-shell .rb-case{color:var(--rb-text);cursor:pointer}.rb-shell .rb-case-state{white-space:normal}.rb-shell .rb-plot{display:grid;gap:0}.rb-shell .rb-bar-track{height:23px;position:relative;display:block;min-width:0}.rb-shell .rb-bar{position:absolute;top:10px;left:0;height:3px;background:var(--rb-muted)}.rb-shell .rb-bar.rb-b{height:7px;top:8px;background:var(--rb-accent)}.rb-shell .rb-bar-value{position:absolute;top:5px;font:11px/1 Consolas,monospace;color:var(--rb-text)}.rb-shell .rb-unavailable{font-size:13px;color:var(--rb-muted)}.rb-shell .rb-delta{color:var(--rb-text)}.rb-shell .rb-delta small{color:var(--rb-muted)}.rb-shell .rb-state-note{color:var(--rb-muted);font-size:12px}.rb-shell .rb-state-note button{background:none;border:0;color:var(--rb-text);text-decoration:underline}.rb-shell .rb-foot-actions{display:flex;gap:8px;flex-wrap:wrap}.rb-shell .rb-disclosure{margin:0 28px;padding:12px 0;border-top:1px solid var(--rb-line);font-size:12px;color:var(--rb-muted)}.rb-shell .rb-disclosure summary{cursor:pointer;color:var(--rb-text)}.rb-shell .rb-disclosure ol{padding-left:20px}.rb-shell .rb-disclosure li{padding:3px 0}.rb-shell .rb-disclosure time{font-family:Consolas,monospace}.rb-shell .rb-exports{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.rb-shell .rb-exports a{border:1px solid var(--rb-control);border-radius:3px;padding:7px 9px;color:var(--rb-text);text-decoration:none}.rb-shell .rb-exports a:hover{background:var(--rb-soft)}.rb-shell .rb-holdout{border-top:1px solid var(--rb-line);padding-top:15px;margin-top:15px}.rb-shell .rb-holdout p{margin:6px 0 10px}.rb-shell .rb-inspector{scroll-margin-top:0}.rb-shell .rb-inspector-top{padding-top:25px}.rb-shell .rb-inspector-meta{margin-bottom:19px}.rb-shell .rb-inspector-status{font-size:11px;margin:3px 0;color:var(--rb-muted)}.rb-shell .rb-inspector-status.rb-concern{color:var(--rb-rose)}.rb-shell .rb-tabs{flex:none}.rb-shell .rb-tabs button{cursor:pointer}.rb-shell .rb-detail-body{min-width:0;overflow-wrap:anywhere}.rb-shell .rb-answer-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}.rb-shell .rb-answer-head strong{font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:500}.rb-shell .rb-answer-head small{margin-left:auto;font-size:11px;color:var(--rb-muted)}.rb-shell .rb-answer-text{font-size:15px;line-height:1.65}.rb-shell .rb-claims{margin-top:11px}.rb-shell .rb-claims p{margin-top:5px;font-size:12px;line-height:1.5}.rb-shell .rb-citation{background:none;border:0;color:var(--rb-accent);text-decoration:underline;margin-left:4px;padding:2px}.rb-shell .rb-check-note{font-size:11px;color:var(--rb-muted);margin-top:10px}.rb-shell .rb-check-note.rb-concern{color:var(--rb-rose)}.rb-shell .rb-insight{color:var(--rb-muted);line-height:1.5}.rb-shell .rb-mobile-back{display:none}.rb-shell .rb-source-view section+section,.rb-shell .rb-attempt-view section+section{border-top:1px solid var(--rb-line);padding-top:18px;margin-top:18px}.rb-shell .rb-source{border-left:1px solid var(--rb-control);padding:5px 12px;margin:14px 0}.rb-shell .rb-source-selected{border-color:var(--rb-accent);background:#24332c}.rb-shell .rb-source strong,.rb-shell .rb-source a{display:block}.rb-shell .rb-source strong{font-size:13px}.rb-shell .rb-source a{font-size:11px;color:var(--rb-accent);overflow-wrap:anywhere}.rb-shell .rb-source p{font-size:12px;line-height:1.5;margin:9px 0}.rb-shell .rb-source small{color:var(--rb-muted)}.rb-shell .rb-source-limit{font-size:11px;line-height:1.5;border-top:1px solid var(--rb-line);padding-top:12px;margin-top:20px}.rb-shell .rb-attempt{grid-template-columns:23px minmax(0,1fr) auto}.rb-shell .rb-attempt small{display:block;color:var(--rb-muted);font-size:11px;overflow-wrap:anywhere}.rb-shell .rb-attempt>span:last-child{font-size:11px}.rb-shell .rb-brief{padding:24px}.rb-shell .rb-brief-head{display:flex;justify-content:space-between;gap:15px}.rb-shell .rb-brief-head h2{font-size:23px;margin:5px 0}.rb-shell .rb-brief-head button{border:0;background:none;color:var(--rb-text);font-size:24px}.rb-shell .rb-brief>p{font-size:12px;line-height:1.6;color:var(--rb-muted)}.rb-shell .rb-brief dl div{display:grid;grid-template-columns:110px 1fr;gap:10px;border-top:1px solid var(--rb-line);padding:10px 0;font-size:12px}.rb-shell .rb-brief dt{color:var(--rb-muted)}.rb-shell .rb-brief dd{margin:0}.rb-shell .rb-brief strong{color:var(--rb-text)}.rb-shell .rb-pagination button{cursor:pointer}.rb-shell .rb-quiet-button{cursor:pointer}.rb-shell .rb-case:focus-visible{outline:2px solid var(--rb-accent);outline-offset:-3px}
+@media(max-width:900px){.topbar{flex-wrap:wrap}.experiment-picker{order:4;width:100%;max-width:none;margin:0}.utility-nav{order:5}.new-button{margin-left:auto}}
+@media(max-width:760px){.topbar{padding:10px 16px;gap:9px}.wordmark{font-size:20px}.agent-label{display:none}.mode-pill{font-size:10px}.rb-shell .rb-inspector{min-height:400px}.rb-shell .rb-inspector-top{padding-top:20px}.rb-shell .rb-mobile-back{display:block;background:none;border:0;color:var(--rb-text);text-decoration:underline;padding:8px 0;margin-top:10px;font-size:12px}.rb-shell .rb-analysis{scroll-margin-top:10px}.rb-shell .rb-case{min-height:95px}.empty-state{padding:6vh 20px}.bottom{padding:12px 20px}.bottom .readiness{margin-left:0}.run-grid{display:block}.run-grid nav{border-right:0;border-bottom:1px solid #343c38;max-height:170px;overflow:auto}.secondary-view{padding:22px}}
+@media(max-width:440px){.topbar{min-height:65px}.experiment-picker{order:4}.utility-nav{order:5}.mode-pill{order:3}.new-button{order:2;font-size:11px;padding:7px}.rb-shell .rb-case-info{justify-content:space-between}.rb-shell .rb-case-state{font-size:11px}.rb-shell .rb-plot{grid-column:1;grid-row:2}.rb-shell .rb-delta{grid-column:2;grid-row:2}.rb-shell .rb-inspector-top{padding:20px 16px}.rb-shell .rb-tabs{padding-inline:16px}.rb-shell .rb-detail-body{padding:20px 16px}.rb-shell .rb-answer-head small{font-size:10px}.empty-tasks>div{grid-template-columns:82px 1fr}.empty-tasks>div span:last-child{grid-column:2}.form-grid{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* Review hierarchy: one decision, a compact scan of cases, detail on request. */
+.rb-shell{--rb-bg:#141715;--rb-panel:#202521;--rb-soft:#2a332c;--rb-text:#f5f5ef;--rb-muted:#b7c0b8;--rb-line:#3d4640;--rb-accent:#b7f0d2;--rb-rose:#f0ad9c}
+.rb-shell .rb-layout{grid-template-columns:minmax(0,1fr) 380px}
+.rb-shell .rb-intro{padding:43px 36px 31px}
+.rb-shell .rb-intro-meta{margin-bottom:18px}
+.rb-shell h1{font-size:clamp(36px,4vw,54px);font-weight:620;line-height:1.04;letter-spacing:-.06em;max-width:800px}
+.rb-shell .rb-decision{display:flex;align-items:baseline;gap:14px;border-left:0;padding:0;margin-top:27px}
+.rb-shell .rb-decision>span{color:var(--rb-muted);font-size:12px}
+.rb-shell .rb-decision>strong{font-size:19px;font-weight:620;color:var(--rb-rose)}
+.rb-shell .rb-decision:not(.rb-decision-concern)>strong{color:var(--rb-text)}
+.rb-shell .rb-decision>button{border:0;background:none;color:var(--rb-accent);font-size:12px;text-decoration:underline;text-underline-offset:4px;padding:4px}
+.rb-shell .rb-quickstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--rb-line);border-bottom:1px solid var(--rb-line);margin-top:30px}
+.rb-shell .rb-quickstats>div{padding:17px 14px 18px 0;min-height:92px;display:flex;flex-direction:column;justify-content:center}
+.rb-shell .rb-quickstats>div+div{border-left:1px solid var(--rb-line);padding-left:23px}
+.rb-shell .rb-quickstats strong{font-size:29px;font-weight:580;line-height:1;font-variant-numeric:tabular-nums}
+.rb-shell .rb-quickstats span{font-size:11px;color:var(--rb-muted);margin-top:8px;line-height:1.3}
+.rb-shell .rb-config{margin-top:16px;font-size:12px;color:var(--rb-muted)}
+.rb-shell .rb-config summary{cursor:pointer;color:var(--rb-text);display:list-item;list-style-position:inside}
+.rb-shell .rb-config summary span{float:right;color:var(--rb-muted)}
+.rb-shell .rb-config .rb-diff{margin-top:15px}
+.rb-shell .rb-analysis{padding:6px 36px 28px}
+.rb-shell .rb-sectionbar{margin-bottom:21px}
+.rb-shell .rb-sectionbar h2{font-size:21px}
+.rb-shell .rb-chart-meta{font-size:12px;margin-bottom:13px}
+.rb-shell .rb-chart-head{font-size:11px}
+.rb-shell .rb-case{min-height:103px;padding-block:18px}
+.rb-shell .rb-case-name{font-size:15px;font-weight:600;align-items:baseline}
+.rb-shell .rb-case-state{font-size:12px;margin-top:8px}
+.rb-shell .rb-case[aria-pressed="true"]{background:#2b352e}
+.rb-shell .rb-case[aria-pressed="true"]::before{background:var(--rb-accent);width:3px;top:0;bottom:0}
+.rb-shell .rb-chart-note{margin-top:15px;font-size:11px}
+.rb-shell .rb-zero{font:12px/1 Consolas,monospace;color:var(--rb-muted);padding-left:3px}
+.rb-shell .rb-footing{margin-inline:36px;margin-top:0;margin-bottom:16px}
+.rb-shell .rb-reading-notes{max-width:500px;color:var(--rb-muted);font-size:12px}
+.rb-shell .rb-reading-notes summary,.rb-shell .rb-inspector-foot summary{cursor:pointer;color:var(--rb-text)}
+.rb-shell .rb-reading-notes p{margin-top:9px}
+.rb-shell .rb-inspector-top{padding:37px 28px 24px}
+.rb-shell .rb-inspector h2{font-size:28px;margin-top:28px}
+.rb-shell .rb-inspector-status{font-size:12px;margin-top:5px}
+.rb-shell .rb-question{font-size:16px;line-height:1.45;margin-top:20px!important}
+.rb-shell .rb-tabs{padding-inline:28px;gap:25px}
+.rb-shell .rb-tabs button{font-size:13px}
+.rb-shell .rb-detail-body{padding:27px 28px;min-height:0}
+.rb-shell .rb-answer{padding-bottom:25px}
+.rb-shell .rb-answer+.rb-answer{padding-top:25px}
+.rb-shell .rb-answer-text{font-size:16px;line-height:1.52}
+.rb-shell .rb-claims{margin-top:15px;font-size:12px;color:var(--rb-muted)}
+.rb-shell .rb-claims summary{cursor:pointer;color:var(--rb-accent)}
+.rb-shell .rb-claims p{color:var(--rb-text);margin-top:12px;line-height:1.5}
+.rb-shell .rb-check-note{margin-top:15px}
+.rb-shell .rb-inspector-foot{display:block;padding:17px 28px;font-size:11px}
+.rb-shell .rb-inspector-foot p{margin-top:8px}
+@media(max-width:1199px){.rb-shell .rb-layout{grid-template-columns:minmax(0,1fr) 320px}.rb-shell .rb-intro,.rb-shell .rb-analysis{padding-inline:24px}.rb-shell .rb-footing{margin-inline:24px}}
+@media(max-width:900px){.rb-shell .rb-layout{grid-template-columns:minmax(0,1fr) 290px}.rb-shell h1{font-size:37px}.rb-shell .rb-quickstats strong{font-size:25px}.rb-shell .rb-inspector-top,.rb-shell .rb-detail-body{padding-inline:20px}.rb-shell .rb-tabs{padding-inline:20px}}
+@media(max-width:760px){.rb-shell .rb-layout{grid-template-columns:1fr}.rb-shell .rb-intro{padding:34px 20px 25px}.rb-shell .rb-analysis{padding-inline:20px}.rb-shell .rb-footing{margin-inline:20px}.rb-shell .rb-inspector:not(.rb-inspector-open){display:none}.rb-shell .rb-inspector-top{padding:27px 20px}.rb-shell .rb-quickstats{margin-top:25px}.rb-shell .rb-case{min-height:104px}}
+@media(max-width:440px){.rb-shell h1{font-size:38px}.rb-shell .rb-intro{padding-inline:18px}.rb-shell .rb-analysis{padding-inline:18px}.rb-shell .rb-footing{margin-inline:18px}.rb-shell .rb-quickstats>div{padding-right:7px;min-height:85px}.rb-shell .rb-quickstats>div+div{padding-left:11px}.rb-shell .rb-quickstats strong{font-size:25px}.rb-shell .rb-quickstats span{font-size:10px}.rb-shell .rb-case-name{font-size:15px}.rb-shell .rb-case-state{margin-top:0}.rb-shell .rb-inspector h2{margin-top:22px}}
+
+/* Evidence desk: warm report surface, one clear result, details on demand. */
+:root,body,.app{background:#f4f2eb;color:#1d2925;color-scheme:light}
+.topbar{background:#1b2b25;border-color:#31433a;color:#f6f5ee}
+.topbar .agent-label{display:none}
+.topbar .experiment-picker select{background:#26382f;border-color:#61746a;color:#f6f5ee;font-size:12px}
+.topbar .utility-nav button{color:#cbd5cb}
+.topbar .utility-nav button:hover,.topbar .utility-nav button.active{color:#fff}
+.topbar .mode-pill{color:#e8d49c}
+.topbar .new-button{background:#e7dba9;border-color:#e7dba9;color:#1b2b25}
+.topbar .new-button:hover{background:#f4e8bd}
+.bottom{background:#1b2b25;border-color:#31433a;color:#d1d9d0}
+.empty-state>p,.secondary-head p,.secondary-view>p,.run-detail p,.report-list span,.board-note,.pane-facts,.field-label,.claims small,.attempt span{color:#526159}
+.empty-tasks,.empty-tasks>div,.run-grid nav,.run-grid nav button,.evidence-pane,.source-list>div,.attempt,.report-summary,.report-list>div{border-color:#cdd3c9}
+.empty-tasks span,.run-grid nav span{color:#657269}
+.run-grid nav button{color:#1d2925}
+.run-grid nav button.selected{background:#e5e9de}
+.answer-block p{color:#1d2925}
+.source-list a{color:#1a7055}
+.primary{background:#1a7055;border-color:#1a7055;color:#fff}
+.primary:hover{background:#245f4b}
+dialog{background:#fbfaf5;color:#1d2925;border-color:#849288}
+dialog::backdrop{background:#0b1712a8}
+.dialog-head{border-color:#cdd3c9}
+.dialog-head button{color:#1d2925}
+dialog form>p,dialog .task-check small{color:#526159}
+dialog input:not([type=checkbox]),dialog select,dialog textarea{background:#fff;color:#1d2925;border-color:#849288}
+dialog fieldset{border-color:#cdd3c9}
+.rb-shell{--rb-bg:#f4f2eb;--rb-top:#1b2b25;--rb-panel:#fbfaf5;--rb-soft:#e9eee5;--rb-text:#1d2925;--rb-muted:#526159;--rb-line:#cdd3c9;--rb-control:#849288;--rb-accent:#1a7055;--rb-rose:#ad4b3b;color-scheme:light;background:var(--rb-bg)}
+.rb-shell .rb-layout{grid-template-columns:minmax(0,1fr) 410px}
+.rb-shell .rb-intro{padding:48px 48px 23px}
+.rb-shell .rb-intro-meta{margin-bottom:18px}
+.rb-shell .rb-kicker{color:#657269;font-size:11px;letter-spacing:.07em}
+.rb-shell h1{font-family:"Iowan Old Style",Georgia,serif;font-size:clamp(42px,4.3vw,62px);font-weight:500;letter-spacing:-.048em;line-height:1.03;max-width:820px;color:#14221b}
+.rb-shell .rb-decision{margin-top:32px;padding:23px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;background:#ece9df;border-left:4px solid #ad4b3b;border-radius:0 4px 4px 0}
+.rb-shell .rb-decision:not(.rb-decision-concern){border-left-color:#536d5d}
+.rb-shell .rb-decision-copy{min-width:0}
+.rb-shell .rb-decision-eyebrow{font-size:11px;color:#5d6b61;text-transform:uppercase;letter-spacing:.07em}
+.rb-shell .rb-decision-copy strong{display:block;font-size:25px;line-height:1.16;margin-top:6px;font-weight:650;color:#1d2925}
+.rb-shell .rb-decision-copy p{font-size:13px;line-height:1.45;color:#4c5951;margin-top:8px;max-width:600px}
+.rb-shell .rb-decision>button{flex:none;border:1px solid #7c8c81;border-radius:3px;padding:10px 12px;text-decoration:none;color:#1d2925;white-space:nowrap;font-size:12px;font-weight:600}
+.rb-shell .rb-decision>button:hover{background:#f8f7f1}
+.rb-shell .rb-overview-line{display:flex;align-items:center;flex-wrap:wrap;gap:8px;color:#34443a;font-size:13px;margin-top:20px}
+.rb-shell .rb-overview-line>span:first-child{font-weight:700}
+.rb-shell .rb-overview-change{margin-left:auto;color:#657269}
+.rb-shell .rb-config{border-top:1px solid var(--rb-line);border-bottom:1px solid var(--rb-line);padding:11px 0;margin-top:24px}
+.rb-shell .rb-config summary{font-size:12px;font-weight:600}
+.rb-shell .rb-config summary span{font-weight:400}
+.rb-shell .rb-config .rb-diff{margin-top:15px}
+.rb-shell .rb-change{color:#34443a}
+.rb-shell .rb-to{color:#1a7055}
+.rb-shell .rb-analysis{padding:38px 48px 30px}
+.rb-shell .rb-sectionbar{align-items:end;margin-bottom:28px;gap:18px}
+.rb-shell .rb-section-index{font:10px/1.5 Consolas,monospace;letter-spacing:.06em;color:#7a867c}
+.rb-shell .rb-sectionbar h2{font-family:"Iowan Old Style",Georgia,serif;font-size:34px;font-weight:500;letter-spacing:-.04em;margin-top:3px}
+.rb-shell .rb-case-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.rb-shell .rb-segments{background:#e8e8de;border:0;padding:3px}
+.rb-shell .rb-segments button{font-size:12px;color:#4d5d52;padding:6px 10px}
+.rb-shell .rb-segments button[aria-pressed="true"]{background:#fff;color:#1d2925;box-shadow:0 1px 3px #1d29251c}
+.rb-shell .rb-view-toggle{border:1px solid #8b9a8c;border-radius:3px;background:transparent;color:#24362a;font-size:12px;padding:8px 10px;white-space:nowrap}
+.rb-shell .rb-view-toggle:hover,.rb-shell .rb-view-toggle[aria-pressed="true"]{background:#e6eee5}
+.rb-shell .rb-check-head{display:grid;grid-template-columns:235px minmax(0,1fr) minmax(0,1fr) 22px;gap:18px;padding:0 14px 13px;border-bottom:2px solid #26382f;text-transform:uppercase;letter-spacing:.07em;color:#68776b;font-size:10px}
+.rb-shell .rb-cases{border-bottom:1px solid var(--rb-line)}
+.rb-shell .rb-case{background:transparent;border-color:var(--rb-line);min-height:91px;padding:18px 14px;transition:background .15s ease}
+.rb-shell .rb-case:hover{background:#ebece3}
+.rb-shell .rb-case[aria-pressed="true"]{background:#e5e9de}
+.rb-shell .rb-case[aria-pressed="true"]::before{background:#1a7055;top:0;bottom:0;left:0;width:4px}
+.rb-shell .rb-case-checks{grid-template-columns:235px minmax(0,1fr) minmax(0,1fr) 22px;gap:18px}
+.rb-shell .rb-case-timing{grid-template-columns:190px minmax(0,1fr) 70px 22px;gap:15px}
+.rb-shell .rb-case-name{font-size:16px;font-weight:650;line-height:1.35;gap:12px;color:#1b2b25}
+.rb-shell .rb-case-name small{font-size:10px;letter-spacing:.06em;color:#79877b}
+.rb-shell .rb-result{font-size:13px;font-weight:600;line-height:1.3;color:#4d5c50}
+.rb-shell .rb-result small{display:none}
+.rb-shell .rb-result::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;background:#879287}
+.rb-shell .rb-result-pass::before{background:#267e60}
+.rb-shell .rb-result-fail::before{background:#ba5949}
+.rb-shell .rb-result-fail{color:#8e392e}
+.rb-shell .rb-case-arrow{grid-column:-2/-1;font-size:15px;color:#829185;justify-self:end}
+.rb-shell .rb-case:hover .rb-case-arrow{color:#1a7055}
+.rb-shell .rb-chart-head{border-bottom:2px solid #26382f}
+.rb-shell .rb-plot .rb-bar.rb-a{background:#849287}
+.rb-shell .rb-plot .rb-bar.rb-b{background:#1a7055}
+.rb-shell .rb-delta{color:#1d2925}
+.rb-shell .rb-footing{margin:0 48px 18px;padding-top:15px}
+.rb-shell .rb-reading-notes summary{font-size:12px}
+.rb-shell .rb-disclosure{border-color:var(--rb-line);color:#4c5c51;margin-inline:48px}
+.rb-shell .rb-disclosure summary{color:#23362a}
+.rb-shell .rb-inspector{background:#fbfaf5;border-left-color:#cdd3c9}
+.rb-shell .rb-inspector-top{padding:48px 30px 26px}
+.rb-shell .rb-inspector-meta{margin-bottom:30px}
+.rb-shell .rb-inspector h2{font-family:"Iowan Old Style",Georgia,serif;font-size:35px;font-weight:500;letter-spacing:-.045em;color:#192a20;margin-top:0}
+.rb-shell .rb-inspector-status{font-size:12px;color:#7a594e}
+.rb-shell .rb-question{font-size:16px;line-height:1.48;color:#34453a}
+.rb-shell .rb-tabs{padding-inline:30px;border-color:var(--rb-line)}
+.rb-shell .rb-tabs button[aria-pressed="true"]{border-color:#1a7055;color:#172c20}
+.rb-shell .rb-detail-body{padding:30px;min-height:0}
+.rb-shell .rb-letter{border-color:#7a897c;color:#1d2925}
+.rb-shell .rb-letter.rb-candidate{background:#1a7055;border-color:#1a7055;color:#fff}
+.rb-shell .rb-answer-head strong{font-size:11px;letter-spacing:.08em}
+.rb-shell .rb-answer-text{font-size:16px;line-height:1.55;color:#25362b}
+.rb-shell .rb-check-note{color:#68766b}
+.rb-shell .rb-claims summary{color:#1a7055}
+.rb-shell .rb-source-selected{background:#e7eee5}
+.rb-shell .rb-source a{color:#1a7055}
+.rb-shell .rb-inspector-foot{border-color:var(--rb-line);color:#657269}
+.rb-shell .rb-inspector-foot summary{color:#4c5b51}
+.rb-shell .rb-quiet-button{color:#1d2925;background:transparent}
+.rb-shell .rb-quiet-button:hover{background:#e5e9de}
+.rb-shell .rb-exports a{color:#1d2925}
+.rb-shell .rb-exports a:hover{background:#e5e9de}
+.rb-shell .rb-brief{background:#fbfaf5;color:#1d2925;border:1px solid #849288;width:min(590px,calc(100vw - 28px));max-height:85vh;overflow:auto;box-shadow:0 22px 70px #0e1b1740}
+.rb-shell .rb-brief h2{font-family:"Iowan Old Style",Georgia,serif;font-size:32px;font-weight:500;color:#14221b}
+.rb-shell .rb-brief-head button{color:#1d2925}
+.rb-shell .rb-brief>p{color:#34453a;font-size:14px;line-height:1.55}
+.rb-shell .rb-brief dl div{border-color:#cdd3c9;font-size:13px;grid-template-columns:105px 1fr}
+.rb-shell .rb-brief dt{color:#68776b}
+.rb-shell .rb-brief dd{color:#25372b}
+.rb-shell .rb-brief-extra{border-top:1px solid #cdd3c9;padding-top:14px;margin-top:6px;font-size:12px;color:#526159}
+.rb-shell .rb-brief-extra summary{cursor:pointer;color:#25372b}
+.rb-shell .rb-brief-extra p{margin-top:10px;line-height:1.55;overflow-wrap:anywhere}
+@media(max-width:1199px){.rb-shell .rb-layout{grid-template-columns:1fr}.rb-shell .rb-inspector{border-left:0;border-top:1px solid var(--rb-line)}.rb-shell .rb-intro,.rb-shell .rb-analysis{padding-inline:40px}.rb-shell .rb-footing,.rb-shell .rb-disclosure{margin-inline:40px}.rb-shell .rb-inspector:not(.rb-inspector-open){display:none}}
+@media(max-width:760px){.rb-shell .rb-intro{padding:34px 20px 20px}.rb-shell .rb-analysis{padding:32px 20px 24px}.rb-shell .rb-footing,.rb-shell .rb-disclosure{margin-inline:20px}.rb-shell .rb-sectionbar{align-items:start}.rb-shell .rb-case-checks,.rb-shell .rb-check-head{grid-template-columns:190px minmax(0,1fr) minmax(0,1fr) 18px;gap:9px}.rb-shell .rb-case-timing{grid-template-columns:170px minmax(0,1fr) 64px 18px}.rb-shell .rb-inspector-top{padding:30px 20px}.rb-shell .rb-detail-body{padding:24px 20px}.rb-shell .rb-tabs{padding-inline:20px}}
+@media(max-width:560px){.rb-shell .rb-decision{padding:18px;align-items:start;flex-direction:column;gap:14px}.rb-shell .rb-decision-copy strong{font-size:23px}.rb-shell .rb-overview-change{margin-left:0;width:100%}.rb-shell .rb-sectionbar{flex-direction:column;gap:15px}.rb-shell .rb-case-controls{justify-content:flex-start}.rb-shell .rb-check-head{display:none}.rb-shell .rb-case-checks{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 22px;gap:11px;min-height:112px}.rb-shell .rb-case-checks .rb-case-info{grid-column:1/3;grid-row:1}.rb-shell .rb-case-checks .rb-result{grid-row:2;font-size:12px}.rb-shell .rb-case-checks .rb-result small{display:inline-block;margin-right:6px;font:10px/1 Consolas,monospace;color:#627264}.rb-shell .rb-case-checks .rb-case-arrow{grid-row:1;grid-column:3}.rb-shell .rb-case-timing{grid-template-columns:minmax(0,1fr) 60px;gap:8px}.rb-shell .rb-case-timing .rb-case-info{grid-column:1/3}.rb-shell .rb-case-timing .rb-plot{grid-column:1;grid-row:2}.rb-shell .rb-case-timing .rb-delta{grid-column:2;grid-row:2}.rb-shell .rb-case-timing .rb-case-arrow{display:none}.rb-shell .rb-case-name{font-size:17px}.rb-shell .rb-case{padding:16px 12px}.rb-shell .rb-chart-head{display:none}}

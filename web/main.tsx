@@ -1,218 +1,91 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { ReviewBench } from './ReviewBench.tsx';
 import './style.css';
 
-type Run = {
-  id: string; taskId: string; mode: 'fixture' | 'live'; status: 'running' | 'completed' | 'failed';
-  input: { entity: string; question: string }; output: null | {
-    answer: string; facts: { claim: string; sourceUrls: string[] }[];
-    sources: { title: string; url: string; snippet: string }[];
-  }; error: string | null; durationMs: number | null; costUsd: number | null;
-  costStatus: string; startedAt: string;
-};
-type Task = { id: string; split: string; entity: string; question: string };
-type Report = { labelNote: string; sampleSize: number; correct: number; qualityRate: number | null; costPerCorrectUsd: number | null; uncertainty: string; evaluations: { taskId: string; split: string; correct: boolean; fixture: boolean; deterministic: { answerTermsPresent: boolean; approvedSourcePresent: boolean; citationsResolve: boolean } }[] };
-type Experiment = { id: string; candidateId: string; mode: 'fixture' | 'live'; status: string; taskIds: string[]; runIds: string[]; steps: { at: string; message: string }[]; error: string | null; maxAttempts: number; maxDurationMs: number; maxSpendUsd: number; cancelRequested: boolean };
-type Optimization = { id: string; status: string; baselineExperimentId: string; candidateExperimentId: string; candidateId: string; settings: { modelAssignment: string; promptStyle: string; cacheTtlMinutes: number; maxSources: number; parallelReads: boolean }; investigation: string; proposal: string; decision: string; challenge: string; error: string | null };
-type ComparisonSide = { status: string; correct: boolean; attempts: number; durationMs: number | null; costUsd: number | null; errors: number; sources: { title: string; url: string }[] };
-type Comparison = { id: string; mode: string; status: string; decision: string; baseline: { correct: number; total: number; qualityRate: number | null; costPerCorrectUsd: number | null; durationMs: number | null; failures: number }; candidate: { correct: number; total: number; qualityRate: number | null; costPerCorrectUsd: number | null; durationMs: number | null; failures: number }; rows: { taskId: string; baseline: ComparisonSide; candidate: ComparisonSide; regression: boolean }[]; uncertainty: string; costNote: string; experimentCostUsd: number | null; breakEvenTasks: number | null };
-type LiveReadiness = { ready: boolean; reason: string; remoteCapEvidence: string | null; budget: { capCents: number; settledCents: number; reservedCents: number; unknownCents: number; availableCents: number; blocked: boolean } };
-type HoldoutAssessment = { optimizationId: string; mode: string; sampleSize: number; correct: number; note: string };
-
+type Config = { modelAssignment: string; promptStyle: string; cacheTtlMinutes: number; maxSources: number; parallelReads: boolean };
+type Run = { id: string; taskId: string; candidateId: string; mode: 'fixture'|'live'; provider: string; model: string|null; status: 'running'|'completed'|'failed'; input: { entity: string; question: string }; output: null|{ answer: string; facts: {claim:string;sourceUrls:string[]}[];sources:{title:string;url:string;snippet:string}[] }; error: string|null; durationMs: number|null; costUsd: number|null; costStatus:'fixture'|'priced'|'unknown'; startedAt:string; finishedAt:string|null; usage:Record<string,unknown>|null; settings?:Config };
+type Task = { id:string;split:string;entity:string;question:string };
+type Experiment = { id:string;candidateId:string;mode:'fixture'|'live';status:string;taskIds:string[];runIds:string[];steps:{at:string;message:string}[];error:string|null;maxAttempts:number;maxDurationMs:number;maxSpendUsd:number;fixtureDelayMs:number;cancelRequested:boolean;settings?:Config;createdAt:string };
+type Optimization = { id:string;mode:'fixture'|'live';status:string;baselineExperimentId:string;candidateExperimentId:string;candidateId:string;settings:Config;investigation:string;proposal:string;decision:string;challenge:string;error:string|null;holdoutStatus?:string;updatedAt:string };
+type Side = {status:string;correct:boolean;attempts:number;durationMs:number|null;costUsd:number|null;errors:number;sources:{title:string;url:string}[]};
+type Comparison = {id:string;mode:string;status:string;decision:string;baseline:{correct:number;total:number;costPerCorrectUsd:number|null};candidate:{correct:number;total:number;costPerCorrectUsd:number|null};rows:{taskId:string;baseline:Side;candidate:Side;regression:boolean}[];uncertainty:string;costNote:string;experimentCostUsd:number|null;breakEvenTasks:number|null};
+type Report = {labelNote:string;sampleSize:number;correct:number;qualityRate:number|null;costPerCorrectUsd:number|null;uncertainty:string;evaluations:{taskId:string;split:string;correct:boolean;fixture:boolean;deterministic:{answerTermsPresent:boolean;approvedSourcePresent:boolean;citationsResolve:boolean}}[]};
+type Readiness = {ready:boolean;reason:string;remoteCapEvidence:string|null;budget:{capCents:number;settledCents:number;reservedCents:number;unknownCents:number;availableCents:number;blocked:boolean}};
+type Holdout = {optimizationId:string;mode:string;sampleSize:number;baselineCorrect:number;correct:number;regressions:string[];note:string};
+type Location = {view:'change'|'experiment'|'runs'|'report';id:string;task:string};
+type Filter = 'all'|'regressions'|'failures'|'missing';
+const emptyLocation:Location={view:'experiment',id:'',task:''};
+function readLocation():Location { const parts=decodeURIComponent(location.hash.slice(1)).split('/'); const view=parts[0]; return {view:view==='change'||view==='experiment'||view==='runs'||view==='report'?view:'experiment',id:parts[1]??'',task:parts[2]??''}; }
+function navigate(view:Location['view'],id='',task='') { location.hash=[view,id,task].filter(Boolean).join('/'); }
+const short=(id:string)=>id.slice(0,8);
+const money=(value:number|null, mode?:string)=>value===null?(mode==='fixture'?'Synthetic':'Unknown'):`$${value.toFixed(value===0?2:4)}`;
+const duration=(value:number|null)=>value===null?'Unavailable':`${value} ms`;
+const titleCase=(value:string)=>value.replaceAll('-', ' ').replace(/\b\w/g, c=>c.toUpperCase());
+function safeUrl(url:string) { try { const parsed=new URL(url); return parsed.protocol==='https:'?url:null; } catch { return null; } }
+function resultLabel(side:Side|undefined, run:Run|undefined) { if (!run && (!side || side.attempts===0)) return 'Missing evidence'; if (run?.status==='failed') return 'Failed execution'; if (run?.status==='running') return 'Running'; if (!run?.output) return 'Unevaluated'; if (!side) return 'Checks unavailable'; return side.correct?'Passed checks':'Failed checks'; }
+function Diff({before,after}:{before?:Config;after?:Config}) { const keys:(keyof Config)[]=['modelAssignment','promptStyle','cacheTtlMinutes','maxSources','parallelReads']; const changed=before&&after?keys.filter(key=>before[key]!==after[key]):[]; return <section className="diff" aria-label="Configuration change"><div className="section-head"><span className="kicker">01 / CONFIGURATION</span><strong>{changed.length===1?'One setting changed':changed.length?`${changed.length} settings changed`:'Change unavailable'}</strong></div>{!before||!after?<p className="muted">Recorded configuration is unavailable.</p>:changed.length===0?<p className="muted">No changed setting appears in the recorded configurations.</p>:<div className="diff-lines">{changed.map(key=><div className="diff-line" key={key}><code>{key}</code><span className="before"><small>BASELINE</small>{String(before[key])}</span><span className="diff-arrow" aria-hidden="true">→</span><span className="after"><small>CANDIDATE</small>{String(after[key])}</span></div>)}</div>}{before&&after&&<details className="unchanged"><summary>Show unchanged settings</summary><dl>{keys.filter(key=>before[key]===after[key]).map(key=><div key={key}><dt>{key}</dt><dd>{String(before[key])}</dd></div>)}</dl></details>}</section> }
+function EvidencePane({label,runs,side,mode}:{label:string;runs:Run[];side?:Side;mode:string}) { const latest=runs.at(-1); return <section className="evidence-pane"><div className="pane-heading"><span>{label}</span><strong>{resultLabel(side,latest)}</strong></div><div className="pane-facts"><span>{runs.length} attempt{runs.length===1?'':'s'}</span><span>{side?.errors??runs.filter(run=>run.status==='failed').length} errors</span><span>{runs.length?duration(side?.durationMs??latest?.durationMs??null):'Unavailable'}</span><span>{money(side?.costUsd??null,mode)}</span></div>{!latest?<p className="empty-copy">No attempt recorded for this task.</p>:<><div className="answer-block"><span className="field-label">ANSWER</span>{latest.output?<p>{latest.output.answer}</p>:<p className="muted">{latest.status==='running'?'No answer yet.':'No answer returned.'}</p>}</div>{latest.error&&<p className="inline-error">{latest.error}</p>}{latest.output&&<><div className="field-label">CLAIMS</div><ul className="claims">{latest.output.facts.map((fact,index)=><li key={index}>{fact.claim}<small>{fact.sourceUrls.join(' · ')}</small></li>)}</ul><div className="field-label">SOURCES</div><div className="source-list">{latest.output.sources.map((source,index)=>{const url=safeUrl(source.url);return <div key={index}><strong>{source.title}</strong>{url?<a href={url} target="_blank" rel="noreferrer">{url}</a>:<span>Source URL unavailable</span>}<p>{source.snippet||'No snippet recorded.'}</p></div>})}</div></> }<details className="attempts"><summary>Attempts & provenance ({runs.length})</summary>{runs.map((run,index)=><div className="attempt" key={run.id}><strong>Attempt {index+1} · {run.status}</strong><span>{short(run.id)} · {new Date(run.startedAt).toLocaleString()}</span><span>Provider {run.provider||'unavailable'} · Model {run.model||'unavailable'}</span><span>Cost {money(run.costUsd,run.mode)} · Duration {duration(run.durationMs)}</span><span>Execution {typeof run.usage?.executionId==='string'?run.usage.executionId:'unavailable'} · Version {typeof run.usage?.agentVersion==='string'?run.usage.agentVersion:'unavailable'}</span>{run.error&&<span>{run.error}</span>}</div>)}</details></>}</section> }
 function App() {
-  const [mode, setMode] = useState<'fixture' | 'live'>('fixture');
-  const [runs, setRuns] = useState<Run[]>([]);
-  const [selected, setSelected] = useState<string | null>(null);
-  const [entity, setEntity] = useState('Example Company');
-  const [question, setQuestion] = useState('What products does this company make?');
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState('');
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [taskId, setTaskId] = useState('');
-  const [report, setReport] = useState<Report | null>(null);
-  const [experiments, setExperiments] = useState<Experiment[]>([]);
-  const [optimizations, setOptimizations] = useState<Optimization[]>([]);
-  const [experimentBusy, setExperimentBusy] = useState(false);
-  const [maxAttempts, setMaxAttempts] = useState(1);
-  const [maxDurationMs, setMaxDurationMs] = useState(30_000);
-  const [maxSpendUsd, setMaxSpendUsd] = useState(1);
-  const [fixtureDelayMs, setFixtureDelayMs] = useState(0);
-  const [optimizationBusy, setOptimizationBusy] = useState(false);
-  const [baselineExperimentId, setBaselineExperimentId] = useState('');
-  const [comparison, setComparison] = useState<Comparison | null>(null);
-  const [selectedOptimizationId, setSelectedOptimizationId] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [liveReadiness, setLiveReadiness] = useState<LiveReadiness | null>(null);
-  const [holdout, setHoldout] = useState<HoldoutAssessment | null>(null);
-  const [holdoutBusy, setHoldoutBusy] = useState(false);
-  useEffect(() => {
-    Promise.all([fetch('/api/health').then(r => r.json()), fetch('/api/runs').then(r => r.json()), fetch('/api/tasks').then(r => r.json()), fetch('/api/report').then(r => r.json()), fetch('/api/experiments').then(r => r.json()), fetch('/api/optimizations').then(r => r.json()), fetch('/api/live-readiness').then(r => r.json())])
-      .then(([health, list, suite, summary, jobs, changes, readiness]) => { setMode(health.mode); setRuns(list.runs); setSelected(list.runs[0]?.id ?? null); setTasks([...suite.development, ...suite.validation]); setReport(summary); setExperiments(jobs.experiments); setOptimizations(changes.optimizations); setLiveReadiness(readiness); setSelectedOptimizationId(changes.optimizations[0]?.id ?? ''); setBaselineExperimentId(jobs.experiments.find((item: Experiment) => item.status === 'completed' && item.candidateId === 'baseline' && item.runIds.length >= 2)?.id ?? ''); })
-      .catch(() => setError('Could not connect to the Ablatrix backend.'))
-      .finally(() => setLoading(false));
-  }, []);
-  useEffect(() => {
-    const id = selectedOptimizationId;
-    if (!id) { setComparison(null); return; }
-    let active = true;
-    fetch(`/api/optimizations/${id}/comparison`).then(async r => { if (!r.ok) throw new Error('Comparison unavailable.'); return r.json(); }).then(value => { if (active) setComparison(value); }).catch(() => { if (active) { setComparison(null); setError('Could not load comparison.'); } });
-    fetch(`/api/optimizations/${id}/holdout`).then(r => r.ok ? r.json() : null).then(value => { if (active) setHoldout(value); }).catch(() => { if (active) setHoldout(null); });
-    return () => { active = false; };
-  }, [selectedOptimizationId, optimizations]);
-  useEffect(() => {
-    if (!experiments.some(item => item.status === 'queued' || item.status === 'running') && !optimizations.some(item => item.status === 'running')) return;
-    const timer = window.setInterval(() => {
-      Promise.all([fetch('/api/experiments').then(r => r.json()), fetch('/api/runs').then(r => r.json()), fetch('/api/report').then(r => r.json()), fetch('/api/optimizations').then(r => r.json()), fetch('/api/live-readiness').then(r => r.json())])
-        .then(([jobs, list, summary, changes, readiness]) => { setExperiments(jobs.experiments); setRuns(list.runs); setReport(summary); setOptimizations(changes.optimizations); setLiveReadiness(readiness); })
-        .catch(() => setError('Could not refresh experiment progress.'));
-    }, 500);
-    return () => window.clearInterval(timer);
-  }, [experiments, optimizations]);
-  useEffect(() => {
-    if (baselineExperimentId) return;
-    const baseline = experiments.find(item => item.status === 'completed' && item.candidateId === 'baseline' && item.runIds.length >= 2);
-    if (baseline) setBaselineExperimentId(baseline.id);
-  }, [experiments, baselineExperimentId]);
-  const current = runs.find(run => run.id === selected);
-
-  async function submit(event: React.FormEvent) {
-    event.preventDefault(); setBusy(true); setError('');
-    try {
-      const response = await fetch('/api/runs', {
-        method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ entity, question, ...(taskId ? { taskId } : {}) })
-      });
-      const run = await response.json() as Run;
-      if (!response.ok && !run.id) throw new Error(run.error ?? 'Research failed.');
-      if (!run.id) throw new Error('The backend did not return a run.');
-      setRuns(previous => [run, ...previous]); setSelected(run.id);
-      fetch('/api/report').then(r => r.json()).then(setReport).catch(() => {});
-      if (!response.ok) setError(run.error ?? 'Research failed.');
-    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Request failed.'); }
-    finally { setBusy(false); }
-  }
-
-  function selectTask(id: string) {
-    setTaskId(id);
-    const task = tasks.find(item => item.id === id);
-    if (task) { setEntity(task.entity); setQuestion(task.question); }
-  }
-  async function startExperiment() {
-    setExperimentBusy(true); setError('');
-    try {
-      const response = await fetch('/api/experiments', {
-        method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ taskIds: tasks.map(task => task.id), maxAttempts, maxDurationMs, maxSpendUsd: mode === 'fixture' ? 0 : maxSpendUsd, fixtureDelayMs: mode === 'fixture' ? fixtureDelayMs : 0 })
-      });
-      const record = await response.json();
-      if (!response.ok) throw new Error(record.error ?? 'Experiment could not start.');
-      setExperiments(previous => [record, ...previous]);
-    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Experiment failed.'); }
-    finally { setExperimentBusy(false); }
-  }
-  async function cancelExperiment(id: string) {
-    const response = await fetch(`/api/experiments/${id}/cancel`, { method: 'POST' });
-    const record = await response.json();
-    if (!response.ok) { setError(record.error ?? 'Cancellation failed.'); return; }
-    setExperiments(previous => previous.map(item => item.id === id ? record : item));
-  }
-  async function startOptimization() {
-    setOptimizationBusy(true); setError('');
-    try {
-      const response = await fetch('/api/optimizations', {
-        method: 'POST', headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ baselineExperimentId })
-      });
-      const record = await response.json();
-      if (!response.ok) throw new Error(record.error ?? 'Optimizer could not start.');
-      setOptimizations(previous => [record, ...previous]);
-      setSelectedOptimizationId(record.id);
-    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Optimizer failed.'); }
-    finally { setOptimizationBusy(false); }
-  }
-  async function runHoldout(id: string) {
-    setHoldoutBusy(true); setError('');
-    try {
-      const response = await fetch(`/api/optimizations/${id}/holdout`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' });
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error ?? 'Holdout assessment failed.');
-      setHoldout(result);
-    } catch (reason) { setError(reason instanceof Error ? reason.message : 'Holdout assessment failed.'); }
-    finally { setHoldoutBusy(false); }
-  }
-
-  return <div className="shell">
-    <aside className="sidebar">
-      <div className="brand"><span className="mark">A</span><div><strong>ablatrix</strong><small>Performance lab</small></div></div>
-      <div className="sidebar-heading">RUN HISTORY</div>
-      {runs.length === 0 && <p className="muted">No runs yet. Launch a baseline to begin.</p>}
-      <div className="run-list">{runs.map(run => <button key={run.id} className={`run-item ${selected === run.id ? 'active' : ''}`} onClick={() => setSelected(run.id)}>
-        <strong>{run.input.entity}</strong><span>{run.status} · {new Date(run.startedAt).toLocaleString()}</span>
-      </button>)}</div>
-      <div className="sidebar-foot">Local workspace<br/>Research agent · baseline</div>
-    </aside>
-    <main>
-      <header><div><div className="eyebrow">WORKSPACE / BASELINE</div><h1>Research run</h1><p>Start with one task. Every response is saved with its sources and execution details.</p></div><span className={`mode ${mode}`}>{mode === 'fixture' ? '● Fixture mode' : '● Live mode'}</span></header>
-      <div className="content">
-        {loading && <div className="notice" role="status">Loading saved runs and experiments…</div>}
-        {mode === 'fixture' && <div className="notice"><strong>Synthetic demonstration</strong><span>Fixture responses are for testing the workflow. They are not live research or benchmark evidence.</span></div>}
-        {mode === 'live' && liveReadiness && <div className="notice" role="status"><strong>{liveReadiness.ready && !liveReadiness.budget.blocked ? 'Live metering ready' : 'Live spending blocked'}</strong><span>{liveReadiness.reason} Budget: ${(liveReadiness.budget.availableCents / 100).toFixed(2)} available · ${(liveReadiness.budget.reservedCents / 100).toFixed(2)} reserved · ${(liveReadiness.budget.settledCents / 100).toFixed(2)} settled · ${(liveReadiness.budget.unknownCents / 100).toFixed(2)} unknown. Remote cap: {liveReadiness.remoteCapEvidence ? 'verified' : 'not verified'}.</span></div>}
-        <section className="panel form-panel"><div className="section-label">01 / CONFIGURE TASK</div><h2>Launch a baseline</h2>
-          <form onSubmit={submit}>
-            <label>Curated evaluation task<select value={taskId} onChange={e => selectTask(e.target.value)}><option value="">Custom task</option>{tasks.map(task => <option key={task.id} value={task.id}>{task.entity} · {task.split}</option>)}</select></label>
-            <label>Company or product<input value={entity} onChange={e => setEntity(e.target.value)} minLength={2} maxLength={120} required readOnly={!!taskId} /></label>
-            <label>Research question<textarea value={question} onChange={e => setQuestion(e.target.value)} minLength={8} maxLength={500} rows={3} required readOnly={!!taskId} /></label>
-            <button className="primary" disabled={busy || mode === 'live'}>{busy ? 'Running research…' : mode === 'live' ? 'Use bounded experiment for live mode' : 'Run baseline'} <span aria-hidden="true">↗</span></button>
-          </form>
-        </section>
-        {error && <div className="error" role="alert">{error}</div>}
-        <section className="panel result-panel"><div className="section-label">02 / RESULT</div>
-          {!current && <div className="empty"><span className="empty-icon">◇</span><h2>Awaiting first run</h2><p>The answer, citations and execution record will appear here.</p></div>}
-          {current && <><div className="result-top"><div><h2>{current.input.entity}</h2><p>{current.input.question}</p></div><span className={`status ${current.status}`}>{current.status}</span></div>
-            <div className="metrics"><div><span>Duration</span><strong>{current.durationMs === null ? '—' : `${current.durationMs} ms`}</strong></div><div><span>Cost</span><strong>{current.costUsd === null ? current.costStatus === 'fixture' ? 'Fixture' : 'Unknown' : `$${current.costUsd.toFixed(4)}`}</strong></div><div><span>Task ID</span><strong className="mono">{current.taskId.slice(0, 8)}</strong></div></div>
-            {current.error && <p className="error">{current.error}</p>}
-            {current.output && <><div className="answer"><span className="section-label">ANSWER</span><p>{current.output.answer}</p></div><div className="sources"><span className="section-label">SOURCES</span>{current.output.sources.map(source => <a key={source.url} href={source.url} target="_blank" rel="noreferrer"><strong>{source.title}</strong><span>{source.url}</span><p>{source.snippet}</p></a>)}</div></>}
-          </>}
-        </section>
-        <section className="panel quality-panel"><div className="section-label">03 / EVALUATION</div><h2>Quality evidence</h2>
-          <div className="metrics"><div><span>Live sample</span><strong>{report?.sampleSize ?? 0}</strong></div><div><span>Correct</span><strong>{report?.correct ?? 0}</strong></div><div><span>Cost / correct</span><strong>{report?.costPerCorrectUsd === null || report?.costPerCorrectUsd === undefined ? 'Unknown' : `$${report.costPerCorrectUsd.toFixed(4)}`}</strong></div></div>
-          <p className="muted-text">{report?.uncertainty ?? 'No report yet.'}</p>
-          {report && <p className="muted-text">{report.labelNote}</p>}
-          {report?.evaluations.map(item => <div className="eval-row" key={item.taskId}><strong>{item.taskId}</strong><span>{item.fixture ? 'Fixture · excluded' : item.correct ? 'Passed checks' : 'Failed checks'}</span><small>Answer terms {item.deterministic.answerTermsPresent ? '✓' : '×'} · Approved source {item.deterministic.approvedSourcePresent ? '✓' : '×'} · Citations {item.deterministic.citationsResolve ? '✓' : '×'}</small></div>)}
-        </section>
-        <section className="panel quality-panel"><div className="section-label">04 / EXPERIMENT RUNNER</div><h2>Bounded comparison run</h2>
-          <p className="muted-text">Runs the development and validation tasks serially. Cancellation stops future tasks.</p>
-          <div className="runner-settings"><label>Attempts per task<select value={maxAttempts} onChange={e => setMaxAttempts(Number(e.target.value))}><option value={1}>1</option><option value={2}>2</option></select></label><label>Time limit<select value={maxDurationMs} onChange={e => setMaxDurationMs(Number(e.target.value))}><option value={30000}>30 seconds</option><option value={60000}>60 seconds</option></select></label>
-            {mode === 'live' ? <label>Spend cap (USD)<input type="number" min="0.01" max="100" step="0.01" value={maxSpendUsd} onChange={e => setMaxSpendUsd(Number(e.target.value))} /></label> : <label>Fixture pacing<select value={fixtureDelayMs} onChange={e => setFixtureDelayMs(Number(e.target.value))}><option value={0}>Immediate</option><option value={2000}>2 seconds per task</option></select></label>}</div>
-          <button className="primary experiment-start" onClick={startExperiment} disabled={experimentBusy || tasks.length === 0 || mode === 'live' && (!liveReadiness?.ready || liveReadiness.budget.blocked)}>{experimentBusy ? 'Queuing…' : 'Run experiment'} <span aria-hidden="true">↗</span></button>
-          {experiments.length === 0 && <p className="muted-text">No experiments yet.</p>}
-          {experiments.map(item => <div className="experiment" key={item.id}>
-            <div className="experiment-head"><strong>{item.status}</strong><span>{item.runIds.length}/{item.taskIds.length} attempts · {item.candidateId}</span>{(item.status === 'queued' || item.status === 'running') && <button onClick={() => cancelExperiment(item.id)} disabled={item.cancelRequested}>{item.cancelRequested ? 'Cancellation requested' : 'Cancel'}</button>}</div>
-            <p className="muted-text">Budget: {item.mode === 'fixture' ? 'fixture, no provider spend' : `$${item.maxSpendUsd.toFixed(2)} upstream cap required`} · Attempts/task ≤ {item.maxAttempts} · Time ≤ {Math.round(item.maxDurationMs / 1000)}s</p>
-            {item.error && <p className="error">{item.error}</p>}
-            <ol>{item.steps.map((step, index) => <li key={index}>{step.message}</li>)}</ol>
-          </div>)}
-        </section>
-        <section className="panel quality-panel"><div className="section-label">05 / OPTIMIZE</div><h2>Investigate → propose → challenge</h2>
-          <p className="muted-text">The modifier can change only one approved workflow setting. The challenger requires priced cost and no quality regression before accepting it.</p>
-          <div className="opt-controls"><label>Baseline experiment<select value={baselineExperimentId} onChange={e => setBaselineExperimentId(e.target.value)}><option value="">Choose a completed baseline</option>{experiments.filter(item => item.status === 'completed' && item.candidateId === 'baseline' && item.runIds.length >= 2).map(item => <option key={item.id} value={item.id}>{item.id.slice(0, 8)} · {item.runIds.length} runs</option>)}</select></label><button className="primary" disabled={!baselineExperimentId || optimizationBusy || mode === 'live' && (!liveReadiness?.ready || liveReadiness.budget.blocked)} onClick={startOptimization}>{optimizationBusy ? 'Proposing…' : 'Propose candidate'} <span aria-hidden="true">↗</span></button></div>
-          {optimizations.length === 0 && <p className="muted-text">No proposals yet.</p>}
-          {optimizations.map(item => <div className="optimization" key={item.id}><div className="experiment-head"><strong>{item.candidateId}</strong><span>{item.status} · {item.decision}</span><button onClick={() => setSelectedOptimizationId(item.id)} aria-pressed={selectedOptimizationId === item.id}>View comparison</button></div>
-            <div className="opt-stages"><div><span>INVESTIGATOR</span><p>{item.investigation}</p></div><div><span>MODIFIER</span><p>{item.proposal}</p><code>{JSON.stringify(item.settings)}</code></div><div><span>CHALLENGER</span><p>{item.challenge}</p></div></div>
-            {item.error && <p className="error">{item.error}</p>}
-          </div>)}
-        </section>
-        {comparison && <section className="panel quality-panel comparison-panel"><div className="section-label">06 / COMPARISON & EXPORT</div><h2>Baseline vs candidate</h2>
-          <p className="muted-text">Selected candidate: {optimizations.find(item => item.id === comparison.id)?.candidateId ?? comparison.id}. {comparison.decision === 'accepted' ? 'Accepted by the challenger.' : 'Unvalidated candidate export; no measured improvement has been established.'}</p>
-          {holdout ? <p className="muted-text">Final holdout: {holdout.correct}/{holdout.sampleSize} passed deterministic checks. {holdout.note}</p> : comparison.mode === 'fixture' && comparison.status === 'completed' ? <button onClick={() => runHoldout(comparison.id)} disabled={holdoutBusy}>{holdoutBusy ? 'Assessing holdout…' : 'Run final fixture holdout'}</button> : <p className="muted-text">Final holdout has not been assessed.</p>}
-          <div className="comparison-summary"><div><span>BASELINE</span><strong>{comparison.baseline.correct}/{comparison.baseline.total} correct</strong><small>{comparison.baseline.durationMs ?? '—'} ms · {comparison.baseline.costPerCorrectUsd === null ? 'Cost unknown' : `$${comparison.baseline.costPerCorrectUsd.toFixed(4)}/correct`}</small></div><div><span>CANDIDATE</span><strong>{comparison.candidate.correct}/{comparison.candidate.total} correct</strong><small>{comparison.candidate.durationMs ?? '—'} ms · {comparison.candidate.costPerCorrectUsd === null ? 'Cost unknown' : `$${comparison.candidate.costPerCorrectUsd.toFixed(4)}/correct`}</small></div><div><span>DECISION</span><strong>{comparison.decision}</strong><small>{comparison.baseline.failures + comparison.candidate.failures} failed attempt(s)</small></div></div>
-          <p className="muted-text">{comparison.uncertainty} {comparison.costNote} Experiment cost: {comparison.experimentCostUsd === null ? 'unknown' : `$${comparison.experimentCostUsd.toFixed(4)}`}. Break-even: {comparison.breakEvenTasks === null ? 'not calculable' : `${comparison.breakEvenTasks} tasks`}.</p>
-          <div className="comparison-rows">{comparison.rows.map(row => <div className={`comparison-row ${row.regression ? 'regression' : ''}`} key={row.taskId}><strong>{row.taskId}{row.regression ? ' · regression' : ''}</strong><div><span>Baseline: {row.baseline.status} · {row.baseline.correct ? 'passed' : 'failed checks'} · {row.baseline.attempts} attempt(s) · {row.baseline.errors} error(s) · {row.baseline.durationMs ?? '—'} ms · {row.baseline.costUsd === null ? 'cost unknown' : `$${row.baseline.costUsd.toFixed(4)}`}</span><span>Candidate: {row.candidate.status} · {row.candidate.correct ? 'passed' : 'failed checks'} · {row.candidate.attempts} attempt(s) · {row.candidate.errors} error(s) · {row.candidate.durationMs ?? '—'} ms · {row.candidate.costUsd === null ? 'cost unknown' : `$${row.candidate.costUsd.toFixed(4)}`}</span></div><div className="source-links">{row.baseline.sources.map(source => <a key={`baseline-${source.url}`} href={source.url} target="_blank" rel="noreferrer">Baseline: {source.title} ↗</a>)}{row.candidate.sources.map(source => <a key={`candidate-${source.url}`} href={source.url} target="_blank" rel="noreferrer">Candidate: {source.title} ↗</a>)}</div></div>)}</div>
-          <div className="export-actions"><a href={`/api/optimizations/${comparison.id}/export?format=candidate`}>Candidate config</a><a href={`/api/optimizations/${comparison.id}/export?format=original`}>Original config</a><a href={`/api/optimizations/${comparison.id}/export?format=patch`}>Patch</a><a href={`/api/optimizations/${comparison.id}/export?format=manifest`}>Reproducibility data</a></div>
-        </section>}
-      </div>
-    </main>
-  </div>;
+  const [loc,setLoc]=useState<Location>(readLocation);
+  const [mode,setMode]=useState<'fixture'|'live'>('fixture');
+  const [runs,setRuns]=useState<Run[]>([]), [tasks,setTasks]=useState<Task[]>([]), [experiments,setExperiments]=useState<Experiment[]>([]), [optimizations,setOptimizations]=useState<Optimization[]>([]);
+  const [report,setReport]=useState<Report|null>(null), [readiness,setReadiness]=useState<Readiness|null>(null);
+  const [comparison,setComparison]=useState<Comparison|null>(null), [comparisonState,setComparisonState]=useState<'idle'|'loading'|'pending'|'error'|'ready'>('idle');
+  const [holdout,setHoldout]=useState<Holdout|null>(null), [loading,setLoading]=useState(true), [error,setError]=useState('');
+  const [filter,setFilter]=useState<Filter>('all'), [search,setSearch]=useState(''), [dialog,setDialog]=useState<'experiment'|'run'|null>(null);
+  const [taskIds,setTaskIds]=useState<string[]>([]), [attempts,setAttempts]=useState(1), [timeLimit,setTimeLimit]=useState(30000), [pace,setPace]=useState(0), [spend,setSpend]=useState(1);
+  const [singleTask,setSingleTask]=useState(''), [entity,setEntity]=useState('Example Company'), [question,setQuestion]=useState('What products does this company make?');
+  const [busy,setBusy]=useState(false), [mobileArm,setMobileArm]=useState<'baseline'|'candidate'>('baseline');
+  const dialogRef=useRef<HTMLDialogElement>(null), openerRef=useRef<HTMLElement|null>(null), requestSeq=useRef(0);
+  useEffect(()=>{const change=()=>{setLoc(readLocation());setFilter('all');setMobileArm('baseline')};window.addEventListener('hashchange',change);return()=>window.removeEventListener('hashchange',change)},[]);
+  async function refresh() { try {const [health,runData,taskData,reportData,experimentData,optimizationData,readyData]=await Promise.all(['/api/health','/api/runs','/api/tasks','/api/report','/api/experiments','/api/optimizations','/api/live-readiness'].map(async url=>{const response=await fetch(url);if(!response.ok)throw new Error('Workspace data unavailable.');return response.json()}));setMode(health.mode);setRuns(previous=>{const newest=new Set(runData.runs.map((run:Run)=>run.id));return [...runData.runs,...previous.filter(run=>!newest.has(run.id))]});const publicTasks=[...taskData.development,...taskData.validation];setTasks(publicTasks);setTaskIds(current=>current.length?current:publicTasks.map((task:Task)=>task.id));setReport(reportData);setExperiments(experimentData.experiments);setOptimizations(optimizationData.optimizations);setReadiness(readyData);if(!location.hash){const first=optimizationData.optimizations[0];const baseline=experimentData.experiments.find((item:Experiment)=>item.candidateId==='baseline');if(first)navigate('change',first.id);else if(baseline)navigate('experiment',baseline.id)}}catch(reason){setError(reason instanceof Error?reason.message:'Could not connect to the Ablatrix backend.')}finally{setLoading(false)} }
+  useEffect(()=>{void refresh()},[]);
+  useEffect(()=>{if(!experiments.some(item=>['running','queued'].includes(item.status))&&!optimizations.some(item=>item.status==='running'))return;const timer=window.setInterval(()=>void refresh(),700);return()=>window.clearInterval(timer)},[experiments,optimizations]);
+  const comparisonVersion=optimizations.find(item=>item.id===loc.id)?.updatedAt+'|'+experiments.find(item=>item.id===optimizations.find(change=>change.id===loc.id)?.candidateExperimentId)?.status;
+  useEffect(()=>{const id=loc.view==='change'?loc.id:'';const sequence=++requestSeq.current;setComparison(null);setHoldout(null);setComparisonState(id?'loading':'idle');if(!id)return;const controller=new AbortController();fetch(`/api/optimizations/${id}/comparison`,{signal:controller.signal}).then(async response=>{if(response.status===409)return {pending:true};if(!response.ok)throw new Error('Comparison unavailable.');return response.json()}).then(value=>{if(sequence!==requestSeq.current)return;if(value.pending)setComparisonState('pending');else{setComparison(value);setComparisonState('ready')}}).catch(()=>{if(sequence===requestSeq.current&&!controller.signal.aborted)setComparisonState('error')});fetch(`/api/optimizations/${id}/holdout`,{signal:controller.signal}).then(response=>response.ok?response.json():null).then(value=>{if(sequence===requestSeq.current)setHoldout(value)}).catch(()=>{});return()=>controller.abort()},[loc.view,loc.id,comparisonVersion]);
+  useEffect(()=>{const element=dialogRef.current;if(dialog&&!element?.open){openerRef.current=document.activeElement as HTMLElement;element?.showModal();}else if(!dialog&&element?.open){element.close();openerRef.current?.focus()}},[dialog]);
+  const selectedOptimization=optimizations.find(item=>item.id===loc.id), selectedExperiment=experiments.find(item=>item.id===loc.id), selectedRun=runs.find(item=>item.id===loc.id);
+  const baseline=selectedOptimization?experiments.find(item=>item.id===selectedOptimization.baselineExperimentId):selectedExperiment;
+  const candidate=selectedOptimization?experiments.find(item=>item.id===selectedOptimization.candidateExperimentId):undefined;
+  const neededRunIds=[...(baseline?.runIds??[]),...(candidate?.runIds??[])].filter(id=>!runs.some(run=>run.id===id));
+  useEffect(()=>{if(!neededRunIds.length)return;let active=true;Promise.all(neededRunIds.map(id=>fetch(`/api/runs/${id}`).then(response=>response.ok?response.json():null))).then(values=>{if(active)setRuns(previous=>{const known=new Set(previous.map(run=>run.id));return [...previous,...values.filter((run):run is Run=>!!run&&!known.has(run.id))]})}).catch(()=>{});return()=>{active=false}},[neededRunIds.join('|')]);
+  const currentTasks=baseline?.taskIds.map(id=>tasks.find(task=>task.id===id)??{id,entity:id,question:'Task question unavailable',split:'unknown'})??[];
+  const byRunId=useMemo(()=>new Map(runs.map(run=>[run.id,run])),[runs]);
+  const armRuns=(experiment:Experiment|undefined,task:string)=>experiment?.runIds.map(id=>byRunId.get(id)).filter((run):run is Run=>!!run&&run.taskId===task)??[];
+  const rows=currentTasks.map(task=>{const row=comparison?.rows.find(item=>item.taskId===task.id);const first=armRuns(baseline,task.id),second=armRuns(candidate,task.id);const missing=!!selectedOptimization&&(first.length===0||second.length===0||(comparisonState==='ready'&&!row));const failure=first.some(run=>run.status==='failed')||second.some(run=>run.status==='failed');return{task,row,first,second,missing,failure,regression:row?.regression??false}});
+  const counts={all:rows.length,regressions:rows.filter(row=>row.regression).length,failures:rows.filter(row=>row.failure).length,missing:rows.filter(row=>row.missing).length};
+  const visibleRows=rows.filter(row=>filter==='all'||(filter==='regressions'&&row.regression)||(filter==='failures'&&row.failure)||(filter==='missing'&&row.missing));
+  const selectedRow=rows.find(row=>row.task.id===loc.task);
+  const maxDuration=Math.max(1,...rows.flatMap(row=>[row.row?.baseline.durationMs,row.row?.candidate.durationMs].filter((value):value is number=>typeof value==='number'&&Number.isFinite(value)&&value>=0)));
+  const liveBlocked=mode==='live'&&(!readiness?.ready||readiness.budget.blocked);
+  function closeDialog(){setDialog(null)}
+  async function post(path:string,body?:unknown){const response=await fetch(path,{method:'POST',headers:body===undefined?undefined:{'content-type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});const value=await response.json();if(!response.ok)throw new Error(value.error??'Request failed.');return value}
+  async function action(work:()=>Promise<void>){setBusy(true);setError('');try{await work();await refresh()}catch(reason){setError(reason instanceof Error?reason.message:'Request failed.')}finally{setBusy(false)}}
+  async function createExperiment(){await action(async()=>{const record=await post('/api/experiments',{taskIds,maxAttempts:attempts,maxDurationMs:timeLimit,maxSpendUsd:mode==='fixture'?0:spend,fixtureDelayMs:mode==='fixture'?pace:0});closeDialog();navigate('experiment',record.id)})}
+  async function createRun(){setBusy(true);setError('');try{const response=await fetch('/api/runs',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({entity,question,...(singleTask?{taskId:singleTask}:{})})});const value=await response.json();if(value.id){closeDialog();navigate('runs',value.id);await refresh()}if(!response.ok)setError(value.error??'Research failed.');else if(!value.id)throw new Error('The backend did not return a run.')}catch(reason){setError(reason instanceof Error?reason.message:'Request failed.')}finally{setBusy(false)}}
+  async function propose(id:string){await action(async()=>{const value=await post('/api/optimizations',{baselineExperimentId:id});navigate('change',value.id)})}
+  async function runHoldout(id:string){await action(async()=>{const value=await post(`/api/optimizations/${id}/holdout`,{});if(location.hash.includes(id))setHoldout(value)})}
+  const indexItems=experiments.filter(item=>item.candidateId==='baseline').filter(item=>{const own=optimizations.filter(change=>change.baselineExperimentId===item.id);return `${item.id} ${item.status} ${own.map(change=>change.id).join(' ')}`.toLowerCase().includes(search.toLowerCase())});
+  const currentIdentity=loc.view==='change'?selectedOptimization?.id:loc.view==='experiment'?baseline?.id:undefined;
+  const savedBaselines=experiments.filter(item=>item.candidateId==='baseline');
+  return <div className="app" id="top">
+    <a className="skip-link" href="#main">Skip to workspace</a>
+    <header className="topbar">
+      <a className="wordmark" href="#experiment" aria-label="Ablatrix workspace">ablatrix<span>_</span></a>
+      <span className="agent-label">Research agent <i>/</i> {currentIdentity?`Experiment ${short(currentIdentity)}`:'Review bench'}</span>
+      <label className="experiment-picker"><span className="sr-only">Select saved experiment</span><select aria-label="Select saved experiment" value={loc.view==='change'||loc.view==='experiment'?`${loc.view}/${loc.id}`:''} onChange={event=>{const [view,id]=event.target.value.split('/');if(view==='change'||view==='experiment')navigate(view,id)}}><option value="">Select experiment…</option>{savedBaselines.map(item=><React.Fragment key={item.id}><option value={`experiment/${item.id}`}>Baseline {short(item.id)} · {item.status}</option>{optimizations.filter(change=>change.baselineExperimentId===item.id).map(change=><option key={change.id} value={`change/${change.id}`}>Change {short(change.id)} · {change.decision}</option>)}</React.Fragment>)}</select></label>
+      <nav className="utility-nav" aria-label="Workspace views"><button className={loc.view==='runs'?'active':''} onClick={()=>navigate('runs')}>Runs</button><button className={loc.view==='report'?'active':''} onClick={()=>navigate('report')}>Suite report</button></nav>
+      <button className="new-button" onClick={()=>setDialog('experiment')}>+ New experiment</button>
+      <span className={`mode-pill ${liveBlocked?'blocked':''}`}>{mode==='fixture'?'● FIXTURE · SYNTHETIC':liveBlocked?'● LIVE BLOCKED':'● LIVE'}</span>
+    </header>
+    {error&&<div className="global-error" role="alert"><strong>Action needs attention</strong><span>{error}</span><button onClick={()=>setError('')} aria-label="Dismiss error">×</button></div>}
+    {loading&&<p className="loading" role="status">Loading saved research…</p>}
+    {(loc.view==='change'||loc.view==='experiment')&&(!baseline&&!selectedOptimization?<section className="empty-state" id="main"><span className="kicker">ABLATRIX / RESEARCH AGENT</span>{error&&tasks.length===0?<><h1>Workspace unavailable</h1><p>Saved experiments and the task suite could not be loaded.</p><button className="primary" onClick={()=>void refresh()}>Retry connection</button></>:<><h1>No experiments yet</h1><p>{mode==='live'?'Live research is blocked until whole-call metering and a remote spending cap are verified.':'Run the built-in development and validation suite to record a baseline. Fixture responses are synthetic and are not a benchmark.'}</p><button className="primary" disabled={liveBlocked} onClick={()=>setDialog('experiment')}>{liveBlocked?'Live spending blocked':'Run baseline suite'}</button><div className="empty-tasks"><h2>Available suite tasks</h2>{tasks.map(task=><div key={task.id}><span>{task.split}</span><strong>{task.entity}</strong><span>{task.question}</span></div>)}</div></>}</section>:<ReviewBench optimization={selectedOptimization} baseline={baseline} candidate={candidate} comparison={comparison} comparisonState={comparisonState} rows={rows} mode={mode} selectedTask={loc.task} onSelect={id=>navigate(loc.view,loc.id,id)} onCloseTask={()=>navigate(loc.view,loc.id)} onPropose={()=>baseline&&void propose(baseline.id)} onCancel={()=>baseline&&void action(async()=>{await post(`/api/experiments/${baseline.id}/cancel`)})} onHoldout={()=>selectedOptimization&&void runHoldout(selectedOptimization.id)} holdout={holdout} busy={busy} liveBlocked={liveBlocked}/>) }
+    {loc.view==='runs'&&<main className="secondary-view" id="main"><div className="secondary-head"><div><span className="kicker">RUNS / SINGLE RESEARCH</span><h1>Standalone runs</h1><p>A single research task is separate from a baseline suite.</p></div><button className="primary" disabled={mode==='live'} onClick={()=>setDialog('run')}>+ New single run</button></div><div className="run-grid"><nav aria-label="Standalone run history">{runs.filter(run=>!experiments.some(exp=>exp.runIds.includes(run.id))).filter(run=>`${run.input.entity} ${run.taskId}`.toLowerCase().includes(search.toLowerCase())).map(run=><button key={run.id} className={loc.id===run.id?'selected':''} onClick={()=>navigate('runs',run.id)}><strong>{run.input.entity}</strong><span>{run.status} · {short(run.id)}</span></button>)}</nav><div className="run-detail">{selectedRun?<><h2>{selectedRun.input.entity}</h2><p>{selectedRun.input.question}</p><EvidencePane label="RECORDED RUN" runs={[selectedRun]} mode={selectedRun.mode}/></>:<p>Select a standalone run, or create one.</p>}</div></div></main>}
+    {loc.view==='report'&&<main className="secondary-view" id="main"><div className="secondary-head"><div><span className="kicker">SUITE / AGGREGATE REPORT</span><h1>Evaluation report</h1><p>All-history view · separate from a selected experiment.</p></div></div>{report?<><div className="report-summary"><strong>{report.sampleSize} live samples</strong><span>Cost per correct task: {money(report.costPerCorrectUsd)}</span></div><p className="board-note">{report.labelNote} {report.uncertainty}</p><p>Deterministic checks do not verify semantic correctness. Pilot labels are not independently reviewed.</p><div className="report-list">{report.evaluations.map((item,index)=><div key={`${item.taskId}-${index}`}><strong>{item.taskId}</strong><span>{item.split} · {item.fixture?'synthetic fixture':'live'} · {item.correct?'Passed checks':'Failed checks'}</span></div>)}</div></>:<p>Report unavailable.</p>}</main>}
+    <footer className="bottom"><span>ABLATRIX / REVIEW BENCH</span><span>{mode==='fixture'?'Local synthetic fixture · No live measurements':'Live state requires verified provider accounting'}</span><details className="readiness"><summary>{liveBlocked?'Live provider blocked':'Mode & budget'}</summary><p>{mode==='fixture'?'Fixture output is synthetic and makes no live performance claim.':readiness?.reason??'Live readiness unavailable.'}</p>{readiness&&<dl><div><dt>Remote cap</dt><dd>{readiness.remoteCapEvidence?'Verified':'Unverified'}</dd></div><div><dt>Available</dt><dd>${(readiness.budget.availableCents/100).toFixed(2)}</dd></div><div><dt>Unknown</dt><dd>${(readiness.budget.unknownCents/100).toFixed(2)}</dd></div></dl>}</details></footer>
+    <dialog ref={dialogRef} onClose={()=>{setDialog(null);openerRef.current?.focus()}} onCancel={()=>setDialog(null)} aria-label={dialog==='experiment'?'New experiment':'New single run'}><div className="dialog-head"><div><span className="kicker">{dialog==='experiment'?'NEW BASELINE':'SINGLE RESEARCH'}</span><h2>{dialog==='experiment'?'Run baseline suite':'Run one task'}</h2></div><button onClick={closeDialog} aria-label="Close dialog">×</button></div>{dialog==='experiment'?<form onSubmit={event=>{event.preventDefault();void createExperiment()}}><p>Choose 1–4 public development or validation tasks. Results in fixture mode are synthetic.</p><fieldset><legend>Tasks</legend>{tasks.map(task=><label className="task-check" key={task.id}><input type="checkbox" checked={taskIds.includes(task.id)} onChange={event=>setTaskIds(current=>event.target.checked?[...current,task.id]:current.filter(id=>id!==task.id))}/><span><strong>{task.entity}</strong><small>{task.split} · {task.question}</small></span></label>)}</fieldset><details><summary>Advanced bounds</summary><div className="form-grid"><label>Maximum attempts<select value={attempts} onChange={event=>setAttempts(Number(event.target.value))}><option value="1">1</option><option value="2">2</option></select></label><label>Time limit<select value={timeLimit} onChange={event=>setTimeLimit(Number(event.target.value))}><option value="30000">30 seconds</option><option value="60000">60 seconds</option><option value="120000">120 seconds</option></select></label>{mode==='fixture'?<label>Fixture pacing<select value={pace} onChange={event=>setPace(Number(event.target.value))}><option value="0">Immediate</option><option value="2000">2 seconds</option></select></label>:<label>Maximum spend (USD)<input type="number" min="0.01" max="100" step="0.01" value={spend} onChange={event=>setSpend(Number(event.target.value))}/></label>}</div></details><button className="primary" disabled={busy||taskIds.length<1||taskIds.length>4||liveBlocked}>{busy?'Starting…':liveBlocked?'Live spending blocked':'Run experiment'}</button></form>:<form onSubmit={event=>{event.preventDefault();void createRun()}}><label>Curated evaluation task<select value={singleTask} onChange={event=>{const id=event.target.value;setSingleTask(id);const task=tasks.find(item=>item.id===id);if(task){setEntity(task.entity);setQuestion(task.question)}}}><option value="">Custom task</option>{tasks.map(task=><option key={task.id} value={task.id}>{task.entity} · {task.question} ({task.split})</option>)}</select></label><label>Company or product<input value={entity} minLength={2} maxLength={120} required readOnly={!!singleTask} onChange={event=>setEntity(event.target.value)}/></label><label>Research question<textarea value={question} minLength={8} maxLength={500} required readOnly={!!singleTask} onChange={event=>setQuestion(event.target.value)}/></label><button className="primary" disabled={busy||mode==='live'}>{busy?'Running…':'Run single task'}</button></form>}</dialog>
+  </div>
 }
-
-createRoot(document.getElementById('root')!).render(<App />);
+createRoot(document.getElementById('root')!).render(<App/>);
