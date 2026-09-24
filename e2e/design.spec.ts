@@ -30,7 +30,11 @@ test('approved chart binds real settings, case selection, tabs, links, deep link
   await expect(page.locator('.rb-case')).toHaveCount(4);
   await expect(page.locator('.rb-change')).toHaveCount(2);
   await expect(page.getByRole('heading', { name: /Read 2 sources in parallel/ })).toBeVisible();
+  await expect(page.getByText('Total attempt time · ms')).toBeHidden();
+  await expect(page.locator('.rb-result').first()).toContainText('Checks failed');
+  await page.getByRole('button', { name: 'Show timing' }).click();
   await expect(page.getByText('Total attempt time · ms')).toBeVisible();
+  await page.getByRole('button', { name: 'Show checks' }).click();
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(page.getByRole('complementary', { name: 'Selected case evidence' })).toBeHidden();
   const first = page.locator('.rb-case').first();
@@ -117,6 +121,7 @@ test('zero priced cost differs from unknown; missing attempt has no success bar 
   await page.route('**/api/experiments',async route=>{const data=await(await route.fetch()).json();const candidate=data.experiments.find((item:{id:string})=>item.id===change.candidateExperimentId);if(candidate)candidate.runIds=[];await route.fulfill({json:data})});
   await page.goto(`/#change/${change.id}`);
   await expect(page.locator('.rb-case').first()).toContainText('Missing attempt');
+  await page.getByRole('button', { name: 'Show timing' }).click();
   await expect(page.locator('.rb-case').first().locator('.rb-bar.rb-b')).toHaveCount(0);
   await expect(page.locator('.rb-case').first().locator('.rb-delta')).toContainText('unavailable');
   const inspector=page.getByRole('complementary',{name:'Selected case evidence'});

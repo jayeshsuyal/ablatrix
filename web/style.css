@@ -269,3 +269,126 @@ dialog{background:#1c211f;color:#f0f1ec;border:1px solid #68766e;border-radius:8
 @media(max-width:900px){.rb-shell .rb-layout{grid-template-columns:minmax(0,1fr) 290px}.rb-shell h1{font-size:37px}.rb-shell .rb-quickstats strong{font-size:25px}.rb-shell .rb-inspector-top,.rb-shell .rb-detail-body{padding-inline:20px}.rb-shell .rb-tabs{padding-inline:20px}}
 @media(max-width:760px){.rb-shell .rb-layout{grid-template-columns:1fr}.rb-shell .rb-intro{padding:34px 20px 25px}.rb-shell .rb-analysis{padding-inline:20px}.rb-shell .rb-footing{margin-inline:20px}.rb-shell .rb-inspector:not(.rb-inspector-open){display:none}.rb-shell .rb-inspector-top{padding:27px 20px}.rb-shell .rb-quickstats{margin-top:25px}.rb-shell .rb-case{min-height:104px}}
 @media(max-width:440px){.rb-shell h1{font-size:38px}.rb-shell .rb-intro{padding-inline:18px}.rb-shell .rb-analysis{padding-inline:18px}.rb-shell .rb-footing{margin-inline:18px}.rb-shell .rb-quickstats>div{padding-right:7px;min-height:85px}.rb-shell .rb-quickstats>div+div{padding-left:11px}.rb-shell .rb-quickstats strong{font-size:25px}.rb-shell .rb-quickstats span{font-size:10px}.rb-shell .rb-case-name{font-size:15px}.rb-shell .rb-case-state{margin-top:0}.rb-shell .rb-inspector h2{margin-top:22px}}
+
+/* Evidence desk: warm report surface, one clear result, details on demand. */
+:root,body,.app{background:#f4f2eb;color:#1d2925;color-scheme:light}
+.topbar{background:#1b2b25;border-color:#31433a;color:#f6f5ee}
+.topbar .agent-label{display:none}
+.topbar .experiment-picker select{background:#26382f;border-color:#61746a;color:#f6f5ee;font-size:12px}
+.topbar .utility-nav button{color:#cbd5cb}
+.topbar .utility-nav button:hover,.topbar .utility-nav button.active{color:#fff}
+.topbar .mode-pill{color:#e8d49c}
+.topbar .new-button{background:#e7dba9;border-color:#e7dba9;color:#1b2b25}
+.topbar .new-button:hover{background:#f4e8bd}
+.bottom{background:#1b2b25;border-color:#31433a;color:#d1d9d0}
+.empty-state>p,.secondary-head p,.secondary-view>p,.run-detail p,.report-list span,.board-note,.pane-facts,.field-label,.claims small,.attempt span{color:#526159}
+.empty-tasks,.empty-tasks>div,.run-grid nav,.run-grid nav button,.evidence-pane,.source-list>div,.attempt,.report-summary,.report-list>div{border-color:#cdd3c9}
+.empty-tasks span,.run-grid nav span{color:#657269}
+.run-grid nav button{color:#1d2925}
+.run-grid nav button.selected{background:#e5e9de}
+.answer-block p{color:#1d2925}
+.source-list a{color:#1a7055}
+.primary{background:#1a7055;border-color:#1a7055;color:#fff}
+.primary:hover{background:#245f4b}
+dialog{background:#fbfaf5;color:#1d2925;border-color:#849288}
+dialog::backdrop{background:#0b1712a8}
+.dialog-head{border-color:#cdd3c9}
+.dialog-head button{color:#1d2925}
+dialog form>p,dialog .task-check small{color:#526159}
+dialog input:not([type=checkbox]),dialog select,dialog textarea{background:#fff;color:#1d2925;border-color:#849288}
+dialog fieldset{border-color:#cdd3c9}
+.rb-shell{--rb-bg:#f4f2eb;--rb-top:#1b2b25;--rb-panel:#fbfaf5;--rb-soft:#e9eee5;--rb-text:#1d2925;--rb-muted:#526159;--rb-line:#cdd3c9;--rb-control:#849288;--rb-accent:#1a7055;--rb-rose:#ad4b3b;color-scheme:light;background:var(--rb-bg)}
+.rb-shell .rb-layout{grid-template-columns:minmax(0,1fr) 410px}
+.rb-shell .rb-intro{padding:48px 48px 23px}
+.rb-shell .rb-intro-meta{margin-bottom:18px}
+.rb-shell .rb-kicker{color:#657269;font-size:11px;letter-spacing:.07em}
+.rb-shell h1{font-family:"Iowan Old Style",Georgia,serif;font-size:clamp(42px,4.3vw,62px);font-weight:500;letter-spacing:-.048em;line-height:1.03;max-width:820px;color:#14221b}
+.rb-shell .rb-decision{margin-top:32px;padding:23px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;background:#ece9df;border-left:4px solid #ad4b3b;border-radius:0 4px 4px 0}
+.rb-shell .rb-decision:not(.rb-decision-concern){border-left-color:#536d5d}
+.rb-shell .rb-decision-copy{min-width:0}
+.rb-shell .rb-decision-eyebrow{font-size:11px;color:#5d6b61;text-transform:uppercase;letter-spacing:.07em}
+.rb-shell .rb-decision-copy strong{display:block;font-size:25px;line-height:1.16;margin-top:6px;font-weight:650;color:#1d2925}
+.rb-shell .rb-decision-copy p{font-size:13px;line-height:1.45;color:#4c5951;margin-top:8px;max-width:600px}
+.rb-shell .rb-decision>button{flex:none;border:1px solid #7c8c81;border-radius:3px;padding:10px 12px;text-decoration:none;color:#1d2925;white-space:nowrap;font-size:12px;font-weight:600}
+.rb-shell .rb-decision>button:hover{background:#f8f7f1}
+.rb-shell .rb-overview-line{display:flex;align-items:center;flex-wrap:wrap;gap:8px;color:#34443a;font-size:13px;margin-top:20px}
+.rb-shell .rb-overview-line>span:first-child{font-weight:700}
+.rb-shell .rb-overview-change{margin-left:auto;color:#657269}
+.rb-shell .rb-config{border-top:1px solid var(--rb-line);border-bottom:1px solid var(--rb-line);padding:11px 0;margin-top:24px}
+.rb-shell .rb-config summary{font-size:12px;font-weight:600}
+.rb-shell .rb-config summary span{font-weight:400}
+.rb-shell .rb-config .rb-diff{margin-top:15px}
+.rb-shell .rb-change{color:#34443a}
+.rb-shell .rb-to{color:#1a7055}
+.rb-shell .rb-analysis{padding:38px 48px 30px}
+.rb-shell .rb-sectionbar{align-items:end;margin-bottom:28px;gap:18px}
+.rb-shell .rb-section-index{font:10px/1.5 Consolas,monospace;letter-spacing:.06em;color:#7a867c}
+.rb-shell .rb-sectionbar h2{font-family:"Iowan Old Style",Georgia,serif;font-size:34px;font-weight:500;letter-spacing:-.04em;margin-top:3px}
+.rb-shell .rb-case-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.rb-shell .rb-segments{background:#e8e8de;border:0;padding:3px}
+.rb-shell .rb-segments button{font-size:12px;color:#4d5d52;padding:6px 10px}
+.rb-shell .rb-segments button[aria-pressed="true"]{background:#fff;color:#1d2925;box-shadow:0 1px 3px #1d29251c}
+.rb-shell .rb-view-toggle{border:1px solid #8b9a8c;border-radius:3px;background:transparent;color:#24362a;font-size:12px;padding:8px 10px;white-space:nowrap}
+.rb-shell .rb-view-toggle:hover,.rb-shell .rb-view-toggle[aria-pressed="true"]{background:#e6eee5}
+.rb-shell .rb-check-head{display:grid;grid-template-columns:235px minmax(0,1fr) minmax(0,1fr) 22px;gap:18px;padding:0 14px 13px;border-bottom:2px solid #26382f;text-transform:uppercase;letter-spacing:.07em;color:#68776b;font-size:10px}
+.rb-shell .rb-cases{border-bottom:1px solid var(--rb-line)}
+.rb-shell .rb-case{background:transparent;border-color:var(--rb-line);min-height:91px;padding:18px 14px;transition:background .15s ease}
+.rb-shell .rb-case:hover{background:#ebece3}
+.rb-shell .rb-case[aria-pressed="true"]{background:#e5e9de}
+.rb-shell .rb-case[aria-pressed="true"]::before{background:#1a7055;top:0;bottom:0;left:0;width:4px}
+.rb-shell .rb-case-checks{grid-template-columns:235px minmax(0,1fr) minmax(0,1fr) 22px;gap:18px}
+.rb-shell .rb-case-timing{grid-template-columns:190px minmax(0,1fr) 70px 22px;gap:15px}
+.rb-shell .rb-case-name{font-size:16px;font-weight:650;line-height:1.35;gap:12px;color:#1b2b25}
+.rb-shell .rb-case-name small{font-size:10px;letter-spacing:.06em;color:#79877b}
+.rb-shell .rb-result{font-size:13px;font-weight:600;line-height:1.3;color:#4d5c50}
+.rb-shell .rb-result small{display:none}
+.rb-shell .rb-result::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:8px;background:#879287}
+.rb-shell .rb-result-pass::before{background:#267e60}
+.rb-shell .rb-result-fail::before{background:#ba5949}
+.rb-shell .rb-result-fail{color:#8e392e}
+.rb-shell .rb-case-arrow{grid-column:-2/-1;font-size:15px;color:#829185;justify-self:end}
+.rb-shell .rb-case:hover .rb-case-arrow{color:#1a7055}
+.rb-shell .rb-chart-head{border-bottom:2px solid #26382f}
+.rb-shell .rb-plot .rb-bar.rb-a{background:#849287}
+.rb-shell .rb-plot .rb-bar.rb-b{background:#1a7055}
+.rb-shell .rb-delta{color:#1d2925}
+.rb-shell .rb-footing{margin:0 48px 18px;padding-top:15px}
+.rb-shell .rb-reading-notes summary{font-size:12px}
+.rb-shell .rb-disclosure{border-color:var(--rb-line);color:#4c5c51;margin-inline:48px}
+.rb-shell .rb-disclosure summary{color:#23362a}
+.rb-shell .rb-inspector{background:#fbfaf5;border-left-color:#cdd3c9}
+.rb-shell .rb-inspector-top{padding:48px 30px 26px}
+.rb-shell .rb-inspector-meta{margin-bottom:30px}
+.rb-shell .rb-inspector h2{font-family:"Iowan Old Style",Georgia,serif;font-size:35px;font-weight:500;letter-spacing:-.045em;color:#192a20;margin-top:0}
+.rb-shell .rb-inspector-status{font-size:12px;color:#7a594e}
+.rb-shell .rb-question{font-size:16px;line-height:1.48;color:#34453a}
+.rb-shell .rb-tabs{padding-inline:30px;border-color:var(--rb-line)}
+.rb-shell .rb-tabs button[aria-pressed="true"]{border-color:#1a7055;color:#172c20}
+.rb-shell .rb-detail-body{padding:30px;min-height:0}
+.rb-shell .rb-letter{border-color:#7a897c;color:#1d2925}
+.rb-shell .rb-letter.rb-candidate{background:#1a7055;border-color:#1a7055;color:#fff}
+.rb-shell .rb-answer-head strong{font-size:11px;letter-spacing:.08em}
+.rb-shell .rb-answer-text{font-size:16px;line-height:1.55;color:#25362b}
+.rb-shell .rb-check-note{color:#68766b}
+.rb-shell .rb-claims summary{color:#1a7055}
+.rb-shell .rb-source-selected{background:#e7eee5}
+.rb-shell .rb-source a{color:#1a7055}
+.rb-shell .rb-inspector-foot{border-color:var(--rb-line);color:#657269}
+.rb-shell .rb-inspector-foot summary{color:#4c5b51}
+.rb-shell .rb-quiet-button{color:#1d2925;background:transparent}
+.rb-shell .rb-quiet-button:hover{background:#e5e9de}
+.rb-shell .rb-exports a{color:#1d2925}
+.rb-shell .rb-exports a:hover{background:#e5e9de}
+.rb-shell .rb-brief{background:#fbfaf5;color:#1d2925;border:1px solid #849288;width:min(590px,calc(100vw - 28px));max-height:85vh;overflow:auto;box-shadow:0 22px 70px #0e1b1740}
+.rb-shell .rb-brief h2{font-family:"Iowan Old Style",Georgia,serif;font-size:32px;font-weight:500;color:#14221b}
+.rb-shell .rb-brief-head button{color:#1d2925}
+.rb-shell .rb-brief>p{color:#34453a;font-size:14px;line-height:1.55}
+.rb-shell .rb-brief dl div{border-color:#cdd3c9;font-size:13px;grid-template-columns:105px 1fr}
+.rb-shell .rb-brief dt{color:#68776b}
+.rb-shell .rb-brief dd{color:#25372b}
+.rb-shell .rb-brief-extra{border-top:1px solid #cdd3c9;padding-top:14px;margin-top:6px;font-size:12px;color:#526159}
+.rb-shell .rb-brief-extra summary{cursor:pointer;color:#25372b}
+.rb-shell .rb-brief-extra p{margin-top:10px;line-height:1.55;overflow-wrap:anywhere}
+@media(max-width:1199px){.rb-shell .rb-layout{grid-template-columns:1fr}.rb-shell .rb-inspector{border-left:0;border-top:1px solid var(--rb-line)}.rb-shell .rb-intro,.rb-shell .rb-analysis{padding-inline:40px}.rb-shell .rb-footing,.rb-shell .rb-disclosure{margin-inline:40px}.rb-shell .rb-inspector:not(.rb-inspector-open){display:none}}
+@media(max-width:760px){.rb-shell .rb-intro{padding:34px 20px 20px}.rb-shell .rb-analysis{padding:32px 20px 24px}.rb-shell .rb-footing,.rb-shell .rb-disclosure{margin-inline:20px}.rb-shell .rb-sectionbar{align-items:start}.rb-shell .rb-case-checks,.rb-shell .rb-check-head{grid-template-columns:190px minmax(0,1fr) minmax(0,1fr) 18px;gap:9px}.rb-shell .rb-case-timing{grid-template-columns:170px minmax(0,1fr) 64px 18px}.rb-shell .rb-inspector-top{padding:30px 20px}.rb-shell .rb-detail-body{padding:24px 20px}.rb-shell .rb-tabs{padding-inline:20px}}
+@media(max-width:560px){.rb-shell .rb-decision{padding:18px;align-items:start;flex-direction:column;gap:14px}.rb-shell .rb-decision-copy strong{font-size:23px}.rb-shell .rb-overview-change{margin-left:0;width:100%}.rb-shell .rb-sectionbar{flex-direction:column;gap:15px}.rb-shell .rb-case-controls{justify-content:flex-start}.rb-shell .rb-check-head{display:none}.rb-shell .rb-case-checks{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 22px;gap:11px;min-height:112px}.rb-shell .rb-case-checks .rb-case-info{grid-column:1/3;grid-row:1}.rb-shell .rb-case-checks .rb-result{grid-row:2;font-size:12px}.rb-shell .rb-case-checks .rb-result small{display:inline-block;margin-right:6px;font:10px/1 Consolas,monospace;color:#627264}.rb-shell .rb-case-checks .rb-case-arrow{grid-row:1;grid-column:3}.rb-shell .rb-case-timing{grid-template-columns:minmax(0,1fr) 60px;gap:8px}.rb-shell .rb-case-timing .rb-case-info{grid-column:1/3}.rb-shell .rb-case-timing .rb-plot{grid-column:1;grid-row:2}.rb-shell .rb-case-timing .rb-delta{grid-column:2;grid-row:2}.rb-shell .rb-case-timing .rb-case-arrow{display:none}.rb-shell .rb-case-name{font-size:17px}.rb-shell .rb-case{padding:16px 12px}.rb-shell .rb-chart-head{display:none}}

@@ -15,10 +15,10 @@ test('fixture single run, suite, candidate, real export, holdout, and reload', a
   await expect(page.locator('.rb-decision')).toContainText('No Improvement');
   await expect(page.locator('.rb-change')).toHaveCount(2);
   await expect(page.locator('.rb-case')).toHaveCount(4);
-  await page.getByRole('button', { name: 'Review brief' }).click();
+  await page.getByRole('button', { name: 'Read decision details' }).click();
   await expect(page.getByRole('dialog', { name: 'Review brief' })).toContainText('Recorded decision: No Improvement');
   await page.keyboard.press('Escape');
-  await expect(page.getByRole('button', { name: 'Review brief' })).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Read decision details' })).toBeFocused();
   await page.getByText('Export and final holdout').click();
   const manifestUrl = await page.getByRole('link', { name: 'Full bundle' }).getAttribute('href');
   const bundle = await (await request.get(manifestUrl!)).json();
