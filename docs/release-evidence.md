@@ -14,7 +14,7 @@ The fixture workflow completes and the optimizer reports **no improvement**. The
 
 ## Pending live acceptance
 
-No paid Sapiom call, real latency measurement, live quality comparison, provider price attribution, break-even calculation, or deployment of the agent definition has been performed. Live acceptance requires user-provided credentials and an approved spend cap, an enforceable Sapiom spending rule, and metering for both proposal and experiment calls. Until then, the release is a working local fixture-mode product with a guarded live adapter, not a validated performance win.
+A short standalone Sapiom Router connectivity request completed with a 148-token usage report. Its charge was not settled in the dashboard at inspection time, and it did not run the Ablatrix agent. No production agent run, live quality comparison, provider price attribution, break-even calculation, or deployment of the agent definition has been performed. Live acceptance requires an enforceable Sapiom spending rule and metering for both proposal and experiment calls. Until then, the release is a working local fixture-mode product with a guarded live adapter, not a validated performance win.
 
 The corrective follow-up adds a fake metered provider test path and shared SQLite reservations. It does not unlock the real provider: see [the accounting boundary](sapiom-accounting.md). Passing injected-provider tests proves the orchestration and accounting assumptions in code, not Sapiom's actual charge or cap behavior.
 

@@ -1,0 +1,15 @@
+{
+  "name": "ablatrix-research-agent",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@sapiom/agent": "0.14.2",
+    "zod": "4.5.4"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}
