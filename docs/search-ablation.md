@@ -1,5 +1,7 @@
 # Search ablation pilot
 
+The first standalone **live** 32-call batch and its measured results are in [pilot-live-results-2026-09-24.md](pilot-live-results-2026-09-24.md). The `/pilot` app's production provider remains gated; the live batch used a separate exploratory harness after the user waived the remote-ceiling condition for that batch.
+
 Open `/pilot` after `npm run local`. Select **Run local demo** to exercise the 32-call synthetic rehearsal. `npm run pilot` runs the same rehearsal from the terminal and saves a JSON evidence bundle under `outputs/`. The dedicated state database is `.data/search-pilot.sqlite` (`ABLATRIX_PILOT_DB` overrides it). The CLI and web server must not own this database at the same time.
 
 ## Frozen question and protocol
@@ -23,7 +25,7 @@ Each export stores the complete frozen suite, source checksums, seed and schedul
 
 ## Named model workflow and live boundary
 
-`server/pilot-workflow.ts` implements the actual search/answer sequence using injected search and Router transports. `createNamedRouterTransport` uses the documented `https://router.sapiom.ai/v1/chat/completions` endpoint and requests `gpt-luna`. It verifies the returned alias and forces a structured tool response. The named alias is not a pinned provider model revision. Tests inject both transports and make no network requests.
+`server/pilot-workflow.ts` implements the actual search/answer sequence using injected search and Router transports. `createNamedRouterTransport` uses the documented `https://router.sapiom.ai/v1/chat/completions` endpoint and requests `gpt-luna` with `reasoning_effort: none` to support the structured function tool. It verifies the returned alias and forces a structured tool response. The named alias is not a pinned provider model revision. Tests inject both transports and make no network requests.
 
 The generic `ctx.sapiom.llm.run` used by the older research agent only selects a routing label, so it cannot establish the pilot's named-model control. A future Sapiom integration must run capability search inside a deployed agent and connect the named-model Router transport through a supported credential surface. Local Sapiom stubs do not intercept raw fetch.
 

@@ -41,6 +41,7 @@ test('both arms use the same named model, generation settings and prompt except 
     assert.equal(JSON.stringify(call.body).includes('requiredFacts'), false);
   }
   const offMessages = calls[0].body.messages as { content: string }[], onMessages = calls[1].body.messages as { content: string }[];
+  assert.equal(calls[0].body.reasoning_effort, 'none');
   const offData = JSON.parse(offMessages[1].content), onData = JSON.parse(onMessages[1].content);
   assert.equal(offData.searchHypothesis, ''); assert.equal(onData.searchHypothesis, 'Search says workflows can be automated.');
   onData.searchHypothesis = '';

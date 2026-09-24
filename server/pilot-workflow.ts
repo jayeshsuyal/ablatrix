@@ -77,7 +77,7 @@ export function createNamedRouterTransport(apiKey: string, fetchImpl: typeof fet
         method: 'POST', signal: AbortSignal.timeout(30_000),
         headers: { authorization: `Bearer ${apiKey}`, 'content-type': 'application/json', 'x-sapiom-lane': request.lane },
         body: JSON.stringify({
-          model: request.model, max_tokens: request.maxTokens, messages: request.messages,
+          model: request.model, max_tokens: request.maxTokens, reasoning_effort: 'none', messages: request.messages,
           tools: [{ type: 'function', function: { name: TOOL_NAME, description: 'Return an answer supported by exact quotes from the frozen source.', parameters: {
             type: 'object', additionalProperties: false, properties: {
               answer: { type: 'string', minLength: 1, maxLength: 12_000 },
