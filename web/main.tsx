@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import './style.css';
 import Pilot from './Pilot';
+import FeedbackLoop from './FeedbackLoop';
 
 type Run = {
   id: string; taskId: string; mode: 'fixture' | 'live'; status: 'running' | 'completed' | 'failed';
@@ -153,7 +154,7 @@ function App() {
       <div className="sidebar-foot">Local workspace<br/>Research agent · baseline</div>
     </aside>
     <main>
-      <header><div><div className="eyebrow">WORKSPACE / BASELINE</div><h1>Research run</h1><p>Start with one task. Every response is saved with its sources and execution details.</p></div><div className="workspace-header-actions"><a className="pilot-workspace-link" href="/pilot">Search experiment ↗</a><span className={`mode ${mode}`}>{mode === 'fixture' ? '● Fixture mode' : '● Live mode'}</span></div></header>
+      <header><div><div className="eyebrow">WORKSPACE / BASELINE</div><h1>Research run</h1><p>Start with one task. Every response is saved with its sources and execution details.</p></div><div className="workspace-header-actions"><a className="pilot-workspace-link" href="/loop">Feedback loop ↗</a><a className="pilot-workspace-link" href="/pilot">Search experiment ↗</a><span className={`mode ${mode}`}>{mode === 'fixture' ? '● Fixture mode' : '● Live mode'}</span></div></header>
       <div className="content">
         {loading && <div className="notice" role="status">Loading saved runs and experiments…</div>}
         {mode === 'fixture' && <div className="notice"><strong>Synthetic demonstration</strong><span>Fixture responses are for testing the workflow. They are not live research or benchmark evidence.</span></div>}
@@ -217,4 +218,5 @@ function App() {
   </div>;
 }
 
-createRoot(document.getElementById('root')!).render(window.location.pathname.replace(/\/$/, '') === '/pilot' ? <Pilot /> : <App />);
+const route = window.location.pathname.replace(/\/$/, '');
+createRoot(document.getElementById('root')!).render(route === '/loop' ? <FeedbackLoop /> : route === '/pilot' ? <Pilot /> : <App />);
