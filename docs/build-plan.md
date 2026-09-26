@@ -1,6 +1,6 @@
 # Six PR build plan and evidence ledger
 
-GitHub review follow-up, September 26: PR #10 has automated Codex review enabled for future pull requests and received a manual review on its current head. The reviewer flagged the `/loop` Router readiness gate for not requiring a deployed agent. Contributor guidance now distinguishes the explicitly approved local Router product-QA experiment from production `agents.run` research, whose deployment and provider accounting gates remain closed. This changes review guidance only; it does not enable production dispatch, establish provider-enforced spend, or turn AI-only assessments into measured answer quality.
+GitHub review follow-up, September 26: PR #10 has automated Codex review enabled for future pull requests and received a manual review on its current head. The reviewer flagged the `/loop` Router readiness gate for not requiring a deployed agent. Contributor guidance now distinguishes the explicitly approved local Router product-QA experiment from production `agents.run` research, whose deployment and provider accounting gates remain closed. The next review found that the original standalone calibration runner omitted external validation reservations. It now imports the known completed packet, excludes both app and external reservations, and reserves its selected products before any paid validation dispatch. This does not enable production dispatch, establish provider-enforced spend, or turn AI-only assessments into measured answer quality.
 
 ## Current product-QA prototype
 
