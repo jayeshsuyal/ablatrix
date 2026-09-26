@@ -109,24 +109,21 @@ export class OptimizationRunner {
       record.status = 'failed'; record.error = 'Modifier proposal exceeds the allowlisted one-change boundary';
       this.store.saveOptimization(record); throw new Error(record.error);
     }
-    let candidate: ExperimentRecord;
     try {
-      candidate = this.experiments.create({
+      record.candidateId = candidateId(settings); record.settings = settings;
+      record.proposal = `Change from baseline: ${JSON.stringify(settings)}.`;
+      record.challenge = 'Waiting for candidate evidence.'; record.proposalMetadata = proposalMetadata;
+      record.updatedAt = new Date().toISOString();
+      this.experiments.create({
         taskIds: baseline.taskIds, maxAttempts: baseline.maxAttempts,
         maxDurationMs: baseline.maxDurationMs, maxSpendUsd: baseline.maxSpendUsd,
         fixtureDelayMs: baseline.fixtureDelayMs, settings
-      });
+      }, record);
     } catch (error) {
       record.status = 'failed'; record.error = error instanceof Error ? error.message : String(error);
       record.updatedAt = new Date().toISOString(); this.store.saveOptimization(record);
       throw error;
     }
-    record.candidateExperimentId = candidate.id;
-    record.candidateId = candidateId(settings); record.settings = settings;
-    record.proposal = `Change from baseline: ${JSON.stringify(settings)}.`;
-    record.challenge = 'Waiting for candidate evidence.'; record.proposalMetadata = proposalMetadata;
-    record.updatedAt = new Date().toISOString();
-    this.store.saveOptimization(record);
     return record;
   }
   refresh(record: OptimizationRecord): OptimizationRecord {

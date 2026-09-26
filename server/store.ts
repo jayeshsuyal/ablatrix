@@ -71,6 +71,21 @@ export class RunStore {
       ON CONFLICT(id) DO UPDATE SET status=excluded.status, document=excluded.document`)
       .run(experiment.id, experiment.status, experiment.createdAt, JSON.stringify(experiment));
   }
+  saveLinkedCandidate(experiment: ExperimentRecord, optimization: OptimizationRecord): void {
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      const saved = this.getOptimization(optimization.id);
+      if (!saved || saved.status !== 'running' || saved.candidateExperimentId || this.getExperiment(experiment.id)) throw new Error('Candidate experiment cannot be linked to this optimization.');
+      optimization.candidateExperimentId = experiment.id;
+      this.saveExperiment(experiment);
+      this.saveOptimization(optimization);
+      this.db.exec('COMMIT');
+    } catch (error) {
+      this.db.exec('ROLLBACK');
+      optimization.candidateExperimentId = '';
+      throw error;
+    }
+  }
   getExperiment(id: string): ExperimentRecord | null {
     const row = this.db.prepare('SELECT document FROM experiments WHERE id=?').get(id) as { document: string } | undefined;
     return row ? JSON.parse(row.document) as ExperimentRecord : null;

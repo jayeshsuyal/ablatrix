@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { RunStore } from './store.ts';
 import { ExperimentRunner } from './experiments.ts';
 import { OptimizationRunner } from './optimizations.ts';
+import type { OptimizationRecord } from './contracts.ts';
 import { finalHoldoutAssessment, runFinalFixtureHoldout } from './holdout.ts';
 
 async function until(check: () => boolean): Promise<void> {
@@ -113,5 +114,29 @@ test('an interrupted proposal is marked failed on startup', () => {
     new OptimizationRunner(store, runner, 'fixture');
     assert.equal(store.getOptimization('pending')?.status, 'failed');
     assert.match(store.getOptimization('pending')?.error ?? '', /interrupted/);
+  } finally { store.close(); rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('candidate experiment and optimization link are saved together before queue dispatch', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'ablatrix-candidate-link-'));
+  const store = new RunStore(join(directory, 'runs.sqlite'));
+  try {
+    const runner = new ExperimentRunner(store, 'fixture');
+    const at = new Date().toISOString();
+    const optimization: OptimizationRecord = {
+      id: 'optimization-link-test', mode: 'fixture' as const, status: 'running' as const,
+      baselineExperimentId: 'baseline', candidateExperimentId: '', candidateId: 'pending',
+      settings: { modelAssignment: 'search-native' as const, promptStyle: 'full' as const, cacheTtlMinutes: 0, maxSources: 1, parallelReads: false },
+      createdAt: at, updatedAt: at, investigation: '', proposal: '', decision: 'pending' as const, challenge: '', error: null
+    };
+    store.saveOptimization(optimization);
+    const candidate = runner.create({ taskIds: ['github-platform-v1'], settings: { ...optimization.settings, maxSources: 2 } }, optimization);
+    assert.equal(store.getOptimization(optimization.id)?.candidateExperimentId, candidate.id);
+    assert.equal(store.getExperiment(candidate.id)?.status, 'queued');
+    runner.cancel(candidate.id);
+    const before = store.listExperiments().length;
+    assert.throws(() => runner.create({ taskIds: ['github-platform-v1'] }, { ...optimization, id: 'missing-optimization', candidateExperimentId: '' }), /cannot be linked/);
+    assert.equal(store.listExperiments().length, before, 'a failed link cannot leave an orphan candidate');
+    await new Promise(resolve => setImmediate(resolve));
   } finally { store.close(); rmSync(directory, { recursive: true, force: true }); }
 });
