@@ -183,6 +183,24 @@ test('external live reservations remain visible and cannot be reused by app vali
   } finally { db.close(); f.loop.close(); rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('fixture validation consumes products for live and standalone validation', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'feedback-cross-mode-validation-')); const path = join(dir, 'loop.sqlite');
+  const f = setup({}, path); const db = new DatabaseSync(path);
+  try {
+    const fixtureSeed = await f.run('fixture'); f.review(fixtureSeed);
+    const fixturePolicy = await f.loop.propose({ mode: 'fixture', runIds: [fixtureSeed.id] });
+    const fixtureValidation = await f.loop.validate(fixturePolicy.id);
+    assert.deepEqual(fixtureValidation.caseIds, f.corpus.cases.slice(2, 4).map(item => item.id));
+    const consumed = f.corpus.cases.slice(2, 4);
+    assert.throws(() => reserveExternalValidation(db, f.corpus, 'packet:fixture-overlap', 'a'.repeat(64), consumed), /not fresh/);
+    const liveSeed = await f.run('live'); f.review(liveSeed);
+    const livePolicy = await f.loop.propose({ mode: 'live', runIds: [liveSeed.id] });
+    const liveValidation = await f.loop.validate(livePolicy.id);
+    assert.deepEqual(liveValidation.caseIds, f.corpus.cases.slice(4, 6).map(item => item.id));
+    assert.equal(f.loop.overview().validations.length, 2);
+  } finally { db.close(); f.loop.close(); rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('app uses snippet citations when supported and stops a live validation after one failed call', async () => {
   let calls = 0;
   const f = setup({

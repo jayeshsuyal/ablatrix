@@ -22,7 +22,7 @@ export function ensureValidationLedger(db: DatabaseSync): void {
 function officialValidations(db: DatabaseSync): LoopValidation[] {
   if (!db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='loop_documents'").get()) return [];
   return (db.prepare("SELECT document FROM loop_documents WHERE kind='validation'").all() as { document: string }[])
-    .map(row => JSON.parse(row.document) as LoopValidation).filter(item => item.mode === 'live');
+    .map(row => JSON.parse(row.document) as LoopValidation);
 }
 
 export function externalValidationProducts(db: DatabaseSync, corpusVersion: string): Set<string> {
@@ -53,7 +53,7 @@ export function reserveExternalValidation(db: DatabaseSync, corpus: ProductCorpu
       db.exec('COMMIT'); return;
     }
     const official = officialValidations(db);
-    if (official.length + externalValidationRounds(db, corpus.version) >= 3) throw new Error('Three live validation rounds are already consumed.');
+    if (official.length + externalValidationRounds(db, corpus.version) >= 3) throw new Error('Three validation rounds are already consumed.');
     const used = new Set(official.flatMap(validation => validation.caseIds.map(id => corpus.cases.find(item => item.id === id)?.productId).filter((id): id is string => !!id)));
     for (const item of cases) {
       const expected = corpus.cases.find(entry => entry.id === item.id);

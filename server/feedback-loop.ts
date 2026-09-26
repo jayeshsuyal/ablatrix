@@ -306,9 +306,9 @@ export class FeedbackLoop {
     if (parent.mode !== candidate.mode || this.active(candidate.mode).id !== parent.id) fail('candidate parent is no longer active');
     const previous = this.list<LoopValidation>('validation');
     if (previous.some(item => item.candidateId === candidate.id)) fail('a candidate gets one validation attempt');
-    if (previous.filter(item => item.mode === candidate.mode).length + (candidate.mode === 'live' ? externalValidationRounds(this.db, this.corpus.version) : 0) >= 3) fail('three validation rounds consumed');
-    const consumedProducts = new Set(previous.filter(item => item.mode === candidate.mode).flatMap(item => item.caseIds.map(id => this.corpus.cases.find(item => item.id === id)).filter(item => item?.split === 'validation').map(item => item!.productId)));
-    if (candidate.mode === 'live') for (const productId of externalValidationProducts(this.db, this.corpus.version)) consumedProducts.add(productId);
+    if (previous.length + externalValidationRounds(this.db, this.corpus.version) >= 3) fail('three validation rounds consumed');
+    const consumedProducts = new Set(previous.flatMap(item => item.caseIds.map(id => this.corpus.cases.find(item => item.id === id)).filter(item => item?.split === 'validation').map(item => item!.productId)));
+    for (const productId of externalValidationProducts(this.db, this.corpus.version)) consumedProducts.add(productId);
     const fresh: ProductCase[] = [];
     for (const item of this.corpus.cases) if (item.split === 'validation' && !consumedProducts.has(item.productId) && !fresh.some(selected => selected.productId === item.productId)) { fresh.push(item); if (fresh.length === 2) break; }
     if (fresh.length < 2) fail('two fresh product-disjoint validation cases are required');
@@ -326,9 +326,10 @@ export class FeedbackLoop {
       const validation: LoopValidation = { id: randomUUID(), candidateId: candidate.id, parentId: parent.id, mode: candidate.mode, status: 'running', caseIds: cases.map(item => item.id), runIds: [], createdAt: now(), reason: `${fresh.length} fresh validation products; ${regression.length} reviewed development regression checks.`, parentCorrect: null, candidateCorrect: null, regressions: null };
       this.db.exec('BEGIN IMMEDIATE');
       try {
-        const current = this.list<LoopValidation>('validation').filter(item => item.mode === candidate.mode);
-        const external = candidate.mode === 'live' ? externalValidationProducts(this.db, this.corpus.version) : new Set<string>();
-        if (current.length + (candidate.mode === 'live' ? externalValidationRounds(this.db, this.corpus.version) : 0) >= 3 || current.some(item => item.candidateId === candidate.id) || fresh.some(item => external.has(item.productId) || current.some(validation => validation.caseIds.includes(item.id)))) fail('validation cases were consumed concurrently');
+        const current = this.list<LoopValidation>('validation');
+        const consumed = new Set(current.flatMap(item => item.caseIds.map(id => this.corpus.cases.find(entry => entry.id === id)).filter(item => item?.split === 'validation').map(item => item!.productId)));
+        for (const productId of externalValidationProducts(this.db, this.corpus.version)) consumed.add(productId);
+        if (current.length + externalValidationRounds(this.db, this.corpus.version) >= 3 || current.some(item => item.candidateId === candidate.id) || fresh.some(item => consumed.has(item.productId))) fail('validation cases were consumed concurrently');
         this.save('validation', validation); this.event('validation_started', 'Validation cases reserved before execution; no automatic retries.', candidate.id);
         this.db.exec('COMMIT');
       } catch (error) { this.db.exec('ROLLBACK'); throw error; }
@@ -477,6 +478,6 @@ export class FeedbackLoop {
     if (this.active(input.mode).id === target.id) fail('policy is already active');
     this.setMeta(`active:${input.mode}`, target.id); this.event('rollback', `Active ${input.mode} policy restored to ${target.id}.`, target.id); return this.overview();
   }
-  export(): unknown { return { format: 'ablatrix-feedback-loop-v0.3', exportedAt: now(), ...this.publicOverview(), experiment: { corpusVersion: this.corpus.version, proposalRounds: { fixture: this.meta<number>('rounds:fixture') ?? 0, live: this.meta<number>('rounds:live') ?? 0 }, disclaimer: 'Fixture scores are synthetic. Live semantic correctness requires human review. Validation cases are consumed once per mode; holdout is excluded.' } }; }
+  export(): unknown { return { format: 'ablatrix-feedback-loop-v0.3', exportedAt: now(), ...this.publicOverview(), experiment: { corpusVersion: this.corpus.version, proposalRounds: { fixture: this.meta<number>('rounds:fixture') ?? 0, live: this.meta<number>('rounds:live') ?? 0 }, disclaimer: 'Fixture scores are synthetic. Live semantic correctness requires human review. Validation products are consumed across fixture, live, and external rounds; holdout is excluded.' } }; }
   close(): void { if (this.closed) return; if (this.busy) fail('cannot close while an operation is running'); this.db.close(); this.retriever.close(); this.finalRetriever?.close(); FeedbackLoop.owners.delete(this.path); if (this.lockPath) unlinkSync(this.lockPath); this.closed = true; }
 }

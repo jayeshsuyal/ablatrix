@@ -306,7 +306,7 @@ export default function FeedbackLoop() {
   const batches = overview?.batches.filter(item => item.mode === mode) ?? [];
   const activeBatch = batches.find(item => item.policyId === activePolicy?.id);
   const usedValidationProducts = new Set([
-    ...(overview?.validations.filter(item => item.mode === 'live').flatMap(item => item.caseIds.map(id => overview.cases.find(entry => entry.id === id && entry.split === 'validation')?.productId).filter((id): id is string => !!id)) ?? []),
+    ...(overview?.validations.flatMap(item => item.caseIds.map(id => overview.cases.find(entry => entry.id === id && entry.split === 'validation')?.productId).filter((id): id is string => !!id)) ?? []),
     ...(overview?.externalValidationCases ?? []).map(item => item.productId)
   ]);
   const validationProductCount = overview?.cases.filter(item => item.split === 'validation').length ?? 0;
