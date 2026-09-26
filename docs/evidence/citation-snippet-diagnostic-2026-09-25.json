@@ -1,0 +1,265 @@
+{
+  "format": "ablatrix-citation-snippet-diagnostic-v1",
+  "hypothesis": "Server-provided literal quote IDs reduce exact-quote execution failures while preserving answer correctness and support.",
+  "interpretation": "Development-only exploratory diagnostic using the previously rejected candidate policy. It does not reopen its consumed validation or change the active baseline. Exact quote membership is mechanical; answer correctness and citation relevance require independent human review. No fresh validation product is consumed.",
+  "policyId": "f9f3e212-5691-48d9-aaf3-0fd8ad79aff9",
+  "policyStatus": "rejected",
+  "modelAlias": "gpt-luna",
+  "sameSavedRetrievalWithinEachPair": true,
+  "cases": [
+    {
+      "caseId": "epqa-train-775",
+      "baselineRunId": "65927dbb-3c07-4609-9985-e063fb7f160f",
+      "question": "what type of wood is this made of and is it real glass?",
+      "productId": "B008402S3K",
+      "corpusVersion": "epqa-demo-v1-cec976cc2f22",
+      "passageIds": [
+        "epqa-B008402S3K-review-33d481baf8c302dd",
+        "epqa-B008402S3K-review-b70384bc8a4748d3",
+        "epqa-B008402S3K-review-87a352a6f9eba57e",
+        "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+        "epqa-B008402S3K-attribute-619f6c0d99b503d0"
+      ],
+      "quoteOptions": [
+        {
+          "id": "p1q1",
+          "passageId": "epqa-B008402S3K-review-33d481baf8c302dd",
+          "quote": "made out of pressed wood material but is nice and light perfect for hanging."
+        },
+        {
+          "id": "p2q1",
+          "passageId": "epqa-B008402S3K-review-b70384bc8a4748d3",
+          "quote": "very nice looking, easy to put on the wall and its real wood!"
+        },
+        {
+          "id": "p3q1",
+          "passageId": "epqa-B008402S3K-review-87a352a6f9eba57e",
+          "quote": "this is made of the cheapest recycled cardboard and wood you can think of."
+        },
+        {
+          "id": "p4q1",
+          "passageId": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+          "quote": "but."
+        },
+        {
+          "id": "p4q2",
+          "passageId": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+          "quote": "not mentioned in the description is that this is made of particle board with a wood grain paper overlay."
+        },
+        {
+          "id": "p5q1",
+          "passageId": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+          "quote": "material:  { value:\"engineered wood\" }; { value:\"glass\" }; { value:\"metal\" }; { value:\"plastic\" }"
+        }
+      ],
+      "quoteOptionCount": 6
+    },
+    {
+      "caseId": "epqa-train-647",
+      "baselineRunId": "bb04efbe-b3bc-453f-8d49-6aae0fee9bb9",
+      "question": "is this phone a native union product as advertised by the pic?",
+      "productId": "B003DKL4JA",
+      "corpusVersion": "epqa-demo-v1-cec976cc2f22",
+      "passageIds": [
+        "epqa-B003DKL4JA-cqa-40546815d0dae28e",
+        "epqa-B003DKL4JA-review-3caca617c0fd6348",
+        "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+        "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+        "epqa-B003DKL4JA-attribute-7a1cda449e751d9d"
+      ],
+      "quoteOptions": [
+        {
+          "id": "p1q1",
+          "passageId": "epqa-B003DKL4JA-cqa-40546815d0dae28e",
+          "quote": "the only complaint i ever had with the handset was pre smart phone when i had a flip phone and had to use the adapter, some calls, a very small percentage, would say they heard echoing and when i disconnected the receiver the echo went away, still worth it in my book for my own personal safety."
+        },
+        {
+          "id": "p1q2",
+          "passageId": "epqa-B003DKL4JA-cqa-40546815d0dae28e",
+          "quote": "Question: is this phone a native union product as advertised by the pic?"
+        },
+        {
+          "id": "p2q1",
+          "passageId": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+          "quote": "not the product i was promised, advertised as native union but was a cheap knock off."
+        },
+        {
+          "id": "p3q1",
+          "passageId": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+          "quote": "and to those wondering, this is indeed a genuine native union model and not a knock off."
+        },
+        {
+          "id": "p4q1",
+          "passageId": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+          "quote": "manufacturer:  { value:\"native union\" }"
+        },
+        {
+          "id": "p5q1",
+          "passageId": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+          "quote": "brand:  { value:\"native union\" }"
+        }
+      ],
+      "quoteOptionCount": 6
+    }
+  ],
+  "steps": [
+    {
+      "caseId": "epqa-train-775",
+      "arm": "raw_quote",
+      "baselineRunId": "65927dbb-3c07-4609-9985-e063fb7f160f",
+      "status": "passed_execution",
+      "answer": {
+        "answer": "The available product attribute lists the material as engineered wood and glass, but it does not specify the wood species or confirm whether the glass is real glass. Customer reports conflict on the wood construction: one says pressed wood, while others describe real wood, recycled cardboard/wood, or particle board with a wood-grain paper overlay. Therefore, the specific type of wood and whether the glass is genuinely glass cannot be confirmed from the supplied evidence.",
+        "status": "insufficient_evidence",
+        "citations": [
+          {
+            "passageId": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+            "quote": "material:  { value:\"engineered wood\" }; { value:\"glass\" }; { value:\"metal\" }; { value:\"plastic\" }"
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-33d481baf8c302dd",
+            "quote": "made out of pressed wood material but is nice and light perfect for hanging."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+            "quote": "not mentioned in the description is that this is made of particle board with a wood grain paper overlay."
+          }
+        ]
+      },
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 697,
+        "outputTokens": 265
+      },
+      "durationMs": 3401,
+      "exactQuoteMembership": true,
+      "humanReview": null
+    },
+    {
+      "caseId": "epqa-train-775",
+      "arm": "snippet_id",
+      "baselineRunId": "65927dbb-3c07-4609-9985-e063fb7f160f",
+      "status": "passed_execution",
+      "answer": {
+        "answer": "The listed material is engineered wood, and glass is included in the product materials. Customer reports conflict on the wood construction—some describe pressed wood or particle board with a wood-grain paper overlay, while another calls it real wood—so the exact wood type is not definitively established. The evidence does not confirm whether the glass is real glass rather than another material.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+            "quote": "material:  { value:\"engineered wood\" }; { value:\"glass\" }; { value:\"metal\" }; { value:\"plastic\" }"
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-33d481baf8c302dd",
+            "quote": "made out of pressed wood material but is nice and light perfect for hanging."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+            "quote": "not mentioned in the description is that this is made of particle board with a wood grain paper overlay."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-b70384bc8a4748d3",
+            "quote": "very nice looking, easy to put on the wall and its real wood!"
+          }
+        ]
+      },
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1007,
+        "outputTokens": 131
+      },
+      "durationMs": 2403,
+      "quoteIds": [
+        "p5q1",
+        "p1q1",
+        "p4q2",
+        "p2q1"
+      ],
+      "optionCount": 6,
+      "exactQuoteMembership": true,
+      "humanReview": null
+    },
+    {
+      "caseId": "epqa-train-647",
+      "arm": "snippet_id",
+      "baselineRunId": "bb04efbe-b3bc-453f-8d49-6aae0fee9bb9",
+      "status": "passed_execution",
+      "answer": {
+        "answer": "The product listing identifies the manufacturer and brand as Native Union. However, authenticity cannot be confirmed definitively: customer reports conflict, with one calling it a cheap knockoff and another calling it genuine. Therefore, the evidence supports that it is advertised/listed as a Native Union product, but does not establish that the specific phone is authentic.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "quote": "manufacturer:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+            "quote": "brand:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "quote": "not the product i was promised, advertised as native union but was a cheap knock off."
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "quote": "and to those wondering, this is indeed a genuine native union model and not a knock off."
+          }
+        ]
+      },
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1085,
+        "outputTokens": 125
+      },
+      "durationMs": 2063,
+      "quoteIds": [
+        "p4q1",
+        "p5q1",
+        "p2q1",
+        "p3q1"
+      ],
+      "optionCount": 6,
+      "exactQuoteMembership": true,
+      "humanReview": null
+    },
+    {
+      "caseId": "epqa-train-647",
+      "arm": "raw_quote",
+      "baselineRunId": "bb04efbe-b3bc-453f-8d49-6aae0fee9bb9",
+      "status": "passed_execution",
+      "answer": {
+        "answer": "The evidence is conflicting, so it cannot definitively establish whether this specific phone is a genuine Native Union product. The product attributes identify the manufacturer and brand as Native Union, and one customer says it is genuine, but another customer reports receiving a cheap knockoff. The supplied evidence does not verify the pictured item’s authenticity.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "quote": "manufacturer:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+            "quote": "brand:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "quote": "this is indeed a genuine native union model and not a knock off."
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "quote": "advertised as native union but was a cheap knock off."
+          }
+        ]
+      },
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 738,
+        "outputTokens": 250
+      },
+      "durationMs": 2550,
+      "exactQuoteMembership": true,
+      "humanReview": null
+    }
+  ],
+  "allowancePerCallUsd": 0.1,
+  "actualBilledCostUsd": null,
+  "startedAt": "2026-09-26T02:12:00.755Z",
+  "finishedAt": "2026-09-26T02:12:11.189Z"
+}

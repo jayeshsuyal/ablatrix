@@ -1,0 +1,322 @@
+{
+  "format": "ablatrix-answer-calibration-v1",
+  "phase": "development_restart",
+  "protocolPath": "docs/answer-calibration-round-2026-09-25.md",
+  "policyId": "exploratory-answer-calibration-2026-09-25",
+  "policySha256": "859759ff966270a0cb5d04ce2bd6ed094e730288633379d675c78e86e76dc7b0",
+  "baselinePolicySha256": "fae04684ca45e5a8240c5b59f1cc8158ceea1ade6b7b24628c693212072ad8e3",
+  "modelAlias": "gpt-luna",
+  "citationInterface": "snippet_id_both_arms",
+  "corpusVersion": "epqa-demo-v1-cec976cc2f22",
+  "cases": [
+    {
+      "caseId": "epqa-train-775",
+      "question": "what type of wood is this made of and is it real glass?",
+      "productId": "B008402S3K",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B008402S3K-review-33d481baf8c302dd",
+            "productId": "B008402S3K",
+            "source": "review",
+            "text": "made out of pressed wood material but is nice and light perfect for hanging.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4935&qa_pair_id=7633&chars=0-76",
+            "sha256": "33d481baf8c302ddaa6814abb8e5cfe9b930df6296588b16f9445429e9b8fef5",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B008402S3K-review-b70384bc8a4748d3",
+            "productId": "B008402S3K",
+            "source": "review",
+            "text": "very nice looking, easy to put on the wall and its real wood!",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4933&qa_pair_id=7631&chars=0-61",
+            "sha256": "b70384bc8a4748d314a087f39c52502c3a4b74f11af8351b2dd7daa8e64a48ec",
+            "lexicalRank": 4,
+            "semanticRank": 1,
+            "score": 0.032018442622950824
+          },
+          {
+            "id": "epqa-B008402S3K-review-87a352a6f9eba57e",
+            "productId": "B008402S3K",
+            "source": "review",
+            "text": "this is made of the cheapest recycled cardboard and wood you can think of.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4934&qa_pair_id=7632&chars=0-74",
+            "sha256": "87a352a6f9eba57ebfc57b05a0318ff542bbd81c05ec94b81dc7a7fbc0f8ec40",
+            "lexicalRank": 1,
+            "semanticRank": 5,
+            "score": 0.03177805800756621
+          },
+          {
+            "id": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+            "productId": "B008402S3K",
+            "source": "review",
+            "text": "but...  not mentioned in the description is that this is made of particle board with a wood grain paper overlay.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4936&qa_pair_id=7634&chars=0-112",
+            "sha256": "2d3f6fc7e07606a54b84794346a5b96b983e8f79cfc19a7da7c3ca1c31038177",
+            "lexicalRank": 3,
+            "semanticRank": 3,
+            "score": 0.031746031746031744
+          },
+          {
+            "id": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+            "productId": "B008402S3K",
+            "source": "attribute",
+            "text": "material:  { value:\"engineered wood\" }; { value:\"glass\" }; { value:\"metal\" }; { value:\"plastic\" }",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4932&qa_pair_id=7630&chars=0-97",
+            "sha256": "619f6c0d99b503d0b149cce2aaa9bc5927bbb8a376ec6502778752e59f77802a",
+            "lexicalRank": 5,
+            "semanticRank": 4,
+            "score": 0.031009615384615385
+          }
+        ],
+        "durationMs": 18.80487500000163,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "epqa-demo-v1-cec976cc2f22"
+      },
+      "baselineRunId": "65927dbb-3c07-4609-9985-e063fb7f160f",
+      "retrievalSha256": "ed87e9e6db63c0f56d25bd2554ad7f1792b3be59a741c5a4630e7eb2eaa2a011"
+    },
+    {
+      "caseId": "epqa-train-647",
+      "question": "is this phone a native union product as advertised by the pic?",
+      "productId": "B003DKL4JA",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B003DKL4JA-cqa-40546815d0dae28e",
+            "productId": "B003DKL4JA",
+            "source": "cqa",
+            "text": "the only complaint i ever had with the handset was pre smart phone when i had a flip phone and had to use the adapter, some calls, a very small percentage, would say they heard echoing and when i disconnected the receiver the echo went away, still worth it in my book for my own personal safety. Question: is this phone a native union product as advertised by the pic?",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4016&qa_pair_id=6334&chars=0-368",
+            "sha256": "40546815d0dae28e67af69a383e45eec40e369d77f2837a7202be9dfc2df0bd8",
+            "lexicalRank": 2,
+            "semanticRank": 1,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "productId": "B003DKL4JA",
+            "source": "review",
+            "text": "not the product i was promised, advertised as native union but was a cheap knock off.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4036&qa_pair_id=6354&chars=0-85",
+            "sha256": "3caca617c0fd6348d54d49aaf1ea4d9a231bc897f8820bb51e9c2bd3e8d59398",
+            "lexicalRank": 1,
+            "semanticRank": 2,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "productId": "B003DKL4JA",
+            "source": "review",
+            "text": "and to those wondering, this is indeed a genuine native union model and not a knock off.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4035&qa_pair_id=6353&chars=0-88",
+            "sha256": "75e68c3a1f4d1e0da17e27e2e9c5b5f6f3a5bd2452190e14b32a0f4fa43f76c7",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "productId": "B003DKL4JA",
+            "source": "attribute",
+            "text": "manufacturer:  { value:\"native union\" }",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4034&qa_pair_id=6352&chars=0-39",
+            "sha256": "7afbf30b240738bdb69ad34164ca12c5a3432efe25067696518e4444abb83ec8",
+            "lexicalRank": 5,
+            "semanticRank": 3,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+            "productId": "B003DKL4JA",
+            "source": "attribute",
+            "text": "brand:  { value:\"native union\" }",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4033&qa_pair_id=6351&chars=0-32",
+            "sha256": "7a1cda449e751d9d6203cd276fc6b7bc3cb063cf9346fd0ec4f4447d352da25c",
+            "lexicalRank": 4,
+            "semanticRank": 5,
+            "score": 0.031009615384615385
+          }
+        ],
+        "durationMs": 9.832666000002064,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "epqa-demo-v1-cec976cc2f22"
+      },
+      "baselineRunId": "bb04efbe-b3bc-453f-8d49-6aae0fee9bb9",
+      "retrievalSha256": "cf3211d27a1e284be69d812e5ce31c918021df5c4b910a9d406395ee8e23fea2"
+    }
+  ],
+  "steps": [
+    {
+      "caseId": "epqa-train-775",
+      "arm": "baseline",
+      "status": "passed_execution",
+      "aiReview": null,
+      "answer": {
+        "answer": "The listed material is engineered wood, and glass is also listed as a material. Customer reports conflict on the wood construction—one describes pressed wood and another particle board with a wood-grain paper overlay—so the exact wood type and whether the glass is specifically real glass are not confirmed by the available evidence.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+            "quote": "material:  { value:\"engineered wood\" }; { value:\"glass\" }; { value:\"metal\" }; { value:\"plastic\" }"
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-33d481baf8c302dd",
+            "quote": "made out of pressed wood material but is nice and light perfect for hanging."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+            "quote": "not mentioned in the description is that this is made of particle board with a wood grain paper overlay."
+          }
+        ]
+      },
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 987,
+        "outputTokens": 111
+      },
+      "durationMs": 2196,
+      "quoteIds": [
+        "p5q1",
+        "p1q1",
+        "p4q2"
+      ],
+      "optionCount": 6,
+      "exactQuoteMembership": true
+    },
+    {
+      "caseId": "epqa-train-775",
+      "arm": "candidate",
+      "status": "passed_execution",
+      "aiReview": null,
+      "answer": {
+        "answer": "The listing identifies the materials as engineered wood and glass, but it does not establish whether the glass is physically real glass. Customer reports conflict on the wood: one describes pressed wood, while another reports particle board with a wood-grain paper overlay. A separate customer says “real wood,” but this is only a customer report and conflicts with the other reports.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+            "quote": "material:  { value:\"engineered wood\" }; { value:\"glass\" }; { value:\"metal\" }; { value:\"plastic\" }"
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-33d481baf8c302dd",
+            "quote": "made out of pressed wood material but is nice and light perfect for hanging."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+            "quote": "not mentioned in the description is that this is made of particle board with a wood grain paper overlay."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-b70384bc8a4748d3",
+            "quote": "very nice looking, easy to put on the wall and its real wood!"
+          }
+        ]
+      },
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1092,
+        "outputTokens": 129
+      },
+      "durationMs": 2563,
+      "quoteIds": [
+        "p5q1",
+        "p1q1",
+        "p4q2",
+        "p2q1"
+      ],
+      "optionCount": 6,
+      "exactQuoteMembership": true
+    },
+    {
+      "caseId": "epqa-train-647",
+      "arm": "candidate",
+      "status": "passed_execution",
+      "aiReview": null,
+      "answer": {
+        "answer": "The listing identifies Native Union as both the brand and manufacturer. However, customer reports conflict: one says it was a cheap knockoff, while another says it was genuine. Therefore, the product is advertised/listed as Native Union, but the supplied evidence does not establish whether the physical phone is authentic.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "quote": "manufacturer:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+            "quote": "brand:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "quote": "not the product i was promised, advertised as native union but was a cheap knock off."
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "quote": "and to those wondering, this is indeed a genuine native union model and not a knock off."
+          }
+        ]
+      },
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1170,
+        "outputTokens": 118
+      },
+      "durationMs": 1806,
+      "quoteIds": [
+        "p4q1",
+        "p5q1",
+        "p2q1",
+        "p3q1"
+      ],
+      "optionCount": 6,
+      "exactQuoteMembership": true
+    },
+    {
+      "caseId": "epqa-train-647",
+      "arm": "baseline",
+      "status": "passed_execution",
+      "aiReview": null,
+      "answer": {
+        "answer": "The product is listed as a Native Union brand and manufacturer, and one customer says it is genuine. However, another customer reports it was a cheap knockoff. Because the customer reports conflict, the evidence does not establish with certainty that the specific phone is authentic Native Union.",
+        "status": "insufficient_evidence",
+        "citations": [
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "quote": "manufacturer:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+            "quote": "brand:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "quote": "and to those wondering, this is indeed a genuine native union model and not a knock off."
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "quote": "not the product i was promised, advertised as native union but was a cheap knock off."
+          }
+        ]
+      },
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1065,
+        "outputTokens": 115
+      },
+      "durationMs": 1989,
+      "quoteIds": [
+        "p4q1",
+        "p5q1",
+        "p3q1",
+        "p2q1"
+      ],
+      "optionCount": 6,
+      "exactQuoteMembership": true
+    }
+  ],
+  "allowancePerCallUsd": 0.1,
+  "actualBilledCostUsd": null,
+  "startedAt": "2026-09-26T02:33:26.317Z",
+  "finishedAt": "2026-09-26T02:33:34.880Z"
+}

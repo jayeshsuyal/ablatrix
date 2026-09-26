@@ -1,0 +1,132 @@
+{
+  "format": "ablatrix-shadow-policy-check-v2",
+  "createdAt": "2026-09-25T19:12:52.248Z",
+  "classification": "exploratory-ai-draft-hypothesis; no human review or measured quality claim",
+  "design": "Two historical baseline answers compared with fresh candidate answers using the same saved retrieval passages and model route. Revision 2 is a behavior check, not a contemporaneous randomized paired evaluation.",
+  "candidatePolicy": {
+    "id": "shadow-partial-answer-clarity-v2",
+    "parentId": "live-baseline",
+    "instructions": "Answer the selected product question using only the supplied evidence. Cite exact supporting quotes and passage IDs. Distinguish listing or manufacturer specifications from customer reports. Address each requested detail separately. Report an explicit listing specification as the listing's claim, with a citation; lack of independent verification alone does not invalidate a stated specification. State unknown details separately. When evidence directly conflicts about a specification, authenticity, or delivered item, explain the conflict and withhold only the disputed conclusion. Return answered when the supported parts give a useful answer, and insufficient_evidence when no requested detail can be answered from the evidence. Never invent a specification or transfer evidence between products.",
+    "sha256": "3cda95cb1334c7ea9e4ec12e625f7a8b0ad54cedcb0a0f6941fc5fb99334a045"
+  },
+  "planningAllowanceUsd": 0.2,
+  "providerBilledCostUsd": null,
+  "results": [
+    {
+      "caseId": "epqa-train-775",
+      "productId": "B008402S3K",
+      "question": "what type of wood is this made of and is it real glass?",
+      "baselineRunId": "65927dbb-3c07-4609-9985-e063fb7f160f",
+      "baselineAnswer": {
+        "answer": "The supplied evidence is conflicting about the wood: customer reviews describe pressed wood, particle board with a wood-grain paper overlay, and also claim “real wood,” while the product attribute lists “engineered wood.” Thus, the evidence supports engineered/pressed wood but does not establish a specific wood species or confirm solid wood. The attribute lists “glass,” but it does not specify whether the glass is real glass; no supplied evidence confirms that detail. Customer reports are not manufacturer specifications.",
+        "status": "insufficient_evidence",
+        "citations": [
+          {
+            "passageId": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+            "quote": "material:  { value:\"engineered wood\" }; { value:\"glass\" }; { value:\"metal\" }; { value:\"plastic\" }"
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+            "quote": "this is made of particle board with a wood grain paper overlay."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-33d481baf8c302dd",
+            "quote": "made out of pressed wood material but is nice and light perfect for hanging."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-b70384bc8a4748d3",
+            "quote": "very nice looking, easy to put on the wall and its real wood!"
+          }
+        ]
+      },
+      "candidateAnswer": {
+        "answer": "Wood: The product attribute lists the material as “engineered wood,” while customer reports describe it as pressed wood, particle board with a wood-grain paper overlay, and—contradictorily—“real wood.” Thus, the supported listing-level description is engineered wood; the exact wood species is not specified. [epqa-B008402S3K-attribute-619f6c0d99b503d0; epqa-B008402S3K-review-33d481baf8c302dd; epqa-B008402S3K-review-2d3f6fc7e07606a5; epqa-B008402S3K-review-b70384bc8a4748d3]\n\nGlass: The product attribute lists “glass” as a material, so the listing claims it includes glass. However, the supplied evidence does not explicitly establish that the glass is real rather than an imitation or confirm which component uses it.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+            "quote": "material:  { value:\"engineered wood\" }; { value:\"glass\" }; { value:\"metal\" }; { value:\"plastic\" }"
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-33d481baf8c302dd",
+            "quote": "made out of pressed wood material but is nice and light perfect for hanging."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+            "quote": "not mentioned in the description is that this is made of particle board with a wood grain paper overlay."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-b70384bc8a4748d3",
+            "quote": "very nice looking, easy to put on the wall and its real wood!"
+          }
+        ]
+      },
+      "candidateModel": "gpt-5.6-luna",
+      "candidateUsage": {
+        "inputTokens": 753,
+        "outputTokens": 416
+      },
+      "candidateDurationMs": 6175,
+      "retrievalSnapshotSha256": "7c022627e191fb4461b023ee979ffc49a78d232ee4a91df3a830ce2c5baf4f2e",
+      "status": "completed"
+    },
+    {
+      "caseId": "epqa-train-647",
+      "productId": "B003DKL4JA",
+      "question": "is this phone a native union product as advertised by the pic?",
+      "baselineRunId": "bb04efbe-b3bc-453f-8d49-6aae0fee9bb9",
+      "baselineAnswer": {
+        "answer": "insufficient_evidence: The supplied evidence is conflicting. Product attributes identify the brand and manufacturer as Native Union, and one customer says it is genuine, but another customer reports it was a cheap knockoff. Customer reports do not establish authenticity, so I cannot determine whether this specific phone is genuinely a Native Union product.",
+        "status": "insufficient_evidence",
+        "citations": [
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+            "quote": "brand:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "quote": "manufacturer:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "quote": "not the product i was promised, advertised as native union but was a cheap knock off."
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "quote": "and to those wondering, this is indeed a genuine native union model and not a knock off."
+          }
+        ]
+      },
+      "candidateAnswer": {
+        "answer": "The listing identifies the phone as a Native Union product: the manufacturer and brand are both listed as “native union.” However, authenticity is disputed in customer reports: one reviewer called it “a cheap knock off,” while another said it was “indeed a genuine native union model.” Therefore, the listing claims it is a Native Union product, but the supplied evidence does not resolve whether the delivered item was authentic.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "quote": "manufacturer:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+            "quote": "brand:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "quote": "not the product i was promised, advertised as native union but was a cheap knock off."
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "quote": "this is indeed a genuine native union model and not a knock off."
+          }
+        ]
+      },
+      "candidateModel": "gpt-5.6-luna",
+      "candidateUsage": {
+        "inputTokens": 794,
+        "outputTokens": 274
+      },
+      "candidateDurationMs": 3590,
+      "retrievalSnapshotSha256": "333115d7f774c34cf762b61a81fc47d5c4c89e54e18b59b08ba56bbac8819917",
+      "status": "completed"
+    }
+  ]
+}

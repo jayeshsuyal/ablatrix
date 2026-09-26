@@ -1,6 +1,31 @@
 # Ablatrix
 
-A local-first performance lab for one built-in, citation-bearing company/product research agent. It stores runs, evaluates a curated task suite, queues bounded experiments, and compares a candidate configuration with its baseline. See [the six-PR ledger](docs/build-plan.md) for release evidence.
+A local agent evaluation lab. Its current prototype turns reviewed product-QA failures into versioned answer-policy candidates, compares each candidate with its parent, and promotes or rejects the change. See [the build ledger](docs/build-plan.md) for implementation evidence and the earlier research experiments.
+
+## Product QA feedback loop — v0.2
+
+Open `/loop` for the saved live experiment when one exists; choose Synthetic demo to exercise **batch answers → review → propose → blind paired validation → promote/reject → final comparison**. SQLite stores the evidence, feedback, policy lineage, runs, and decisions. Rollback restores an earlier version.
+
+- **Evidence:** 304 genuine Amazon ePQA passages across 10 development and six separate validation products, plus 498 passages from 20 unseen final products. The final set has no supplied answer labels. Original annotations and AI-assisted development guidance require independent human review.
+- **Retrieval:** product-filtered BM25 + local BGE semantic embeddings, combined with reciprocal rank fusion. Retrieval, corpus, and model stay fixed while the answer policy changes.
+- **Live model:** Sapiom `gpt-luna`, with structured output, exact-quote provenance checks, bounded requests, and a durable local planning allowance.
+- **Feedback:** a reviewed development failure is required to propose an update. Each live validation answer needs a human correctness/support review with at least one checked product source. Promotion requires a strict gain on fresh validation products and no observed paired regression; development controls only check regressions. Rollback restores a previous version.
+- **Comparison:** one frozen batch per policy version, randomized anonymous A/B review cards, and a 20-product final report with paired outcomes, regressions, uncertainty, latency, tokens, and explicit unknown billed cost. Live final execution requires a full 40-call local preflight.
+- **Demonstration:** the synthetic mode exercises the full workflow. Its scripted scores are clearly labeled and do not establish model improvement.
+
+Prepare the pinned local embedding model before starting:
+
+```sh
+npm ci
+npm run feedback:prepare
+npm run feedback:prepare -- --final
+npm run feedback:retrieval-audit
+npm run local
+```
+
+Then open `http://127.0.0.1:4173/loop`. Preparation downloads public weights once and makes no Sapiom calls. See [setup and live configuration](docs/feedback-loop-local.md), [corpus provenance](docs/product-corpus.md), and [the frozen v0.2 protocol](docs/feedback-loop-v0.2-protocol.md). The final runner is implemented; a human-reviewed live feedback gain has not yet been measured.
+
+The sections below describe the earlier `/pilot` and research workspaces, which retain their own execution and accounting rules.
 
 ## Focused search experiment
 

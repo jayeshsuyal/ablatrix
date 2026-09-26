@@ -1,0 +1,12 @@
+{
+  "format": "ablatrix-answer-calibration-revision2-development-gate-v1",
+  "phasePacket": "answer-calibration-revision2-development-2026-09-25.json",
+  "review": "answer-calibration-revision2-astra-review-2026-09-25.md",
+  "policySha256": "4f8a64b228e3ea8eba2ec1ca09076ea2380f9589f0183d3dfd84557d92c7b90a",
+  "reviewer": "GPT-6 Astra AI assessment",
+  "developmentPassed": true,
+  "reason": "Candidate cabinet answer passed claim support, shopper adequacy, and citation relevance in the blind AI read; the Native Union candidate also passed without a material regression. Selected internal quote-ID markers in cabinet prose were identified and deterministically removed by the shared snippet provider before fresh validation.",
+  "presentationFixVerified": true,
+  "humanReview": null,
+  "policyPromoted": false
+}

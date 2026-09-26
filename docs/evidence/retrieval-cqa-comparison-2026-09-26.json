@@ -1,0 +1,150 @@
+{
+  "format": "ablatrix-cqa-answer-index-comparison-v1",
+  "corpusVersion": "epqa-demo-v1-cec976cc2f22",
+  "split": "development",
+  "annotationCaveat": "AI-assisted passage membership is an imperfect retrieval proxy; answer correctness was not measured.",
+  "baselineHits": 32,
+  "candidateHits": 33,
+  "cases": [
+    {
+      "caseId": "epqa-train-349",
+      "baselineHits": 3,
+      "candidateHits": 3,
+      "baselineFirst": "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+      "candidateFirst": "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+      "candidateIds": [
+        "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+        "epqa-B00251EVPW-review-c44d61711b6f2015",
+        "epqa-B00251EVPW-cqa-8d024252f9007e1f",
+        "epqa-B00251EVPW-bullet-f827f18b1afe5848",
+        "epqa-B00251EVPW-attribute-95b63e3e9dd5c120"
+      ]
+    },
+    {
+      "caseId": "epqa-train-416",
+      "baselineHits": 3,
+      "candidateHits": 3,
+      "baselineFirst": "epqa-B00006IE1F-attribute-58e2bea8e9ff6410",
+      "candidateFirst": "epqa-B00006IE1F-attribute-58e2bea8e9ff6410",
+      "candidateIds": [
+        "epqa-B00006IE1F-attribute-58e2bea8e9ff6410",
+        "epqa-B00006IE1F-cqa-1a022e3122df87d4",
+        "epqa-B00006IE1F-attribute-b59571e7dd4c3025",
+        "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc",
+        "epqa-B00006IE1F-bullet-1a6633e738035f77"
+      ]
+    },
+    {
+      "caseId": "epqa-train-438",
+      "baselineHits": 4,
+      "candidateHits": 4,
+      "baselineFirst": "epqa-B003ZSD5EC-cqa-219ea12f8cef62b4",
+      "candidateFirst": "epqa-B003ZSD5EC-cqa-219ea12f8cef62b4",
+      "candidateIds": [
+        "epqa-B003ZSD5EC-cqa-219ea12f8cef62b4",
+        "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+        "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+        "epqa-B003ZSD5EC-cqa-44fcd518324755cf",
+        "epqa-B003ZSD5EC-attribute-c4aa96e8f1e93b58"
+      ]
+    },
+    {
+      "caseId": "epqa-train-743",
+      "baselineHits": 4,
+      "candidateHits": 4,
+      "baselineFirst": "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+      "candidateFirst": "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+      "candidateIds": [
+        "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+        "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+        "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+        "epqa-B0058YR0XS-review-e716e7c57bb5dbe4",
+        "epqa-B0058YR0XS-review-345c5b719b19e017"
+      ]
+    },
+    {
+      "caseId": "epqa-train-770",
+      "baselineHits": 1,
+      "candidateHits": 1,
+      "baselineFirst": "epqa-B002V92YMA-review-b1ad16045e25e4d7",
+      "candidateFirst": "epqa-B002V92YMA-review-b1ad16045e25e4d7",
+      "candidateIds": [
+        "epqa-B002V92YMA-review-b1ad16045e25e4d7",
+        "epqa-B002V92YMA-review-80a9b1227daf0646",
+        "epqa-B002V92YMA-review-e27a9b01e1834d95",
+        "epqa-B002V92YMA-description-8a4a9bebcbb4671d",
+        "epqa-B002V92YMA-review-938f85f1730d8dca"
+      ]
+    },
+    {
+      "caseId": "epqa-train-775",
+      "baselineHits": 1,
+      "candidateHits": 1,
+      "baselineFirst": "epqa-B008402S3K-review-33d481baf8c302dd",
+      "candidateFirst": "epqa-B008402S3K-review-33d481baf8c302dd",
+      "candidateIds": [
+        "epqa-B008402S3K-review-33d481baf8c302dd",
+        "epqa-B008402S3K-review-b70384bc8a4748d3",
+        "epqa-B008402S3K-review-87a352a6f9eba57e",
+        "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+        "epqa-B008402S3K-attribute-619f6c0d99b503d0"
+      ]
+    },
+    {
+      "caseId": "epqa-train-585",
+      "baselineHits": 5,
+      "candidateHits": 5,
+      "baselineFirst": "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+      "candidateFirst": "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+      "candidateIds": [
+        "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+        "epqa-B00FH9B8RI-review-4fbef905c7cbe4fb",
+        "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+        "epqa-B00FH9B8RI-review-33e3e80248990e7e",
+        "epqa-B00FH9B8RI-attribute-26922d151a0951f3"
+      ]
+    },
+    {
+      "caseId": "epqa-train-728",
+      "baselineHits": 4,
+      "candidateHits": 4,
+      "baselineFirst": "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+      "candidateFirst": "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+      "candidateIds": [
+        "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+        "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+        "epqa-B002ZG7RGM-review-e790d9384382ab4a",
+        "epqa-B002ZG7RGM-description-ab112b1d59926758",
+        "epqa-B002ZG7RGM-review-a9b93eb594ccba9e"
+      ]
+    },
+    {
+      "caseId": "epqa-train-647",
+      "baselineHits": 4,
+      "candidateHits": 5,
+      "baselineFirst": "epqa-B003DKL4JA-cqa-40546815d0dae28e",
+      "candidateFirst": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+      "candidateIds": [
+        "epqa-B003DKL4JA-review-3caca617c0fd6348",
+        "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+        "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+        "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+        "epqa-B003DKL4JA-review-7637a46f0afa1f31"
+      ]
+    },
+    {
+      "caseId": "epqa-train-635",
+      "baselineHits": 3,
+      "candidateHits": 3,
+      "baselineFirst": "epqa-B008UV6YRO-cqa-9e0df0446ae16800",
+      "candidateFirst": "epqa-B008UV6YRO-cqa-9e0df0446ae16800",
+      "candidateIds": [
+        "epqa-B008UV6YRO-cqa-9e0df0446ae16800",
+        "epqa-B008UV6YRO-review-20096a352bc7c9ff",
+        "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+        "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+        "epqa-B008UV6YRO-review-377d63ca2f0ed941"
+      ]
+    }
+  ]
+}
