@@ -20,6 +20,7 @@ export function ensureValidationLedger(db: DatabaseSync): void {
 }
 
 function officialValidations(db: DatabaseSync): LoopValidation[] {
+  if (!db.prepare("SELECT 1 FROM sqlite_master WHERE type='table' AND name='loop_documents'").get()) return [];
   return (db.prepare("SELECT document FROM loop_documents WHERE kind='validation'").all() as { document: string }[])
     .map(row => JSON.parse(row.document) as LoopValidation).filter(item => item.mode === 'live');
 }

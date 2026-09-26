@@ -181,7 +181,7 @@ function App() {
           <p className="muted-text">{report?.uncertainty ?? 'No report yet.'}</p>
           {report && <p className="muted-text">{report.costNote}</p>}
           {report && <p className="muted-text">{report.labelNote}</p>}
-          {report?.evaluations.map(item => <div className="eval-row" key={item.taskId}><strong>{item.taskId}</strong><span>{item.fixture ? 'Fixture · excluded' : item.correct ? 'Passed checks' : 'Failed checks'}</span><small>Answer terms {item.deterministic.answerTermsPresent ? '✓' : '×'} · Approved source {item.deterministic.approvedSourcePresent ? '✓' : '×'} · Citations {item.deterministic.citationsResolve ? '✓' : '×'}</small></div>)}
+          {report?.evaluations.map(item => <div className="eval-row" key={`${item.fixture ? 'fixture' : 'live'}:${item.taskId}`}><strong>{item.taskId}</strong><span>{item.fixture ? 'Fixture · excluded' : item.correct ? 'Passed checks' : 'Failed checks'}</span><small>Answer terms {item.deterministic.answerTermsPresent ? '✓' : '×'} · Approved source {item.deterministic.approvedSourcePresent ? '✓' : '×'} · Citations {item.deterministic.citationsResolve ? '✓' : '×'}</small></div>)}
         </section>
         <section className="panel quality-panel"><div className="section-label">04 / EXPERIMENT RUNNER</div><h2>Bounded comparison run</h2>
           <p className="muted-text">Runs the development and validation tasks serially. Cancellation stops future tasks.</p>

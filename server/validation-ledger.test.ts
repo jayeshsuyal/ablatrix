@@ -3,8 +3,10 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { DatabaseSync } from 'node:sqlite';
 import { FeedbackLoop } from './feedback-loop.ts';
 import { loadProductCorpus } from './product-corpus.ts';
+import { externalValidationReservations, importKnownValidationPacket } from './validation-ledger.ts';
 import type { LoopProvider, LoopRetriever } from './loop-types.ts';
 
 test('a new app database imports the completed external round before selecting validation cases', () => {
@@ -20,4 +22,17 @@ test('a new app database imports the completed external round before selecting v
     loop.close(); loop = new FeedbackLoop(corpus, retriever, provider, path);
     assert.equal(loop.overview().externalValidationCases.length, 2, 'restart must not duplicate the imported round');
   } finally { loop?.close(); rmSync(dir, { recursive: true, force: true }); }
+});
+
+test('known validation packet imports into a fresh database and remains idempotent', () => {
+  const db = new DatabaseSync(':memory:');
+  try {
+    const corpus = loadProductCorpus();
+    importKnownValidationPacket(db, corpus);
+    const first = externalValidationReservations(db, corpus.version);
+    assert.equal(first.length, 2);
+    assert.equal(new Set(first.map(item => item.productId)).size, 2);
+    importKnownValidationPacket(db, corpus);
+    assert.deepEqual(externalValidationReservations(db, corpus.version), first);
+  } finally { db.close(); }
 });
