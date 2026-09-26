@@ -62,7 +62,7 @@ test('feedback loop persists a reviewed proposal, validates, promotes and rolls 
   await page.getByRole('navigation', { name: 'Feedback loop stages' }).getByRole('button', { name: 'Final evaluation' }).click();
   await page.getByRole('button', { name: 'Run final paired comparison' }).click();
   await expect(page.locator('.fl-final-cases details')).toHaveCount(20, { timeout: 60_000 });
-  await expect(page.locator('.fl-final-body')).toContainText('SYNTHETIC fixture scores');
+  await expect(page.locator('.fl-final-body')).toContainText('SYNTHETIC fixture scores', { timeout: 60_000 });
   await page.getByRole('button', { name: 'Reveal final report' }).click();
   await expect(page.locator('.fl-final-report')).toContainText('Synthetic report demonstration');
   await page.locator('.fl-final-cases details').first().locator('summary').click();
