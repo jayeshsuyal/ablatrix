@@ -342,6 +342,14 @@ test('final set stays sealed until promotion, then yields forty blind paired ans
     loop.review(seed.id, { correct: false, supported: true, referenceChecked: true, category: 'unnecessary_abstention', correction: 'The synthetic source supports an extract.', sourceIds: ['passage-product-0'], reviewer: 'Synthetic test' });
     const policy = await loop.propose({ mode: 'fixture', runIds: [seed.id] });
     const validation = await loop.validate(policy.id); assert.equal(loop.decide(validation.id).status, 'accepted');
+    const liveSeed = await loop.run({ mode: 'live', productId: 'product-0', caseId: 'case-product-0', question: f.corpus.cases[0].question });
+    loop.review(liveSeed.id, { correct: false, supported: true, referenceChecked: true, category: 'incomplete_answer', correction: 'State the supported material.', sourceIds: ['passage-product-0'], reviewer: 'Human test reviewer' });
+    const livePolicy = await loop.propose({ mode: 'live', runIds: [liveSeed.id] });
+    const liveValidation = await loop.validate(livePolicy.id);
+    for (const run of loop.overview().runs.filter(run => run.validationId === liveValidation.id)) {
+      loop.review(run.id, { correct: run.policyId === livePolicy.id, supported: true, referenceChecked: true, category: run.policyId === livePolicy.id ? 'none' : 'incomplete_answer', correction: run.policyId === livePolicy.id ? '' : 'State the supported material.', sourceIds: [`passage-${run.productId}`], reviewer: 'Human test reviewer' });
+    }
+    assert.equal(loop.decide(liveValidation.id).status, 'accepted');
     const final = await loop.startFinal({ mode: 'fixture' });
     assert.equal(final.status, 'awaiting_review'); assert.equal(final.runIds.length, 40);
     assert.equal(loop.publicOverview().runs.filter(run => run.finalId === final.id).length, 0);
@@ -356,6 +364,8 @@ test('final set stays sealed until promotion, then yields forty blind paired ans
     assert.equal(reported.result?.baselineUnsupported, 1, 'unsupported claims count even when the model labels its response insufficient');
     assert.equal(reported.result?.verdict, 'inconclusive'); assert.equal(reported.result?.billedCostUsd, null);
     assert.equal(loop.publicOverview().runs.filter(run => run.finalId === final.id).length, 40);
-    await assert.rejects(loop.startFinal({ mode: 'fixture' }), /one final evaluation/);
+    await assert.rejects(loop.startFinal({ mode: 'fixture' }), /final holdout already exposed/);
+    await assert.rejects(loop.startFinal({ mode: 'live' }), /final holdout already exposed/);
+    assert.equal(loop.overview().finals.length, 1, 'a fixture final cannot be followed by a live final on the same exposed holdout');
   } finally { loop.close(); f.loop.close(); }
 });

@@ -18,7 +18,7 @@ Can a generic answer-policy update derived from reviewed product-QA failures imp
 4. Promote only for a strict supported-correctness gain on the two fresh validation products with zero observed paired regressions across fresh products and previously reviewed development controls. Controls do not contribute to the required gain. A rejection is saved; validation questions are never reused in another round.
 5. Freeze the promoted policy and compare it with the original baseline on the 20 final products. Each pair reuses one retrieval result and alternates answer order. The live path checks capacity for all 40 answer calls before starting. The user reviews each randomized A/B card against its product evidence; no summary result is released until all 40 have explicit human reviews. Fixture reviews and scores are labeled synthetic.
 
-Restart marks an interrupted batch or final comparison and preserves attempted calls. A final comparison is attempted once per mode. The local planning allowance is not a billed-cost guarantee; actual billed cost is shown as unavailable.
+Restart marks an interrupted batch or final comparison and preserves attempted calls. A final comparison is attempted once per workspace across fixture and live modes because starting either mode exposes the same final holdout. A later final comparison needs a separate sealed corpus and workspace. The local planning allowance is not a billed-cost guarantee; actual billed cost is shown as unavailable.
 
 ## Report and interpretation
 

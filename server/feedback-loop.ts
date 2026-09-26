@@ -393,7 +393,7 @@ export class FeedbackLoop {
     if (!corpus || !this.finalRetriever) throw new Error('Feedback: frozen final product corpus is unavailable');
     const candidate = this.active(input.mode);
     if (candidate.status !== 'promoted') fail('freeze a promoted policy before final evaluation');
-    if (this.list<LoopFinal>('final').some(item => item.mode === input.mode)) fail('one final evaluation per mode is allowed');
+    if (this.list<LoopFinal>('final').length) fail('final holdout already exposed in this workspace; use a separate sealed corpus and workspace for another final evaluation');
     const cases = corpus.cases;
     if (cases.length !== 20 || new Set(cases.map(item => item.productId)).size !== 20 || cases.some(item => item.split !== 'holdout')) fail('final requires 20 separate unseen products');
     if (input.mode === 'live' && this.provider.capacity && !this.provider.capacity(cases.length * 2).ready) fail(this.provider.capacity(cases.length * 2).reason);
