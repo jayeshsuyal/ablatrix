@@ -1,5 +1,7 @@
 # Six PR build plan and evidence ledger
 
+GitHub review follow-up, September 26: PR #10 has automated Codex review enabled for future pull requests and received a manual review on its current head. The reviewer flagged the `/loop` Router readiness gate for not requiring a deployed agent. Contributor guidance now distinguishes the explicitly approved local Router product-QA experiment from production `agents.run` research, whose deployment and provider accounting gates remain closed. This changes review guidance only; it does not enable production dispatch, establish provider-enforced spend, or turn AI-only assessments into measured answer quality.
+
 ## Current product-QA prototype
 
 The product-QA extension centers on a **reviewed feedback loop**: failures -> bounded policy proposal -> validation -> promotion or rejection -> comparison on unseen cases. Hybrid retrieval is supporting infrastructure; BM25/dense/hybrid benchmarking is secondary. The local `/loop` implementation includes SQLite persistence, product-filtered BM25/BGE/RRF retrieval, human review, versioned answer-policy proposals, paired validation, promotion/rejection, rollback, and trace export. See [the local guide](feedback-loop-local.md), [corpus provenance](product-corpus.md), and [the experiment roadmap](feedback-loop-roadmap.md).
