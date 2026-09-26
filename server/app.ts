@@ -13,6 +13,11 @@ import { comparison, exportArtifacts } from './comparison.ts';
 import { SapiomLiveProvider, type MeteredLiveProvider } from './live-provider.ts';
 import { finalHoldoutAssessment, runFinalFixtureHoldout } from './holdout.ts';
 import { PilotRunner, PilotStore } from './pilot.ts';
+import { FeedbackLoop } from './feedback-loop.ts';
+import { loadFinalProductCorpus, loadProductCorpus } from './product-corpus.ts';
+import { ProductRetriever } from './product-retrieval.ts';
+import { SapiomFeedbackProvider } from './feedback-provider.ts';
+import { LoopTelemetry } from './loop-telemetry.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -35,9 +40,35 @@ async function body(req: IncomingMessage): Promise<unknown> {
   return JSON.parse(text || '{}') as unknown;
 }
 
-export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore())) {
+export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry) {
   const runner = new ExperimentRunner(store, mode, provider);
   const optimizer = new OptimizationRunner(store, runner, mode, provider);
+  let feedbackProvider: SapiomFeedbackProvider | undefined;
+  const loopTelemetry = () => telemetry ??= new LoopTelemetry();
+  const feedbackLoop = () => {
+    if (!feedback) {
+      const corpus = loadProductCorpus();
+      const finalCorpus = loadFinalProductCorpus();
+      const nextProvider = new SapiomFeedbackProvider();
+      let nextRetriever: ProductRetriever | undefined;
+      let nextFinalRetriever: ProductRetriever | undefined;
+      let nextLoop: FeedbackLoop | undefined;
+      try {
+        nextRetriever = new ProductRetriever(corpus, process.env.ABLATRIX_RETRIEVAL_DB);
+        nextFinalRetriever = new ProductRetriever(finalCorpus, process.env.ABLATRIX_FINAL_RETRIEVAL_DB ?? '.data/product-final-retrieval.sqlite');
+        nextLoop = new FeedbackLoop(corpus, nextRetriever, nextProvider, process.env.ABLATRIX_LOOP_DB, finalCorpus, nextFinalRetriever);
+        nextProvider.recoverInterruptedCalls();
+        feedbackProvider = nextProvider;
+        feedback = nextLoop;
+      } catch (error) {
+        if (nextLoop) nextLoop.close();
+        else { nextRetriever?.close(); nextFinalRetriever?.close(); }
+        nextProvider.close();
+        throw error;
+      }
+    }
+    return feedback;
+  };
   const server = createServer(async (req, res) => {
     try {
       const host = req.headers.host ?? '';
@@ -55,6 +86,30 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       }
       const url = new URL(req.url ?? '/', 'http://localhost');
       const path = url.pathname;
+      if (req.method === 'GET' && path === '/api/loop/telemetry') return json(res, 200, loopTelemetry().status());
+      if (req.method === 'POST' && path === '/api/loop/telemetry/sync') {
+        const input = await body(req);
+        if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).length) return json(res, 400, { error: 'Sync takes an empty object; configure Langfuse on the server.' });
+        const exporter = loopTelemetry();
+        if (!exporter.status().ready) return json(res, 200, exporter.status());
+        const snapshot = feedbackLoop().publicOverview();
+        if (snapshot.busy) return json(res, 409, { error: 'Finish the current experiment operation before syncing.' });
+        return json(res, 200, await exporter.sync(snapshot));
+      }
+      if (req.method === 'GET' && path === '/api/loop') return json(res, 200, feedbackLoop().publicOverview());
+      if (req.method === 'GET' && /^\/api\/loop\/products\/[A-Za-z0-9_-]{1,120}\/evidence$/.test(path)) return json(res, 200, { passages: feedbackLoop().productEvidence(path.split('/')[4]) });
+      if (req.method === 'GET' && /^\/api\/loop\/final\/products\/[A-Za-z0-9_-]{1,120}\/evidence$/.test(path)) return json(res, 200, { passages: feedbackLoop().finalEvidence(path.split('/')[5]) });
+      if (req.method === 'GET' && path === '/api/loop/export') return download(res, 'ablatrix-feedback-loop.json', `${JSON.stringify(feedbackLoop().export(), null, 2)}\n`, 'application/json');
+      if (req.method === 'POST' && path === '/api/loop/runs') return json(res, 201, await feedbackLoop().run(await body(req)));
+      if (req.method === 'POST' && path === '/api/loop/batches') return json(res, 201, await feedbackLoop().batch(await body(req)));
+      if (req.method === 'POST' && path === '/api/loop/final') { const result = await feedbackLoop().startFinal(await body(req)); return json(res, 201, feedbackLoop().publicOverview().finals.find(item => item.id === result.id)); }
+      if (req.method === 'POST' && /^\/api\/loop\/final\/[a-f0-9-]{36}\/report$/.test(path)) { await body(req); return json(res, 200, feedbackLoop().reportFinal(path.split('/')[4])); }
+      if (req.method === 'POST' && path === '/api/loop/proposals') return json(res, 201, await feedbackLoop().propose(await body(req)));
+      if (req.method === 'POST' && path === '/api/loop/rollback') return json(res, 200, feedbackLoop().rollback(await body(req)));
+      if (req.method === 'POST' && /^\/api\/loop\/runs\/[a-f0-9-]{36}\/review-draft$/.test(path)) return json(res, 200, feedbackLoop().saveReviewDraft(path.split('/')[4], await body(req)));
+      if (req.method === 'POST' && /^\/api\/loop\/runs\/[a-f0-9-]{36}\/review$/.test(path)) { const run = feedbackLoop().review(path.split('/')[4], await body(req)); return json(res, 200, feedbackLoop().publicRun(run.id)); }
+      if (req.method === 'POST' && /^\/api\/loop\/policies\/[a-f0-9-]{36}\/validate$/.test(path)) { const input = await body(req); const validation = await feedbackLoop().validate(path.split('/')[4], input); return json(res, 201, feedbackLoop().publicOverview().validations.find(item => item.id === validation.id)); }
+      if (req.method === 'POST' && /^\/api\/loop\/validations\/[a-f0-9-]{36}\/decide$/.test(path)) { await body(req); return json(res, 200, feedbackLoop().decide(path.split('/')[4])); }
       if (req.method === 'GET' && path === '/api/pilot') return json(res, 200, pilot.overview());
       if (req.method === 'POST' && path === '/api/pilot/runs') return json(res, 201, pilot.create(await body(req)));
       if (/^\/api\/pilot\/runs\/[a-f0-9-]{36}(\/(cancel|review|export))?$/.test(path)) {
@@ -143,6 +198,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (error instanceof ZodError) return json(res, 400, { error: 'Invalid request fields.' });
       if (error instanceof SyntaxError) return json(res, 400, { error: 'Invalid JSON body.' });
       if (error instanceof Error && error.message === 'Request body too large') return json(res, 413, { error: error.message });
+      if (error instanceof Error && error.message.startsWith('Feedback')) return json(res, 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Pilot')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted|Live optimization|holdout|frozen completed/.test(error.message)) {
         return json(res, 400, { error: error.message });
@@ -151,6 +207,6 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       return json(res, 500, { error: 'Internal server error.' });
     }
   });
-  server.on('close', () => { void pilot.close(); });
+  server.on('close', () => { void pilot.close(); feedback?.close(); feedbackProvider?.close(); telemetry?.close(); });
   return server;
 }
