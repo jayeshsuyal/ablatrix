@@ -1,0 +1,309 @@
+{
+  "format": "ablatrix-answer-calibration-revision2-v1",
+  "phase": "validation",
+  "protocolPath": "docs/answer-calibration-revision2-2026-09-25.md",
+  "policyId": "exploratory-answer-calibration-r2-2026-09-25",
+  "policySha256": "4f8a64b228e3ea8eba2ec1ca09076ea2380f9589f0183d3dfd84557d92c7b90a",
+  "baselinePolicySha256": "fae04684ca45e5a8240c5b59f1cc8158ceea1ade6b7b24628c693212072ad8e3",
+  "sourceControlPacket": null,
+  "modelAlias": "gpt-luna",
+  "citationInterface": "snippet_id_both_arms",
+  "corpusVersion": "epqa-demo-v1-cec976cc2f22",
+  "cases": [
+    {
+      "caseId": "epqa-dev-535",
+      "question": "my experience is that case for 4 does not fit 4s.  does this one?",
+      "productId": "B005SWX65G",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B005SWX65G-cqa-5c96e4f36cfde5f9",
+            "productId": "B005SWX65G",
+            "source": "cqa",
+            "text": "fits both iphone 4 and 4s. Question: does it fit the iphone 4 or just the 4s?",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=512&qa_pair_id=5230&chars=0-77",
+            "sha256": "5c96e4f36cfde5f94836d8417cef8a55480653f878585f2be307612d1e8285b7",
+            "lexicalRank": 2,
+            "semanticRank": 1,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B005SWX65G-review-9ed7e4c0d13518f8",
+            "productId": "B005SWX65G",
+            "source": "review",
+            "text": "just wanted to add that i have the iphone 4 (not 4s) for verizon wireless, and this case fit my phone just fine.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=516&qa_pair_id=5234&chars=0-112",
+            "sha256": "9ed7e4c0d13518f8ccaf00ce1d4868854f49e64e102fb1b7ac0f2edb8931ff89",
+            "lexicalRank": 1,
+            "semanticRank": 2,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B005SWX65G-cqa-fdef6b6aa5212cad",
+            "productId": "B005SWX65G",
+            "source": "cqa",
+            "text": "this case fit perfectly on our iphone 4s. Question: is there anyway i could just buy the white rubber piece i already have this one but the rubber seems to big like it don't seal around the phone?..",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=515&qa_pair_id=5233&chars=0-198",
+            "sha256": "fdef6b6aa5212cada57ca7f1007fed2e47bb364e36d31bad817ffe2af470b7a8",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B005SWX65G-review-2a5b56a4de0517c6",
+            "productId": "B005SWX65G",
+            "source": "review",
+            "text": "the case fits my iphone 4 s well",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=514&qa_pair_id=5232&chars=0-32",
+            "sha256": "2a5b56a4de0517c67d01cfabb6425aaabce30f1557d2540a14770284a1172ca8",
+            "lexicalRank": 4,
+            "semanticRank": 3,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B005SWX65G-attribute-62e8757b539d9d6f",
+            "productId": "B005SWX65G",
+            "source": "attribute",
+            "text": "compatible_phone_models:  { value:\"apple iphone 4\" }; { value:\"apple iphone 4s\" }",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=513&qa_pair_id=5231&chars=0-81",
+            "sha256": "62e8757b539d9d6ff72eb14bdc7f04041cc6aeeb0dd874243f5ecb063c127ec4",
+            "lexicalRank": 5,
+            "semanticRank": 5,
+            "score": 0.03076923076923077
+          }
+        ],
+        "durationMs": 717.422167,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "epqa-demo-v1-cec976cc2f22"
+      },
+      "retrievalSha256": "983b53dbcd1c97b9c4e0c0c740a2bb2427e64b07a80d64ce2e14b768192f805e"
+    },
+    {
+      "caseId": "epqa-dev-587",
+      "question": "would this fit a motorola droid turbo?",
+      "productId": "B009XGZGZG",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B009XGZGZG-cqa-156f07dabe81b8ab",
+            "productId": "B009XGZGZG",
+            "source": "cqa",
+            "text": "it might fit an htc but i think you'd be better off buying a non iphone armband for a non iphone device. Question: htc ???",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=544&qa_pair_id=5752&chars=0-122",
+            "sha256": "156f07dabe81b8ab291eb758a1125882cea4fdb10a2d1af67949343f29fb82c3",
+            "lexicalRank": 2,
+            "semanticRank": 1,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B009XGZGZG-cqa-f7562a2d3cd19f12",
+            "productId": "B009XGZGZG",
+            "source": "cqa",
+            "text": "it would probably be a little tight though. Question: otterbox commuter",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=545&qa_pair_id=5753&chars=0-71",
+            "sha256": "f7562a2d3cd19f1257d58e1aa81113c4709232c0639a7dd3668877ebda942bb3",
+            "lexicalRank": 1,
+            "semanticRank": 2,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B009XGZGZG-review-5ab01fad0bbd9399",
+            "productId": "B009XGZGZG",
+            "source": "review",
+            "text": "hard to determine whether it'd fit from just the descriptions so it was nice we were able to return it after trying it out.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=546&qa_pair_id=5754&chars=0-123",
+            "sha256": "5ab01fad0bbd9399aaaafaf9393ca4d059d7c098ab8cc6109efd110b00935486",
+            "lexicalRank": 3,
+            "semanticRank": 5,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B009XGZGZG-bullet-a7c0ae5f01867551",
+            "productId": "B009XGZGZG",
+            "source": "bullet",
+            "text": "for men and women, the tune belt armband securely holds and protects your phone in a case that feels good and is lightweight – not bulky or cumbersome.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=549&qa_pair_id=5757&chars=0-151",
+            "sha256": "a7c0ae5f01867551080f04a3ae8e269e9105a489b660515bf9fb5e8eb4ad20d8",
+            "lexicalRank": 7,
+            "semanticRank": 4,
+            "score": 0.03055037313432836
+          },
+          {
+            "id": "epqa-B009XGZGZG-review-68f1e5ab5bd8b3cd",
+            "productId": "B009XGZGZG",
+            "source": "review",
+            "text": "i attach this to my flexible dog leash when i go out walking.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=550&qa_pair_id=5758&chars=0-61",
+            "sha256": "68f1e5ab5bd8b3cd2f3806785ce421866a3bd805880f2de868a78f92df01c190",
+            "lexicalRank": 4,
+            "semanticRank": 8,
+            "score": 0.030330882352941176
+          }
+        ],
+        "durationMs": 6.493791000000101,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "epqa-demo-v1-cec976cc2f22"
+      },
+      "retrievalSha256": "214c07e5553e86bb2a88aeb99bf4b9fac4d43673790c430867c4517acac6d845"
+    }
+  ],
+  "steps": [
+    {
+      "caseId": "epqa-dev-535",
+      "arm": "baseline",
+      "status": "passed_execution",
+      "origin": "revision2_live",
+      "aiReview": null,
+      "answer": {
+        "answer": "Yes. The supplied evidence indicates that this case fits both the iPhone 4 and iPhone 4S. This is supported by customer reports for each model and the listed compatibility attribute; it does not establish a manufacturer specification beyond that listing.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B005SWX65G-cqa-5c96e4f36cfde5f9",
+            "quote": "fits both iphone 4 and 4s."
+          },
+          {
+            "passageId": "epqa-B005SWX65G-review-9ed7e4c0d13518f8",
+            "quote": "just wanted to add that i have the iphone 4 (not 4s) for verizon wireless, and this case fit my phone just fine."
+          },
+          {
+            "passageId": "epqa-B005SWX65G-cqa-fdef6b6aa5212cad",
+            "quote": "this case fit perfectly on our iphone 4s."
+          },
+          {
+            "passageId": "epqa-B005SWX65G-attribute-62e8757b539d9d6f",
+            "quote": "compatible_phone_models:  { value:\"apple iphone 4\" }; { value:\"apple iphone 4s\" }"
+          }
+        ]
+      },
+      "rawAnswer": "Yes. The supplied evidence indicates that this case fits both the iPhone 4 and iPhone 4S. This is supported by customer reports for each model and the listed compatibility attribute; it does not establish a manufacturer specification beyond that listing.",
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1128,
+        "outputTokens": 107
+      },
+      "durationMs": 2270,
+      "quoteIds": [
+        "p1q1",
+        "p2q1",
+        "p3q1",
+        "p5q1"
+      ],
+      "optionCount": 7,
+      "exactQuoteMembership": true
+    },
+    {
+      "caseId": "epqa-dev-535",
+      "arm": "candidate",
+      "status": "passed_execution",
+      "origin": "revision2_live",
+      "aiReview": null,
+      "answer": {
+        "answer": "Yes. This case is listed as fitting both the iPhone 4 and iPhone 4S, and a customer specifically reports that it fit an iPhone 4 (not 4S).",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B005SWX65G-cqa-5c96e4f36cfde5f9",
+            "quote": "fits both iphone 4 and 4s."
+          },
+          {
+            "passageId": "epqa-B005SWX65G-review-9ed7e4c0d13518f8",
+            "quote": "just wanted to add that i have the iphone 4 (not 4s) for verizon wireless, and this case fit my phone just fine."
+          },
+          {
+            "passageId": "epqa-B005SWX65G-attribute-62e8757b539d9d6f",
+            "quote": "compatible_phone_models:  { value:\"apple iphone 4\" }; { value:\"apple iphone 4s\" }"
+          }
+        ]
+      },
+      "rawAnswer": "Yes. This case is listed as fitting both the iPhone 4 and iPhone 4S, and a customer specifically reports that it fit an iPhone 4 (not 4S).",
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1286,
+        "outputTokens": 91
+      },
+      "durationMs": 1443,
+      "quoteIds": [
+        "p1q1",
+        "p2q1",
+        "p5q1"
+      ],
+      "optionCount": 7,
+      "exactQuoteMembership": true
+    },
+    {
+      "caseId": "epqa-dev-587",
+      "arm": "candidate",
+      "status": "passed_execution",
+      "origin": "revision2_live",
+      "aiReview": null,
+      "answer": {
+        "answer": "It’s uncertain whether this iPhone-sized armband would fit a Motorola Droid Turbo. The supplied evidence does not mention the Droid Turbo or provide dimensions; one response suggests using a non-iPhone armband for non-iPhone devices, and another says fit can be hard to determine from descriptions alone.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B009XGZGZG-cqa-156f07dabe81b8ab",
+            "quote": "it might fit an htc but i think you'd be better off buying a non iphone armband for a non iphone device."
+          },
+          {
+            "passageId": "epqa-B009XGZGZG-review-5ab01fad0bbd9399",
+            "quote": "hard to determine whether it'd fit from just the descriptions so it was nice we were able to return it after trying it out."
+          }
+        ]
+      },
+      "rawAnswer": "It’s uncertain whether this iPhone-sized armband would fit a Motorola Droid Turbo. The supplied evidence does not mention the Droid Turbo or provide dimensions; one response suggests using a non-iPhone armband for non-iPhone devices, and another says fit can be hard to determine from descriptions alone.",
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1247,
+        "outputTokens": 101
+      },
+      "durationMs": 1998,
+      "quoteIds": [
+        "p1q1",
+        "p3q1"
+      ],
+      "optionCount": 7,
+      "exactQuoteMembership": true
+    },
+    {
+      "caseId": "epqa-dev-587",
+      "arm": "baseline",
+      "status": "passed_execution",
+      "origin": "revision2_live",
+      "aiReview": null,
+      "answer": {
+        "answer": "Insufficient evidence to determine whether this iPhone-specific armband fits a Motorola Droid Turbo. The supplied evidence does not provide the Droid Turbo’s dimensions or the armband’s compatible dimensions, and a customer comment says fit was difficult to determine from the descriptions. A non-iPhone device may be better served by a non-iPhone armband.",
+        "status": "insufficient_evidence",
+        "citations": [
+          {
+            "passageId": "epqa-B009XGZGZG-review-5ab01fad0bbd9399",
+            "quote": "hard to determine whether it'd fit from just the descriptions so it was nice we were able to return it after trying it out."
+          },
+          {
+            "passageId": "epqa-B009XGZGZG-cqa-156f07dabe81b8ab",
+            "quote": "it might fit an htc but i think you'd be better off buying a non iphone armband for a non iphone device."
+          }
+        ]
+      },
+      "rawAnswer": "Insufficient evidence to determine whether this iPhone-specific armband fits a Motorola Droid Turbo. The supplied evidence does not provide the Droid Turbo’s dimensions or the armband’s compatible dimensions, and a customer comment says fit was difficult to determine from the descriptions. A non-iPhone device may be better served by a non-iPhone armband.",
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1089,
+        "outputTokens": 113
+      },
+      "durationMs": 2262,
+      "quoteIds": [
+        "p3q1",
+        "p1q1"
+      ],
+      "optionCount": 7,
+      "exactQuoteMembership": true
+    }
+  ],
+  "allowancePerNewCallUsd": 0.1,
+  "actualBilledCostUsd": null,
+  "startedAt": "2026-09-26T02:46:55.150Z",
+  "finishedAt": "2026-09-26T02:47:03.131Z"
+}

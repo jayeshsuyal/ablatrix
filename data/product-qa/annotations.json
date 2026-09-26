@@ -1,0 +1,994 @@
+{
+  "train-349": [
+    {
+      "passageId": "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+      "qaPairId": "3400",
+      "label": 2,
+      "answer": "There is a customer saying that there are 12 in a package."
+    },
+    {
+      "passageId": "epqa-B00251EVPW-attribute-4f8a9b21dbec272e",
+      "qaPairId": "3401",
+      "label": 2,
+      "answer": "There are 12 pieces included."
+    },
+    {
+      "passageId": "epqa-B00251EVPW-attribute-95b63e3e9dd5c120",
+      "qaPairId": "3402",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00251EVPW-cqa-8d024252f9007e1f",
+      "qaPairId": "3403",
+      "label": 2,
+      "answer": "There is a customer saying that this listing is for a pack of 12 canvas panels."
+    },
+    {
+      "passageId": "epqa-B00251EVPW-review-c44d61711b6f2015",
+      "qaPairId": "3404",
+      "label": 2,
+      "answer": "There is a customer saying that this pack of 12 canvases are very sturdy and great quality for beginners and the experienced alike."
+    },
+    {
+      "passageId": "epqa-B00251EVPW-attribute-7cd1350a1f8fa194",
+      "qaPairId": "3405",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00251EVPW-bullet-da6fe355eef3606c",
+      "qaPairId": "3406",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00251EVPW-bullet-f827f18b1afe5848",
+      "qaPairId": "3407",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00251EVPW-review-770e607624d68926",
+      "qaPairId": "3408",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00251EVPW-review-009cdac6be41b518",
+      "qaPairId": "3409",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "train-416": [
+    {
+      "passageId": "epqa-B00006IE1F-attribute-58e2bea8e9ff6410",
+      "qaPairId": "4060",
+      "label": 1,
+      "answer": "I'm not sure but the size is 4' x 200'."
+    },
+    {
+      "passageId": "epqa-B00006IE1F-attribute-b59571e7dd4c3025",
+      "qaPairId": "4061",
+      "label": 2,
+      "answer": "The special size type is 48\\\" x 200 ft."
+    },
+    {
+      "passageId": "epqa-B00006IE1F-bullet-1a6633e738035f77",
+      "qaPairId": "4062",
+      "label": 2,
+      "answer": "This heavyweight duo-finish kraft paper roll is 4-feet by 200-feet."
+    },
+    {
+      "passageId": "epqa-B00006IE1F-cqa-1a022e3122df87d4",
+      "qaPairId": "4063",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc",
+      "qaPairId": "4064",
+      "label": 2,
+      "answer": "It is a continuous roll of 200 ft."
+    },
+    {
+      "passageId": "epqa-B00006IE1F-attribute-172e3678af72bc01",
+      "qaPairId": "4065",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00006IE1F-description-ea1299d4f8126d03",
+      "qaPairId": "4066",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00006IE1F-description-3babae289f12a98c",
+      "qaPairId": "4067",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00006IE1F-review-2689367b205c16ce",
+      "qaPairId": "4068",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00006IE1F-cqa-90e8789b92d68da8",
+      "qaPairId": "4069",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "train-438": [
+    {
+      "passageId": "epqa-B003ZSD5EC-cqa-219ea12f8cef62b4",
+      "qaPairId": "4280",
+      "label": 1,
+      "answer": "I'm not sure but 402 weight is common for most of product of this type."
+    },
+    {
+      "passageId": "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+      "qaPairId": "4281",
+      "label": 2,
+      "answer": "The product's weight is 40\"."
+    },
+    {
+      "passageId": "epqa-B003ZSD5EC-cqa-44fcd518324755cf",
+      "qaPairId": "4282",
+      "label": 2,
+      "answer": "The item is between 40-50 weight."
+    },
+    {
+      "passageId": "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+      "qaPairId": "4283",
+      "label": 2,
+      "answer": "The product is of hight quality 40 weight type."
+    },
+    {
+      "passageId": "epqa-B003ZSD5EC-attribute-c4aa96e8f1e93b58",
+      "qaPairId": "4284",
+      "label": 2,
+      "answer": "The item's weight is 10.3 pounds."
+    },
+    {
+      "passageId": "epqa-B003ZSD5EC-attribute-c372ae16b9d52259",
+      "qaPairId": "4285",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B003ZSD5EC-attribute-a66f17da89f99d80",
+      "qaPairId": "4286",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B003ZSD5EC-bullet-d2dac34072dd3f31",
+      "qaPairId": "4287",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B003ZSD5EC-review-8548a6d02a015212",
+      "qaPairId": "4288",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B003ZSD5EC-review-830c2df9c17bbb93",
+      "qaPairId": "4289",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "train-743": [
+    {
+      "passageId": "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+      "qaPairId": "7310",
+      "label": 2,
+      "answer": "The item inseam length is 10 inches."
+    },
+    {
+      "passageId": "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+      "qaPairId": "7311",
+      "label": 2,
+      "answer": "The item has 10-inch and 12-inch inseams."
+    },
+    {
+      "passageId": "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+      "qaPairId": "7312",
+      "label": 2,
+      "answer": "There is a customer saying that the short has a 10-inch inseam."
+    },
+    {
+      "passageId": "epqa-B0058YR0XS-review-345c5b719b19e017",
+      "qaPairId": "7313",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that the leg length is 10 inches and has a sizing guide of 34/10."
+    },
+    {
+      "passageId": "epqa-B0058YR0XS-review-e716e7c57bb5dbe4",
+      "qaPairId": "7314",
+      "label": 2,
+      "answer": "There is a customer saying that the inseam is perfect at 10\" which means the legs don't ride up but they are shorter than bermuda's."
+    },
+    {
+      "passageId": "epqa-B0058YR0XS-attribute-066cf1d43b745f01",
+      "qaPairId": "7315",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B0058YR0XS-attribute-dff6f87ddcc6b801",
+      "qaPairId": "7316",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B0058YR0XS-attribute-57e130a0617d1a46",
+      "qaPairId": "7317",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B0058YR0XS-review-44520442390d37d8",
+      "qaPairId": "7318",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B0058YR0XS-review-06bdcb5640d16655",
+      "qaPairId": "7319",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "train-770": [
+    {
+      "passageId": "epqa-B002V92YMA-review-938f85f1730d8dca",
+      "qaPairId": "7580",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that it has no bottle pockets on the outside."
+    },
+    {
+      "passageId": "epqa-B002V92YMA-review-80a9b1227daf0646",
+      "qaPairId": "7581",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that it lacks a side pouch for a water bottle."
+    },
+    {
+      "passageId": "epqa-B002V92YMA-review-e27a9b01e1834d95",
+      "qaPairId": "7582",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that an outer pocket for a water bottle of some sort would be nice."
+    },
+    {
+      "passageId": "epqa-B002V92YMA-description-8a4a9bebcbb4671d",
+      "qaPairId": "7583",
+      "label": 2,
+      "answer": "Yes. The internal water bottle pocket keeps water in."
+    },
+    {
+      "passageId": "epqa-B002V92YMA-review-b1ad16045e25e4d7",
+      "qaPairId": "7584",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that it has an external mesh water bottle pocket."
+    },
+    {
+      "passageId": "epqa-B002V92YMA-attribute-27920ec4f51b9fec",
+      "qaPairId": "7585",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B002V92YMA-attribute-82f29a633c24c00a",
+      "qaPairId": "7586",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B002V92YMA-bullet-f0e8c3351a975b19",
+      "qaPairId": "7587",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B002V92YMA-review-c70f24d69fab1144",
+      "qaPairId": "7588",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B002V92YMA-review-9cf01c5df1f2afa2",
+      "qaPairId": "7589",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "train-775": [
+    {
+      "passageId": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+      "qaPairId": "7630",
+      "label": 2,
+      "answer": "The product is made of engineered wood, glass, metal and plastic."
+    },
+    {
+      "passageId": "epqa-B008402S3K-review-b70384bc8a4748d3",
+      "qaPairId": "7631",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that the item is made of real wood."
+    },
+    {
+      "passageId": "epqa-B008402S3K-review-87a352a6f9eba57e",
+      "qaPairId": "7632",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that the product is made of cheapest recycled carddboard and wood."
+    },
+    {
+      "passageId": "epqa-B008402S3K-review-33d481baf8c302dd",
+      "qaPairId": "7633",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that the item is made of pressed wood."
+    },
+    {
+      "passageId": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+      "qaPairId": "7634",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that the item consists of particle board with a wood grain paper overlay."
+    },
+    {
+      "passageId": "epqa-B008402S3K-description-778998b842c56976",
+      "qaPairId": "7635",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B008402S3K-description-f9260184e9da9adb",
+      "qaPairId": "7636",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B008402S3K-attribute-19994518fa269134",
+      "qaPairId": "7637",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B008402S3K-review-6f712e4702308e34",
+      "qaPairId": "7638",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B008402S3K-review-473fac68990b9f46",
+      "qaPairId": "7639",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "train-585": [
+    {
+      "passageId": "epqa-B00FH9B8RI-attribute-26922d151a0951f3",
+      "qaPairId": "5730",
+      "label": 2,
+      "answer": "It is compatible with LG G2."
+    },
+    {
+      "passageId": "epqa-B00FH9B8RI-review-33e3e80248990e7e",
+      "qaPairId": "5731",
+      "label": 2,
+      "answer": "There is a customer saying that it fits LG G2 VS980 verizon edition."
+    },
+    {
+      "passageId": "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+      "qaPairId": "5732",
+      "label": 2,
+      "answer": "No. A customer says that this case is for non-Verizon G2's."
+    },
+    {
+      "passageId": "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+      "qaPairId": "5733",
+      "label": 2,
+      "answer": "Yes. A customer says that it will fit the Verizon G2."
+    },
+    {
+      "passageId": "epqa-B00FH9B8RI-review-4fbef905c7cbe4fb",
+      "qaPairId": "5734",
+      "label": 2,
+      "answer": "There is a customer saying that it can fit LG G2 Verizon."
+    },
+    {
+      "passageId": "epqa-B00FH9B8RI-description-99509a34639409b1",
+      "qaPairId": "5735",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00FH9B8RI-attribute-1f30988cdba30f2a",
+      "qaPairId": "5736",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00FH9B8RI-attribute-9d6ee5169043d075",
+      "qaPairId": "5737",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00FH9B8RI-review-181c3a323e54a948",
+      "qaPairId": "5738",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B00FH9B8RI-review-8553d206b4632512",
+      "qaPairId": "5739",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "train-728": [
+    {
+      "passageId": "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+      "qaPairId": "7160",
+      "label": 2,
+      "answer": "Yes. A customer says that it is waterproof after testing it under running water."
+    },
+    {
+      "passageId": "epqa-B002ZG7RGM-review-e790d9384382ab4a",
+      "qaPairId": "7161",
+      "label": 2,
+      "answer": "Yes. A customer says that the outside part is waterproof thick fabric."
+    },
+    {
+      "passageId": "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+      "qaPairId": "7162",
+      "label": 2,
+      "answer": "Yes. A customer says that it is waterproof & windproof."
+    },
+    {
+      "passageId": "epqa-B002ZG7RGM-description-ab112b1d59926758",
+      "qaPairId": "7163",
+      "label": 2,
+      "answer": "Yes. It is made of waterproof and breathable fabric that will keep the face warm in the coldest climate."
+    },
+    {
+      "passageId": "epqa-B002ZG7RGM-review-a9b93eb594ccba9e",
+      "qaPairId": "7164",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that it does get wet on inside around the mouth."
+    },
+    {
+      "passageId": "epqa-B002ZG7RGM-description-e22f9933b1b3437e",
+      "qaPairId": "7165",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B002ZG7RGM-description-be4c4b9d59e0369a",
+      "qaPairId": "7166",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B002ZG7RGM-attribute-18c602a0ed103175",
+      "qaPairId": "7167",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B002ZG7RGM-review-de419420b1ec6c53",
+      "qaPairId": "7168",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B002ZG7RGM-review-171de2da7becb5ec",
+      "qaPairId": "7169",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "train-647": [
+    {
+      "passageId": "epqa-B003DKL4JA-review-7637a46f0afa1f31",
+      "qaPairId": "6350",
+      "label": 2,
+      "answer": "No. A customer says that there was no native union branding anywhere on the packaging or the handset itself."
+    },
+    {
+      "passageId": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+      "qaPairId": "6351",
+      "label": 2,
+      "answer": "Yes. The item brand value is native union."
+    },
+    {
+      "passageId": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+      "qaPairId": "6352",
+      "label": 2,
+      "answer": "Yes. The item manufacturer is the native union."
+    },
+    {
+      "passageId": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+      "qaPairId": "6353",
+      "label": 2,
+      "answer": "Yes. A customer says that the item is indeed a genuine native union model and not a knockoff."
+    },
+    {
+      "passageId": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+      "qaPairId": "6354",
+      "label": 2,
+      "answer": "No. A customer says that the product is not as promised because it is advertised as a native union but is a cheap knockoff."
+    },
+    {
+      "passageId": "epqa-B003DKL4JA-attribute-193db991c06db553",
+      "qaPairId": "6355",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B003DKL4JA-description-a0f16f883c93dd90",
+      "qaPairId": "6356",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B003DKL4JA-attribute-d2b658be438dad29",
+      "qaPairId": "6357",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B003DKL4JA-review-5b800c3c0f827058",
+      "qaPairId": "6358",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B003DKL4JA-cqa-70b2042c489e5f82",
+      "qaPairId": "6359",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "train-635": [
+    {
+      "passageId": "epqa-B008UV6YRO-attribute-d7b75a4051516fb8",
+      "qaPairId": "6230",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+      "qaPairId": "6231",
+      "label": 2,
+      "answer": "The compatible phone models are the Apple iPhone 6, Samsung Galaxy S3, Samsung Galaxy S4, Samsung Galaxy S5, Apple iPhone 4S, and Apple iPhone 5S."
+    },
+    {
+      "passageId": "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+      "qaPairId": "6232",
+      "label": 2,
+      "answer": "There is a customer saying that the expandable cradle will adjust to any size phone."
+    },
+    {
+      "passageId": "epqa-B008UV6YRO-review-20096a352bc7c9ff",
+      "qaPairId": "6233",
+      "label": 2,
+      "answer": "There is a customer saying that this product does not fit a Samsung Galaxy s3."
+    },
+    {
+      "passageId": "epqa-B008UV6YRO-cqa-9e0df0446ae16800",
+      "qaPairId": "6234",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that he doesn't own a samsung, but his iphone 5 measures 2 1/4 wide by 4 3/4 long"
+    },
+    {
+      "passageId": "epqa-B008UV6YRO-description-9d9c0ff5037d256f",
+      "qaPairId": "6235",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B008UV6YRO-attribute-c36fc284f954a873",
+      "qaPairId": "6236",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B008UV6YRO-attribute-be6d01deb031d5f5",
+      "qaPairId": "6237",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B008UV6YRO-review-a88d8afbd7543ef8",
+      "qaPairId": "6238",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B008UV6YRO-review-36e6a2352d587631",
+      "qaPairId": "6239",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "dev-469": [
+    {
+      "passageId": "epqa-B005NY0TEK-cqa-1c5c43013373c24c",
+      "qaPairId": "4590",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that it is approximately 200 pages counting both sides."
+    },
+    {
+      "passageId": "epqa-B005NY0TEK-cqa-ba871fb86de970e0",
+      "qaPairId": "4591",
+      "label": 2,
+      "answer": "There is a customer saying that it has a total 5 sections divided into 20 pages each, that's 100 pages."
+    },
+    {
+      "passageId": "epqa-B005NY0TEK-review-da2ddd19f81ec518",
+      "qaPairId": "4592",
+      "label": 2,
+      "answer": "There is a customer saying that there are probably 100 or so pages in this book."
+    },
+    {
+      "passageId": "epqa-B005NY0TEK-review-518709cf39882fe5",
+      "qaPairId": "4593",
+      "label": 2,
+      "answer": "There is a customer saying that there are 56 sheets (112 pages)."
+    },
+    {
+      "passageId": "epqa-B005NY0TEK-description-27643ebbbb4c05b6",
+      "qaPairId": "4594",
+      "label": 2,
+      "answer": "There are 240 pages in this book."
+    },
+    {
+      "passageId": "epqa-B005NY0TEK-bullet-61c4d117914297ad",
+      "qaPairId": "4595",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B005NY0TEK-bullet-08ad77a7139bc311",
+      "qaPairId": "4596",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B005NY0TEK-description-7a8cc98857b50c36",
+      "qaPairId": "4597",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B005NY0TEK-review-1bc94fa73842ef7c",
+      "qaPairId": "4598",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B005NY0TEK-review-b4500587713d32d9",
+      "qaPairId": "4599",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "dev-505": [
+    {
+      "passageId": "epqa-B007PBHZK0-description-a238c01a21c189d5",
+      "qaPairId": "4930",
+      "label": 2,
+      "answer": "The item's base is made of plastic with three metal legs."
+    },
+    {
+      "passageId": "epqa-B007PBHZK0-description-bf21c0f3a3629930",
+      "qaPairId": "4931",
+      "label": 2,
+      "answer": "The item's base is made of plastic with four plastic legs."
+    },
+    {
+      "passageId": "epqa-B007PBHZK0-cqa-64e0714b812377f7",
+      "qaPairId": "4932",
+      "label": 2,
+      "answer": "The item's stand is metal and has a plastic base for the metal support legs for sturdy support."
+    },
+    {
+      "passageId": "epqa-B007PBHZK0-review-ad4bc720e84a9e0e",
+      "qaPairId": "4933",
+      "label": 2,
+      "answer": "There is a customer saying that the item's bottom is made of plastic."
+    },
+    {
+      "passageId": "epqa-B007PBHZK0-description-a4cb075ed22dc0cf",
+      "qaPairId": "4934",
+      "label": 2,
+      "answer": "The item's base is made of plastic and features four legs to provide even stability."
+    },
+    {
+      "passageId": "epqa-B007PBHZK0-description-2b4d9d3b855ac925",
+      "qaPairId": "4935",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B007PBHZK0-description-793980c416e87601",
+      "qaPairId": "4936",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B007PBHZK0-description-a4504bf9d88fc8e7",
+      "qaPairId": "4937",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B007PBHZK0-review-481164120f386f08",
+      "qaPairId": "4938",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B007PBHZK0-cqa-144bd859e5f02006",
+      "qaPairId": "4939",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "dev-535": [
+    {
+      "passageId": "epqa-B005SWX65G-cqa-5c96e4f36cfde5f9",
+      "qaPairId": "5230",
+      "label": 2,
+      "answer": "Yes. The item fits both iPhone 4 and 4s."
+    },
+    {
+      "passageId": "epqa-B005SWX65G-attribute-62e8757b539d9d6f",
+      "qaPairId": "5231",
+      "label": 2,
+      "answer": "Yes. The item is compatible with Apple iPhone 4 and Apple iPhone 4s phone models."
+    },
+    {
+      "passageId": "epqa-B005SWX65G-review-2a5b56a4de0517c6",
+      "qaPairId": "5232",
+      "label": 2,
+      "answer": "Yes. A customer says that the case fits an iPhone 4s well."
+    },
+    {
+      "passageId": "epqa-B005SWX65G-cqa-fdef6b6aa5212cad",
+      "qaPairId": "5233",
+      "label": 2,
+      "answer": "Yes. A customer says that the case fits perfectly on their iPhone 4s."
+    },
+    {
+      "passageId": "epqa-B005SWX65G-review-9ed7e4c0d13518f8",
+      "qaPairId": "5234",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that the case fits iPhone 4 from Verizon wireless."
+    },
+    {
+      "passageId": "epqa-B005SWX65G-attribute-7f4aca73fb65e82e",
+      "qaPairId": "5235",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B005SWX65G-description-30a71f9b9ffd7a3b",
+      "qaPairId": "5236",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B005SWX65G-attribute-db36d532941c4f8c",
+      "qaPairId": "5237",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B005SWX65G-review-6a0b113348985fbb",
+      "qaPairId": "5238",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B005SWX65G-review-d3eb31e9d97c97ef",
+      "qaPairId": "5239",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "dev-587": [
+    {
+      "passageId": "epqa-B009XGZGZG-attribute-6f6346f16723c9e2",
+      "qaPairId": "5750",
+      "label": 2,
+      "answer": "No. The item will not fit a motorola droid turbo."
+    },
+    {
+      "passageId": "epqa-B009XGZGZG-attribute-de5e7a1e3aea33ec",
+      "qaPairId": "5751",
+      "label": 2,
+      "answer": "No. The item is not compatible with a motorola droid turbo."
+    },
+    {
+      "passageId": "epqa-B009XGZGZG-cqa-156f07dabe81b8ab",
+      "qaPairId": "5752",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B009XGZGZG-cqa-f7562a2d3cd19f12",
+      "qaPairId": "5753",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B009XGZGZG-review-5ab01fad0bbd9399",
+      "qaPairId": "5754",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B009XGZGZG-attribute-8d70ec43d861c615",
+      "qaPairId": "5755",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B009XGZGZG-bullet-0dc2479c6e645668",
+      "qaPairId": "5756",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B009XGZGZG-bullet-a7c0ae5f01867551",
+      "qaPairId": "5757",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B009XGZGZG-review-68f1e5ab5bd8b3cd",
+      "qaPairId": "5758",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B009XGZGZG-review-f18eff5ac18b82f8",
+      "qaPairId": "5759",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "dev-1985": [
+    {
+      "passageId": "epqa-B000XXQULC-attribute-d02d08d24f2e1577",
+      "qaPairId": "19440",
+      "label": 2,
+      "answer": "No. The item's standardized color value is brown."
+    },
+    {
+      "passageId": "epqa-B000XXQULC-attribute-44e832a7a0bd60dd",
+      "qaPairId": "19441",
+      "label": 2,
+      "answer": "No. The item style value is 3 inches in brown."
+    },
+    {
+      "passageId": "epqa-B000XXQULC-review-8659fec1c04cc2a5",
+      "qaPairId": "19442",
+      "label": 1,
+      "answer": "I'm not sure but there is a customer saying that the item could only be found in white."
+    },
+    {
+      "passageId": "epqa-B000XXQULC-review-405505a63932077b",
+      "qaPairId": "19443",
+      "label": 2,
+      "answer": "No. A customer says that what these stores carry is ivory or bone-colored ones."
+    },
+    {
+      "passageId": "epqa-B000XXQULC-review-c10820b883ef4bd1",
+      "qaPairId": "19444",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B000XXQULC-attribute-3d5baee8cbf7d0b9",
+      "qaPairId": "19445",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B000XXQULC-attribute-b96cf8cdf74a8b48",
+      "qaPairId": "19446",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B000XXQULC-attribute-a66f17da89f99d80",
+      "qaPairId": "19447",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B000XXQULC-cqa-3001e08223bb2a68",
+      "qaPairId": "19448",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B000XXQULC-review-77ecf5af4db69749",
+      "qaPairId": "19449",
+      "label": 0,
+      "answer": ""
+    }
+  ],
+  "dev-2433": [
+    {
+      "passageId": "epqa-B000B6FADU-description-f76de0b61319783f",
+      "qaPairId": "23820",
+      "label": 2,
+      "answer": "The item weight is 12.8lbs and it supports adults."
+    },
+    {
+      "passageId": "epqa-B000B6FADU-attribute-d9799d7775b234e6",
+      "qaPairId": "23821",
+      "label": 2,
+      "answer": "The item weight is 11 pounds."
+    },
+    {
+      "passageId": "epqa-B000B6FADU-attribute-010b707f5510bb5f",
+      "qaPairId": "23822",
+      "label": 1,
+      "answer": "I'm not sure but the item package weight is 12.83 pounds."
+    },
+    {
+      "passageId": "epqa-B000B6FADU-review-38a6a739fa2c4a74",
+      "qaPairId": "23823",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B000B6FADU-review-01dec21ed3c1ed66",
+      "qaPairId": "23824",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B000B6FADU-bullet-d07dc2e928ca45dc",
+      "qaPairId": "23825",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B000B6FADU-description-ef3d9c44ce1592a3",
+      "qaPairId": "23826",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B000B6FADU-description-b322456e37cb4693",
+      "qaPairId": "23827",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B000B6FADU-review-1aabea79a0f9590a",
+      "qaPairId": "23828",
+      "label": 0,
+      "answer": ""
+    },
+    {
+      "passageId": "epqa-B000B6FADU-review-b0974f91b63fd007",
+      "qaPairId": "23829",
+      "label": 0,
+      "answer": ""
+    }
+  ]
+}

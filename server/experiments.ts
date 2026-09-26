@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
-import { type ExperimentRecord, type RunMode } from './contracts.ts';
+import { type ExperimentRecord, type OptimizationRecord, type RunMode } from './contracts.ts';
 import { taskForRun } from './evaluation.ts';
 import { executeResearch } from './research.ts';
 import { RunStore } from './store.ts';
@@ -54,7 +54,7 @@ export class ExperimentRunner {
     if (!this.halted && store.pendingExperiments().some(item => item.status === 'queued')) queueMicrotask(() => this.drain());
   }
   readiness() { return this.provider.readiness(); }
-  create(raw: unknown): ExperimentRecord {
+  create(raw: unknown, optimization?: OptimizationRecord): ExperimentRecord {
     if (this.halted && this.mode === 'live') throw new Error('Live queue is halted after an interrupted paid attempt; inspect provider usage before continuing');
     const input = experimentInput.parse(raw);
     if (!allowedCandidateChange(input.settings)) throw new Error('Candidate settings exceed the allowlisted one-change boundary');
@@ -74,7 +74,8 @@ export class ExperimentRunner {
       createdAt: at, updatedAt: at, cancelRequested: false, error: null, settings: input.settings,
       steps: [{ at, message: 'Experiment queued.' }]
     };
-    this.store.saveExperiment(record);
+    if (optimization) this.store.saveLinkedCandidate(record, optimization);
+    else this.store.saveExperiment(record);
     queueMicrotask(() => this.drain());
     return record;
   }

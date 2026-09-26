@@ -62,10 +62,29 @@ export class RunStore {
     return (this.db.prepare('SELECT document FROM runs ORDER BY started_at DESC LIMIT 100').all() as { document: string }[])
       .map(row => JSON.parse(row.document) as RunRecord);
   }
+  allRunsForReport(): RunRecord[] {
+    return (this.db.prepare('SELECT document FROM runs ORDER BY started_at DESC').all() as { document: string }[])
+      .map(row => JSON.parse(row.document) as RunRecord);
+  }
   saveExperiment(experiment: ExperimentRecord): void {
     this.db.prepare(`INSERT INTO experiments (id,status,created_at,document) VALUES (?,?,?,?)
       ON CONFLICT(id) DO UPDATE SET status=excluded.status, document=excluded.document`)
       .run(experiment.id, experiment.status, experiment.createdAt, JSON.stringify(experiment));
+  }
+  saveLinkedCandidate(experiment: ExperimentRecord, optimization: OptimizationRecord): void {
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      const saved = this.getOptimization(optimization.id);
+      if (!saved || saved.status !== 'running' || saved.candidateExperimentId || this.getExperiment(experiment.id)) throw new Error('Candidate experiment cannot be linked to this optimization.');
+      optimization.candidateExperimentId = experiment.id;
+      this.saveExperiment(experiment);
+      this.saveOptimization(optimization);
+      this.db.exec('COMMIT');
+    } catch (error) {
+      this.db.exec('ROLLBACK');
+      optimization.candidateExperimentId = '';
+      throw error;
+    }
   }
   getExperiment(id: string): ExperimentRecord | null {
     const row = this.db.prepare('SELECT document FROM experiments WHERE id=?').get(id) as { document: string } | undefined;
@@ -101,6 +120,11 @@ export class RunStore {
   listOptimizations(): OptimizationRecord[] {
     return (this.db.prepare('SELECT document FROM optimizations ORDER BY created_at DESC LIMIT 100').all() as { document: string }[])
       .map(row => JSON.parse(row.document) as OptimizationRecord);
+  }
+  pendingOptimizations(): OptimizationRecord[] {
+    return (this.db.prepare('SELECT document FROM optimizations').all() as { document: string }[])
+      .map(row => JSON.parse(row.document) as OptimizationRecord)
+      .filter(item => item.status === 'running' && !item.candidateExperimentId);
   }
   reserveCharge(id: string, kind: 'research' | 'proposal', maxCents: number, capCents: number, ownerId = id): void {
     if (!Number.isSafeInteger(maxCents) || maxCents <= 0 || !Number.isSafeInteger(capCents) || capCents <= 0) throw new Error('Invalid budget reservation');

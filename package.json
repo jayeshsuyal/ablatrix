@@ -11,9 +11,14 @@
     "test:e2e": "npm run build && playwright test",
     "local": "npm run build && npm start",
     "replay": "node --import tsx server/replay.ts",
-    "holdout": "node --import tsx server/holdout.ts"
+    "holdout": "node --import tsx server/holdout.ts",
+    "pilot": "node --import tsx server/pilot-cli.ts",
+    "feedback:prepare": "node --env-file-if-exists=.env --import tsx server/feedback-prepare.ts",
+    "feedback:retrieval-audit": "node --import tsx scripts/evaluate_product_retrieval.ts",
+    "feedback:import-validation": "node --import tsx scripts/import_validation_packet.ts"
   },
   "dependencies": {
+    "@huggingface/transformers": "4.3.0",
     "@sapiom/agent": "0.14.2",
     "@sapiom/tools": "0.38.0",
     "react": "19.2.8",

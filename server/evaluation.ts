@@ -71,17 +71,22 @@ export function evaluate(run: RunRecord, revealHoldout = false): Evaluation | nu
 
 export function report(runs: RunRecord[]) {
   const latest = new Map<string, RunRecord>();
-  for (const run of runs) if (!latest.has(run.taskId)) latest.set(run.taskId, run);
+  for (const run of runs) {
+    const key = `${run.mode}:${run.taskId}`;
+    if (!latest.has(key)) latest.set(key, run);
+  }
   const evaluations = [...latest.values()].map(run => evaluate(run)).filter((item): item is Evaluation => item !== null && item.split !== 'holdout');
   const live = evaluations.filter(item => !item.fixture);
   const liveCorrect = live.filter(item => item.correct).length;
-  const pricedRuns = runs.filter(run => run.mode === 'live' && run.costStatus === 'priced' && run.costUsd !== null);
-  const allLivePriced = runs.filter(run => run.mode === 'live').length === pricedRuns.length;
+  const eligibleTaskIds = new Set(live.map(item => item.taskId));
+  const liveRuns = runs.filter(run => run.mode === 'live' && eligibleTaskIds.has(run.taskId));
+  const pricedRuns = liveRuns.filter(run => run.costStatus === 'priced' && run.costUsd !== null);
+  const allLivePriced = liveRuns.length === pricedRuns.length;
   return {
     version: suite.version, labelNote: suite.labelNote, sampleSize: live.length, correct: liveCorrect,
     qualityRate: live.length ? liveCorrect / live.length : null,
     costPerCorrectUsd: allLivePriced && liveCorrect > 0 ? pricedRuns.reduce((sum, run) => sum + (run.costUsd ?? 0), 0) / liveCorrect : null,
-    costNote: 'Unknown when any live run is unpriced or no task is correctly completed; fixture cost is excluded.',
+    costNote: 'Pooled cost across all priced live attempts for visible tasks, divided by the latest correct live task count. This is a diagnostic, not a candidate comparison. Unknown when any included live attempt is unpriced or no task is correctly completed.',
     uncertainty: live.length < 30 ? 'Small sample; no reliable performance claim.' : 'Report a confidence interval before comparison.',
     evaluations
   };

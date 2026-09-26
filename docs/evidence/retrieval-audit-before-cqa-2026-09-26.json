@@ -1,0 +1,566 @@
+{
+  "format": "ablatrix-offline-retrieval-audit-v1",
+  "corpusVersion": "epqa-demo-v1-cec976cc2f22",
+  "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+  "topK": 5,
+  "split": "development",
+  "annotationCaveat": "Upstream reference passage membership is AI-assisted and contains acknowledged errors. This is passage retrieval coverage, not answer correctness.",
+  "summary": {
+    "bm25": {
+      "matchedReferencePassages": 32,
+      "totalReferencePassages": 34,
+      "casesWithAnyReference": 10,
+      "cases": 10
+    },
+    "dense": {
+      "matchedReferencePassages": 33,
+      "totalReferencePassages": 34,
+      "casesWithAnyReference": 10,
+      "cases": 10
+    },
+    "hybrid": {
+      "matchedReferencePassages": 32,
+      "totalReferencePassages": 34,
+      "casesWithAnyReference": 10,
+      "cases": 10
+    }
+  },
+  "cases": [
+    {
+      "caseId": "epqa-train-349",
+      "productId": "B00251EVPW",
+      "referenceCount": 4,
+      "methods": {
+        "bm25": {
+          "passageIds": [
+            "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+            "epqa-B00251EVPW-review-c44d61711b6f2015",
+            "epqa-B00251EVPW-bullet-f827f18b1afe5848",
+            "epqa-B00251EVPW-cqa-8d024252f9007e1f"
+          ],
+          "matchedIds": [
+            "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+            "epqa-B00251EVPW-review-c44d61711b6f2015",
+            "epqa-B00251EVPW-cqa-8d024252f9007e1f"
+          ],
+          "missingIds": [
+            "epqa-B00251EVPW-attribute-4f8a9b21dbec272e"
+          ]
+        },
+        "dense": {
+          "passageIds": [
+            "epqa-B00251EVPW-attribute-95b63e3e9dd5c120",
+            "epqa-B00251EVPW-attribute-4f8a9b21dbec272e",
+            "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+            "epqa-B00251EVPW-cqa-8d024252f9007e1f",
+            "epqa-B00251EVPW-review-c44d61711b6f2015"
+          ],
+          "matchedIds": [
+            "epqa-B00251EVPW-attribute-4f8a9b21dbec272e",
+            "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+            "epqa-B00251EVPW-cqa-8d024252f9007e1f",
+            "epqa-B00251EVPW-review-c44d61711b6f2015"
+          ],
+          "missingIds": []
+        },
+        "hybrid": {
+          "passageIds": [
+            "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+            "epqa-B00251EVPW-review-c44d61711b6f2015",
+            "epqa-B00251EVPW-cqa-8d024252f9007e1f",
+            "epqa-B00251EVPW-bullet-f827f18b1afe5848",
+            "epqa-B00251EVPW-attribute-95b63e3e9dd5c120"
+          ],
+          "matchedIds": [
+            "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+            "epqa-B00251EVPW-review-c44d61711b6f2015",
+            "epqa-B00251EVPW-cqa-8d024252f9007e1f"
+          ],
+          "missingIds": [
+            "epqa-B00251EVPW-attribute-4f8a9b21dbec272e"
+          ]
+        }
+      }
+    },
+    {
+      "caseId": "epqa-train-416",
+      "productId": "B00006IE1F",
+      "referenceCount": 3,
+      "methods": {
+        "bm25": {
+          "passageIds": [
+            "epqa-B00006IE1F-attribute-58e2bea8e9ff6410",
+            "epqa-B00006IE1F-attribute-b59571e7dd4c3025",
+            "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc",
+            "epqa-B00006IE1F-cqa-1a022e3122df87d4",
+            "epqa-B00006IE1F-bullet-1a6633e738035f77"
+          ],
+          "matchedIds": [
+            "epqa-B00006IE1F-attribute-b59571e7dd4c3025",
+            "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc",
+            "epqa-B00006IE1F-bullet-1a6633e738035f77"
+          ],
+          "missingIds": []
+        },
+        "dense": {
+          "passageIds": [
+            "epqa-B00006IE1F-attribute-58e2bea8e9ff6410",
+            "epqa-B00006IE1F-attribute-b59571e7dd4c3025",
+            "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc",
+            "epqa-B00006IE1F-cqa-1a022e3122df87d4",
+            "epqa-B00006IE1F-bullet-1a6633e738035f77"
+          ],
+          "matchedIds": [
+            "epqa-B00006IE1F-attribute-b59571e7dd4c3025",
+            "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc",
+            "epqa-B00006IE1F-bullet-1a6633e738035f77"
+          ],
+          "missingIds": []
+        },
+        "hybrid": {
+          "passageIds": [
+            "epqa-B00006IE1F-attribute-58e2bea8e9ff6410",
+            "epqa-B00006IE1F-attribute-b59571e7dd4c3025",
+            "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc",
+            "epqa-B00006IE1F-cqa-1a022e3122df87d4",
+            "epqa-B00006IE1F-bullet-1a6633e738035f77"
+          ],
+          "matchedIds": [
+            "epqa-B00006IE1F-attribute-b59571e7dd4c3025",
+            "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc",
+            "epqa-B00006IE1F-bullet-1a6633e738035f77"
+          ],
+          "missingIds": []
+        }
+      }
+    },
+    {
+      "caseId": "epqa-train-438",
+      "productId": "B003ZSD5EC",
+      "referenceCount": 4,
+      "methods": {
+        "bm25": {
+          "passageIds": [
+            "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+            "epqa-B003ZSD5EC-cqa-44fcd518324755cf",
+            "epqa-B003ZSD5EC-cqa-219ea12f8cef62b4",
+            "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+            "epqa-B003ZSD5EC-attribute-c4aa96e8f1e93b58"
+          ],
+          "matchedIds": [
+            "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+            "epqa-B003ZSD5EC-cqa-44fcd518324755cf",
+            "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+            "epqa-B003ZSD5EC-attribute-c4aa96e8f1e93b58"
+          ],
+          "missingIds": []
+        },
+        "dense": {
+          "passageIds": [
+            "epqa-B003ZSD5EC-cqa-219ea12f8cef62b4",
+            "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+            "epqa-B003ZSD5EC-attribute-c4aa96e8f1e93b58",
+            "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+            "epqa-B003ZSD5EC-cqa-44fcd518324755cf"
+          ],
+          "matchedIds": [
+            "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+            "epqa-B003ZSD5EC-attribute-c4aa96e8f1e93b58",
+            "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+            "epqa-B003ZSD5EC-cqa-44fcd518324755cf"
+          ],
+          "missingIds": []
+        },
+        "hybrid": {
+          "passageIds": [
+            "epqa-B003ZSD5EC-cqa-219ea12f8cef62b4",
+            "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+            "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+            "epqa-B003ZSD5EC-cqa-44fcd518324755cf",
+            "epqa-B003ZSD5EC-attribute-c4aa96e8f1e93b58"
+          ],
+          "matchedIds": [
+            "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+            "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+            "epqa-B003ZSD5EC-cqa-44fcd518324755cf",
+            "epqa-B003ZSD5EC-attribute-c4aa96e8f1e93b58"
+          ],
+          "missingIds": []
+        }
+      }
+    },
+    {
+      "caseId": "epqa-train-743",
+      "productId": "B0058YR0XS",
+      "referenceCount": 4,
+      "methods": {
+        "bm25": {
+          "passageIds": [
+            "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+            "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+            "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+            "epqa-B0058YR0XS-review-e716e7c57bb5dbe4",
+            "epqa-B0058YR0XS-attribute-57e130a0617d1a46"
+          ],
+          "matchedIds": [
+            "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+            "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+            "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+            "epqa-B0058YR0XS-review-e716e7c57bb5dbe4"
+          ],
+          "missingIds": []
+        },
+        "dense": {
+          "passageIds": [
+            "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+            "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+            "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+            "epqa-B0058YR0XS-review-e716e7c57bb5dbe4",
+            "epqa-B0058YR0XS-review-345c5b719b19e017"
+          ],
+          "matchedIds": [
+            "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+            "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+            "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+            "epqa-B0058YR0XS-review-e716e7c57bb5dbe4"
+          ],
+          "missingIds": []
+        },
+        "hybrid": {
+          "passageIds": [
+            "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+            "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+            "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+            "epqa-B0058YR0XS-review-e716e7c57bb5dbe4",
+            "epqa-B0058YR0XS-review-345c5b719b19e017"
+          ],
+          "matchedIds": [
+            "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+            "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+            "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+            "epqa-B0058YR0XS-review-e716e7c57bb5dbe4"
+          ],
+          "missingIds": []
+        }
+      }
+    },
+    {
+      "caseId": "epqa-train-770",
+      "productId": "B002V92YMA",
+      "referenceCount": 1,
+      "methods": {
+        "bm25": {
+          "passageIds": [
+            "epqa-B002V92YMA-description-8a4a9bebcbb4671d",
+            "epqa-B002V92YMA-review-80a9b1227daf0646",
+            "epqa-B002V92YMA-review-e27a9b01e1834d95",
+            "epqa-B002V92YMA-review-b1ad16045e25e4d7",
+            "epqa-B002V92YMA-review-938f85f1730d8dca"
+          ],
+          "matchedIds": [
+            "epqa-B002V92YMA-description-8a4a9bebcbb4671d"
+          ],
+          "missingIds": []
+        },
+        "dense": {
+          "passageIds": [
+            "epqa-B002V92YMA-review-b1ad16045e25e4d7",
+            "epqa-B002V92YMA-review-e27a9b01e1834d95",
+            "epqa-B002V92YMA-review-80a9b1227daf0646",
+            "epqa-B002V92YMA-review-938f85f1730d8dca",
+            "epqa-B002V92YMA-description-8a4a9bebcbb4671d"
+          ],
+          "matchedIds": [
+            "epqa-B002V92YMA-description-8a4a9bebcbb4671d"
+          ],
+          "missingIds": []
+        },
+        "hybrid": {
+          "passageIds": [
+            "epqa-B002V92YMA-review-b1ad16045e25e4d7",
+            "epqa-B002V92YMA-review-80a9b1227daf0646",
+            "epqa-B002V92YMA-review-e27a9b01e1834d95",
+            "epqa-B002V92YMA-description-8a4a9bebcbb4671d",
+            "epqa-B002V92YMA-review-938f85f1730d8dca"
+          ],
+          "matchedIds": [
+            "epqa-B002V92YMA-description-8a4a9bebcbb4671d"
+          ],
+          "missingIds": []
+        }
+      }
+    },
+    {
+      "caseId": "epqa-train-775",
+      "productId": "B008402S3K",
+      "referenceCount": 1,
+      "methods": {
+        "bm25": {
+          "passageIds": [
+            "epqa-B008402S3K-review-87a352a6f9eba57e",
+            "epqa-B008402S3K-review-33d481baf8c302dd",
+            "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+            "epqa-B008402S3K-review-b70384bc8a4748d3",
+            "epqa-B008402S3K-attribute-619f6c0d99b503d0"
+          ],
+          "matchedIds": [
+            "epqa-B008402S3K-attribute-619f6c0d99b503d0"
+          ],
+          "missingIds": []
+        },
+        "dense": {
+          "passageIds": [
+            "epqa-B008402S3K-review-b70384bc8a4748d3",
+            "epqa-B008402S3K-review-33d481baf8c302dd",
+            "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+            "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+            "epqa-B008402S3K-review-87a352a6f9eba57e"
+          ],
+          "matchedIds": [
+            "epqa-B008402S3K-attribute-619f6c0d99b503d0"
+          ],
+          "missingIds": []
+        },
+        "hybrid": {
+          "passageIds": [
+            "epqa-B008402S3K-review-33d481baf8c302dd",
+            "epqa-B008402S3K-review-b70384bc8a4748d3",
+            "epqa-B008402S3K-review-87a352a6f9eba57e",
+            "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+            "epqa-B008402S3K-attribute-619f6c0d99b503d0"
+          ],
+          "matchedIds": [
+            "epqa-B008402S3K-attribute-619f6c0d99b503d0"
+          ],
+          "missingIds": []
+        }
+      }
+    },
+    {
+      "caseId": "epqa-train-585",
+      "productId": "B00FH9B8RI",
+      "referenceCount": 5,
+      "methods": {
+        "bm25": {
+          "passageIds": [
+            "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+            "epqa-B00FH9B8RI-review-4fbef905c7cbe4fb",
+            "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+            "epqa-B00FH9B8RI-attribute-26922d151a0951f3",
+            "epqa-B00FH9B8RI-review-33e3e80248990e7e"
+          ],
+          "matchedIds": [
+            "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+            "epqa-B00FH9B8RI-review-4fbef905c7cbe4fb",
+            "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+            "epqa-B00FH9B8RI-attribute-26922d151a0951f3",
+            "epqa-B00FH9B8RI-review-33e3e80248990e7e"
+          ],
+          "missingIds": []
+        },
+        "dense": {
+          "passageIds": [
+            "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+            "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+            "epqa-B00FH9B8RI-review-4fbef905c7cbe4fb",
+            "epqa-B00FH9B8RI-review-33e3e80248990e7e",
+            "epqa-B00FH9B8RI-attribute-26922d151a0951f3"
+          ],
+          "matchedIds": [
+            "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+            "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+            "epqa-B00FH9B8RI-review-4fbef905c7cbe4fb",
+            "epqa-B00FH9B8RI-review-33e3e80248990e7e",
+            "epqa-B00FH9B8RI-attribute-26922d151a0951f3"
+          ],
+          "missingIds": []
+        },
+        "hybrid": {
+          "passageIds": [
+            "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+            "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+            "epqa-B00FH9B8RI-review-4fbef905c7cbe4fb",
+            "epqa-B00FH9B8RI-attribute-26922d151a0951f3",
+            "epqa-B00FH9B8RI-review-33e3e80248990e7e"
+          ],
+          "matchedIds": [
+            "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+            "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+            "epqa-B00FH9B8RI-review-4fbef905c7cbe4fb",
+            "epqa-B00FH9B8RI-attribute-26922d151a0951f3",
+            "epqa-B00FH9B8RI-review-33e3e80248990e7e"
+          ],
+          "missingIds": []
+        }
+      }
+    },
+    {
+      "caseId": "epqa-train-728",
+      "productId": "B002ZG7RGM",
+      "referenceCount": 4,
+      "methods": {
+        "bm25": {
+          "passageIds": [
+            "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+            "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+            "epqa-B002ZG7RGM-review-e790d9384382ab4a",
+            "epqa-B002ZG7RGM-description-ab112b1d59926758",
+            "epqa-B002ZG7RGM-review-b5ded03197f80961"
+          ],
+          "matchedIds": [
+            "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+            "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+            "epqa-B002ZG7RGM-review-e790d9384382ab4a",
+            "epqa-B002ZG7RGM-description-ab112b1d59926758"
+          ],
+          "missingIds": []
+        },
+        "dense": {
+          "passageIds": [
+            "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+            "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+            "epqa-B002ZG7RGM-description-ab112b1d59926758",
+            "epqa-B002ZG7RGM-review-a9b93eb594ccba9e",
+            "epqa-B002ZG7RGM-review-e790d9384382ab4a"
+          ],
+          "matchedIds": [
+            "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+            "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+            "epqa-B002ZG7RGM-description-ab112b1d59926758",
+            "epqa-B002ZG7RGM-review-e790d9384382ab4a"
+          ],
+          "missingIds": []
+        },
+        "hybrid": {
+          "passageIds": [
+            "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+            "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+            "epqa-B002ZG7RGM-description-ab112b1d59926758",
+            "epqa-B002ZG7RGM-review-e790d9384382ab4a",
+            "epqa-B002ZG7RGM-review-a9b93eb594ccba9e"
+          ],
+          "matchedIds": [
+            "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+            "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+            "epqa-B002ZG7RGM-description-ab112b1d59926758",
+            "epqa-B002ZG7RGM-review-e790d9384382ab4a"
+          ],
+          "missingIds": []
+        }
+      }
+    },
+    {
+      "caseId": "epqa-train-647",
+      "productId": "B003DKL4JA",
+      "referenceCount": 5,
+      "methods": {
+        "bm25": {
+          "passageIds": [
+            "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "epqa-B003DKL4JA-cqa-40546815d0dae28e",
+            "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+            "epqa-B003DKL4JA-attribute-7afbf30b240738bd"
+          ],
+          "matchedIds": [
+            "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+            "epqa-B003DKL4JA-attribute-7afbf30b240738bd"
+          ],
+          "missingIds": [
+            "epqa-B003DKL4JA-review-7637a46f0afa1f31"
+          ]
+        },
+        "dense": {
+          "passageIds": [
+            "epqa-B003DKL4JA-cqa-40546815d0dae28e",
+            "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "epqa-B003DKL4JA-attribute-7a1cda449e751d9d"
+          ],
+          "matchedIds": [
+            "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "epqa-B003DKL4JA-attribute-7a1cda449e751d9d"
+          ],
+          "missingIds": [
+            "epqa-B003DKL4JA-review-7637a46f0afa1f31"
+          ]
+        },
+        "hybrid": {
+          "passageIds": [
+            "epqa-B003DKL4JA-cqa-40546815d0dae28e",
+            "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "epqa-B003DKL4JA-attribute-7a1cda449e751d9d"
+          ],
+          "matchedIds": [
+            "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "epqa-B003DKL4JA-attribute-7a1cda449e751d9d"
+          ],
+          "missingIds": [
+            "epqa-B003DKL4JA-review-7637a46f0afa1f31"
+          ]
+        }
+      }
+    },
+    {
+      "caseId": "epqa-train-635",
+      "productId": "B008UV6YRO",
+      "referenceCount": 3,
+      "methods": {
+        "bm25": {
+          "passageIds": [
+            "epqa-B008UV6YRO-cqa-9e0df0446ae16800",
+            "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+            "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+            "epqa-B008UV6YRO-review-20096a352bc7c9ff",
+            "epqa-B008UV6YRO-review-19cced7bc7540e43"
+          ],
+          "matchedIds": [
+            "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+            "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+            "epqa-B008UV6YRO-review-20096a352bc7c9ff"
+          ],
+          "missingIds": []
+        },
+        "dense": {
+          "passageIds": [
+            "epqa-B008UV6YRO-cqa-9e0df0446ae16800",
+            "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+            "epqa-B008UV6YRO-review-20096a352bc7c9ff",
+            "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+            "epqa-B008UV6YRO-attribute-c36fc284f954a873"
+          ],
+          "matchedIds": [
+            "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+            "epqa-B008UV6YRO-review-20096a352bc7c9ff",
+            "epqa-B008UV6YRO-attribute-9fb761de545aadf9"
+          ],
+          "missingIds": []
+        },
+        "hybrid": {
+          "passageIds": [
+            "epqa-B008UV6YRO-cqa-9e0df0446ae16800",
+            "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+            "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+            "epqa-B008UV6YRO-review-20096a352bc7c9ff",
+            "epqa-B008UV6YRO-review-abd934245cc16fad"
+          ],
+          "matchedIds": [
+            "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+            "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+            "epqa-B008UV6YRO-review-20096a352bc7c9ff"
+          ],
+          "missingIds": []
+        }
+      }
+    }
+  ]
+}

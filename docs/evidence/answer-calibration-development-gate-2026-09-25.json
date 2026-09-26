@@ -1,0 +1,11 @@
+{
+  "format": "ablatrix-answer-calibration-development-gate-v1",
+  "phasePacket": "answer-calibration-development-restart-2026-09-25.json",
+  "review": "answer-calibration-astra-review-2026-09-25.md",
+  "policySha256": "859759ff966270a0cb5d04ce2bd6ed094e730288633379d675c78e86e76dc7b0",
+  "reviewer": "GPT-6 Astra AI assessment",
+  "developmentPassed": false,
+  "reason": "Both cabinet answers were only qualified on claim support, answer adequacy, and citation relevance. The candidate was narrowly preferred but still hedged away the listed glass claim and overstated conflict among compatible wood descriptions. Native Union answers passed without a material regression. The frozen gate requires an adequately calibrated cabinet answer, so no fresh validation is authorized by this protocol.",
+  "humanReview": null,
+  "policyPromoted": false
+}

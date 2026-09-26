@@ -1,0 +1,2737 @@
+{
+  "version": "epqa-demo-v1-cec976cc2f22",
+  "source": "https://github.com/amazon-science/contextual-product-qa",
+  "license": "CDLA-Sharing-1.0",
+  "products": [
+    {
+      "id": "B00251EVPW",
+      "title": "Canvas Panel 8X10 Pack of 12",
+      "split": "development"
+    },
+    {
+      "id": "B00006IE1F",
+      "title": "ArtKraft Duo-Finish Paper Roll P67134, 4-feet by 200-feet, Brite Green, 1 Roll",
+      "split": "development"
+    },
+    {
+      "id": "B003ZSD5EC",
+      "title": "Mega Kit 260 Spools Polyester Embroidery Machine Thread",
+      "split": "development"
+    },
+    {
+      "id": "B0058YR0XS",
+      "title": "Columbia Men's Silver Ridge Cargo Short, Tusk, 40x10",
+      "split": "development"
+    },
+    {
+      "id": "B002V92YMA",
+      "title": "TIMBUK2 Classic Messenger Bag, Blue/Black/Blue, Small",
+      "split": "development"
+    },
+    {
+      "id": "B008402S3K",
+      "title": "Plaza Astoria Wall/Door-Mount Jewelry Armoire, Black",
+      "split": "development"
+    },
+    {
+      "id": "B00FH9B8RI",
+      "title": "OtterBox Defender Series Case for LG G2 - Retail Packaging - White/Pink (Verizon Only)",
+      "split": "development"
+    },
+    {
+      "id": "B002ZG7RGM",
+      "title": "Chaos -CTR Howler Multi Tasker Pro Windproof Balaclava, Black, Large/X-Large",
+      "split": "development"
+    },
+    {
+      "id": "B003DKL4JA",
+      "title": "Native Union Pop Phone Retro Handset - MM01H-B-1 - Black",
+      "split": "development"
+    },
+    {
+      "id": "B008UV6YRO",
+      "title": "Incredisonic IFM-500 Bluetooth FM Transmitter Car Kit With Goosneck GPS Vehicle Mount Combo, for iPhone 6 5s, 4, 4S, Ipod Touch All Versions, Samsung Galaxy S5, S3, & S4, & All other PDA Phones",
+      "split": "development"
+    },
+    {
+      "id": "B005NY0TEK",
+      "title": "AzureGreen - Small 1842 Poetry Leather Blank Book",
+      "split": "validation"
+    },
+    {
+      "id": "B007PBHZK0",
+      "title": "Dritz Sew You Adjustable Dress Form, Small, Opal Green",
+      "split": "validation"
+    },
+    {
+      "id": "B005SWX65G",
+      "title": "OtterBox Commuter Series Case for iPhone 4/4S - Retail Packaging - Black (Discontinued by Manufacturer)",
+      "split": "validation"
+    },
+    {
+      "id": "B009XGZGZG",
+      "title": "Tune Belt Armband for iPhone SE (2016) 5 5s 5c & iPod touch 5th 6th Generation - For Running & Working Out - Sweat-Resistant AB87 [Black]",
+      "split": "validation"
+    },
+    {
+      "id": "B000XXQULC",
+      "title": "Shepherd Hardware 9078 Shepherd Smooth Caster Cup, 3 in L X 3 in W, Square, 3-Inch, Brown",
+      "split": "validation"
+    },
+    {
+      "id": "B000B6FADU",
+      "title": "Meinl Cajon Box Drum, Full Size with Internal Metal Strings for Adjustable Snare Effect, Birch Wood, HCAJ1NT",
+      "split": "validation"
+    }
+  ],
+  "passages": [
+    {
+      "id": "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+      "productId": "B00251EVPW",
+      "source": "cqa",
+      "text": "there are 12 in a package. Question: what is the depth? in inches",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2242&qa_pair_id=3400&chars=0-65",
+      "sha256": "51f39d37d00e4e80e64ca7ecbacf7202ea6ab4752acdefd34b423fa5cc7d3e21"
+    },
+    {
+      "id": "epqa-B00251EVPW-attribute-4f8a9b21dbec272e",
+      "productId": "B00251EVPW",
+      "source": "attribute",
+      "text": "number_of_pieces:  { value:12 }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2243&qa_pair_id=3401&chars=0-31",
+      "sha256": "4f8a9b21dbec272ee9c188ea7f0fe3ade3d504ec7a04aff6577a2dd713ff402e"
+    },
+    {
+      "id": "epqa-B00251EVPW-attribute-95b63e3e9dd5c120",
+      "productId": "B00251EVPW",
+      "source": "attribute",
+      "text": "number_of_items:  { value:1 }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2244&qa_pair_id=3402&chars=0-29",
+      "sha256": "95b63e3e9dd5c120890de71ee14256ad5be1a2c9d1f40f26631dec9e07865a38"
+    },
+    {
+      "id": "epqa-B00251EVPW-cqa-8d024252f9007e1f",
+      "productId": "B00251EVPW",
+      "source": "cqa",
+      "text": "hello,this listing is for a pack of 12 canvas panels.canvas panels are conventionally produced panels with turned edges over a multiple binder board. Question: canvas paper pad",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2245&qa_pair_id=3403&chars=0-176",
+      "sha256": "8d024252f9007e1f9f1ea53c87383a43ea53b5b7a031f2252107f08873a2c4a5"
+    },
+    {
+      "id": "epqa-B00251EVPW-review-c44d61711b6f2015",
+      "productId": "B00251EVPW",
+      "source": "review",
+      "text": "this pack of 12 canvases are very sturdy and great quality for beginners and the experienced alike!",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2246&qa_pair_id=3404&chars=0-99",
+      "sha256": "c44d61711b6f20154eedf21b87b7cf42dda2d580994dc6b0b64bfd371562525a"
+    },
+    {
+      "id": "epqa-B00251EVPW-attribute-7cd1350a1f8fa194",
+      "productId": "B00251EVPW",
+      "source": "attribute",
+      "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:8 }, value:8 }, length:{ unit:inches, normalized_value:{ unit:inches, value:10.2 }, value:10.2 }, height:{ unit:inches, normalized_value:{ unit:inches, value:10 }, value:10 } }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2247&qa_pair_id=3405&chars=0-255",
+      "sha256": "7cd1350a1f8fa194f17b293b736eaee31d2a389c8fca1a7a9282722de889a63a"
+    },
+    {
+      "id": "epqa-B00251EVPW-bullet-da6fe355eef3606c",
+      "productId": "B00251EVPW",
+      "source": "bullet",
+      "text": "can be used for a wide variety of projects and by artists of all skill levels.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2248&qa_pair_id=3406&chars=0-78",
+      "sha256": "da6fe355eef3606c95f4d48d82532eac0bfa45ba60a9ddaccd588677d8b0f4fb"
+    },
+    {
+      "id": "epqa-B00251EVPW-bullet-f827f18b1afe5848",
+      "productId": "B00251EVPW",
+      "source": "bullet",
+      "text": "all edges are smoothly attached to the back of the canvas panel and covered with smooth paper on the back.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2249&qa_pair_id=3407&chars=0-106",
+      "sha256": "f827f18b1afe58486546ba1619ada00da1bdd3a800a96b3cf24f3c55f293d35b"
+    },
+    {
+      "id": "epqa-B00251EVPW-review-770e607624d68926",
+      "productId": "B00251EVPW",
+      "source": "review",
+      "text": "good",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2250&qa_pair_id=3408&chars=0-4",
+      "sha256": "770e607624d689265ca6c44884d0807d9b054d23c473c106c72be9de08b7376c"
+    },
+    {
+      "id": "epqa-B00251EVPW-review-009cdac6be41b518",
+      "productId": "B00251EVPW",
+      "source": "review",
+      "text": "just what i wanted and needed",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2251&qa_pair_id=3409&chars=0-29",
+      "sha256": "009cdac6be41b518513970ebaa7d6cc6260de3e8d28abc1ce56b424dffe9a343"
+    },
+    {
+      "id": "epqa-B00006IE1F-review-873790dab54dfac0",
+      "productId": "B00006IE1F",
+      "source": "review",
+      "text": "worked to help black out lights on windows for an event.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2612&qa_pair_id=4050&chars=0-56",
+      "sha256": "873790dab54dfac0eefc669af5f57acdfebbcd524531b28a98bf957d664e21bc"
+    },
+    {
+      "id": "epqa-B00006IE1F-review-0006f4c25c36ca92",
+      "productId": "B00006IE1F",
+      "source": "review",
+      "text": "bought this to black out windows at my place of work for an event.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2613&qa_pair_id=4051&chars=0-66",
+      "sha256": "0006f4c25c36ca9220f2288304037d15cf4cb3bf83caa6f1bdff7872c0eb67a8"
+    },
+    {
+      "id": "epqa-B00006IE1F-review-d9fe73043ce893a8",
+      "productId": "B00006IE1F",
+      "source": "review",
+      "text": "used to black out some stained glass windows in our sanctuary at the church.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2614&qa_pair_id=4052&chars=0-76",
+      "sha256": "d9fe73043ce893a8badae0ac8a27a52faf1cef8020de0ca8ffdee5b61b372373"
+    },
+    {
+      "id": "epqa-B00006IE1F-review-3ce05733df7de76d",
+      "productId": "B00006IE1F",
+      "source": "review",
+      "text": "i bought this to black out the cafeteria windows for a daytime dance.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2615&qa_pair_id=4053&chars=0-69",
+      "sha256": "3ce05733df7de76d9d9adc8c0da1383838d5263fcacdd789e7dffde26490921b"
+    },
+    {
+      "id": "epqa-B00006IE1F-review-4afd3099f4e7b841",
+      "productId": "B00006IE1F",
+      "source": "review",
+      "text": "we needed a way to black out very tall, narrow windows in order to give a power point presentation,.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2616&qa_pair_id=4054&chars=0-100",
+      "sha256": "4afd3099f4e7b841f85587daf0d4de0a740c5154f103d62c21dfaca7fdda8c93"
+    },
+    {
+      "id": "epqa-B00006IE1F-attribute-172e3678af72bc01",
+      "productId": "B00006IE1F",
+      "source": "attribute",
+      "text": "item_shape:  { value:\"other\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2617&qa_pair_id=4055&chars=0-30",
+      "sha256": "172e3678af72bc01a4dc9f0417986b0ecd717a85bd75757d4ee2c9dbd22c2dae"
+    },
+    {
+      "id": "epqa-B00006IE1F-bullet-a6796f43b2ebb976",
+      "productId": "B00006IE1F",
+      "source": "bullet",
+      "text": "the textured or rough |\"toothy|\" side accepts chalk, watercolor, tempera and acrylic paints",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2618&qa_pair_id=4056&chars=0-91",
+      "sha256": "a6796f43b2ebb976396a6bd5c810bc9c364f06b4cdbabf59c008872129e5dfd0"
+    },
+    {
+      "id": "epqa-B00006IE1F-attribute-7158f5400cfb8c35",
+      "productId": "B00006IE1F",
+      "source": "attribute",
+      "text": "recycled_content_percentage:  { value:10 }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2619&qa_pair_id=4057&chars=0-42",
+      "sha256": "7158f5400cfb8c35dd89d4050fd885f9dee428d5b27d3e480a0de11880dc9acc"
+    },
+    {
+      "id": "epqa-B00006IE1F-review-f6967fb8727eb8aa",
+      "productId": "B00006IE1F",
+      "source": "review",
+      "text": "just perfect.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2620&qa_pair_id=4058&chars=0-13",
+      "sha256": "f6967fb8727eb8aae5e89c1d289ae8bbb8e77f1888a72ebd894f153160e3d656"
+    },
+    {
+      "id": "epqa-B00006IE1F-review-2ba0824314f2798f",
+      "productId": "B00006IE1F",
+      "source": "review",
+      "text": "purchased for stage prop artwork for a dance school.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2621&qa_pair_id=4059&chars=0-52",
+      "sha256": "2ba0824314f2798fc264bdc26feaab301f0a75a0a40559b3400da546f184f5a0"
+    },
+    {
+      "id": "epqa-B00006IE1F-attribute-58e2bea8e9ff6410",
+      "productId": "B00006IE1F",
+      "source": "attribute",
+      "text": "size:  { value:\"4' x 200'\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2622&qa_pair_id=4060&chars=0-28",
+      "sha256": "58e2bea8e9ff64101e7a3db2363b0f19d4c73efdf31e2f3e2bbcb3ef72215bb6"
+    },
+    {
+      "id": "epqa-B00006IE1F-attribute-b59571e7dd4c3025",
+      "productId": "B00006IE1F",
+      "source": "attribute",
+      "text": "special_size_type:  { value:\"48|\" x 200 ft\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2623&qa_pair_id=4061&chars=0-45",
+      "sha256": "b59571e7dd4c3025b566e961829fa4db806b375976ee9cb0af39437196d46bf6"
+    },
+    {
+      "id": "epqa-B00006IE1F-bullet-1a6633e738035f77",
+      "productId": "B00006IE1F",
+      "source": "bullet",
+      "text": "heavyweight duo-finish kraft paper roll is 4-feet by 200-feet",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2624&qa_pair_id=4062&chars=0-61",
+      "sha256": "1a6633e738035f772f37c538eab573ab099bf13f004de685e82fb6c2cb2574b1"
+    },
+    {
+      "id": "epqa-B00006IE1F-cqa-1a022e3122df87d4",
+      "productId": "B00006IE1F",
+      "source": "cqa",
+      "text": "i purchased the 200 foot roll. Question: how much paper is on the roll?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2625&qa_pair_id=4063&chars=0-71",
+      "sha256": "1a022e3122df87d47d0b418cac032630f6dd957946d48ccb9c415c7a110aa1a7"
+    },
+    {
+      "id": "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc",
+      "productId": "B00006IE1F",
+      "source": "cqa",
+      "text": "it is a continuous roll of 200 ft. sorry for the confusion. Question: what does it mean by \"loose sheets\"? yet says its a roll of 200'",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2626&qa_pair_id=4064&chars=0-134",
+      "sha256": "fcf0bf0fcc09edbc25c36116bb88aab8d7db6e93f825b3641afcc61e004e1557"
+    },
+    {
+      "id": "epqa-B00006IE1F-description-ea1299d4f8126d03",
+      "productId": "B00006IE1F",
+      "source": "description",
+      "text": "the leading heavyweight duo-finish kraft paper roll is 4-feet by 200-feet and is brite green in color.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2628&qa_pair_id=4066&chars=0-102",
+      "sha256": "ea1299d4f8126d0321a20866b02f1b7ae199cc01897494aa968d211f607d33b1"
+    },
+    {
+      "id": "epqa-B00006IE1F-description-3babae289f12a98c",
+      "productId": "B00006IE1F",
+      "source": "description",
+      "text": "with trusted brands like fadeless, bordette, tru-ray, riverside and creativity street, our educational and art supplies encourage creativity.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2629&qa_pair_id=4067&chars=0-141",
+      "sha256": "3babae289f12a98ce07ee1debb283dbd065c454f699ee5f0715937a9604e540d"
+    },
+    {
+      "id": "epqa-B00006IE1F-review-2689367b205c16ce",
+      "productId": "B00006IE1F",
+      "source": "review",
+      "text": "ok",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2630&qa_pair_id=4068&chars=0-2",
+      "sha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df"
+    },
+    {
+      "id": "epqa-B00006IE1F-cqa-90e8789b92d68da8",
+      "productId": "B00006IE1F",
+      "source": "cqa",
+      "text": "i use it for bullentin boards. Question: would this work well for paper mache crafts?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2631&qa_pair_id=4069&chars=0-85",
+      "sha256": "90e8789b92d68da8aed1ebc2944f3513404a44b596c394e4f18d7b8952e4c58d"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-cqa-43461783606fb28a",
+      "productId": "B003ZSD5EC",
+      "source": "cqa",
+      "text": "i don't know,  but i write down the number from my machine and pick out the color i think it is and put that number under each spool as i  line my colors up. Question: none of the colors match any of the charts. i have spent days looking. what brand chart should be used?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2742&qa_pair_id=4260&chars=0-271",
+      "sha256": "43461783606fb28a313871fb79445d86859c92a2f300bc9d6a812dd0336aa912"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-abc9a32147d329f9",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": ".i can't wait to try them.october 1 2013i have tried them : they are easy to open, easy to pick out the thread start,the color paper is missing on a few so i don't know what number the thread is.i cannot figure out the numbering system ie: 2214 might be a light blue,and 2014 may be on a light blue silver.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2743&qa_pair_id=4261&chars=0-306",
+      "sha256": "abc9a32147d329f914497e642421f9ec98cc6799c8c2535ceb02831add01281f"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-6cdd497d999c4686",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": "i will tell you it sews well with my brother...the \"isodore innovis 5000\" laura ashley edition quite a mouthful huh?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2744&qa_pair_id=4262&chars=0-116",
+      "sha256": "6cdd497d999c4686a45c759362b6341d5d6822a2b3467ea284f6357b779521ac"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-attribute-c372ae16b9d52259",
+      "productId": "B003ZSD5EC",
+      "source": "attribute",
+      "text": "part_number:  { value:\"ke260asst\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2745&qa_pair_id=4263&chars=0-35",
+      "sha256": "c372ae16b9d52259766b6e711c9ce329a4d0e2705b72d2314a73843f396ccb08"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-0e80cf25ed53a831",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": "the color number sticker is horribly placed - first use and the sticker is gone.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2746&qa_pair_id=4264&chars=0-80",
+      "sha256": "0e80cf25ed53a831fa16323394a491e0f32d305d55a3fc15c7c1e06bfe9b29f7"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-attribute-12bb32d29eeb926a",
+      "productId": "B003ZSD5EC",
+      "source": "attribute",
+      "text": "manufacturer:  { value:\"kolors embroidery\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2747&qa_pair_id=4265&chars=0-44",
+      "sha256": "12bb32d29eeb926ac5d4e1570738ae5167347944282571c237beb67686accea1"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-attribute-27f7c2ba4514f441",
+      "productId": "B003ZSD5EC",
+      "source": "attribute",
+      "text": "model_number:  { value:\"ke260asst\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2748&qa_pair_id=4266&chars=0-36",
+      "sha256": "27f7c2ba4514f441d9cfddb5b368bb3cd45469fcd6d6f7dea6630955a24d41f4"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-attribute-02ab49b90ccd0372",
+      "productId": "B003ZSD5EC",
+      "source": "attribute",
+      "text": "item_package_dimensions:  { length:{ unit:centimeters, normalized_value:{ unit:inches, value:16.69 }, value:17.5 }, width:{ unit:centimeters, normalized_value:{ unit:inches, value:10.16 }, value:25.81 }, height:{ unit:centimeters, normalized_value:{ unit:inches, value:6.89 }, value:42.39 } }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2749&qa_pair_id=4267&chars=0-292",
+      "sha256": "02ab49b90ccd0372eeb746b6fd6c751f76af796c789683a34ba0e507535e9385"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-10776ff21bb6936a",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": "too bad the colors are on the top of the spool where it gets removed before using it.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2750&qa_pair_id=4268&chars=0-85",
+      "sha256": "10776ff21bb6936a69c35887086523e18ccd0970f697045b84ffbbae879f2bfe"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-19298c0b1ac13fc7",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": "blush  2035 emily pink1221 rust  2049 golden poppy1222 lt. lt. yellow 2  2154 tender yellow1223 yellow 6  2017 light yellow1224 yellow 7  2155 lemon1225 med.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2751&qa_pair_id=4269&chars=0-157",
+      "sha256": "19298c0b1ac13fc7fb436af8fe404019fab91f885b311c99090ebaeb2baaa099"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-cbc1a39ccba34a29",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": "there is no color chart as many have noted.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2752&qa_pair_id=4270&chars=0-43",
+      "sha256": "cbc1a39ccba34a295fc0b9089ead5eb39ab48c1bf0734eb1c9d164b51562f26d"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-7dd77c6ae581e8cf",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": "nice selection but no color chart included",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2753&qa_pair_id=4271&chars=0-42",
+      "sha256": "7dd77c6ae581e8cfa29cd088e5ecf35c4348e0677e0c18e4cc3d2da97526e13a"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-attribute-720cb0306cc3547c",
+      "productId": "B003ZSD5EC",
+      "source": "attribute",
+      "text": "color:  { value:\"assorted\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2754&qa_pair_id=4272&chars=0-28",
+      "sha256": "720cb0306cc3547cc24b8dc8e87e8a66a200a4fed111fde603d7162ce6fe7eea"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-9c79d7928167cb26",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": "there isn't a color chart available anywhere for these colors or a conversion chart.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2755&qa_pair_id=4273&chars=0-84",
+      "sha256": "9c79d7928167cb268eee155b856d5bde97e3893b1fd44dc3b2c4c146409e1105"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-a2e8ca455eed78be",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": "i do wish there was a color chart though.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2756&qa_pair_id=4274&chars=0-41",
+      "sha256": "a2e8ca455eed78be06a2ebfd26a86fc5a3f8fdd49120d601a09591f45f60aea8"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-attribute-ff225d9f17b207a3",
+      "productId": "B003ZSD5EC",
+      "source": "attribute",
+      "text": "material:  { value:\"polyester\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2758&qa_pair_id=4276&chars=0-32",
+      "sha256": "ff225d9f17b207a37c9bc6e0dfc4815fd858d2ed6c8342f7e1bb1460cb30f1fa"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-bullet-0ee3f5851a4b71c7",
+      "productId": "B003ZSD5EC",
+      "source": "bullet",
+      "text": "includes 260 different colors",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2759&qa_pair_id=4277&chars=0-29",
+      "sha256": "0ee3f5851a4b71c74e32325031082712d8c08830672eba12f9b102de604eaa51"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-cqa-025316cc40b9a968",
+      "productId": "B003ZSD5EC",
+      "source": "cqa",
+      "text": "i keep them in drawers that way. Question: do you have a chart that shows how the spools are arranged by color in the picture?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2760&qa_pair_id=4278&chars=0-126",
+      "sha256": "025316cc40b9a9686dc92b84160904f03d0709d8e8e07f37de00a55a0641bdf8"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-2e685a603e3bd238",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": "quality, sews smooth.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2761&qa_pair_id=4279&chars=0-21",
+      "sha256": "2e685a603e3bd238996bbc7f8a633d3ce1c5c94c046833ba4c3f1bc49f004034"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-cqa-219ea12f8cef62b4",
+      "productId": "B003ZSD5EC",
+      "source": "cqa",
+      "text": "40's weight is standard for most machine embroidery. Question: my mom will be embroidering delicate handkerchiefs for my daughter’s wedding. is this the correct weight, “thin” thread? if not any suggestions? thank",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2762&qa_pair_id=4280&chars=0-213",
+      "sha256": "219ea12f8cef62b414e45739650953425e683ba73eedf2b8cbdbee7f3ed8df25"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+      "productId": "B003ZSD5EC",
+      "source": "cqa",
+      "text": "this is 40 weight  i will also tell you before you buy this product that it easily frays (and can become tangled in your machine) and there is no color chart to tell you the colors. Question: we just bought a husqvarna viking jade embroidery machine. does anyone know if this thread will work with it?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2763&qa_pair_id=4281&chars=0-301",
+      "sha256": "df535bf6a73a00d7bd4cdda30fdc15e90e6dc5dac5bf4bbcf95877ae090666f8"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-cqa-44fcd518324755cf",
+      "productId": "B003ZSD5EC",
+      "source": "cqa",
+      "text": "this is like an aurafil or robinson-anton embroidery thread, between 40-50 weight, not as thin as a bobbin thread but not anywhere as thick as even 1 strand of embroidery floss (dmc like). Question: would this work for friendship bracelets?  either kumihimo or knotted?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2764&qa_pair_id=4282&chars=0-269",
+      "sha256": "44fcd518324755cf6fe88b4bee2b03ddc33493fde22c060cd1c15e6c0ae4d953"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+      "productId": "B003ZSD5EC",
+      "source": "bullet",
+      "text": "high quality embroidery machine thread 40 weight polyester",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2765&qa_pair_id=4283&chars=0-58",
+      "sha256": "9af0ee832adb00871b5a5dbef459fcdb096ba5477b39f0c77ffa5ad0e8230313"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-attribute-c4aa96e8f1e93b58",
+      "productId": "B003ZSD5EC",
+      "source": "attribute",
+      "text": "item_weight:  { unit:pounds, normalized_value:{ unit:pounds, value:10.3 }, value:10.3 }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2766&qa_pair_id=4284&chars=0-87",
+      "sha256": "c4aa96e8f1e93b58cb41e4520ba66e1040f8a168247d9a7b1f9fe25bc66c1f5d"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-attribute-a66f17da89f99d80",
+      "productId": "B003ZSD5EC",
+      "source": "attribute",
+      "text": "batteries_included:  { value:false }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2768&qa_pair_id=4286&chars=0-36",
+      "sha256": "a66f17da89f99d800cae79c8ac76d6b3fe0bb06b93fac436923c4d66049e579c"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-bullet-d2dac34072dd3f31",
+      "productId": "B003ZSD5EC",
+      "source": "bullet",
+      "text": "each spool has 550 yards.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2769&qa_pair_id=4287&chars=0-25",
+      "sha256": "d2dac34072dd3f317445c6a71f14c0a93b5b7cb75b2b906e3e193d26c0e2d8e0"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-8548a6d02a015212",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": "without a color chart the number of colors is overwhelming at times to try to match.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2770&qa_pair_id=4288&chars=0-84",
+      "sha256": "8548a6d02a01521227b78f8baecfd41e1ce21a84be16d5a18b5592419a2c625a"
+    },
+    {
+      "id": "epqa-B003ZSD5EC-review-830c2df9c17bbb93",
+      "productId": "B003ZSD5EC",
+      "source": "review",
+      "text": "someone said the thread twisted in her machine, if you have your thread set up vertical it can't twist, my brother and singer both have vertical and horizontal feeds.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2771&qa_pair_id=4289&chars=0-166",
+      "sha256": "830c2df9c17bbb9330781bb73ac8d5fb00c3b30a22217f3e772a88e0ec6afe4d"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-attribute-26922d151a0951f3",
+      "productId": "B00FH9B8RI",
+      "source": "attribute",
+      "text": "compatible_phone_models:  { value:\"lg g2\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3632&qa_pair_id=5730&chars=0-43",
+      "sha256": "26922d151a0951f3211d49eb56bb65add1e73deeae1b5376547426822ebc7729"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-review-33e3e80248990e7e",
+      "productId": "B00FH9B8RI",
+      "source": "review",
+      "text": "fits lg g2 vs980 (verizon edition).",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3633&qa_pair_id=5731&chars=0-35",
+      "sha256": "33e3e80248990e7e201993c6b450865fe5cb91c784e13b1843a7bfe3f1c468e9"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+      "productId": "B00FH9B8RI",
+      "source": "cqa",
+      "text": "no, this case is for non-verizon g2's. Question: is this for verizon?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3634&qa_pair_id=5732&chars=0-69",
+      "sha256": "93a31f6a6e0eacf31f40b206661c496422907fdd19d53257ac26119fe88c25e0"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+      "productId": "B00FH9B8RI",
+      "source": "cqa",
+      "text": "yes it will fit the verizon g2 Question: why is the case different for a verizon lg g2",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3635&qa_pair_id=5733&chars=0-86",
+      "sha256": "60ed6f94adecb0def76c4f042c26568d12a016c0329b040d0f4b05ec4fb0e420"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-review-4fbef905c7cbe4fb",
+      "productId": "B00FH9B8RI",
+      "source": "review",
+      "text": "i had a really hard time finding a case for my lg g2 (verizon) before finally stumbling upon this searching through amazon.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3636&qa_pair_id=5734&chars=0-123",
+      "sha256": "4fbef905c7cbe4fba83680849988fe858458bb5595e0090380e370b9c8da4749"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-description-99509a34639409b1",
+      "productId": "B00FH9B8RI",
+      "source": "description",
+      "text": "the defender series case offers triple-layer protection and is built from a high-impact polycarbonate shell, durable silicone slipcover and a built-in screen protector, making it one of the toughest cases on the market.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3637&qa_pair_id=5735&chars=0-219",
+      "sha256": "99509a34639409b1adb69bb9d11edd97711e57c774e422f56e6f1e651d5045bf"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-attribute-1f30988cdba30f2a",
+      "productId": "B00FH9B8RI",
+      "source": "attribute",
+      "text": "special_feature:  { value:\"kickstand\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3638&qa_pair_id=5736&chars=0-39",
+      "sha256": "1f30988cdba30f2ac0eee4011b7f50fd4cc76de871cd0e7fdcb7399443d9dfb2"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-attribute-9d6ee5169043d075",
+      "productId": "B00FH9B8RI",
+      "source": "attribute",
+      "text": "includes_remote:  { value:false }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3639&qa_pair_id=5737&chars=0-33",
+      "sha256": "9d6ee5169043d075be30eff412ea7e42764e22dc15c6b10ad755a446bde8a253"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-review-181c3a323e54a948",
+      "productId": "B00FH9B8RI",
+      "source": "review",
+      "text": "fits great",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3640&qa_pair_id=5738&chars=0-10",
+      "sha256": "181c3a323e54a948e55c8933756530789d3daf40e842a02d2ab43ba813d1ddfd"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-review-8553d206b4632512",
+      "productId": "B00FH9B8RI",
+      "source": "review",
+      "text": "the backing started rubbing off after a week of recieving it.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3641&qa_pair_id=5739&chars=0-61",
+      "sha256": "8553d206b46325122c6bd66bc8bc6adafc3a93296d863e577d8e1e9d08d52456"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-review-2f3dd2bfa5787c80",
+      "productId": "B00FH9B8RI",
+      "source": "review",
+      "text": "may cut off and put on regular screen protector",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3642&qa_pair_id=5740&chars=0-47",
+      "sha256": "2f3dd2bfa5787c8045babac08033a6790f9997b332531c52830bd65287f836a7"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-review-0ac81082d8bb233b",
+      "productId": "B00FH9B8RI",
+      "source": "review",
+      "text": "it is very distracting and takes away from the touchscreen experience.you can remove the built-in screen protector from the case and peel away the adhesive that attaches it, but doing so will create about a millimeter of wiggle room for your phone (where the screen protector is supposed to be at).",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3643&qa_pair_id=5741&chars=0-298",
+      "sha256": "0ac81082d8bb233bdcfcb62ac36e796daa286a4ab2c2d36ab61fffa42e03059c"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-review-11f585135ec3d601",
+      "productId": "B00FH9B8RI",
+      "source": "review",
+      "text": "there is a gap between the screen protector and the screen but i just removed that screen protector and added my own which was easy to do.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3644&qa_pair_id=5742&chars=0-138",
+      "sha256": "11f585135ec3d601c123011efbfa5201c5b09084aaea18ed5c0b1383b8f028ab"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-review-4123654d2db0e664",
+      "productId": "B00FH9B8RI",
+      "source": "review",
+      "text": "screen cover is too loose i removed it and just use seperate screen protector.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3645&qa_pair_id=5743&chars=0-78",
+      "sha256": "4123654d2db0e664c5d582641764a7013acc561069d3c31f45958c12f53b545f"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-review-61f8594030f4d6eb",
+      "productId": "B00FH9B8RI",
+      "source": "review",
+      "text": "i have to remove the case every few days to clean the dirt and dust from underneath it, but it is supposed to keep dust out..?the screen protector cannot be removed and sits above the screen a good bit you have to press hard and is very noisy.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3646&qa_pair_id=5744&chars=0-243",
+      "sha256": "61f8594030f4d6eb9fdb07471ec4e301cddf78a05c2e559c48b07e182210d5c8"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-attribute-afded36de84e5892",
+      "productId": "B00FH9B8RI",
+      "source": "attribute",
+      "text": "item_weight:  { unit:pounds, normalized_value:{ unit:pounds, value:0.2 }, value:0.2 }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3647&qa_pair_id=5745&chars=0-85",
+      "sha256": "afded36de84e58924b3908e5dbb89d4d683e1d785665979c030e874dce2a91cc"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-attribute-a66f17da89f99d80",
+      "productId": "B00FH9B8RI",
+      "source": "attribute",
+      "text": "batteries_included:  { value:false }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3648&qa_pair_id=5746&chars=0-36",
+      "sha256": "a66f17da89f99d800cae79c8ac76d6b3fe0bb06b93fac436923c4d66049e579c"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-attribute-ce2474af67875a0a",
+      "productId": "B00FH9B8RI",
+      "source": "attribute",
+      "text": "color:  { value:\"pink\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3649&qa_pair_id=5747&chars=0-24",
+      "sha256": "ce2474af67875a0a0fd8e8b71e28a1fb213494782022e3f9a454ba94112fcc5c"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-review-93616680f7456f81",
+      "productId": "B00FH9B8RI",
+      "source": "review",
+      "text": "in my opinion...the best case you can get on the market!",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3650&qa_pair_id=5748&chars=0-56",
+      "sha256": "93616680f7456f8132f12963993d37f17f2f48d4a9de50487042dbd7d8ff4a21"
+    },
+    {
+      "id": "epqa-B00FH9B8RI-review-6dab5e1c424241d7",
+      "productId": "B00FH9B8RI",
+      "source": "review",
+      "text": "the plastic screen cover kinda pisses me off.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3651&qa_pair_id=5749&chars=0-45",
+      "sha256": "6dab5e1c424241d7b734849efc9743b171469390b88dff21040b148e8f15952b"
+    },
+    {
+      "id": "epqa-B008UV6YRO-attribute-d7b75a4051516fb8",
+      "productId": "B008UV6YRO",
+      "source": "attribute",
+      "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:2 }, value:2 }, length:{ unit:inches, normalized_value:{ unit:inches, value:2 }, value:2 }, height:{ unit:inches, normalized_value:{ unit:inches, value:4 }, value:4 } }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3962&qa_pair_id=6230&chars=0-247",
+      "sha256": "d7b75a4051516fb8a8e47eebbee6992bc24a1a618d0fa6e4f70077feba610bad"
+    },
+    {
+      "id": "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+      "productId": "B008UV6YRO",
+      "source": "attribute",
+      "text": "compatible_phone_models:  { value:\"apple iphone 6\" }; { value:\"samsung galaxy s3\" }; { value:\"samsung galaxy s4\" }; { value:\"samsung galaxy s5\" }; { value:\"apple iphone 4s\" }; { value:\"apple iphone 5s\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3963&qa_pair_id=6231&chars=0-203",
+      "sha256": "9fb761de545aadf9443354fad11a8741cf9f660cc1d94871ad807876a9273b81"
+    },
+    {
+      "id": "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+      "productId": "B008UV6YRO",
+      "source": "cqa",
+      "text": "the expandable cradle will adjust to any size phone. Question: will this product hold my samsung s 3?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3964&qa_pair_id=6232&chars=0-101",
+      "sha256": "11d009311d953fe5a589f558736d7d7b417db4114efb046a1a7da87e32eea19d"
+    },
+    {
+      "id": "epqa-B008UV6YRO-review-20096a352bc7c9ff",
+      "productId": "B008UV6YRO",
+      "source": "review",
+      "text": "this product does not fit a samsung galaxy s3 in a (admittedly very large) ballistic case.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3965&qa_pair_id=6233&chars=0-90",
+      "sha256": "20096a352bc7c9ff1495e2ee8c0b6dc469c466a484bde535815465326fc60e8b"
+    },
+    {
+      "id": "epqa-B008UV6YRO-cqa-9e0df0446ae16800",
+      "productId": "B008UV6YRO",
+      "source": "cqa",
+      "text": "i don't own a samsung, but my iphone 5 measures 2 1/4 wide by 4 3/4 long. Question: will this product hold my samsung s 3?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3966&qa_pair_id=6234&chars=0-122",
+      "sha256": "9e0df0446ae168007871a3c0f9ad02aaecbef6b1ab6ac051c720401bf206a930"
+    },
+    {
+      "id": "epqa-B008UV6YRO-description-9d9c0ff5037d256f",
+      "productId": "B008UV6YRO",
+      "source": "description",
+      "text": "bluetooth stereo receiver - listen to your music from your phone, very handy buttons for play settings and phone control.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3967&qa_pair_id=6235&chars=0-121",
+      "sha256": "9d9c0ff5037d256fd7045821ec8926379c6db4efea14bf487acd7d44ae3e5aaa"
+    },
+    {
+      "id": "epqa-B008UV6YRO-attribute-c36fc284f954a873",
+      "productId": "B008UV6YRO",
+      "source": "attribute",
+      "text": "item_package_dimensions:  { length:{ unit:centimeters, normalized_value:{ unit:inches, value:10.7 }, value:27.18 }, width:{ unit:centimeters, normalized_value:{ unit:inches, value:5 }, value:12.7 }, height:{ unit:centimeters, normalized_value:{ unit:inches, value:1.9 }, value:4.83 } }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3968&qa_pair_id=6236&chars=0-285",
+      "sha256": "c36fc284f954a8733282a6638d2a900e97201e57bb8582f84748fe831ae8445a"
+    },
+    {
+      "id": "epqa-B008UV6YRO-attribute-be6d01deb031d5f5",
+      "productId": "B008UV6YRO",
+      "source": "attribute",
+      "text": "manufacturer:  { value:\"incredisonic\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3969&qa_pair_id=6237&chars=0-39",
+      "sha256": "be6d01deb031d5f5ae65407d59ec06dac3baed502c0f33734e545086ca6cb470"
+    },
+    {
+      "id": "epqa-B008UV6YRO-review-a88d8afbd7543ef8",
+      "productId": "B008UV6YRO",
+      "source": "review",
+      "text": "does the job as advertised.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3970&qa_pair_id=6238&chars=0-27",
+      "sha256": "a88d8afbd7543ef85460d9c3331cda3794f9337266c36827e972b06cf345548b"
+    },
+    {
+      "id": "epqa-B008UV6YRO-review-36e6a2352d587631",
+      "productId": "B008UV6YRO",
+      "source": "review",
+      "text": "that's the part that takes all the abuse, so i don't know why they don't make them better.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3971&qa_pair_id=6239&chars=0-90",
+      "sha256": "36e6a2352d58763145749306780aa906538fe701202050e873e47f6374825e89"
+    },
+    {
+      "id": "epqa-B008UV6YRO-review-abd934245cc16fad",
+      "productId": "B008UV6YRO",
+      "source": "review",
+      "text": "it's a cradle for the phone and it has a usb port for charging.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3972&qa_pair_id=6240&chars=0-63",
+      "sha256": "abd934245cc16fad92292b79b968c2b76ec27f4b348d92f351f0b465ffb01885"
+    },
+    {
+      "id": "epqa-B008UV6YRO-review-19cced7bc7540e43",
+      "productId": "B008UV6YRO",
+      "source": "review",
+      "text": "the usb connector enables charging of your cell phone if traveling long distances; otherwise with bluetooth, it operates wirelessly.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3973&qa_pair_id=6241&chars=0-132",
+      "sha256": "19cced7bc7540e430d966bcc19540da5cdd46712f0a10f52c3bce6b827b49bbe"
+    },
+    {
+      "id": "epqa-B008UV6YRO-review-c8940be92cbccc5a",
+      "productId": "B008UV6YRO",
+      "source": "review",
+      "text": "does not come with a usb cord for charging, but that would be difficult since it supports more than one style/brand of device, i already had my own anyway.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3974&qa_pair_id=6242&chars=0-155",
+      "sha256": "c8940be92cbccc5a86b0446945a4b655b0306e47cda80221d12e3a0c93fd29bd"
+    },
+    {
+      "id": "epqa-B008UV6YRO-cqa-654068950c52c7be",
+      "productId": "B008UV6YRO",
+      "source": "cqa",
+      "text": "it has a usb port, but i haven't tested it with a flash drive (i only use it to charge my phone), but it comes also with a p2 jack, so if you have a device which plays mp3 songs, you can play with that... Question: ok please important question ... this product also plays music from usb flash drive of 2gb or 4gb or from any source of usb that has mp3 or mp4 songs?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3975&qa_pair_id=6243&chars=0-365",
+      "sha256": "654068950c52c7bebbdcc27362dd8909c0f68808418d05785c7859c1fac60e5a"
+    },
+    {
+      "id": "epqa-B008UV6YRO-review-377d63ca2f0ed941",
+      "productId": "B008UV6YRO",
+      "source": "review",
+      "text": "the sound in fm transmitter is clear and crisp, but not mind blowing.bluetooth calling is a nice feature, but has low volume and comes with some disturbance.a usb port is provided for car charging, but we will need to get our own cable for charging.the mount is good, but a bit tight for my phone galaxy s3.if you are navigating using gps on the phone, sometimes it chews up a few words.it would have been great if the gooseneck was a bit more flexible, as it would not mount upright on my car honda accord.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3976&qa_pair_id=6244&chars=0-507",
+      "sha256": "377d63ca2f0ed941647da381a13b7211fc885781cb4ef745d7a26bceec4ee292"
+    },
+    {
+      "id": "epqa-B008UV6YRO-attribute-bd67bc4f6d869ded",
+      "productId": "B008UV6YRO",
+      "source": "attribute",
+      "text": "brand:  { value:\"incredisonic\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3978&qa_pair_id=6246&chars=0-32",
+      "sha256": "bd67bc4f6d869dedfbb801ccfc1ee9b42c402f1cc7760008e55d968cc314e4a5"
+    },
+    {
+      "id": "epqa-B008UV6YRO-review-28476b2a28b5518d",
+      "productId": "B008UV6YRO",
+      "source": "review",
+      "text": "however, that was proof that the built in phone mount keeps your phone tightly in place because my iphone never fell out.great gadget and would make a great gift!",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3980&qa_pair_id=6248&chars=0-162",
+      "sha256": "28476b2a28b5518dd27a08570e6bc07c80ce2901c7522016035f221d239becc0"
+    },
+    {
+      "id": "epqa-B008UV6YRO-review-13ce901b13a67ed0",
+      "productId": "B008UV6YRO",
+      "source": "review",
+      "text": "i am going to send this piece of junk back to amazon, even though i have to pay for the return shipping now.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3981&qa_pair_id=6249&chars=0-108",
+      "sha256": "13ce901b13a67ed0e5b48c9ef1529554bc2e4094b170a7268ff1f7f3d6ef3824"
+    },
+    {
+      "id": "epqa-B003DKL4JA-bullet-4c6ee374f1b537ac",
+      "productId": "B003DKL4JA",
+      "source": "bullet",
+      "text": "compatible with all 3.5mm jack mobile phones and computers, including iphone, blackberry, ipad and latest macbooks",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4012&qa_pair_id=6330&chars=0-114",
+      "sha256": "4c6ee374f1b537ace7b1653346a1d9c0388de29fd715ed0805abe12d874ea559"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-fdf12ac2e4c747fc",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "i ordered the lime green handset and an adapter to fit my old motorola flip phone.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4013&qa_pair_id=6331&chars=0-82",
+      "sha256": "fdf12ac2e4c747fcd6ef9cff21925952b02bdf6f9ee46238fbe469626c2cde93"
+    },
+    {
+      "id": "epqa-B003DKL4JA-cqa-8fe586695232edf4",
+      "productId": "B003DKL4JA",
+      "source": "cqa",
+      "text": "i don't know about your flip phone i have a iphone and it sounds like i'm in a well. Question: even if it would work with a flip phone i now don't want it.  thanks for your replies.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4014&qa_pair_id=6332&chars=0-181",
+      "sha256": "8fe586695232edf4713cababf9e7fd117d932d79e4931dc8d8cd9cb260995ae1"
+    },
+    {
+      "id": "epqa-B003DKL4JA-attribute-c615659e19d746e6",
+      "productId": "B003DKL4JA",
+      "source": "attribute",
+      "text": "hardware_platform:  { value:\"tablet\" }; { value:\"pc\" }; { value:\"smartphone\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4015&qa_pair_id=6333&chars=0-78",
+      "sha256": "c615659e19d746e63e5ec581eef66c87d277f2781e7ffac702412b175835bdd7"
+    },
+    {
+      "id": "epqa-B003DKL4JA-cqa-40546815d0dae28e",
+      "productId": "B003DKL4JA",
+      "source": "cqa",
+      "text": "the only complaint i ever had with the handset was pre smart phone when i had a flip phone and had to use the adapter, some calls, a very small percentage, would say they heard echoing and when i disconnected the receiver the echo went away, still worth it in my book for my own personal safety. Question: is this phone a native union product as advertised by the pic?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4016&qa_pair_id=6334&chars=0-368",
+      "sha256": "40546815d0dae28e67af69a383e45eec40e369d77f2837a7202be9dfc2df0bd8"
+    },
+    {
+      "id": "epqa-B003DKL4JA-bullet-e9e39f84567b31ad",
+      "productId": "B003DKL4JA",
+      "source": "bullet",
+      "text": "one touch button for convenient pick-up/hang-up directly from the handset (not all mobile phone support function)",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4017&qa_pair_id=6335&chars=0-113",
+      "sha256": "e9e39f84567b31ade1573dea22da70fb1503706a2fa11a41d293e3c54d67e87e"
+    },
+    {
+      "id": "epqa-B003DKL4JA-attribute-cab0a009d032c1a7",
+      "productId": "B003DKL4JA",
+      "source": "attribute",
+      "text": "is_assembly_required:  { value:false }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4018&qa_pair_id=6336&chars=0-38",
+      "sha256": "cab0a009d032c1a7e8f9b3745e17ce061bbad6f4cc147578f78db02938c79feb"
+    },
+    {
+      "id": "epqa-B003DKL4JA-description-80e18b85bc2da466",
+      "productId": "B003DKL4JA",
+      "source": "description",
+      "text": "this product is fitted with a 3.5mm jack (compatible with the iphone).",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4019&qa_pair_id=6337&chars=0-70",
+      "sha256": "80e18b85bc2da46618ebc6a094683e8e2fec98fef91c179f99b36e366c7c6c93"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-383b1f3a00f24594",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "this phone has an excellent fit and finish and reminds me of my great-grandmothers rotary phone that i would use every weekend as a child.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4020&qa_pair_id=6338&chars=0-138",
+      "sha256": "383b1f3a00f24594c9ce1bf76188dd76479f9758e5080c07588ea57b761e1de7"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-1e7b27144245d96a",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "the result was also great: we plugged it in and it worked.thank you moshi, and keep up the good work.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4021&qa_pair_id=6339&chars=0-101",
+      "sha256": "1e7b27144245d96a07dadcc48c11c1137d59cedc1287a98610a52b335bbb4e01"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-6d55e959848d989b",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "when i talked into the mouthpiece, i didn't hear my voice in the earpiece, like with an old fashion handset.but sadly, after a couple months it just stopped working.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4022&qa_pair_id=6340&chars=0-165",
+      "sha256": "6d55e959848d989b984a951f545120de37648044a21afc0758dd649560fdea06"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-a7db48f5e195468b",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "it's cool and very old school but you can't hear your voice through the ear piece like a regular phone.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4023&qa_pair_id=6341&chars=0-103",
+      "sha256": "a7db48f5e195468bdb955c084c41007f8f5fa9962536cc19e861964984be6eec"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-41f89774a65a4254",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "i have found that when using this device, you can hear well but the person you are talking to, finds that your voice is quite faint.from other reviews, it's clear that this is a consistent problem.don't get sucked in by reviewers that may have a vested interest, or ones that haven't addressed this problem.it is a real problem and if you value money, be careful before you spend your hard earned $$$ on this product.i have not seen any 'fix' that the manufacturer has supplied to remedy this problem either.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4024&qa_pair_id=6342&chars=0-508",
+      "sha256": "41f89774a65a4254613baa04fb3a650e09091f2cdfc766dc3981e640b95b1908"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-dbbbddd1367be7ab",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "the button to answer didn't work to answer or hang up, and i could hear an echo of my self and the person on the other end sounded like they were a faint tiny voice, lucky the room was quiet to hear that!",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4025&qa_pair_id=6343&chars=0-204",
+      "sha256": "dbbbddd1367be7ab534fab2a21eed67a8384f2403c6d2bbb6de6900561fd709e"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-a429c8ea82988637",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "however every time i make a call, people have difficulty hearing my voice and complain that i sound quite distant.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4026&qa_pair_id=6344&chars=0-114",
+      "sha256": "a429c8ea82988637a9bc1200ec5031a21f3807340377eed20506d43aca0d7a74"
+    },
+    {
+      "id": "epqa-B003DKL4JA-attribute-d91fd5784d45979d",
+      "productId": "B003DKL4JA",
+      "source": "attribute",
+      "text": "item_weight:  { unit:pounds, normalized_value:{ unit:pounds, value:8.16 }, value:8.16 }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4027&qa_pair_id=6345&chars=0-87",
+      "sha256": "d91fd5784d45979d3ddb970f3325f18133ccab112994f55d88671bccf29dcda9"
+    },
+    {
+      "id": "epqa-B003DKL4JA-bullet-8904b325973c674e",
+      "productId": "B003DKL4JA",
+      "source": "bullet",
+      "text": "eliminates up to 99 percentage of the radiation absorbed compared to a direct use of mobile phones",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4028&qa_pair_id=6346&chars=0-98",
+      "sha256": "8904b325973c674e4d5df3d4e6e077037ef4aafc13fac3d68c6ee33c302dd824"
+    },
+    {
+      "id": "epqa-B003DKL4JA-attribute-6ecbbe50dafc77aa",
+      "productId": "B003DKL4JA",
+      "source": "attribute",
+      "text": "warranty_description:  { value:\"1 year\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4029&qa_pair_id=6347&chars=0-41",
+      "sha256": "6ecbbe50dafc77aaba3e5444f70b8ca6a0e158c89a3e405d7102c24163caf73c"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-9964f0f0a10b2dfa",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "my uneducated guess is that the 3.5mm plug doesn't sit well in the iphone 4's headset jack and the movement causes the \"static\".regardless of the reason, i shall be returning the handset immediately since it is effectively useless to make calls from.one last note.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4030&qa_pair_id=6348&chars=0-264",
+      "sha256": "9964f0f0a10b2dfab374723a3513a9ceae0c80914de63c19b574b2d07aa0c289"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-54d626e08c1c802b",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": ":)",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4031&qa_pair_id=6349&chars=0-2",
+      "sha256": "54d626e08c1c802b305dad30b7e54a82f102390cc92c7d4db112048935236e9c"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-7637a46f0afa1f31",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "there was no native union branding anywhere on the packaging or the handset itself.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4032&qa_pair_id=6350&chars=0-83",
+      "sha256": "7637a46f0afa1f31fc4824785f6870deea4f9384c31c58cf20f80176c17ddd50"
+    },
+    {
+      "id": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+      "productId": "B003DKL4JA",
+      "source": "attribute",
+      "text": "brand:  { value:\"native union\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4033&qa_pair_id=6351&chars=0-32",
+      "sha256": "7a1cda449e751d9d6203cd276fc6b7bc3cb063cf9346fd0ec4f4447d352da25c"
+    },
+    {
+      "id": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+      "productId": "B003DKL4JA",
+      "source": "attribute",
+      "text": "manufacturer:  { value:\"native union\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4034&qa_pair_id=6352&chars=0-39",
+      "sha256": "7afbf30b240738bdb69ad34164ca12c5a3432efe25067696518e4444abb83ec8"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "and to those wondering, this is indeed a genuine native union model and not a knock off.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4035&qa_pair_id=6353&chars=0-88",
+      "sha256": "75e68c3a1f4d1e0da17e27e2e9c5b5f6f3a5bd2452190e14b32a0f4fa43f76c7"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "not the product i was promised, advertised as native union but was a cheap knock off.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4036&qa_pair_id=6354&chars=0-85",
+      "sha256": "3caca617c0fd6348d54d49aaf1ea4d9a231bc897f8820bb51e9c2bd3e8d59398"
+    },
+    {
+      "id": "epqa-B003DKL4JA-attribute-193db991c06db553",
+      "productId": "B003DKL4JA",
+      "source": "attribute",
+      "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:2.87 }, value:2.87 }, length:{ unit:inches, normalized_value:{ unit:inches, value:9.84 }, value:9.84 }, height:{ unit:inches, normalized_value:{ unit:inches, value:3.94 }, value:3.94 } }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4037&qa_pair_id=6355&chars=0-265",
+      "sha256": "193db991c06db553f045d3f1164731c7a46d4a0245282e4e4888bc55c4e1299a"
+    },
+    {
+      "id": "epqa-B003DKL4JA-description-a0f16f883c93dd90",
+      "productId": "B003DKL4JA",
+      "source": "description",
+      "text": "improved call comfort allows access to phone functions when making calls eliminates over 99% of absorbed phone radiation turns your tablet computer into a telephone via skype or voip applications supplied with a 3.5mm plug",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4038&qa_pair_id=6356&chars=0-222",
+      "sha256": "a0f16f883c93dd90b7a1562be3c4646a14a1dd3ec47dbabc3bcd68adabaeaf0c"
+    },
+    {
+      "id": "epqa-B003DKL4JA-attribute-d2b658be438dad29",
+      "productId": "B003DKL4JA",
+      "source": "attribute",
+      "text": "item_package_weight:  { unit:pounds, normalized_value:{ unit:pounds, value:0.45 }, value:0.45 }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4039&qa_pair_id=6357&chars=0-95",
+      "sha256": "d2b658be438dad2908fd70956292dcb42553a7a4c52e7ab496da6522ea5eddc9"
+    },
+    {
+      "id": "epqa-B003DKL4JA-review-5b800c3c0f827058",
+      "productId": "B003DKL4JA",
+      "source": "review",
+      "text": "the sound is muffled, and when the cord moves, a crackling noise is created.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4040&qa_pair_id=6358&chars=0-76",
+      "sha256": "5b800c3c0f82705843ffee550674bd826d5a014776fdf41ded53ca17e62b057c"
+    },
+    {
+      "id": "epqa-B003DKL4JA-cqa-70b2042c489e5f82",
+      "productId": "B003DKL4JA",
+      "source": "cqa",
+      "text": "any phone that has the small opening for ear buds will work with this receiver. Question: is it compatible with basic samsung at&t a-157?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4041&qa_pair_id=6359&chars=0-137",
+      "sha256": "70b2042c489e5f825ce7d884e6bc670d36272678ff7dfa53a1352bdd0694de1f"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "waterproof (yes i tested it under running water) and apparently windproof.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4602&qa_pair_id=7160&chars=0-74",
+      "sha256": "eba8b7e928ca7374691480a719eb7d0dcbbd73a1c9584989dd1dbc25ec19cd77"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-e790d9384382ab4a",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "the outside is a waterproof thick fabric and the inside is very warm.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4603&qa_pair_id=7161&chars=0-69",
+      "sha256": "e790d9384382ab4ac94e6c5fa3d09b262b9cb8a591fdaa518f3afff40be94a93"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "windproof, waterproof, fits tight so it doesn't flap.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4604&qa_pair_id=7162&chars=0-53",
+      "sha256": "3615ce8d95033ee5c16f7eed4415abc7e898ea231ca87388aa093d21390be6e2"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-description-ab112b1d59926758",
+      "productId": "B002ZG7RGM",
+      "source": "description",
+      "text": "windshield is a waterproof and breathable fabric that will keep your face warm in the coldest climate.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4605&qa_pair_id=7163&chars=0-102",
+      "sha256": "ab112b1d599267582a107f50962e82a609402bd53ebf1fa6690e69b15eeffd3e"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-a9b93eb594ccba9e",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "but it does get wet on inside around the mouth.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4606&qa_pair_id=7164&chars=0-47",
+      "sha256": "a9b93eb594ccba9ef9260bce0dd0529019e188a65db9dbbd5cc8853bb7a4ba11"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-description-e22f9933b1b3437e",
+      "productId": "B002ZG7RGM",
+      "source": "description",
+      "text": "if you're looking for all over wind protection then this is the piece for you",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4607&qa_pair_id=7165&chars=0-77",
+      "sha256": "e22f9933b1b3437e0fb33c9e898012624950fed1ed94a4b68a69c7fc1d042840"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-description-be4c4b9d59e0369a",
+      "productId": "B002ZG7RGM",
+      "source": "description",
+      "text": "the windshield ultra along the front provides protection from the wind.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4608&qa_pair_id=7166&chars=0-71",
+      "sha256": "be4c4b9d59e0369ae974bdde56c5a5542bf7c0944ccf03a451445bbd73dfb941"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-attribute-18c602a0ed103175",
+      "productId": "B002ZG7RGM",
+      "source": "attribute",
+      "text": "item_weight:  { unit:pounds, normalized_value:{ unit:pounds, value:0.01 }, value:0.01 }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4609&qa_pair_id=7167&chars=0-87",
+      "sha256": "18c602a0ed103175d9bcc81bf2f89b74ceb33c8b089c2301e66cf098de95f48f"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-de419420b1ec6c53",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "will not stretch to fit on.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4610&qa_pair_id=7168&chars=0-27",
+      "sha256": "de419420b1ec6c53807d537b9c49190488307bf9af31919420a3efa63c6ea938"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-171de2da7becb5ec",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "awesome balaclava!!",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4611&qa_pair_id=7169&chars=0-19",
+      "sha256": "171de2da7becb5ecfe4940ecfb7eb318ee4dadd959424a3a1cc2c4d6e140a984"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-a372cbef4dabe1d7",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "made for a smaller head or good for a teen",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4612&qa_pair_id=7170&chars=0-42",
+      "sha256": "a372cbef4dabe1d755d90324b64de33ca7119f5dbb7b87bdd49717a8b0251dcc"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-attribute-bd3244b584e84d83",
+      "productId": "B002ZG7RGM",
+      "source": "attribute",
+      "text": "size:  { value:\"large-x-large\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4613&qa_pair_id=7171&chars=0-32",
+      "sha256": "bd3244b584e84d83d4b9f939ea3c5bf109638bf132ba60bd14dcf6e95983f035"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-a57db939fb68622f",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "the junior size was way too small for my 7 year old boy.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4614&qa_pair_id=7172&chars=0-56",
+      "sha256": "a57db939fb68622f9ef58acd7cc784fefb6582feaf82bc6a803067db03500502"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-75db348ef45aa71e",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "not that big a deal but you may want to go for the smaller size if you fall in the overlap zones on the sizing chart.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4615&qa_pair_id=7173&chars=0-117",
+      "sha256": "75db348ef45aa71ec3671781f5bfe16df3cd343b92e5943af7c56a5b648cf3ee"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-c123f430a662b6b1",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "also, i would recommend judging size to purchase by the size of your helmet.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4616&qa_pair_id=7174&chars=0-76",
+      "sha256": "c123f430a662b6b150d545924b0f985342eb0107c2a03abd4c994aa07b1cf7b3"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-attribute-793d954105c52eb5",
+      "productId": "B002ZG7RGM",
+      "source": "attribute",
+      "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:1. }, value:1. }, length:{ unit:inches, normalized_value:{ unit:inches, value:1. }, value:1. }, height:{ unit:inches, normalized_value:{ unit:inches, value:1. }, value:1. } }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4617&qa_pair_id=7175&chars=0-253",
+      "sha256": "793d954105c52eb5e02afe9c19ad89b26451b199c1768e6e5a76e21552e51dc0"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-attribute-ebc953b9b193e865",
+      "productId": "B002ZG7RGM",
+      "source": "attribute",
+      "text": "country_as_labeled:  { value:us }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4618&qa_pair_id=7176&chars=0-33",
+      "sha256": "ebc953b9b193e86553e11a8a3abee57daade4f70faf9d83f4b0f192f943a867e"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-attribute-059ac6e24e73a573",
+      "productId": "B002ZG7RGM",
+      "source": "attribute",
+      "text": "included_components:  { value:\"ctr hats howler multi-tasker pro black l/xl\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4619&qa_pair_id=7177&chars=0-77",
+      "sha256": "059ac6e24e73a57364572899d4be01283f3e8f874eae75288c474b68c22b7974"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-b2713a8412fae666",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "i don't need neoprene on cold days because of this mask.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4620&qa_pair_id=7178&chars=0-56",
+      "sha256": "b2713a8412fae666a097385964e354810acc3201ccc00ecd1868233d98ebf901"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-cd3d121ae5180879",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "and it's very tight getting over my head.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4621&qa_pair_id=7179&chars=0-41",
+      "sha256": "cd3d121ae5180879f44635d5ac456ebde2adc4ecc540d7a89929863feb6a4ff2"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-07155b1c9ea185a0",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "this chaos-ctr howler balaclava is the best of them all for several reasons:-windstopper fabric is soft and flexible unlike gore windstopper products which are effective but stiff;-mouth covering is more effective than any other for ease of breathing as well as no fogging of glasses or goggles, a big plus;-the nape goes down farther than any other balaclava, more than covering the entire neck area; it's essentially a windstopper neck gaiter built in;-the hood hinging means it will come down to your eyebrows, leaving only a small open area for your eyes, or it can be lifted incrementally to expose your forehead, front of head or entire head, and it doesn't make the facemask portion tight on your face as you adjust it.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4622&qa_pair_id=7180&chars=0-726",
+      "sha256": "07155b1c9ea185a00efc3983453f7165839f7e5896fbd1933041343f1ca9808c"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-b5ded03197f80961",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "(that one is also a lot thicker, however, with no specific place for breathing, so it's also not an entirely fair comparison.)",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4623&qa_pair_id=7181&chars=0-126",
+      "sha256": "b5ded03197f8096185f785e6bc3febf3b79db519459abc2d341a26ec0c61f171"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-bullet-88edff015ab70fba",
+      "productId": "B002ZG7RGM",
+      "source": "bullet",
+      "text": "windshield ultra multi-functional hinged balaclava with added face protection",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4624&qa_pair_id=7182&chars=0-77",
+      "sha256": "88edff015ab70fba43f3b7d17f1d555f0aec072952a8d2e74b79b0c90cdfa928"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-description-b8b07973feedec0b",
+      "productId": "B002ZG7RGM",
+      "source": "description",
+      "text": "the howler multi-tasker pro with windshield windproof fleece is a high tech balaclava with a multi-functional hinge.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4625&qa_pair_id=7183&chars=0-116",
+      "sha256": "b8b07973feedec0bc0187657bbade8473b7c22be893595cc33aa6a644698ccaa"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-a30cf79c4dbf8919",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "if you want some stretch, consider the chinook model as it has 5% spandex.as other reviewers have noted, the mouth vents on ctr masks make you choose between covering your nose well and exhaling directly out of the mask.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4626&qa_pair_id=7184&chars=0-220",
+      "sha256": "a30cf79c4dbf8919344a08af2705fd62aad29a8f99942e5991f2423c0b1ddb0a"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-bullet-d81743696c252dee",
+      "productId": "B002ZG7RGM",
+      "source": "bullet",
+      "text": "lycra binding around the face seals against the elements",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4627&qa_pair_id=7185&chars=0-56",
+      "sha256": "d81743696c252deefae35ae5e12ae317b06f5406b09fc99523853462f46225c5"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-attribute-0315ffb4b1f60fb5",
+      "productId": "B002ZG7RGM",
+      "source": "attribute",
+      "text": "style:  { value:\"1630\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4628&qa_pair_id=7186&chars=0-24",
+      "sha256": "0315ffb4b1f60fb539f3ac28bee6041bd6342523e1835716ca6cfc2c1400ef92"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-description-7c209f03b6a7d2c6",
+      "productId": "B002ZG7RGM",
+      "source": "description",
+      "text": "windshield ultra has a custom interior print that adjusts to the amount of heat absorbed and released depending on body temperature.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4629&qa_pair_id=7187&chars=0-132",
+      "sha256": "7c209f03b6a7d2c6118c8c79a2cbd59bf928249a720bc12c89a0c2e3d58f4016"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-b23abff2238f5abc",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "(and i don't have a huge head).",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4630&qa_pair_id=7188&chars=0-31",
+      "sha256": "b23abff2238f5abcb68a8d51e00de6b301be5e8f43eec0c99d8317c4f1944cfc"
+    },
+    {
+      "id": "epqa-B002ZG7RGM-review-dd001cc9e2a5a421",
+      "productId": "B002ZG7RGM",
+      "source": "review",
+      "text": "warm as hell!",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4631&qa_pair_id=7189&chars=0-13",
+      "sha256": "dd001cc9e2a5a421d385001bb6befbafcc162e549ec29a33e581c3ff5a8d2e60"
+    },
+    {
+      "id": "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+      "productId": "B0058YR0XS",
+      "source": "attribute",
+      "text": "inseam:  { length:[ { unit:inches, value:10 } ] }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4722&qa_pair_id=7310&chars=0-49",
+      "sha256": "3aceb241d9003e4a75f6ea7c448bc28900e3b15e0494574882fb0f393b1261ed"
+    },
+    {
+      "id": "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+      "productId": "B0058YR0XS",
+      "source": "cqa",
+      "text": "they have 10 inch and 12 inch inseams. Question: what is the inseam measurement for a 34 waist?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4723&qa_pair_id=7311&chars=0-95",
+      "sha256": "bcd169ca072ef787277282467a495c124f29c713286206b6557a6197fc4ec74c"
+    },
+    {
+      "id": "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+      "productId": "B0058YR0XS",
+      "source": "cqa",
+      "text": "the short have a 10 inch inseam. Question: the picture makes these shorts look like thye are knee length, i would like the at least a couple inches above the knees, are they?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4724&qa_pair_id=7312&chars=0-174",
+      "sha256": "2da0e60efa03f04554dd6f8e46b2b18c2c2f7048112c33abee2a5f7e72c11c21"
+    },
+    {
+      "id": "epqa-B0058YR0XS-review-345c5b719b19e017",
+      "productId": "B0058YR0XS",
+      "source": "review",
+      "text": "leg length is 10 inches (from crotch to hem) so they sit just above the knee hence the sizing guide of 34/10 (in case you were wondering).",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4725&qa_pair_id=7313&chars=0-138",
+      "sha256": "345c5b719b19e017dd55202eff287aeee7235de1c2497234bb0feaaf049813e6"
+    },
+    {
+      "id": "epqa-B0058YR0XS-review-e716e7c57bb5dbe4",
+      "productId": "B0058YR0XS",
+      "source": "review",
+      "text": "the inseam is perfect at 10\" which means the legs don't ride up but they are shorter than bermuda's.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4726&qa_pair_id=7314&chars=0-100",
+      "sha256": "e716e7c57bb5dbe43b760a779082a87f90522d75010bf79b446b288514b4820f"
+    },
+    {
+      "id": "epqa-B0058YR0XS-attribute-066cf1d43b745f01",
+      "productId": "B0058YR0XS",
+      "source": "attribute",
+      "text": "seasons:  { value:\"fall/holiday\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4727&qa_pair_id=7315&chars=0-34",
+      "sha256": "066cf1d43b745f01a071c80cc2d696708e20bc914a22c01935e845464a5a9230"
+    },
+    {
+      "id": "epqa-B0058YR0XS-attribute-dff6f87ddcc6b801",
+      "productId": "B0058YR0XS",
+      "source": "attribute",
+      "text": "water_resistance_level:  { value:not_water_resistant }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4728&qa_pair_id=7316&chars=0-54",
+      "sha256": "dff6f87ddcc6b801ba3a956b110f0a0f19bf49488ce0f333ded04ccb3aa843ac"
+    },
+    {
+      "id": "epqa-B0058YR0XS-attribute-57e130a0617d1a46",
+      "productId": "B0058YR0XS",
+      "source": "attribute",
+      "text": "size_map:  { value:\"40 10\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4729&qa_pair_id=7317&chars=0-28",
+      "sha256": "57e130a0617d1a4625c50ded211cb16d2a8a8c085d9753d3e09268246dc65a52"
+    },
+    {
+      "id": "epqa-B0058YR0XS-review-44520442390d37d8",
+      "productId": "B0058YR0XS",
+      "source": "review",
+      "text": "i got two pairs of these a year ago and they're great.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4730&qa_pair_id=7318&chars=0-54",
+      "sha256": "44520442390d37d88e32a5a2cc3cec4e23cd0a11bbe25222d56e10364845b244"
+    },
+    {
+      "id": "epqa-B0058YR0XS-review-06bdcb5640d16655",
+      "productId": "B0058YR0XS",
+      "source": "review",
+      "text": "the several mediums i own were getting loose due to small weight loss.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4731&qa_pair_id=7319&chars=0-70",
+      "sha256": "06bdcb5640d166551ecc732c5377e04b3af6a4a1a2c7fef53e4c9eb2c49e818c"
+    },
+    {
+      "id": "epqa-B0058YR0XS-review-8522429d081877e9",
+      "productId": "B0058YR0XS",
+      "source": "review",
+      "text": "not having an inner mesh to get my briefs all scrunched up in is a huge plus.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4732&qa_pair_id=7320&chars=0-77",
+      "sha256": "8522429d081877e961c5dfaf0421944b4719068595f6cd6cf9cc114e15b97a9c"
+    },
+    {
+      "id": "epqa-B0058YR0XS-review-a86fdd66dbad1b22",
+      "productId": "B0058YR0XS",
+      "source": "review",
+      "text": "the way that they are constructed has the inner mesh pocket sewn directly to the outer material.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4733&qa_pair_id=7321&chars=0-96",
+      "sha256": "a86fdd66dbad1b2250eb8032a84b37a32e1e77577870b4144814199f00938460"
+    },
+    {
+      "id": "epqa-B0058YR0XS-cqa-cec00fa3db4ecb29",
+      "productId": "B0058YR0XS",
+      "source": "cqa",
+      "text": "some models have the mesh lining, like a swimsuit! Question: are they lined? i have a few older clumbia shorts that do have liners.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4734&qa_pair_id=7322&chars=0-131",
+      "sha256": "cec00fa3db4ecb29260ae3e36b604a5a7d4ee5c29648d0a1b8fd00d290d209ba"
+    },
+    {
+      "id": "epqa-B0058YR0XS-cqa-c675dc108da2bb5a",
+      "productId": "B0058YR0XS",
+      "source": "cqa",
+      "text": "shell: 100% nylon silver ridge ripstoplining: 57% recycled polyester, 43% polyester mesh Question: columbia website states: 100% nylon silver ridge ripstop, 57% recycled polyester/43 polyester mesh. are the polyester or nylon or combo?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4735&qa_pair_id=7323&chars=0-235",
+      "sha256": "c675dc108da2bb5a9c1b37413b89e45515ddf8b9fc914c3a6e2110de3155601c"
+    },
+    {
+      "id": "epqa-B0058YR0XS-review-152ca5c096bf93ed",
+      "productId": "B0058YR0XS",
+      "source": "review",
+      "text": "second, these shorts have front pockets with the inside made of polyester mesh rather than solid fabric.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4736&qa_pair_id=7324&chars=0-104",
+      "sha256": "152ca5c096bf93ed2bbd6fae4291278d7c3fd76e666e47acfc6d8d5664dd9f3e"
+    },
+    {
+      "id": "epqa-B0058YR0XS-description-32c7a3bacf2f2ee1",
+      "productId": "B0058YR0XS",
+      "source": "description",
+      "text": "specially crafted for the active man, the columbia silver ridge cargo short is the ultimate outdoor staple.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4737&qa_pair_id=7325&chars=0-107",
+      "sha256": "32c7a3bacf2f2ee10133f9c3f36464ecbb831bee0e61fe713fa25996fc2d01b0"
+    },
+    {
+      "id": "epqa-B0058YR0XS-attribute-8bf21a3c620ae444",
+      "productId": "B0058YR0XS",
+      "source": "attribute",
+      "text": "size:  { value:\"40\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4738&qa_pair_id=7326&chars=0-21",
+      "sha256": "8bf21a3c620ae44456b85208c9da122031fde6abe968bf5435f201a41b459bed"
+    },
+    {
+      "id": "epqa-B0058YR0XS-description-11c1ce60baebd842",
+      "productId": "B0058YR0XS",
+      "source": "description",
+      "text": "be safe and protected.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4739&qa_pair_id=7327&chars=0-22",
+      "sha256": "11c1ce60baebd842ff675f13b563786f904f9a3ea20a1bd4ded8bcf3f0b2b080"
+    },
+    {
+      "id": "epqa-B0058YR0XS-review-b17b02f5903620d3",
+      "productId": "B0058YR0XS",
+      "source": "review",
+      "text": "very nice quality shorts, style and fit.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4740&qa_pair_id=7328&chars=0-40",
+      "sha256": "b17b02f5903620d35d1b71a71fdb49f321a04b6828ba26d1d7446a330447f517"
+    },
+    {
+      "id": "epqa-B0058YR0XS-review-06c89c96f56411d2",
+      "productId": "B0058YR0XS",
+      "source": "review",
+      "text": "comfortable and light.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4741&qa_pair_id=7329&chars=0-22",
+      "sha256": "06c89c96f56411d2340fd8f1b10b156e25c137ddb0c6d7087e314c38200856c0"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-938f85f1730d8dca",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "great bag,very durable,good stitching  price is great.the con: no bottle pockets on outside, and 1 large pocket in or out would be great.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4882&qa_pair_id=7580&chars=0-137",
+      "sha256": "938f85f1730d8dcafe4eaddc0877ef11177189ec57f3acc8a4daae2b5d8ae088"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-80a9b1227daf0646",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "the only thing it lacks is a side pouch for a water bottle.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4883&qa_pair_id=7581&chars=0-59",
+      "sha256": "80a9b1227daf06464518a4ea5ca784aba447ddd1c4416ae1d3866759d0956c22"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-e27a9b01e1834d95",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "also, i would like an outer pocket for a water bottle of some sort.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4884&qa_pair_id=7582&chars=0-67",
+      "sha256": "e27a9b01e1834d957b61f39a4ef41b7d2b1f6374eec3a95d312d97cc5961a1e2"
+    },
+    {
+      "id": "epqa-B002V92YMA-description-8a4a9bebcbb4671d",
+      "productId": "B002V92YMA",
+      "source": "description",
+      "text": "inside, the waterproof tpu liner and corner wings keep water out, and the internal water bottle pocket keeps water in.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4885&qa_pair_id=7583&chars=0-118",
+      "sha256": "8a4a9bebcbb4671df1f8bd670c3bdcc27bd71aa6a6a59c658df22e5cffaf14c9"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-b1ad16045e25e4d7",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "had rather wanted an external mesh water bottle pocket but find i don't miss it.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4886&qa_pair_id=7584&chars=0-80",
+      "sha256": "b1ad16045e25e4d7ce3f2159e3de1bb4088f086738e493a4c2d5411d905d7799"
+    },
+    {
+      "id": "epqa-B002V92YMA-attribute-27920ec4f51b9fec",
+      "productId": "B002V92YMA",
+      "source": "attribute",
+      "text": "item_package_weight:  { unit:pounds, normalized_value:{ unit:pounds, value:2.4 }, value:2.4 }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4887&qa_pair_id=7585&chars=0-93",
+      "sha256": "27920ec4f51b9fecb237641701c95cfe206fbba1813084d29d1ccbb6eae8092a"
+    },
+    {
+      "id": "epqa-B002V92YMA-attribute-82f29a633c24c00a",
+      "productId": "B002V92YMA",
+      "source": "attribute",
+      "text": "size:  { value:\"small\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4888&qa_pair_id=7586&chars=0-24",
+      "sha256": "82f29a633c24c00acc0d90e25fa1fcae96b54b1517d1f55c36fc075d61ddba40"
+    },
+    {
+      "id": "epqa-B002V92YMA-bullet-f0e8c3351a975b19",
+      "productId": "B002V92YMA",
+      "source": "bullet",
+      "text": "classic messenger bag with massive functional upgrades",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4889&qa_pair_id=7587&chars=0-54",
+      "sha256": "f0e8c3351a975b1988cf558dcbe779bff2d207adb533c21b3c3638f9083d3235"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-c70f24d69fab1144",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "i was also glad to find them on amazon for much cheaper than the timbuk2 website.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4890&qa_pair_id=7588&chars=0-81",
+      "sha256": "c70f24d69fab11444077a20c72dc6622300f35495ab90ebd8211590e10134fcd"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-9cf01c5df1f2afa2",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "books and laptop don't fit well in this giant thing.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4891&qa_pair_id=7589&chars=0-52",
+      "sha256": "9cf01c5df1f2afa2f232dc8a2a1b03507f480d4cc44107268efd8d007f110d84"
+    },
+    {
+      "id": "epqa-B002V92YMA-attribute-838e5d8f5f191c6a",
+      "productId": "B002V92YMA",
+      "source": "attribute",
+      "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:15. }, value:15. }, length:{ unit:inches, normalized_value:{ unit:inches, value:4.72 }, value:4.72 }, height:{ unit:inches, normalized_value:{ unit:inches, value:9.6 }, value:9.6 } }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4892&qa_pair_id=7590&chars=0-261",
+      "sha256": "838e5d8f5f191c6a386d713c864642a2f50626507f58d99e85068dc2ef7f37fa"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-a335b022df36e1f1",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "there are many compartments within the bag to organize all of my things and a laptop pouch that fits my 15\" laptop even when i have it in its protective sleeve.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4893&qa_pair_id=7591&chars=0-160",
+      "sha256": "a335b022df36e1f1d156a531fb38cfdf9e876112fa3b0d9df7167e9d371c9692"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-77af25988bb2ebca",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "the laptop case is made to fit a 15\" laptop although it my 13\" didn't move around too much.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4894&qa_pair_id=7592&chars=0-91",
+      "sha256": "77af25988bb2ebcae48b347a776c06a1ba8f98102dc2088217b6c2b35927edb7"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-692b91528c06a424",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "my only gripe is that the sleeve isn't quite big enough to hold my 15\" laptop (inspiron e1505).",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4895&qa_pair_id=7593&chars=0-95",
+      "sha256": "692b91528c06a4242e3ff7f85bf9c2bcd57409d74164ed6a763cc15c862b9fc7"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-332b9d79af7b9f6b",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "this bag fits my 16 inch toshiba laptop with just a little over hang in top but can be adjusted with the straps.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4896&qa_pair_id=7594&chars=0-112",
+      "sha256": "332b9d79af7b9f6b8cfb40f7afe35c5724b6f08dd7a0525fb4e7ad445c8cfc5f"
+    },
+    {
+      "id": "epqa-B002V92YMA-description-b8b66084da115191",
+      "productId": "B002V92YMA",
+      "source": "description",
+      "text": "9 - 21 l (xs - m)",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4897&qa_pair_id=7595&chars=0-17",
+      "sha256": "b8b66084da115191251f5ef2d95da10a79689027f8eee3670fcb727c13b785ca"
+    },
+    {
+      "id": "epqa-B002V92YMA-description-4d97ad39815bb9f0",
+      "productId": "B002V92YMA",
+      "source": "description",
+      "text": "26 - 35 l",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4898&qa_pair_id=7596&chars=0-9",
+      "sha256": "4d97ad39815bb9f0f3bc848585cb9e052568442ab412fc7cfc29e3707a0e73ff"
+    },
+    {
+      "id": "epqa-B002V92YMA-attribute-8d35eb6f5972bcc5",
+      "productId": "B002V92YMA",
+      "source": "attribute",
+      "text": "model_name:  { value:\"classic messenger bag\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4899&qa_pair_id=7597&chars=0-46",
+      "sha256": "8d35eb6f5972bcc5b1bead1f48bef58d22e0ea8556a8cdb659b3dfc916359ccd"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-6efd83e503de99df",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "due to the small size, this thing is not a very frugal purchase at full price.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4900&qa_pair_id=7598&chars=0-78",
+      "sha256": "6efd83e503de99df8c15c87528a3b00de7896523ea9aecbb2e9ef807d3384542"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-78ca9f46149f44d2",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "also you have the ability to buy additional items to create a bag that is perfect for you.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4901&qa_pair_id=7599&chars=0-90",
+      "sha256": "78ca9f46149f44d28aab9e0760b06227375a6c748f92d9a43cf658d445666a0f"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-413ead1cee1cb1bf",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "it's also great for everyday use bc i have a 3 year old who still requires quit a bit of stuff!the feel of this bag is amazing i mean there's is no doubt this thing isn't gonna last forever!",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4902&qa_pair_id=7600&chars=0-190",
+      "sha256": "413ead1cee1cb1bff991d962a5bee189d9e89eb0a87fa9ec964409a378f91e2a"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-b2887167387dd2bf",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "ordered this for my son who is a h.s.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4903&qa_pair_id=7601&chars=0-37",
+      "sha256": "b2887167387dd2bfd7181651cfcee7af6feefb1dc4a7a84dbb0ab80b31075ac8"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-0ab7014f64e6a166",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "for my 6'2\" it is ideal.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4904&qa_pair_id=7602&chars=0-24",
+      "sha256": "0ab7014f64e6a166c52c57d128fea2d6a2d2484ede61815a48028ba0a25b7ab4"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-c3d05cb0e6b9fd88",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "it is a great bag to have, i bought for my son, and very happy with it.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4905&qa_pair_id=7603&chars=0-71",
+      "sha256": "c3d05cb0e6b9fd88aea8d204628f6ffbbea678b4ee87236b326ccb9d40d0174c"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-f2ed3f7058d25b8c",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "gave it to my daughter to use for school.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4906&qa_pair_id=7604&chars=0-41",
+      "sha256": "f2ed3f7058d25b8c450107ca875c22a06dc865b60e4c6742c7c768295c924683"
+    },
+    {
+      "id": "epqa-B002V92YMA-attribute-566878355c8be024",
+      "productId": "B002V92YMA",
+      "source": "attribute",
+      "text": "sport_type:  { value:\"camping & hiking\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4908&qa_pair_id=7606&chars=0-41",
+      "sha256": "566878355c8be0244eb210f3d863612c7447db146dc6e88269dd343b362d1388"
+    },
+    {
+      "id": "epqa-B002V92YMA-attribute-3ba12f9bf27fe364",
+      "productId": "B002V92YMA",
+      "source": "attribute",
+      "text": "is_heat_sensitive:  { value:false }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4909&qa_pair_id=7607&chars=0-35",
+      "sha256": "3ba12f9bf27fe364433fdb0ac8193bb4480cff3d073bc49a8ccde09daf3a4522"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-4792fc053248eb60",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "this bag is my buddy.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4910&qa_pair_id=7608&chars=0-21",
+      "sha256": "4792fc053248eb60723b128582c3b5923c1564985832215fe348846bd12440a6"
+    },
+    {
+      "id": "epqa-B002V92YMA-review-48df8040b0bcf73e",
+      "productId": "B002V92YMA",
+      "source": "review",
+      "text": "purchased the small size rev red/black/rev red bag.overall, i really like this bag.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4911&qa_pair_id=7609&chars=0-83",
+      "sha256": "48df8040b0bcf73ed43db6757167f8cab5e20ddcd116792717859cc5dec91a89"
+    },
+    {
+      "id": "epqa-B008402S3K-cqa-c6aa6b6c50e5ff32",
+      "productId": "B008402S3K",
+      "source": "cqa",
+      "text": "yes, the package includes wall anchors and screws so you can hang it on the wall. Question: i want to hang this on the wall (not over door).  is there hardware on the back to hang it this way?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4912&qa_pair_id=7610&chars=0-192",
+      "sha256": "c6aa6b6c50e5ff325597ae30a93d845b1ac5eac5120592a9cc7e2677159e16df"
+    },
+    {
+      "id": "epqa-B008402S3K-review-90654784d5a08a9b",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "it can be hung on a wall or over-the-door, and stores a lot of jewelry.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4913&qa_pair_id=7611&chars=0-71",
+      "sha256": "90654784d5a08a9befd93b51f206f31d40cf03d2bbe7207518a6c3b00f0bac61"
+    },
+    {
+      "id": "epqa-B008402S3K-review-a637451c127b9e7f",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "easy to hang (we hung on wall) & lots of storage.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4914&qa_pair_id=7612&chars=0-49",
+      "sha256": "a637451c127b9e7f8a5ec3ef9ae67088e7f4134da98aec43833de2fb0ce4ed26"
+    },
+    {
+      "id": "epqa-B008402S3K-cqa-2b5b348ba07b46ad",
+      "productId": "B008402S3K",
+      "source": "cqa",
+      "text": "yes it comes with anchors and screws to hang it on the wall Question: can this be hung directly to the wall?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4915&qa_pair_id=7613&chars=0-108",
+      "sha256": "2b5b348ba07b46adefbd36e987398313ad7a0d285cd036676e4c63e275e934dc"
+    },
+    {
+      "id": "epqa-B008402S3K-review-c4af171d28886a98",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "it hangs easily on the wall and is the perfect size.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4916&qa_pair_id=7614&chars=0-52",
+      "sha256": "c4af171d28886a98c4640d072b79ea4be7595c3a53cec65aec0e3f566815a49a"
+    },
+    {
+      "id": "epqa-B008402S3K-description-d6bf205c00b1928c",
+      "productId": "B008402S3K",
+      "source": "description",
+      "text": "and no more waiting around for the mirror to free up, because you have one right here.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4917&qa_pair_id=7615&chars=0-86",
+      "sha256": "d6bf205c00b1928c712fc356e5938234fae49ac4dd57341928722847daa1434d"
+    },
+    {
+      "id": "epqa-B008402S3K-description-0e9583aa6726b7f9",
+      "productId": "B008402S3K",
+      "source": "description",
+      "text": "your jewelry armoire comes complete with a full length dressing mirror on the outside.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4918&qa_pair_id=7616&chars=0-86",
+      "sha256": "0e9583aa6726b7f9173938156469f566fa91ce9a9b62207d247882976c8d043a"
+    },
+    {
+      "id": "epqa-B008402S3K-attribute-2b59224fbe6aaa57",
+      "productId": "B008402S3K",
+      "source": "attribute",
+      "text": "is_stain_resistant:  { value:false }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4919&qa_pair_id=7617&chars=0-36",
+      "sha256": "2b59224fbe6aaa579c0241aed6a87023d1873233bd8ccdf5f31906535a3f0eaa"
+    },
+    {
+      "id": "epqa-B008402S3K-review-a18c2809bbd8d16a",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "this item does exactly what it says it does.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4920&qa_pair_id=7618&chars=0-44",
+      "sha256": "a18c2809bbd8d16a98a86d55b5e375a5b6121568c52f2fdc01678d99d135036d"
+    },
+    {
+      "id": "epqa-B008402S3K-review-8ec3869877ee5393",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "this meets everything i was looking for.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4921&qa_pair_id=7619&chars=0-40",
+      "sha256": "8ec3869877ee53932d41dd70685ac1ad58616457d2a1604ad55ccbc364fc78d4"
+    },
+    {
+      "id": "epqa-B008402S3K-review-5ebd033da14fcfb2",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "came with everything you need to mount it on the wall (which is what i did) or hang over a door.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4922&qa_pair_id=7620&chars=0-96",
+      "sha256": "5ebd033da14fcfb27d6c4ccb6471a8280833894641b2ad79f3c9656c1190b07b"
+    },
+    {
+      "id": "epqa-B008402S3K-review-999fbae6ed638b61",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "it does come with over the door hangers.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4923&qa_pair_id=7621&chars=0-40",
+      "sha256": "999fbae6ed638b61321b2c76d6f4e30fb3af00dff35cfcf818d8a21e25801a78"
+    },
+    {
+      "id": "epqa-B008402S3K-review-22f62a98a87d497e",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "came with all the hardware needed to hang on over the door or mount to the wall.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4924&qa_pair_id=7622&chars=0-80",
+      "sha256": "22f62a98a87d497eaaf0e05469ac1653966c518497b8fe3c2b11fb261dd3d620"
+    },
+    {
+      "id": "epqa-B008402S3K-cqa-0fb356b2a46a8aa3",
+      "productId": "B008402S3K",
+      "source": "cqa",
+      "text": "it comes with two hooks to hang over the door. Question: what did you use to hango over the door?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4925&qa_pair_id=7623&chars=0-97",
+      "sha256": "0fb356b2a46a8aa3142221bef9a42730e53a79471bb56ad710a8e1c665f9b11a"
+    },
+    {
+      "id": "epqa-B008402S3K-cqa-2d858b7205412c5a",
+      "productId": "B008402S3K",
+      "source": "cqa",
+      "text": "it comes with both an over the door mounting kit and some screws and anchors for the wall. Question: is it possible to hang this on a wall instead of a door?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4926&qa_pair_id=7624&chars=0-157",
+      "sha256": "2d858b7205412c5a50f200242d91b08c779ad77083fecdb74ea5589e1476356c"
+    },
+    {
+      "id": "epqa-B008402S3K-attribute-a06c0a99989d5546",
+      "productId": "B008402S3K",
+      "source": "attribute",
+      "text": "brand:  { value:\"plaza astoria\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4927&qa_pair_id=7625&chars=0-33",
+      "sha256": "a06c0a99989d5546fa51d2f1ec8bfb20d54f9631005bb86572e8c514bef49c64"
+    },
+    {
+      "id": "epqa-B008402S3K-description-898296e01833a23b",
+      "productId": "B008402S3K",
+      "source": "description",
+      "text": "relieve yourself of the common frustrations of getting ready to go out.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4928&qa_pair_id=7626&chars=0-71",
+      "sha256": "898296e01833a23b7082fc0e2057d34e1bcacddfdab53e74f66778339b78d8fd"
+    },
+    {
+      "id": "epqa-B008402S3K-bullet-b473a0e7871b7bc8",
+      "productId": "B008402S3K",
+      "source": "bullet",
+      "text": "the armoire measures 48|\"h x 14|\"w x 4.2|\"d and features lined jewelry storage and organizational compartments and a built in vanity mirror",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4929&qa_pair_id=7627&chars=0-139",
+      "sha256": "b473a0e7871b7bc88773a34cf496d1e3ad152a88e3153ea5da6e629bc77f350e"
+    },
+    {
+      "id": "epqa-B008402S3K-review-dca51774860199fc",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "every woman in my family wants one now.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4930&qa_pair_id=7628&chars=0-39",
+      "sha256": "dca51774860199fcc062d579676fe78078ea825a02e9920e59eaa7877b0d9ae7"
+    },
+    {
+      "id": "epqa-B008402S3K-review-e2a1cc411d6fbbf0",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "needs to be redesigned with a knob and best wall mounted.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4931&qa_pair_id=7629&chars=0-57",
+      "sha256": "e2a1cc411d6fbbf08485f664311fbe3810c3cbebc2c521ef06bf74570dee7dad"
+    },
+    {
+      "id": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+      "productId": "B008402S3K",
+      "source": "attribute",
+      "text": "material:  { value:\"engineered wood\" }; { value:\"glass\" }; { value:\"metal\" }; { value:\"plastic\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4932&qa_pair_id=7630&chars=0-97",
+      "sha256": "619f6c0d99b503d0b149cce2aaa9bc5927bbb8a376ec6502778752e59f77802a"
+    },
+    {
+      "id": "epqa-B008402S3K-review-b70384bc8a4748d3",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "very nice looking, easy to put on the wall and its real wood!",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4933&qa_pair_id=7631&chars=0-61",
+      "sha256": "b70384bc8a4748d314a087f39c52502c3a4b74f11af8351b2dd7daa8e64a48ec"
+    },
+    {
+      "id": "epqa-B008402S3K-review-87a352a6f9eba57e",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "this is made of the cheapest recycled cardboard and wood you can think of.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4934&qa_pair_id=7632&chars=0-74",
+      "sha256": "87a352a6f9eba57ebfc57b05a0318ff542bbd81c05ec94b81dc7a7fbc0f8ec40"
+    },
+    {
+      "id": "epqa-B008402S3K-review-33d481baf8c302dd",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "made out of pressed wood material but is nice and light perfect for hanging.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4935&qa_pair_id=7633&chars=0-76",
+      "sha256": "33d481baf8c302ddaa6814abb8e5cfe9b930df6296588b16f9445429e9b8fef5"
+    },
+    {
+      "id": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "but...  not mentioned in the description is that this is made of particle board with a wood grain paper overlay.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4936&qa_pair_id=7634&chars=0-112",
+      "sha256": "2d3f6fc7e07606a54b84794346a5b96b983e8f79cfc19a7da7c3ca1c31038177"
+    },
+    {
+      "id": "epqa-B008402S3K-description-778998b842c56976",
+      "productId": "B008402S3K",
+      "source": "description",
+      "text": "finish: black",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4937&qa_pair_id=7635&chars=0-13",
+      "sha256": "778998b842c5697680b67b9b07fcde06c2d554da4a4458c3d14121169245d9f2"
+    },
+    {
+      "id": "epqa-B008402S3K-description-f9260184e9da9adb",
+      "productId": "B008402S3K",
+      "source": "description",
+      "text": "armoire details",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4938&qa_pair_id=7636&chars=0-15",
+      "sha256": "f9260184e9da9adb07f4043a18886b8762b78e3303aa06f9551fdfd43bac729d"
+    },
+    {
+      "id": "epqa-B008402S3K-attribute-19994518fa269134",
+      "productId": "B008402S3K",
+      "source": "attribute",
+      "text": "binding:  { value:kitchen }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4939&qa_pair_id=7637&chars=0-27",
+      "sha256": "19994518fa269134e2b5f12897cca6d4380cab8fcbda6b6de537ec700a48c8dd"
+    },
+    {
+      "id": "epqa-B008402S3K-review-6f712e4702308e34",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "this product shipped fast and in perfect condition....my mother now wants one!",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4940&qa_pair_id=7638&chars=0-78",
+      "sha256": "6f712e4702308e34e14011c1c8956a17719927a0cd9038487bab339dc74d4e8e"
+    },
+    {
+      "id": "epqa-B008402S3K-review-473fac68990b9f46",
+      "productId": "B008402S3K",
+      "source": "review",
+      "text": "amazing !",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4941&qa_pair_id=7639&chars=0-9",
+      "sha256": "473fac68990b9f46b75e01e4e7393ef519e4a666691762713f0751da8fdea9ad"
+    },
+    {
+      "id": "epqa-B005NY0TEK-cqa-1c5c43013373c24c",
+      "productId": "B005NY0TEK",
+      "source": "cqa",
+      "text": "approximately 200 pages counting both sides. Question: how is the book bound (3 different answers don't help me)? and how many separate pages (also a problem with the answers already given)?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=442&qa_pair_id=4590&chars=0-190",
+      "sha256": "1c5c43013373c24c1d39b881ae1dc393a78ca2d8d3d69319e6378f94444507b2"
+    },
+    {
+      "id": "epqa-B005NY0TEK-cqa-ba871fb86de970e0",
+      "productId": "B005NY0TEK",
+      "source": "cqa",
+      "text": "it has a total 5 sections divided into 20 pages each, that's 100 pages. Question: the description says 240 pages does that mean 120 pages in the book itself?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=443&qa_pair_id=4591&chars=0-157",
+      "sha256": "ba871fb86de970e021217b7a1dc6d0867f13e963509f9bc48effcdd13c57c68e"
+    },
+    {
+      "id": "epqa-B005NY0TEK-review-da2ddd19f81ec518",
+      "productId": "B005NY0TEK",
+      "source": "review",
+      "text": "there are probably 100 or so pages in this book.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=444&qa_pair_id=4592&chars=0-48",
+      "sha256": "da2ddd19f81ec518b8f2ad0df6b97fe96512d60a6a9d8f0928021c4ea656baeb"
+    },
+    {
+      "id": "epqa-B005NY0TEK-review-518709cf39882fe5",
+      "productId": "B005NY0TEK",
+      "source": "review",
+      "text": "there are 56 sheets (112 pages) not what is written in the description.the paper is the consistency of paper hand towels from a public bathroom.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=445&qa_pair_id=4593&chars=0-144",
+      "sha256": "518709cf39882fe509d5272fbd1ba61f8074b447909323c2c7d2c4107a61cc75"
+    },
+    {
+      "id": "epqa-B005NY0TEK-description-27643ebbbb4c05b6",
+      "productId": "B005NY0TEK",
+      "source": "description",
+      "text": "240 pages, latch closure.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=446&qa_pair_id=4594&chars=0-25",
+      "sha256": "27643ebbbb4c05b6d0329966962a02d401f66fc1e5a348cca4eb128e2221ae37"
+    },
+    {
+      "id": "epqa-B005NY0TEK-bullet-61c4d117914297ad",
+      "productId": "B005NY0TEK",
+      "source": "bullet",
+      "text": "front face also covers with a brass clasp",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=447&qa_pair_id=4595&chars=0-41",
+      "sha256": "61c4d117914297add97a941565b6dc3e19353ce8770be605b61beaf1045dfb10"
+    },
+    {
+      "id": "epqa-B005NY0TEK-bullet-08ad77a7139bc311",
+      "productId": "B005NY0TEK",
+      "source": "bullet",
+      "text": "durable leather cover",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=448&qa_pair_id=4596&chars=0-21",
+      "sha256": "08ad77a7139bc311c43d283f1db45323ba0b6e078ff1e4cac54249e92e54b23b"
+    },
+    {
+      "id": "epqa-B005NY0TEK-description-7a8cc98857b50c36",
+      "productId": "B005NY0TEK",
+      "source": "description",
+      "text": "approx 3 inches by 4 inches",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=449&qa_pair_id=4597&chars=0-27",
+      "sha256": "7a8cc98857b50c3683993ddd26634189ac9e1dd4aa34a6e9e2cac0e864364a8e"
+    },
+    {
+      "id": "epqa-B005NY0TEK-review-1bc94fa73842ef7c",
+      "productId": "B005NY0TEK",
+      "source": "review",
+      "text": "however, i tried drawing it in the pages with a pencil and it barely showed up and the eraser completely tore throughout the page",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=450&qa_pair_id=4598&chars=0-129",
+      "sha256": "1bc94fa73842ef7cedbc2169a97ade000625b296b1236aa233919deda0ee2ca8"
+    },
+    {
+      "id": "epqa-B005NY0TEK-review-b4500587713d32d9",
+      "productId": "B005NY0TEK",
+      "source": "review",
+      "text": "nice book liked the paper",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=451&qa_pair_id=4599&chars=0-25",
+      "sha256": "b4500587713d32d98cff96cb2616bab64f455a2be3188eff090c2ea4940c8efe"
+    },
+    {
+      "id": "epqa-B007PBHZK0-description-a238c01a21c189d5",
+      "productId": "B007PBHZK0",
+      "source": "description",
+      "text": "plastic base - 3 metal legs",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=482&qa_pair_id=4930&chars=0-27",
+      "sha256": "a238c01a21c189d518594ddfc90c3eddb6cd7d84ee39b6d75cd5971a63e8ff54"
+    },
+    {
+      "id": "epqa-B007PBHZK0-description-bf21c0f3a3629930",
+      "productId": "B007PBHZK0",
+      "source": "description",
+      "text": "plastic base - 4 plastic legs",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=483&qa_pair_id=4931&chars=0-29",
+      "sha256": "bf21c0f3a3629930a03b7b2146ce8987770d88e9d2eadb3d99b95a2b2cba90e1"
+    },
+    {
+      "id": "epqa-B007PBHZK0-cqa-64e0714b812377f7",
+      "productId": "B007PBHZK0",
+      "source": "cqa",
+      "text": "the stand is metal and has a plastic base for the metal support legs for sturdy support.sincerely,gerrie Question: what is the stand made of?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=484&qa_pair_id=4932&chars=0-141",
+      "sha256": "64e0714b812377f73a6bb7806b9040476737f475498c3a01f634f96654afc8af"
+    },
+    {
+      "id": "epqa-B007PBHZK0-review-ad4bc720e84a9e0e",
+      "productId": "B007PBHZK0",
+      "source": "review",
+      "text": "the bottom is made of plastic, and almost as soon as i put it together the first day.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=485&qa_pair_id=4933&chars=0-85",
+      "sha256": "ad4bc720e84a9e0e572829f90dbc8360d5b8f28b6c04f32addb36e17f36f1fc2"
+    },
+    {
+      "id": "epqa-B007PBHZK0-description-a4cb075ed22dc0cf",
+      "productId": "B007PBHZK0",
+      "source": "description",
+      "text": "the plastic base features four legs to provide even stability.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=486&qa_pair_id=4934&chars=0-62",
+      "sha256": "a4cb075ed22dc0cffd92c49b47b0142c9690422136d2dc631940fe2f2c92524c"
+    },
+    {
+      "id": "epqa-B007PBHZK0-description-2b4d9d3b855ac925",
+      "productId": "B007PBHZK0",
+      "source": "description",
+      "text": "7\"",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=487&qa_pair_id=4935&chars=0-2",
+      "sha256": "2b4d9d3b855ac92571cd96399d4c022743847c1726f65f797ba23cc8ca7b486b"
+    },
+    {
+      "id": "epqa-B007PBHZK0-description-793980c416e87601",
+      "productId": "B007PBHZK0",
+      "source": "description",
+      "text": "measure bust over the fullest part.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=488&qa_pair_id=4936&chars=0-35",
+      "sha256": "793980c416e87601d6ba38ae86d22746f0353e20ef80c9d4ad600a7eb0654f6f"
+    },
+    {
+      "id": "epqa-B007PBHZK0-description-a4504bf9d88fc8e7",
+      "productId": "B007PBHZK0",
+      "source": "description",
+      "text": "12 soft-grip adjustment wheels",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=489&qa_pair_id=4937&chars=0-30",
+      "sha256": "a4504bf9d88fc8e7c0c2c50147cf253f80167ea853acb35e6c3b62632ac84e0a"
+    },
+    {
+      "id": "epqa-B007PBHZK0-review-481164120f386f08",
+      "productId": "B007PBHZK0",
+      "source": "review",
+      "text": "the product arrived very quickly and was in perfect condition.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=490&qa_pair_id=4938&chars=0-62",
+      "sha256": "481164120f386f08c8329c81c5a339ed438532cebc1f01246879108def3104fc"
+    },
+    {
+      "id": "epqa-B007PBHZK0-cqa-144bd859e5f02006",
+      "productId": "B007PBHZK0",
+      "source": "cqa",
+      "text": "i measured across the back - shoulder to shoulder    right at the bottom of the neck. Question: what is the shoulder to shoulder measurement on the smallest settings?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=491&qa_pair_id=4939&chars=0-166",
+      "sha256": "144bd859e5f02006809bc404bf9592a16ace609a7e9721227c17f2498ac77a9b"
+    },
+    {
+      "id": "epqa-B005SWX65G-cqa-5c96e4f36cfde5f9",
+      "productId": "B005SWX65G",
+      "source": "cqa",
+      "text": "fits both iphone 4 and 4s. Question: does it fit the iphone 4 or just the 4s?",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=512&qa_pair_id=5230&chars=0-77",
+      "sha256": "5c96e4f36cfde5f94836d8417cef8a55480653f878585f2be307612d1e8285b7"
+    },
+    {
+      "id": "epqa-B005SWX65G-attribute-62e8757b539d9d6f",
+      "productId": "B005SWX65G",
+      "source": "attribute",
+      "text": "compatible_phone_models:  { value:\"apple iphone 4\" }; { value:\"apple iphone 4s\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=513&qa_pair_id=5231&chars=0-81",
+      "sha256": "62e8757b539d9d6ff72eb14bdc7f04041cc6aeeb0dd874243f5ecb063c127ec4"
+    },
+    {
+      "id": "epqa-B005SWX65G-review-2a5b56a4de0517c6",
+      "productId": "B005SWX65G",
+      "source": "review",
+      "text": "the case fits my iphone 4 s well",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=514&qa_pair_id=5232&chars=0-32",
+      "sha256": "2a5b56a4de0517c67d01cfabb6425aaabce30f1557d2540a14770284a1172ca8"
+    },
+    {
+      "id": "epqa-B005SWX65G-cqa-fdef6b6aa5212cad",
+      "productId": "B005SWX65G",
+      "source": "cqa",
+      "text": "this case fit perfectly on our iphone 4s. Question: is there anyway i could just buy the white rubber piece i already have this one but the rubber seems to big like it don't seal around the phone?..",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=515&qa_pair_id=5233&chars=0-198",
+      "sha256": "fdef6b6aa5212cada57ca7f1007fed2e47bb364e36d31bad817ffe2af470b7a8"
+    },
+    {
+      "id": "epqa-B005SWX65G-review-9ed7e4c0d13518f8",
+      "productId": "B005SWX65G",
+      "source": "review",
+      "text": "just wanted to add that i have the iphone 4 (not 4s) for verizon wireless, and this case fit my phone just fine.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=516&qa_pair_id=5234&chars=0-112",
+      "sha256": "9ed7e4c0d13518f8ccaf00ce1d4868854f49e64e102fb1b7ac0f2edb8931ff89"
+    },
+    {
+      "id": "epqa-B005SWX65G-attribute-7f4aca73fb65e82e",
+      "productId": "B005SWX65G",
+      "source": "attribute",
+      "text": "manufacturer:  { value:\"otterbox\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=517&qa_pair_id=5235&chars=0-35",
+      "sha256": "7f4aca73fb65e82eb248d42ca6900012f47b6c1d58a56dc3ab36640f0a9081b8"
+    },
+    {
+      "id": "epqa-B005SWX65G-description-30a71f9b9ffd7a3b",
+      "productId": "B005SWX65G",
+      "source": "description",
+      "text": "clearly protected screen protectors",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=518&qa_pair_id=5236&chars=0-35",
+      "sha256": "30a71f9b9ffd7a3b44d951023f4a459f27ec13d409d74294e12f427c160f1a7e"
+    },
+    {
+      "id": "epqa-B005SWX65G-attribute-db36d532941c4f8c",
+      "productId": "B005SWX65G",
+      "source": "attribute",
+      "text": "cpsia_cautionary_statement:  { value:no_warning_applicable }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=519&qa_pair_id=5237&chars=0-60",
+      "sha256": "db36d532941c4f8c7cec4673c3dda5264a93fbb66c8d9fe27732ee25f5e31849"
+    },
+    {
+      "id": "epqa-B005SWX65G-review-6a0b113348985fbb",
+      "productId": "B005SWX65G",
+      "source": "review",
+      "text": "i highly recommend this product not only for business professionals but for anyone looking to provide outstanding protection for their iphone.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=520&qa_pair_id=5238&chars=0-142",
+      "sha256": "6a0b113348985fbb5c86469a2ab138fddad833a30733774f26ff3a1dae739150"
+    },
+    {
+      "id": "epqa-B005SWX65G-review-d3eb31e9d97c97ef",
+      "productId": "B005SWX65G",
+      "source": "review",
+      "text": "good protection for the i-phone.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=521&qa_pair_id=5239&chars=0-32",
+      "sha256": "d3eb31e9d97c97ef14dc902f3513a89fdf71bc6b5415b628beeb8c6019e3abed"
+    },
+    {
+      "id": "epqa-B009XGZGZG-attribute-6f6346f16723c9e2",
+      "productId": "B009XGZGZG",
+      "source": "attribute",
+      "text": "compatible_devices:  { value:\"iphone se (1st generation2016)\" }; { value:\"iphone 5, 5s, 5c\" }; { value:\"ipod touch 6, 5\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=542&qa_pair_id=5750&chars=0-122",
+      "sha256": "6f6346f16723c9e200d81a59786025f7cf8f779b1610024653d0fea367c99043"
+    },
+    {
+      "id": "epqa-B009XGZGZG-attribute-de5e7a1e3aea33ec",
+      "productId": "B009XGZGZG",
+      "source": "attribute",
+      "text": "compatible_phone_models:  { value:\"iphone se (2016)\" }; { value:\"iphone 5, 5s, 5c\" }; { value:\"ipod touch 6, 5\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=543&qa_pair_id=5751&chars=0-113",
+      "sha256": "de5e7a1e3aea33eca8c9384e1861ba4b813bbd5b181e750801a1a0848d76f6dc"
+    },
+    {
+      "id": "epqa-B009XGZGZG-cqa-156f07dabe81b8ab",
+      "productId": "B009XGZGZG",
+      "source": "cqa",
+      "text": "it might fit an htc but i think you'd be better off buying a non iphone armband for a non iphone device. Question: htc ???",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=544&qa_pair_id=5752&chars=0-122",
+      "sha256": "156f07dabe81b8ab291eb758a1125882cea4fdb10a2d1af67949343f29fb82c3"
+    },
+    {
+      "id": "epqa-B009XGZGZG-cqa-f7562a2d3cd19f12",
+      "productId": "B009XGZGZG",
+      "source": "cqa",
+      "text": "it would probably be a little tight though. Question: otterbox commuter",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=545&qa_pair_id=5753&chars=0-71",
+      "sha256": "f7562a2d3cd19f1257d58e1aa81113c4709232c0639a7dd3668877ebda942bb3"
+    },
+    {
+      "id": "epqa-B009XGZGZG-review-5ab01fad0bbd9399",
+      "productId": "B009XGZGZG",
+      "source": "review",
+      "text": "hard to determine whether it'd fit from just the descriptions so it was nice we were able to return it after trying it out.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=546&qa_pair_id=5754&chars=0-123",
+      "sha256": "5ab01fad0bbd9399aaaafaf9393ca4d059d7c098ab8cc6109efd110b00935486"
+    },
+    {
+      "id": "epqa-B009XGZGZG-attribute-8d70ec43d861c615",
+      "productId": "B009XGZGZG",
+      "source": "attribute",
+      "text": "color:  { value:\"black\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=547&qa_pair_id=5755&chars=0-25",
+      "sha256": "8d70ec43d861c6152095608185f7c8bd2757300c61bade65dedb5ee88eb44286"
+    },
+    {
+      "id": "epqa-B009XGZGZG-bullet-0dc2479c6e645668",
+      "productId": "B009XGZGZG",
+      "source": "bullet",
+      "text": "high quality materials ensure a durable product that you can hand wash to keep clean while it lasts for years to come.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=548&qa_pair_id=5756&chars=0-118",
+      "sha256": "0dc2479c6e645668f580786f58d43870e714cda3372dd53957a5332b0ea83a1a"
+    },
+    {
+      "id": "epqa-B009XGZGZG-bullet-a7c0ae5f01867551",
+      "productId": "B009XGZGZG",
+      "source": "bullet",
+      "text": "for men and women, the tune belt armband securely holds and protects your phone in a case that feels good and is lightweight – not bulky or cumbersome.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=549&qa_pair_id=5757&chars=0-151",
+      "sha256": "a7c0ae5f01867551080f04a3ae8e269e9105a489b660515bf9fb5e8eb4ad20d8"
+    },
+    {
+      "id": "epqa-B009XGZGZG-review-68f1e5ab5bd8b3cd",
+      "productId": "B009XGZGZG",
+      "source": "review",
+      "text": "i attach this to my flexible dog leash when i go out walking.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=550&qa_pair_id=5758&chars=0-61",
+      "sha256": "68f1e5ab5bd8b3cd2f3806785ce421866a3bd805880f2de868a78f92df01c190"
+    },
+    {
+      "id": "epqa-B009XGZGZG-review-f18eff5ac18b82f8",
+      "productId": "B009XGZGZG",
+      "source": "review",
+      "text": "right now, it is covered by the armband, and it is a little tricky to find the sweet spot to turn the volume up or down.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=551&qa_pair_id=5759&chars=0-120",
+      "sha256": "f18eff5ac18b82f8b3d26460a575dfdf3df18d68f8248e6698b8627433fc045e"
+    },
+    {
+      "id": "epqa-B000XXQULC-attribute-d02d08d24f2e1577",
+      "productId": "B000XXQULC",
+      "source": "attribute",
+      "text": "color:  { standardized_values:[ \"brown\" ], value:\"brown\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2122&qa_pair_id=19440&chars=0-58",
+      "sha256": "d02d08d24f2e15774943fbd01f0536d1d21af7862ebb77de23d655d3d4f5e554"
+    },
+    {
+      "id": "epqa-B000XXQULC-attribute-44e832a7a0bd60dd",
+      "productId": "B000XXQULC",
+      "source": "attribute",
+      "text": "style:  { value:\"3-inch, brown\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2123&qa_pair_id=19441&chars=0-33",
+      "sha256": "44e832a7a0bd60ddc69cc8e70a55a5e645481bdb521140c0f33954d058730581"
+    },
+    {
+      "id": "epqa-B000XXQULC-review-8659fec1c04cc2a5",
+      "productId": "B000XXQULC",
+      "source": "review",
+      "text": "i could only find these in ugly white (did not match my wood floors) in the stores.many places only stocked 2\" in brown.this company shipped amazingly fast, wish i'd ordered sooner and saved the gas money driving to all the local diy stores.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2124&qa_pair_id=19442&chars=0-241",
+      "sha256": "8659fec1c04cc2a5170351bafc5e0457fff5cdd592742329907dabc910a625f2"
+    },
+    {
+      "id": "epqa-B000XXQULC-review-405505a63932077b",
+      "productId": "B000XXQULC",
+      "source": "review",
+      "text": "all these stores carry are the ivory/bone colored ones.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2125&qa_pair_id=19443&chars=0-55",
+      "sha256": "405505a63932077b1017aebf0d567bfd32be4a55e0f2c8ec5fb41a3ec28c284b"
+    },
+    {
+      "id": "epqa-B000XXQULC-review-c10820b883ef4bd1",
+      "productId": "B000XXQULC",
+      "source": "review",
+      "text": "i was not able to find this size or color at any of my local  stores but as usual, amazon came through for me...",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2126&qa_pair_id=19444&chars=0-112",
+      "sha256": "c10820b883ef4bd1f038bb6821c752e7aeca9d0fb51aed065cfa4d3922aa713f"
+    },
+    {
+      "id": "epqa-B000XXQULC-attribute-3d5baee8cbf7d0b9",
+      "productId": "B000XXQULC",
+      "source": "attribute",
+      "text": "included_components:  { value:\"hardware;casters & floor protection;ball-casters\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2127&qa_pair_id=19445&chars=0-82",
+      "sha256": "3d5baee8cbf7d0b970f4fcf92b31dc2e0a07a2e57ad5ef3c3f7ac6df4c772b23"
+    },
+    {
+      "id": "epqa-B000XXQULC-attribute-b96cf8cdf74a8b48",
+      "productId": "B000XXQULC",
+      "source": "attribute",
+      "text": "brand:  { value:\"shepherd hardware\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2128&qa_pair_id=19446&chars=0-37",
+      "sha256": "b96cf8cdf74a8b48dad2e068fe47cf2af3b3b0052a0b8ddd7d43b09df57ab5e4"
+    },
+    {
+      "id": "epqa-B000XXQULC-attribute-a66f17da89f99d80",
+      "productId": "B000XXQULC",
+      "source": "attribute",
+      "text": "batteries_included:  { value:false }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2129&qa_pair_id=19447&chars=0-36",
+      "sha256": "a66f17da89f99d800cae79c8ac76d6b3fe0bb06b93fac436923c4d66049e579c"
+    },
+    {
+      "id": "epqa-B000XXQULC-cqa-3001e08223bb2a68",
+      "productId": "B000XXQULC",
+      "source": "cqa",
+      "text": "sorry i can't answer. Question: how many cups come in a 8 pack, the pricing is unclear",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2130&qa_pair_id=19448&chars=0-86",
+      "sha256": "3001e08223bb2a68202af0a98e4e65726664695b51337d604ef6ba7807fc163c"
+    },
+    {
+      "id": "epqa-B000XXQULC-review-77ecf5af4db69749",
+      "productId": "B000XXQULC",
+      "source": "review",
+      "text": "this is a pack of 2 for some reason.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2131&qa_pair_id=19449&chars=0-36",
+      "sha256": "77ecf5af4db697496f1e68c52c08da2cefd22595d8e4e3595d45e5b0f469be1e"
+    },
+    {
+      "id": "epqa-B000B6FADU-attribute-9cfb087ee528d6f7",
+      "productId": "B000B6FADU",
+      "source": "attribute",
+      "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:12. }, value:12. }, length:{ unit:inches, normalized_value:{ unit:inches, value:11.75 }, value:11.75 }, height:{ unit:inches, normalized_value:{ unit:inches, value:18. }, value:18. } }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2672&qa_pair_id=23810&chars=0-263",
+      "sha256": "9cfb087ee528d6f7bac28da18bcf67f74f1ed5944a27d4d1d8de0d76e092046a"
+    },
+    {
+      "id": "epqa-B000B6FADU-review-6d5f2e095f2150f5",
+      "productId": "B000B6FADU",
+      "source": "review",
+      "text": "it's small enough that a 6 year-old can sit on it and play it, yet large enough for an adult.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2673&qa_pair_id=23811&chars=0-93",
+      "sha256": "6d5f2e095f2150f58d8a6e5d7ec81243d6dfbde3b8b1688f206ca69ed0fa2381"
+    },
+    {
+      "id": "epqa-B000B6FADU-bullet-2a5cd59a474dcb36",
+      "productId": "B000B6FADU",
+      "source": "bullet",
+      "text": "100% baltic birch wood, full size — the natural finish baltic birch playing surface and body dishes out cutting slap tones, deep bass and responds to soft finger rolls and brush playing — this full size cajon measures 11 ¾” w x 12” d x 18” h",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2674&qa_pair_id=23812&chars=0-241",
+      "sha256": "2a5cd59a474dcb362af52c09512b4564c084500b3467faf177a0af9725e17cea"
+    },
+    {
+      "id": "epqa-B000B6FADU-review-64a2d14d50a87561",
+      "productId": "B000B6FADU",
+      "source": "review",
+      "text": "i am slightly over 200lbs and can comfortably and safely sit on this, has excellent sound quality as well.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2675&qa_pair_id=23813&chars=0-106",
+      "sha256": "64a2d14d50a875611785b5800e094223af9297c84b174b7ba244fa4f3bff6409"
+    },
+    {
+      "id": "epqa-B000B6FADU-review-53b73cc5f9a41197",
+      "productId": "B000B6FADU",
+      "source": "review",
+      "text": "well, i'm going to tell you that playing the cajon is very similar to playing that cardboard box, only it's made to be a durable enough instrument so that it can be sat upon as its normal playing position.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2676&qa_pair_id=23814&chars=0-205",
+      "sha256": "53b73cc5f9a41197de536c93fbf0b4c489e1713bf2d4d4e1778323e7ca969870"
+    },
+    {
+      "id": "epqa-B000B6FADU-attribute-6923e1768d4ce392",
+      "productId": "B000B6FADU",
+      "source": "attribute",
+      "text": "part_number:  { value:\"hcaj1nt\" }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2677&qa_pair_id=23815&chars=0-33",
+      "sha256": "6923e1768d4ce39209da3bfb1a6a580cb6dd2763976ab8fa610c17fd84959337"
+    },
+    {
+      "id": "epqa-B000B6FADU-attribute-283aa122962de0f2",
+      "productId": "B000B6FADU",
+      "source": "attribute",
+      "text": "includes_ac_adapter:  { value:false }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2678&qa_pair_id=23816&chars=0-37",
+      "sha256": "283aa122962de0f20dd6d0640aa2a21d501a8a4fc5f4d6e9a6f60f7481e48180"
+    },
+    {
+      "id": "epqa-B000B6FADU-description-0521009bfcc81981",
+      "productId": "B000B6FADU",
+      "source": "description",
+      "text": "we crafted the meinl headliner series string cajon to deliver both with precision, dynamics, projection and an outstanding feel—all with the ability to fit right into the mix of acoustic performances.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2679&qa_pair_id=23817&chars=0-200",
+      "sha256": "0521009bfcc81981f743bb8f0c10d4ce2390e1734f1473a1ae55e8cf7b4b2439"
+    },
+    {
+      "id": "epqa-B000B6FADU-review-0637a7db4ae76bb9",
+      "productId": "B000B6FADU",
+      "source": "review",
+      "text": "my daughter now thinks every band should have a cajon.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2680&qa_pair_id=23818&chars=0-54",
+      "sha256": "0637a7db4ae76bb9df266097ffa615706cc853c113c4b494bff3638333504f22"
+    },
+    {
+      "id": "epqa-B000B6FADU-review-f2d45a9dd9158b05",
+      "productId": "B000B6FADU",
+      "source": "review",
+      "text": "great product.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2681&qa_pair_id=23819&chars=0-14",
+      "sha256": "f2d45a9dd9158b05e533b17c68c2ca04421c2098e3f354a96a427e48a69e3701"
+    },
+    {
+      "id": "epqa-B000B6FADU-description-f76de0b61319783f",
+      "productId": "B000B6FADU",
+      "source": "description",
+      "text": "weighs 12.8 lbs (supports adults)",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2682&qa_pair_id=23820&chars=0-33",
+      "sha256": "f76de0b61319783fed895a3a26ccfc994a29e1cf8b207dd10ec6bf2f2413c1f9"
+    },
+    {
+      "id": "epqa-B000B6FADU-attribute-d9799d7775b234e6",
+      "productId": "B000B6FADU",
+      "source": "attribute",
+      "text": "item_weight:  { unit:pounds, normalized_value:{ unit:pounds, value:11. }, value:11. }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2683&qa_pair_id=23821&chars=0-85",
+      "sha256": "d9799d7775b234e6c99a23baa656f3e94434f68813b442d43c2a7e29ada980b5"
+    },
+    {
+      "id": "epqa-B000B6FADU-attribute-010b707f5510bb5f",
+      "productId": "B000B6FADU",
+      "source": "attribute",
+      "text": "item_package_weight:  { unit:kilograms, normalized_value:{ unit:pounds, value:12.83 }, value:5.82 }",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2684&qa_pair_id=23822&chars=0-99",
+      "sha256": "010b707f5510bb5f105d601a30425cd45fe7e0093d7fa9ac4a3a12ba68634dee"
+    },
+    {
+      "id": "epqa-B000B6FADU-review-38a6a739fa2c4a74",
+      "productId": "B000B6FADU",
+      "source": "review",
+      "text": "perfect size and weight for lugging around to gigs, and i love that it is adjustable.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2685&qa_pair_id=23823&chars=0-85",
+      "sha256": "38a6a739fa2c4a7495c4e3297e7f4d1dd479bcb018c27416a726a535f7143de3"
+    },
+    {
+      "id": "epqa-B000B6FADU-review-01dec21ed3c1ed66",
+      "productId": "B000B6FADU",
+      "source": "review",
+      "text": "no age or weight problem working my cajon.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2686&qa_pair_id=23824&chars=0-42",
+      "sha256": "01dec21ed3c1ed665d089b189ace38d857776c9bbb88ace3099e35a65e5e811b"
+    },
+    {
+      "id": "epqa-B000B6FADU-bullet-d07dc2e928ca45dc",
+      "productId": "B000B6FADU",
+      "source": "bullet",
+      "text": "rear port for enhanced tone and microphone placement — a sound port is cut into the back of the cajon to allow air to escape as you play, which results in enhanced tone and feel — this is an ideal spot to place a microphone when amplification is needed",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2687&qa_pair_id=23825&chars=0-252",
+      "sha256": "d07dc2e928ca45dcc9c0f5cf92173fbb26db831dd2fa616223ce4ec0e693fdcb"
+    },
+    {
+      "id": "epqa-B000B6FADU-description-ef3d9c44ce1592a3",
+      "productId": "B000B6FADU",
+      "source": "description",
+      "text": "a 5\" circular sound port is cut into the back side of the baltic birch resonating body to allow air flow to escape the cajon as you play.",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2688&qa_pair_id=23826&chars=0-137",
+      "sha256": "ef3d9c44ce1592a302cea6104d4e1dbde1edb72185976026b27c1fc7b5c378a7"
+    },
+    {
+      "id": "epqa-B000B6FADU-description-b322456e37cb4693",
+      "productId": "B000B6FADU",
+      "source": "description",
+      "text": "percussion for the masses",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2689&qa_pair_id=23827&chars=0-25",
+      "sha256": "b322456e37cb46937b107fa8da3bf2f3cc3ac44f7dfffa1579aa4075a31c9ccb"
+    },
+    {
+      "id": "epqa-B000B6FADU-review-1aabea79a0f9590a",
+      "productId": "B000B6FADU",
+      "source": "review",
+      "text": "would definitely recommend!",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2690&qa_pair_id=23828&chars=0-27",
+      "sha256": "1aabea79a0f9590aafbdfbdadb4341782adb48ad02e02599843a9eec9f39245a"
+    },
+    {
+      "id": "epqa-B000B6FADU-review-b0974f91b63fd007",
+      "productId": "B000B6FADU",
+      "source": "review",
+      "text": "with the purchase came a 3 month tutorial which is amazing since she is a total beginner!",
+      "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv#row=2691&qa_pair_id=23829&chars=0-89",
+      "sha256": "b0974f91b63fd007a912361543c2261ec804e625907256c3b466dc7f09830456"
+    }
+  ],
+  "cases": [
+    {
+      "id": "epqa-train-349",
+      "productId": "B00251EVPW",
+      "question": "how many are included?",
+      "split": "development",
+      "referenceAnswer": "The listing attribute says 12 pieces; community answers also describe a pack of 12 canvas panels.",
+      "referencePassageIds": [
+        "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+        "epqa-B00251EVPW-attribute-4f8a9b21dbec272e",
+        "epqa-B00251EVPW-cqa-8d024252f9007e1f",
+        "epqa-B00251EVPW-review-c44d61711b6f2015"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-train-416",
+      "productId": "B00006IE1F",
+      "question": "the description shows 200” should be 200’ ?",
+      "split": "development",
+      "referenceAnswer": "The bullet describes a roll 4 feet by 200 feet; 200 feet is the length, not 200 inches.",
+      "referencePassageIds": [
+        "epqa-B00006IE1F-attribute-b59571e7dd4c3025",
+        "epqa-B00006IE1F-bullet-1a6633e738035f77",
+        "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-train-438",
+      "productId": "B003ZSD5EC",
+      "question": "30 or 40 weight?",
+      "split": "development",
+      "referenceAnswer": "The bullet specifies 40-weight polyester embroidery thread. The 10.3-pound item weight is a different measurement; a community answer gives 40–50 weight.",
+      "referencePassageIds": [
+        "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+        "epqa-B003ZSD5EC-cqa-44fcd518324755cf",
+        "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+        "epqa-B003ZSD5EC-attribute-c4aa96e8f1e93b58"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-train-743",
+      "productId": "B0058YR0XS",
+      "question": "inseam 10 inch or 12 inch?",
+      "split": "development",
+      "referenceAnswer": "The selected 40x10 variant has a 10-inch inseam according to its attribute. Community discussion also mentions a 12-inch option, which must not replace this variant specification.",
+      "referencePassageIds": [
+        "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+        "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+        "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+        "epqa-B0058YR0XS-review-e716e7c57bb5dbe4"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-train-770",
+      "productId": "B002V92YMA",
+      "question": "does this model have water bottle pockets?",
+      "split": "development",
+      "referenceAnswer": "The product description says there is an internal water-bottle pocket.",
+      "referencePassageIds": [
+        "epqa-B002V92YMA-description-8a4a9bebcbb4671d"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-train-775",
+      "productId": "B008402S3K",
+      "question": "what type of wood is this made of and is it real glass?",
+      "split": "development",
+      "referenceAnswer": "The material attribute lists engineered wood, glass, metal, and plastic. It does not establish a particular wood species or solid wood.",
+      "referencePassageIds": [
+        "epqa-B008402S3K-attribute-619f6c0d99b503d0"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-train-585",
+      "productId": "B00FH9B8RI",
+      "question": "trying to find a case for the lg g2 by vervizon... will this fit?",
+      "split": "development",
+      "referenceAnswer": "The listing title specifies Verizon and a review says VS980, but community answers contradict each other about Verizon compatibility. State the conflict and confirm the exact model before guaranteeing fit.",
+      "referencePassageIds": [
+        "epqa-B00FH9B8RI-attribute-26922d151a0951f3",
+        "epqa-B00FH9B8RI-review-33e3e80248990e7e",
+        "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+        "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+        "epqa-B00FH9B8RI-review-4fbef905c7cbe4fb"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-train-728",
+      "productId": "B002ZG7RGM",
+      "question": "is it waterproof?",
+      "split": "development",
+      "referenceAnswer": "The description calls the fabric waterproof and breathable; reviews agree. Attribute that claim to the supplied description rather than treating it as independently tested performance.",
+      "referencePassageIds": [
+        "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+        "epqa-B002ZG7RGM-review-e790d9384382ab4a",
+        "epqa-B002ZG7RGM-review-3615ce8d95033ee5",
+        "epqa-B002ZG7RGM-description-ab112b1d59926758"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-train-647",
+      "productId": "B003DKL4JA",
+      "question": "is this phone a native union product as advertised by the pic?",
+      "split": "development",
+      "referenceAnswer": "The brand/manufacturer attributes say Native Union. Reviews disagree about authenticity, so the snapshot cannot independently establish that every delivered handset is genuine.",
+      "referencePassageIds": [
+        "epqa-B003DKL4JA-review-7637a46f0afa1f31",
+        "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+        "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+        "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+        "epqa-B003DKL4JA-review-3caca617c0fd6348"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-train-635",
+      "productId": "B008UV6YRO",
+      "question": "the samsung galaxy s 3 measures 3 wide by 5 long do you think the phone will fit?",
+      "split": "development",
+      "referenceAnswer": "Samsung Galaxy S3 appears in compatible_phone_models. A review reports failure with a large Ballistic case, so bare-phone compatibility is not a guarantee for every case or configuration.",
+      "referencePassageIds": [
+        "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+        "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+        "epqa-B008UV6YRO-review-20096a352bc7c9ff"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-dev-469",
+      "productId": "B005NY0TEK",
+      "question": "how many pages are in this book?",
+      "split": "validation",
+      "referenceAnswer": "The description says 240 pages, while reviews/community answers report about 100 or 112. Report the disagreement; the provided snapshot does not establish one reliable page count.",
+      "referencePassageIds": [
+        "epqa-B005NY0TEK-cqa-ba871fb86de970e0",
+        "epqa-B005NY0TEK-review-da2ddd19f81ec518",
+        "epqa-B005NY0TEK-review-518709cf39882fe5",
+        "epqa-B005NY0TEK-description-27643ebbbb4c05b6"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-dev-505",
+      "productId": "B007PBHZK0",
+      "question": "is the base at the bottom plasic or metal?",
+      "split": "validation",
+      "referenceAnswer": "The supplied descriptions identify a plastic base. They disagree about whether the legs are metal or plastic and how many legs there are, so avoid adding an unsupported leg specification.",
+      "referencePassageIds": [
+        "epqa-B007PBHZK0-description-a238c01a21c189d5",
+        "epqa-B007PBHZK0-description-bf21c0f3a3629930",
+        "epqa-B007PBHZK0-cqa-64e0714b812377f7",
+        "epqa-B007PBHZK0-review-ad4bc720e84a9e0e",
+        "epqa-B007PBHZK0-description-a4cb075ed22dc0cf"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-dev-535",
+      "productId": "B005SWX65G",
+      "question": "my experience is that case for 4 does not fit 4s.  does this one?",
+      "split": "validation",
+      "referenceAnswer": "The compatible_phone_models attribute lists both iPhone 4 and iPhone 4S. Community answers also report fitting the 4S.",
+      "referencePassageIds": [
+        "epqa-B005SWX65G-cqa-5c96e4f36cfde5f9",
+        "epqa-B005SWX65G-attribute-62e8757b539d9d6f",
+        "epqa-B005SWX65G-review-2a5b56a4de0517c6",
+        "epqa-B005SWX65G-cqa-fdef6b6aa5212cad"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-dev-587",
+      "productId": "B009XGZGZG",
+      "question": "would this fit a motorola droid turbo?",
+      "split": "validation",
+      "referenceAnswer": "The listed compatible models are iPhone SE (2016), 5/5s/5c, and iPod touch 5/6. Droid Turbo compatibility is not established; absence from that list alone does not prove physical incompatibility.",
+      "referencePassageIds": [
+        "epqa-B009XGZGZG-attribute-6f6346f16723c9e2",
+        "epqa-B009XGZGZG-attribute-de5e7a1e3aea33ec"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-dev-1985",
+      "productId": "B000XXQULC",
+      "question": "do these come in black?",
+      "split": "validation",
+      "referenceAnswer": "This selected listing is brown. The supplied evidence does not establish whether a separate black variant is sold; avoid claiming no black version exists.",
+      "referencePassageIds": [
+        "epqa-B000XXQULC-attribute-d02d08d24f2e1577",
+        "epqa-B000XXQULC-attribute-44e832a7a0bd60dd",
+        "epqa-B000XXQULC-review-405505a63932077b"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    },
+    {
+      "id": "epqa-dev-2433",
+      "productId": "B000B6FADU",
+      "question": "what is the weight of this cajon?",
+      "split": "validation",
+      "referenceAnswer": "The description says 12.8 pounds and the item_weight attribute says 11 pounds. Report that conflict rather than asserting one weight as certain.",
+      "referencePassageIds": [
+        "epqa-B000B6FADU-description-f76de0b61319783f",
+        "epqa-B000B6FADU-attribute-d9799d7775b234e6"
+      ],
+      "labelStatus": "AI-assisted dataset-derived guidance; independent human audit pending"
+    }
+  ]
+}

@@ -1,0 +1,827 @@
+{
+  "format": "ablatrix-ai-development-review-v1",
+  "createdAt": "2026-09-25T06:27:18.800Z",
+  "kind": "ai_assisted",
+  "humanConfirmed": false,
+  "batchId": "3c53c6ba-5e16-47b5-8161-6ba9d6319e28",
+  "batchManifestSha256": "03df3be9af26333552959003445436cd634ad0136f81bbe27fea5c325b65d241",
+  "corpusVersion": "epqa-demo-v1-cec976cc2f22",
+  "rubric": "Correct means the answer resolves the question to the extent supported by the full local product evidence. Supported means reported product facts follow from available passages and product metadata. Report contradictions and uncertainty. Treat an unnecessary global abstention as an adequacy failure; mark ambiguous judgments for human adjudication.",
+  "limitations": "Draft AI judgments only. No independent human accuracy score, no policy promotion, and no final/validation source access. Nine positive judgments and one medium-confidence suspected unnecessary abstention.",
+  "sourceSnapshotSha256": "e74369d9dd56e8de485c2aba97e27431e695a7341394cf68a795d7a41467268c",
+  "records": [
+    {
+      "runId": "c503216f-6e5e-4453-8d37-55de58c1bd10",
+      "caseId": "epqa-train-349",
+      "productId": "B00251EVPW",
+      "question": "how many are included?",
+      "answer": {
+        "answer": "12 canvas panels are included. The supplied evidence states, “there are 12 in a package” and describes it as “a pack of 12 canvas panels.”",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+            "quote": "there are 12 in a package."
+          },
+          {
+            "passageId": "epqa-B00251EVPW-cqa-8d024252f9007e1f",
+            "quote": "this listing is for a pack of 12 canvas panels."
+          }
+        ]
+      },
+      "answerModel": "gpt-5.6-luna",
+      "policyId": "live-baseline",
+      "review": {
+        "runId": "c503216f-6e5e-4453-8d37-55de58c1bd10",
+        "caseId": "epqa-train-349",
+        "correct": true,
+        "supported": true,
+        "category": "none",
+        "correction": "",
+        "sourceIds": [
+          "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+          "epqa-B00251EVPW-cqa-8d024252f9007e1f",
+          "epqa-B00251EVPW-attribute-4f8a9b21dbec272e",
+          "epqa-B00251EVPW-review-c44d61711b6f2015"
+        ],
+        "rationale": "AI assessment: the answer directly resolves the quantity question. Both cited community passages explicitly state 12 panels per package; the full pool independently includes number_of_pieces:12 and a review of a pack of 12. The separate number_of_items:1 field is consistent with one package and does not establish one panel. The first cited community answer is attached to a depth question, but the second citation and piece-count attribute remove dependence on that mismatch. All substantive answer claims are supported. No material subjective ambiguity.",
+        "confidence": "high",
+        "kind": "ai_assisted",
+        "reviewer": "Codex AI source review"
+      },
+      "evidence": [
+        {
+          "id": "epqa-B00251EVPW-cqa-51f39d37d00e4e80",
+          "productId": "B00251EVPW",
+          "source": "cqa",
+          "text": "there are 12 in a package. Question: what is the depth? in inches",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2242&qa_pair_id=3400&chars=0-65",
+          "sha256": "51f39d37d00e4e80e64ca7ecbacf7202ea6ab4752acdefd34b423fa5cc7d3e21"
+        },
+        {
+          "id": "epqa-B00251EVPW-cqa-8d024252f9007e1f",
+          "productId": "B00251EVPW",
+          "source": "cqa",
+          "text": "hello,this listing is for a pack of 12 canvas panels.canvas panels are conventionally produced panels with turned edges over a multiple binder board. Question: canvas paper pad",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2245&qa_pair_id=3403&chars=0-176",
+          "sha256": "8d024252f9007e1f9f1ea53c87383a43ea53b5b7a031f2252107f08873a2c4a5"
+        },
+        {
+          "id": "epqa-B00251EVPW-attribute-4f8a9b21dbec272e",
+          "productId": "B00251EVPW",
+          "source": "attribute",
+          "text": "number_of_pieces:  { value:12 }",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2243&qa_pair_id=3401&chars=0-31",
+          "sha256": "4f8a9b21dbec272ee9c188ea7f0fe3ade3d504ec7a04aff6577a2dd713ff402e"
+        },
+        {
+          "id": "epqa-B00251EVPW-review-c44d61711b6f2015",
+          "productId": "B00251EVPW",
+          "source": "review",
+          "text": "this pack of 12 canvases are very sturdy and great quality for beginners and the experienced alike!",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2246&qa_pair_id=3404&chars=0-99",
+          "sha256": "c44d61711b6f20154eedf21b87b7cf42dda2d580994dc6b0b64bfd371562525a"
+        }
+      ],
+      "fullProductPassageCount": 10
+    },
+    {
+      "runId": "37e41bf5-72e8-42e7-96d9-f8d15a22bd10",
+      "caseId": "epqa-train-416",
+      "productId": "B00006IE1F",
+      "question": "the description shows 200” should be 200’ ?",
+      "answer": {
+        "answer": "Yes. The product specifications indicate the roll is 200 feet long, not 200 inches: the size is listed as “4' x 200',” and the product bullet says “4-feet by 200-feet.”",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B00006IE1F-attribute-58e2bea8e9ff6410",
+            "quote": "size:  { value:\"4' x 200'\" }"
+          },
+          {
+            "passageId": "epqa-B00006IE1F-bullet-1a6633e738035f77",
+            "quote": "heavyweight duo-finish kraft paper roll is 4-feet by 200-feet"
+          }
+        ]
+      },
+      "answerModel": "gpt-5.6-luna",
+      "policyId": "live-baseline",
+      "review": {
+        "runId": "37e41bf5-72e8-42e7-96d9-f8d15a22bd10",
+        "caseId": "epqa-train-416",
+        "correct": true,
+        "supported": true,
+        "category": "none",
+        "correction": "",
+        "sourceIds": [
+          "epqa-B00006IE1F-attribute-58e2bea8e9ff6410",
+          "epqa-B00006IE1F-bullet-1a6633e738035f77",
+          "epqa-B00006IE1F-description-ea1299d4f8126d03",
+          "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc"
+        ],
+        "rationale": "AI assessment: the cited size attribute and bullet explicitly specify 4 feet by 200 feet. The complete description and customer Q&A corroborate the 200-foot roll length. The answer correctly disambiguates feet from inches without adding an unsupported specification. No contradictory passage or material subjective ambiguity appears in the full product pool.",
+        "confidence": "high",
+        "kind": "ai_assisted",
+        "reviewer": "Codex AI source review"
+      },
+      "evidence": [
+        {
+          "id": "epqa-B00006IE1F-attribute-58e2bea8e9ff6410",
+          "productId": "B00006IE1F",
+          "source": "attribute",
+          "text": "size:  { value:\"4' x 200'\" }",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2622&qa_pair_id=4060&chars=0-28",
+          "sha256": "58e2bea8e9ff64101e7a3db2363b0f19d4c73efdf31e2f3e2bbcb3ef72215bb6"
+        },
+        {
+          "id": "epqa-B00006IE1F-bullet-1a6633e738035f77",
+          "productId": "B00006IE1F",
+          "source": "bullet",
+          "text": "heavyweight duo-finish kraft paper roll is 4-feet by 200-feet",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2624&qa_pair_id=4062&chars=0-61",
+          "sha256": "1a6633e738035f772f37c538eab573ab099bf13f004de685e82fb6c2cb2574b1"
+        },
+        {
+          "id": "epqa-B00006IE1F-description-ea1299d4f8126d03",
+          "productId": "B00006IE1F",
+          "source": "description",
+          "text": "the leading heavyweight duo-finish kraft paper roll is 4-feet by 200-feet and is brite green in color.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2628&qa_pair_id=4066&chars=0-102",
+          "sha256": "ea1299d4f8126d0321a20866b02f1b7ae199cc01897494aa968d211f607d33b1"
+        },
+        {
+          "id": "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc",
+          "productId": "B00006IE1F",
+          "source": "cqa",
+          "text": "it is a continuous roll of 200 ft. sorry for the confusion. Question: what does it mean by \"loose sheets\"? yet says its a roll of 200'",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2626&qa_pair_id=4064&chars=0-134",
+          "sha256": "fcf0bf0fcc09edbc25c36116bb88aab8d7db6e93f825b3641afcc61e004e1557"
+        }
+      ],
+      "fullProductPassageCount": 19
+    },
+    {
+      "runId": "2543f532-532e-4cfc-b0ae-b95029aefd91",
+      "caseId": "epqa-train-438",
+      "productId": "B003ZSD5EC",
+      "question": "30 or 40 weight?",
+      "answer": {
+        "answer": "The supplied evidence identifies this thread as 40 weight, not 30 weight. The product bullet states “40 weight polyester,” and a customer report also says “this is 40 weight.”",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+            "quote": "high quality embroidery machine thread 40 weight polyester"
+          },
+          {
+            "passageId": "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+            "quote": "this is 40 weight"
+          }
+        ]
+      },
+      "answerModel": "gpt-5.6-luna",
+      "policyId": "live-baseline",
+      "review": {
+        "runId": "2543f532-532e-4cfc-b0ae-b95029aefd91",
+        "caseId": "epqa-train-438",
+        "correct": true,
+        "supported": true,
+        "category": "none",
+        "correction": "",
+        "sourceIds": [
+          "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+          "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+          "epqa-B003ZSD5EC-cqa-44fcd518324755cf"
+        ],
+        "rationale": "AI assessment: the listing bullet explicitly identifies 40-weight polyester embroidery thread and the cited customer response agrees. One other community answer estimates 40-50 weight by comparison with other threads; that imprecision does not establish 30 weight or override the direct listing specification. The answer identifies its basis as supplied evidence and directly answers the binary choice. No material subjective ambiguity in the requested listed weight.",
+        "confidence": "high",
+        "kind": "ai_assisted",
+        "reviewer": "Codex AI source review"
+      },
+      "evidence": [
+        {
+          "id": "epqa-B003ZSD5EC-bullet-9af0ee832adb0087",
+          "productId": "B003ZSD5EC",
+          "source": "bullet",
+          "text": "high quality embroidery machine thread 40 weight polyester",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2765&qa_pair_id=4283&chars=0-58",
+          "sha256": "9af0ee832adb00871b5a5dbef459fcdb096ba5477b39f0c77ffa5ad0e8230313"
+        },
+        {
+          "id": "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7",
+          "productId": "B003ZSD5EC",
+          "source": "cqa",
+          "text": "this is 40 weight  i will also tell you before you buy this product that it easily frays (and can become tangled in your machine) and there is no color chart to tell you the colors. Question: we just bought a husqvarna viking jade embroidery machine. does anyone know if this thread will work with it?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2763&qa_pair_id=4281&chars=0-301",
+          "sha256": "df535bf6a73a00d7bd4cdda30fdc15e90e6dc5dac5bf4bbcf95877ae090666f8"
+        },
+        {
+          "id": "epqa-B003ZSD5EC-cqa-44fcd518324755cf",
+          "productId": "B003ZSD5EC",
+          "source": "cqa",
+          "text": "this is like an aurafil or robinson-anton embroidery thread, between 40-50 weight, not as thin as a bobbin thread but not anywhere as thick as even 1 strand of embroidery floss (dmc like). Question: would this work for friendship bracelets?  either kumihimo or knotted?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2764&qa_pair_id=4282&chars=0-269",
+          "sha256": "44fcd518324755cf6fe88b4bee2b03ddc33493fde22c060cd1c15e6c0ae4d953"
+        }
+      ],
+      "fullProductPassageCount": 28
+    },
+    {
+      "runId": "4fecf799-3e1e-4c04-ba28-7f4d243824c6",
+      "caseId": "epqa-train-743",
+      "productId": "B0058YR0XS",
+      "question": "inseam 10 inch or 12 inch?",
+      "answer": {
+        "answer": "The selected product is specified as having a 10-inch inseam. The product attribute lists “value:10” inches, and customer reports also describe the inseam as 10 inches. One customer Q&A mentions both 10- and 12-inch inseams, but it does not establish that this specific selected product is 12 inches.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+            "quote": "inseam:  { length:[ { unit:inches, value:10 } ] }"
+          },
+          {
+            "passageId": "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+            "quote": "the short have a 10 inch inseam."
+          },
+          {
+            "passageId": "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+            "quote": "they have 10 inch and 12 inch inseams."
+          }
+        ]
+      },
+      "answerModel": "gpt-5.6-luna",
+      "policyId": "live-baseline",
+      "review": {
+        "runId": "4fecf799-3e1e-4c04-ba28-7f4d243824c6",
+        "caseId": "epqa-train-743",
+        "correct": true,
+        "supported": true,
+        "category": "none",
+        "correction": "",
+        "sourceIds": [
+          "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+          "epqa-B0058YR0XS-attribute-57e130a0617d1a46",
+          "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+          "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+          "epqa-B0058YR0XS-review-345c5b719b19e017",
+          "epqa-B0058YR0XS-review-e716e7c57bb5dbe4"
+        ],
+        "rationale": "AI assessment: the product inseam attribute explicitly says 10 inches, and the full pool also has size_map 40 10 plus two reviews and a community answer stating 10 inches. The answer appropriately mentions the community response saying both 10- and 12-inch options exist, while explaining that it does not identify this selected item as 12 inches. This handles the variant ambiguity without asserting all variants share one inseam. No material subjective ambiguity remains for the listed item.",
+        "confidence": "high",
+        "kind": "ai_assisted",
+        "reviewer": "Codex AI source review"
+      },
+      "evidence": [
+        {
+          "id": "epqa-B0058YR0XS-attribute-3aceb241d9003e4a",
+          "productId": "B0058YR0XS",
+          "source": "attribute",
+          "text": "inseam:  { length:[ { unit:inches, value:10 } ] }",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4722&qa_pair_id=7310&chars=0-49",
+          "sha256": "3aceb241d9003e4a75f6ea7c448bc28900e3b15e0494574882fb0f393b1261ed"
+        },
+        {
+          "id": "epqa-B0058YR0XS-attribute-57e130a0617d1a46",
+          "productId": "B0058YR0XS",
+          "source": "attribute",
+          "text": "size_map:  { value:\"40 10\" }",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4729&qa_pair_id=7317&chars=0-28",
+          "sha256": "57e130a0617d1a4625c50ded211cb16d2a8a8c085d9753d3e09268246dc65a52"
+        },
+        {
+          "id": "epqa-B0058YR0XS-cqa-2da0e60efa03f045",
+          "productId": "B0058YR0XS",
+          "source": "cqa",
+          "text": "the short have a 10 inch inseam. Question: the picture makes these shorts look like thye are knee length, i would like the at least a couple inches above the knees, are they?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4724&qa_pair_id=7312&chars=0-174",
+          "sha256": "2da0e60efa03f04554dd6f8e46b2b18c2c2f7048112c33abee2a5f7e72c11c21"
+        },
+        {
+          "id": "epqa-B0058YR0XS-cqa-bcd169ca072ef787",
+          "productId": "B0058YR0XS",
+          "source": "cqa",
+          "text": "they have 10 inch and 12 inch inseams. Question: what is the inseam measurement for a 34 waist?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4723&qa_pair_id=7311&chars=0-95",
+          "sha256": "bcd169ca072ef787277282467a495c124f29c713286206b6557a6197fc4ec74c"
+        },
+        {
+          "id": "epqa-B0058YR0XS-review-345c5b719b19e017",
+          "productId": "B0058YR0XS",
+          "source": "review",
+          "text": "leg length is 10 inches (from crotch to hem) so they sit just above the knee hence the sizing guide of 34/10 (in case you were wondering).",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4725&qa_pair_id=7313&chars=0-138",
+          "sha256": "345c5b719b19e017dd55202eff287aeee7235de1c2497234bb0feaaf049813e6"
+        },
+        {
+          "id": "epqa-B0058YR0XS-review-e716e7c57bb5dbe4",
+          "productId": "B0058YR0XS",
+          "source": "review",
+          "text": "the inseam is perfect at 10\" which means the legs don't ride up but they are shorter than bermuda's.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4726&qa_pair_id=7314&chars=0-100",
+          "sha256": "e716e7c57bb5dbe43b760a779082a87f90522d75010bf79b446b288514b4820f"
+        }
+      ],
+      "fullProductPassageCount": 20
+    },
+    {
+      "runId": "5001a703-720c-4712-b02b-bb56053036dd",
+      "caseId": "epqa-train-770",
+      "productId": "B002V92YMA",
+      "question": "does this model have water bottle pockets?",
+      "answer": {
+        "answer": "Yes. The product description states that it has an internal water bottle pocket: “the internal water bottle pocket keeps water in.” However, the supplied customer reviews indicate it does not have an external/side bottle pocket, including “the only thing it lacks is a side pouch for a water bottle” and “no bottle pockets on outside.”",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B002V92YMA-description-8a4a9bebcbb4671d",
+            "quote": "inside, the waterproof tpu liner and corner wings keep water out, and the internal water bottle pocket keeps water in."
+          },
+          {
+            "passageId": "epqa-B002V92YMA-review-80a9b1227daf0646",
+            "quote": "the only thing it lacks is a side pouch for a water bottle."
+          },
+          {
+            "passageId": "epqa-B002V92YMA-review-938f85f1730d8dca",
+            "quote": "great bag,very durable,good stitching  price is great.the con: no bottle pockets on outside, and 1 large pocket in or out would be great."
+          }
+        ]
+      },
+      "answerModel": "gpt-5.6-luna",
+      "policyId": "live-baseline",
+      "review": {
+        "runId": "5001a703-720c-4712-b02b-bb56053036dd",
+        "caseId": "epqa-train-770",
+        "correct": true,
+        "supported": true,
+        "category": "none",
+        "correction": "",
+        "sourceIds": [
+          "epqa-B002V92YMA-description-8a4a9bebcbb4671d",
+          "epqa-B002V92YMA-review-80a9b1227daf0646",
+          "epqa-B002V92YMA-review-938f85f1730d8dca",
+          "epqa-B002V92YMA-review-b1ad16045e25e4d7",
+          "epqa-B002V92YMA-review-e27a9b01e1834d95"
+        ],
+        "rationale": "AI assessment: the description explicitly states an internal water bottle pocket. Customer passages consistently report the absence of an outside or side bottle pocket. The answer preserves this distinction and attributes the external-pocket limitation to customer reviews. These passages address different pocket locations rather than a direct factual contradiction. The initial yes is immediately qualified, making the answer sufficient for the question's unspecified pocket location. No material subjective ambiguity.",
+        "confidence": "high",
+        "kind": "ai_assisted",
+        "reviewer": "Codex AI source review"
+      },
+      "evidence": [
+        {
+          "id": "epqa-B002V92YMA-description-8a4a9bebcbb4671d",
+          "productId": "B002V92YMA",
+          "source": "description",
+          "text": "inside, the waterproof tpu liner and corner wings keep water out, and the internal water bottle pocket keeps water in.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4885&qa_pair_id=7583&chars=0-118",
+          "sha256": "8a4a9bebcbb4671df1f8bd670c3bdcc27bd71aa6a6a59c658df22e5cffaf14c9"
+        },
+        {
+          "id": "epqa-B002V92YMA-review-80a9b1227daf0646",
+          "productId": "B002V92YMA",
+          "source": "review",
+          "text": "the only thing it lacks is a side pouch for a water bottle.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4883&qa_pair_id=7581&chars=0-59",
+          "sha256": "80a9b1227daf06464518a4ea5ca784aba447ddd1c4416ae1d3866759d0956c22"
+        },
+        {
+          "id": "epqa-B002V92YMA-review-938f85f1730d8dca",
+          "productId": "B002V92YMA",
+          "source": "review",
+          "text": "great bag,very durable,good stitching  price is great.the con: no bottle pockets on outside, and 1 large pocket in or out would be great.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4882&qa_pair_id=7580&chars=0-137",
+          "sha256": "938f85f1730d8dcafe4eaddc0877ef11177189ec57f3acc8a4daae2b5d8ae088"
+        },
+        {
+          "id": "epqa-B002V92YMA-review-b1ad16045e25e4d7",
+          "productId": "B002V92YMA",
+          "source": "review",
+          "text": "had rather wanted an external mesh water bottle pocket but find i don't miss it.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4886&qa_pair_id=7584&chars=0-80",
+          "sha256": "b1ad16045e25e4d7ce3f2159e3de1bb4088f086738e493a4c2d5411d905d7799"
+        },
+        {
+          "id": "epqa-B002V92YMA-review-e27a9b01e1834d95",
+          "productId": "B002V92YMA",
+          "source": "review",
+          "text": "also, i would like an outer pocket for a water bottle of some sort.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4884&qa_pair_id=7582&chars=0-67",
+          "sha256": "e27a9b01e1834d957b61f39a4ef41b7d2b1f6374eec3a95d312d97cc5961a1e2"
+        }
+      ],
+      "fullProductPassageCount": 29
+    },
+    {
+      "runId": "65927dbb-3c07-4609-9985-e063fb7f160f",
+      "caseId": "epqa-train-775",
+      "productId": "B008402S3K",
+      "question": "what type of wood is this made of and is it real glass?",
+      "answer": {
+        "answer": "The supplied evidence is conflicting about the wood: customer reviews describe pressed wood, particle board with a wood-grain paper overlay, and also claim “real wood,” while the product attribute lists “engineered wood.” Thus, the evidence supports engineered/pressed wood but does not establish a specific wood species or confirm solid wood. The attribute lists “glass,” but it does not specify whether the glass is real glass; no supplied evidence confirms that detail. Customer reports are not manufacturer specifications.",
+        "status": "insufficient_evidence",
+        "citations": [
+          {
+            "passageId": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+            "quote": "material:  { value:\"engineered wood\" }; { value:\"glass\" }; { value:\"metal\" }; { value:\"plastic\" }"
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+            "quote": "this is made of particle board with a wood grain paper overlay."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-33d481baf8c302dd",
+            "quote": "made out of pressed wood material but is nice and light perfect for hanging."
+          },
+          {
+            "passageId": "epqa-B008402S3K-review-b70384bc8a4748d3",
+            "quote": "very nice looking, easy to put on the wall and its real wood!"
+          }
+        ]
+      },
+      "answerModel": "gpt-5.6-luna",
+      "policyId": "live-baseline",
+      "review": {
+        "runId": "65927dbb-3c07-4609-9985-e063fb7f160f",
+        "caseId": "epqa-train-775",
+        "correct": false,
+        "supported": true,
+        "category": "unnecessary_abstention",
+        "correction": "The product materials are listed as engineered wood and glass, along with metal and plastic. Reviews describe pressed wood or particle board with a wood-grain paper overlay, so the evidence supports engineered wood rather than a named solid-wood species. The listing identifies glass; its exact composition and the wood species are not specified. One customer's 'real wood' description conflicts with the listing and other reviews.",
+        "sourceIds": [
+          "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+          "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+          "epqa-B008402S3K-review-33d481baf8c302dd",
+          "epqa-B008402S3K-review-b70384bc8a4748d3"
+        ],
+        "rationale": "AI assessment after reading all 30 product passages. The answer accurately quotes the material attribute and distinguishes conflicting customer descriptions, so its reported source facts are supported. However, it underuses the explicit glass material and abstains globally despite evidence supporting a qualified answer of listed engineered wood and glass. Correctness is false for that adequacy/calibration failure, not for an invented positive product claim. This is a medium-confidence judgment: 'real glass' could demand physical verification or glass composition beyond what a historical listing can establish, and no source independently authenticates the item. A source-relative answer should preserve that limit without treating an ordinary glass material entry as no evidence.",
+        "confidence": "medium",
+        "kind": "ai_assisted",
+        "reviewer": "Codex AI source review"
+      },
+      "evidence": [
+        {
+          "id": "epqa-B008402S3K-attribute-619f6c0d99b503d0",
+          "productId": "B008402S3K",
+          "source": "attribute",
+          "text": "material:  { value:\"engineered wood\" }; { value:\"glass\" }; { value:\"metal\" }; { value:\"plastic\" }",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4932&qa_pair_id=7630&chars=0-97",
+          "sha256": "619f6c0d99b503d0b149cce2aaa9bc5927bbb8a376ec6502778752e59f77802a"
+        },
+        {
+          "id": "epqa-B008402S3K-review-2d3f6fc7e07606a5",
+          "productId": "B008402S3K",
+          "source": "review",
+          "text": "but...  not mentioned in the description is that this is made of particle board with a wood grain paper overlay.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4936&qa_pair_id=7634&chars=0-112",
+          "sha256": "2d3f6fc7e07606a54b84794346a5b96b983e8f79cfc19a7da7c3ca1c31038177"
+        },
+        {
+          "id": "epqa-B008402S3K-review-33d481baf8c302dd",
+          "productId": "B008402S3K",
+          "source": "review",
+          "text": "made out of pressed wood material but is nice and light perfect for hanging.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4935&qa_pair_id=7633&chars=0-76",
+          "sha256": "33d481baf8c302ddaa6814abb8e5cfe9b930df6296588b16f9445429e9b8fef5"
+        },
+        {
+          "id": "epqa-B008402S3K-review-b70384bc8a4748d3",
+          "productId": "B008402S3K",
+          "source": "review",
+          "text": "very nice looking, easy to put on the wall and its real wood!",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4933&qa_pair_id=7631&chars=0-61",
+          "sha256": "b70384bc8a4748d314a087f39c52502c3a4b74f11af8351b2dd7daa8e64a48ec"
+        }
+      ],
+      "fullProductPassageCount": 30
+    },
+    {
+      "runId": "30ab98a2-d810-4c7f-b27f-4abf48b9c389",
+      "caseId": "epqa-train-585",
+      "productId": "B00FH9B8RI",
+      "question": "trying to find a case for the lg g2 by vervizon... will this fit?",
+      "answer": {
+        "answer": "Yes—this product is listed for the Verizon LG G2, specifically model VS980. However, the supplied customer reports conflict: one says it fits the Verizon G2, while another says it is for non-Verizon G2 phones. The product title also identifies it as “Verizon Only,” so verify that your phone is the Verizon VS980 before purchasing.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B00FH9B8RI-review-33e3e80248990e7e",
+            "quote": "fits lg g2 vs980 (verizon edition)."
+          },
+          {
+            "passageId": "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+            "quote": "yes it will fit the verizon g2"
+          },
+          {
+            "passageId": "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+            "quote": "no, this case is for non-verizon g2's."
+          }
+        ]
+      },
+      "answerModel": "gpt-5.6-luna",
+      "policyId": "live-baseline",
+      "review": {
+        "runId": "30ab98a2-d810-4c7f-b27f-4abf48b9c389",
+        "caseId": "epqa-train-585",
+        "correct": true,
+        "supported": true,
+        "category": "none",
+        "correction": "",
+        "sourceIds": [
+          "epqa-B00FH9B8RI-review-33e3e80248990e7e",
+          "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+          "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+          "epqa-B00FH9B8RI-attribute-26922d151a0951f3"
+        ],
+        "rationale": "AI assessment after reading all 20 product passages and the product title. The title explicitly says Verizon Only, a review names LG G2 VS980 (Verizon edition), and another customer confirms Verizon compatibility. The answer also exposes the contradictory non-Verizon customer response instead of silently discarding it, and recommends checking the exact model. The title is product metadata rather than a passage, so the title claim is supported outside its three quote citations. Fit for an individual purchased item is not independently verified; the affirmative is reasonably qualified by the conflict and model check.",
+        "confidence": "high",
+        "kind": "ai_assisted",
+        "reviewer": "Codex AI source review"
+      },
+      "evidence": [
+        {
+          "id": "epqa-B00FH9B8RI-review-33e3e80248990e7e",
+          "productId": "B00FH9B8RI",
+          "source": "review",
+          "text": "fits lg g2 vs980 (verizon edition).",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3633&qa_pair_id=5731&chars=0-35",
+          "sha256": "33e3e80248990e7e201993c6b450865fe5cb91c784e13b1843a7bfe3f1c468e9"
+        },
+        {
+          "id": "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de",
+          "productId": "B00FH9B8RI",
+          "source": "cqa",
+          "text": "yes it will fit the verizon g2 Question: why is the case different for a verizon lg g2",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3635&qa_pair_id=5733&chars=0-86",
+          "sha256": "60ed6f94adecb0def76c4f042c26568d12a016c0329b040d0f4b05ec4fb0e420"
+        },
+        {
+          "id": "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3",
+          "productId": "B00FH9B8RI",
+          "source": "cqa",
+          "text": "no, this case is for non-verizon g2's. Question: is this for verizon?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3634&qa_pair_id=5732&chars=0-69",
+          "sha256": "93a31f6a6e0eacf31f40b206661c496422907fdd19d53257ac26119fe88c25e0"
+        },
+        {
+          "id": "epqa-B00FH9B8RI-attribute-26922d151a0951f3",
+          "productId": "B00FH9B8RI",
+          "source": "attribute",
+          "text": "compatible_phone_models:  { value:\"lg g2\" }",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3632&qa_pair_id=5730&chars=0-43",
+          "sha256": "26922d151a0951f3211d49eb56bb65add1e73deeae1b5376547426822ebc7729"
+        }
+      ],
+      "fullProductPassageCount": 20
+    },
+    {
+      "runId": "dc5eeff6-cfa1-4c09-92ab-e47d0189739a",
+      "caseId": "epqa-train-728",
+      "productId": "B002ZG7RGM",
+      "question": "is it waterproof?",
+      "answer": {
+        "answer": "Yes, the supplied evidence supports that it is waterproof, though one customer reported moisture inside around the mouth. The product description calls the windshield “a waterproof and breathable fabric,” and customer reports also describe it as waterproof. This is manufacturer/product-description evidence plus customer reports, not an independently verified waterproof rating.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B002ZG7RGM-description-ab112b1d59926758",
+            "quote": "windshield is a waterproof and breathable fabric that will keep your face warm in the coldest climate."
+          },
+          {
+            "passageId": "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+            "quote": "waterproof (yes i tested it under running water) and apparently windproof."
+          },
+          {
+            "passageId": "epqa-B002ZG7RGM-review-a9b93eb594ccba9e",
+            "quote": "but it does get wet on inside around the mouth."
+          }
+        ]
+      },
+      "answerModel": "gpt-5.6-luna",
+      "policyId": "live-baseline",
+      "review": {
+        "runId": "dc5eeff6-cfa1-4c09-92ab-e47d0189739a",
+        "caseId": "epqa-train-728",
+        "correct": true,
+        "supported": true,
+        "category": "none",
+        "correction": "",
+        "sourceIds": [
+          "epqa-B002ZG7RGM-description-ab112b1d59926758",
+          "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+          "epqa-B002ZG7RGM-review-a9b93eb594ccba9e",
+          "epqa-B002ZG7RGM-review-e790d9384382ab4a"
+        ],
+        "rationale": "AI assessment after reading all 30 product passages. The product description directly calls the fabric waterproof and breathable; several reviews agree, including a claimed running-water test. The answer accurately notes an interior-mouth moisture report and avoids inventing a certified rating or interpreting that moisture as proven external leakage. It is supported as an account of the supplied listing and reviews. The phrase manufacturer/product-description evidence is looser than provenance warrants: the corpus identifies a description, not an independently authenticated manufacturer statement. That wording is a minor attribution caveat, not a material failure of the waterproof answer.",
+        "confidence": "high",
+        "kind": "ai_assisted",
+        "reviewer": "Codex AI source review"
+      },
+      "evidence": [
+        {
+          "id": "epqa-B002ZG7RGM-description-ab112b1d59926758",
+          "productId": "B002ZG7RGM",
+          "source": "description",
+          "text": "windshield is a waterproof and breathable fabric that will keep your face warm in the coldest climate.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4605&qa_pair_id=7163&chars=0-102",
+          "sha256": "ab112b1d599267582a107f50962e82a609402bd53ebf1fa6690e69b15eeffd3e"
+        },
+        {
+          "id": "epqa-B002ZG7RGM-review-eba8b7e928ca7374",
+          "productId": "B002ZG7RGM",
+          "source": "review",
+          "text": "waterproof (yes i tested it under running water) and apparently windproof.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4602&qa_pair_id=7160&chars=0-74",
+          "sha256": "eba8b7e928ca7374691480a719eb7d0dcbbd73a1c9584989dd1dbc25ec19cd77"
+        },
+        {
+          "id": "epqa-B002ZG7RGM-review-a9b93eb594ccba9e",
+          "productId": "B002ZG7RGM",
+          "source": "review",
+          "text": "but it does get wet on inside around the mouth.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4606&qa_pair_id=7164&chars=0-47",
+          "sha256": "a9b93eb594ccba9ef9260bce0dd0529019e188a65db9dbbd5cc8853bb7a4ba11"
+        },
+        {
+          "id": "epqa-B002ZG7RGM-review-e790d9384382ab4a",
+          "productId": "B002ZG7RGM",
+          "source": "review",
+          "text": "the outside is a waterproof thick fabric and the inside is very warm.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4603&qa_pair_id=7161&chars=0-69",
+          "sha256": "e790d9384382ab4ac94e6c5fa3d09b262b9cb8a591fdaa518f3afff40be94a93"
+        }
+      ],
+      "fullProductPassageCount": 30
+    },
+    {
+      "runId": "bb04efbe-b3bc-453f-8d49-6aae0fee9bb9",
+      "caseId": "epqa-train-647",
+      "productId": "B003DKL4JA",
+      "question": "is this phone a native union product as advertised by the pic?",
+      "answer": {
+        "answer": "insufficient_evidence: The supplied evidence is conflicting. Product attributes identify the brand and manufacturer as Native Union, and one customer says it is genuine, but another customer reports it was a cheap knockoff. Customer reports do not establish authenticity, so I cannot determine whether this specific phone is genuinely a Native Union product.",
+        "status": "insufficient_evidence",
+        "citations": [
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+            "quote": "brand:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+            "quote": "manufacturer:  { value:\"native union\" }"
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+            "quote": "not the product i was promised, advertised as native union but was a cheap knock off."
+          },
+          {
+            "passageId": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+            "quote": "and to those wondering, this is indeed a genuine native union model and not a knock off."
+          }
+        ]
+      },
+      "answerModel": "gpt-5.6-luna",
+      "policyId": "live-baseline",
+      "review": {
+        "runId": "bb04efbe-b3bc-453f-8d49-6aae0fee9bb9",
+        "caseId": "epqa-train-647",
+        "correct": true,
+        "supported": true,
+        "category": "none",
+        "correction": "",
+        "sourceIds": [
+          "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+          "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+          "epqa-B003DKL4JA-review-3caca617c0fd6348",
+          "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+          "epqa-B003DKL4JA-review-7637a46f0afa1f31"
+        ],
+        "rationale": "AI assessment after reading all 30 product passages. The listing names Native Union, but customer reports explicitly conflict about genuine versus knockoff, and an additional full-corpus review reports no branding on the package or handset. The user asks about authenticity, so listing metadata alone cannot resolve the disputed delivered item. The answer correctly reports the advertised brand while abstaining from an authenticity guarantee. This is justified abstention, unlike requiring extra verification merely to report an unchallenged material listing. If the question meant only the advertised brand, a shorter listed-as-Native-Union answer would suffice, but the conflicting authenticity reports support the cautious reading.",
+        "confidence": "high",
+        "kind": "ai_assisted",
+        "reviewer": "Codex AI source review"
+      },
+      "evidence": [
+        {
+          "id": "epqa-B003DKL4JA-attribute-7a1cda449e751d9d",
+          "productId": "B003DKL4JA",
+          "source": "attribute",
+          "text": "brand:  { value:\"native union\" }",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4033&qa_pair_id=6351&chars=0-32",
+          "sha256": "7a1cda449e751d9d6203cd276fc6b7bc3cb063cf9346fd0ec4f4447d352da25c"
+        },
+        {
+          "id": "epqa-B003DKL4JA-attribute-7afbf30b240738bd",
+          "productId": "B003DKL4JA",
+          "source": "attribute",
+          "text": "manufacturer:  { value:\"native union\" }",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4034&qa_pair_id=6352&chars=0-39",
+          "sha256": "7afbf30b240738bdb69ad34164ca12c5a3432efe25067696518e4444abb83ec8"
+        },
+        {
+          "id": "epqa-B003DKL4JA-review-3caca617c0fd6348",
+          "productId": "B003DKL4JA",
+          "source": "review",
+          "text": "not the product i was promised, advertised as native union but was a cheap knock off.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4036&qa_pair_id=6354&chars=0-85",
+          "sha256": "3caca617c0fd6348d54d49aaf1ea4d9a231bc897f8820bb51e9c2bd3e8d59398"
+        },
+        {
+          "id": "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d",
+          "productId": "B003DKL4JA",
+          "source": "review",
+          "text": "and to those wondering, this is indeed a genuine native union model and not a knock off.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4035&qa_pair_id=6353&chars=0-88",
+          "sha256": "75e68c3a1f4d1e0da17e27e2e9c5b5f6f3a5bd2452190e14b32a0f4fa43f76c7"
+        },
+        {
+          "id": "epqa-B003DKL4JA-review-7637a46f0afa1f31",
+          "productId": "B003DKL4JA",
+          "source": "review",
+          "text": "there was no native union branding anywhere on the packaging or the handset itself.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=4032&qa_pair_id=6350&chars=0-83",
+          "sha256": "7637a46f0afa1f31fc4824785f6870deea4f9384c31c58cf20f80176c17ddd50"
+        }
+      ],
+      "fullProductPassageCount": 30
+    },
+    {
+      "runId": "033c0682-2f41-4027-977e-d5024c8ef186",
+      "caseId": "epqa-train-635",
+      "productId": "B008UV6YRO",
+      "question": "the samsung galaxy s 3 measures 3 wide by 5 long do you think the phone will fit?",
+      "answer": {
+        "answer": "The evidence suggests it should fit a Samsung Galaxy S3 without a bulky case. The product is explicitly listed as compatible with the Samsung Galaxy S3, and a customer says the expandable cradle adjusts to any phone size. However, another customer reports that an S3 did not fit in a “very large” ballistic case, so fit depends on the phone case and the stated 3-by-5-inch dimensions alone are not enough to guarantee fit.",
+        "status": "answered",
+        "citations": [
+          {
+            "passageId": "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+            "quote": "compatible_phone_models:  { value:\"apple iphone 6\" }; { value:\"samsung galaxy s3\" }; { value:\"samsung galaxy s4\" }; { value:\"samsung galaxy s5\" }; { value:\"apple iphone 4s\" }; { value:\"apple iphone 5s\" }"
+          },
+          {
+            "passageId": "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+            "quote": "the expandable cradle will adjust to any size phone."
+          },
+          {
+            "passageId": "epqa-B008UV6YRO-review-20096a352bc7c9ff",
+            "quote": "this product does not fit a samsung galaxy s3 in a (admittedly very large) ballistic case."
+          }
+        ]
+      },
+      "answerModel": "gpt-5.6-luna",
+      "policyId": "live-baseline",
+      "review": {
+        "runId": "033c0682-2f41-4027-977e-d5024c8ef186",
+        "caseId": "epqa-train-635",
+        "correct": true,
+        "supported": true,
+        "category": "none",
+        "correction": "",
+        "sourceIds": [
+          "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+          "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+          "epqa-B008UV6YRO-review-20096a352bc7c9ff",
+          "epqa-B008UV6YRO-review-377d63ca2f0ed941"
+        ],
+        "rationale": "AI assessment after reading all 18 product passages. Explicit Galaxy S3 compatibility supports likely fit, while the large ballistic-case failure directly supports the bulky-case caveat. Another full-corpus review describes a tight mount on a Galaxy S3, reinforcing that fit is plausible but not universally spacious. The answer attributes the any-size claim to a customer and does not adopt it as an unlimited specification. It also correctly avoids deriving a guaranteed 3-by-5-inch cradle capacity from product/package dimensions. No material unsupported claim or missing conflict was found.",
+        "confidence": "high",
+        "kind": "ai_assisted",
+        "reviewer": "Codex AI source review"
+      },
+      "evidence": [
+        {
+          "id": "epqa-B008UV6YRO-attribute-9fb761de545aadf9",
+          "productId": "B008UV6YRO",
+          "source": "attribute",
+          "text": "compatible_phone_models:  { value:\"apple iphone 6\" }; { value:\"samsung galaxy s3\" }; { value:\"samsung galaxy s4\" }; { value:\"samsung galaxy s5\" }; { value:\"apple iphone 4s\" }; { value:\"apple iphone 5s\" }",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3963&qa_pair_id=6231&chars=0-203",
+          "sha256": "9fb761de545aadf9443354fad11a8741cf9f660cc1d94871ad807876a9273b81"
+        },
+        {
+          "id": "epqa-B008UV6YRO-cqa-11d009311d953fe5",
+          "productId": "B008UV6YRO",
+          "source": "cqa",
+          "text": "the expandable cradle will adjust to any size phone. Question: will this product hold my samsung s 3?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3964&qa_pair_id=6232&chars=0-101",
+          "sha256": "11d009311d953fe5a589f558736d7d7b417db4114efb046a1a7da87e32eea19d"
+        },
+        {
+          "id": "epqa-B008UV6YRO-review-20096a352bc7c9ff",
+          "productId": "B008UV6YRO",
+          "source": "review",
+          "text": "this product does not fit a samsung galaxy s3 in a (admittedly very large) ballistic case.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3965&qa_pair_id=6233&chars=0-90",
+          "sha256": "20096a352bc7c9ff1495e2ee8c0b6dc469c466a484bde535815465326fc60e8b"
+        },
+        {
+          "id": "epqa-B008UV6YRO-review-377d63ca2f0ed941",
+          "productId": "B008UV6YRO",
+          "source": "review",
+          "text": "the sound in fm transmitter is clear and crisp, but not mind blowing.bluetooth calling is a nice feature, but has low volume and comes with some disturbance.a usb port is provided for car charging, but we will need to get our own cable for charging.the mount is good, but a bit tight for my phone galaxy s3.if you are navigating using gps on the phone, sometimes it chews up a few words.it would have been great if the gooseneck was a bit more flexible, as it would not mount upright on my car honda accord.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=3976&qa_pair_id=6244&chars=0-507",
+          "sha256": "377d63ca2f0ed941647da381a13b7211fc885781cb4ef745d7a26bceec4ee292"
+        }
+      ],
+      "fullProductPassageCount": 18
+    }
+  ]
+}

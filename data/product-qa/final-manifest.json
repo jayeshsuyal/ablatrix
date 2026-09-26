@@ -1,0 +1,3633 @@
+{
+  "upstreamCommit": "cec976cc2f2218aa76e562ecc9c7d79f1f3271bc",
+  "upstreamTrainSha256": "b63de9681b770573240367e919f7f04f087f6a4745ab1f79a77e6b800105ea25",
+  "selectionSeed": "ablatrix-v02-final",
+  "selectionRule": "first 20 SHA256-ranked train qids with >=4 rows, 15-150 question chars, a bullet/attribute/review source, unique ASIN and unique first title token; exclude all existing development/validation ASINs",
+  "selectedQids": [
+    "11834",
+    "11634",
+    "8427",
+    "13488",
+    "523",
+    "13877",
+    "10013",
+    "9789",
+    "8514",
+    "13831",
+    "9046",
+    "3735",
+    "1503",
+    "12368",
+    "3464",
+    "4953",
+    "10158",
+    "12415",
+    "15044",
+    "9453"
+  ],
+  "corpusSha256": "ddaea7f022f4439ab469540ba18776e9ad52bbe6b49d3455f9815891b255386d",
+  "passageOrigins": {
+    "epqa-B004T36GCU-cqa-222adecb256e3105": [
+      {
+        "row": 3222,
+        "qaPairId": "5110",
+        "qid": "523"
+      }
+    ],
+    "epqa-B004T36GCU-cqa-140063519885f6d1": [
+      {
+        "row": 3223,
+        "qaPairId": "5111",
+        "qid": "523"
+      }
+    ],
+    "epqa-B004T36GCU-cqa-985304727cc24ed2": [
+      {
+        "row": 3224,
+        "qaPairId": "5112",
+        "qid": "523"
+      }
+    ],
+    "epqa-B004T36GCU-cqa-d19226a8a835c1be": [
+      {
+        "row": 3225,
+        "qaPairId": "5113",
+        "qid": "523"
+      }
+    ],
+    "epqa-B004T36GCU-cqa-0eba4c68e67a3d61": [
+      {
+        "row": 3226,
+        "qaPairId": "5114",
+        "qid": "523"
+      }
+    ],
+    "epqa-B004T36GCU-attribute-51c38c7caf2eeb11": [
+      {
+        "row": 3227,
+        "qaPairId": "5115",
+        "qid": "523"
+      }
+    ],
+    "epqa-B004T36GCU-attribute-6d7a86f89599e96a": [
+      {
+        "row": 3228,
+        "qaPairId": "5116",
+        "qid": "523"
+      }
+    ],
+    "epqa-B004T36GCU-bullet-1e7bef76c8a13520": [
+      {
+        "row": 3229,
+        "qaPairId": "5117",
+        "qid": "523"
+      }
+    ],
+    "epqa-B004T36GCU-review-577ee36fb805cd7e": [
+      {
+        "row": 3230,
+        "qaPairId": "5118",
+        "qid": "523"
+      }
+    ],
+    "epqa-B004T36GCU-review-af479697d0c4157d": [
+      {
+        "row": 3231,
+        "qaPairId": "5119",
+        "qid": "523"
+      }
+    ],
+    "epqa-B004T36GCU-cqa-2238a9990f51947d": [
+      {
+        "row": 3232,
+        "qaPairId": "5120",
+        "qid": "524"
+      }
+    ],
+    "epqa-B004T36GCU-cqa-50e992ee2f2ecbcf": [
+      {
+        "row": 3233,
+        "qaPairId": "5121",
+        "qid": "524"
+      }
+    ],
+    "epqa-B004T36GCU-review-bcb89a5b6d117c39": [
+      {
+        "row": 3234,
+        "qaPairId": "5122",
+        "qid": "524"
+      }
+    ],
+    "epqa-B004T36GCU-review-8aa6f9147bdfee78": [
+      {
+        "row": 3235,
+        "qaPairId": "5123",
+        "qid": "524"
+      }
+    ],
+    "epqa-B004T36GCU-cqa-df479ca6073c0c12": [
+      {
+        "row": 3236,
+        "qaPairId": "5124",
+        "qid": "524"
+      }
+    ],
+    "epqa-B004T36GCU-bullet-5312e9a5ffe8d752": [
+      {
+        "row": 3237,
+        "qaPairId": "5125",
+        "qid": "524"
+      }
+    ],
+    "epqa-B004T36GCU-bullet-1dc62c990d6594a7": [
+      {
+        "row": 3238,
+        "qaPairId": "5126",
+        "qid": "524"
+      }
+    ],
+    "epqa-B004T36GCU-attribute-23d9af73ebee0e81": [
+      {
+        "row": 3239,
+        "qaPairId": "5127",
+        "qid": "524"
+      }
+    ],
+    "epqa-B004T36GCU-review-e749c08ff0682e08": [
+      {
+        "row": 3240,
+        "qaPairId": "5128",
+        "qid": "524"
+      }
+    ],
+    "epqa-B004T36GCU-review-ec4c80ddd409488f": [
+      {
+        "row": 3241,
+        "qaPairId": "5129",
+        "qid": "524"
+      }
+    ],
+    "epqa-B004T36GCU-review-62f4b4604625acee": [
+      {
+        "row": 3242,
+        "qaPairId": "5130",
+        "qid": "525"
+      }
+    ],
+    "epqa-B004T36GCU-review-9a838f7ac74e39d9": [
+      {
+        "row": 3243,
+        "qaPairId": "5131",
+        "qid": "525"
+      }
+    ],
+    "epqa-B004T36GCU-review-998679074ff06942": [
+      {
+        "row": 3244,
+        "qaPairId": "5132",
+        "qid": "525"
+      }
+    ],
+    "epqa-B004T36GCU-review-473069f45696ec24": [
+      {
+        "row": 3245,
+        "qaPairId": "5133",
+        "qid": "525"
+      }
+    ],
+    "epqa-B004T36GCU-review-4391ccb9715c23ad": [
+      {
+        "row": 3246,
+        "qaPairId": "5134",
+        "qid": "525"
+      }
+    ],
+    "epqa-B004T36GCU-attribute-d3776a0abd267899": [
+      {
+        "row": 3247,
+        "qaPairId": "5135",
+        "qid": "525"
+      }
+    ],
+    "epqa-B004T36GCU-attribute-9c8cd93383c1c746": [
+      {
+        "row": 3248,
+        "qaPairId": "5136",
+        "qid": "525"
+      }
+    ],
+    "epqa-B004T36GCU-attribute-e0891d1c8b359ca6": [
+      {
+        "row": 3249,
+        "qaPairId": "5137",
+        "qid": "525"
+      }
+    ],
+    "epqa-B004T36GCU-cqa-240f280302d38e1a": [
+      {
+        "row": 3250,
+        "qaPairId": "5138",
+        "qid": "525"
+      }
+    ],
+    "epqa-B004T36GCU-review-53bec1c39e9c28c9": [
+      {
+        "row": 3251,
+        "qaPairId": "5139",
+        "qid": "525"
+      }
+    ],
+    "epqa-B003U6A3C6-review-613c66bac6c89a08": [
+      {
+        "row": 9532,
+        "qaPairId": "14720",
+        "qid": "1503"
+      }
+    ],
+    "epqa-B003U6A3C6-review-cb1d0be821caf316": [
+      {
+        "row": 9533,
+        "qaPairId": "14721",
+        "qid": "1503"
+      }
+    ],
+    "epqa-B003U6A3C6-review-ee3abf2d8632bad2": [
+      {
+        "row": 9534,
+        "qaPairId": "14722",
+        "qid": "1503"
+      }
+    ],
+    "epqa-B003U6A3C6-review-2c4af4f21fadbc12": [
+      {
+        "row": 9535,
+        "qaPairId": "14723",
+        "qid": "1503"
+      }
+    ],
+    "epqa-B003U6A3C6-review-9414e3ad78e564ee": [
+      {
+        "row": 9536,
+        "qaPairId": "14724",
+        "qid": "1503"
+      }
+    ],
+    "epqa-B003U6A3C6-attribute-da0c781a73f60ba7": [
+      {
+        "row": 9537,
+        "qaPairId": "14725",
+        "qid": "1503"
+      }
+    ],
+    "epqa-B003U6A3C6-bullet-97112ca1680fc832": [
+      {
+        "row": 9538,
+        "qaPairId": "14726",
+        "qid": "1503"
+      }
+    ],
+    "epqa-B003U6A3C6-attribute-2b37015cd7c0076b": [
+      {
+        "row": 9539,
+        "qaPairId": "14727",
+        "qid": "1503"
+      }
+    ],
+    "epqa-B003U6A3C6-review-b3bc3decb43bb938": [
+      {
+        "row": 9540,
+        "qaPairId": "14728",
+        "qid": "1503"
+      }
+    ],
+    "epqa-B003U6A3C6-review-5d13e5645658585c": [
+      {
+        "row": 9541,
+        "qaPairId": "14729",
+        "qid": "1503"
+      }
+    ],
+    "epqa-B003U1Q47E-review-5179c46e1bcebfe5": [
+      {
+        "row": 22102,
+        "qaPairId": "33940",
+        "qid": "3464"
+      }
+    ],
+    "epqa-B003U1Q47E-review-c325e76a033e152e": [
+      {
+        "row": 22103,
+        "qaPairId": "33941",
+        "qid": "3464"
+      }
+    ],
+    "epqa-B003U1Q47E-cqa-57cb34ee8a0c4a7a": [
+      {
+        "row": 22104,
+        "qaPairId": "33942",
+        "qid": "3464"
+      }
+    ],
+    "epqa-B003U1Q47E-review-4fa3125bcc7dc806": [
+      {
+        "row": 22105,
+        "qaPairId": "33943",
+        "qid": "3464"
+      }
+    ],
+    "epqa-B003U1Q47E-review-9e3f4b135ff449e9": [
+      {
+        "row": 22106,
+        "qaPairId": "33944",
+        "qid": "3464"
+      }
+    ],
+    "epqa-B003U1Q47E-attribute-5d4b3bfcdac05315": [
+      {
+        "row": 22107,
+        "qaPairId": "33945",
+        "qid": "3464"
+      },
+      {
+        "row": 22117,
+        "qaPairId": "33955",
+        "qid": "3465"
+      }
+    ],
+    "epqa-B003U1Q47E-description-543bed16641ea645": [
+      {
+        "row": 22108,
+        "qaPairId": "33946",
+        "qid": "3464"
+      }
+    ],
+    "epqa-B003U1Q47E-attribute-4652c11a8b99b0a9": [
+      {
+        "row": 22109,
+        "qaPairId": "33947",
+        "qid": "3464"
+      }
+    ],
+    "epqa-B003U1Q47E-review-bf2ed01987eb76b8": [
+      {
+        "row": 22110,
+        "qaPairId": "33948",
+        "qid": "3464"
+      }
+    ],
+    "epqa-B003U1Q47E-cqa-6e4382dfae07e4ba": [
+      {
+        "row": 22111,
+        "qaPairId": "33949",
+        "qid": "3464"
+      }
+    ],
+    "epqa-B003U1Q47E-review-886f405fdc37649b": [
+      {
+        "row": 22112,
+        "qaPairId": "33950",
+        "qid": "3465"
+      }
+    ],
+    "epqa-B003U1Q47E-cqa-c20945c65a7f7989": [
+      {
+        "row": 22113,
+        "qaPairId": "33951",
+        "qid": "3465"
+      }
+    ],
+    "epqa-B003U1Q47E-review-b3119ee61e01112a": [
+      {
+        "row": 22114,
+        "qaPairId": "33952",
+        "qid": "3465"
+      }
+    ],
+    "epqa-B003U1Q47E-review-83750b559daf9afd": [
+      {
+        "row": 22115,
+        "qaPairId": "33953",
+        "qid": "3465"
+      }
+    ],
+    "epqa-B003U1Q47E-review-7f8b391967f82573": [
+      {
+        "row": 22116,
+        "qaPairId": "33954",
+        "qid": "3465"
+      }
+    ],
+    "epqa-B003U1Q47E-attribute-3936986368811e4a": [
+      {
+        "row": 22118,
+        "qaPairId": "33956",
+        "qid": "3465"
+      }
+    ],
+    "epqa-B003U1Q47E-attribute-2f66c07b65bdce0b": [
+      {
+        "row": 22119,
+        "qaPairId": "33957",
+        "qid": "3465"
+      }
+    ],
+    "epqa-B003U1Q47E-review-86664fc75a96c030": [
+      {
+        "row": 22120,
+        "qaPairId": "33958",
+        "qid": "3465"
+      }
+    ],
+    "epqa-B003U1Q47E-review-7fc04cc23cad7842": [
+      {
+        "row": 22121,
+        "qaPairId": "33959",
+        "qid": "3465"
+      }
+    ],
+    "epqa-B0014LP19E-review-f53bf688478fee22": [
+      {
+        "row": 23752,
+        "qaPairId": "36580",
+        "qid": "3734"
+      }
+    ],
+    "epqa-B0014LP19E-description-b906cebc8c58873c": [
+      {
+        "row": 23753,
+        "qaPairId": "36581",
+        "qid": "3734"
+      }
+    ],
+    "epqa-B0014LP19E-description-45ab697b19b71c85": [
+      {
+        "row": 23754,
+        "qaPairId": "36582",
+        "qid": "3734"
+      },
+      {
+        "row": 23762,
+        "qaPairId": "36590",
+        "qid": "3735"
+      }
+    ],
+    "epqa-B0014LP19E-attribute-eb5ad109a0009b33": [
+      {
+        "row": 23755,
+        "qaPairId": "36583",
+        "qid": "3734"
+      },
+      {
+        "row": 23764,
+        "qaPairId": "36592",
+        "qid": "3735"
+      }
+    ],
+    "epqa-B0014LP19E-review-cc021af1fdb3006c": [
+      {
+        "row": 23756,
+        "qaPairId": "36584",
+        "qid": "3734"
+      }
+    ],
+    "epqa-B0014LP19E-description-71d7ec8a43d52ff9": [
+      {
+        "row": 23757,
+        "qaPairId": "36585",
+        "qid": "3734"
+      },
+      {
+        "row": 23768,
+        "qaPairId": "36596",
+        "qid": "3735"
+      }
+    ],
+    "epqa-B0014LP19E-attribute-8d70ec43d861c615": [
+      {
+        "row": 23758,
+        "qaPairId": "36586",
+        "qid": "3734"
+      },
+      {
+        "row": 23763,
+        "qaPairId": "36591",
+        "qid": "3735"
+      }
+    ],
+    "epqa-B0014LP19E-description-9947de9fb818ab26": [
+      {
+        "row": 23759,
+        "qaPairId": "36587",
+        "qid": "3734"
+      }
+    ],
+    "epqa-B0014LP19E-review-8447378f8e024abb": [
+      {
+        "row": 23760,
+        "qaPairId": "36588",
+        "qid": "3734"
+      }
+    ],
+    "epqa-B0014LP19E-review-1447c8dcf7d8bda4": [
+      {
+        "row": 23761,
+        "qaPairId": "36589",
+        "qid": "3734"
+      }
+    ],
+    "epqa-B0014LP19E-review-49d2a03debb2cf2f": [
+      {
+        "row": 23765,
+        "qaPairId": "36593",
+        "qid": "3735"
+      }
+    ],
+    "epqa-B0014LP19E-review-b46dec5a71d5d06c": [
+      {
+        "row": 23766,
+        "qaPairId": "36594",
+        "qid": "3735"
+      }
+    ],
+    "epqa-B0014LP19E-attribute-3df7f1d863974268": [
+      {
+        "row": 23767,
+        "qaPairId": "36595",
+        "qid": "3735"
+      }
+    ],
+    "epqa-B0014LP19E-attribute-764ca3e483c35903": [
+      {
+        "row": 23769,
+        "qaPairId": "36597",
+        "qid": "3735"
+      }
+    ],
+    "epqa-B0014LP19E-review-df27a0c4eb74e03b": [
+      {
+        "row": 23770,
+        "qaPairId": "36598",
+        "qid": "3735"
+      }
+    ],
+    "epqa-B0014LP19E-review-eb6efcffad4b3b70": [
+      {
+        "row": 23771,
+        "qaPairId": "36599",
+        "qid": "3735"
+      }
+    ],
+    "epqa-B000063082-description-5c473303092a6975": [
+      {
+        "row": 31612,
+        "qaPairId": "48450",
+        "qid": "4952"
+      }
+    ],
+    "epqa-B000063082-attribute-f583a10a3eea7e34": [
+      {
+        "row": 31613,
+        "qaPairId": "48451",
+        "qid": "4952"
+      },
+      {
+        "row": 31624,
+        "qaPairId": "48462",
+        "qid": "4953"
+      }
+    ],
+    "epqa-B000063082-cqa-aabeca5007bd0693": [
+      {
+        "row": 31614,
+        "qaPairId": "48452",
+        "qid": "4952"
+      }
+    ],
+    "epqa-B000063082-bullet-e85f13bcb7058d24": [
+      {
+        "row": 31615,
+        "qaPairId": "48453",
+        "qid": "4952"
+      },
+      {
+        "row": 31637,
+        "qaPairId": "48475",
+        "qid": "4954"
+      }
+    ],
+    "epqa-B000063082-attribute-9b76ef29f3488dee": [
+      {
+        "row": 31616,
+        "qaPairId": "48454",
+        "qid": "4952"
+      },
+      {
+        "row": 31622,
+        "qaPairId": "48460",
+        "qid": "4953"
+      }
+    ],
+    "epqa-B000063082-description-d9171ed92e42098a": [
+      {
+        "row": 31617,
+        "qaPairId": "48455",
+        "qid": "4952"
+      }
+    ],
+    "epqa-B000063082-description-873f4f85e5a63604": [
+      {
+        "row": 31618,
+        "qaPairId": "48456",
+        "qid": "4952"
+      },
+      {
+        "row": 31639,
+        "qaPairId": "48477",
+        "qid": "4954"
+      }
+    ],
+    "epqa-B000063082-attribute-2b59224fbe6aaa57": [
+      {
+        "row": 31619,
+        "qaPairId": "48457",
+        "qid": "4952"
+      }
+    ],
+    "epqa-B000063082-review-8b1ab9b09e8ecc49": [
+      {
+        "row": 31620,
+        "qaPairId": "48458",
+        "qid": "4952"
+      }
+    ],
+    "epqa-B000063082-review-00ab81de20ee9106": [
+      {
+        "row": 31621,
+        "qaPairId": "48459",
+        "qid": "4952"
+      }
+    ],
+    "epqa-B000063082-review-1050400a89b0641e": [
+      {
+        "row": 31623,
+        "qaPairId": "48461",
+        "qid": "4953"
+      }
+    ],
+    "epqa-B000063082-attribute-789f45d8df90a24a": [
+      {
+        "row": 31625,
+        "qaPairId": "48463",
+        "qid": "4953"
+      }
+    ],
+    "epqa-B000063082-review-6c6f797380562aef": [
+      {
+        "row": 31626,
+        "qaPairId": "48464",
+        "qid": "4953"
+      }
+    ],
+    "epqa-B000063082-attribute-95b63e3e9dd5c120": [
+      {
+        "row": 31627,
+        "qaPairId": "48465",
+        "qid": "4953"
+      }
+    ],
+    "epqa-B000063082-description-20a2ff64ce7acdbc": [
+      {
+        "row": 31628,
+        "qaPairId": "48466",
+        "qid": "4953"
+      }
+    ],
+    "epqa-B000063082-bullet-29493329ba4c3c83": [
+      {
+        "row": 31629,
+        "qaPairId": "48467",
+        "qid": "4953"
+      }
+    ],
+    "epqa-B000063082-review-3a93805712d34c2d": [
+      {
+        "row": 31630,
+        "qaPairId": "48468",
+        "qid": "4953"
+      }
+    ],
+    "epqa-B000063082-review-81db87563ab6eb16": [
+      {
+        "row": 31631,
+        "qaPairId": "48469",
+        "qid": "4953"
+      }
+    ],
+    "epqa-B000063082-review-67bbe02904344a5c": [
+      {
+        "row": 31632,
+        "qaPairId": "48470",
+        "qid": "4954"
+      }
+    ],
+    "epqa-B000063082-review-8905594365173487": [
+      {
+        "row": 31633,
+        "qaPairId": "48471",
+        "qid": "4954"
+      }
+    ],
+    "epqa-B000063082-review-0fe9afd87c369f35": [
+      {
+        "row": 31634,
+        "qaPairId": "48472",
+        "qid": "4954"
+      }
+    ],
+    "epqa-B000063082-bullet-000158d245cf45f1": [
+      {
+        "row": 31635,
+        "qaPairId": "48473",
+        "qid": "4954"
+      }
+    ],
+    "epqa-B000063082-bullet-479f4d427122c8fd": [
+      {
+        "row": 31636,
+        "qaPairId": "48474",
+        "qid": "4954"
+      }
+    ],
+    "epqa-B000063082-attribute-2b7871490a893481": [
+      {
+        "row": 31638,
+        "qaPairId": "48476",
+        "qid": "4954"
+      }
+    ],
+    "epqa-B000063082-review-c5f1ded9386db447": [
+      {
+        "row": 31640,
+        "qaPairId": "48478",
+        "qid": "4954"
+      }
+    ],
+    "epqa-B000063082-review-660720fcacf992d3": [
+      {
+        "row": 31641,
+        "qaPairId": "48479",
+        "qid": "4954"
+      }
+    ],
+    "epqa-B009W9APU0-attribute-835026bfd098371c": [
+      {
+        "row": 54372,
+        "qaPairId": "82530",
+        "qid": "8427"
+      },
+      {
+        "row": 54389,
+        "qaPairId": "82547",
+        "qid": "8428"
+      }
+    ],
+    "epqa-B009W9APU0-cqa-5573dc8b7d4b9edc": [
+      {
+        "row": 54373,
+        "qaPairId": "82531",
+        "qid": "8427"
+      }
+    ],
+    "epqa-B009W9APU0-review-186ef468c3064046": [
+      {
+        "row": 54374,
+        "qaPairId": "82532",
+        "qid": "8427"
+      }
+    ],
+    "epqa-B009W9APU0-cqa-8f404df55ab95014": [
+      {
+        "row": 54375,
+        "qaPairId": "82533",
+        "qid": "8427"
+      }
+    ],
+    "epqa-B009W9APU0-review-52efebcebec95a94": [
+      {
+        "row": 54376,
+        "qaPairId": "82534",
+        "qid": "8427"
+      }
+    ],
+    "epqa-B009W9APU0-attribute-f1a76b569fc6e21b": [
+      {
+        "row": 54377,
+        "qaPairId": "82535",
+        "qid": "8427"
+      }
+    ],
+    "epqa-B009W9APU0-attribute-12b112ad42954403": [
+      {
+        "row": 54378,
+        "qaPairId": "82536",
+        "qid": "8427"
+      }
+    ],
+    "epqa-B009W9APU0-attribute-20d15a0ada9c3b7e": [
+      {
+        "row": 54379,
+        "qaPairId": "82537",
+        "qid": "8427"
+      }
+    ],
+    "epqa-B009W9APU0-review-42ae42bea7004557": [
+      {
+        "row": 54380,
+        "qaPairId": "82538",
+        "qid": "8427"
+      }
+    ],
+    "epqa-B009W9APU0-review-e60b861922901570": [
+      {
+        "row": 54381,
+        "qaPairId": "82539",
+        "qid": "8427"
+      }
+    ],
+    "epqa-B009W9APU0-review-919d396a8c34170a": [
+      {
+        "row": 54382,
+        "qaPairId": "82540",
+        "qid": "8428"
+      }
+    ],
+    "epqa-B009W9APU0-review-b423f4098f6d1d78": [
+      {
+        "row": 54383,
+        "qaPairId": "82541",
+        "qid": "8428"
+      }
+    ],
+    "epqa-B009W9APU0-attribute-113e218f3ce722fa": [
+      {
+        "row": 54384,
+        "qaPairId": "82542",
+        "qid": "8428"
+      }
+    ],
+    "epqa-B009W9APU0-review-7de5803e0bf4a12e": [
+      {
+        "row": 54385,
+        "qaPairId": "82543",
+        "qid": "8428"
+      }
+    ],
+    "epqa-B009W9APU0-review-5b234dfb47209014": [
+      {
+        "row": 54386,
+        "qaPairId": "82544",
+        "qid": "8428"
+      }
+    ],
+    "epqa-B009W9APU0-attribute-4bd6b29a2cd6aeee": [
+      {
+        "row": 54387,
+        "qaPairId": "82545",
+        "qid": "8428"
+      }
+    ],
+    "epqa-B009W9APU0-attribute-73c7c47fe4b20888": [
+      {
+        "row": 54388,
+        "qaPairId": "82546",
+        "qid": "8428"
+      }
+    ],
+    "epqa-B009W9APU0-review-b35c6599ea608eb0": [
+      {
+        "row": 54390,
+        "qaPairId": "82548",
+        "qid": "8428"
+      }
+    ],
+    "epqa-B009W9APU0-review-7475c371804eeff4": [
+      {
+        "row": 54391,
+        "qaPairId": "82549",
+        "qid": "8428"
+      }
+    ],
+    "epqa-B009W9APU0-cqa-dd37c5bb352fba3b": [
+      {
+        "row": 54392,
+        "qaPairId": "82550",
+        "qid": "8429"
+      }
+    ],
+    "epqa-B009W9APU0-review-5b91206e8b2e58c1": [
+      {
+        "row": 54393,
+        "qaPairId": "82551",
+        "qid": "8429"
+      }
+    ],
+    "epqa-B009W9APU0-cqa-6723f46f7202a1fc": [
+      {
+        "row": 54394,
+        "qaPairId": "82552",
+        "qid": "8429"
+      }
+    ],
+    "epqa-B009W9APU0-cqa-58f4473e0eaeef10": [
+      {
+        "row": 54395,
+        "qaPairId": "82553",
+        "qid": "8429"
+      }
+    ],
+    "epqa-B009W9APU0-review-9dbaa738680b4f84": [
+      {
+        "row": 54396,
+        "qaPairId": "82554",
+        "qid": "8429"
+      }
+    ],
+    "epqa-B009W9APU0-attribute-e92cc5cb77dc0c62": [
+      {
+        "row": 54397,
+        "qaPairId": "82555",
+        "qid": "8429"
+      }
+    ],
+    "epqa-B009W9APU0-attribute-6c83f3f0f68b0158": [
+      {
+        "row": 54398,
+        "qaPairId": "82556",
+        "qid": "8429"
+      }
+    ],
+    "epqa-B009W9APU0-bullet-f90ed68ebbd403bc": [
+      {
+        "row": 54399,
+        "qaPairId": "82557",
+        "qid": "8429"
+      }
+    ],
+    "epqa-B009W9APU0-review-9a87621b2743aec9": [
+      {
+        "row": 54400,
+        "qaPairId": "82558",
+        "qid": "8429"
+      }
+    ],
+    "epqa-B009W9APU0-review-55ff35bb5f12187d": [
+      {
+        "row": 54401,
+        "qaPairId": "82559",
+        "qid": "8429"
+      }
+    ],
+    "epqa-B000233WJ6-review-460b51dab0828a94": [
+      {
+        "row": 54812,
+        "qaPairId": "83350",
+        "qid": "8512"
+      }
+    ],
+    "epqa-B000233WJ6-review-c427ae2ef03a27cd": [
+      {
+        "row": 54813,
+        "qaPairId": "83351",
+        "qid": "8512"
+      }
+    ],
+    "epqa-B000233WJ6-review-41ac279f45ab6b01": [
+      {
+        "row": 54814,
+        "qaPairId": "83352",
+        "qid": "8512"
+      }
+    ],
+    "epqa-B000233WJ6-review-87a6e1c026c52d59": [
+      {
+        "row": 54815,
+        "qaPairId": "83353",
+        "qid": "8512"
+      }
+    ],
+    "epqa-B000233WJ6-description-84a48f365c206504": [
+      {
+        "row": 54816,
+        "qaPairId": "83354",
+        "qid": "8512"
+      }
+    ],
+    "epqa-B000233WJ6-attribute-4eeee709ab6406b6": [
+      {
+        "row": 54817,
+        "qaPairId": "83355",
+        "qid": "8512"
+      }
+    ],
+    "epqa-B000233WJ6-attribute-80e16b1e454384ee": [
+      {
+        "row": 54818,
+        "qaPairId": "83356",
+        "qid": "8512"
+      }
+    ],
+    "epqa-B000233WJ6-review-2998568713109d27": [
+      {
+        "row": 54819,
+        "qaPairId": "83357",
+        "qid": "8512"
+      }
+    ],
+    "epqa-B000233WJ6-review-d3930141935776a2": [
+      {
+        "row": 54820,
+        "qaPairId": "83358",
+        "qid": "8512"
+      }
+    ],
+    "epqa-B000233WJ6-review-48532080bc664e6b": [
+      {
+        "row": 54821,
+        "qaPairId": "83359",
+        "qid": "8512"
+      }
+    ],
+    "epqa-B000233WJ6-cqa-5da122b358afc3f7": [
+      {
+        "row": 54822,
+        "qaPairId": "83370",
+        "qid": "8514"
+      }
+    ],
+    "epqa-B000233WJ6-review-c87234a5039e2b67": [
+      {
+        "row": 54823,
+        "qaPairId": "83371",
+        "qid": "8514"
+      }
+    ],
+    "epqa-B000233WJ6-attribute-1de2c64d6e98ea2b": [
+      {
+        "row": 54824,
+        "qaPairId": "83372",
+        "qid": "8514"
+      }
+    ],
+    "epqa-B000233WJ6-review-6a26c067c5ba1412": [
+      {
+        "row": 54825,
+        "qaPairId": "83373",
+        "qid": "8514"
+      }
+    ],
+    "epqa-B000233WJ6-review-a6ee26f23a894536": [
+      {
+        "row": 54826,
+        "qaPairId": "83374",
+        "qid": "8514"
+      }
+    ],
+    "epqa-B000233WJ6-attribute-91f90f8d90096d2e": [
+      {
+        "row": 54827,
+        "qaPairId": "83375",
+        "qid": "8514"
+      }
+    ],
+    "epqa-B000233WJ6-attribute-5efe05ad2e10c8f9": [
+      {
+        "row": 54828,
+        "qaPairId": "83376",
+        "qid": "8514"
+      }
+    ],
+    "epqa-B000233WJ6-attribute-8d70ec43d861c615": [
+      {
+        "row": 54829,
+        "qaPairId": "83377",
+        "qid": "8514"
+      }
+    ],
+    "epqa-B000233WJ6-review-4bb882deebf7c7c0": [
+      {
+        "row": 54830,
+        "qaPairId": "83378",
+        "qid": "8514"
+      }
+    ],
+    "epqa-B000233WJ6-review-e6adc4092d634817": [
+      {
+        "row": 54831,
+        "qaPairId": "83379",
+        "qid": "8514"
+      }
+    ],
+    "epqa-B000ET9SB4-attribute-f5a05e52fdfb5302": [
+      {
+        "row": 59202,
+        "qaPairId": "88670",
+        "qid": "9044"
+      }
+    ],
+    "epqa-B000ET9SB4-description-4cf1f128bab63aa6": [
+      {
+        "row": 59203,
+        "qaPairId": "88671",
+        "qid": "9044"
+      }
+    ],
+    "epqa-B000ET9SB4-review-0105fb637932373e": [
+      {
+        "row": 59204,
+        "qaPairId": "88672",
+        "qid": "9044"
+      }
+    ],
+    "epqa-B000ET9SB4-bullet-9074412a2ece1a46": [
+      {
+        "row": 59205,
+        "qaPairId": "88673",
+        "qid": "9044"
+      }
+    ],
+    "epqa-B000ET9SB4-review-c71afe3c7ba6e147": [
+      {
+        "row": 59206,
+        "qaPairId": "88674",
+        "qid": "9044"
+      }
+    ],
+    "epqa-B000ET9SB4-description-6847d6daafb7d75f": [
+      {
+        "row": 59207,
+        "qaPairId": "88675",
+        "qid": "9044"
+      }
+    ],
+    "epqa-B000ET9SB4-description-f0f8daf0c7ff33da": [
+      {
+        "row": 59208,
+        "qaPairId": "88676",
+        "qid": "9044"
+      }
+    ],
+    "epqa-B000ET9SB4-description-f0e75a9a02e7e7c7": [
+      {
+        "row": 59209,
+        "qaPairId": "88677",
+        "qid": "9044"
+      }
+    ],
+    "epqa-B000ET9SB4-review-d8fca82165111052": [
+      {
+        "row": 59210,
+        "qaPairId": "88678",
+        "qid": "9044"
+      }
+    ],
+    "epqa-B000ET9SB4-review-40cb1a8b13455e19": [
+      {
+        "row": 59211,
+        "qaPairId": "88679",
+        "qid": "9044"
+      }
+    ],
+    "epqa-B000ET9SB4-attribute-81d710d49b654903": [
+      {
+        "row": 59212,
+        "qaPairId": "88680",
+        "qid": "9046"
+      }
+    ],
+    "epqa-B000ET9SB4-review-baabdab765de49c1": [
+      {
+        "row": 59213,
+        "qaPairId": "88681",
+        "qid": "9046"
+      }
+    ],
+    "epqa-B000ET9SB4-description-52b12131e1205961": [
+      {
+        "row": 59214,
+        "qaPairId": "88682",
+        "qid": "9046"
+      }
+    ],
+    "epqa-B000ET9SB4-attribute-2da9b71b5aa8f607": [
+      {
+        "row": 59215,
+        "qaPairId": "88683",
+        "qid": "9046"
+      }
+    ],
+    "epqa-B000ET9SB4-review-8bb28786cd949c3e": [
+      {
+        "row": 59216,
+        "qaPairId": "88684",
+        "qid": "9046"
+      }
+    ],
+    "epqa-B000ET9SB4-description-3256550e771e9db9": [
+      {
+        "row": 59217,
+        "qaPairId": "88685",
+        "qid": "9046"
+      }
+    ],
+    "epqa-B000ET9SB4-attribute-cdc0a7504d112929": [
+      {
+        "row": 59218,
+        "qaPairId": "88686",
+        "qid": "9046"
+      }
+    ],
+    "epqa-B000ET9SB4-description-636f5fac06446603": [
+      {
+        "row": 59219,
+        "qaPairId": "88687",
+        "qid": "9046"
+      }
+    ],
+    "epqa-B000ET9SB4-review-75481154f656e178": [
+      {
+        "row": 59220,
+        "qaPairId": "88688",
+        "qid": "9046"
+      }
+    ],
+    "epqa-B000ET9SB4-review-3fd4aa6abfba8e66": [
+      {
+        "row": 59221,
+        "qaPairId": "88689",
+        "qid": "9046"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-77ee9131d7e10398": [
+      {
+        "row": 63192,
+        "qaPairId": "92660",
+        "qid": "9453"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-3c5a273a1497724c": [
+      {
+        "row": 63193,
+        "qaPairId": "92661",
+        "qid": "9453"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-023ae0d00482ea02": [
+      {
+        "row": 63194,
+        "qaPairId": "92662",
+        "qid": "9453"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-2686a6ee3dda72b5": [
+      {
+        "row": 63195,
+        "qaPairId": "92663",
+        "qid": "9453"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-f4831bbf968fa45e": [
+      {
+        "row": 63196,
+        "qaPairId": "92664",
+        "qid": "9453"
+      }
+    ],
+    "epqa-B009LRNT1A-attribute-ebc953b9b193e865": [
+      {
+        "row": 63197,
+        "qaPairId": "92665",
+        "qid": "9453"
+      }
+    ],
+    "epqa-B009LRNT1A-attribute-6704dc8d38b73755": [
+      {
+        "row": 63198,
+        "qaPairId": "92666",
+        "qid": "9453"
+      }
+    ],
+    "epqa-B009LRNT1A-attribute-9d6ee5169043d075": [
+      {
+        "row": 63199,
+        "qaPairId": "92667",
+        "qid": "9453"
+      }
+    ],
+    "epqa-B009LRNT1A-review-7d16a819f6474a79": [
+      {
+        "row": 63200,
+        "qaPairId": "92668",
+        "qid": "9453"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-929f6ad7dcaaecc0": [
+      {
+        "row": 63201,
+        "qaPairId": "92669",
+        "qid": "9453"
+      }
+    ],
+    "epqa-B009LRNT1A-review-8800ec3a4b0683da": [
+      {
+        "row": 63202,
+        "qaPairId": "92670",
+        "qid": "9454"
+      }
+    ],
+    "epqa-B009LRNT1A-review-3a4843cfa7e25c1d": [
+      {
+        "row": 63203,
+        "qaPairId": "92671",
+        "qid": "9454"
+      }
+    ],
+    "epqa-B009LRNT1A-review-b09d5e271c0fa24a": [
+      {
+        "row": 63204,
+        "qaPairId": "92672",
+        "qid": "9454"
+      }
+    ],
+    "epqa-B009LRNT1A-review-74616b7eec3f4b12": [
+      {
+        "row": 63205,
+        "qaPairId": "92673",
+        "qid": "9454"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-76fcbeeddfc4e101": [
+      {
+        "row": 63206,
+        "qaPairId": "92674",
+        "qid": "9454"
+      }
+    ],
+    "epqa-B009LRNT1A-attribute-4eeee709ab6406b6": [
+      {
+        "row": 63207,
+        "qaPairId": "92675",
+        "qid": "9454"
+      }
+    ],
+    "epqa-B009LRNT1A-attribute-f1fda57c6a0830c4": [
+      {
+        "row": 63208,
+        "qaPairId": "92676",
+        "qid": "9454"
+      }
+    ],
+    "epqa-B009LRNT1A-attribute-2138ab3b36de82fc": [
+      {
+        "row": 63209,
+        "qaPairId": "92677",
+        "qid": "9454"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-09b815dbebf8e0c8": [
+      {
+        "row": 63210,
+        "qaPairId": "92678",
+        "qid": "9454"
+      }
+    ],
+    "epqa-B009LRNT1A-review-1764f3c2c1743beb": [
+      {
+        "row": 63211,
+        "qaPairId": "92679",
+        "qid": "9454"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-d54178a15b731d31": [
+      {
+        "row": 63212,
+        "qaPairId": "92680",
+        "qid": "9455"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-44aa75ea57eaba1f": [
+      {
+        "row": 63213,
+        "qaPairId": "92681",
+        "qid": "9455"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-10ae5f7445cab612": [
+      {
+        "row": 63214,
+        "qaPairId": "92682",
+        "qid": "9455"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-4015c46a48689a5f": [
+      {
+        "row": 63215,
+        "qaPairId": "92683",
+        "qid": "9455"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-344921fcf9c00d13": [
+      {
+        "row": 63216,
+        "qaPairId": "92684",
+        "qid": "9455"
+      }
+    ],
+    "epqa-B009LRNT1A-attribute-a75fbbcf24e50993": [
+      {
+        "row": 63217,
+        "qaPairId": "92685",
+        "qid": "9455"
+      }
+    ],
+    "epqa-B009LRNT1A-attribute-d5e9daea7a55fcad": [
+      {
+        "row": 63218,
+        "qaPairId": "92686",
+        "qid": "9455"
+      }
+    ],
+    "epqa-B009LRNT1A-attribute-cab0a009d032c1a7": [
+      {
+        "row": 63219,
+        "qaPairId": "92687",
+        "qid": "9455"
+      }
+    ],
+    "epqa-B009LRNT1A-review-97ecb0cb701bde13": [
+      {
+        "row": 63220,
+        "qaPairId": "92688",
+        "qid": "9455"
+      }
+    ],
+    "epqa-B009LRNT1A-cqa-cfc02f2c2fbf9347": [
+      {
+        "row": 63221,
+        "qaPairId": "92689",
+        "qid": "9455"
+      }
+    ],
+    "epqa-B000PD0HQE-cqa-b31d0b70e0df11ec": [
+      {
+        "row": 66432,
+        "qaPairId": "95900",
+        "qid": "9787"
+      }
+    ],
+    "epqa-B000PD0HQE-cqa-6bc916fd9200c025": [
+      {
+        "row": 66433,
+        "qaPairId": "95901",
+        "qid": "9787"
+      }
+    ],
+    "epqa-B000PD0HQE-review-07d1509582ae628d": [
+      {
+        "row": 66434,
+        "qaPairId": "95902",
+        "qid": "9787"
+      },
+      {
+        "row": 66450,
+        "qaPairId": "95918",
+        "qid": "9788"
+      }
+    ],
+    "epqa-B000PD0HQE-cqa-7c9177472c6e12b0": [
+      {
+        "row": 66435,
+        "qaPairId": "95903",
+        "qid": "9787"
+      }
+    ],
+    "epqa-B000PD0HQE-review-caaaa0967bc35b33": [
+      {
+        "row": 66436,
+        "qaPairId": "95904",
+        "qid": "9787"
+      }
+    ],
+    "epqa-B000PD0HQE-attribute-a66f17da89f99d80": [
+      {
+        "row": 66437,
+        "qaPairId": "95905",
+        "qid": "9787"
+      }
+    ],
+    "epqa-B000PD0HQE-attribute-f7cc088891788d5d": [
+      {
+        "row": 66438,
+        "qaPairId": "95906",
+        "qid": "9787"
+      }
+    ],
+    "epqa-B000PD0HQE-description-610d87b1e63bb38e": [
+      {
+        "row": 66439,
+        "qaPairId": "95907",
+        "qid": "9787"
+      }
+    ],
+    "epqa-B000PD0HQE-review-21d29e9c5e3edd92": [
+      {
+        "row": 66440,
+        "qaPairId": "95908",
+        "qid": "9787"
+      }
+    ],
+    "epqa-B000PD0HQE-review-7b9731918aef4b4e": [
+      {
+        "row": 66441,
+        "qaPairId": "95909",
+        "qid": "9787"
+      }
+    ],
+    "epqa-B000PD0HQE-cqa-77e721bb7d8474cf": [
+      {
+        "row": 66442,
+        "qaPairId": "95910",
+        "qid": "9788"
+      }
+    ],
+    "epqa-B000PD0HQE-cqa-13dabb2631fcd587": [
+      {
+        "row": 66443,
+        "qaPairId": "95911",
+        "qid": "9788"
+      }
+    ],
+    "epqa-B000PD0HQE-cqa-64dc3d0d8dcf2e4c": [
+      {
+        "row": 66444,
+        "qaPairId": "95912",
+        "qid": "9788"
+      }
+    ],
+    "epqa-B000PD0HQE-review-a66636af06f725b9": [
+      {
+        "row": 66445,
+        "qaPairId": "95913",
+        "qid": "9788"
+      }
+    ],
+    "epqa-B000PD0HQE-cqa-8df9a4de85f5486f": [
+      {
+        "row": 66446,
+        "qaPairId": "95914",
+        "qid": "9788"
+      }
+    ],
+    "epqa-B000PD0HQE-attribute-c86ad1dad6d1a036": [
+      {
+        "row": 66447,
+        "qaPairId": "95915",
+        "qid": "9788"
+      }
+    ],
+    "epqa-B000PD0HQE-attribute-3ba12f9bf27fe364": [
+      {
+        "row": 66448,
+        "qaPairId": "95916",
+        "qid": "9788"
+      }
+    ],
+    "epqa-B000PD0HQE-attribute-f324abf7cfb12d30": [
+      {
+        "row": 66449,
+        "qaPairId": "95917",
+        "qid": "9788"
+      }
+    ],
+    "epqa-B000PD0HQE-review-fb9ca58f48a4b654": [
+      {
+        "row": 66451,
+        "qaPairId": "95919",
+        "qid": "9788"
+      }
+    ],
+    "epqa-B000PD0HQE-cqa-2399cb9c245951e7": [
+      {
+        "row": 66452,
+        "qaPairId": "95920",
+        "qid": "9789"
+      }
+    ],
+    "epqa-B000PD0HQE-review-b4df8b24f39e2ae8": [
+      {
+        "row": 66453,
+        "qaPairId": "95921",
+        "qid": "9789"
+      }
+    ],
+    "epqa-B000PD0HQE-review-0b5c81ee9aa7ee4c": [
+      {
+        "row": 66454,
+        "qaPairId": "95922",
+        "qid": "9789"
+      }
+    ],
+    "epqa-B000PD0HQE-review-ed080df735412c5b": [
+      {
+        "row": 66455,
+        "qaPairId": "95923",
+        "qid": "9789"
+      }
+    ],
+    "epqa-B000PD0HQE-cqa-d0af0896c0a89f3a": [
+      {
+        "row": 66456,
+        "qaPairId": "95924",
+        "qid": "9789"
+      }
+    ],
+    "epqa-B000PD0HQE-attribute-6ac88205bab4f6d2": [
+      {
+        "row": 66457,
+        "qaPairId": "95925",
+        "qid": "9789"
+      }
+    ],
+    "epqa-B000PD0HQE-attribute-f48b6d906e94840d": [
+      {
+        "row": 66458,
+        "qaPairId": "95926",
+        "qid": "9789"
+      }
+    ],
+    "epqa-B000PD0HQE-attribute-b2a2546b668cf65f": [
+      {
+        "row": 66459,
+        "qaPairId": "95927",
+        "qid": "9789"
+      }
+    ],
+    "epqa-B000PD0HQE-review-eac6ce87bc205c40": [
+      {
+        "row": 66460,
+        "qaPairId": "95928",
+        "qid": "9789"
+      }
+    ],
+    "epqa-B000PD0HQE-review-69acf39758c2b5a7": [
+      {
+        "row": 66461,
+        "qaPairId": "95929",
+        "qid": "9789"
+      }
+    ],
+    "epqa-B0054HSVGE-description-8c841b4d2a3da332": [
+      {
+        "row": 68682,
+        "qaPairId": "98150",
+        "qid": "10013"
+      }
+    ],
+    "epqa-B0054HSVGE-review-6d66cb8ec8ffc794": [
+      {
+        "row": 68683,
+        "qaPairId": "98151",
+        "qid": "10013"
+      }
+    ],
+    "epqa-B0054HSVGE-description-70d52be2d9bb7b6e": [
+      {
+        "row": 68684,
+        "qaPairId": "98152",
+        "qid": "10013"
+      }
+    ],
+    "epqa-B0054HSVGE-bullet-a74eed4fe8a5eae1": [
+      {
+        "row": 68685,
+        "qaPairId": "98153",
+        "qid": "10013"
+      }
+    ],
+    "epqa-B0054HSVGE-description-fa6798aa9361362c": [
+      {
+        "row": 68686,
+        "qaPairId": "98154",
+        "qid": "10013"
+      }
+    ],
+    "epqa-B0054HSVGE-description-44ef41e2c7728101": [
+      {
+        "row": 68687,
+        "qaPairId": "98155",
+        "qid": "10013"
+      }
+    ],
+    "epqa-B0054HSVGE-attribute-9a2fc10375c3f856": [
+      {
+        "row": 68688,
+        "qaPairId": "98156",
+        "qid": "10013"
+      }
+    ],
+    "epqa-B0054HSVGE-bullet-a31edbebf43033ec": [
+      {
+        "row": 68689,
+        "qaPairId": "98157",
+        "qid": "10013"
+      }
+    ],
+    "epqa-B0054HSVGE-review-7caee50f3203ca1e": [
+      {
+        "row": 68690,
+        "qaPairId": "98158",
+        "qid": "10013"
+      }
+    ],
+    "epqa-B0054HSVGE-review-1b82a40fd6de70ea": [
+      {
+        "row": 68691,
+        "qaPairId": "98159",
+        "qid": "10013"
+      }
+    ],
+    "epqa-B0054HSVGE-attribute-376582d0aa22ad05": [
+      {
+        "row": 68692,
+        "qaPairId": "98160",
+        "qid": "10014"
+      }
+    ],
+    "epqa-B0054HSVGE-description-9aa6593b4502652d": [
+      {
+        "row": 68693,
+        "qaPairId": "98161",
+        "qid": "10014"
+      }
+    ],
+    "epqa-B0054HSVGE-review-dae9c75fa3c4be22": [
+      {
+        "row": 68694,
+        "qaPairId": "98162",
+        "qid": "10014"
+      }
+    ],
+    "epqa-B0054HSVGE-review-9fc4620ae223c2c7": [
+      {
+        "row": 68695,
+        "qaPairId": "98163",
+        "qid": "10014"
+      }
+    ],
+    "epqa-B0054HSVGE-review-224d8b90a4bb3ac1": [
+      {
+        "row": 68696,
+        "qaPairId": "98164",
+        "qid": "10014"
+      }
+    ],
+    "epqa-B0054HSVGE-attribute-871e26318b8281d9": [
+      {
+        "row": 68697,
+        "qaPairId": "98165",
+        "qid": "10014"
+      }
+    ],
+    "epqa-B0054HSVGE-description-51d8c109bb67fe5e": [
+      {
+        "row": 68698,
+        "qaPairId": "98166",
+        "qid": "10014"
+      }
+    ],
+    "epqa-B0054HSVGE-attribute-4264711d58b916bd": [
+      {
+        "row": 68699,
+        "qaPairId": "98167",
+        "qid": "10014"
+      }
+    ],
+    "epqa-B0054HSVGE-review-d65807b75d597b58": [
+      {
+        "row": 68700,
+        "qaPairId": "98168",
+        "qid": "10014"
+      }
+    ],
+    "epqa-B0054HSVGE-review-4c315704357cd537": [
+      {
+        "row": 68701,
+        "qaPairId": "98169",
+        "qid": "10014"
+      }
+    ],
+    "epqa-B0054HSVGE-cqa-109c1200c4908e25": [
+      {
+        "row": 68702,
+        "qaPairId": "98170",
+        "qid": "10015"
+      }
+    ],
+    "epqa-B0054HSVGE-cqa-4b7a59970f1b2c2d": [
+      {
+        "row": 68703,
+        "qaPairId": "98171",
+        "qid": "10015"
+      }
+    ],
+    "epqa-B0054HSVGE-review-13977d54cb7d2371": [
+      {
+        "row": 68704,
+        "qaPairId": "98172",
+        "qid": "10015"
+      }
+    ],
+    "epqa-B0054HSVGE-review-24d8e746868e217d": [
+      {
+        "row": 68705,
+        "qaPairId": "98173",
+        "qid": "10015"
+      }
+    ],
+    "epqa-B0054HSVGE-review-9a1edad860fe2354": [
+      {
+        "row": 68706,
+        "qaPairId": "98174",
+        "qid": "10015"
+      }
+    ],
+    "epqa-B0054HSVGE-description-611f25cd5acfa892": [
+      {
+        "row": 68707,
+        "qaPairId": "98175",
+        "qid": "10015"
+      }
+    ],
+    "epqa-B0054HSVGE-attribute-95b63e3e9dd5c120": [
+      {
+        "row": 68708,
+        "qaPairId": "98176",
+        "qid": "10015"
+      }
+    ],
+    "epqa-B0054HSVGE-attribute-6721b6ab54c04929": [
+      {
+        "row": 68709,
+        "qaPairId": "98177",
+        "qid": "10015"
+      }
+    ],
+    "epqa-B0054HSVGE-review-64489e9e3e1ddb3a": [
+      {
+        "row": 68710,
+        "qaPairId": "98178",
+        "qid": "10015"
+      }
+    ],
+    "epqa-B0054HSVGE-review-339dfd5416476c1c": [
+      {
+        "row": 68711,
+        "qaPairId": "98179",
+        "qid": "10015"
+      }
+    ],
+    "epqa-B00AHVR5U0-review-57918a8eff7522a6": [
+      {
+        "row": 70102,
+        "qaPairId": "99570",
+        "qid": "10158"
+      }
+    ],
+    "epqa-B00AHVR5U0-review-cc330059699c289c": [
+      {
+        "row": 70103,
+        "qaPairId": "99571",
+        "qid": "10158"
+      }
+    ],
+    "epqa-B00AHVR5U0-cqa-935bf51eee3d0c5a": [
+      {
+        "row": 70104,
+        "qaPairId": "99572",
+        "qid": "10158"
+      }
+    ],
+    "epqa-B00AHVR5U0-cqa-46d8dc2fb2093ce0": [
+      {
+        "row": 70105,
+        "qaPairId": "99573",
+        "qid": "10158"
+      }
+    ],
+    "epqa-B00AHVR5U0-cqa-f6a8cd1018632664": [
+      {
+        "row": 70106,
+        "qaPairId": "99574",
+        "qid": "10158"
+      }
+    ],
+    "epqa-B00AHVR5U0-attribute-6ef7021884e16a55": [
+      {
+        "row": 70107,
+        "qaPairId": "99575",
+        "qid": "10158"
+      }
+    ],
+    "epqa-B00AHVR5U0-attribute-8be9d7f2218bffd5": [
+      {
+        "row": 70108,
+        "qaPairId": "99576",
+        "qid": "10158"
+      }
+    ],
+    "epqa-B00AHVR5U0-attribute-17acfb867997626f": [
+      {
+        "row": 70109,
+        "qaPairId": "99577",
+        "qid": "10158"
+      }
+    ],
+    "epqa-B00AHVR5U0-review-ebde7ab0b6d26f49": [
+      {
+        "row": 70110,
+        "qaPairId": "99578",
+        "qid": "10158"
+      }
+    ],
+    "epqa-B00AHVR5U0-review-0a2958d305a56db5": [
+      {
+        "row": 70111,
+        "qaPairId": "99579",
+        "qid": "10158"
+      }
+    ],
+    "epqa-B00AHVR5U0-cqa-98511fb4e2d1fab8": [
+      {
+        "row": 70112,
+        "qaPairId": "99580",
+        "qid": "10159"
+      }
+    ],
+    "epqa-B00AHVR5U0-cqa-60de32fcd0fe5b73": [
+      {
+        "row": 70113,
+        "qaPairId": "99581",
+        "qid": "10159"
+      }
+    ],
+    "epqa-B00AHVR5U0-cqa-ecb00c7617049236": [
+      {
+        "row": 70114,
+        "qaPairId": "99582",
+        "qid": "10159"
+      }
+    ],
+    "epqa-B00AHVR5U0-review-466d492e5f4951b6": [
+      {
+        "row": 70115,
+        "qaPairId": "99583",
+        "qid": "10159"
+      }
+    ],
+    "epqa-B00AHVR5U0-review-50b810d8ad68c517": [
+      {
+        "row": 70116,
+        "qaPairId": "99584",
+        "qid": "10159"
+      }
+    ],
+    "epqa-B00AHVR5U0-bullet-bd74d22f5a5627d4": [
+      {
+        "row": 70117,
+        "qaPairId": "99585",
+        "qid": "10159"
+      }
+    ],
+    "epqa-B00AHVR5U0-attribute-2a8b6e30f0503ed7": [
+      {
+        "row": 70118,
+        "qaPairId": "99586",
+        "qid": "10159"
+      }
+    ],
+    "epqa-B00AHVR5U0-attribute-6fd4922f40cf4eac": [
+      {
+        "row": 70119,
+        "qaPairId": "99587",
+        "qid": "10159"
+      }
+    ],
+    "epqa-B00AHVR5U0-review-cd754ededc0a71d3": [
+      {
+        "row": 70120,
+        "qaPairId": "99588",
+        "qid": "10159"
+      }
+    ],
+    "epqa-B00AHVR5U0-review-8d9a943471e3f0a5": [
+      {
+        "row": 70121,
+        "qaPairId": "99589",
+        "qid": "10159"
+      }
+    ],
+    "epqa-B00002ND4G-review-0800b766846f63e5": [
+      {
+        "row": 84632,
+        "qaPairId": "114100",
+        "qid": "11634"
+      },
+      {
+        "row": 84653,
+        "qaPairId": "114121",
+        "qid": "11636"
+      }
+    ],
+    "epqa-B00002ND4G-cqa-25a56a7e1ce039e8": [
+      {
+        "row": 84633,
+        "qaPairId": "114101",
+        "qid": "11634"
+      }
+    ],
+    "epqa-B00002ND4G-review-a11babbb9d4518f3": [
+      {
+        "row": 84634,
+        "qaPairId": "114102",
+        "qid": "11634"
+      }
+    ],
+    "epqa-B00002ND4G-cqa-1176d76a521a37c7": [
+      {
+        "row": 84635,
+        "qaPairId": "114103",
+        "qid": "11634"
+      },
+      {
+        "row": 84656,
+        "qaPairId": "114124",
+        "qid": "11636"
+      }
+    ],
+    "epqa-B00002ND4G-cqa-9f4eabaa2cdaf959": [
+      {
+        "row": 84636,
+        "qaPairId": "114104",
+        "qid": "11634"
+      }
+    ],
+    "epqa-B00002ND4G-description-cd2aa30b57815b3b": [
+      {
+        "row": 84637,
+        "qaPairId": "114105",
+        "qid": "11634"
+      }
+    ],
+    "epqa-B00002ND4G-attribute-afded36de84e5892": [
+      {
+        "row": 84639,
+        "qaPairId": "114107",
+        "qid": "11634"
+      }
+    ],
+    "epqa-B00002ND4G-review-0dbed6efe09ae7fb": [
+      {
+        "row": 84640,
+        "qaPairId": "114108",
+        "qid": "11634"
+      }
+    ],
+    "epqa-B00002ND4G-review-ac68b2108c1f0411": [
+      {
+        "row": 84641,
+        "qaPairId": "114109",
+        "qid": "11634"
+      }
+    ],
+    "epqa-B00002ND4G-description-edc6fe93a8b5b250": [
+      {
+        "row": 84642,
+        "qaPairId": "114110",
+        "qid": "11635"
+      }
+    ],
+    "epqa-B00002ND4G-attribute-7de3429dd96ed733": [
+      {
+        "row": 84643,
+        "qaPairId": "114111",
+        "qid": "11635"
+      }
+    ],
+    "epqa-B00002ND4G-description-7efde861ce1922dd": [
+      {
+        "row": 84644,
+        "qaPairId": "114112",
+        "qid": "11635"
+      }
+    ],
+    "epqa-B00002ND4G-review-8abe4581601e7fde": [
+      {
+        "row": 84645,
+        "qaPairId": "114113",
+        "qid": "11635"
+      }
+    ],
+    "epqa-B00002ND4G-review-21e0b7fe0e049869": [
+      {
+        "row": 84646,
+        "qaPairId": "114114",
+        "qid": "11635"
+      }
+    ],
+    "epqa-B00002ND4G-attribute-0bdb2cc30ec92f68": [
+      {
+        "row": 84647,
+        "qaPairId": "114115",
+        "qid": "11635"
+      }
+    ],
+    "epqa-B00002ND4G-bullet-47cb0499fa364e57": [
+      {
+        "row": 84648,
+        "qaPairId": "114116",
+        "qid": "11635"
+      }
+    ],
+    "epqa-B00002ND4G-attribute-d645eb9ebedeefe7": [
+      {
+        "row": 84649,
+        "qaPairId": "114117",
+        "qid": "11635"
+      }
+    ],
+    "epqa-B00002ND4G-review-b6dc6c2b45397ae1": [
+      {
+        "row": 84650,
+        "qaPairId": "114118",
+        "qid": "11635"
+      }
+    ],
+    "epqa-B00002ND4G-review-03a00b49f5f98539": [
+      {
+        "row": 84651,
+        "qaPairId": "114119",
+        "qid": "11635"
+      }
+    ],
+    "epqa-B00002ND4G-review-dc200bcf15383bda": [
+      {
+        "row": 84652,
+        "qaPairId": "114120",
+        "qid": "11636"
+      }
+    ],
+    "epqa-B00002ND4G-cqa-0ac00ef46805d3c3": [
+      {
+        "row": 84654,
+        "qaPairId": "114122",
+        "qid": "11636"
+      }
+    ],
+    "epqa-B00002ND4G-cqa-322151db85716cd6": [
+      {
+        "row": 84655,
+        "qaPairId": "114123",
+        "qid": "11636"
+      }
+    ],
+    "epqa-B00002ND4G-attribute-a31fad6301d27211": [
+      {
+        "row": 84657,
+        "qaPairId": "114125",
+        "qid": "11636"
+      }
+    ],
+    "epqa-B00002ND4G-attribute-db36d532941c4f8c": [
+      {
+        "row": 84658,
+        "qaPairId": "114126",
+        "qid": "11636"
+      }
+    ],
+    "epqa-B00002ND4G-attribute-7ccfec43a8f17afd": [
+      {
+        "row": 84659,
+        "qaPairId": "114127",
+        "qid": "11636"
+      }
+    ],
+    "epqa-B00002ND4G-cqa-2e812112fd849341": [
+      {
+        "row": 84660,
+        "qaPairId": "114128",
+        "qid": "11636"
+      }
+    ],
+    "epqa-B00002ND4G-review-83df52d2006a02bf": [
+      {
+        "row": 84661,
+        "qaPairId": "114129",
+        "qid": "11636"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-175fd1261487fe14": [
+      {
+        "row": 86622,
+        "qaPairId": "116090",
+        "qid": "11834"
+      }
+    ],
+    "epqa-B000A7W4Z2-cqa-9c4cc41ba1c8ea32": [
+      {
+        "row": 86623,
+        "qaPairId": "116091",
+        "qid": "11834"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-59bc68a1d7dbf38f": [
+      {
+        "row": 86624,
+        "qaPairId": "116092",
+        "qid": "11834"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-83aee1716fd8351e": [
+      {
+        "row": 86625,
+        "qaPairId": "116093",
+        "qid": "11834"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-4ce713b5aa87c9f8": [
+      {
+        "row": 86626,
+        "qaPairId": "116094",
+        "qid": "11834"
+      }
+    ],
+    "epqa-B000A7W4Z2-attribute-3da9dc49795a827b": [
+      {
+        "row": 86627,
+        "qaPairId": "116095",
+        "qid": "11834"
+      },
+      {
+        "row": 86649,
+        "qaPairId": "116117",
+        "qid": "11836"
+      }
+    ],
+    "epqa-B000A7W4Z2-description-6d8f2942e46ec10e": [
+      {
+        "row": 86628,
+        "qaPairId": "116096",
+        "qid": "11834"
+      },
+      {
+        "row": 86637,
+        "qaPairId": "116105",
+        "qid": "11835"
+      }
+    ],
+    "epqa-B000A7W4Z2-bullet-df9d110c619c9133": [
+      {
+        "row": 86629,
+        "qaPairId": "116097",
+        "qid": "11834"
+      },
+      {
+        "row": 86639,
+        "qaPairId": "116107",
+        "qid": "11835"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-290b4173278d9341": [
+      {
+        "row": 86630,
+        "qaPairId": "116098",
+        "qid": "11834"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-d0d4f591b9357ce1": [
+      {
+        "row": 86631,
+        "qaPairId": "116099",
+        "qid": "11834"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-4d52c28bfdf77ce5": [
+      {
+        "row": 86632,
+        "qaPairId": "116100",
+        "qid": "11835"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-b4e67005a19b3c43": [
+      {
+        "row": 86633,
+        "qaPairId": "116101",
+        "qid": "11835"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-1bb39ba7e1c2909b": [
+      {
+        "row": 86634,
+        "qaPairId": "116102",
+        "qid": "11835"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-8bbecea05f95a098": [
+      {
+        "row": 86635,
+        "qaPairId": "116103",
+        "qid": "11835"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-dbee5afffe70b883": [
+      {
+        "row": 86636,
+        "qaPairId": "116104",
+        "qid": "11835"
+      }
+    ],
+    "epqa-B000A7W4Z2-attribute-5d0b0e4475674286": [
+      {
+        "row": 86638,
+        "qaPairId": "116106",
+        "qid": "11835"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-f61573ddfc1e44af": [
+      {
+        "row": 86640,
+        "qaPairId": "116108",
+        "qid": "11835"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-e119a422e929bf1d": [
+      {
+        "row": 86641,
+        "qaPairId": "116109",
+        "qid": "11835"
+      }
+    ],
+    "epqa-B000A7W4Z2-cqa-1fbacd99b8241e09": [
+      {
+        "row": 86642,
+        "qaPairId": "116110",
+        "qid": "11836"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-fc814f8769b91b1c": [
+      {
+        "row": 86643,
+        "qaPairId": "116111",
+        "qid": "11836"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-7f2914f4787a9d79": [
+      {
+        "row": 86644,
+        "qaPairId": "116112",
+        "qid": "11836"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-13cae2832224b15d": [
+      {
+        "row": 86645,
+        "qaPairId": "116113",
+        "qid": "11836"
+      }
+    ],
+    "epqa-B000A7W4Z2-cqa-bd006f039f48fbde": [
+      {
+        "row": 86646,
+        "qaPairId": "116114",
+        "qid": "11836"
+      }
+    ],
+    "epqa-B000A7W4Z2-description-fcf5f96d65b3e002": [
+      {
+        "row": 86647,
+        "qaPairId": "116115",
+        "qid": "11836"
+      }
+    ],
+    "epqa-B000A7W4Z2-attribute-3c629c48b7ccdfec": [
+      {
+        "row": 86648,
+        "qaPairId": "116116",
+        "qid": "11836"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-196dda44def85935": [
+      {
+        "row": 86650,
+        "qaPairId": "116118",
+        "qid": "11836"
+      }
+    ],
+    "epqa-B000A7W4Z2-review-047818c1c4248341": [
+      {
+        "row": 86651,
+        "qaPairId": "116119",
+        "qid": "11836"
+      }
+    ],
+    "epqa-B00161ZI4A-review-7ac9a4972d69232d": [
+      {
+        "row": 91882,
+        "qaPairId": "121350",
+        "qid": "12368"
+      }
+    ],
+    "epqa-B00161ZI4A-review-c316e08bed487109": [
+      {
+        "row": 91882,
+        "qaPairId": "121350",
+        "qid": "12368"
+      }
+    ],
+    "epqa-B00161ZI4A-bullet-3b3004d519ddbc02": [
+      {
+        "row": 91883,
+        "qaPairId": "121351",
+        "qid": "12368"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-67ba7f0b7dfa14f6": [
+      {
+        "row": 91884,
+        "qaPairId": "121352",
+        "qid": "12368"
+      }
+    ],
+    "epqa-B00161ZI4A-cqa-a4501b16f8a78491": [
+      {
+        "row": 91885,
+        "qaPairId": "121353",
+        "qid": "12368"
+      }
+    ],
+    "epqa-B00161ZI4A-review-84049e1221ef7208": [
+      {
+        "row": 91886,
+        "qaPairId": "121354",
+        "qid": "12368"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-cd8c380a7dd3dd05": [
+      {
+        "row": 91887,
+        "qaPairId": "121355",
+        "qid": "12368"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-8d70ec43d861c615": [
+      {
+        "row": 91888,
+        "qaPairId": "121356",
+        "qid": "12368"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-356f8f92997dd937": [
+      {
+        "row": 91889,
+        "qaPairId": "121357",
+        "qid": "12368"
+      }
+    ],
+    "epqa-B00161ZI4A-review-990a0c360dcb0567": [
+      {
+        "row": 91890,
+        "qaPairId": "121358",
+        "qid": "12368"
+      }
+    ],
+    "epqa-B00161ZI4A-review-2c6155a23a547f91": [
+      {
+        "row": 91891,
+        "qaPairId": "121359",
+        "qid": "12368"
+      }
+    ],
+    "epqa-B00161ZI4A-cqa-5e003a33f82c0e2e": [
+      {
+        "row": 91892,
+        "qaPairId": "121360",
+        "qid": "12369"
+      },
+      {
+        "row": 91904,
+        "qaPairId": "121372",
+        "qid": "12370"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-541985375237fc0f": [
+      {
+        "row": 91893,
+        "qaPairId": "121361",
+        "qid": "12369"
+      }
+    ],
+    "epqa-B00161ZI4A-description-a0b774884d3da265": [
+      {
+        "row": 91894,
+        "qaPairId": "121362",
+        "qid": "12369"
+      }
+    ],
+    "epqa-B00161ZI4A-review-000fe783e08c1d9e": [
+      {
+        "row": 91895,
+        "qaPairId": "121363",
+        "qid": "12369"
+      }
+    ],
+    "epqa-B00161ZI4A-review-2733023837659b4d": [
+      {
+        "row": 91896,
+        "qaPairId": "121364",
+        "qid": "12369"
+      }
+    ],
+    "epqa-B00161ZI4A-description-e976f9b9a1015034": [
+      {
+        "row": 91897,
+        "qaPairId": "121365",
+        "qid": "12369"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-5897bd09d1b52acc": [
+      {
+        "row": 91898,
+        "qaPairId": "121366",
+        "qid": "12369"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-cd63ab48dcd036f2": [
+      {
+        "row": 91899,
+        "qaPairId": "121367",
+        "qid": "12369"
+      }
+    ],
+    "epqa-B00161ZI4A-review-1c9625dde6b0c185": [
+      {
+        "row": 91900,
+        "qaPairId": "121368",
+        "qid": "12369"
+      }
+    ],
+    "epqa-B00161ZI4A-review-ef376eb25db1e019": [
+      {
+        "row": 91901,
+        "qaPairId": "121369",
+        "qid": "12369"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-243c2729df3d387f": [
+      {
+        "row": 91902,
+        "qaPairId": "121370",
+        "qid": "12370"
+      }
+    ],
+    "epqa-B00161ZI4A-review-77c2761f57a20a78": [
+      {
+        "row": 91903,
+        "qaPairId": "121371",
+        "qid": "12370"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-2d5a6c75b87e22de": [
+      {
+        "row": 91905,
+        "qaPairId": "121373",
+        "qid": "12370"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-aa6b8ace46c46aad": [
+      {
+        "row": 91906,
+        "qaPairId": "121374",
+        "qid": "12370"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-f641982d80105f7d": [
+      {
+        "row": 91907,
+        "qaPairId": "121375",
+        "qid": "12370"
+      }
+    ],
+    "epqa-B00161ZI4A-attribute-02e2b1cb395b48a8": [
+      {
+        "row": 91908,
+        "qaPairId": "121376",
+        "qid": "12370"
+      }
+    ],
+    "epqa-B00161ZI4A-description-b43f32953e266816": [
+      {
+        "row": 91909,
+        "qaPairId": "121377",
+        "qid": "12370"
+      }
+    ],
+    "epqa-B00161ZI4A-review-aaae96465dd8f1f2": [
+      {
+        "row": 91910,
+        "qaPairId": "121378",
+        "qid": "12370"
+      }
+    ],
+    "epqa-B00161ZI4A-review-93eab0419453c65e": [
+      {
+        "row": 91911,
+        "qaPairId": "121379",
+        "qid": "12370"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-3e010d43730d3eae": [
+      {
+        "row": 92312,
+        "qaPairId": "121780",
+        "qid": "12415"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-7fce3809f7975f24": [
+      {
+        "row": 92313,
+        "qaPairId": "121781",
+        "qid": "12415"
+      }
+    ],
+    "epqa-B00EAI9ICE-description-de987ee093bc2cd7": [
+      {
+        "row": 92314,
+        "qaPairId": "121782",
+        "qid": "12415"
+      }
+    ],
+    "epqa-B00EAI9ICE-attribute-75efa38f0beb29fa": [
+      {
+        "row": 92315,
+        "qaPairId": "121783",
+        "qid": "12415"
+      }
+    ],
+    "epqa-B00EAI9ICE-bullet-ee592fcbe36cad37": [
+      {
+        "row": 92316,
+        "qaPairId": "121784",
+        "qid": "12415"
+      }
+    ],
+    "epqa-B00EAI9ICE-attribute-82e2a30054c2ee05": [
+      {
+        "row": 92317,
+        "qaPairId": "121785",
+        "qid": "12415"
+      }
+    ],
+    "epqa-B00EAI9ICE-attribute-f20658de2138b896": [
+      {
+        "row": 92318,
+        "qaPairId": "121786",
+        "qid": "12415"
+      }
+    ],
+    "epqa-B00EAI9ICE-attribute-a66f17da89f99d80": [
+      {
+        "row": 92319,
+        "qaPairId": "121787",
+        "qid": "12415"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-c408d957ea11b05f": [
+      {
+        "row": 92320,
+        "qaPairId": "121788",
+        "qid": "12415"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-2d07b965ab50b59b": [
+      {
+        "row": 92321,
+        "qaPairId": "121789",
+        "qid": "12415"
+      }
+    ],
+    "epqa-B00EAI9ICE-attribute-b29b74ec3ac3dd3c": [
+      {
+        "row": 92322,
+        "qaPairId": "121790",
+        "qid": "12416"
+      }
+    ],
+    "epqa-B00EAI9ICE-attribute-233186e5bd5d6d05": [
+      {
+        "row": 92323,
+        "qaPairId": "121791",
+        "qid": "12416"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-8f60856e41591829": [
+      {
+        "row": 92324,
+        "qaPairId": "121792",
+        "qid": "12416"
+      }
+    ],
+    "epqa-B00EAI9ICE-cqa-113f7324cfd433e5": [
+      {
+        "row": 92325,
+        "qaPairId": "121793",
+        "qid": "12416"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-3fba8cce562b7500": [
+      {
+        "row": 92326,
+        "qaPairId": "121794",
+        "qid": "12416"
+      }
+    ],
+    "epqa-B00EAI9ICE-description-ef4751248f98ff0a": [
+      {
+        "row": 92327,
+        "qaPairId": "121795",
+        "qid": "12416"
+      }
+    ],
+    "epqa-B00EAI9ICE-description-b6560762ca6c565d": [
+      {
+        "row": 92328,
+        "qaPairId": "121796",
+        "qid": "12416"
+      }
+    ],
+    "epqa-B00EAI9ICE-attribute-8006a7aa2184ab51": [
+      {
+        "row": 92329,
+        "qaPairId": "121797",
+        "qid": "12416"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-e105ff05b803d37e": [
+      {
+        "row": 92330,
+        "qaPairId": "121798",
+        "qid": "12416"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-80107f63632a15bf": [
+      {
+        "row": 92331,
+        "qaPairId": "121799",
+        "qid": "12416"
+      }
+    ],
+    "epqa-B00EAI9ICE-cqa-f33a78d0587eca93": [
+      {
+        "row": 92332,
+        "qaPairId": "121800",
+        "qid": "12417"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-418e56ad0c9a407b": [
+      {
+        "row": 92333,
+        "qaPairId": "121801",
+        "qid": "12417"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-5b08e4a955c8b0aa": [
+      {
+        "row": 92334,
+        "qaPairId": "121802",
+        "qid": "12417"
+      }
+    ],
+    "epqa-B00EAI9ICE-cqa-a42889cd35d3815a": [
+      {
+        "row": 92335,
+        "qaPairId": "121803",
+        "qid": "12417"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-8a14404adfbf8a03": [
+      {
+        "row": 92336,
+        "qaPairId": "121804",
+        "qid": "12417"
+      }
+    ],
+    "epqa-B00EAI9ICE-attribute-793d954105c52eb5": [
+      {
+        "row": 92337,
+        "qaPairId": "121805",
+        "qid": "12417"
+      }
+    ],
+    "epqa-B00EAI9ICE-description-9d3a9555502b5aa3": [
+      {
+        "row": 92338,
+        "qaPairId": "121806",
+        "qid": "12417"
+      }
+    ],
+    "epqa-B00EAI9ICE-attribute-99cdd93d640f47a0": [
+      {
+        "row": 92339,
+        "qaPairId": "121807",
+        "qid": "12417"
+      }
+    ],
+    "epqa-B00EAI9ICE-cqa-7bfd7cf781cc1865": [
+      {
+        "row": 92340,
+        "qaPairId": "121808",
+        "qid": "12417"
+      }
+    ],
+    "epqa-B00EAI9ICE-review-918f00a0e426d5ed": [
+      {
+        "row": 92341,
+        "qaPairId": "121809",
+        "qid": "12417"
+      }
+    ],
+    "epqa-B07CGPZD27-review-16a657fdd7bb5d03": [
+      {
+        "row": 102762,
+        "qaPairId": "132230",
+        "qid": "13486"
+      }
+    ],
+    "epqa-B07CGPZD27-description-12b9cc322469bd48": [
+      {
+        "row": 102763,
+        "qaPairId": "132231",
+        "qid": "13486"
+      },
+      {
+        "row": 102773,
+        "qaPairId": "132241",
+        "qid": "13487"
+      }
+    ],
+    "epqa-B07CGPZD27-bullet-2342d415627877e2": [
+      {
+        "row": 102764,
+        "qaPairId": "132232",
+        "qid": "13486"
+      }
+    ],
+    "epqa-B07CGPZD27-description-ceb41ab7160d74e4": [
+      {
+        "row": 102765,
+        "qaPairId": "132233",
+        "qid": "13486"
+      }
+    ],
+    "epqa-B07CGPZD27-attribute-84cfad0e761ee976": [
+      {
+        "row": 102766,
+        "qaPairId": "132234",
+        "qid": "13486"
+      }
+    ],
+    "epqa-B07CGPZD27-attribute-3ba12f9bf27fe364": [
+      {
+        "row": 102767,
+        "qaPairId": "132235",
+        "qid": "13486"
+      }
+    ],
+    "epqa-B07CGPZD27-attribute-07cc548dbc8b21a0": [
+      {
+        "row": 102768,
+        "qaPairId": "132236",
+        "qid": "13486"
+      }
+    ],
+    "epqa-B07CGPZD27-description-f1ddd53255efd4d9": [
+      {
+        "row": 102769,
+        "qaPairId": "132237",
+        "qid": "13486"
+      }
+    ],
+    "epqa-B07CGPZD27-review-54d626e08c1c802b": [
+      {
+        "row": 102770,
+        "qaPairId": "132238",
+        "qid": "13486"
+      }
+    ],
+    "epqa-B07CGPZD27-review-8c14d0186bdc3315": [
+      {
+        "row": 102771,
+        "qaPairId": "132239",
+        "qid": "13486"
+      }
+    ],
+    "epqa-B07CGPZD27-attribute-8a8e5d390a9afecc": [
+      {
+        "row": 102772,
+        "qaPairId": "132240",
+        "qid": "13487"
+      }
+    ],
+    "epqa-B07CGPZD27-description-d8bf7c112f2dba8f": [
+      {
+        "row": 102774,
+        "qaPairId": "132242",
+        "qid": "13487"
+      }
+    ],
+    "epqa-B07CGPZD27-review-9d56c40f5d34dc0a": [
+      {
+        "row": 102775,
+        "qaPairId": "132243",
+        "qid": "13487"
+      }
+    ],
+    "epqa-B07CGPZD27-cqa-8afe85eedc0bf101": [
+      {
+        "row": 102776,
+        "qaPairId": "132244",
+        "qid": "13487"
+      }
+    ],
+    "epqa-B07CGPZD27-attribute-11f833cbadd99496": [
+      {
+        "row": 102777,
+        "qaPairId": "132245",
+        "qid": "13487"
+      }
+    ],
+    "epqa-B07CGPZD27-attribute-7ca06d9053aafc61": [
+      {
+        "row": 102778,
+        "qaPairId": "132246",
+        "qid": "13487"
+      }
+    ],
+    "epqa-B07CGPZD27-attribute-13dd8b3d3de87a67": [
+      {
+        "row": 102779,
+        "qaPairId": "132247",
+        "qid": "13487"
+      }
+    ],
+    "epqa-B07CGPZD27-review-43f657ee19cab3e7": [
+      {
+        "row": 102780,
+        "qaPairId": "132248",
+        "qid": "13487"
+      }
+    ],
+    "epqa-B07CGPZD27-review-84b35057c419d811": [
+      {
+        "row": 102781,
+        "qaPairId": "132249",
+        "qid": "13487"
+      }
+    ],
+    "epqa-B07CGPZD27-review-114c9eeb178c3f1a": [
+      {
+        "row": 102782,
+        "qaPairId": "132250",
+        "qid": "13488"
+      }
+    ],
+    "epqa-B07CGPZD27-review-e862b312db2d3cef": [
+      {
+        "row": 102783,
+        "qaPairId": "132251",
+        "qid": "13488"
+      }
+    ],
+    "epqa-B07CGPZD27-review-5891da4736ad6f47": [
+      {
+        "row": 102784,
+        "qaPairId": "132252",
+        "qid": "13488"
+      }
+    ],
+    "epqa-B07CGPZD27-review-c465df21e27edce3": [
+      {
+        "row": 102785,
+        "qaPairId": "132253",
+        "qid": "13488"
+      }
+    ],
+    "epqa-B07CGPZD27-review-847ebc505ef7e62c": [
+      {
+        "row": 102786,
+        "qaPairId": "132254",
+        "qid": "13488"
+      }
+    ],
+    "epqa-B07CGPZD27-description-d229538aaaca60c7": [
+      {
+        "row": 102787,
+        "qaPairId": "132255",
+        "qid": "13488"
+      }
+    ],
+    "epqa-B07CGPZD27-description-02b180d20ddf7c54": [
+      {
+        "row": 102788,
+        "qaPairId": "132256",
+        "qid": "13488"
+      }
+    ],
+    "epqa-B07CGPZD27-attribute-2d9b38c3e28fdc65": [
+      {
+        "row": 102789,
+        "qaPairId": "132257",
+        "qid": "13488"
+      }
+    ],
+    "epqa-B07CGPZD27-review-82448fe19fe9f5dd": [
+      {
+        "row": 102790,
+        "qaPairId": "132258",
+        "qid": "13488"
+      }
+    ],
+    "epqa-B07CGPZD27-review-d13c5c79e974e403": [
+      {
+        "row": 102791,
+        "qaPairId": "132259",
+        "qid": "13488"
+      }
+    ],
+    "epqa-B01LWIPTAJ-bullet-9d58a14e5adf9349": [
+      {
+        "row": 106142,
+        "qaPairId": "135610",
+        "qid": "13831"
+      },
+      {
+        "row": 106155,
+        "qaPairId": "135623",
+        "qid": "13832"
+      }
+    ],
+    "epqa-B01LWIPTAJ-attribute-751c924351349547": [
+      {
+        "row": 106143,
+        "qaPairId": "135611",
+        "qid": "13831"
+      }
+    ],
+    "epqa-B01LWIPTAJ-cqa-1d383b64320a97a6": [
+      {
+        "row": 106144,
+        "qaPairId": "135612",
+        "qid": "13831"
+      }
+    ],
+    "epqa-B01LWIPTAJ-cqa-41529bea2f147e95": [
+      {
+        "row": 106145,
+        "qaPairId": "135613",
+        "qid": "13831"
+      },
+      {
+        "row": 106152,
+        "qaPairId": "135620",
+        "qid": "13832"
+      }
+    ],
+    "epqa-B01LWIPTAJ-cqa-4a85ce353242303d": [
+      {
+        "row": 106146,
+        "qaPairId": "135614",
+        "qid": "13831"
+      }
+    ],
+    "epqa-B01LWIPTAJ-attribute-f9b76b85a9f6a8df": [
+      {
+        "row": 106147,
+        "qaPairId": "135615",
+        "qid": "13831"
+      }
+    ],
+    "epqa-B01LWIPTAJ-attribute-7c7f88a2d4204364": [
+      {
+        "row": 106148,
+        "qaPairId": "135616",
+        "qid": "13831"
+      },
+      {
+        "row": 106167,
+        "qaPairId": "135635",
+        "qid": "13833"
+      }
+    ],
+    "epqa-B01LWIPTAJ-bullet-b96f5cc845e33d8e": [
+      {
+        "row": 106149,
+        "qaPairId": "135617",
+        "qid": "13831"
+      }
+    ],
+    "epqa-B01LWIPTAJ-review-88fd814f33ade3e1": [
+      {
+        "row": 106150,
+        "qaPairId": "135618",
+        "qid": "13831"
+      }
+    ],
+    "epqa-B01LWIPTAJ-cqa-9a8c6bfacc16e178": [
+      {
+        "row": 106151,
+        "qaPairId": "135619",
+        "qid": "13831"
+      }
+    ],
+    "epqa-B01LWIPTAJ-review-7cc8d51ceac13180": [
+      {
+        "row": 106153,
+        "qaPairId": "135621",
+        "qid": "13832"
+      }
+    ],
+    "epqa-B01LWIPTAJ-cqa-2cca3366fff10fae": [
+      {
+        "row": 106154,
+        "qaPairId": "135622",
+        "qid": "13832"
+      }
+    ],
+    "epqa-B01LWIPTAJ-review-0c44d882e1134282": [
+      {
+        "row": 106156,
+        "qaPairId": "135624",
+        "qid": "13832"
+      }
+    ],
+    "epqa-B01LWIPTAJ-description-f0fb9c2dbd2ae1e8": [
+      {
+        "row": 106157,
+        "qaPairId": "135625",
+        "qid": "13832"
+      }
+    ],
+    "epqa-B01LWIPTAJ-attribute-5ed319e0f85d767e": [
+      {
+        "row": 106158,
+        "qaPairId": "135626",
+        "qid": "13832"
+      }
+    ],
+    "epqa-B01LWIPTAJ-attribute-356f8f92997dd937": [
+      {
+        "row": 106159,
+        "qaPairId": "135627",
+        "qid": "13832"
+      }
+    ],
+    "epqa-B01LWIPTAJ-review-cf4cbd96fae1f7d8": [
+      {
+        "row": 106160,
+        "qaPairId": "135628",
+        "qid": "13832"
+      }
+    ],
+    "epqa-B01LWIPTAJ-review-9d6011d109b76e9e": [
+      {
+        "row": 106161,
+        "qaPairId": "135629",
+        "qid": "13832"
+      }
+    ],
+    "epqa-B01LWIPTAJ-cqa-9f42bf6a7e09a6bf": [
+      {
+        "row": 106162,
+        "qaPairId": "135630",
+        "qid": "13833"
+      }
+    ],
+    "epqa-B01LWIPTAJ-cqa-c6578345a1bb5bc9": [
+      {
+        "row": 106163,
+        "qaPairId": "135631",
+        "qid": "13833"
+      }
+    ],
+    "epqa-B01LWIPTAJ-review-0629bd7a95dba125": [
+      {
+        "row": 106164,
+        "qaPairId": "135632",
+        "qid": "13833"
+      }
+    ],
+    "epqa-B01LWIPTAJ-attribute-ba095bbfce4a1945": [
+      {
+        "row": 106165,
+        "qaPairId": "135633",
+        "qid": "13833"
+      }
+    ],
+    "epqa-B01LWIPTAJ-review-3f3877bcde3ced32": [
+      {
+        "row": 106166,
+        "qaPairId": "135634",
+        "qid": "13833"
+      }
+    ],
+    "epqa-B01LWIPTAJ-description-869dd5fd5559cc70": [
+      {
+        "row": 106168,
+        "qaPairId": "135636",
+        "qid": "13833"
+      }
+    ],
+    "epqa-B01LWIPTAJ-description-f8b05ff47f0609b2": [
+      {
+        "row": 106169,
+        "qaPairId": "135637",
+        "qid": "13833"
+      }
+    ],
+    "epqa-B01LWIPTAJ-review-51353f5f4986b470": [
+      {
+        "row": 106170,
+        "qaPairId": "135638",
+        "qid": "13833"
+      }
+    ],
+    "epqa-B01LWIPTAJ-cqa-020ae71c2cdadb0b": [
+      {
+        "row": 106171,
+        "qaPairId": "135639",
+        "qid": "13833"
+      }
+    ],
+    "epqa-B0789HCT6J-attribute-8148b95c02dd28d6": [
+      {
+        "row": 106582,
+        "qaPairId": "136050",
+        "qid": "13876"
+      }
+    ],
+    "epqa-B0789HCT6J-review-6b26b796b897db29": [
+      {
+        "row": 106583,
+        "qaPairId": "136051",
+        "qid": "13876"
+      }
+    ],
+    "epqa-B0789HCT6J-review-24988c05b0d3c350": [
+      {
+        "row": 106584,
+        "qaPairId": "136052",
+        "qid": "13876"
+      }
+    ],
+    "epqa-B0789HCT6J-attribute-300030480acbb38d": [
+      {
+        "row": 106585,
+        "qaPairId": "136053",
+        "qid": "13876"
+      }
+    ],
+    "epqa-B0789HCT6J-review-d2f427050439fdcd": [
+      {
+        "row": 106586,
+        "qaPairId": "136054",
+        "qid": "13876"
+      }
+    ],
+    "epqa-B0789HCT6J-bullet-41ae2ac6398de8e9": [
+      {
+        "row": 106587,
+        "qaPairId": "136055",
+        "qid": "13876"
+      }
+    ],
+    "epqa-B0789HCT6J-attribute-33d57bbb79c23fde": [
+      {
+        "row": 106588,
+        "qaPairId": "136056",
+        "qid": "13876"
+      }
+    ],
+    "epqa-B0789HCT6J-bullet-2f4aa1dddca849c0": [
+      {
+        "row": 106589,
+        "qaPairId": "136057",
+        "qid": "13876"
+      }
+    ],
+    "epqa-B0789HCT6J-review-9b9d9cda3131fe66": [
+      {
+        "row": 106590,
+        "qaPairId": "136058",
+        "qid": "13876"
+      }
+    ],
+    "epqa-B0789HCT6J-review-2a1314840d7cb413": [
+      {
+        "row": 106591,
+        "qaPairId": "136059",
+        "qid": "13876"
+      }
+    ],
+    "epqa-B0789HCT6J-review-b1035a49ec0344d3": [
+      {
+        "row": 106592,
+        "qaPairId": "136060",
+        "qid": "13877"
+      }
+    ],
+    "epqa-B0789HCT6J-review-292af20443907567": [
+      {
+        "row": 106593,
+        "qaPairId": "136061",
+        "qid": "13877"
+      },
+      {
+        "row": 106604,
+        "qaPairId": "136072",
+        "qid": "13878"
+      }
+    ],
+    "epqa-B0789HCT6J-attribute-1409702f7282408d": [
+      {
+        "row": 106594,
+        "qaPairId": "136062",
+        "qid": "13877"
+      }
+    ],
+    "epqa-B0789HCT6J-review-51fd42216ea850ef": [
+      {
+        "row": 106595,
+        "qaPairId": "136063",
+        "qid": "13877"
+      }
+    ],
+    "epqa-B0789HCT6J-review-873c3e13f56bced9": [
+      {
+        "row": 106596,
+        "qaPairId": "136064",
+        "qid": "13877"
+      }
+    ],
+    "epqa-B0789HCT6J-description-e3dc601d8f6eab93": [
+      {
+        "row": 106597,
+        "qaPairId": "136065",
+        "qid": "13877"
+      }
+    ],
+    "epqa-B0789HCT6J-description-abb1c7e93a6651da": [
+      {
+        "row": 106598,
+        "qaPairId": "136066",
+        "qid": "13877"
+      }
+    ],
+    "epqa-B0789HCT6J-description-0660297eccbf12b7": [
+      {
+        "row": 106599,
+        "qaPairId": "136067",
+        "qid": "13877"
+      }
+    ],
+    "epqa-B0789HCT6J-review-aa02849cf9d38ddb": [
+      {
+        "row": 106600,
+        "qaPairId": "136068",
+        "qid": "13877"
+      }
+    ],
+    "epqa-B0789HCT6J-review-6b4cda6719c3e884": [
+      {
+        "row": 106601,
+        "qaPairId": "136069",
+        "qid": "13877"
+      }
+    ],
+    "epqa-B0789HCT6J-review-d430c49220d46dc5": [
+      {
+        "row": 106602,
+        "qaPairId": "136070",
+        "qid": "13878"
+      }
+    ],
+    "epqa-B0789HCT6J-review-6baf7577de6c950f": [
+      {
+        "row": 106603,
+        "qaPairId": "136071",
+        "qid": "13878"
+      }
+    ],
+    "epqa-B0789HCT6J-review-0915c295df17a0e7": [
+      {
+        "row": 106605,
+        "qaPairId": "136073",
+        "qid": "13878"
+      }
+    ],
+    "epqa-B0789HCT6J-attribute-bed49794722e3b11": [
+      {
+        "row": 106606,
+        "qaPairId": "136074",
+        "qid": "13878"
+      }
+    ],
+    "epqa-B0789HCT6J-bullet-08c37a6e9fcc70bc": [
+      {
+        "row": 106607,
+        "qaPairId": "136075",
+        "qid": "13878"
+      }
+    ],
+    "epqa-B0789HCT6J-attribute-d68e39f3892c5610": [
+      {
+        "row": 106608,
+        "qaPairId": "136076",
+        "qid": "13878"
+      }
+    ],
+    "epqa-B0789HCT6J-attribute-26c17ad8e22e70f9": [
+      {
+        "row": 106609,
+        "qaPairId": "136077",
+        "qid": "13878"
+      }
+    ],
+    "epqa-B0789HCT6J-review-6d735779bee69d33": [
+      {
+        "row": 106610,
+        "qaPairId": "136078",
+        "qid": "13878"
+      }
+    ],
+    "epqa-B0789HCT6J-review-e86acbf64396c1bc": [
+      {
+        "row": 106611,
+        "qaPairId": "136079",
+        "qid": "13878"
+      }
+    ],
+    "epqa-B07Q6B5YL5-review-55b271587a2f844d": [
+      {
+        "row": 118002,
+        "qaPairId": "147470",
+        "qid": "15043"
+      }
+    ],
+    "epqa-B07Q6B5YL5-review-d7907d2f20200be0": [
+      {
+        "row": 118003,
+        "qaPairId": "147471",
+        "qid": "15043"
+      }
+    ],
+    "epqa-B07Q6B5YL5-review-e81a23e92d94fcce": [
+      {
+        "row": 118004,
+        "qaPairId": "147472",
+        "qid": "15043"
+      }
+    ],
+    "epqa-B07Q6B5YL5-review-540623817b8a97a6": [
+      {
+        "row": 118005,
+        "qaPairId": "147473",
+        "qid": "15043"
+      }
+    ],
+    "epqa-B07Q6B5YL5-review-90d338b7b3e76440": [
+      {
+        "row": 118006,
+        "qaPairId": "147474",
+        "qid": "15043"
+      }
+    ],
+    "epqa-B07Q6B5YL5-description-1a6df1f9b088cac5": [
+      {
+        "row": 118007,
+        "qaPairId": "147475",
+        "qid": "15043"
+      }
+    ],
+    "epqa-B07Q6B5YL5-description-6fe9eb8f468b5843": [
+      {
+        "row": 118008,
+        "qaPairId": "147476",
+        "qid": "15043"
+      }
+    ],
+    "epqa-B07Q6B5YL5-attribute-ad658fb343d9827e": [
+      {
+        "row": 118009,
+        "qaPairId": "147477",
+        "qid": "15043"
+      }
+    ],
+    "epqa-B07Q6B5YL5-review-29dab47091f3252e": [
+      {
+        "row": 118010,
+        "qaPairId": "147478",
+        "qid": "15043"
+      }
+    ],
+    "epqa-B07Q6B5YL5-review-72b19978df8d9ae5": [
+      {
+        "row": 118011,
+        "qaPairId": "147479",
+        "qid": "15043"
+      }
+    ],
+    "epqa-B07Q6B5YL5-cqa-65207aad865450e7": [
+      {
+        "row": 118012,
+        "qaPairId": "147480",
+        "qid": "15044"
+      }
+    ],
+    "epqa-B07Q6B5YL5-review-05963829b90d5548": [
+      {
+        "row": 118013,
+        "qaPairId": "147481",
+        "qid": "15044"
+      }
+    ],
+    "epqa-B07Q6B5YL5-review-374b6bda47a24857": [
+      {
+        "row": 118014,
+        "qaPairId": "147482",
+        "qid": "15044"
+      }
+    ],
+    "epqa-B07Q6B5YL5-cqa-5d7b2c4f9a452309": [
+      {
+        "row": 118015,
+        "qaPairId": "147483",
+        "qid": "15044"
+      }
+    ],
+    "epqa-B07Q6B5YL5-cqa-2d9dde18ff6914da": [
+      {
+        "row": 118016,
+        "qaPairId": "147484",
+        "qid": "15044"
+      }
+    ],
+    "epqa-B07Q6B5YL5-description-8d2a5cbc29d00eec": [
+      {
+        "row": 118017,
+        "qaPairId": "147485",
+        "qid": "15044"
+      }
+    ],
+    "epqa-B07Q6B5YL5-attribute-586ebe7d2215a468": [
+      {
+        "row": 118018,
+        "qaPairId": "147486",
+        "qid": "15044"
+      }
+    ],
+    "epqa-B07Q6B5YL5-description-5aace38dec7472ce": [
+      {
+        "row": 118019,
+        "qaPairId": "147487",
+        "qid": "15044"
+      }
+    ],
+    "epqa-B07Q6B5YL5-review-4cd0808107ff19b0": [
+      {
+        "row": 118020,
+        "qaPairId": "147488",
+        "qid": "15044"
+      }
+    ],
+    "epqa-B07Q6B5YL5-review-bbe516af88466fda": [
+      {
+        "row": 118021,
+        "qaPairId": "147489",
+        "qid": "15044"
+      }
+    ]
+  },
+  "notes": [
+    "Upstream test split untouched.",
+    "Labels and reference answers intentionally omitted.",
+    "Source candidates are historical and human review is required.",
+    "First-title-token family separation is a heuristic; independent product-family audit pending."
+  ]
+}

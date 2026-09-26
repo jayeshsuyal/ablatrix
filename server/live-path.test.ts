@@ -135,6 +135,7 @@ for (const outcome of ['no-improvement', 'regression', 'proposal-timeout', 'malf
       if (outcome === 'proposal-timeout' || outcome === 'malformed-proposal') {
         await assert.rejects(() => optimizer.create({ baselineExperimentId: baseline.id }));
         assert.equal(store.budgetSummary(100).unknownCents, outcome === 'proposal-timeout' ? 6 : 0);
+        assert.equal(store.listOptimizations()[0].status, 'failed');
       } else {
         const optimization = await optimizer.create({ baselineExperimentId: baseline.id });
         await until(() => store.getExperiment(optimization.candidateExperimentId)?.status === 'completed');

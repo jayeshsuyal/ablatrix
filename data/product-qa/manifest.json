@@ -1,0 +1,3451 @@
+{
+  "upstreamCommit": "cec976cc2f2218aa76e562ecc9c7d79f1f3271bc",
+  "upstream": "https://github.com/amazon-science/contextual-product-qa",
+  "license": "CDLA-Sharing-1.0",
+  "licenseUrl": "https://github.com/amazon-science/contextual-product-qa/blob/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/LICENSE",
+  "files": {
+    "train": {
+      "url": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv",
+      "sha256": "b63de9681b770573240367e919f7f04f087f6a4745ab1f79a77e6b800105ea25",
+      "bytes": 37486800
+    },
+    "dev": {
+      "url": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/dev.csv",
+      "sha256": "ec5c486592b59f2efb30abceb57c76fa55c2ff55333720a41d347cec601b024a",
+      "bytes": 2986475
+    }
+  },
+  "selection": {
+    "train": [
+      "349",
+      "416",
+      "438",
+      "743",
+      "770",
+      "775",
+      "585",
+      "728",
+      "647",
+      "635"
+    ],
+    "dev": [
+      "469",
+      "505",
+      "535",
+      "587",
+      "1985",
+      "2433"
+    ]
+  },
+  "notes": [
+    "Historical product snapshot; not current product advice.",
+    "Selection is purposive, not a representative benchmark.",
+    "Only train and dev downloaded; test remains untouched.",
+    "Product ASINs are disjoint between local development and validation.",
+    "No exhaustive brand/family deduplication audit; unsuitable for final benchmark claims.",
+    "Train/dev supply candidate text without a separate context column.",
+    "Reference guidance is AI-assisted interpretation, not the original dataset gold answer.",
+    "All annotation guidance remains pending independent human audit."
+  ],
+  "passageOrigins": {
+    "epqa-B00251EVPW-cqa-51f39d37d00e4e80": [
+      {
+        "split": "train",
+        "row": 2242,
+        "qaPairId": "3400",
+        "qid": "349",
+        "start": 0,
+        "end": 65,
+        "candidateSha256": "51f39d37d00e4e80e64ca7ecbacf7202ea6ab4752acdefd34b423fa5cc7d3e21"
+      }
+    ],
+    "epqa-B00251EVPW-attribute-4f8a9b21dbec272e": [
+      {
+        "split": "train",
+        "row": 2243,
+        "qaPairId": "3401",
+        "qid": "349",
+        "start": 0,
+        "end": 31,
+        "candidateSha256": "4f8a9b21dbec272ee9c188ea7f0fe3ade3d504ec7a04aff6577a2dd713ff402e"
+      }
+    ],
+    "epqa-B00251EVPW-attribute-95b63e3e9dd5c120": [
+      {
+        "split": "train",
+        "row": 2244,
+        "qaPairId": "3402",
+        "qid": "349",
+        "start": 0,
+        "end": 29,
+        "candidateSha256": "95b63e3e9dd5c120890de71ee14256ad5be1a2c9d1f40f26631dec9e07865a38"
+      }
+    ],
+    "epqa-B00251EVPW-cqa-8d024252f9007e1f": [
+      {
+        "split": "train",
+        "row": 2245,
+        "qaPairId": "3403",
+        "qid": "349",
+        "start": 0,
+        "end": 176,
+        "candidateSha256": "8d024252f9007e1f9f1ea53c87383a43ea53b5b7a031f2252107f08873a2c4a5"
+      }
+    ],
+    "epqa-B00251EVPW-review-c44d61711b6f2015": [
+      {
+        "split": "train",
+        "row": 2246,
+        "qaPairId": "3404",
+        "qid": "349",
+        "start": 0,
+        "end": 99,
+        "candidateSha256": "c44d61711b6f20154eedf21b87b7cf42dda2d580994dc6b0b64bfd371562525a"
+      }
+    ],
+    "epqa-B00251EVPW-attribute-7cd1350a1f8fa194": [
+      {
+        "split": "train",
+        "row": 2247,
+        "qaPairId": "3405",
+        "qid": "349",
+        "start": 0,
+        "end": 255,
+        "candidateSha256": "7cd1350a1f8fa194f17b293b736eaee31d2a389c8fca1a7a9282722de889a63a"
+      }
+    ],
+    "epqa-B00251EVPW-bullet-da6fe355eef3606c": [
+      {
+        "split": "train",
+        "row": 2248,
+        "qaPairId": "3406",
+        "qid": "349",
+        "start": 0,
+        "end": 78,
+        "candidateSha256": "da6fe355eef3606c95f4d48d82532eac0bfa45ba60a9ddaccd588677d8b0f4fb"
+      }
+    ],
+    "epqa-B00251EVPW-bullet-f827f18b1afe5848": [
+      {
+        "split": "train",
+        "row": 2249,
+        "qaPairId": "3407",
+        "qid": "349",
+        "start": 0,
+        "end": 106,
+        "candidateSha256": "f827f18b1afe58486546ba1619ada00da1bdd3a800a96b3cf24f3c55f293d35b"
+      }
+    ],
+    "epqa-B00251EVPW-review-770e607624d68926": [
+      {
+        "split": "train",
+        "row": 2250,
+        "qaPairId": "3408",
+        "qid": "349",
+        "start": 0,
+        "end": 4,
+        "candidateSha256": "770e607624d689265ca6c44884d0807d9b054d23c473c106c72be9de08b7376c"
+      }
+    ],
+    "epqa-B00251EVPW-review-009cdac6be41b518": [
+      {
+        "split": "train",
+        "row": 2251,
+        "qaPairId": "3409",
+        "qid": "349",
+        "start": 0,
+        "end": 29,
+        "candidateSha256": "009cdac6be41b518513970ebaa7d6cc6260de3e8d28abc1ce56b424dffe9a343"
+      }
+    ],
+    "epqa-B00006IE1F-review-873790dab54dfac0": [
+      {
+        "split": "train",
+        "row": 2612,
+        "qaPairId": "4050",
+        "qid": "415",
+        "start": 0,
+        "end": 56,
+        "candidateSha256": "873790dab54dfac0eefc669af5f57acdfebbcd524531b28a98bf957d664e21bc"
+      }
+    ],
+    "epqa-B00006IE1F-review-0006f4c25c36ca92": [
+      {
+        "split": "train",
+        "row": 2613,
+        "qaPairId": "4051",
+        "qid": "415",
+        "start": 0,
+        "end": 66,
+        "candidateSha256": "0006f4c25c36ca9220f2288304037d15cf4cb3bf83caa6f1bdff7872c0eb67a8"
+      }
+    ],
+    "epqa-B00006IE1F-review-d9fe73043ce893a8": [
+      {
+        "split": "train",
+        "row": 2614,
+        "qaPairId": "4052",
+        "qid": "415",
+        "start": 0,
+        "end": 76,
+        "candidateSha256": "d9fe73043ce893a8badae0ac8a27a52faf1cef8020de0ca8ffdee5b61b372373"
+      }
+    ],
+    "epqa-B00006IE1F-review-3ce05733df7de76d": [
+      {
+        "split": "train",
+        "row": 2615,
+        "qaPairId": "4053",
+        "qid": "415",
+        "start": 0,
+        "end": 69,
+        "candidateSha256": "3ce05733df7de76d9d9adc8c0da1383838d5263fcacdd789e7dffde26490921b"
+      }
+    ],
+    "epqa-B00006IE1F-review-4afd3099f4e7b841": [
+      {
+        "split": "train",
+        "row": 2616,
+        "qaPairId": "4054",
+        "qid": "415",
+        "start": 0,
+        "end": 100,
+        "candidateSha256": "4afd3099f4e7b841f85587daf0d4de0a740c5154f103d62c21dfaca7fdda8c93"
+      }
+    ],
+    "epqa-B00006IE1F-attribute-172e3678af72bc01": [
+      {
+        "split": "train",
+        "row": 2617,
+        "qaPairId": "4055",
+        "qid": "415",
+        "start": 0,
+        "end": 30,
+        "candidateSha256": "172e3678af72bc01a4dc9f0417986b0ecd717a85bd75757d4ee2c9dbd22c2dae"
+      },
+      {
+        "split": "train",
+        "row": 2627,
+        "qaPairId": "4065",
+        "qid": "416",
+        "start": 0,
+        "end": 30,
+        "candidateSha256": "172e3678af72bc01a4dc9f0417986b0ecd717a85bd75757d4ee2c9dbd22c2dae"
+      }
+    ],
+    "epqa-B00006IE1F-bullet-a6796f43b2ebb976": [
+      {
+        "split": "train",
+        "row": 2618,
+        "qaPairId": "4056",
+        "qid": "415",
+        "start": 0,
+        "end": 91,
+        "candidateSha256": "a6796f43b2ebb976396a6bd5c810bc9c364f06b4cdbabf59c008872129e5dfd0"
+      }
+    ],
+    "epqa-B00006IE1F-attribute-7158f5400cfb8c35": [
+      {
+        "split": "train",
+        "row": 2619,
+        "qaPairId": "4057",
+        "qid": "415",
+        "start": 0,
+        "end": 42,
+        "candidateSha256": "7158f5400cfb8c35dd89d4050fd885f9dee428d5b27d3e480a0de11880dc9acc"
+      }
+    ],
+    "epqa-B00006IE1F-review-f6967fb8727eb8aa": [
+      {
+        "split": "train",
+        "row": 2620,
+        "qaPairId": "4058",
+        "qid": "415",
+        "start": 0,
+        "end": 13,
+        "candidateSha256": "f6967fb8727eb8aae5e89c1d289ae8bbb8e77f1888a72ebd894f153160e3d656"
+      }
+    ],
+    "epqa-B00006IE1F-review-2ba0824314f2798f": [
+      {
+        "split": "train",
+        "row": 2621,
+        "qaPairId": "4059",
+        "qid": "415",
+        "start": 0,
+        "end": 52,
+        "candidateSha256": "2ba0824314f2798fc264bdc26feaab301f0a75a0a40559b3400da546f184f5a0"
+      }
+    ],
+    "epqa-B00006IE1F-attribute-58e2bea8e9ff6410": [
+      {
+        "split": "train",
+        "row": 2622,
+        "qaPairId": "4060",
+        "qid": "416",
+        "start": 0,
+        "end": 28,
+        "candidateSha256": "58e2bea8e9ff64101e7a3db2363b0f19d4c73efdf31e2f3e2bbcb3ef72215bb6"
+      }
+    ],
+    "epqa-B00006IE1F-attribute-b59571e7dd4c3025": [
+      {
+        "split": "train",
+        "row": 2623,
+        "qaPairId": "4061",
+        "qid": "416",
+        "start": 0,
+        "end": 45,
+        "candidateSha256": "b59571e7dd4c3025b566e961829fa4db806b375976ee9cb0af39437196d46bf6"
+      }
+    ],
+    "epqa-B00006IE1F-bullet-1a6633e738035f77": [
+      {
+        "split": "train",
+        "row": 2624,
+        "qaPairId": "4062",
+        "qid": "416",
+        "start": 0,
+        "end": 61,
+        "candidateSha256": "1a6633e738035f772f37c538eab573ab099bf13f004de685e82fb6c2cb2574b1"
+      }
+    ],
+    "epqa-B00006IE1F-cqa-1a022e3122df87d4": [
+      {
+        "split": "train",
+        "row": 2625,
+        "qaPairId": "4063",
+        "qid": "416",
+        "start": 0,
+        "end": 71,
+        "candidateSha256": "1a022e3122df87d47d0b418cac032630f6dd957946d48ccb9c415c7a110aa1a7"
+      }
+    ],
+    "epqa-B00006IE1F-cqa-fcf0bf0fcc09edbc": [
+      {
+        "split": "train",
+        "row": 2626,
+        "qaPairId": "4064",
+        "qid": "416",
+        "start": 0,
+        "end": 134,
+        "candidateSha256": "fcf0bf0fcc09edbc25c36116bb88aab8d7db6e93f825b3641afcc61e004e1557"
+      }
+    ],
+    "epqa-B00006IE1F-description-ea1299d4f8126d03": [
+      {
+        "split": "train",
+        "row": 2628,
+        "qaPairId": "4066",
+        "qid": "416",
+        "start": 0,
+        "end": 102,
+        "candidateSha256": "ea1299d4f8126d0321a20866b02f1b7ae199cc01897494aa968d211f607d33b1"
+      }
+    ],
+    "epqa-B00006IE1F-description-3babae289f12a98c": [
+      {
+        "split": "train",
+        "row": 2629,
+        "qaPairId": "4067",
+        "qid": "416",
+        "start": 0,
+        "end": 141,
+        "candidateSha256": "3babae289f12a98ce07ee1debb283dbd065c454f699ee5f0715937a9604e540d"
+      }
+    ],
+    "epqa-B00006IE1F-review-2689367b205c16ce": [
+      {
+        "split": "train",
+        "row": 2630,
+        "qaPairId": "4068",
+        "qid": "416",
+        "start": 0,
+        "end": 2,
+        "candidateSha256": "2689367b205c16ce32ed4200942b8b8b1e262dfc70d9bc9fbc77c49699a4f1df"
+      }
+    ],
+    "epqa-B00006IE1F-cqa-90e8789b92d68da8": [
+      {
+        "split": "train",
+        "row": 2631,
+        "qaPairId": "4069",
+        "qid": "416",
+        "start": 0,
+        "end": 85,
+        "candidateSha256": "90e8789b92d68da8aed1ebc2944f3513404a44b596c394e4f18d7b8952e4c58d"
+      }
+    ],
+    "epqa-B003ZSD5EC-cqa-43461783606fb28a": [
+      {
+        "split": "train",
+        "row": 2742,
+        "qaPairId": "4260",
+        "qid": "436",
+        "start": 0,
+        "end": 271,
+        "candidateSha256": "43461783606fb28a313871fb79445d86859c92a2f300bc9d6a812dd0336aa912"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-abc9a32147d329f9": [
+      {
+        "split": "train",
+        "row": 2743,
+        "qaPairId": "4261",
+        "qid": "436",
+        "start": 0,
+        "end": 306,
+        "candidateSha256": "abc9a32147d329f914497e642421f9ec98cc6799c8c2535ceb02831add01281f"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-6cdd497d999c4686": [
+      {
+        "split": "train",
+        "row": 2744,
+        "qaPairId": "4262",
+        "qid": "436",
+        "start": 0,
+        "end": 116,
+        "candidateSha256": "6cdd497d999c4686a45c759362b6341d5d6822a2b3467ea284f6357b779521ac"
+      }
+    ],
+    "epqa-B003ZSD5EC-attribute-c372ae16b9d52259": [
+      {
+        "split": "train",
+        "row": 2745,
+        "qaPairId": "4263",
+        "qid": "436",
+        "start": 0,
+        "end": 35,
+        "candidateSha256": "c372ae16b9d52259766b6e711c9ce329a4d0e2705b72d2314a73843f396ccb08"
+      },
+      {
+        "split": "train",
+        "row": 2767,
+        "qaPairId": "4285",
+        "qid": "438",
+        "start": 0,
+        "end": 35,
+        "candidateSha256": "c372ae16b9d52259766b6e711c9ce329a4d0e2705b72d2314a73843f396ccb08"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-0e80cf25ed53a831": [
+      {
+        "split": "train",
+        "row": 2746,
+        "qaPairId": "4264",
+        "qid": "436",
+        "start": 0,
+        "end": 80,
+        "candidateSha256": "0e80cf25ed53a831fa16323394a491e0f32d305d55a3fc15c7c1e06bfe9b29f7"
+      }
+    ],
+    "epqa-B003ZSD5EC-attribute-12bb32d29eeb926a": [
+      {
+        "split": "train",
+        "row": 2747,
+        "qaPairId": "4265",
+        "qid": "436",
+        "start": 0,
+        "end": 44,
+        "candidateSha256": "12bb32d29eeb926ac5d4e1570738ae5167347944282571c237beb67686accea1"
+      }
+    ],
+    "epqa-B003ZSD5EC-attribute-27f7c2ba4514f441": [
+      {
+        "split": "train",
+        "row": 2748,
+        "qaPairId": "4266",
+        "qid": "436",
+        "start": 0,
+        "end": 36,
+        "candidateSha256": "27f7c2ba4514f441d9cfddb5b368bb3cd45469fcd6d6f7dea6630955a24d41f4"
+      }
+    ],
+    "epqa-B003ZSD5EC-attribute-02ab49b90ccd0372": [
+      {
+        "split": "train",
+        "row": 2749,
+        "qaPairId": "4267",
+        "qid": "436",
+        "start": 0,
+        "end": 292,
+        "candidateSha256": "02ab49b90ccd0372eeb746b6fd6c751f76af796c789683a34ba0e507535e9385"
+      },
+      {
+        "split": "train",
+        "row": 2757,
+        "qaPairId": "4275",
+        "qid": "437",
+        "start": 0,
+        "end": 292,
+        "candidateSha256": "02ab49b90ccd0372eeb746b6fd6c751f76af796c789683a34ba0e507535e9385"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-10776ff21bb6936a": [
+      {
+        "split": "train",
+        "row": 2750,
+        "qaPairId": "4268",
+        "qid": "436",
+        "start": 0,
+        "end": 85,
+        "candidateSha256": "10776ff21bb6936a69c35887086523e18ccd0970f697045b84ffbbae879f2bfe"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-19298c0b1ac13fc7": [
+      {
+        "split": "train",
+        "row": 2751,
+        "qaPairId": "4269",
+        "qid": "436",
+        "start": 0,
+        "end": 157,
+        "candidateSha256": "19298c0b1ac13fc7fb436af8fe404019fab91f885b311c99090ebaeb2baaa099"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-cbc1a39ccba34a29": [
+      {
+        "split": "train",
+        "row": 2752,
+        "qaPairId": "4270",
+        "qid": "437",
+        "start": 0,
+        "end": 43,
+        "candidateSha256": "cbc1a39ccba34a295fc0b9089ead5eb39ab48c1bf0734eb1c9d164b51562f26d"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-7dd77c6ae581e8cf": [
+      {
+        "split": "train",
+        "row": 2753,
+        "qaPairId": "4271",
+        "qid": "437",
+        "start": 0,
+        "end": 42,
+        "candidateSha256": "7dd77c6ae581e8cfa29cd088e5ecf35c4348e0677e0c18e4cc3d2da97526e13a"
+      }
+    ],
+    "epqa-B003ZSD5EC-attribute-720cb0306cc3547c": [
+      {
+        "split": "train",
+        "row": 2754,
+        "qaPairId": "4272",
+        "qid": "437",
+        "start": 0,
+        "end": 28,
+        "candidateSha256": "720cb0306cc3547cc24b8dc8e87e8a66a200a4fed111fde603d7162ce6fe7eea"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-9c79d7928167cb26": [
+      {
+        "split": "train",
+        "row": 2755,
+        "qaPairId": "4273",
+        "qid": "437",
+        "start": 0,
+        "end": 84,
+        "candidateSha256": "9c79d7928167cb268eee155b856d5bde97e3893b1fd44dc3b2c4c146409e1105"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-a2e8ca455eed78be": [
+      {
+        "split": "train",
+        "row": 2756,
+        "qaPairId": "4274",
+        "qid": "437",
+        "start": 0,
+        "end": 41,
+        "candidateSha256": "a2e8ca455eed78be06a2ebfd26a86fc5a3f8fdd49120d601a09591f45f60aea8"
+      }
+    ],
+    "epqa-B003ZSD5EC-attribute-ff225d9f17b207a3": [
+      {
+        "split": "train",
+        "row": 2758,
+        "qaPairId": "4276",
+        "qid": "437",
+        "start": 0,
+        "end": 32,
+        "candidateSha256": "ff225d9f17b207a37c9bc6e0dfc4815fd858d2ed6c8342f7e1bb1460cb30f1fa"
+      }
+    ],
+    "epqa-B003ZSD5EC-bullet-0ee3f5851a4b71c7": [
+      {
+        "split": "train",
+        "row": 2759,
+        "qaPairId": "4277",
+        "qid": "437",
+        "start": 0,
+        "end": 29,
+        "candidateSha256": "0ee3f5851a4b71c74e32325031082712d8c08830672eba12f9b102de604eaa51"
+      }
+    ],
+    "epqa-B003ZSD5EC-cqa-025316cc40b9a968": [
+      {
+        "split": "train",
+        "row": 2760,
+        "qaPairId": "4278",
+        "qid": "437",
+        "start": 0,
+        "end": 126,
+        "candidateSha256": "025316cc40b9a9686dc92b84160904f03d0709d8e8e07f37de00a55a0641bdf8"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-2e685a603e3bd238": [
+      {
+        "split": "train",
+        "row": 2761,
+        "qaPairId": "4279",
+        "qid": "437",
+        "start": 0,
+        "end": 21,
+        "candidateSha256": "2e685a603e3bd238996bbc7f8a633d3ce1c5c94c046833ba4c3f1bc49f004034"
+      }
+    ],
+    "epqa-B003ZSD5EC-cqa-219ea12f8cef62b4": [
+      {
+        "split": "train",
+        "row": 2762,
+        "qaPairId": "4280",
+        "qid": "438",
+        "start": 0,
+        "end": 213,
+        "candidateSha256": "219ea12f8cef62b414e45739650953425e683ba73eedf2b8cbdbee7f3ed8df25"
+      }
+    ],
+    "epqa-B003ZSD5EC-cqa-df535bf6a73a00d7": [
+      {
+        "split": "train",
+        "row": 2763,
+        "qaPairId": "4281",
+        "qid": "438",
+        "start": 0,
+        "end": 301,
+        "candidateSha256": "df535bf6a73a00d7bd4cdda30fdc15e90e6dc5dac5bf4bbcf95877ae090666f8"
+      }
+    ],
+    "epqa-B003ZSD5EC-cqa-44fcd518324755cf": [
+      {
+        "split": "train",
+        "row": 2764,
+        "qaPairId": "4282",
+        "qid": "438",
+        "start": 0,
+        "end": 269,
+        "candidateSha256": "44fcd518324755cf6fe88b4bee2b03ddc33493fde22c060cd1c15e6c0ae4d953"
+      }
+    ],
+    "epqa-B003ZSD5EC-bullet-9af0ee832adb0087": [
+      {
+        "split": "train",
+        "row": 2765,
+        "qaPairId": "4283",
+        "qid": "438",
+        "start": 0,
+        "end": 58,
+        "candidateSha256": "9af0ee832adb00871b5a5dbef459fcdb096ba5477b39f0c77ffa5ad0e8230313"
+      }
+    ],
+    "epqa-B003ZSD5EC-attribute-c4aa96e8f1e93b58": [
+      {
+        "split": "train",
+        "row": 2766,
+        "qaPairId": "4284",
+        "qid": "438",
+        "start": 0,
+        "end": 87,
+        "candidateSha256": "c4aa96e8f1e93b58cb41e4520ba66e1040f8a168247d9a7b1f9fe25bc66c1f5d"
+      }
+    ],
+    "epqa-B003ZSD5EC-attribute-a66f17da89f99d80": [
+      {
+        "split": "train",
+        "row": 2768,
+        "qaPairId": "4286",
+        "qid": "438",
+        "start": 0,
+        "end": 36,
+        "candidateSha256": "a66f17da89f99d800cae79c8ac76d6b3fe0bb06b93fac436923c4d66049e579c"
+      }
+    ],
+    "epqa-B003ZSD5EC-bullet-d2dac34072dd3f31": [
+      {
+        "split": "train",
+        "row": 2769,
+        "qaPairId": "4287",
+        "qid": "438",
+        "start": 0,
+        "end": 25,
+        "candidateSha256": "d2dac34072dd3f317445c6a71f14c0a93b5b7cb75b2b906e3e193d26c0e2d8e0"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-8548a6d02a015212": [
+      {
+        "split": "train",
+        "row": 2770,
+        "qaPairId": "4288",
+        "qid": "438",
+        "start": 0,
+        "end": 84,
+        "candidateSha256": "8548a6d02a01521227b78f8baecfd41e1ce21a84be16d5a18b5592419a2c625a"
+      }
+    ],
+    "epqa-B003ZSD5EC-review-830c2df9c17bbb93": [
+      {
+        "split": "train",
+        "row": 2771,
+        "qaPairId": "4289",
+        "qid": "438",
+        "start": 0,
+        "end": 166,
+        "candidateSha256": "830c2df9c17bbb9330781bb73ac8d5fb00c3b30a22217f3e772a88e0ec6afe4d"
+      }
+    ],
+    "epqa-B00FH9B8RI-attribute-26922d151a0951f3": [
+      {
+        "split": "train",
+        "row": 3632,
+        "qaPairId": "5730",
+        "qid": "585",
+        "start": 0,
+        "end": 43,
+        "candidateSha256": "26922d151a0951f3211d49eb56bb65add1e73deeae1b5376547426822ebc7729"
+      }
+    ],
+    "epqa-B00FH9B8RI-review-33e3e80248990e7e": [
+      {
+        "split": "train",
+        "row": 3633,
+        "qaPairId": "5731",
+        "qid": "585",
+        "start": 0,
+        "end": 35,
+        "candidateSha256": "33e3e80248990e7e201993c6b450865fe5cb91c784e13b1843a7bfe3f1c468e9"
+      }
+    ],
+    "epqa-B00FH9B8RI-cqa-93a31f6a6e0eacf3": [
+      {
+        "split": "train",
+        "row": 3634,
+        "qaPairId": "5732",
+        "qid": "585",
+        "start": 0,
+        "end": 69,
+        "candidateSha256": "93a31f6a6e0eacf31f40b206661c496422907fdd19d53257ac26119fe88c25e0"
+      }
+    ],
+    "epqa-B00FH9B8RI-cqa-60ed6f94adecb0de": [
+      {
+        "split": "train",
+        "row": 3635,
+        "qaPairId": "5733",
+        "qid": "585",
+        "start": 0,
+        "end": 86,
+        "candidateSha256": "60ed6f94adecb0def76c4f042c26568d12a016c0329b040d0f4b05ec4fb0e420"
+      }
+    ],
+    "epqa-B00FH9B8RI-review-4fbef905c7cbe4fb": [
+      {
+        "split": "train",
+        "row": 3636,
+        "qaPairId": "5734",
+        "qid": "585",
+        "start": 0,
+        "end": 123,
+        "candidateSha256": "4fbef905c7cbe4fba83680849988fe858458bb5595e0090380e370b9c8da4749"
+      }
+    ],
+    "epqa-B00FH9B8RI-description-99509a34639409b1": [
+      {
+        "split": "train",
+        "row": 3637,
+        "qaPairId": "5735",
+        "qid": "585",
+        "start": 0,
+        "end": 219,
+        "candidateSha256": "99509a34639409b1adb69bb9d11edd97711e57c774e422f56e6f1e651d5045bf"
+      }
+    ],
+    "epqa-B00FH9B8RI-attribute-1f30988cdba30f2a": [
+      {
+        "split": "train",
+        "row": 3638,
+        "qaPairId": "5736",
+        "qid": "585",
+        "start": 0,
+        "end": 39,
+        "candidateSha256": "1f30988cdba30f2ac0eee4011b7f50fd4cc76de871cd0e7fdcb7399443d9dfb2"
+      }
+    ],
+    "epqa-B00FH9B8RI-attribute-9d6ee5169043d075": [
+      {
+        "split": "train",
+        "row": 3639,
+        "qaPairId": "5737",
+        "qid": "585",
+        "start": 0,
+        "end": 33,
+        "candidateSha256": "9d6ee5169043d075be30eff412ea7e42764e22dc15c6b10ad755a446bde8a253"
+      }
+    ],
+    "epqa-B00FH9B8RI-review-181c3a323e54a948": [
+      {
+        "split": "train",
+        "row": 3640,
+        "qaPairId": "5738",
+        "qid": "585",
+        "start": 0,
+        "end": 10,
+        "candidateSha256": "181c3a323e54a948e55c8933756530789d3daf40e842a02d2ab43ba813d1ddfd"
+      }
+    ],
+    "epqa-B00FH9B8RI-review-8553d206b4632512": [
+      {
+        "split": "train",
+        "row": 3641,
+        "qaPairId": "5739",
+        "qid": "585",
+        "start": 0,
+        "end": 61,
+        "candidateSha256": "8553d206b46325122c6bd66bc8bc6adafc3a93296d863e577d8e1e9d08d52456"
+      }
+    ],
+    "epqa-B00FH9B8RI-review-2f3dd2bfa5787c80": [
+      {
+        "split": "train",
+        "row": 3642,
+        "qaPairId": "5740",
+        "qid": "586",
+        "start": 0,
+        "end": 47,
+        "candidateSha256": "2f3dd2bfa5787c8045babac08033a6790f9997b332531c52830bd65287f836a7"
+      }
+    ],
+    "epqa-B00FH9B8RI-review-0ac81082d8bb233b": [
+      {
+        "split": "train",
+        "row": 3643,
+        "qaPairId": "5741",
+        "qid": "586",
+        "start": 0,
+        "end": 298,
+        "candidateSha256": "0ac81082d8bb233bdcfcb62ac36e796daa286a4ab2c2d36ab61fffa42e03059c"
+      }
+    ],
+    "epqa-B00FH9B8RI-review-11f585135ec3d601": [
+      {
+        "split": "train",
+        "row": 3644,
+        "qaPairId": "5742",
+        "qid": "586",
+        "start": 0,
+        "end": 138,
+        "candidateSha256": "11f585135ec3d601c123011efbfa5201c5b09084aaea18ed5c0b1383b8f028ab"
+      }
+    ],
+    "epqa-B00FH9B8RI-review-4123654d2db0e664": [
+      {
+        "split": "train",
+        "row": 3645,
+        "qaPairId": "5743",
+        "qid": "586",
+        "start": 0,
+        "end": 78,
+        "candidateSha256": "4123654d2db0e664c5d582641764a7013acc561069d3c31f45958c12f53b545f"
+      }
+    ],
+    "epqa-B00FH9B8RI-review-61f8594030f4d6eb": [
+      {
+        "split": "train",
+        "row": 3646,
+        "qaPairId": "5744",
+        "qid": "586",
+        "start": 0,
+        "end": 243,
+        "candidateSha256": "61f8594030f4d6eb9fdb07471ec4e301cddf78a05c2e559c48b07e182210d5c8"
+      }
+    ],
+    "epqa-B00FH9B8RI-attribute-afded36de84e5892": [
+      {
+        "split": "train",
+        "row": 3647,
+        "qaPairId": "5745",
+        "qid": "586",
+        "start": 0,
+        "end": 85,
+        "candidateSha256": "afded36de84e58924b3908e5dbb89d4d683e1d785665979c030e874dce2a91cc"
+      }
+    ],
+    "epqa-B00FH9B8RI-attribute-a66f17da89f99d80": [
+      {
+        "split": "train",
+        "row": 3648,
+        "qaPairId": "5746",
+        "qid": "586",
+        "start": 0,
+        "end": 36,
+        "candidateSha256": "a66f17da89f99d800cae79c8ac76d6b3fe0bb06b93fac436923c4d66049e579c"
+      }
+    ],
+    "epqa-B00FH9B8RI-attribute-ce2474af67875a0a": [
+      {
+        "split": "train",
+        "row": 3649,
+        "qaPairId": "5747",
+        "qid": "586",
+        "start": 0,
+        "end": 24,
+        "candidateSha256": "ce2474af67875a0a0fd8e8b71e28a1fb213494782022e3f9a454ba94112fcc5c"
+      }
+    ],
+    "epqa-B00FH9B8RI-review-93616680f7456f81": [
+      {
+        "split": "train",
+        "row": 3650,
+        "qaPairId": "5748",
+        "qid": "586",
+        "start": 0,
+        "end": 56,
+        "candidateSha256": "93616680f7456f8132f12963993d37f17f2f48d4a9de50487042dbd7d8ff4a21"
+      }
+    ],
+    "epqa-B00FH9B8RI-review-6dab5e1c424241d7": [
+      {
+        "split": "train",
+        "row": 3651,
+        "qaPairId": "5749",
+        "qid": "586",
+        "start": 0,
+        "end": 45,
+        "candidateSha256": "6dab5e1c424241d7b734849efc9743b171469390b88dff21040b148e8f15952b"
+      }
+    ],
+    "epqa-B008UV6YRO-attribute-d7b75a4051516fb8": [
+      {
+        "split": "train",
+        "row": 3962,
+        "qaPairId": "6230",
+        "qid": "635",
+        "start": 0,
+        "end": 247,
+        "candidateSha256": "d7b75a4051516fb8a8e47eebbee6992bc24a1a618d0fa6e4f70077feba610bad"
+      },
+      {
+        "split": "train",
+        "row": 3977,
+        "qaPairId": "6245",
+        "qid": "636",
+        "start": 0,
+        "end": 247,
+        "candidateSha256": "d7b75a4051516fb8a8e47eebbee6992bc24a1a618d0fa6e4f70077feba610bad"
+      }
+    ],
+    "epqa-B008UV6YRO-attribute-9fb761de545aadf9": [
+      {
+        "split": "train",
+        "row": 3963,
+        "qaPairId": "6231",
+        "qid": "635",
+        "start": 0,
+        "end": 203,
+        "candidateSha256": "9fb761de545aadf9443354fad11a8741cf9f660cc1d94871ad807876a9273b81"
+      }
+    ],
+    "epqa-B008UV6YRO-cqa-11d009311d953fe5": [
+      {
+        "split": "train",
+        "row": 3964,
+        "qaPairId": "6232",
+        "qid": "635",
+        "start": 0,
+        "end": 101,
+        "candidateSha256": "11d009311d953fe5a589f558736d7d7b417db4114efb046a1a7da87e32eea19d"
+      }
+    ],
+    "epqa-B008UV6YRO-review-20096a352bc7c9ff": [
+      {
+        "split": "train",
+        "row": 3965,
+        "qaPairId": "6233",
+        "qid": "635",
+        "start": 0,
+        "end": 90,
+        "candidateSha256": "20096a352bc7c9ff1495e2ee8c0b6dc469c466a484bde535815465326fc60e8b"
+      }
+    ],
+    "epqa-B008UV6YRO-cqa-9e0df0446ae16800": [
+      {
+        "split": "train",
+        "row": 3966,
+        "qaPairId": "6234",
+        "qid": "635",
+        "start": 0,
+        "end": 122,
+        "candidateSha256": "9e0df0446ae168007871a3c0f9ad02aaecbef6b1ab6ac051c720401bf206a930"
+      }
+    ],
+    "epqa-B008UV6YRO-description-9d9c0ff5037d256f": [
+      {
+        "split": "train",
+        "row": 3967,
+        "qaPairId": "6235",
+        "qid": "635",
+        "start": 0,
+        "end": 121,
+        "candidateSha256": "9d9c0ff5037d256fd7045821ec8926379c6db4efea14bf487acd7d44ae3e5aaa"
+      },
+      {
+        "split": "train",
+        "row": 3979,
+        "qaPairId": "6247",
+        "qid": "636",
+        "start": 0,
+        "end": 121,
+        "candidateSha256": "9d9c0ff5037d256fd7045821ec8926379c6db4efea14bf487acd7d44ae3e5aaa"
+      }
+    ],
+    "epqa-B008UV6YRO-attribute-c36fc284f954a873": [
+      {
+        "split": "train",
+        "row": 3968,
+        "qaPairId": "6236",
+        "qid": "635",
+        "start": 0,
+        "end": 285,
+        "candidateSha256": "c36fc284f954a8733282a6638d2a900e97201e57bb8582f84748fe831ae8445a"
+      }
+    ],
+    "epqa-B008UV6YRO-attribute-be6d01deb031d5f5": [
+      {
+        "split": "train",
+        "row": 3969,
+        "qaPairId": "6237",
+        "qid": "635",
+        "start": 0,
+        "end": 39,
+        "candidateSha256": "be6d01deb031d5f5ae65407d59ec06dac3baed502c0f33734e545086ca6cb470"
+      }
+    ],
+    "epqa-B008UV6YRO-review-a88d8afbd7543ef8": [
+      {
+        "split": "train",
+        "row": 3970,
+        "qaPairId": "6238",
+        "qid": "635",
+        "start": 0,
+        "end": 27,
+        "candidateSha256": "a88d8afbd7543ef85460d9c3331cda3794f9337266c36827e972b06cf345548b"
+      }
+    ],
+    "epqa-B008UV6YRO-review-36e6a2352d587631": [
+      {
+        "split": "train",
+        "row": 3971,
+        "qaPairId": "6239",
+        "qid": "635",
+        "start": 0,
+        "end": 90,
+        "candidateSha256": "36e6a2352d58763145749306780aa906538fe701202050e873e47f6374825e89"
+      }
+    ],
+    "epqa-B008UV6YRO-review-abd934245cc16fad": [
+      {
+        "split": "train",
+        "row": 3972,
+        "qaPairId": "6240",
+        "qid": "636",
+        "start": 0,
+        "end": 63,
+        "candidateSha256": "abd934245cc16fad92292b79b968c2b76ec27f4b348d92f351f0b465ffb01885"
+      }
+    ],
+    "epqa-B008UV6YRO-review-19cced7bc7540e43": [
+      {
+        "split": "train",
+        "row": 3973,
+        "qaPairId": "6241",
+        "qid": "636",
+        "start": 0,
+        "end": 132,
+        "candidateSha256": "19cced7bc7540e430d966bcc19540da5cdd46712f0a10f52c3bce6b827b49bbe"
+      }
+    ],
+    "epqa-B008UV6YRO-review-c8940be92cbccc5a": [
+      {
+        "split": "train",
+        "row": 3974,
+        "qaPairId": "6242",
+        "qid": "636",
+        "start": 0,
+        "end": 155,
+        "candidateSha256": "c8940be92cbccc5a86b0446945a4b655b0306e47cda80221d12e3a0c93fd29bd"
+      }
+    ],
+    "epqa-B008UV6YRO-cqa-654068950c52c7be": [
+      {
+        "split": "train",
+        "row": 3975,
+        "qaPairId": "6243",
+        "qid": "636",
+        "start": 0,
+        "end": 365,
+        "candidateSha256": "654068950c52c7bebbdcc27362dd8909c0f68808418d05785c7859c1fac60e5a"
+      }
+    ],
+    "epqa-B008UV6YRO-review-377d63ca2f0ed941": [
+      {
+        "split": "train",
+        "row": 3976,
+        "qaPairId": "6244",
+        "qid": "636",
+        "start": 0,
+        "end": 507,
+        "candidateSha256": "377d63ca2f0ed941647da381a13b7211fc885781cb4ef745d7a26bceec4ee292"
+      }
+    ],
+    "epqa-B008UV6YRO-attribute-bd67bc4f6d869ded": [
+      {
+        "split": "train",
+        "row": 3978,
+        "qaPairId": "6246",
+        "qid": "636",
+        "start": 0,
+        "end": 32,
+        "candidateSha256": "bd67bc4f6d869dedfbb801ccfc1ee9b42c402f1cc7760008e55d968cc314e4a5"
+      }
+    ],
+    "epqa-B008UV6YRO-review-28476b2a28b5518d": [
+      {
+        "split": "train",
+        "row": 3980,
+        "qaPairId": "6248",
+        "qid": "636",
+        "start": 0,
+        "end": 162,
+        "candidateSha256": "28476b2a28b5518dd27a08570e6bc07c80ce2901c7522016035f221d239becc0"
+      }
+    ],
+    "epqa-B008UV6YRO-review-13ce901b13a67ed0": [
+      {
+        "split": "train",
+        "row": 3981,
+        "qaPairId": "6249",
+        "qid": "636",
+        "start": 0,
+        "end": 108,
+        "candidateSha256": "13ce901b13a67ed0e5b48c9ef1529554bc2e4094b170a7268ff1f7f3d6ef3824"
+      }
+    ],
+    "epqa-B003DKL4JA-bullet-4c6ee374f1b537ac": [
+      {
+        "split": "train",
+        "row": 4012,
+        "qaPairId": "6330",
+        "qid": "645",
+        "start": 0,
+        "end": 114,
+        "candidateSha256": "4c6ee374f1b537ace7b1653346a1d9c0388de29fd715ed0805abe12d874ea559"
+      }
+    ],
+    "epqa-B003DKL4JA-review-fdf12ac2e4c747fc": [
+      {
+        "split": "train",
+        "row": 4013,
+        "qaPairId": "6331",
+        "qid": "645",
+        "start": 0,
+        "end": 82,
+        "candidateSha256": "fdf12ac2e4c747fcd6ef9cff21925952b02bdf6f9ee46238fbe469626c2cde93"
+      }
+    ],
+    "epqa-B003DKL4JA-cqa-8fe586695232edf4": [
+      {
+        "split": "train",
+        "row": 4014,
+        "qaPairId": "6332",
+        "qid": "645",
+        "start": 0,
+        "end": 181,
+        "candidateSha256": "8fe586695232edf4713cababf9e7fd117d932d79e4931dc8d8cd9cb260995ae1"
+      }
+    ],
+    "epqa-B003DKL4JA-attribute-c615659e19d746e6": [
+      {
+        "split": "train",
+        "row": 4015,
+        "qaPairId": "6333",
+        "qid": "645",
+        "start": 0,
+        "end": 78,
+        "candidateSha256": "c615659e19d746e63e5ec581eef66c87d277f2781e7ffac702412b175835bdd7"
+      }
+    ],
+    "epqa-B003DKL4JA-cqa-40546815d0dae28e": [
+      {
+        "split": "train",
+        "row": 4016,
+        "qaPairId": "6334",
+        "qid": "645",
+        "start": 0,
+        "end": 368,
+        "candidateSha256": "40546815d0dae28e67af69a383e45eec40e369d77f2837a7202be9dfc2df0bd8"
+      }
+    ],
+    "epqa-B003DKL4JA-bullet-e9e39f84567b31ad": [
+      {
+        "split": "train",
+        "row": 4017,
+        "qaPairId": "6335",
+        "qid": "645",
+        "start": 0,
+        "end": 113,
+        "candidateSha256": "e9e39f84567b31ade1573dea22da70fb1503706a2fa11a41d293e3c54d67e87e"
+      }
+    ],
+    "epqa-B003DKL4JA-attribute-cab0a009d032c1a7": [
+      {
+        "split": "train",
+        "row": 4018,
+        "qaPairId": "6336",
+        "qid": "645",
+        "start": 0,
+        "end": 38,
+        "candidateSha256": "cab0a009d032c1a7e8f9b3745e17ce061bbad6f4cc147578f78db02938c79feb"
+      }
+    ],
+    "epqa-B003DKL4JA-description-80e18b85bc2da466": [
+      {
+        "split": "train",
+        "row": 4019,
+        "qaPairId": "6337",
+        "qid": "645",
+        "start": 0,
+        "end": 70,
+        "candidateSha256": "80e18b85bc2da46618ebc6a094683e8e2fec98fef91c179f99b36e366c7c6c93"
+      }
+    ],
+    "epqa-B003DKL4JA-review-383b1f3a00f24594": [
+      {
+        "split": "train",
+        "row": 4020,
+        "qaPairId": "6338",
+        "qid": "645",
+        "start": 0,
+        "end": 138,
+        "candidateSha256": "383b1f3a00f24594c9ce1bf76188dd76479f9758e5080c07588ea57b761e1de7"
+      }
+    ],
+    "epqa-B003DKL4JA-review-1e7b27144245d96a": [
+      {
+        "split": "train",
+        "row": 4021,
+        "qaPairId": "6339",
+        "qid": "645",
+        "start": 0,
+        "end": 101,
+        "candidateSha256": "1e7b27144245d96a07dadcc48c11c1137d59cedc1287a98610a52b335bbb4e01"
+      }
+    ],
+    "epqa-B003DKL4JA-review-6d55e959848d989b": [
+      {
+        "split": "train",
+        "row": 4022,
+        "qaPairId": "6340",
+        "qid": "646",
+        "start": 0,
+        "end": 165,
+        "candidateSha256": "6d55e959848d989b984a951f545120de37648044a21afc0758dd649560fdea06"
+      }
+    ],
+    "epqa-B003DKL4JA-review-a7db48f5e195468b": [
+      {
+        "split": "train",
+        "row": 4023,
+        "qaPairId": "6341",
+        "qid": "646",
+        "start": 0,
+        "end": 103,
+        "candidateSha256": "a7db48f5e195468bdb955c084c41007f8f5fa9962536cc19e861964984be6eec"
+      }
+    ],
+    "epqa-B003DKL4JA-review-41f89774a65a4254": [
+      {
+        "split": "train",
+        "row": 4024,
+        "qaPairId": "6342",
+        "qid": "646",
+        "start": 0,
+        "end": 508,
+        "candidateSha256": "41f89774a65a4254613baa04fb3a650e09091f2cdfc766dc3981e640b95b1908"
+      }
+    ],
+    "epqa-B003DKL4JA-review-dbbbddd1367be7ab": [
+      {
+        "split": "train",
+        "row": 4025,
+        "qaPairId": "6343",
+        "qid": "646",
+        "start": 0,
+        "end": 204,
+        "candidateSha256": "dbbbddd1367be7ab534fab2a21eed67a8384f2403c6d2bbb6de6900561fd709e"
+      }
+    ],
+    "epqa-B003DKL4JA-review-a429c8ea82988637": [
+      {
+        "split": "train",
+        "row": 4026,
+        "qaPairId": "6344",
+        "qid": "646",
+        "start": 0,
+        "end": 114,
+        "candidateSha256": "a429c8ea82988637a9bc1200ec5031a21f3807340377eed20506d43aca0d7a74"
+      }
+    ],
+    "epqa-B003DKL4JA-attribute-d91fd5784d45979d": [
+      {
+        "split": "train",
+        "row": 4027,
+        "qaPairId": "6345",
+        "qid": "646",
+        "start": 0,
+        "end": 87,
+        "candidateSha256": "d91fd5784d45979d3ddb970f3325f18133ccab112994f55d88671bccf29dcda9"
+      }
+    ],
+    "epqa-B003DKL4JA-bullet-8904b325973c674e": [
+      {
+        "split": "train",
+        "row": 4028,
+        "qaPairId": "6346",
+        "qid": "646",
+        "start": 0,
+        "end": 98,
+        "candidateSha256": "8904b325973c674e4d5df3d4e6e077037ef4aafc13fac3d68c6ee33c302dd824"
+      }
+    ],
+    "epqa-B003DKL4JA-attribute-6ecbbe50dafc77aa": [
+      {
+        "split": "train",
+        "row": 4029,
+        "qaPairId": "6347",
+        "qid": "646",
+        "start": 0,
+        "end": 41,
+        "candidateSha256": "6ecbbe50dafc77aaba3e5444f70b8ca6a0e158c89a3e405d7102c24163caf73c"
+      }
+    ],
+    "epqa-B003DKL4JA-review-9964f0f0a10b2dfa": [
+      {
+        "split": "train",
+        "row": 4030,
+        "qaPairId": "6348",
+        "qid": "646",
+        "start": 0,
+        "end": 264,
+        "candidateSha256": "9964f0f0a10b2dfab374723a3513a9ceae0c80914de63c19b574b2d07aa0c289"
+      }
+    ],
+    "epqa-B003DKL4JA-review-54d626e08c1c802b": [
+      {
+        "split": "train",
+        "row": 4031,
+        "qaPairId": "6349",
+        "qid": "646",
+        "start": 0,
+        "end": 2,
+        "candidateSha256": "54d626e08c1c802b305dad30b7e54a82f102390cc92c7d4db112048935236e9c"
+      }
+    ],
+    "epqa-B003DKL4JA-review-7637a46f0afa1f31": [
+      {
+        "split": "train",
+        "row": 4032,
+        "qaPairId": "6350",
+        "qid": "647",
+        "start": 0,
+        "end": 83,
+        "candidateSha256": "7637a46f0afa1f31fc4824785f6870deea4f9384c31c58cf20f80176c17ddd50"
+      }
+    ],
+    "epqa-B003DKL4JA-attribute-7a1cda449e751d9d": [
+      {
+        "split": "train",
+        "row": 4033,
+        "qaPairId": "6351",
+        "qid": "647",
+        "start": 0,
+        "end": 32,
+        "candidateSha256": "7a1cda449e751d9d6203cd276fc6b7bc3cb063cf9346fd0ec4f4447d352da25c"
+      }
+    ],
+    "epqa-B003DKL4JA-attribute-7afbf30b240738bd": [
+      {
+        "split": "train",
+        "row": 4034,
+        "qaPairId": "6352",
+        "qid": "647",
+        "start": 0,
+        "end": 39,
+        "candidateSha256": "7afbf30b240738bdb69ad34164ca12c5a3432efe25067696518e4444abb83ec8"
+      }
+    ],
+    "epqa-B003DKL4JA-review-75e68c3a1f4d1e0d": [
+      {
+        "split": "train",
+        "row": 4035,
+        "qaPairId": "6353",
+        "qid": "647",
+        "start": 0,
+        "end": 88,
+        "candidateSha256": "75e68c3a1f4d1e0da17e27e2e9c5b5f6f3a5bd2452190e14b32a0f4fa43f76c7"
+      }
+    ],
+    "epqa-B003DKL4JA-review-3caca617c0fd6348": [
+      {
+        "split": "train",
+        "row": 4036,
+        "qaPairId": "6354",
+        "qid": "647",
+        "start": 0,
+        "end": 85,
+        "candidateSha256": "3caca617c0fd6348d54d49aaf1ea4d9a231bc897f8820bb51e9c2bd3e8d59398"
+      }
+    ],
+    "epqa-B003DKL4JA-attribute-193db991c06db553": [
+      {
+        "split": "train",
+        "row": 4037,
+        "qaPairId": "6355",
+        "qid": "647",
+        "start": 0,
+        "end": 265,
+        "candidateSha256": "193db991c06db553f045d3f1164731c7a46d4a0245282e4e4888bc55c4e1299a"
+      }
+    ],
+    "epqa-B003DKL4JA-description-a0f16f883c93dd90": [
+      {
+        "split": "train",
+        "row": 4038,
+        "qaPairId": "6356",
+        "qid": "647",
+        "start": 0,
+        "end": 222,
+        "candidateSha256": "a0f16f883c93dd90b7a1562be3c4646a14a1dd3ec47dbabc3bcd68adabaeaf0c"
+      }
+    ],
+    "epqa-B003DKL4JA-attribute-d2b658be438dad29": [
+      {
+        "split": "train",
+        "row": 4039,
+        "qaPairId": "6357",
+        "qid": "647",
+        "start": 0,
+        "end": 95,
+        "candidateSha256": "d2b658be438dad2908fd70956292dcb42553a7a4c52e7ab496da6522ea5eddc9"
+      }
+    ],
+    "epqa-B003DKL4JA-review-5b800c3c0f827058": [
+      {
+        "split": "train",
+        "row": 4040,
+        "qaPairId": "6358",
+        "qid": "647",
+        "start": 0,
+        "end": 76,
+        "candidateSha256": "5b800c3c0f82705843ffee550674bd826d5a014776fdf41ded53ca17e62b057c"
+      }
+    ],
+    "epqa-B003DKL4JA-cqa-70b2042c489e5f82": [
+      {
+        "split": "train",
+        "row": 4041,
+        "qaPairId": "6359",
+        "qid": "647",
+        "start": 0,
+        "end": 137,
+        "candidateSha256": "70b2042c489e5f825ce7d884e6bc670d36272678ff7dfa53a1352bdd0694de1f"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-eba8b7e928ca7374": [
+      {
+        "split": "train",
+        "row": 4602,
+        "qaPairId": "7160",
+        "qid": "728",
+        "start": 0,
+        "end": 74,
+        "candidateSha256": "eba8b7e928ca7374691480a719eb7d0dcbbd73a1c9584989dd1dbc25ec19cd77"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-e790d9384382ab4a": [
+      {
+        "split": "train",
+        "row": 4603,
+        "qaPairId": "7161",
+        "qid": "728",
+        "start": 0,
+        "end": 69,
+        "candidateSha256": "e790d9384382ab4ac94e6c5fa3d09b262b9cb8a591fdaa518f3afff40be94a93"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-3615ce8d95033ee5": [
+      {
+        "split": "train",
+        "row": 4604,
+        "qaPairId": "7162",
+        "qid": "728",
+        "start": 0,
+        "end": 53,
+        "candidateSha256": "3615ce8d95033ee5c16f7eed4415abc7e898ea231ca87388aa093d21390be6e2"
+      }
+    ],
+    "epqa-B002ZG7RGM-description-ab112b1d59926758": [
+      {
+        "split": "train",
+        "row": 4605,
+        "qaPairId": "7163",
+        "qid": "728",
+        "start": 0,
+        "end": 102,
+        "candidateSha256": "ab112b1d599267582a107f50962e82a609402bd53ebf1fa6690e69b15eeffd3e"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-a9b93eb594ccba9e": [
+      {
+        "split": "train",
+        "row": 4606,
+        "qaPairId": "7164",
+        "qid": "728",
+        "start": 0,
+        "end": 47,
+        "candidateSha256": "a9b93eb594ccba9ef9260bce0dd0529019e188a65db9dbbd5cc8853bb7a4ba11"
+      }
+    ],
+    "epqa-B002ZG7RGM-description-e22f9933b1b3437e": [
+      {
+        "split": "train",
+        "row": 4607,
+        "qaPairId": "7165",
+        "qid": "728",
+        "start": 0,
+        "end": 77,
+        "candidateSha256": "e22f9933b1b3437e0fb33c9e898012624950fed1ed94a4b68a69c7fc1d042840"
+      }
+    ],
+    "epqa-B002ZG7RGM-description-be4c4b9d59e0369a": [
+      {
+        "split": "train",
+        "row": 4608,
+        "qaPairId": "7166",
+        "qid": "728",
+        "start": 0,
+        "end": 71,
+        "candidateSha256": "be4c4b9d59e0369ae974bdde56c5a5542bf7c0944ccf03a451445bbd73dfb941"
+      }
+    ],
+    "epqa-B002ZG7RGM-attribute-18c602a0ed103175": [
+      {
+        "split": "train",
+        "row": 4609,
+        "qaPairId": "7167",
+        "qid": "728",
+        "start": 0,
+        "end": 87,
+        "candidateSha256": "18c602a0ed103175d9bcc81bf2f89b74ceb33c8b089c2301e66cf098de95f48f"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-de419420b1ec6c53": [
+      {
+        "split": "train",
+        "row": 4610,
+        "qaPairId": "7168",
+        "qid": "728",
+        "start": 0,
+        "end": 27,
+        "candidateSha256": "de419420b1ec6c53807d537b9c49190488307bf9af31919420a3efa63c6ea938"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-171de2da7becb5ec": [
+      {
+        "split": "train",
+        "row": 4611,
+        "qaPairId": "7169",
+        "qid": "728",
+        "start": 0,
+        "end": 19,
+        "candidateSha256": "171de2da7becb5ecfe4940ecfb7eb318ee4dadd959424a3a1cc2c4d6e140a984"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-a372cbef4dabe1d7": [
+      {
+        "split": "train",
+        "row": 4612,
+        "qaPairId": "7170",
+        "qid": "729",
+        "start": 0,
+        "end": 42,
+        "candidateSha256": "a372cbef4dabe1d755d90324b64de33ca7119f5dbb7b87bdd49717a8b0251dcc"
+      }
+    ],
+    "epqa-B002ZG7RGM-attribute-bd3244b584e84d83": [
+      {
+        "split": "train",
+        "row": 4613,
+        "qaPairId": "7171",
+        "qid": "729",
+        "start": 0,
+        "end": 32,
+        "candidateSha256": "bd3244b584e84d83d4b9f939ea3c5bf109638bf132ba60bd14dcf6e95983f035"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-a57db939fb68622f": [
+      {
+        "split": "train",
+        "row": 4614,
+        "qaPairId": "7172",
+        "qid": "729",
+        "start": 0,
+        "end": 56,
+        "candidateSha256": "a57db939fb68622f9ef58acd7cc784fefb6582feaf82bc6a803067db03500502"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-75db348ef45aa71e": [
+      {
+        "split": "train",
+        "row": 4615,
+        "qaPairId": "7173",
+        "qid": "729",
+        "start": 0,
+        "end": 117,
+        "candidateSha256": "75db348ef45aa71ec3671781f5bfe16df3cd343b92e5943af7c56a5b648cf3ee"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-c123f430a662b6b1": [
+      {
+        "split": "train",
+        "row": 4616,
+        "qaPairId": "7174",
+        "qid": "729",
+        "start": 0,
+        "end": 76,
+        "candidateSha256": "c123f430a662b6b150d545924b0f985342eb0107c2a03abd4c994aa07b1cf7b3"
+      }
+    ],
+    "epqa-B002ZG7RGM-attribute-793d954105c52eb5": [
+      {
+        "split": "train",
+        "row": 4617,
+        "qaPairId": "7175",
+        "qid": "729",
+        "start": 0,
+        "end": 253,
+        "candidateSha256": "793d954105c52eb5e02afe9c19ad89b26451b199c1768e6e5a76e21552e51dc0"
+      }
+    ],
+    "epqa-B002ZG7RGM-attribute-ebc953b9b193e865": [
+      {
+        "split": "train",
+        "row": 4618,
+        "qaPairId": "7176",
+        "qid": "729",
+        "start": 0,
+        "end": 33,
+        "candidateSha256": "ebc953b9b193e86553e11a8a3abee57daade4f70faf9d83f4b0f192f943a867e"
+      }
+    ],
+    "epqa-B002ZG7RGM-attribute-059ac6e24e73a573": [
+      {
+        "split": "train",
+        "row": 4619,
+        "qaPairId": "7177",
+        "qid": "729",
+        "start": 0,
+        "end": 77,
+        "candidateSha256": "059ac6e24e73a57364572899d4be01283f3e8f874eae75288c474b68c22b7974"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-b2713a8412fae666": [
+      {
+        "split": "train",
+        "row": 4620,
+        "qaPairId": "7178",
+        "qid": "729",
+        "start": 0,
+        "end": 56,
+        "candidateSha256": "b2713a8412fae666a097385964e354810acc3201ccc00ecd1868233d98ebf901"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-cd3d121ae5180879": [
+      {
+        "split": "train",
+        "row": 4621,
+        "qaPairId": "7179",
+        "qid": "729",
+        "start": 0,
+        "end": 41,
+        "candidateSha256": "cd3d121ae5180879f44635d5ac456ebde2adc4ecc540d7a89929863feb6a4ff2"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-07155b1c9ea185a0": [
+      {
+        "split": "train",
+        "row": 4622,
+        "qaPairId": "7180",
+        "qid": "730",
+        "start": 0,
+        "end": 726,
+        "candidateSha256": "07155b1c9ea185a00efc3983453f7165839f7e5896fbd1933041343f1ca9808c"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-b5ded03197f80961": [
+      {
+        "split": "train",
+        "row": 4623,
+        "qaPairId": "7181",
+        "qid": "730",
+        "start": 0,
+        "end": 126,
+        "candidateSha256": "b5ded03197f8096185f785e6bc3febf3b79db519459abc2d341a26ec0c61f171"
+      }
+    ],
+    "epqa-B002ZG7RGM-bullet-88edff015ab70fba": [
+      {
+        "split": "train",
+        "row": 4624,
+        "qaPairId": "7182",
+        "qid": "730",
+        "start": 0,
+        "end": 77,
+        "candidateSha256": "88edff015ab70fba43f3b7d17f1d555f0aec072952a8d2e74b79b0c90cdfa928"
+      }
+    ],
+    "epqa-B002ZG7RGM-description-b8b07973feedec0b": [
+      {
+        "split": "train",
+        "row": 4625,
+        "qaPairId": "7183",
+        "qid": "730",
+        "start": 0,
+        "end": 116,
+        "candidateSha256": "b8b07973feedec0bc0187657bbade8473b7c22be893595cc33aa6a644698ccaa"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-a30cf79c4dbf8919": [
+      {
+        "split": "train",
+        "row": 4626,
+        "qaPairId": "7184",
+        "qid": "730",
+        "start": 0,
+        "end": 220,
+        "candidateSha256": "a30cf79c4dbf8919344a08af2705fd62aad29a8f99942e5991f2423c0b1ddb0a"
+      }
+    ],
+    "epqa-B002ZG7RGM-bullet-d81743696c252dee": [
+      {
+        "split": "train",
+        "row": 4627,
+        "qaPairId": "7185",
+        "qid": "730",
+        "start": 0,
+        "end": 56,
+        "candidateSha256": "d81743696c252deefae35ae5e12ae317b06f5406b09fc99523853462f46225c5"
+      }
+    ],
+    "epqa-B002ZG7RGM-attribute-0315ffb4b1f60fb5": [
+      {
+        "split": "train",
+        "row": 4628,
+        "qaPairId": "7186",
+        "qid": "730",
+        "start": 0,
+        "end": 24,
+        "candidateSha256": "0315ffb4b1f60fb539f3ac28bee6041bd6342523e1835716ca6cfc2c1400ef92"
+      }
+    ],
+    "epqa-B002ZG7RGM-description-7c209f03b6a7d2c6": [
+      {
+        "split": "train",
+        "row": 4629,
+        "qaPairId": "7187",
+        "qid": "730",
+        "start": 0,
+        "end": 132,
+        "candidateSha256": "7c209f03b6a7d2c6118c8c79a2cbd59bf928249a720bc12c89a0c2e3d58f4016"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-b23abff2238f5abc": [
+      {
+        "split": "train",
+        "row": 4630,
+        "qaPairId": "7188",
+        "qid": "730",
+        "start": 0,
+        "end": 31,
+        "candidateSha256": "b23abff2238f5abcb68a8d51e00de6b301be5e8f43eec0c99d8317c4f1944cfc"
+      }
+    ],
+    "epqa-B002ZG7RGM-review-dd001cc9e2a5a421": [
+      {
+        "split": "train",
+        "row": 4631,
+        "qaPairId": "7189",
+        "qid": "730",
+        "start": 0,
+        "end": 13,
+        "candidateSha256": "dd001cc9e2a5a421d385001bb6befbafcc162e549ec29a33e581c3ff5a8d2e60"
+      }
+    ],
+    "epqa-B0058YR0XS-attribute-3aceb241d9003e4a": [
+      {
+        "split": "train",
+        "row": 4722,
+        "qaPairId": "7310",
+        "qid": "743",
+        "start": 0,
+        "end": 49,
+        "candidateSha256": "3aceb241d9003e4a75f6ea7c448bc28900e3b15e0494574882fb0f393b1261ed"
+      }
+    ],
+    "epqa-B0058YR0XS-cqa-bcd169ca072ef787": [
+      {
+        "split": "train",
+        "row": 4723,
+        "qaPairId": "7311",
+        "qid": "743",
+        "start": 0,
+        "end": 95,
+        "candidateSha256": "bcd169ca072ef787277282467a495c124f29c713286206b6557a6197fc4ec74c"
+      }
+    ],
+    "epqa-B0058YR0XS-cqa-2da0e60efa03f045": [
+      {
+        "split": "train",
+        "row": 4724,
+        "qaPairId": "7312",
+        "qid": "743",
+        "start": 0,
+        "end": 174,
+        "candidateSha256": "2da0e60efa03f04554dd6f8e46b2b18c2c2f7048112c33abee2a5f7e72c11c21"
+      }
+    ],
+    "epqa-B0058YR0XS-review-345c5b719b19e017": [
+      {
+        "split": "train",
+        "row": 4725,
+        "qaPairId": "7313",
+        "qid": "743",
+        "start": 0,
+        "end": 138,
+        "candidateSha256": "345c5b719b19e017dd55202eff287aeee7235de1c2497234bb0feaaf049813e6"
+      }
+    ],
+    "epqa-B0058YR0XS-review-e716e7c57bb5dbe4": [
+      {
+        "split": "train",
+        "row": 4726,
+        "qaPairId": "7314",
+        "qid": "743",
+        "start": 0,
+        "end": 100,
+        "candidateSha256": "e716e7c57bb5dbe43b760a779082a87f90522d75010bf79b446b288514b4820f"
+      }
+    ],
+    "epqa-B0058YR0XS-attribute-066cf1d43b745f01": [
+      {
+        "split": "train",
+        "row": 4727,
+        "qaPairId": "7315",
+        "qid": "743",
+        "start": 0,
+        "end": 34,
+        "candidateSha256": "066cf1d43b745f01a071c80cc2d696708e20bc914a22c01935e845464a5a9230"
+      }
+    ],
+    "epqa-B0058YR0XS-attribute-dff6f87ddcc6b801": [
+      {
+        "split": "train",
+        "row": 4728,
+        "qaPairId": "7316",
+        "qid": "743",
+        "start": 0,
+        "end": 54,
+        "candidateSha256": "dff6f87ddcc6b801ba3a956b110f0a0f19bf49488ce0f333ded04ccb3aa843ac"
+      }
+    ],
+    "epqa-B0058YR0XS-attribute-57e130a0617d1a46": [
+      {
+        "split": "train",
+        "row": 4729,
+        "qaPairId": "7317",
+        "qid": "743",
+        "start": 0,
+        "end": 28,
+        "candidateSha256": "57e130a0617d1a4625c50ded211cb16d2a8a8c085d9753d3e09268246dc65a52"
+      }
+    ],
+    "epqa-B0058YR0XS-review-44520442390d37d8": [
+      {
+        "split": "train",
+        "row": 4730,
+        "qaPairId": "7318",
+        "qid": "743",
+        "start": 0,
+        "end": 54,
+        "candidateSha256": "44520442390d37d88e32a5a2cc3cec4e23cd0a11bbe25222d56e10364845b244"
+      }
+    ],
+    "epqa-B0058YR0XS-review-06bdcb5640d16655": [
+      {
+        "split": "train",
+        "row": 4731,
+        "qaPairId": "7319",
+        "qid": "743",
+        "start": 0,
+        "end": 70,
+        "candidateSha256": "06bdcb5640d166551ecc732c5377e04b3af6a4a1a2c7fef53e4c9eb2c49e818c"
+      }
+    ],
+    "epqa-B0058YR0XS-review-8522429d081877e9": [
+      {
+        "split": "train",
+        "row": 4732,
+        "qaPairId": "7320",
+        "qid": "744",
+        "start": 0,
+        "end": 77,
+        "candidateSha256": "8522429d081877e961c5dfaf0421944b4719068595f6cd6cf9cc114e15b97a9c"
+      }
+    ],
+    "epqa-B0058YR0XS-review-a86fdd66dbad1b22": [
+      {
+        "split": "train",
+        "row": 4733,
+        "qaPairId": "7321",
+        "qid": "744",
+        "start": 0,
+        "end": 96,
+        "candidateSha256": "a86fdd66dbad1b2250eb8032a84b37a32e1e77577870b4144814199f00938460"
+      }
+    ],
+    "epqa-B0058YR0XS-cqa-cec00fa3db4ecb29": [
+      {
+        "split": "train",
+        "row": 4734,
+        "qaPairId": "7322",
+        "qid": "744",
+        "start": 0,
+        "end": 131,
+        "candidateSha256": "cec00fa3db4ecb29260ae3e36b604a5a7d4ee5c29648d0a1b8fd00d290d209ba"
+      }
+    ],
+    "epqa-B0058YR0XS-cqa-c675dc108da2bb5a": [
+      {
+        "split": "train",
+        "row": 4735,
+        "qaPairId": "7323",
+        "qid": "744",
+        "start": 0,
+        "end": 235,
+        "candidateSha256": "c675dc108da2bb5a9c1b37413b89e45515ddf8b9fc914c3a6e2110de3155601c"
+      }
+    ],
+    "epqa-B0058YR0XS-review-152ca5c096bf93ed": [
+      {
+        "split": "train",
+        "row": 4736,
+        "qaPairId": "7324",
+        "qid": "744",
+        "start": 0,
+        "end": 104,
+        "candidateSha256": "152ca5c096bf93ed2bbd6fae4291278d7c3fd76e666e47acfc6d8d5664dd9f3e"
+      }
+    ],
+    "epqa-B0058YR0XS-description-32c7a3bacf2f2ee1": [
+      {
+        "split": "train",
+        "row": 4737,
+        "qaPairId": "7325",
+        "qid": "744",
+        "start": 0,
+        "end": 107,
+        "candidateSha256": "32c7a3bacf2f2ee10133f9c3f36464ecbb831bee0e61fe713fa25996fc2d01b0"
+      }
+    ],
+    "epqa-B0058YR0XS-attribute-8bf21a3c620ae444": [
+      {
+        "split": "train",
+        "row": 4738,
+        "qaPairId": "7326",
+        "qid": "744",
+        "start": 0,
+        "end": 21,
+        "candidateSha256": "8bf21a3c620ae44456b85208c9da122031fde6abe968bf5435f201a41b459bed"
+      }
+    ],
+    "epqa-B0058YR0XS-description-11c1ce60baebd842": [
+      {
+        "split": "train",
+        "row": 4739,
+        "qaPairId": "7327",
+        "qid": "744",
+        "start": 0,
+        "end": 22,
+        "candidateSha256": "11c1ce60baebd842ff675f13b563786f904f9a3ea20a1bd4ded8bcf3f0b2b080"
+      }
+    ],
+    "epqa-B0058YR0XS-review-b17b02f5903620d3": [
+      {
+        "split": "train",
+        "row": 4740,
+        "qaPairId": "7328",
+        "qid": "744",
+        "start": 0,
+        "end": 40,
+        "candidateSha256": "b17b02f5903620d35d1b71a71fdb49f321a04b6828ba26d1d7446a330447f517"
+      }
+    ],
+    "epqa-B0058YR0XS-review-06c89c96f56411d2": [
+      {
+        "split": "train",
+        "row": 4741,
+        "qaPairId": "7329",
+        "qid": "744",
+        "start": 0,
+        "end": 22,
+        "candidateSha256": "06c89c96f56411d2340fd8f1b10b156e25c137ddb0c6d7087e314c38200856c0"
+      }
+    ],
+    "epqa-B002V92YMA-review-938f85f1730d8dca": [
+      {
+        "split": "train",
+        "row": 4882,
+        "qaPairId": "7580",
+        "qid": "770",
+        "start": 0,
+        "end": 137,
+        "candidateSha256": "938f85f1730d8dcafe4eaddc0877ef11177189ec57f3acc8a4daae2b5d8ae088"
+      }
+    ],
+    "epqa-B002V92YMA-review-80a9b1227daf0646": [
+      {
+        "split": "train",
+        "row": 4883,
+        "qaPairId": "7581",
+        "qid": "770",
+        "start": 0,
+        "end": 59,
+        "candidateSha256": "80a9b1227daf06464518a4ea5ca784aba447ddd1c4416ae1d3866759d0956c22"
+      }
+    ],
+    "epqa-B002V92YMA-review-e27a9b01e1834d95": [
+      {
+        "split": "train",
+        "row": 4884,
+        "qaPairId": "7582",
+        "qid": "770",
+        "start": 0,
+        "end": 67,
+        "candidateSha256": "e27a9b01e1834d957b61f39a4ef41b7d2b1f6374eec3a95d312d97cc5961a1e2"
+      }
+    ],
+    "epqa-B002V92YMA-description-8a4a9bebcbb4671d": [
+      {
+        "split": "train",
+        "row": 4885,
+        "qaPairId": "7583",
+        "qid": "770",
+        "start": 0,
+        "end": 118,
+        "candidateSha256": "8a4a9bebcbb4671df1f8bd670c3bdcc27bd71aa6a6a59c658df22e5cffaf14c9"
+      }
+    ],
+    "epqa-B002V92YMA-review-b1ad16045e25e4d7": [
+      {
+        "split": "train",
+        "row": 4886,
+        "qaPairId": "7584",
+        "qid": "770",
+        "start": 0,
+        "end": 80,
+        "candidateSha256": "b1ad16045e25e4d7ce3f2159e3de1bb4088f086738e493a4c2d5411d905d7799"
+      }
+    ],
+    "epqa-B002V92YMA-attribute-27920ec4f51b9fec": [
+      {
+        "split": "train",
+        "row": 4887,
+        "qaPairId": "7585",
+        "qid": "770",
+        "start": 0,
+        "end": 93,
+        "candidateSha256": "27920ec4f51b9fecb237641701c95cfe206fbba1813084d29d1ccbb6eae8092a"
+      }
+    ],
+    "epqa-B002V92YMA-attribute-82f29a633c24c00a": [
+      {
+        "split": "train",
+        "row": 4888,
+        "qaPairId": "7586",
+        "qid": "770",
+        "start": 0,
+        "end": 24,
+        "candidateSha256": "82f29a633c24c00acc0d90e25fa1fcae96b54b1517d1f55c36fc075d61ddba40"
+      }
+    ],
+    "epqa-B002V92YMA-bullet-f0e8c3351a975b19": [
+      {
+        "split": "train",
+        "row": 4889,
+        "qaPairId": "7587",
+        "qid": "770",
+        "start": 0,
+        "end": 54,
+        "candidateSha256": "f0e8c3351a975b1988cf558dcbe779bff2d207adb533c21b3c3638f9083d3235"
+      },
+      {
+        "split": "train",
+        "row": 4907,
+        "qaPairId": "7605",
+        "qid": "772",
+        "start": 0,
+        "end": 54,
+        "candidateSha256": "f0e8c3351a975b1988cf558dcbe779bff2d207adb533c21b3c3638f9083d3235"
+      }
+    ],
+    "epqa-B002V92YMA-review-c70f24d69fab1144": [
+      {
+        "split": "train",
+        "row": 4890,
+        "qaPairId": "7588",
+        "qid": "770",
+        "start": 0,
+        "end": 81,
+        "candidateSha256": "c70f24d69fab11444077a20c72dc6622300f35495ab90ebd8211590e10134fcd"
+      }
+    ],
+    "epqa-B002V92YMA-review-9cf01c5df1f2afa2": [
+      {
+        "split": "train",
+        "row": 4891,
+        "qaPairId": "7589",
+        "qid": "770",
+        "start": 0,
+        "end": 52,
+        "candidateSha256": "9cf01c5df1f2afa2f232dc8a2a1b03507f480d4cc44107268efd8d007f110d84"
+      }
+    ],
+    "epqa-B002V92YMA-attribute-838e5d8f5f191c6a": [
+      {
+        "split": "train",
+        "row": 4892,
+        "qaPairId": "7590",
+        "qid": "771",
+        "start": 0,
+        "end": 261,
+        "candidateSha256": "838e5d8f5f191c6a386d713c864642a2f50626507f58d99e85068dc2ef7f37fa"
+      }
+    ],
+    "epqa-B002V92YMA-review-a335b022df36e1f1": [
+      {
+        "split": "train",
+        "row": 4893,
+        "qaPairId": "7591",
+        "qid": "771",
+        "start": 0,
+        "end": 160,
+        "candidateSha256": "a335b022df36e1f1d156a531fb38cfdf9e876112fa3b0d9df7167e9d371c9692"
+      }
+    ],
+    "epqa-B002V92YMA-review-77af25988bb2ebca": [
+      {
+        "split": "train",
+        "row": 4894,
+        "qaPairId": "7592",
+        "qid": "771",
+        "start": 0,
+        "end": 91,
+        "candidateSha256": "77af25988bb2ebcae48b347a776c06a1ba8f98102dc2088217b6c2b35927edb7"
+      }
+    ],
+    "epqa-B002V92YMA-review-692b91528c06a424": [
+      {
+        "split": "train",
+        "row": 4895,
+        "qaPairId": "7593",
+        "qid": "771",
+        "start": 0,
+        "end": 95,
+        "candidateSha256": "692b91528c06a4242e3ff7f85bf9c2bcd57409d74164ed6a763cc15c862b9fc7"
+      }
+    ],
+    "epqa-B002V92YMA-review-332b9d79af7b9f6b": [
+      {
+        "split": "train",
+        "row": 4896,
+        "qaPairId": "7594",
+        "qid": "771",
+        "start": 0,
+        "end": 112,
+        "candidateSha256": "332b9d79af7b9f6b8cfb40f7afe35c5724b6f08dd7a0525fb4e7ad445c8cfc5f"
+      }
+    ],
+    "epqa-B002V92YMA-description-b8b66084da115191": [
+      {
+        "split": "train",
+        "row": 4897,
+        "qaPairId": "7595",
+        "qid": "771",
+        "start": 0,
+        "end": 17,
+        "candidateSha256": "b8b66084da115191251f5ef2d95da10a79689027f8eee3670fcb727c13b785ca"
+      }
+    ],
+    "epqa-B002V92YMA-description-4d97ad39815bb9f0": [
+      {
+        "split": "train",
+        "row": 4898,
+        "qaPairId": "7596",
+        "qid": "771",
+        "start": 0,
+        "end": 9,
+        "candidateSha256": "4d97ad39815bb9f0f3bc848585cb9e052568442ab412fc7cfc29e3707a0e73ff"
+      }
+    ],
+    "epqa-B002V92YMA-attribute-8d35eb6f5972bcc5": [
+      {
+        "split": "train",
+        "row": 4899,
+        "qaPairId": "7597",
+        "qid": "771",
+        "start": 0,
+        "end": 46,
+        "candidateSha256": "8d35eb6f5972bcc5b1bead1f48bef58d22e0ea8556a8cdb659b3dfc916359ccd"
+      }
+    ],
+    "epqa-B002V92YMA-review-6efd83e503de99df": [
+      {
+        "split": "train",
+        "row": 4900,
+        "qaPairId": "7598",
+        "qid": "771",
+        "start": 0,
+        "end": 78,
+        "candidateSha256": "6efd83e503de99df8c15c87528a3b00de7896523ea9aecbb2e9ef807d3384542"
+      }
+    ],
+    "epqa-B002V92YMA-review-78ca9f46149f44d2": [
+      {
+        "split": "train",
+        "row": 4901,
+        "qaPairId": "7599",
+        "qid": "771",
+        "start": 0,
+        "end": 90,
+        "candidateSha256": "78ca9f46149f44d28aab9e0760b06227375a6c748f92d9a43cf658d445666a0f"
+      }
+    ],
+    "epqa-B002V92YMA-review-413ead1cee1cb1bf": [
+      {
+        "split": "train",
+        "row": 4902,
+        "qaPairId": "7600",
+        "qid": "772",
+        "start": 0,
+        "end": 190,
+        "candidateSha256": "413ead1cee1cb1bff991d962a5bee189d9e89eb0a87fa9ec964409a378f91e2a"
+      }
+    ],
+    "epqa-B002V92YMA-review-b2887167387dd2bf": [
+      {
+        "split": "train",
+        "row": 4903,
+        "qaPairId": "7601",
+        "qid": "772",
+        "start": 0,
+        "end": 37,
+        "candidateSha256": "b2887167387dd2bfd7181651cfcee7af6feefb1dc4a7a84dbb0ab80b31075ac8"
+      }
+    ],
+    "epqa-B002V92YMA-review-0ab7014f64e6a166": [
+      {
+        "split": "train",
+        "row": 4904,
+        "qaPairId": "7602",
+        "qid": "772",
+        "start": 0,
+        "end": 24,
+        "candidateSha256": "0ab7014f64e6a166c52c57d128fea2d6a2d2484ede61815a48028ba0a25b7ab4"
+      }
+    ],
+    "epqa-B002V92YMA-review-c3d05cb0e6b9fd88": [
+      {
+        "split": "train",
+        "row": 4905,
+        "qaPairId": "7603",
+        "qid": "772",
+        "start": 0,
+        "end": 71,
+        "candidateSha256": "c3d05cb0e6b9fd88aea8d204628f6ffbbea678b4ee87236b326ccb9d40d0174c"
+      }
+    ],
+    "epqa-B002V92YMA-review-f2ed3f7058d25b8c": [
+      {
+        "split": "train",
+        "row": 4906,
+        "qaPairId": "7604",
+        "qid": "772",
+        "start": 0,
+        "end": 41,
+        "candidateSha256": "f2ed3f7058d25b8c450107ca875c22a06dc865b60e4c6742c7c768295c924683"
+      }
+    ],
+    "epqa-B002V92YMA-attribute-566878355c8be024": [
+      {
+        "split": "train",
+        "row": 4908,
+        "qaPairId": "7606",
+        "qid": "772",
+        "start": 0,
+        "end": 41,
+        "candidateSha256": "566878355c8be0244eb210f3d863612c7447db146dc6e88269dd343b362d1388"
+      }
+    ],
+    "epqa-B002V92YMA-attribute-3ba12f9bf27fe364": [
+      {
+        "split": "train",
+        "row": 4909,
+        "qaPairId": "7607",
+        "qid": "772",
+        "start": 0,
+        "end": 35,
+        "candidateSha256": "3ba12f9bf27fe364433fdb0ac8193bb4480cff3d073bc49a8ccde09daf3a4522"
+      }
+    ],
+    "epqa-B002V92YMA-review-4792fc053248eb60": [
+      {
+        "split": "train",
+        "row": 4910,
+        "qaPairId": "7608",
+        "qid": "772",
+        "start": 0,
+        "end": 21,
+        "candidateSha256": "4792fc053248eb60723b128582c3b5923c1564985832215fe348846bd12440a6"
+      }
+    ],
+    "epqa-B002V92YMA-review-48df8040b0bcf73e": [
+      {
+        "split": "train",
+        "row": 4911,
+        "qaPairId": "7609",
+        "qid": "772",
+        "start": 0,
+        "end": 83,
+        "candidateSha256": "48df8040b0bcf73ed43db6757167f8cab5e20ddcd116792717859cc5dec91a89"
+      }
+    ],
+    "epqa-B008402S3K-cqa-c6aa6b6c50e5ff32": [
+      {
+        "split": "train",
+        "row": 4912,
+        "qaPairId": "7610",
+        "qid": "773",
+        "start": 0,
+        "end": 192,
+        "candidateSha256": "c6aa6b6c50e5ff325597ae30a93d845b1ac5eac5120592a9cc7e2677159e16df"
+      }
+    ],
+    "epqa-B008402S3K-review-90654784d5a08a9b": [
+      {
+        "split": "train",
+        "row": 4913,
+        "qaPairId": "7611",
+        "qid": "773",
+        "start": 0,
+        "end": 71,
+        "candidateSha256": "90654784d5a08a9befd93b51f206f31d40cf03d2bbe7207518a6c3b00f0bac61"
+      }
+    ],
+    "epqa-B008402S3K-review-a637451c127b9e7f": [
+      {
+        "split": "train",
+        "row": 4914,
+        "qaPairId": "7612",
+        "qid": "773",
+        "start": 0,
+        "end": 49,
+        "candidateSha256": "a637451c127b9e7f8a5ec3ef9ae67088e7f4134da98aec43833de2fb0ce4ed26"
+      }
+    ],
+    "epqa-B008402S3K-cqa-2b5b348ba07b46ad": [
+      {
+        "split": "train",
+        "row": 4915,
+        "qaPairId": "7613",
+        "qid": "773",
+        "start": 0,
+        "end": 108,
+        "candidateSha256": "2b5b348ba07b46adefbd36e987398313ad7a0d285cd036676e4c63e275e934dc"
+      }
+    ],
+    "epqa-B008402S3K-review-c4af171d28886a98": [
+      {
+        "split": "train",
+        "row": 4916,
+        "qaPairId": "7614",
+        "qid": "773",
+        "start": 0,
+        "end": 52,
+        "candidateSha256": "c4af171d28886a98c4640d072b79ea4be7595c3a53cec65aec0e3f566815a49a"
+      }
+    ],
+    "epqa-B008402S3K-description-d6bf205c00b1928c": [
+      {
+        "split": "train",
+        "row": 4917,
+        "qaPairId": "7615",
+        "qid": "773",
+        "start": 0,
+        "end": 86,
+        "candidateSha256": "d6bf205c00b1928c712fc356e5938234fae49ac4dd57341928722847daa1434d"
+      }
+    ],
+    "epqa-B008402S3K-description-0e9583aa6726b7f9": [
+      {
+        "split": "train",
+        "row": 4918,
+        "qaPairId": "7616",
+        "qid": "773",
+        "start": 0,
+        "end": 86,
+        "candidateSha256": "0e9583aa6726b7f9173938156469f566fa91ce9a9b62207d247882976c8d043a"
+      }
+    ],
+    "epqa-B008402S3K-attribute-2b59224fbe6aaa57": [
+      {
+        "split": "train",
+        "row": 4919,
+        "qaPairId": "7617",
+        "qid": "773",
+        "start": 0,
+        "end": 36,
+        "candidateSha256": "2b59224fbe6aaa579c0241aed6a87023d1873233bd8ccdf5f31906535a3f0eaa"
+      }
+    ],
+    "epqa-B008402S3K-review-a18c2809bbd8d16a": [
+      {
+        "split": "train",
+        "row": 4920,
+        "qaPairId": "7618",
+        "qid": "773",
+        "start": 0,
+        "end": 44,
+        "candidateSha256": "a18c2809bbd8d16a98a86d55b5e375a5b6121568c52f2fdc01678d99d135036d"
+      }
+    ],
+    "epqa-B008402S3K-review-8ec3869877ee5393": [
+      {
+        "split": "train",
+        "row": 4921,
+        "qaPairId": "7619",
+        "qid": "773",
+        "start": 0,
+        "end": 40,
+        "candidateSha256": "8ec3869877ee53932d41dd70685ac1ad58616457d2a1604ad55ccbc364fc78d4"
+      }
+    ],
+    "epqa-B008402S3K-review-5ebd033da14fcfb2": [
+      {
+        "split": "train",
+        "row": 4922,
+        "qaPairId": "7620",
+        "qid": "774",
+        "start": 0,
+        "end": 96,
+        "candidateSha256": "5ebd033da14fcfb27d6c4ccb6471a8280833894641b2ad79f3c9656c1190b07b"
+      }
+    ],
+    "epqa-B008402S3K-review-999fbae6ed638b61": [
+      {
+        "split": "train",
+        "row": 4923,
+        "qaPairId": "7621",
+        "qid": "774",
+        "start": 0,
+        "end": 40,
+        "candidateSha256": "999fbae6ed638b61321b2c76d6f4e30fb3af00dff35cfcf818d8a21e25801a78"
+      }
+    ],
+    "epqa-B008402S3K-review-22f62a98a87d497e": [
+      {
+        "split": "train",
+        "row": 4924,
+        "qaPairId": "7622",
+        "qid": "774",
+        "start": 0,
+        "end": 80,
+        "candidateSha256": "22f62a98a87d497eaaf0e05469ac1653966c518497b8fe3c2b11fb261dd3d620"
+      }
+    ],
+    "epqa-B008402S3K-cqa-0fb356b2a46a8aa3": [
+      {
+        "split": "train",
+        "row": 4925,
+        "qaPairId": "7623",
+        "qid": "774",
+        "start": 0,
+        "end": 97,
+        "candidateSha256": "0fb356b2a46a8aa3142221bef9a42730e53a79471bb56ad710a8e1c665f9b11a"
+      }
+    ],
+    "epqa-B008402S3K-cqa-2d858b7205412c5a": [
+      {
+        "split": "train",
+        "row": 4926,
+        "qaPairId": "7624",
+        "qid": "774",
+        "start": 0,
+        "end": 157,
+        "candidateSha256": "2d858b7205412c5a50f200242d91b08c779ad77083fecdb74ea5589e1476356c"
+      }
+    ],
+    "epqa-B008402S3K-attribute-a06c0a99989d5546": [
+      {
+        "split": "train",
+        "row": 4927,
+        "qaPairId": "7625",
+        "qid": "774",
+        "start": 0,
+        "end": 33,
+        "candidateSha256": "a06c0a99989d5546fa51d2f1ec8bfb20d54f9631005bb86572e8c514bef49c64"
+      }
+    ],
+    "epqa-B008402S3K-description-898296e01833a23b": [
+      {
+        "split": "train",
+        "row": 4928,
+        "qaPairId": "7626",
+        "qid": "774",
+        "start": 0,
+        "end": 71,
+        "candidateSha256": "898296e01833a23b7082fc0e2057d34e1bcacddfdab53e74f66778339b78d8fd"
+      }
+    ],
+    "epqa-B008402S3K-bullet-b473a0e7871b7bc8": [
+      {
+        "split": "train",
+        "row": 4929,
+        "qaPairId": "7627",
+        "qid": "774",
+        "start": 0,
+        "end": 139,
+        "candidateSha256": "b473a0e7871b7bc88773a34cf496d1e3ad152a88e3153ea5da6e629bc77f350e"
+      }
+    ],
+    "epqa-B008402S3K-review-dca51774860199fc": [
+      {
+        "split": "train",
+        "row": 4930,
+        "qaPairId": "7628",
+        "qid": "774",
+        "start": 0,
+        "end": 39,
+        "candidateSha256": "dca51774860199fcc062d579676fe78078ea825a02e9920e59eaa7877b0d9ae7"
+      }
+    ],
+    "epqa-B008402S3K-review-e2a1cc411d6fbbf0": [
+      {
+        "split": "train",
+        "row": 4931,
+        "qaPairId": "7629",
+        "qid": "774",
+        "start": 0,
+        "end": 57,
+        "candidateSha256": "e2a1cc411d6fbbf08485f664311fbe3810c3cbebc2c521ef06bf74570dee7dad"
+      }
+    ],
+    "epqa-B008402S3K-attribute-619f6c0d99b503d0": [
+      {
+        "split": "train",
+        "row": 4932,
+        "qaPairId": "7630",
+        "qid": "775",
+        "start": 0,
+        "end": 97,
+        "candidateSha256": "619f6c0d99b503d0b149cce2aaa9bc5927bbb8a376ec6502778752e59f77802a"
+      }
+    ],
+    "epqa-B008402S3K-review-b70384bc8a4748d3": [
+      {
+        "split": "train",
+        "row": 4933,
+        "qaPairId": "7631",
+        "qid": "775",
+        "start": 0,
+        "end": 61,
+        "candidateSha256": "b70384bc8a4748d314a087f39c52502c3a4b74f11af8351b2dd7daa8e64a48ec"
+      }
+    ],
+    "epqa-B008402S3K-review-87a352a6f9eba57e": [
+      {
+        "split": "train",
+        "row": 4934,
+        "qaPairId": "7632",
+        "qid": "775",
+        "start": 0,
+        "end": 74,
+        "candidateSha256": "87a352a6f9eba57ebfc57b05a0318ff542bbd81c05ec94b81dc7a7fbc0f8ec40"
+      }
+    ],
+    "epqa-B008402S3K-review-33d481baf8c302dd": [
+      {
+        "split": "train",
+        "row": 4935,
+        "qaPairId": "7633",
+        "qid": "775",
+        "start": 0,
+        "end": 76,
+        "candidateSha256": "33d481baf8c302ddaa6814abb8e5cfe9b930df6296588b16f9445429e9b8fef5"
+      }
+    ],
+    "epqa-B008402S3K-review-2d3f6fc7e07606a5": [
+      {
+        "split": "train",
+        "row": 4936,
+        "qaPairId": "7634",
+        "qid": "775",
+        "start": 0,
+        "end": 112,
+        "candidateSha256": "2d3f6fc7e07606a54b84794346a5b96b983e8f79cfc19a7da7c3ca1c31038177"
+      }
+    ],
+    "epqa-B008402S3K-description-778998b842c56976": [
+      {
+        "split": "train",
+        "row": 4937,
+        "qaPairId": "7635",
+        "qid": "775",
+        "start": 0,
+        "end": 13,
+        "candidateSha256": "778998b842c5697680b67b9b07fcde06c2d554da4a4458c3d14121169245d9f2"
+      }
+    ],
+    "epqa-B008402S3K-description-f9260184e9da9adb": [
+      {
+        "split": "train",
+        "row": 4938,
+        "qaPairId": "7636",
+        "qid": "775",
+        "start": 0,
+        "end": 15,
+        "candidateSha256": "f9260184e9da9adb07f4043a18886b8762b78e3303aa06f9551fdfd43bac729d"
+      }
+    ],
+    "epqa-B008402S3K-attribute-19994518fa269134": [
+      {
+        "split": "train",
+        "row": 4939,
+        "qaPairId": "7637",
+        "qid": "775",
+        "start": 0,
+        "end": 27,
+        "candidateSha256": "19994518fa269134e2b5f12897cca6d4380cab8fcbda6b6de537ec700a48c8dd"
+      }
+    ],
+    "epqa-B008402S3K-review-6f712e4702308e34": [
+      {
+        "split": "train",
+        "row": 4940,
+        "qaPairId": "7638",
+        "qid": "775",
+        "start": 0,
+        "end": 78,
+        "candidateSha256": "6f712e4702308e34e14011c1c8956a17719927a0cd9038487bab339dc74d4e8e"
+      }
+    ],
+    "epqa-B008402S3K-review-473fac68990b9f46": [
+      {
+        "split": "train",
+        "row": 4941,
+        "qaPairId": "7639",
+        "qid": "775",
+        "start": 0,
+        "end": 9,
+        "candidateSha256": "473fac68990b9f46b75e01e4e7393ef519e4a666691762713f0751da8fdea9ad"
+      }
+    ],
+    "epqa-B005NY0TEK-cqa-1c5c43013373c24c": [
+      {
+        "split": "dev",
+        "row": 442,
+        "qaPairId": "4590",
+        "qid": "469",
+        "start": 0,
+        "end": 190,
+        "candidateSha256": "1c5c43013373c24c1d39b881ae1dc393a78ca2d8d3d69319e6378f94444507b2"
+      }
+    ],
+    "epqa-B005NY0TEK-cqa-ba871fb86de970e0": [
+      {
+        "split": "dev",
+        "row": 443,
+        "qaPairId": "4591",
+        "qid": "469",
+        "start": 0,
+        "end": 157,
+        "candidateSha256": "ba871fb86de970e021217b7a1dc6d0867f13e963509f9bc48effcdd13c57c68e"
+      }
+    ],
+    "epqa-B005NY0TEK-review-da2ddd19f81ec518": [
+      {
+        "split": "dev",
+        "row": 444,
+        "qaPairId": "4592",
+        "qid": "469",
+        "start": 0,
+        "end": 48,
+        "candidateSha256": "da2ddd19f81ec518b8f2ad0df6b97fe96512d60a6a9d8f0928021c4ea656baeb"
+      }
+    ],
+    "epqa-B005NY0TEK-review-518709cf39882fe5": [
+      {
+        "split": "dev",
+        "row": 445,
+        "qaPairId": "4593",
+        "qid": "469",
+        "start": 0,
+        "end": 144,
+        "candidateSha256": "518709cf39882fe509d5272fbd1ba61f8074b447909323c2c7d2c4107a61cc75"
+      }
+    ],
+    "epqa-B005NY0TEK-description-27643ebbbb4c05b6": [
+      {
+        "split": "dev",
+        "row": 446,
+        "qaPairId": "4594",
+        "qid": "469",
+        "start": 0,
+        "end": 25,
+        "candidateSha256": "27643ebbbb4c05b6d0329966962a02d401f66fc1e5a348cca4eb128e2221ae37"
+      }
+    ],
+    "epqa-B005NY0TEK-bullet-61c4d117914297ad": [
+      {
+        "split": "dev",
+        "row": 447,
+        "qaPairId": "4595",
+        "qid": "469",
+        "start": 0,
+        "end": 41,
+        "candidateSha256": "61c4d117914297add97a941565b6dc3e19353ce8770be605b61beaf1045dfb10"
+      }
+    ],
+    "epqa-B005NY0TEK-bullet-08ad77a7139bc311": [
+      {
+        "split": "dev",
+        "row": 448,
+        "qaPairId": "4596",
+        "qid": "469",
+        "start": 0,
+        "end": 21,
+        "candidateSha256": "08ad77a7139bc311c43d283f1db45323ba0b6e078ff1e4cac54249e92e54b23b"
+      }
+    ],
+    "epqa-B005NY0TEK-description-7a8cc98857b50c36": [
+      {
+        "split": "dev",
+        "row": 449,
+        "qaPairId": "4597",
+        "qid": "469",
+        "start": 0,
+        "end": 27,
+        "candidateSha256": "7a8cc98857b50c3683993ddd26634189ac9e1dd4aa34a6e9e2cac0e864364a8e"
+      }
+    ],
+    "epqa-B005NY0TEK-review-1bc94fa73842ef7c": [
+      {
+        "split": "dev",
+        "row": 450,
+        "qaPairId": "4598",
+        "qid": "469",
+        "start": 0,
+        "end": 129,
+        "candidateSha256": "1bc94fa73842ef7cedbc2169a97ade000625b296b1236aa233919deda0ee2ca8"
+      }
+    ],
+    "epqa-B005NY0TEK-review-b4500587713d32d9": [
+      {
+        "split": "dev",
+        "row": 451,
+        "qaPairId": "4599",
+        "qid": "469",
+        "start": 0,
+        "end": 25,
+        "candidateSha256": "b4500587713d32d98cff96cb2616bab64f455a2be3188eff090c2ea4940c8efe"
+      }
+    ],
+    "epqa-B007PBHZK0-description-a238c01a21c189d5": [
+      {
+        "split": "dev",
+        "row": 482,
+        "qaPairId": "4930",
+        "qid": "505",
+        "start": 0,
+        "end": 27,
+        "candidateSha256": "a238c01a21c189d518594ddfc90c3eddb6cd7d84ee39b6d75cd5971a63e8ff54"
+      }
+    ],
+    "epqa-B007PBHZK0-description-bf21c0f3a3629930": [
+      {
+        "split": "dev",
+        "row": 483,
+        "qaPairId": "4931",
+        "qid": "505",
+        "start": 0,
+        "end": 29,
+        "candidateSha256": "bf21c0f3a3629930a03b7b2146ce8987770d88e9d2eadb3d99b95a2b2cba90e1"
+      }
+    ],
+    "epqa-B007PBHZK0-cqa-64e0714b812377f7": [
+      {
+        "split": "dev",
+        "row": 484,
+        "qaPairId": "4932",
+        "qid": "505",
+        "start": 0,
+        "end": 141,
+        "candidateSha256": "64e0714b812377f73a6bb7806b9040476737f475498c3a01f634f96654afc8af"
+      }
+    ],
+    "epqa-B007PBHZK0-review-ad4bc720e84a9e0e": [
+      {
+        "split": "dev",
+        "row": 485,
+        "qaPairId": "4933",
+        "qid": "505",
+        "start": 0,
+        "end": 85,
+        "candidateSha256": "ad4bc720e84a9e0e572829f90dbc8360d5b8f28b6c04f32addb36e17f36f1fc2"
+      }
+    ],
+    "epqa-B007PBHZK0-description-a4cb075ed22dc0cf": [
+      {
+        "split": "dev",
+        "row": 486,
+        "qaPairId": "4934",
+        "qid": "505",
+        "start": 0,
+        "end": 62,
+        "candidateSha256": "a4cb075ed22dc0cffd92c49b47b0142c9690422136d2dc631940fe2f2c92524c"
+      }
+    ],
+    "epqa-B007PBHZK0-description-2b4d9d3b855ac925": [
+      {
+        "split": "dev",
+        "row": 487,
+        "qaPairId": "4935",
+        "qid": "505",
+        "start": 0,
+        "end": 2,
+        "candidateSha256": "2b4d9d3b855ac92571cd96399d4c022743847c1726f65f797ba23cc8ca7b486b"
+      }
+    ],
+    "epqa-B007PBHZK0-description-793980c416e87601": [
+      {
+        "split": "dev",
+        "row": 488,
+        "qaPairId": "4936",
+        "qid": "505",
+        "start": 0,
+        "end": 35,
+        "candidateSha256": "793980c416e87601d6ba38ae86d22746f0353e20ef80c9d4ad600a7eb0654f6f"
+      }
+    ],
+    "epqa-B007PBHZK0-description-a4504bf9d88fc8e7": [
+      {
+        "split": "dev",
+        "row": 489,
+        "qaPairId": "4937",
+        "qid": "505",
+        "start": 0,
+        "end": 30,
+        "candidateSha256": "a4504bf9d88fc8e7c0c2c50147cf253f80167ea853acb35e6c3b62632ac84e0a"
+      }
+    ],
+    "epqa-B007PBHZK0-review-481164120f386f08": [
+      {
+        "split": "dev",
+        "row": 490,
+        "qaPairId": "4938",
+        "qid": "505",
+        "start": 0,
+        "end": 62,
+        "candidateSha256": "481164120f386f08c8329c81c5a339ed438532cebc1f01246879108def3104fc"
+      }
+    ],
+    "epqa-B007PBHZK0-cqa-144bd859e5f02006": [
+      {
+        "split": "dev",
+        "row": 491,
+        "qaPairId": "4939",
+        "qid": "505",
+        "start": 0,
+        "end": 166,
+        "candidateSha256": "144bd859e5f02006809bc404bf9592a16ace609a7e9721227c17f2498ac77a9b"
+      }
+    ],
+    "epqa-B005SWX65G-cqa-5c96e4f36cfde5f9": [
+      {
+        "split": "dev",
+        "row": 512,
+        "qaPairId": "5230",
+        "qid": "535",
+        "start": 0,
+        "end": 77,
+        "candidateSha256": "5c96e4f36cfde5f94836d8417cef8a55480653f878585f2be307612d1e8285b7"
+      }
+    ],
+    "epqa-B005SWX65G-attribute-62e8757b539d9d6f": [
+      {
+        "split": "dev",
+        "row": 513,
+        "qaPairId": "5231",
+        "qid": "535",
+        "start": 0,
+        "end": 81,
+        "candidateSha256": "62e8757b539d9d6ff72eb14bdc7f04041cc6aeeb0dd874243f5ecb063c127ec4"
+      }
+    ],
+    "epqa-B005SWX65G-review-2a5b56a4de0517c6": [
+      {
+        "split": "dev",
+        "row": 514,
+        "qaPairId": "5232",
+        "qid": "535",
+        "start": 0,
+        "end": 32,
+        "candidateSha256": "2a5b56a4de0517c67d01cfabb6425aaabce30f1557d2540a14770284a1172ca8"
+      }
+    ],
+    "epqa-B005SWX65G-cqa-fdef6b6aa5212cad": [
+      {
+        "split": "dev",
+        "row": 515,
+        "qaPairId": "5233",
+        "qid": "535",
+        "start": 0,
+        "end": 198,
+        "candidateSha256": "fdef6b6aa5212cada57ca7f1007fed2e47bb364e36d31bad817ffe2af470b7a8"
+      }
+    ],
+    "epqa-B005SWX65G-review-9ed7e4c0d13518f8": [
+      {
+        "split": "dev",
+        "row": 516,
+        "qaPairId": "5234",
+        "qid": "535",
+        "start": 0,
+        "end": 112,
+        "candidateSha256": "9ed7e4c0d13518f8ccaf00ce1d4868854f49e64e102fb1b7ac0f2edb8931ff89"
+      }
+    ],
+    "epqa-B005SWX65G-attribute-7f4aca73fb65e82e": [
+      {
+        "split": "dev",
+        "row": 517,
+        "qaPairId": "5235",
+        "qid": "535",
+        "start": 0,
+        "end": 35,
+        "candidateSha256": "7f4aca73fb65e82eb248d42ca6900012f47b6c1d58a56dc3ab36640f0a9081b8"
+      }
+    ],
+    "epqa-B005SWX65G-description-30a71f9b9ffd7a3b": [
+      {
+        "split": "dev",
+        "row": 518,
+        "qaPairId": "5236",
+        "qid": "535",
+        "start": 0,
+        "end": 35,
+        "candidateSha256": "30a71f9b9ffd7a3b44d951023f4a459f27ec13d409d74294e12f427c160f1a7e"
+      }
+    ],
+    "epqa-B005SWX65G-attribute-db36d532941c4f8c": [
+      {
+        "split": "dev",
+        "row": 519,
+        "qaPairId": "5237",
+        "qid": "535",
+        "start": 0,
+        "end": 60,
+        "candidateSha256": "db36d532941c4f8c7cec4673c3dda5264a93fbb66c8d9fe27732ee25f5e31849"
+      }
+    ],
+    "epqa-B005SWX65G-review-6a0b113348985fbb": [
+      {
+        "split": "dev",
+        "row": 520,
+        "qaPairId": "5238",
+        "qid": "535",
+        "start": 0,
+        "end": 142,
+        "candidateSha256": "6a0b113348985fbb5c86469a2ab138fddad833a30733774f26ff3a1dae739150"
+      }
+    ],
+    "epqa-B005SWX65G-review-d3eb31e9d97c97ef": [
+      {
+        "split": "dev",
+        "row": 521,
+        "qaPairId": "5239",
+        "qid": "535",
+        "start": 0,
+        "end": 32,
+        "candidateSha256": "d3eb31e9d97c97ef14dc902f3513a89fdf71bc6b5415b628beeb8c6019e3abed"
+      }
+    ],
+    "epqa-B009XGZGZG-attribute-6f6346f16723c9e2": [
+      {
+        "split": "dev",
+        "row": 542,
+        "qaPairId": "5750",
+        "qid": "587",
+        "start": 0,
+        "end": 122,
+        "candidateSha256": "6f6346f16723c9e200d81a59786025f7cf8f779b1610024653d0fea367c99043"
+      }
+    ],
+    "epqa-B009XGZGZG-attribute-de5e7a1e3aea33ec": [
+      {
+        "split": "dev",
+        "row": 543,
+        "qaPairId": "5751",
+        "qid": "587",
+        "start": 0,
+        "end": 113,
+        "candidateSha256": "de5e7a1e3aea33eca8c9384e1861ba4b813bbd5b181e750801a1a0848d76f6dc"
+      }
+    ],
+    "epqa-B009XGZGZG-cqa-156f07dabe81b8ab": [
+      {
+        "split": "dev",
+        "row": 544,
+        "qaPairId": "5752",
+        "qid": "587",
+        "start": 0,
+        "end": 122,
+        "candidateSha256": "156f07dabe81b8ab291eb758a1125882cea4fdb10a2d1af67949343f29fb82c3"
+      }
+    ],
+    "epqa-B009XGZGZG-cqa-f7562a2d3cd19f12": [
+      {
+        "split": "dev",
+        "row": 545,
+        "qaPairId": "5753",
+        "qid": "587",
+        "start": 0,
+        "end": 71,
+        "candidateSha256": "f7562a2d3cd19f1257d58e1aa81113c4709232c0639a7dd3668877ebda942bb3"
+      }
+    ],
+    "epqa-B009XGZGZG-review-5ab01fad0bbd9399": [
+      {
+        "split": "dev",
+        "row": 546,
+        "qaPairId": "5754",
+        "qid": "587",
+        "start": 0,
+        "end": 123,
+        "candidateSha256": "5ab01fad0bbd9399aaaafaf9393ca4d059d7c098ab8cc6109efd110b00935486"
+      }
+    ],
+    "epqa-B009XGZGZG-attribute-8d70ec43d861c615": [
+      {
+        "split": "dev",
+        "row": 547,
+        "qaPairId": "5755",
+        "qid": "587",
+        "start": 0,
+        "end": 25,
+        "candidateSha256": "8d70ec43d861c6152095608185f7c8bd2757300c61bade65dedb5ee88eb44286"
+      }
+    ],
+    "epqa-B009XGZGZG-bullet-0dc2479c6e645668": [
+      {
+        "split": "dev",
+        "row": 548,
+        "qaPairId": "5756",
+        "qid": "587",
+        "start": 0,
+        "end": 118,
+        "candidateSha256": "0dc2479c6e645668f580786f58d43870e714cda3372dd53957a5332b0ea83a1a"
+      }
+    ],
+    "epqa-B009XGZGZG-bullet-a7c0ae5f01867551": [
+      {
+        "split": "dev",
+        "row": 549,
+        "qaPairId": "5757",
+        "qid": "587",
+        "start": 0,
+        "end": 151,
+        "candidateSha256": "a7c0ae5f01867551080f04a3ae8e269e9105a489b660515bf9fb5e8eb4ad20d8"
+      }
+    ],
+    "epqa-B009XGZGZG-review-68f1e5ab5bd8b3cd": [
+      {
+        "split": "dev",
+        "row": 550,
+        "qaPairId": "5758",
+        "qid": "587",
+        "start": 0,
+        "end": 61,
+        "candidateSha256": "68f1e5ab5bd8b3cd2f3806785ce421866a3bd805880f2de868a78f92df01c190"
+      }
+    ],
+    "epqa-B009XGZGZG-review-f18eff5ac18b82f8": [
+      {
+        "split": "dev",
+        "row": 551,
+        "qaPairId": "5759",
+        "qid": "587",
+        "start": 0,
+        "end": 120,
+        "candidateSha256": "f18eff5ac18b82f8b3d26460a575dfdf3df18d68f8248e6698b8627433fc045e"
+      }
+    ],
+    "epqa-B000XXQULC-attribute-d02d08d24f2e1577": [
+      {
+        "split": "dev",
+        "row": 2122,
+        "qaPairId": "19440",
+        "qid": "1985",
+        "start": 0,
+        "end": 58,
+        "candidateSha256": "d02d08d24f2e15774943fbd01f0536d1d21af7862ebb77de23d655d3d4f5e554"
+      }
+    ],
+    "epqa-B000XXQULC-attribute-44e832a7a0bd60dd": [
+      {
+        "split": "dev",
+        "row": 2123,
+        "qaPairId": "19441",
+        "qid": "1985",
+        "start": 0,
+        "end": 33,
+        "candidateSha256": "44e832a7a0bd60ddc69cc8e70a55a5e645481bdb521140c0f33954d058730581"
+      }
+    ],
+    "epqa-B000XXQULC-review-8659fec1c04cc2a5": [
+      {
+        "split": "dev",
+        "row": 2124,
+        "qaPairId": "19442",
+        "qid": "1985",
+        "start": 0,
+        "end": 241,
+        "candidateSha256": "8659fec1c04cc2a5170351bafc5e0457fff5cdd592742329907dabc910a625f2"
+      }
+    ],
+    "epqa-B000XXQULC-review-405505a63932077b": [
+      {
+        "split": "dev",
+        "row": 2125,
+        "qaPairId": "19443",
+        "qid": "1985",
+        "start": 0,
+        "end": 55,
+        "candidateSha256": "405505a63932077b1017aebf0d567bfd32be4a55e0f2c8ec5fb41a3ec28c284b"
+      }
+    ],
+    "epqa-B000XXQULC-review-c10820b883ef4bd1": [
+      {
+        "split": "dev",
+        "row": 2126,
+        "qaPairId": "19444",
+        "qid": "1985",
+        "start": 0,
+        "end": 112,
+        "candidateSha256": "c10820b883ef4bd1f038bb6821c752e7aeca9d0fb51aed065cfa4d3922aa713f"
+      }
+    ],
+    "epqa-B000XXQULC-attribute-3d5baee8cbf7d0b9": [
+      {
+        "split": "dev",
+        "row": 2127,
+        "qaPairId": "19445",
+        "qid": "1985",
+        "start": 0,
+        "end": 82,
+        "candidateSha256": "3d5baee8cbf7d0b970f4fcf92b31dc2e0a07a2e57ad5ef3c3f7ac6df4c772b23"
+      }
+    ],
+    "epqa-B000XXQULC-attribute-b96cf8cdf74a8b48": [
+      {
+        "split": "dev",
+        "row": 2128,
+        "qaPairId": "19446",
+        "qid": "1985",
+        "start": 0,
+        "end": 37,
+        "candidateSha256": "b96cf8cdf74a8b48dad2e068fe47cf2af3b3b0052a0b8ddd7d43b09df57ab5e4"
+      }
+    ],
+    "epqa-B000XXQULC-attribute-a66f17da89f99d80": [
+      {
+        "split": "dev",
+        "row": 2129,
+        "qaPairId": "19447",
+        "qid": "1985",
+        "start": 0,
+        "end": 36,
+        "candidateSha256": "a66f17da89f99d800cae79c8ac76d6b3fe0bb06b93fac436923c4d66049e579c"
+      }
+    ],
+    "epqa-B000XXQULC-cqa-3001e08223bb2a68": [
+      {
+        "split": "dev",
+        "row": 2130,
+        "qaPairId": "19448",
+        "qid": "1985",
+        "start": 0,
+        "end": 86,
+        "candidateSha256": "3001e08223bb2a68202af0a98e4e65726664695b51337d604ef6ba7807fc163c"
+      }
+    ],
+    "epqa-B000XXQULC-review-77ecf5af4db69749": [
+      {
+        "split": "dev",
+        "row": 2131,
+        "qaPairId": "19449",
+        "qid": "1985",
+        "start": 0,
+        "end": 36,
+        "candidateSha256": "77ecf5af4db697496f1e68c52c08da2cefd22595d8e4e3595d45e5b0f469be1e"
+      }
+    ],
+    "epqa-B000B6FADU-attribute-9cfb087ee528d6f7": [
+      {
+        "split": "dev",
+        "row": 2672,
+        "qaPairId": "23810",
+        "qid": "2432",
+        "start": 0,
+        "end": 263,
+        "candidateSha256": "9cfb087ee528d6f7bac28da18bcf67f74f1ed5944a27d4d1d8de0d76e092046a"
+      }
+    ],
+    "epqa-B000B6FADU-review-6d5f2e095f2150f5": [
+      {
+        "split": "dev",
+        "row": 2673,
+        "qaPairId": "23811",
+        "qid": "2432",
+        "start": 0,
+        "end": 93,
+        "candidateSha256": "6d5f2e095f2150f58d8a6e5d7ec81243d6dfbde3b8b1688f206ca69ed0fa2381"
+      }
+    ],
+    "epqa-B000B6FADU-bullet-2a5cd59a474dcb36": [
+      {
+        "split": "dev",
+        "row": 2674,
+        "qaPairId": "23812",
+        "qid": "2432",
+        "start": 0,
+        "end": 241,
+        "candidateSha256": "2a5cd59a474dcb362af52c09512b4564c084500b3467faf177a0af9725e17cea"
+      }
+    ],
+    "epqa-B000B6FADU-review-64a2d14d50a87561": [
+      {
+        "split": "dev",
+        "row": 2675,
+        "qaPairId": "23813",
+        "qid": "2432",
+        "start": 0,
+        "end": 106,
+        "candidateSha256": "64a2d14d50a875611785b5800e094223af9297c84b174b7ba244fa4f3bff6409"
+      }
+    ],
+    "epqa-B000B6FADU-review-53b73cc5f9a41197": [
+      {
+        "split": "dev",
+        "row": 2676,
+        "qaPairId": "23814",
+        "qid": "2432",
+        "start": 0,
+        "end": 205,
+        "candidateSha256": "53b73cc5f9a41197de536c93fbf0b4c489e1713bf2d4d4e1778323e7ca969870"
+      }
+    ],
+    "epqa-B000B6FADU-attribute-6923e1768d4ce392": [
+      {
+        "split": "dev",
+        "row": 2677,
+        "qaPairId": "23815",
+        "qid": "2432",
+        "start": 0,
+        "end": 33,
+        "candidateSha256": "6923e1768d4ce39209da3bfb1a6a580cb6dd2763976ab8fa610c17fd84959337"
+      }
+    ],
+    "epqa-B000B6FADU-attribute-283aa122962de0f2": [
+      {
+        "split": "dev",
+        "row": 2678,
+        "qaPairId": "23816",
+        "qid": "2432",
+        "start": 0,
+        "end": 37,
+        "candidateSha256": "283aa122962de0f20dd6d0640aa2a21d501a8a4fc5f4d6e9a6f60f7481e48180"
+      }
+    ],
+    "epqa-B000B6FADU-description-0521009bfcc81981": [
+      {
+        "split": "dev",
+        "row": 2679,
+        "qaPairId": "23817",
+        "qid": "2432",
+        "start": 0,
+        "end": 200,
+        "candidateSha256": "0521009bfcc81981f743bb8f0c10d4ce2390e1734f1473a1ae55e8cf7b4b2439"
+      }
+    ],
+    "epqa-B000B6FADU-review-0637a7db4ae76bb9": [
+      {
+        "split": "dev",
+        "row": 2680,
+        "qaPairId": "23818",
+        "qid": "2432",
+        "start": 0,
+        "end": 54,
+        "candidateSha256": "0637a7db4ae76bb9df266097ffa615706cc853c113c4b494bff3638333504f22"
+      }
+    ],
+    "epqa-B000B6FADU-review-f2d45a9dd9158b05": [
+      {
+        "split": "dev",
+        "row": 2681,
+        "qaPairId": "23819",
+        "qid": "2432",
+        "start": 0,
+        "end": 14,
+        "candidateSha256": "f2d45a9dd9158b05e533b17c68c2ca04421c2098e3f354a96a427e48a69e3701"
+      }
+    ],
+    "epqa-B000B6FADU-description-f76de0b61319783f": [
+      {
+        "split": "dev",
+        "row": 2682,
+        "qaPairId": "23820",
+        "qid": "2433",
+        "start": 0,
+        "end": 33,
+        "candidateSha256": "f76de0b61319783fed895a3a26ccfc994a29e1cf8b207dd10ec6bf2f2413c1f9"
+      }
+    ],
+    "epqa-B000B6FADU-attribute-d9799d7775b234e6": [
+      {
+        "split": "dev",
+        "row": 2683,
+        "qaPairId": "23821",
+        "qid": "2433",
+        "start": 0,
+        "end": 85,
+        "candidateSha256": "d9799d7775b234e6c99a23baa656f3e94434f68813b442d43c2a7e29ada980b5"
+      }
+    ],
+    "epqa-B000B6FADU-attribute-010b707f5510bb5f": [
+      {
+        "split": "dev",
+        "row": 2684,
+        "qaPairId": "23822",
+        "qid": "2433",
+        "start": 0,
+        "end": 99,
+        "candidateSha256": "010b707f5510bb5f105d601a30425cd45fe7e0093d7fa9ac4a3a12ba68634dee"
+      }
+    ],
+    "epqa-B000B6FADU-review-38a6a739fa2c4a74": [
+      {
+        "split": "dev",
+        "row": 2685,
+        "qaPairId": "23823",
+        "qid": "2433",
+        "start": 0,
+        "end": 85,
+        "candidateSha256": "38a6a739fa2c4a7495c4e3297e7f4d1dd479bcb018c27416a726a535f7143de3"
+      }
+    ],
+    "epqa-B000B6FADU-review-01dec21ed3c1ed66": [
+      {
+        "split": "dev",
+        "row": 2686,
+        "qaPairId": "23824",
+        "qid": "2433",
+        "start": 0,
+        "end": 42,
+        "candidateSha256": "01dec21ed3c1ed665d089b189ace38d857776c9bbb88ace3099e35a65e5e811b"
+      }
+    ],
+    "epqa-B000B6FADU-bullet-d07dc2e928ca45dc": [
+      {
+        "split": "dev",
+        "row": 2687,
+        "qaPairId": "23825",
+        "qid": "2433",
+        "start": 0,
+        "end": 252,
+        "candidateSha256": "d07dc2e928ca45dcc9c0f5cf92173fbb26db831dd2fa616223ce4ec0e693fdcb"
+      }
+    ],
+    "epqa-B000B6FADU-description-ef3d9c44ce1592a3": [
+      {
+        "split": "dev",
+        "row": 2688,
+        "qaPairId": "23826",
+        "qid": "2433",
+        "start": 0,
+        "end": 137,
+        "candidateSha256": "ef3d9c44ce1592a302cea6104d4e1dbde1edb72185976026b27c1fc7b5c378a7"
+      }
+    ],
+    "epqa-B000B6FADU-description-b322456e37cb4693": [
+      {
+        "split": "dev",
+        "row": 2689,
+        "qaPairId": "23827",
+        "qid": "2433",
+        "start": 0,
+        "end": 25,
+        "candidateSha256": "b322456e37cb46937b107fa8da3bf2f3cc3ac44f7dfffa1579aa4075a31c9ccb"
+      }
+    ],
+    "epqa-B000B6FADU-review-1aabea79a0f9590a": [
+      {
+        "split": "dev",
+        "row": 2690,
+        "qaPairId": "23828",
+        "qid": "2433",
+        "start": 0,
+        "end": 27,
+        "candidateSha256": "1aabea79a0f9590aafbdfbdadb4341782adb48ad02e02599843a9eec9f39245a"
+      }
+    ],
+    "epqa-B000B6FADU-review-b0974f91b63fd007": [
+      {
+        "split": "dev",
+        "row": 2691,
+        "qaPairId": "23829",
+        "qid": "2433",
+        "start": 0,
+        "end": 89,
+        "candidateSha256": "b0974f91b63fd007a912361543c2261ec804e625907256c3b466dc7f09830456"
+      }
+    ]
+  },
+  "corpusSha256": "f154ba6bb6472292d1d82da26f7627fc3a2961b6ee7283ce5965585a789150ad"
+}
