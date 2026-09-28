@@ -18,6 +18,7 @@ import { loadFinalProductCorpus, loadProductCorpus } from './product-corpus.ts';
 import { ProductRetriever } from './product-retrieval.ts';
 import { SapiomFeedbackProvider } from './feedback-provider.ts';
 import { LoopTelemetry } from './loop-telemetry.ts';
+import { ProductWorkspace } from './product-workspace.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -40,16 +41,21 @@ async function body(req: IncomingMessage): Promise<unknown> {
   return JSON.parse(text || '{}') as unknown;
 }
 
-export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry) {
+export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace) {
   const runner = new ExperimentRunner(store, mode, provider);
   const optimizer = new OptimizationRunner(store, runner, mode, provider);
   let feedbackProvider: SapiomFeedbackProvider | undefined;
+  const localAnswerProvider = () => {
+    if (!feedbackProvider) { feedbackProvider = new SapiomFeedbackProvider(); feedbackProvider.recoverInterruptedCalls(); }
+    return feedbackProvider;
+  };
+  const productWorkspace = () => workspace ??= new ProductWorkspace(process.env.ABLATRIX_WORKSPACE_DB, localAnswerProvider());
   const loopTelemetry = () => telemetry ??= new LoopTelemetry();
   const feedbackLoop = () => {
     if (!feedback) {
       const corpus = loadProductCorpus();
       const finalCorpus = loadFinalProductCorpus();
-      const nextProvider = new SapiomFeedbackProvider();
+      const nextProvider = localAnswerProvider();
       let nextRetriever: ProductRetriever | undefined;
       let nextFinalRetriever: ProductRetriever | undefined;
       let nextLoop: FeedbackLoop | undefined;
@@ -57,13 +63,10 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
         nextRetriever = new ProductRetriever(corpus, process.env.ABLATRIX_RETRIEVAL_DB);
         nextFinalRetriever = new ProductRetriever(finalCorpus, process.env.ABLATRIX_FINAL_RETRIEVAL_DB ?? '.data/product-final-retrieval.sqlite');
         nextLoop = new FeedbackLoop(corpus, nextRetriever, nextProvider, process.env.ABLATRIX_LOOP_DB, finalCorpus, nextFinalRetriever);
-        nextProvider.recoverInterruptedCalls();
-        feedbackProvider = nextProvider;
         feedback = nextLoop;
       } catch (error) {
         if (nextLoop) nextLoop.close();
         else { nextRetriever?.close(); nextFinalRetriever?.close(); }
-        nextProvider.close();
         throw error;
       }
     }
@@ -86,6 +89,12 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       }
       const url = new URL(req.url ?? '/', 'http://localhost');
       const path = url.pathname;
+      if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, productWorkspace().overview());
+      if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req)));
+      if (req.method === 'POST' && path === '/api/workspace/questions') {
+        const run = await productWorkspace().ask(await body(req));
+        return json(res, run.status === 'failed' ? 502 : 201, run);
+      }
       if (req.method === 'GET' && path === '/api/loop/telemetry') return json(res, 200, loopTelemetry().status());
       if (req.method === 'POST' && path === '/api/loop/telemetry/sync') {
         const input = await body(req);
@@ -199,6 +208,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (error instanceof SyntaxError) return json(res, 400, { error: 'Invalid JSON body.' });
       if (error instanceof Error && error.message === 'Request body too large') return json(res, 413, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Feedback')) return json(res, 409, { error: error.message });
+      if (error instanceof Error && error.message.startsWith('Workspace:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Pilot')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted|Live optimization|holdout|frozen completed/.test(error.message)) {
         return json(res, 400, { error: error.message });
@@ -207,6 +217,6 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       return json(res, 500, { error: 'Internal server error.' });
     }
   });
-  server.on('close', () => { void pilot.close(); feedback?.close(); feedbackProvider?.close(); telemetry?.close(); });
+  server.on('close', () => { void pilot.close(); feedback?.close(); workspace?.close(); feedbackProvider?.close(); telemetry?.close(); });
   return server;
 }
