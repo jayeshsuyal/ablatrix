@@ -19,6 +19,7 @@ import { ProductRetriever } from './product-retrieval.ts';
 import { SapiomFeedbackProvider } from './feedback-provider.ts';
 import { LoopTelemetry } from './loop-telemetry.ts';
 import { ProductWorkspace } from './product-workspace.ts';
+import { PaidAnswerReview } from './paid-answer-review.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -41,7 +42,7 @@ async function body(req: IncomingMessage, maxLength = 16_384): Promise<unknown> 
   return JSON.parse(text || '{}') as unknown;
 }
 
-export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace) {
+export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview) {
   const runner = new ExperimentRunner(store, mode, provider);
   const optimizer = new OptimizationRunner(store, runner, mode, provider);
   let feedbackProvider: SapiomFeedbackProvider | undefined;
@@ -50,6 +51,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
     return feedbackProvider;
   };
   const productWorkspace = () => workspace ??= new ProductWorkspace(process.env.ABLATRIX_WORKSPACE_DB, localAnswerProvider());
+  const paidAnswerReview = () => paidReview ??= new PaidAnswerReview(process.env.ABLATRIX_PAID_REVIEW_DB);
   const loopTelemetry = () => telemetry ??= new LoopTelemetry();
   const feedbackLoop = () => {
     if (!feedback) {
@@ -90,6 +92,9 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       }
       const url = new URL(req.url ?? '/', 'http://localhost');
       const path = url.pathname;
+      if (req.method === 'GET' && path === '/api/paid-review') return json(res, 200, paidAnswerReview().overview());
+      if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}$/.test(path)) return json(res, 201, paidAnswerReview().review(path.split('/')[3], await body(req)));
+      if (req.method === 'GET' && path === '/api/paid-review/export') return download(res, 'ablatrix-paid-answer-reviews.json', `${JSON.stringify(paidAnswerReview().overview(), null, 2)}\n`, 'application/json');
       if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, productWorkspace().overview());
       if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req, 100_000)));
       if (req.method === 'POST' && path === '/api/workspace/questions') {
@@ -215,6 +220,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (error instanceof Error && error.message === 'Request body too large') return json(res, 413, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Feedback')) return json(res, 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Workspace:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
+      if (error instanceof Error && error.message.startsWith('Paid review:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Pilot')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted|Live optimization|holdout|frozen completed/.test(error.message)) {
         return json(res, 400, { error: error.message });
@@ -223,6 +229,6 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       return json(res, 500, { error: 'Internal server error.' });
     }
   });
-  server.on('close', () => { void pilot.close(); feedback?.close(); workspace?.close(); feedbackProvider?.close(); telemetry?.close(); });
+  server.on('close', () => { void pilot.close(); feedback?.close(); workspace?.close(); paidReview?.close(); feedbackProvider?.close(); telemetry?.close(); });
   return server;
 }
