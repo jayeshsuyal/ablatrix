@@ -12,6 +12,26 @@ const productInput = z.object({ title: z.string().trim().min(3).max(160), source
 const questionInput = z.object({ productId: z.uuid(), question: z.string().trim().min(5).max(500), mode: z.enum(['preview', 'live']) }).strict();
 const baselineInstructions = 'Answer the product question using only the supplied product evidence. State supported facts directly, attribute claims to their source, and qualify missing or conflicting details. Never invent a specification. Cite an exact supporting quote for each material claim.';
 
+// A byte is an upper bound on byte-level BPE tokens. Keep each passage below
+// the retriever's 350-token limit, including tokenizer special tokens.
+function sourceChunks(text: string): string[] {
+  const chars = [...text];
+  const chunks: string[] = [];
+  let start = 0;
+  while (start < chars.length) {
+    let end = start, bytes = 0;
+    while (end < chars.length && bytes + Buffer.byteLength(chars[end]!) <= 300) bytes += Buffer.byteLength(chars[end++]!);
+    if (end < chars.length) {
+      const boundary = chars.lastIndexOf(' ', end - 1);
+      if (boundary > start && boundary - start > 40) end = boundary + 1;
+    }
+    const chunk = chars.slice(start, end).join('').trim();
+    if (chunk) chunks.push(chunk);
+    start = end;
+  }
+  return chunks;
+}
+
 export type WorkspaceProduct = { id: string; title: string; sources: { id: string; label: string; text: string }[]; createdAt: string };
 export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live'; status: 'retrieving' | 'evidence_ready' | 'completed' | 'failed'; retrieval: RetrievalResult | null; answer: LoopAnswer | null; model: string | null; usage: LoopUsage; error: string | null; createdAt: string };
 
@@ -20,7 +40,7 @@ export class ProductWorkspace {
   private db: DatabaseSync;
   private retrievers = new Map<string, LoopRetriever>();
   private busy = false;
-  constructor(dbPath = '.data/product-workspace.sqlite', private provider: LoopProvider, private retrieverFactory: (corpus: ProductCorpus) => LoopRetriever = corpus => new ProductRetriever(corpus, '.data/product-workspace-retrieval.sqlite')) {
+  constructor(dbPath = '.data/product-workspace.sqlite', private provider: LoopProvider, private retrieverFactory: (corpus: ProductCorpus) => LoopRetriever = corpus => new ProductRetriever(corpus, dbPath === ':memory:' ? ':memory:' : `${dbPath}.retrieval.sqlite`)) {
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`CREATE TABLE IF NOT EXISTS workspace_products (id TEXT PRIMARY KEY, created_at TEXT NOT NULL, document TEXT NOT NULL);
@@ -56,7 +76,7 @@ export class ProductWorkspace {
     if (cached) return cached;
     const corpus: ProductCorpus = { version: `workspace-${textHash(JSON.stringify(product)).slice(0, 24)}`, source: 'user-supplied local evidence', license: 'user-supplied',
       products: [{ id: product.id, title: product.title, split: 'development' }],
-      passages: product.sources.map(source => ({ id: source.id, productId: product.id, source: 'user_supplied', text: source.text, reference: source.label, sha256: textHash(source.text) })), cases: [] };
+      passages: product.sources.flatMap(source => sourceChunks(source.text).map((chunk, index, chunks) => ({ id: chunks.length === 1 ? source.id : `${source.id}-${index + 1}`, productId: product.id, source: 'user_supplied', text: chunk, reference: chunks.length === 1 ? source.label : `${source.label} (part ${index + 1})`, sha256: textHash(chunk) }))), cases: [] };
     const retriever = this.retrieverFactory(corpus);
     this.retrievers.set(product.id, retriever);
     return retriever;

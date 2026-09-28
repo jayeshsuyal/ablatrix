@@ -46,7 +46,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   const optimizer = new OptimizationRunner(store, runner, mode, provider);
   let feedbackProvider: SapiomFeedbackProvider | undefined;
   const localAnswerProvider = () => {
-    if (!feedbackProvider) { feedbackProvider = new SapiomFeedbackProvider(); feedbackProvider.recoverInterruptedCalls(); }
+    if (!feedbackProvider) feedbackProvider = new SapiomFeedbackProvider();
     return feedbackProvider;
   };
   const productWorkspace = () => workspace ??= new ProductWorkspace(process.env.ABLATRIX_WORKSPACE_DB, localAnswerProvider());
@@ -63,6 +63,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
         nextRetriever = new ProductRetriever(corpus, process.env.ABLATRIX_RETRIEVAL_DB);
         nextFinalRetriever = new ProductRetriever(finalCorpus, process.env.ABLATRIX_FINAL_RETRIEVAL_DB ?? '.data/product-final-retrieval.sqlite');
         nextLoop = new FeedbackLoop(corpus, nextRetriever, nextProvider, process.env.ABLATRIX_LOOP_DB, finalCorpus, nextFinalRetriever);
+        nextProvider.recoverInterruptedCalls();
         feedback = nextLoop;
       } catch (error) {
         if (nextLoop) nextLoop.close();
@@ -92,7 +93,9 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, productWorkspace().overview());
       if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req)));
       if (req.method === 'POST' && path === '/api/workspace/questions') {
-        const run = await productWorkspace().ask(await body(req));
+        const input = await body(req);
+        if (input && typeof input === 'object' && 'mode' in input && input.mode === 'live') feedbackLoop();
+        const run = await productWorkspace().ask(input);
         return json(res, run.status === 'failed' ? 502 : 201, run);
       }
       if (req.method === 'GET' && path === '/api/loop/telemetry') return json(res, 200, loopTelemetry().status());

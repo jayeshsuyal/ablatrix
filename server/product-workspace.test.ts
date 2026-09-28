@@ -63,3 +63,17 @@ test('live workspace answers require exact citations and retain failed attempts'
     assert.equal(workspace.overview().runs.length, 2);
   } finally { workspace.close(); }
 });
+
+test('long multibyte sources become bounded passages before retrieval', async () => {
+  const provider: LoopProvider = { readiness: () => ({ ready: false, reason: 'Disabled.' }), async answer() { throw new Error('Unexpected answer.'); }, async propose() { throw new Error('Unexpected proposal.'); } };
+  const workspace = new ProductWorkspace(':memory:', provider, corpus => {
+    assert.ok(corpus.passages.length > 1);
+    assert.ok(corpus.passages.every(passage => Buffer.byteLength(passage.text) <= 300));
+    return retrieverFor(corpus);
+  });
+  try {
+    const product = workspace.createProduct({ title: 'Multibyte listing', sources: [{ label: 'Specification', text: '防水素材と軽量設計。'.repeat(100) }] });
+    const run = await workspace.ask({ productId: product.id, question: 'What does the specification say?', mode: 'preview' });
+    assert.equal(run.status, 'evidence_ready');
+  } finally { workspace.close(); }
+});
