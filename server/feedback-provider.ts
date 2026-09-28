@@ -1,5 +1,5 @@
 import { DatabaseSync } from 'node:sqlite';
-import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
@@ -60,7 +60,8 @@ export type FeedbackProviderOptions = {
 /** This is a local planning ledger, not a provider billing or hard-ceiling claim. */
 export class SapiomFeedbackProvider implements LoopProvider {
   private static owners = new Set<string>();
-  private readonly ownerPath: string | null;
+  private readonly ownerKey: string | null;
+  private readonly ownerToken = randomUUID();
   private ownsLedger = false;
   private readonly apiKey: string;
   private readonly enabled: boolean;
@@ -87,32 +88,33 @@ export class SapiomFeedbackProvider implements LoopProvider {
     this.allowance = options.allowancePerCallUsd ?? Number(process.env.ABLATRIX_LOOP_ALLOWANCE_USD ?? 0.10);
     this.callLimit = options.callLimit ?? Number(process.env.ABLATRIX_LOOP_CALL_LIMIT ?? 20);
     const dbPath = options.dbPath ?? process.env.ABLATRIX_LOOP_BUDGET_DB ?? '.data/feedback-budget.sqlite';
-    this.ownerPath = dbPath === ':memory:' ? null : `${resolve(dbPath)}.owner.lock`;
+    this.ownerKey = dbPath === ':memory:' ? null : resolve(dbPath);
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`PRAGMA busy_timeout=5000; CREATE TABLE IF NOT EXISTS loop_provider_calls (
       id TEXT PRIMARY KEY, created_at TEXT NOT NULL, kind TEXT NOT NULL, allowance_usd REAL NOT NULL,
       status TEXT NOT NULL, model TEXT, input_tokens INTEGER, output_tokens INTEGER,
       run_id TEXT, error_code TEXT
-    )`);
+    ); CREATE TABLE IF NOT EXISTS loop_provider_owner (id INTEGER PRIMARY KEY CHECK(id=1), pid INTEGER NOT NULL, token TEXT NOT NULL)`);
     const columns = new Set((this.db.prepare('PRAGMA table_info(loop_provider_calls)').all() as { name: string }[]).map(row => row.name));
     if (!columns.has('run_id')) this.db.exec('ALTER TABLE loop_provider_calls ADD COLUMN run_id TEXT');
     if (!columns.has('error_code')) this.db.exec('ALTER TABLE loop_provider_calls ADD COLUMN error_code TEXT');
   }
   private claimLedger(): void {
-    if (this.ownsLedger || !this.ownerPath) return;
-    if (SapiomFeedbackProvider.owners.has(this.ownerPath)) throw new Error('Feedback budget ledger is owned by another provider in this process.');
-    try { writeFileSync(this.ownerPath, String(process.pid), { flag: 'wx', mode: 0o600 }); }
-    catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
-      const pid = Number(readFileSync(this.ownerPath, 'utf8'));
-      let alive = true;
-      if (Number.isSafeInteger(pid) && pid > 0) { try { process.kill(pid, 0); } catch (check) { alive = (check as NodeJS.ErrnoException).code !== 'ESRCH'; } }
-      if (alive) throw new Error('Feedback budget ledger is owned by another process.');
-      unlinkSync(this.ownerPath);
-      writeFileSync(this.ownerPath, String(process.pid), { flag: 'wx', mode: 0o600 });
-    }
-    SapiomFeedbackProvider.owners.add(this.ownerPath);
+    if (this.ownsLedger || !this.ownerKey) return;
+    if (SapiomFeedbackProvider.owners.has(this.ownerKey)) throw new Error('Feedback budget ledger is owned by another provider in this process.');
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      const owner = this.db.prepare('SELECT pid FROM loop_provider_owner WHERE id=1').get() as { pid: number } | undefined;
+      if (owner) {
+        let alive = true;
+        if (Number.isSafeInteger(owner.pid) && owner.pid > 0) { try { process.kill(owner.pid, 0); } catch (check) { alive = (check as NodeJS.ErrnoException).code !== 'ESRCH'; } }
+        if (alive) throw new Error('Feedback budget ledger is owned by another process.');
+      }
+      this.db.prepare('INSERT OR REPLACE INTO loop_provider_owner(id,pid,token) VALUES(1,?,?)').run(process.pid, this.ownerToken);
+      this.db.exec('COMMIT');
+    } catch (error) { this.db.exec('ROLLBACK'); throw error; }
+    SapiomFeedbackProvider.owners.add(this.ownerKey);
     this.ownsLedger = true;
   }
   /** Call only after acquiring exclusive ownership of the associated FeedbackLoop. */
@@ -230,5 +232,5 @@ export class SapiomFeedbackProvider implements LoopProvider {
         evidence: e.evidence.map(p => ({ source: p.source, text: p.text })) })) }, proposalParameters);
     return proposalSchema.parse(result.output);
   }
-  close() { this.db.close(); if (this.ownsLedger && this.ownerPath) { SapiomFeedbackProvider.owners.delete(this.ownerPath); unlinkSync(this.ownerPath); this.ownsLedger = false; } }
+  close() { if (this.ownsLedger && this.ownerKey) { this.db.prepare('DELETE FROM loop_provider_owner WHERE id=1 AND token=?').run(this.ownerToken); SapiomFeedbackProvider.owners.delete(this.ownerKey); this.ownsLedger = false; } this.db.close(); }
 }

@@ -32,11 +32,11 @@ function download(res: ServerResponse, filename: string, value: string, mime: st
   res.end(value);
 }
 
-async function body(req: IncomingMessage): Promise<unknown> {
+async function body(req: IncomingMessage, maxLength = 16_384): Promise<unknown> {
   let text = '';
   for await (const chunk of req) {
     text += chunk.toString();
-    if (text.length > 16_384) throw new Error('Request body too large');
+    if (text.length > maxLength) throw new Error('Request body too large');
   }
   return JSON.parse(text || '{}') as unknown;
 }
@@ -91,7 +91,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       const url = new URL(req.url ?? '/', 'http://localhost');
       const path = url.pathname;
       if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, productWorkspace().overview());
-      if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req)));
+      if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req, 100_000)));
       if (req.method === 'POST' && path === '/api/workspace/questions') {
         const input = await body(req);
         if (input && typeof input === 'object' && 'mode' in input && input.mode === 'live') feedbackLoop();

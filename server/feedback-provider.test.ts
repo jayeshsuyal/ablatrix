@@ -89,6 +89,7 @@ test('opening another provider preserves pending calls until explicit owned reco
     db.prepare("INSERT INTO loop_provider_calls(id,created_at,kind,allowance_usd,status) VALUES(?,?,?,?,?)").run('abandoned-call', new Date().toISOString(), 'product_answer', 0.1, 'pending');
     assert.throws(() => second.recoverInterruptedCalls(), /owned by another provider/);
     first.close(); firstClosed = true;
+    db.prepare('INSERT OR REPLACE INTO loop_provider_owner(id,pid,token) VALUES(1,?,?)').run(999_999_999, 'stale-owner');
     second.recoverInterruptedCalls();
     assert.equal(db.prepare('SELECT status FROM loop_provider_calls WHERE id=?').get('abandoned-call')!.status, 'interrupted');
     assert.equal(db.prepare("SELECT COUNT(*) AS count FROM loop_provider_calls WHERE status='completed'").get()!.count, 1);

@@ -65,5 +65,7 @@ test('product workspace API saves user evidence and returns a model-free preview
     const overview = await (await fetch(`${base}/api/workspace`)).json();
     assert.equal(overview.products.length, 1); assert.equal(overview.runs.length, 1);
     assert.equal(overview.readiness.ready, false);
+    const escaped = await fetch(`${base}/api/workspace/products`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ title: 'Eight excerpt listing', sources: Array.from({ length: 8 }, (_, index) => ({ label: `Source ${index + 1}`, text: 'x\n'.repeat(750) })) }) });
+    assert.equal(escaped.status, 201);
   } finally { await new Promise<void>(resolve => app.close(() => resolve())); store.close(); rmSync(directory, { recursive: true, force: true }); }
 });

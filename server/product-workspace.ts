@@ -5,6 +5,7 @@ import { dirname } from 'node:path';
 import { z } from 'zod';
 import { textHash } from './product-corpus.ts';
 import { ProductRetriever } from './product-retrieval.ts';
+import { quoteOptions } from './feedback-provider.ts';
 import type { LoopAnswer, LoopProvider, LoopRetriever, LoopUsage, ProductCorpus, RetrievalResult } from './loop-types.ts';
 
 const sourceInput = z.object({ label: z.string().trim().min(2).max(80), text: z.string().trim().min(30).max(1500) }).strict();
@@ -97,7 +98,9 @@ export class ProductWorkspace {
         const passages = run.retrieval.passages;
         if (!passages.length) throw new Error('No product evidence was retrieved.');
         const policy = { id: 'workspace-baseline-v1', parentId: null, instructions: baselineInstructions, rationale: 'Frozen local product workspace baseline.', feedbackRunIds: [], status: 'baseline' as const, mode: 'live' as const, createdAt: '2026-09-27T00:00:00.000Z' };
-        const answer = await (this.provider.answerWithSnippetIds ?? this.provider.answer).call(this.provider, { question: input.question, product: { id: product.id, title: product.title, split: 'development' }, policy, passages, runId: run.id });
+        const quoteCount = this.provider.answerWithSnippetIds ? quoteOptions(passages).length : 0;
+        const answerMethod = quoteCount >= 1 && quoteCount <= 60 ? this.provider.answerWithSnippetIds! : this.provider.answer;
+        const answer = await answerMethod.call(this.provider, { question: input.question, product: { id: product.id, title: product.title, split: 'development' }, policy, passages, runId: run.id });
         if (answer.answer.status === 'answered' && !answer.answer.citations.length || answer.answer.citations.some(citation => !passages.some(passage => passage.id === citation.passageId && passage.text.includes(citation.quote)))) throw new Error('Answer citation did not match supplied product evidence.');
         run.answer = answer.answer; run.model = answer.model; run.usage = answer.usage; run.status = 'completed';
       }

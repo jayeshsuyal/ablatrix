@@ -78,3 +78,17 @@ test('long multibyte sources become bounded passages before retrieval', async ()
     assert.equal(run.status, 'evidence_ready');
   } finally { workspace.close(); }
 });
+
+test('many short evidence lines use exact-quote answering when snippet options exceed the bound', async () => {
+  let direct = 0;
+  const provider: LoopProvider = { readiness: () => ({ ready: true, reason: 'Ready.' }), async answer(input) {
+    direct++;
+    return { answer: { answer: 'The listing says Line.', status: 'answered', citations: [{ passageId: input.passages[0].id, quote: 'Line.' }] }, model: 'test-model', usage: null };
+  }, async answerWithSnippetIds() { throw new Error('Too many snippet options.'); }, async propose() { throw new Error('Unexpected proposal.'); } };
+  const workspace = new ProductWorkspace(':memory:', provider, retrieverFor);
+  try {
+    const product = workspace.createProduct({ title: 'Bullet listing', sources: [{ label: 'Listing', text: 'Line.\n'.repeat(80) }] });
+    const run = await workspace.ask({ productId: product.id, question: 'What does the listing say?', mode: 'live' });
+    assert.equal(run.status, 'completed'); assert.equal(direct, 1);
+  } finally { workspace.close(); }
+});
