@@ -352,7 +352,7 @@ export default function FeedbackLoop() {
   }
 
   return <div className="fl-app">
-    <nav className="fl-nav" aria-label="Main navigation"><a className="fl-brand" href="/loop"><span className="fl-logo" aria-hidden="true">a<span>↗</span></span>ablatrix<span className="fl-nav-label">Feedback lab</span></a><div className="fl-nav-right"><a href="/pilot">Retrieval pilot ↗</a><span className="fl-local"><i />LOCALHOST</span></div></nav>
+    <nav className="fl-nav" aria-label="Main navigation"><a className="fl-brand" href="/loop"><span className="fl-logo" aria-hidden="true">a<span>↗</span></span>ablatrix<span className="fl-nav-label">Feedback lab</span></a><div className="fl-nav-right"><a href="/ask">Product QA ↗</a><a href="/pilot">Retrieval pilot ↗</a><span className="fl-local"><i />LOCALHOST</span></div></nav>
     <main className="fl-main">
       <header className="fl-project-head"><div><span className="fl-eyebrow">ABLATRIX / LOCAL EXPERIMENT WORKSPACE</span><h1>Evidence to decision</h1><p>Inspect saved answers, the policy change they prompted, and the test that rejected it.</p></div><div className="fl-project-state"><span>ACTIVE {mode.toUpperCase()} POLICY</span><strong>{overview ? <PolicyName policy={activePolicy} overview={overview} /> : 'Loading'}</strong><small>{mode === 'live' ? 'Recorded live evidence' : 'Synthetic mechanism exercise'}</small></div></header>
 

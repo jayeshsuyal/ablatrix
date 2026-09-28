@@ -1,6 +1,10 @@
 # Ablatrix
 
-A local agent evaluation lab. Its current prototype turns reviewed product-QA failures into versioned answer-policy candidates, compares each candidate with its parent, and promotes or rejects the change. See [the build ledger](docs/build-plan.md) for implementation evidence and the earlier research experiments.
+Ablatrix is a local product QA workspace with an evidence-based agent evaluation lab. Its current prototype answers from product sources and turns reviewed failures into versioned answer-policy candidates, comparing each candidate with its parent before promotion or rejection. See [the build ledger](docs/build-plan.md) for implementation evidence and the earlier research experiments.
+
+## Product QA workspace
+
+Open `/ask` to add a product and paste up to eight source excerpts, then ask a question. **Preview evidence** uses local hybrid retrieval and makes no model call. **Generate cited answer** is available only when the local Sapiom Router opt-in and shared planning allowance are configured. Answers, citations, retrieved evidence, and failed attempts are saved in `.data/product-workspace.sqlite`; the retrieval index is stored beside that database with a `.retrieval.sqlite` suffix. Imported products are isolated from the frozen evaluation corpora. Exact-quote checks verify citation membership, while answer correctness still needs human judgment. This is a local workflow, not a deployed multi-user service or a measured answer-quality gain.
 
 ## Product QA feedback loop — v0.2
 
