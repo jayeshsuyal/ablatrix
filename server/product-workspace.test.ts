@@ -92,3 +92,14 @@ test('many short evidence lines use exact-quote answering when snippet options e
     assert.equal(run.status, 'completed'); assert.equal(direct, 1);
   } finally { workspace.close(); }
 });
+
+test('a feedback batch starting during retrieval prevents workspace live dispatch', async () => {
+  let calls = 0;
+  const provider: LoopProvider = { readiness: () => ({ ready: true, reason: 'Ready.' }), async answer() { calls++; throw new Error('Should not dispatch.'); }, async propose() { throw new Error('Unexpected proposal.'); } };
+  const workspace = new ProductWorkspace(':memory:', provider, retrieverFor);
+  try {
+    const product = workspace.createProduct({ title: 'Trail jacket', sources: [{ label: 'Listing', text: 'The jacket has a waterproof nylon shell with a detachable hood.' }] });
+    const run = await workspace.ask({ productId: product.id, question: 'What is the shell made of?', mode: 'live' }, () => { throw new Error('Feedback experiment started during retrieval; no workspace live call was made.'); });
+    assert.equal(run.status, 'failed'); assert.match(run.error ?? '', /no workspace live call/); assert.equal(calls, 0);
+  } finally { workspace.close(); }
+});

@@ -94,8 +94,11 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req, 100_000)));
       if (req.method === 'POST' && path === '/api/workspace/questions') {
         const input = await body(req);
-        if (input && typeof input === 'object' && 'mode' in input && input.mode === 'live') feedbackLoop();
-        const run = await productWorkspace().ask(input);
+        const loop = input && typeof input === 'object' && 'mode' in input && input.mode === 'live' ? feedbackLoop() : undefined;
+        if (loop?.publicOverview().busy) return json(res, 409, { error: 'Finish the active feedback experiment before a workspace live answer.' });
+        const run = await productWorkspace().ask(input, () => {
+          if (loop?.publicOverview().busy) throw new Error('Feedback experiment started during retrieval; no workspace live call was made.');
+        });
         return json(res, run.status === 'failed' ? 502 : 201, run);
       }
       if (req.method === 'GET' && path === '/api/loop/telemetry') return json(res, 200, loopTelemetry().status());

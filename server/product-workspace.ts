@@ -82,7 +82,7 @@ export class ProductWorkspace {
     this.retrievers.set(product.id, retriever);
     return retriever;
   }
-  async ask(raw: unknown): Promise<WorkspaceRun> {
+  async ask(raw: unknown, beforeLiveDispatch?: () => void): Promise<WorkspaceRun> {
     const input = questionInput.parse(raw);
     if (this.busy) throw new Error('Workspace: finish the current question before starting another.');
     const product = this.getProduct(input.productId);
@@ -97,6 +97,7 @@ export class ProductWorkspace {
       else {
         const passages = run.retrieval.passages;
         if (!passages.length) throw new Error('No product evidence was retrieved.');
+        beforeLiveDispatch?.();
         const policy = { id: 'workspace-baseline-v1', parentId: null, instructions: baselineInstructions, rationale: 'Frozen local product workspace baseline.', feedbackRunIds: [], status: 'baseline' as const, mode: 'live' as const, createdAt: '2026-09-27T00:00:00.000Z' };
         const quoteCount = this.provider.answerWithSnippetIds ? quoteOptions(passages).length : 0;
         const answerMethod = quoteCount >= 1 && quoteCount <= 60 ? this.provider.answerWithSnippetIds! : this.provider.answer;
