@@ -84,6 +84,23 @@ function localBgeEmbedding(modelId: string, revision: string): EmbeddingFunction
   };
 }
 
+const sharedLocalEmbeddings = new Map<string, EmbeddingFunction>();
+function sharedLocalBgeEmbedding(modelId: string, revision: string): EmbeddingFunction {
+  const key = `${modelId}@${revision}`;
+  let embed = sharedLocalEmbeddings.get(key);
+  if (!embed) {
+    const run = localBgeEmbedding(modelId, revision);
+    let queue: Promise<unknown> = Promise.resolve();
+    embed = (texts, kind) => {
+      const result = queue.then(() => run(texts, kind));
+      queue = result.catch(() => undefined);
+      return result;
+    };
+    sharedLocalEmbeddings.set(key, embed);
+  }
+  return embed;
+}
+
 export class ProductRetriever implements LoopRetriever {
   private readonly db: DatabaseSync;
   private readonly embed: EmbeddingFunction;
@@ -100,7 +117,7 @@ export class ProductRetriever implements LoopRetriever {
     this.modelId = options.modelId ?? (options.embed ? 'injected-test-embedding' : EMBEDDING_MODEL);
     this.revision = options.modelRevision ?? (options.embed ? 'test-only' : EMBEDDING_REVISION);
     this.indexText = options.cqaAnswerOnly === false ? passage => passage.text : cqaAnswerText;
-    this.embed = options.embed ?? localBgeEmbedding(this.modelId, this.revision);
+    this.embed = options.embed ?? sharedLocalBgeEmbedding(this.modelId, this.revision);
     if (dbPath !== ':memory:') mkdirSync(dirname(resolve(dbPath)), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`PRAGMA busy_timeout=5000;
