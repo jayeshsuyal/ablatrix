@@ -1,6 +1,6 @@
 import { DatabaseSync } from 'node:sqlite';
-import { mkdirSync, readFileSync } from 'node:fs';
-import { dirname } from 'node:path';
+import { mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
+import { dirname, resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import type { LoopProvider, LoopUsage, RetrievedPassage } from './loop-types.ts';
@@ -59,6 +59,9 @@ export type FeedbackProviderOptions = {
 
 /** This is a local planning ledger, not a provider billing or hard-ceiling claim. */
 export class SapiomFeedbackProvider implements LoopProvider {
+  private static owners = new Set<string>();
+  private readonly ownerPath: string | null;
+  private ownsLedger = false;
   private readonly apiKey: string;
   private readonly enabled: boolean;
   private readonly fetchImpl: typeof fetch;
@@ -84,6 +87,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
     this.allowance = options.allowancePerCallUsd ?? Number(process.env.ABLATRIX_LOOP_ALLOWANCE_USD ?? 0.10);
     this.callLimit = options.callLimit ?? Number(process.env.ABLATRIX_LOOP_CALL_LIMIT ?? 20);
     const dbPath = options.dbPath ?? process.env.ABLATRIX_LOOP_BUDGET_DB ?? '.data/feedback-budget.sqlite';
+    this.ownerPath = dbPath === ':memory:' ? null : `${resolve(dbPath)}.owner.lock`;
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`PRAGMA busy_timeout=5000; CREATE TABLE IF NOT EXISTS loop_provider_calls (
@@ -95,8 +99,25 @@ export class SapiomFeedbackProvider implements LoopProvider {
     if (!columns.has('run_id')) this.db.exec('ALTER TABLE loop_provider_calls ADD COLUMN run_id TEXT');
     if (!columns.has('error_code')) this.db.exec('ALTER TABLE loop_provider_calls ADD COLUMN error_code TEXT');
   }
+  private claimLedger(): void {
+    if (this.ownsLedger || !this.ownerPath) return;
+    if (SapiomFeedbackProvider.owners.has(this.ownerPath)) throw new Error('Feedback budget ledger is owned by another provider in this process.');
+    try { writeFileSync(this.ownerPath, String(process.pid), { flag: 'wx', mode: 0o600 }); }
+    catch (error) {
+      if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
+      const pid = Number(readFileSync(this.ownerPath, 'utf8'));
+      let alive = true;
+      if (Number.isSafeInteger(pid) && pid > 0) { try { process.kill(pid, 0); } catch (check) { alive = (check as NodeJS.ErrnoException).code !== 'ESRCH'; } }
+      if (alive) throw new Error('Feedback budget ledger is owned by another process.');
+      unlinkSync(this.ownerPath);
+      writeFileSync(this.ownerPath, String(process.pid), { flag: 'wx', mode: 0o600 });
+    }
+    SapiomFeedbackProvider.owners.add(this.ownerPath);
+    this.ownsLedger = true;
+  }
   /** Call only after acquiring exclusive ownership of the associated FeedbackLoop. */
   recoverInterruptedCalls(): void {
+    this.claimLedger();
     this.db.exec("UPDATE loop_provider_calls SET status='interrupted' WHERE status='pending'");
   }
   readiness() { return this.capacity(1); }
@@ -110,6 +131,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
     return { ready: true, reason: `Sapiom ${MODEL}; ${Number(totals.count)}/${this.callLimit} calls used. $${this.allowance.toFixed(2)} planning allowance per call; actual provider charges are unavailable here.` };
   }
   private reserve(kind: string, runId?: string) {
+    this.claimLedger();
     this.db.exec('BEGIN IMMEDIATE');
     try {
       const readiness = this.readiness();
@@ -208,5 +230,5 @@ export class SapiomFeedbackProvider implements LoopProvider {
         evidence: e.evidence.map(p => ({ source: p.source, text: p.text })) })) }, proposalParameters);
     return proposalSchema.parse(result.output);
   }
-  close() { this.db.close(); }
+  close() { this.db.close(); if (this.ownsLedger && this.ownerPath) { SapiomFeedbackProvider.owners.delete(this.ownerPath); unlinkSync(this.ownerPath); this.ownsLedger = false; } }
 }

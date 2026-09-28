@@ -69,6 +69,7 @@ test('long multibyte sources become bounded passages before retrieval', async ()
   const workspace = new ProductWorkspace(':memory:', provider, corpus => {
     assert.ok(corpus.passages.length > 1);
     assert.ok(corpus.passages.every(passage => Buffer.byteLength(passage.text) <= 300));
+    assert.ok(corpus.passages.every(passage => passage.source === 'Specification'));
     return retrieverFor(corpus);
   });
   try {

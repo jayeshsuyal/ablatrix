@@ -76,7 +76,7 @@ export class ProductWorkspace {
     if (cached) return cached;
     const corpus: ProductCorpus = { version: `workspace-${textHash(JSON.stringify(product)).slice(0, 24)}`, source: 'user-supplied local evidence', license: 'user-supplied',
       products: [{ id: product.id, title: product.title, split: 'development' }],
-      passages: product.sources.flatMap(source => sourceChunks(source.text).map((chunk, index, chunks) => ({ id: chunks.length === 1 ? source.id : `${source.id}-${index + 1}`, productId: product.id, source: 'user_supplied', text: chunk, reference: chunks.length === 1 ? source.label : `${source.label} (part ${index + 1})`, sha256: textHash(chunk) }))), cases: [] };
+      passages: product.sources.flatMap(source => sourceChunks(source.text).map((chunk, index, chunks) => ({ id: chunks.length === 1 ? source.id : `${source.id}-${index + 1}`, productId: product.id, source: source.label, text: chunk, reference: chunks.length === 1 ? source.label : `${source.label} (part ${index + 1})`, sha256: textHash(chunk) }))), cases: [] };
     const retriever = this.retrieverFactory(corpus);
     this.retrievers.set(product.id, retriever);
     return retriever;

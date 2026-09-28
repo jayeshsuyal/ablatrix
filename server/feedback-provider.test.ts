@@ -81,16 +81,19 @@ test('opening another provider preserves pending calls until explicit owned reco
   const request = first.answer(input);
   const second = new SapiomFeedbackProvider({ ...options, dbPath });
   const db = new DatabaseSync(dbPath);
+  let firstClosed = false;
   try {
     assert.equal(db.prepare('SELECT status FROM loop_provider_calls').get()!.status, 'pending');
     release(reply(valid)); await request;
     assert.equal(db.prepare('SELECT status FROM loop_provider_calls').get()!.status, 'completed');
     db.prepare("INSERT INTO loop_provider_calls(id,created_at,kind,allowance_usd,status) VALUES(?,?,?,?,?)").run('abandoned-call', new Date().toISOString(), 'product_answer', 0.1, 'pending');
+    assert.throws(() => second.recoverInterruptedCalls(), /owned by another provider/);
+    first.close(); firstClosed = true;
     second.recoverInterruptedCalls();
     assert.equal(db.prepare('SELECT status FROM loop_provider_calls WHERE id=?').get('abandoned-call')!.status, 'interrupted');
     assert.equal(db.prepare("SELECT COUNT(*) AS count FROM loop_provider_calls WHERE status='completed'").get()!.count, 1);
     assert.match(second.readiness().reason, /2\/20 calls/);
-  } finally { release(reply(valid)); await request.catch(() => {}); db.close(); first.close(); second.close(); rmSync(dir, { recursive: true, force: true }); }
+  } finally { release(reply(valid)); await request.catch(() => {}); db.close(); if (!firstClosed) first.close(); second.close(); rmSync(dir, { recursive: true, force: true }); }
 });
 
 test('provider advertises and enforces the workflow output bounds', async () => {
