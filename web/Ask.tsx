@@ -46,7 +46,7 @@ export default function Ask() {
     finally { setBusy(false); }
   }
   return <div className="ask-app">
-    <nav className="ask-nav" aria-label="Main navigation"><a className="ask-brand" href="/ask"><span>a↗</span> ablatrix <small>Product QA</small></a><div><a href="/loop">Feedback lab ↗</a><a href="/pilot">Search pilot ↗</a><span className="ask-local">LOCAL WORKSPACE</span></div></nav>
+    <nav className="ask-nav" aria-label="Main navigation"><a className="ask-brand" href="/ask"><span>a↗</span> ablatrix <small>Product QA</small></a><div><a href="/paid-review">Answer review ↗</a><a href="/loop">Feedback lab ↗</a><a href="/pilot">Search pilot ↗</a><span className="ask-local">LOCAL WORKSPACE</span></div></nav>
     <main className="ask-main">
       <header className="ask-hero"><span className="ask-kicker">PRODUCT EVIDENCE → GROUNDED ANSWER</span><h1>Ask your product evidence.</h1><p>Add a product’s source text, find the relevant passages, and inspect an answer with citations. This local workspace is separate from Ablatrix’s frozen evaluation sets.</p></header>
       {error && <p className="ask-alert" role="alert">{error}</p>}{notice && <p className="ask-notice" role="status">{notice}</p>}
