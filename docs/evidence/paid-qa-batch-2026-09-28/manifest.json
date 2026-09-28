@@ -1,0 +1,1196 @@
+{
+  "protocol": "fixed-first-20-eligible-product-disjoint-train-qids-v1",
+  "upstreamSha256": "b63de9681b770573240367e919f7f04f087f6a4745ab1f79a77e6b800105ea25",
+  "excludedCuratedProductCount": 36,
+  "sampling": "Ascending numeric qid; unique ASIN; exclude all frozen curated products; require at least one source candidate with original label 2 and 30-1500 post-clean characters.",
+  "evidence": "Up to 3 label-2 candidates first, then original row order to 8 unique candidates; CQA echoed Question suffix removed; labels and reference answers never sent to model.",
+  "cases": [
+    {
+      "qid": "4",
+      "asin": "B00005AUHX",
+      "title": "Watersafe City Water Test Kit, 1 EA",
+      "question": "can this be used on a well?",
+      "sources": [
+        {
+          "label": "ePQA review 13",
+          "text": "we just put in a new well and wanted to check its quality.",
+          "sha256": "00413bc3f8b1a1f376625e3f1e8a6dc705577fbb267de3c9962a352a8a7ba86d",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 10",
+          "text": "my family relies on well water to supply our home.",
+          "sha256": "ab7a19f5a658e7e244c7f7a04eb0430f1127df2cbbfc8e06a8f3c5696e2173f0",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 11",
+          "text": "used it to test my hard well water so we could get the right filter.",
+          "sha256": "4d643ddf9d3d00188504a6ffb5f1de92fb0ebe45cbe78e66274951bd94ec6d1c",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA review 12",
+          "text": "ive never had our well water tested, but i have cared for pool and hot tub familiar with strips and such items in the watersafe kit.",
+          "sha256": "340f4116164936febc7a5874f08ed647f88d3e84e5378c2fb4807777851e6bcf",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 14",
+          "text": "you will not get a drinking water test - you will get a \"city water test\" so if you are on well water, this is not the right test.",
+          "sha256": "5f254c226ed5ab053a6ff90c3c6592629f7c03c37282ca0d288b5ccbaf20086f",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA attribute 15",
+          "text": "directions:  { value:\"<p><strong>it's easy as 1, 2, 3</strong></p> <ol> <li> <div>open watersafe box.</div></li> <li> <div>sample water.</div></li> <li> <div>read results.</div></li></ol>\" }",
+          "sha256": "27c96468691005decebf90e5a57e3c2f9c39b2218dc1f563998cdc56afb2bd24",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 16",
+          "text": "get results in only 10 minutes with easy to follow directions and no mixing or measuring.",
+          "sha256": "036d73adcebd1aa304a7d2971e79d4c7a20e68ec8d5a4b24c9a5e8d1ddf06e83",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA bullet 17",
+          "text": "compare your results with epa recommended levels",
+          "sha256": "6b63b05f387142c5559d72190062ec785b0ea2196a83ffbf95b15c3fe5f66c5e",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "Yes. A customer says that the item was put in a new well to check its quality."
+      ]
+    },
+    {
+      "qid": "5",
+      "asin": "B00074TB9U",
+      "title": "Broan QS130BC 220 CFM Under Cabinet Hood, 30-Inches, Bisque",
+      "question": "what side filter fit ?",
+      "sources": [
+        {
+          "label": "ePQA review 21",
+          "text": "start at far sides of filters.",
+          "sha256": "3d1c95a7db2a3a5573104442361fe184d96ec7a124ce3cf8cf70cfd912b4545c",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA description 20",
+          "text": "standard large filters, dishwasher safe.",
+          "sha256": "95b2b2cd3e49e412ea3236280dbe26196fa3d8356a2da753b446ecfbbd8d087a",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 22",
+          "text": "versatile design allows for 3-1/4-inch x 10-inch, 7-inch round, or non-ducted discharges without re-positioning blower.",
+          "sha256": "3998e91a6fca5904c7bcbb7caa07a643b3389f76f5a1ae1f5401d664602e0c96",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA cqa 23",
+          "text": "the curve ends 6 inches from the front, or at a point where the side configuration changes",
+          "sha256": "0b05a3a5f4be0992331f00d416ebd8eac49148cc0da681728084b0b1b65462a9",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 24",
+          "text": "fit in my 30\" opening perfectly.",
+          "sha256": "27df6e3cd6eee2f39c7e1bea9323f06d490a447055d7a9f21db73ab20637b9ad",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA bullet 25",
+          "text": "fully enclosed design for easy cleaning",
+          "sha256": "de553597ef2b2c02a475a7600dc5345611ee2452649c8f9b9b8d332fed843ac7",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 26",
+          "text": "broan qs130bl under cabinet hood, 220-cfm, 30-inch, black",
+          "sha256": "5ebbc1a848ef8aae1d1e24bc3ddee87b35112f3c6da6709e820aeb12f1bd92f9",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 27",
+          "text": "broan is the industry leader of range hoods, ventilation fans, heater/fan/light combination units, indoor air quality (iaq) fresh air systems, built-in heaters, whole-house fans, solar powered attic ventilators and trash compactors.",
+          "sha256": "b9f900c9de3d3a36f3078e1e6acbb09c726bc9d877557cf00a3dbb0f5b750f68",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "There is a customer saying that you start at the far sides of the filters."
+      ]
+    },
+    {
+      "qid": "8",
+      "asin": "B00074TBCW",
+      "title": "Broan QS130WW 220 CFM Under Cabinet Hood, 30-Inches, White",
+      "question": "ducted installation but lots of of air coming out of the slots on top. is it normal?",
+      "sources": [
+        {
+          "label": "ePQA review 50",
+          "text": "as a result, some air ends up recirculating right back into the kitchen.",
+          "sha256": "e5ae3b55cb121b5f6c47f649612210e6ecf1eea540f426094e95b0698f43547c",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 51",
+          "text": "now i can't feel the thrown out air.",
+          "sha256": "f731a9f2ca05ff311881e0a2a16fc3a074c2b14250f39fd93c2f7d81e4a2c2ec",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA cqa 52",
+          "text": "i think the baffle isn't air tight so there is always going to be some.",
+          "sha256": "43008b911cd19a07814e4299c0aa63f944977a165471e0c84ba4b3465d6f8c8e",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 53",
+          "text": "if not configured to vent to the outside, the unfiltered air gets pushed back out through the vent, covering the top of the unit with grease.",
+          "sha256": "ec1da2bf279d9efcb7ec1b6750b900f2519c3e212c0fa7c549ae1e2d47fc2088",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 54",
+          "text": "there is also some holes on the top of the hood that is throwing out air.",
+          "sha256": "0a572bc42234831e9ac6455d788eeca45ee17d35df41595706d0b285ddd3528e",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 55",
+          "text": "band:  { material:[ { value:\"stainless steel,steel\" } ] }",
+          "sha256": "571a0ccf4108d2eb66d10cfe2b3566d0ef8a56d09d97cbad9ec206f656c56101",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 56",
+          "text": "contains_liquid_contents:  { value:false }",
+          "sha256": "d645eb9ebedeefe78e143b90c1bddc8a8fd38a1cd42c2767c9ed999c90fc039d",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 57",
+          "text": "broan-nutone is committed to developing revolutionary products that improve the indoor environment as well as implementing procedures to preserve the outdoor environment.",
+          "sha256": "2612394b719b9aff6d8f1f79b82cf53763ec0e571adf0e264ddc2027cc3febde",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "Yes. A customer says that ducting outside results in some air ending up recirculating back into the kitchen."
+      ]
+    },
+    {
+      "qid": "11",
+      "asin": "B00EZFPDO4",
+      "title": "NuWave PIC Pro Highest Powered Induction Cooktop 1800W",
+      "question": "what brand pots with lids do buyers say work best ?",
+      "sources": [
+        {
+          "label": "ePQA review 70",
+          "text": "all these i can live with.other notes... we got a couple of vollrath \"intrigue\" sauce pans (very heavy) and a vollrath \"tri ply\" stock pot which work well with this cooktop, as does all our cast iron.",
+          "sha256": "1e97dc1e7e8735548eea6b75c1aeaf276f76afbf8886cd8b40935ac1234394fb",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 72",
+          "text": "i just finished cooking a pot of dry kidney beans i'll be using in some chili that i will cook on the nuwave and i'll be using my lodge cast iron combo dutch oven with skillet lid (from amazon).",
+          "sha256": "734faecc3c099f66aa9b21a1366bea566e034707bdf3da56e09ef88e8daf68bf",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 73",
+          "text": "i liked the off brand (from aldi's) as much for less than half the money.",
+          "sha256": "a7a5e2ab78102c8399462c3e0d2d3e9381ce830e0dca9d9145c6ad31d6038b44",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 74",
+          "text": "so, i'd recomend the ming sai brand and forget the hype and cost of the nu wave.",
+          "sha256": "9b7bc0bd8119c82431431bd77c4ca2c841823a301c54d4db44a28e144cd5f17c",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA attribute 75",
+          "text": "number_of_heating_elements:  { value:1 }",
+          "sha256": "9d891612230c5f2422035bfaff0d3113b32785d06f0249f16f210240c8a4d190",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 76",
+          "text": "item_package_weight:  { unit:kilograms, normalized_value:{ unit:pounds, value:7.55 }, value:3.42 }",
+          "sha256": "be7bebc4ce7407ce27fed11ccc466ff4027893c7c4d406d933b45aeccd5f3007",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 77",
+          "text": "multitask: because you can set precise temperatures and time the food, you can walk away knowing it will get cooked perfectly.",
+          "sha256": "d3be3e35900bf523a00ba5e630e91da858eaa81bcede024d2890b01e626d6509",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA cqa 78",
+          "text": "using a sauce pan or stock pot or cast iron dutch oven you still have to wait for the contents to come to a boil.",
+          "sha256": "88dde9a0d1be11e91507cf5df7a24fee3e356a1bf0bffd28aa1d5e1c0a1e62bb",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "There is a customer saying that they got a couple of vollrath \"intrigue\" sauce pans, vollrath \"tri ply\" stock pot which works well with this cooktop, as does all their cast iron.",
+        "There is a customer saying that the lodge cast iron combo dutch oven with skillet lid from amazon will be used to cook on the nuwave.",
+        "There is a customer saying that the brand from aldi's is liked as much for less than half the money.",
+        "There is a customer saying that the ming sai brand is recommendable."
+      ]
+    },
+    {
+      "qid": "19",
+      "asin": "B00545ATZW",
+      "title": "Frigidaire 240337103 Crisper Pan for Refrigerator",
+      "question": "i have a frigidaire and need a bottom crisper drawer part number 241543917...what drawer do i get?",
+      "sources": [
+        {
+          "label": "ePQA cqa 151",
+          "text": "oem part - manufacturer #240351061 this is your crisper drawer",
+          "sha256": "ec4864086f5b61ad5bbc68c7f1281042d29839610fccbd7599ed79741da1abab",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 154",
+          "text": "frigidaire oem part #240337103 yes this crisper drawer matches your model",
+          "sha256": "d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA attribute 150",
+          "text": "part_number:  { value:\"240337103\" }",
+          "sha256": "a5e496377ffae77f8032184d258fcbf02d3f70f3f87ba40ec3b701fca7602c8b",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA cqa 152",
+          "text": "on amazon it's frigidaire frigidaire 240337103 refrigerator crisper drawer.",
+          "sha256": "b5f7f04b3746b43c8c3394837824ca56f3dcaa677e0b2ed7b49f0c052963b9e3",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 153",
+          "text": "frigidaire part# 240599801 deli drawer cover frame (oem)",
+          "sha256": "9bb293dd772bd189fecf054fde355e14370b7a203c7f7c33bac10ab5e316c8d5",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA attribute 155",
+          "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:11.6 }, value:11.6 }, length:{ unit:inches, normalized_value:{ unit:inches, value:17. }, value:17. }, height:{ unit:inches, normalized_value:{ unit:inches, value:8.25 }, value:8.25 } }",
+          "sha256": "b256102581f9e08c0e1e4e6fcece89c23cb5863683cbb814e9ba4ef9b350a7cf",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 157",
+          "text": "frigidaire 240337103 crisper pan for refrigerator.",
+          "sha256": "2d5f13fbecef583a8a48d501e45f6b3cefe2c31ac96f303e35da6c654ffb9d51",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "There is a customer saying that you will get #240351061 crisper drawer.",
+        "There is a customer saying that yes this crisper drawer matches your model (frigidaire oem part #240337103)."
+      ]
+    },
+    {
+      "qid": "25",
+      "asin": "B004N4MSPO",
+      "title": "SPT Countertop Dishwasher, Silver",
+      "question": "what are the sizes of all the threaded connections on the inlet and drain tubes?",
+      "sources": [
+        {
+          "label": "ePQA cqa 211",
+          "text": "the drain hose length is 60in5/8\" i/d inlet hose connection to quick connect1/16\" i/d drain hose connection to quick connectquick connect 7/8\" i/d, 15/16 o/d",
+          "sha256": "77e3928c62619b5df099c6fff52e3fa20af68415026b8cc22f3b3448f2d81190",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 210",
+          "text": "garden hose connection on the top and male 55/64 in.-27 threads on the bottom.",
+          "sha256": "6688bc4781d53092074a0eb485e496438ec05be5b5f80bb347d1e70e0c2eb145",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 212",
+          "text": "drain hose length is 60in5/8\" i/d inlet hose connection to quick connect11/16\" i/d drain hose connection to quick connect",
+          "sha256": "a10bd27abbbcc4f713433ad4d07bb9dc0056e7e0a009cef07a7ce17cbdb0753e",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA description 213",
+          "text": "the sizes: male 15/16\"\"; female 55/64\"\".",
+          "sha256": "d05f86b86bc464a44f3b06d1ee2510054dc05619e5fe24a6949314d7545781f5",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 214",
+          "text": "the bit in between the faucet and the faucet adapter was purchased at orchards and uses the internal 55/64\" threads on the original faucet adapter.",
+          "sha256": "caf4655552b871bd4d0d3a4f92f98dc8c1fbea8992441715f53cf34dbb5db4f3",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA description 215",
+          "text": "if you have a side sprayer, you will most likely need to install a water line that is separated from the sprayer.",
+          "sha256": "72e40d26b67088ad6cb0333ee4eb6a4a705d1a05e13f03d54d1680f8d37dcfd1",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 216",
+          "text": "controls_type:  { value:\"full_panel\" }",
+          "sha256": "89aab8b4746ad6ccf8ae75143c8ce12fcd297559424ce77519060c9f3c952c59",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 217",
+          "text": "our faucet adapter fits standard-sized aerator openings for both male and female connections.",
+          "sha256": "1c56751e95531c1790b28e7ab8cd840677314abcd997bb93da8d167959dd805e",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "The sizes of the item threaded connections are: the drain hose length is 60in5/8\", i/d inlet hose connection to quick connect 1/16\", i/d drain hose connection to quick connect quick connect 7/8\" i/d, 15/16 o/d.."
+      ]
+    },
+    {
+      "qid": "26",
+      "asin": "B0053F8W2K",
+      "title": "Whirlpool 8181846 Handle for Washing Machine",
+      "question": "your picture shows pewter but the description says white... which is it?",
+      "sources": [
+        {
+          "label": "ePQA review 220",
+          "text": "it is white instead of off white color.",
+          "sha256": "0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 222",
+          "text": "the handle color is off-white/light, light gray.",
+          "sha256": "00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 223",
+          "text": "our washer is pewter, but this is lighter in color.",
+          "sha256": "4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA review 224",
+          "text": "what's to describe?remove the two torx #15 screws, remove the old broken plastic part, screw the new part on, and try not to be a dummy and break this on.the white matched the current white, so i'm happy with it.",
+          "sha256": "a3062d769f21be4f283001e0bb07a8883f6bd9a458a3683644b99220bfe5fa52",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 225",
+          "text": "part_number:  { value:\"8181846\" }",
+          "sha256": "10298c78e1018789871debadd7d224bbdd3abdc0f95202b3f45d55c7ca0332e2",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 226",
+          "text": "item_package_weight:  { unit:kilograms, normalized_value:{ unit:pounds, value:0.2 }, value:0.09 }",
+          "sha256": "644e13f289ab5aea7916c89cd09909c76a8d62de42c9a60f61e5e7afc9f02ff8",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 227",
+          "text": "this is a genuine replacement part.",
+          "sha256": "d628fd55b53af4f77ed93c7ff8f91c13fb18f3d4cebda082db417f99e0cff5c5",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 228",
+          "text": "the color matched and it was replaced in just a few minutes.",
+          "sha256": "7f2498a7ad9bce51a8c2200ce5328b8ce20c3a97f54e27b2ffa0066f0ead2b6a",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "There is a customer saying that the color is white, not off-white.",
+        "The color of the handle is off-white/light, light gray."
+      ]
+    },
+    {
+      "qid": "32",
+      "asin": "B00DM8K1NS",
+      "title": "LIFTREN 2198597 Icemaker, White",
+      "question": "does this fit the kitchen aid ksrj25cnst00?",
+      "sources": [
+        {
+          "label": "ePQA cqa 280",
+          "text": "chances are yes, it fit my kitchen aid, ksrs25ftss00 model.",
+          "sha256": "93e88e2714102d3c4b1ff542ac57a1bc2cb26a889b32fbbc1cf20becd038cdf0",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 282",
+          "text": "if your kitchenaid has the clear ice bin in the freezer door and is 25 or 27 cubic ft(i'm assuming by the 25 in the model number it's a 25 cu ft. model), this should work.",
+          "sha256": "816125bbf62f9ff90ccc05ba2ba8e5618cc75bf7235cec47ffa53d81f26f2336",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 281",
+          "text": "i suggest you use this handy tool to tell if it will fit your particular model of refrigeration by typing in your model number.",
+          "sha256": "4c0f786fafdf062a3ee80a67fae6eb80316bc1c245c70de950dc337417fee5c9",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA review 283",
+          "text": "installs quickly and works fine in my kitchenaid kscs25inss02one minor issue: the cup on the right that the water inlet feeder tube feeds into is taller on the unit i received than on the one i replaced.",
+          "sha256": "34a8f7c5364e07b1d97225a7885d0ba1c4596e285cc272e1620a3421b792f428",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 284",
+          "text": "there is a \"make sure this fits:\" model number search at the top of the page.",
+          "sha256": "89603fd9902eeaa5abd1a8e28500e4e99190268c2cf3e4db6adbc16689eb84a8",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA attribute 285",
+          "text": "cpsia_cautionary_statement:  { value:no_warning_applicable }",
+          "sha256": "db36d532941c4f8c7cec4673c3dda5264a93fbb66c8d9fe27732ee25f5e31849",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 286",
+          "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:6. }, value:6. }, length:{ unit:inches, normalized_value:{ unit:inches, value:11. }, value:11. }, height:{ unit:inches, normalized_value:{ unit:inches, value:3.5 }, value:3.5 } }",
+          "sha256": "6074af9d07f55d60144a9863b7e265e53d61bd19e485bf315cfbce4827af964e",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 288",
+          "text": "a little expensive but appears well made.",
+          "sha256": "f8edf539db3cf0cf35052f4379c5de64e27278d6c6df3142f531dfbe6e1faccc",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "Yes. A customer says that it fits the kitchen aid, ksrs25ftss00 model.",
+        "Yes. A customer says that if your kitchen aid has 25 in the model number, this should work."
+      ]
+    },
+    {
+      "qid": "37",
+      "asin": "B005AR75A6",
+      "title": "Whirlpool W10130695 Latch Assembly for Dishwasher, White",
+      "question": "maytag 49022. looks like it needs wpw10130695. does it matter this part is just w not wpw?",
+      "sources": [
+        {
+          "label": "ePQA bullet 331",
+          "text": "this part is a replacement for the following part numbers: 99002577 w10130695, 99002579, w10130694, wpw10130694, 99002578, wpw10130696, w10130696",
+          "sha256": "0a09bd3c504581ab6f459d56ee2b640634527e786be99b79171a9556e66e90c3",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA attribute 330",
+          "text": "part_number:  { value:\"w10130695\" }",
+          "sha256": "526e940f3ae7cb84872868bc4ef2a3250264eee426e1b3b068a12593d890340f",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 332",
+          "text": "model_number:  { value:\"w10130695\" }",
+          "sha256": "c1b4611c6d95174f57d8c6ad3970befd127ec1e60e9b20b0704a1bab0d6663a7",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 333",
+          "text": "none of this matters to me because the part is correct, intact and it is a perfect fit for my maytag quiet series 200 dishwasher.if you are repairing your dishwasher latch and handle assembly, be sure this is the correct part.",
+          "sha256": "22b8c70b2b281fb8cf71fbdad93ee8c971081d3bf3d1212008df1947cf6e361e",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 334",
+          "text": "i have a maytag and this is a whirlpool part and it fit.",
+          "sha256": "8a021edbe423045e97b0820c4e9311ce908ef5c38868676ef4679e68c1df6090",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA bullet 336",
+          "text": "this product is a replacement part",
+          "sha256": "ed044bac90f762c65007b6b9f3f04c8607e363db2490f8aa862b28bf7dba8847",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 339",
+          "text": "as advertised and shipped quickly.",
+          "sha256": "12c7b0191c81e5282b6f0d911ba30ca737e0c47a1218544df3a16495f80154d3",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "No. This is a replacement part for the following part numbers: 99002577, W10130695, 99002579, W10130694, WPW10130694, 99002578, WPW10130696, W10130696."
+      ]
+    },
+    {
+      "qid": "39",
+      "asin": "B00E37TR5U",
+      "title": "EcoAqua EFF-6027A Replacement Filter, Compatible with Samsung DA29-00020B, DA29-00020A, HAF-CIN/EXP, 46-9101 Refrigerator Water Filter",
+      "question": "with \"normal\" usage, how long does this filter last before replacement is needed?",
+      "sources": [
+        {
+          "label": "ePQA review 353",
+          "text": "it needs to be changed in 3 months no matter how often and how much water is used.",
+          "sha256": "34d0428a1d0ad68302786dfaceba5e7d07cf30d558a064d768c7dfdb883be6fa",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 354",
+          "text": "this is supposed to be a 6 month filter.",
+          "sha256": "061d82c7ed777a2d4b0c0391fbbf54518ef516e6e253017a509a57a1abd4ca5d",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 350",
+          "text": "time will tell how long it lasts, the original filter from the manufacturer was about 6 months",
+          "sha256": "51becfa7cb921646616e0118eebc26b290bc43cbdfbf53987c41a0963f0f2497",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA review 351",
+          "text": "they are supposed to last around 6 months!",
+          "sha256": "956fa6b2dfdc467ef459119d572a12eac7f9befbcbc8d68b4b34f2a08956b83b",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA review 352",
+          "text": "we are a family of 2 adults and 3 children and this filter lasts us about 6 months.",
+          "sha256": "c177d637387046759f181bfb9b542bc22b49f158ce352b8aa5cbb33cdde0c65b",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA bullet 355",
+          "text": "certified and testedtested and certified by nsf international against nsf/ansi standard 42 for the absorption of chlorine taste and odor and particulate.",
+          "sha256": "f617e6aa18baaa2bea8a178d1e925ff75d4cc8eaed7041a118416295d94929dd",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA bullet 356",
+          "text": "the ecoaqua brand guarantees the quality of the product.",
+          "sha256": "3a1d4fd997df9cad602c256481dc3d8eb67b18b7b79aea904cc9f15722f02bea",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 357",
+          "text": "model_name:  { value:\"eff-6027a\" }",
+          "sha256": "3e3fadf43efd31a31fae98c95c34381cb6b010fdf34da48879e06cd606e7fa6f",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "There is a customer saying that the item needs to be changed in 3 months no matter how often and how much water is used.",
+        "There is a customer saying that the item is supposed to be a 6-month filter."
+      ]
+    },
+    {
+      "qid": "45",
+      "asin": "B00IY7B5CS",
+      "title": "Avalon Bay AB-ICE26B Ice Maker, Black",
+      "question": "is this 110v only, or accepts a range of 110 to 220v?",
+      "sources": [
+        {
+          "label": "ePQA cqa 412",
+          "text": "no, this model is for only 115 volts.",
+          "sha256": "6e16495271a35c633655f5edefc390c2d50ee2de53f128ee46a1d49decde1a17",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 413",
+          "text": "unfortunately we do not offer a 220 volt version of this ice maker.",
+          "sha256": "5222982be32279e8c72413fd35deb44033b48a2cb6b2f608c2cf52b414353d2e",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA attribute 411",
+          "text": "voltage:  { unit:volts, value:120. }",
+          "sha256": "e7b4f18f46557de369a641a495034a43db69a972816195178c1fa1743075450b",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA description 415",
+          "text": "the avalon bay ab-ice26b produces nine ice cubes every cycle and comes complete with an ice scoop and ice bucket that collects the ice as it's made.",
+          "sha256": "e9613cfb43118788f006eedca7fd45741014e134ab0e39fee9fbc46ad9eb1fd7",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 416",
+          "text": "item_package_dimensions:  { length:{ unit:centimeters, normalized_value:{ unit:inches, value:17.3 }, value:43.94 }, width:{ unit:centimeters, normalized_value:{ unit:inches, value:17.2 }, value:34.8 }, height:{ unit:centimeters, normalized_value:{ unit:inches, value:13.7 }, value:43.69 } }",
+          "sha256": "dfc1f5c12424cd5c2b9fa82d15821397b45ad4354981c6b407062bcb5ce61907",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 417",
+          "text": "it's lightweight and portable, the perfect accessory for parties, camping trips, and boat rides.",
+          "sha256": "a74e012e1446617bfa1dd51a26d4bb85b41029435a8b51b6fc74a90840338e0b",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 418",
+          "text": "its a little wet so once it gets a solid freeze, it breaks apart easily to stick in the cube bin in the freezer.",
+          "sha256": "38e851db36448017d5c79a1427ce768123a3c4479f621463918182977a3ffd02",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 419",
+          "text": "it doesn't make enough for a party without freezing batches as they are made; but we have been impressed by its efficient ice production, water conservation, and the size of the counter top unit.",
+          "sha256": "dbca6c22ce92438246edefb1581ca1f5a1ba107be8301789c71316e5ba8b9657",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "There is a customer saying that a 110V is the only option.",
+        "No. A customer says that this model is for only 115 volts.",
+        "There is no 220-volt version of this ice maker."
+      ]
+    },
+    {
+      "qid": "47",
+      "asin": "B000WOG90E",
+      "title": "Oregon Scientific THGR122NX Water Resistant Remote Sensor W/ LCD Display. Measures and Displays Humidity & Temperature from -22F to 140F",
+      "question": "will this work with a wmr200 station?",
+      "sources": [
+        {
+          "label": "ePQA review 432",
+          "text": "after trying to get it to work on any channel (it didn't after exhausting all possibilities) it definitely is not compatible apparently unless you purchase an oregon product display.",
+          "sha256": "39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 430",
+          "text": "the oregon scientific website does give a list of what weather stations this works with.",
+          "sha256": "15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 431",
+          "text": "if it is the same freq as this senor it should work.",
+          "sha256": "aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA description 433",
+          "text": "the sensor is compatible with various multi-channel products from oregon scientific.",
+          "sha256": "c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 434",
+          "text": "the oregon scientific web site has a \"contact us\" tag, i suggest you send them this question to make sure that they are compatible.",
+          "sha256": "6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA attribute 435",
+          "text": "brand:  { value:\"oregon scientific\" }",
+          "sha256": "805f717c8b2076d682132fee6f2a4e348fa198fd44eb33b7d086328852834a76",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 436",
+          "text": "manufacturer:  { value:\"oregon scientific\" }",
+          "sha256": "a740b6175bb1530f49cf52daa8a5b99e447f4b0080790868fdab80c1481ecc04",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 437",
+          "text": "country_as_labeled:  { value:cn }",
+          "sha256": "03df9962f2d62e0fe1cfef684695e055c24cac0aa6f7732fbc2cdc4fb970999e",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "No. A customer says that the item is not compatible unless you purchase an Oregon product display."
+      ]
+    },
+    {
+      "qid": "54",
+      "asin": "B000PC4JL4",
+      "title": "VCT VT-500J - Japanese Step Up/Down Voltage Transformer Converts Japan 100 Volts To 110V OR Vice Versa - 500 Watt",
+      "question": "can this transformer can convert from 100v 50hz to 120v 60hz?",
+      "sources": [
+        {
+          "label": "ePQA description 501",
+          "text": "this transformer will convert from 120 volt to 100 volt and from 100 volt to 120 volts - input: 100/120v and output: 100/120v.",
+          "sha256": "e4f0c5493358555e40ba30854000037265cf320c26aa78f068efa666d7a3b854",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA bullet 502",
+          "text": "it converts 110/120 volt usa power to 100 volt japan power and 100 volt to 110/120 volts (means it will convert the american power to japanese power and also convert japanese power to american)",
+          "sha256": "2a7e9b7541cf10deeea189c31cb5ad576a78c5b777306ae3a8ff8d439116856d",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 500",
+          "text": "the specifications should indicate something like ac voltage 100v to 240v range 50hz or 60hz somewhere on the specification sticker.",
+          "sha256": "38b3e3db37fc3be926b5d74f3d459d9b7c0862c053800f3c194a9fb5b731451b",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA review 503",
+          "text": "what this device does is convert united states 120 volts 60hz ac to japanese 100 volts 60hz ac with a 500 watt maximum or if your in japan, the opposite 100 volts 60hz ac 120 volts 60hz ac.the unit is a little heavy box with a slight audible hum which is to be expected since it's a transformer.",
+          "sha256": "580ce5937ebf6828d58265686b3a5f239a35343a32c4b478d39f7716a8f2b2c8",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 504",
+          "text": "yes but only if your household voltage is 120v 60hz any higher no and some areas run 5 to 10 volts higher like central texas",
+          "sha256": "e7555674535890c746186586f1d7c34857217cebf31207d1235e7b7844f96ccb",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA attribute 506",
+          "text": "voltage:  { unit:volts, value:100120110. }",
+          "sha256": "f784d31584693479a9ac22f1418d4056b68702fbd2328b7623ff9d7b2788c05a",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 507",
+          "text": "wattage:  { unit:watts, value:500. }",
+          "sha256": "e2945641f9572ba1417b08385156f4c3243d4652e53c63ca81ebcce1b0457e91",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 508",
+          "text": "you are forced to buy a warranty because it isn't reliable.",
+          "sha256": "024cd29b30190053a8d4fcd21345fdd2a5288f322f928f3bca269ae3b38d90f5",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "This transformer will convert from 120 volts to 100 volts and from 100 volts to 120 volts - input: 100/120v and output: 100/120v.",
+        "It converts 110/120 volt USA power to 100-volt japan power and 100 volt to 110/120 volts (means it will convert the American power to Japanese power and also convert Japanese power to American)."
+      ]
+    },
+    {
+      "qid": "58",
+      "asin": "B004RPQ4MM",
+      "title": "Kitchen Bath Collection 30-inch Wall-mounted Stainless Steel Range Hood with Arched Tempered Glass & Touch Screen Control Panel, Carbon filters included.",
+      "question": "what is the cfm on this hood?",
+      "sources": [
+        {
+          "label": "ePQA cqa 540",
+          "text": "it has lightly lower cfm rate - 700 cubic meters per hour translates to 412 cubic feet per minute (or cfm).",
+          "sha256": "4b88f8212007f281d5c28967219e2d1d29d7b9daf041f4efde7a57b99c8e14cc",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA description 541",
+          "text": "maximum suction capacity: 700 cubic meters per hour, or 412 cfm.",
+          "sha256": "f2aa6100dda4197cfdeaabac55492879ccdbd16da8fea507ae7e7cd1fe41f3f4",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 542",
+          "text": "the maximum ceiling height for this range hood is approximately 8.5 ft and the maximum suction capacity is 700 cubic meters per hour, or about 412 cfm.thanks again!kitchen bath collection",
+          "sha256": "04ef11ba21f1e6d311d1340871b1b98f32444b9b8b3909e6105cce1a842cf5ec",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 543",
+          "text": "hello, the maximum suction capacity is about 412 cfm.",
+          "sha256": "72dc843ac6dea03b7c3fd2f13eb02fc878dafa58a60ff75231ae0a25786ce9a1",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 544",
+          "text": "this evacuates 450cfm with the lowest decibel rating of 48db(a), maximum 58db(a).",
+          "sha256": "2910adf05c90893626c250f520cf53ed6262a8ccc70f40bd4a88b20c4d436edd",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA attribute 545",
+          "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:20. }, value:20. }, length:{ unit:inches, normalized_value:{ unit:inches, value:30. }, value:30. }, height:{ unit:inches, normalized_value:{ unit:inches, value:28. }, value:28. } }",
+          "sha256": "c514fa496ea71a0f1c378ec538e3734c32b0dc0912da3091f3b792b5d7ed8a9c",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 546",
+          "text": "finish_type:  { value:\"stainless steel\" }",
+          "sha256": "1a538648f5d36506e7cc7cf2d5f2452c5ed885eea2145e18f300b66d757574a5",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 547",
+          "text": "batteries_included:  { value:false }",
+          "sha256": "a66f17da89f99d800cae79c8ac76d6b3fe0bb06b93fac436923c4d66049e579c",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "There is a customer saying that it has a lightly lower cfm rate - 700 cubic meters per hour translates to 412 cubic feet per minute (or cfm).",
+        "The maximum suction capacity is 700 cubic meters per hour or 412 cfm.",
+        "The maximum ceiling height for this range hood is approximately 8.5 ft and the maximum suction capacity is 700 cubic meters per hour or about 412 cfm.",
+        "The maximum suction capacity is about 412 cfm.",
+        "There is a customer saying that this evacuates 450cfm with the lowest decibel rating of 48db(a), maximum 58db(a)."
+      ]
+    },
+    {
+      "qid": "63",
+      "asin": "B00655HJJE",
+      "title": "EdgeStar KC2000SSTWIN Full Size Stainless Steel Dual Tap Kegerator & Draft Beer Dispenser - Stainless Steel",
+      "question": "can it fit 2 slim quarter kegs?",
+      "sources": [
+        {
+          "label": "ePQA cqa 592",
+          "text": "no, this only has enough room for one quarter keg.",
+          "sha256": "33dabbb17e14762fd93486372972513cc1c0e8227cf5a39f948a2bf32c99b6ea",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 590",
+          "text": "this will not fit two quarter kegs.",
+          "sha256": "203a5136634941fc624a1ded36be8716b05f8f7c09c3c2569e1f1614754ec332",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 591",
+          "text": "i don't think 2 slim quarter kegs will fit.",
+          "sha256": "877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA bullet 593",
+          "text": "stores up to a full sized half shell sankey standard keg or two sixth kegs; does not support use of coors, miller rubberized or other oversized kegs",
+          "sha256": "1162814d3f71aeb0668a89286ead579c4369358ff7da69e8ac66f707baefeca6",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 594",
+          "text": "this kegerator will fit the following kegs: one full size (1/2 barrel), one straight pony (1/4 barrel), one quarter slim (1/4 barrel) and two sixth slim (1/6 barrel)i don't think it would hold a 1/4 barrel and a 1/6 barrel at the same time.",
+          "sha256": "24a1549982a91a70a9c213ed6531185b14ba26754426f503ae465e52e2cf4d73",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA description 595",
+          "text": "acceptable keg configurations:  (1) full size keg, 1/2 barrel (124 pints) (1) pony keg, 1/4 barrel (62 pints) (1) slim-pony keg, 1/4 barrel (62 pints) up to (2) sixth barrel kegs, (42 pints each) up to (2) cornelius homebrew kegs, (40 pints each)",
+          "sha256": "0ceb8d3e3b36f5d6c5a6e803b525792a2e0834471e184723a17eb4448d3022b9",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA bullet 597",
+          "text": "for freestanding use only and indoor use only; 5 lb.",
+          "sha256": "c9673407444f1c2d41f20a7c23f5f25968e7a1ed77226d51cdcbcbbd061b0884",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 598",
+          "text": "when i contacted edge star customer service, they said they would not ship me a second one and to look on the internet for how to drill holes into the metal refrigerator.",
+          "sha256": "3e5206a3557c68afe5c95bb54e03e69c708cf642df9c07c97a6584eb0b1f3617",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "No. A customer says that it only has enough room for one quarter keg."
+      ]
+    },
+    {
+      "qid": "70",
+      "asin": "B000DZFTC6",
+      "title": "Dundas Jafine TDIDVKZW Indoor Dryer Vent Kit with 4-Inch by 5-Foot Proflex Duct, 4 Inch, White",
+      "question": "can you vent thru a window just like you can with an ac?",
+      "sources": [
+        {
+          "label": "ePQA review 660",
+          "text": "it is extremely easy to install and use inside or venting thru a window.",
+          "sha256": "a2f3da8773be03e099d720dd7077a5d85971eb81fcb3ccdb628225668d4bf085",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 661",
+          "text": "open a door and window to generate cross draft.",
+          "sha256": "9a39f270b6e1d438467dd9d2da4fd16dc9facd3dfe6c5e9b4b1f3ea884d8e61c",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA cqa 662",
+          "text": "although, if you don't have this facilities, just open a window closest to the dryer vent to prevent humidity to build up.",
+          "sha256": "95670298fd3f0dbefc8753c76d032cfd58ad2e7b14e7d37e235a97d4c92f5fe2",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 663",
+          "text": "you may need to open a window though.",
+          "sha256": "9070cb6f9d28755c10a53cda197cbb749a10479a89ed2d453653aa45c231b2a7",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 664",
+          "text": "humidifies the room a lot, but we can just crack a window.",
+          "sha256": "e700f55606703b71a2eddf0de970d393c30ede3ba3eb58fdbf18e4404b18da92",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 665",
+          "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:6.75 }, value:6.75 }, length:{ unit:inches, normalized_value:{ unit:inches, value:6.75 }, value:6.75 }, height:{ unit:inches, normalized_value:{ unit:inches, value:7.25 }, value:7.25 } }",
+          "sha256": "301837e8a2a54f651c3610f92846a7c72e490c6aea6c5fc4f69d39a97d41df73",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 666",
+          "text": "model_number:  { value:\"tdidvkzw\" }",
+          "sha256": "cd9896b814b9a07467eb6f5da6db5d6ccf9f89d06f352040239ac857aa9f0f66",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 667",
+          "text": "binding:  { value:home_improvement }",
+          "sha256": "7ccfec43a8f17afd1225084431afd9b0fd8f7f8f858ddfe4d2811e7a42a0f29c",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "Yes. A customer says that it is extremely easy to install and use inside or venting through a window."
+      ]
+    },
+    {
+      "qid": "72",
+      "asin": "B000UVWGGK",
+      "title": "Broan-NuTone 403004 Range Hood Insert with Light Exhaust Fan for Under Cabinet, 30\\\", Stainless Steel, 6.5 Sones, 160 CFM",
+      "question": "will this work for a manufactured home, with the vent located on the exterior wall?",
+      "sources": [
+        {
+          "label": "ePQA cqa 684",
+          "text": "hi jean... the hole for the vent is on the top of the unit, but i know of people who have used a 90 degree elbow vent pipe to have it vent out the back.",
+          "sha256": "51861be5de1e6009797861780de8add04ba017a7c1bf01d00304e8002e42c90f",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 680",
+          "text": "this vents to the back or top.",
+          "sha256": "f3836dd7247d135e03fbfdb01f646b84d019d162cb67ce3565d2c49dbc8a7de0",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 681",
+          "text": "so, make sure you check to see the size and shape of your vent pipe, and that it is compatible with this hood.",
+          "sha256": "6fdc8e67454180c08cac7e266447057e6f7076974dd57792715177a577568add",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 682",
+          "text": "it can vent out of the top or out of the back.",
+          "sha256": "a8363e766c79801ab1f91fe091a0f2f9e8b76b114e2d09b1c9bfb51fac440c52",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 683",
+          "text": "the vent and screw holes are on the top of the unit.",
+          "sha256": "9f4cdb6d82acca57c5d1a4d1f93a77d4d7ca0b652ecf59d3637ca36ee7455cc2",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA description 685",
+          "text": "light type: 1 incandescent 75-watt bulb ( sold separately)",
+          "sha256": "6e20f80da0af005c015131968c567c8b7da4e125460aa9a83226285a74824155",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA bullet 687",
+          "text": "versatile: 2 speed fan with top or rear exhaust options lets you connect the ductwork in the most convenient way for you",
+          "sha256": "2e95badc2ff23de6e3ebb92ec4d9282f9463253ef42ebe05bfca9a1eba9352c1",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 688",
+          "text": "shipping inexpensive and it arrived in 3 days undamaged",
+          "sha256": "a5bd07afeb108098d66d7835d5cbaa41aba77c17ed6e53bc81681aa3a0f54db1",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "There is a customer saying that the hole for the vent is on the top of the unit."
+      ]
+    },
+    {
+      "qid": "75",
+      "asin": "B0051S4ZZM",
+      "title": "Washer anti vibration anti walking pads",
+      "question": "can these pads be used on a stacked washer dryer  ?",
+      "sources": [
+        {
+          "label": "ePQA cqa 710",
+          "text": "we actually have a dryer stacked on top of the washer and these pads are working great.",
+          "sha256": "9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 711",
+          "text": "these were used in a multi unit senior apartment building on stacked washer/dryer units..",
+          "sha256": "a43d474af666f63013dca433fdc69f9004ed9b4dae17771a80a60730ff0f7149",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 712",
+          "text": "so i built a laundry closet on the second floor and stacked our washer & dryer (we did not have them stacked downstairs, because we had wall cabinets above them).",
+          "sha256": "021b7506b59945f7d3a9d2e60e63a607dda2fdf50e71c0b02e1602f826ae7e8b",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 713",
+          "text": "i have a dryer stacked on top of my washer and they are working like a charm.",
+          "sha256": "be04360b069e4ae3e6e1873cd986669fe065d565442c025d17cb5184b3a1bcea",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA cqa 714",
+          "text": "i had removed two of my pads when i had to reposition my stacked washer/dryer, and i saw no indentations on the inside of the top of the pads (the tops of the pads are dish-shaped to keep the washer from walking off of them).",
+          "sha256": "75f29f552357225695b3cca3f297b9e94a6356088e0fa78bfdcbbafb651b5081",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 715",
+          "text": "type of flooring, size and balance of the load, machine level, etc.",
+          "sha256": "e1260f3457cc630194a5cec2163464c76b8f628a398df3c1ee784c15a41f2d3e",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA description 716",
+          "text": "checking each washer foot when in spin cycle and lowering until movement is minimized)!",
+          "sha256": "68deb2699aeefb0d8ccaa8fff388ee6e59b4d766f2d06be8a6f0e5a4bb6cc558",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 717",
+          "text": "part_number:  { value:\"1001\" }",
+          "sha256": "267cef08b8ba92f39fe6916a6e1832fee65a18b7e892b4a139758644bdc6ba58",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "Yes. A customer says that they actually have a dryer stacked on top of the washer and these pads are working great.",
+        "Yes. A customer says that these items were used in a multi-unit senior apartment building on a stacked washer or dryer units."
+      ]
+    },
+    {
+      "qid": "77",
+      "asin": "B00BAUPS9M",
+      "title": "EZ FAUX DECOR Stainless Steel Paint? NO! Appliance Door Panel Peel and Stick Stainless Steel Self Adhesive Nickel Film Overlay 36\\\" X 144",
+      "question": "it is enough for a fridge side by side?",
+      "sources": [
+        {
+          "label": "ePQA review 730",
+          "text": "looks like a good solution, but its not enough for a fridge side by side like the picture show in the announce.",
+          "sha256": "aaf7b85ec40eea5b0d428ace2618abe849a1ef263190513357cc0e4ac35c8192",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 731",
+          "text": "it didn't fix to my fridge  side by side.",
+          "sha256": "5d43f14661a1a1d7afde91fb5007ce877051627218cc30f9af7b41806e700f75",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA review 732",
+          "text": "in my case i did a large side by side refrigerator which required 2 rolls, one for each door.",
+          "sha256": "84627a2493fbbf9d05f8f337ab4dc51af40a8b225e0131ceba647f66f5f6834f",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 733",
+          "text": "it depends on the size of the fridge, on my fridge since it is big, i had to buy two rolls",
+          "sha256": "e468c748a5867031919f5b5c22ef4c94dda4fd2634988ef60b1178ce40a61c45",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 734",
+          "text": "depending on how large the fridge is you may need 2 rolls.",
+          "sha256": "30bb5e23aa89aaf480ef96fc9c64b89c48aad3adbf412d7ae5631dfea5bbba0d",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA attribute 735",
+          "text": "size_map:  { value:\"36|\" x 144|\"\" }",
+          "sha256": "3526257719eb04294972353856e702a67d7cce7bb6ae7d0998b7e633964cce2e",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 736",
+          "text": "fabric_type:  { value:\"vinyl\" }",
+          "sha256": "ac269265fe0d5b9d4d0e30742dde4a8855a8c89e1b1a4cd6ecf1bbff19d14f92",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA bullet 737",
+          "text": "the stainless product we offer can be uses for dishwashers, refrigerators, oven, and many kitchen appliances.",
+          "sha256": "f4a585b3af3352cd0b5a7f8dd6f67762ae4fe8ff38474645cd944261ee3b5ae8",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "No. A customer says that the item looks like a good solution but it's not enough for a fridge side by side like the picture shown in the announcement.",
+        "No. A customer says that the item did not fix the fridge side by side.",
+        "Yes. A customer says that two rolls were required to do a large side-by-side refrigerator.",
+        "Yes. A customer says that it depends on the size of the fridge and had to buy two rolls.",
+        "Yes. A customer says that depending on how large the fridge is, you may need two rolls."
+      ]
+    },
+    {
+      "qid": "81",
+      "asin": "B00266BXV6",
+      "title": "ERP 4389102 Refrigerator Ice Maker Control Board",
+      "question": "i have a ktchenaid ksrb25fkss02 side by side. will this kit function properly?",
+      "sources": [
+        {
+          "label": "ePQA cqa 770",
+          "text": "yes - it will fit and function perfectly.",
+          "sha256": "6332fde062d306ad887b34168ff505676c1b2b3156d8a64e57b6035828bb272a",
+          "originalLabel": 2
+        },
+        {
+          "label": "ePQA cqa 771",
+          "text": "if yours has the sensors on both sides then this will likely work.",
+          "sha256": "0ccf0e35c239036e429210cc3f9a71e6b5108716e7d728e8e21fd1a29a13dde2",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA review 772",
+          "text": "this kit has the two circuit boards needed to replace the left and right side icemaker optics in applicable kitchenaid/whirlpool side-by-side refrigerators.",
+          "sha256": "89282788f9a13d8d468a0123f649b444c1010b49fc157e5a08e631b1e4954d57",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 773",
+          "text": "if your refrigerator has this 2-pc board optical ice sensor on the left and right freezer walls and your refrigerator was designed by whirlpool (such as a sears kenmore), then it will fit.",
+          "sha256": "ccbf385a5f4d032cb05cc0fa2a26df2b4fa5a2bec538704cb3b82b20fc66dfb5",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA cqa 774",
+          "text": "i don't know, i bought this for my whirpool fridge and it works  perfectly, you must check the product description first to verify if it replaces your oem part number",
+          "sha256": "d8bd8144735d7f7a7a2aad9ed7cad5794f1554eb92f6230441f1d9917df34bda",
+          "originalLabel": 1
+        },
+        {
+          "label": "ePQA attribute 775",
+          "text": "item_package_weight:  { unit:pounds, normalized_value:{ unit:pounds, value:0.1 }, value:0.1 }",
+          "sha256": "4032df4bd620ec4c465d8a422eed7d0e77911a5d7aa2317b183d95cc17223f72",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA attribute 777",
+          "text": "batteries_included:  { value:false }",
+          "sha256": "a66f17da89f99d800cae79c8ac76d6b3fe0bb06b93fac436923c4d66049e579c",
+          "originalLabel": 0
+        },
+        {
+          "label": "ePQA review 778",
+          "text": "this is the part we needed and it solved our ice maker issue for a while.",
+          "sha256": "97400e10930cb0b2a7cf0954995ea5866f59a7b16ce95677374689134de2849a",
+          "originalLabel": 0
+        }
+      ],
+      "referenceAnswers": [
+        "Yes. The item will fit and function perfectly."
+      ]
+    }
+  ]
+}

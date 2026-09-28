@@ -1,0 +1,1973 @@
+{
+  "manifestSha256": "125def79dfcd8823e1ca5c38b125fcdc5bdfcbd55222e4cbc1236c6b3a666dd2",
+  "runs": [
+    {
+      "qid": "4",
+      "asin": "B00005AUHX",
+      "run": {
+        "id": "d984743e-9eed-4099-8108-d3cb4d13213b",
+        "productId": "187f726c-8e84-47f9-bff3-627aa8ad2af7",
+        "question": "can this be used on a well?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "b013a67f-8218-428e-bcf0-7dd12ce4aff8",
+              "productId": "187f726c-8e84-47f9-bff3-627aa8ad2af7",
+              "source": "ePQA review 11",
+              "text": "used it to test my hard well water so we could get the right filter.",
+              "reference": "ePQA review 11",
+              "sha256": "4d643ddf9d3d00188504a6ffb5f1de92fb0ebe45cbe78e66274951bd94ec6d1c",
+              "lexicalRank": 1,
+              "semanticRank": 2,
+              "score": 0.03252247488101534
+            },
+            {
+              "id": "b66546be-3c15-48ab-ac8d-2047a32ab50d",
+              "productId": "187f726c-8e84-47f9-bff3-627aa8ad2af7",
+              "source": "ePQA review 13",
+              "text": "we just put in a new well and wanted to check its quality.",
+              "reference": "ePQA review 13",
+              "sha256": "00413bc3f8b1a1f376625e3f1e8a6dc705577fbb267de3c9962a352a8a7ba86d",
+              "lexicalRank": 4,
+              "semanticRank": 1,
+              "score": 0.032018442622950824
+            },
+            {
+              "id": "6bbf9a6e-cf95-4afc-8eaa-56cab64b0e6b",
+              "productId": "187f726c-8e84-47f9-bff3-627aa8ad2af7",
+              "source": "ePQA review 14",
+              "text": "you will not get a drinking water test - you will get a \"city water test\" so if you are on well water, this is not the right test.",
+              "reference": "ePQA review 14",
+              "sha256": "5f254c226ed5ab053a6ff90c3c6592629f7c03c37282ca0d288b5ccbaf20086f",
+              "lexicalRank": 2,
+              "semanticRank": 4,
+              "score": 0.031754032258064516
+            },
+            {
+              "id": "e2715d34-033c-4958-a880-d21ed302d8ba",
+              "productId": "187f726c-8e84-47f9-bff3-627aa8ad2af7",
+              "source": "ePQA review 10",
+              "text": "my family relies on well water to supply our home.",
+              "reference": "ePQA review 10",
+              "sha256": "ab7a19f5a658e7e244c7f7a04eb0430f1127df2cbbfc8e06a8f3c5696e2173f0",
+              "lexicalRank": 3,
+              "semanticRank": 3,
+              "score": 0.031746031746031744
+            },
+            {
+              "id": "830acdc8-aeb9-45a6-9599-ef65a6637fc0",
+              "productId": "187f726c-8e84-47f9-bff3-627aa8ad2af7",
+              "source": "ePQA review 12",
+              "text": "ive never had our well water tested, but i have cared for pool and hot tub familiar with strips and such items in the watersafe kit.",
+              "reference": "ePQA review 12",
+              "sha256": "340f4116164936febc7a5874f08ed647f88d3e84e5378c2fb4807777851e6bcf",
+              "lexicalRank": 5,
+              "semanticRank": 5,
+              "score": 0.03076923076923077
+            }
+          ],
+          "durationMs": 15.026582999998936,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-554a5e6378b7ab181c67bc9f"
+        },
+        "answer": {
+          "answer": "Evidence is conflicting. One review says it was used to test hard well water, but another says this is a “city water test” and “not the right test” for well water. Therefore, I can’t confirm that this kit is appropriate for well-water testing.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "b013a67f-8218-428e-bcf0-7dd12ce4aff8",
+              "quote": "used it to test my hard well water so we could get the right filter."
+            },
+            {
+              "passageId": "6bbf9a6e-cf95-4afc-8eaa-56cab64b0e6b",
+              "quote": "you will not get a drinking water test - you will get a \"city water test\" so if you are on well water, this is not the right test."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1009,
+          "outputTokens": 96
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:08.774Z"
+      },
+      "clientMs": 2607.7935
+    },
+    {
+      "qid": "5",
+      "asin": "B00074TB9U",
+      "run": {
+        "id": "e5c298bc-1227-49a3-93bb-82caf630abdf",
+        "productId": "c029edc1-7a89-4c5e-97b5-4a40308b70f8",
+        "question": "what side filter fit ?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "0a8d569d-6a5b-44d6-b949-cc550c5ea807",
+              "productId": "c029edc1-7a89-4c5e-97b5-4a40308b70f8",
+              "source": "ePQA review 24",
+              "text": "fit in my 30\" opening perfectly.",
+              "reference": "ePQA review 24",
+              "sha256": "27df6e3cd6eee2f39c7e1bea9323f06d490a447055d7a9f21db73ab20637b9ad",
+              "lexicalRank": 1,
+              "semanticRank": 4,
+              "score": 0.032018442622950824
+            },
+            {
+              "id": "d914b1e7-7507-4f95-b65d-1460d815f843",
+              "productId": "c029edc1-7a89-4c5e-97b5-4a40308b70f8",
+              "source": "ePQA cqa 23",
+              "text": "the curve ends 6 inches from the front, or at a point where the side configuration changes",
+              "reference": "ePQA cqa 23",
+              "sha256": "0b05a3a5f4be0992331f00d416ebd8eac49148cc0da681728084b0b1b65462a9",
+              "lexicalRank": 2,
+              "semanticRank": 8,
+              "score": 0.030834914611005692
+            },
+            {
+              "id": "ea5fa5ae-90d5-4a64-a906-aa6caed3bbf6",
+              "productId": "c029edc1-7a89-4c5e-97b5-4a40308b70f8",
+              "source": "ePQA review 21",
+              "text": "start at far sides of filters.",
+              "reference": "ePQA review 21",
+              "sha256": "3d1c95a7db2a3a5573104442361fe184d96ec7a124ce3cf8cf70cfd912b4545c",
+              "lexicalRank": null,
+              "semanticRank": 1,
+              "score": 0.01639344262295082
+            },
+            {
+              "id": "c873656a-079d-4207-b47d-e1c78d2c0a7b",
+              "productId": "c029edc1-7a89-4c5e-97b5-4a40308b70f8",
+              "source": "ePQA description 20",
+              "text": "standard large filters, dishwasher safe.",
+              "reference": "ePQA description 20",
+              "sha256": "95b2b2cd3e49e412ea3236280dbe26196fa3d8356a2da753b446ecfbbd8d087a",
+              "lexicalRank": null,
+              "semanticRank": 2,
+              "score": 0.016129032258064516
+            },
+            {
+              "id": "f82c5208-c599-465b-b686-f61545873697",
+              "productId": "c029edc1-7a89-4c5e-97b5-4a40308b70f8",
+              "source": "ePQA description 26",
+              "text": "broan qs130bl under cabinet hood, 220-cfm, 30-inch, black",
+              "reference": "ePQA description 26",
+              "sha256": "5ebbc1a848ef8aae1d1e24bc3ddee87b35112f3c6da6709e820aeb12f1bd92f9",
+              "lexicalRank": null,
+              "semanticRank": 3,
+              "score": 0.015873015873015872
+            }
+          ],
+          "durationMs": 5.767417000002752,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-14c6ee5e02eeeba01be578f1"
+        },
+        "answer": {
+          "answer": "The evidence only says this hood uses “standard large filters,” and that they are dishwasher-safe. It does not specify the exact side-filter dimensions, shape, or compatible replacement part.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "c873656a-079d-4207-b47d-e1c78d2c0a7b",
+              "quote": "standard large filters, dishwasher safe."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 932,
+          "outputTokens": 71
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:11.419Z"
+      },
+      "clientMs": 1707.789875
+    },
+    {
+      "qid": "8",
+      "asin": "B00074TBCW",
+      "run": {
+        "id": "20fe605f-efd9-4cb4-8f40-46eacf218f6c",
+        "productId": "2c2380bc-5bca-45d5-afb5-4e1f29796a2e",
+        "question": "ducted installation but lots of of air coming out of the slots on top. is it normal?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "97ea28b8-dc37-42cd-827e-858ad00d9c70",
+              "productId": "2c2380bc-5bca-45d5-afb5-4e1f29796a2e",
+              "source": "ePQA review 54",
+              "text": "there is also some holes on the top of the hood that is throwing out air.",
+              "reference": "ePQA review 54",
+              "sha256": "0a572bc42234831e9ac6455d788eeca45ee17d35df41595706d0b285ddd3528e",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "00257e88-e184-40ee-9772-49f00514146a",
+              "productId": "2c2380bc-5bca-45d5-afb5-4e1f29796a2e",
+              "source": "ePQA review 51",
+              "text": "now i can't feel the thrown out air.",
+              "reference": "ePQA review 51",
+              "sha256": "f731a9f2ca05ff311881e0a2a16fc3a074c2b14250f39fd93c2f7d81e4a2c2ec",
+              "lexicalRank": 3,
+              "semanticRank": 2,
+              "score": 0.03200204813108039
+            },
+            {
+              "id": "5f043b63-f1ed-4951-8d17-34a32f4e5ce9",
+              "productId": "2c2380bc-5bca-45d5-afb5-4e1f29796a2e",
+              "source": "ePQA review 53",
+              "text": "if not configured to vent to the outside, the unfiltered air gets pushed back out through the vent, covering the top of the unit with grease.",
+              "reference": "ePQA review 53",
+              "sha256": "ec1da2bf279d9efcb7ec1b6750b900f2519c3e212c0fa7c549ae1e2d47fc2088",
+              "lexicalRank": 2,
+              "semanticRank": 3,
+              "score": 0.03200204813108039
+            },
+            {
+              "id": "835863db-fa5b-42c9-b7b7-6139c9c22d77",
+              "productId": "2c2380bc-5bca-45d5-afb5-4e1f29796a2e",
+              "source": "ePQA cqa 52",
+              "text": "i think the baffle isn't air tight so there is always going to be some.",
+              "reference": "ePQA cqa 52",
+              "sha256": "43008b911cd19a07814e4299c0aa63f944977a165471e0c84ba4b3465d6f8c8e",
+              "lexicalRank": 4,
+              "semanticRank": 4,
+              "score": 0.03125
+            },
+            {
+              "id": "24e66c47-211e-4c24-86f0-20e739e5d6ad",
+              "productId": "2c2380bc-5bca-45d5-afb5-4e1f29796a2e",
+              "source": "ePQA review 50",
+              "text": "as a result, some air ends up recirculating right back into the kitchen.",
+              "reference": "ePQA review 50",
+              "sha256": "e5ae3b55cb121b5f6c47f649612210e6ecf1eea540f426094e95b0698f43547c",
+              "lexicalRank": 5,
+              "semanticRank": 5,
+              "score": 0.03076923076923077
+            }
+          ],
+          "durationMs": 5.467665999996825,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-caddd6a6be2c082bcf732776"
+        },
+        "answer": {
+          "answer": "Some air from the top slots can occur, but the evidence does not establish that a large amount is normal for a correctly ducted installation. If the hood is not configured to vent outside, unfiltered air can be pushed back through the vent; some recirculation may also occur. Verify that the hood is configured and connected for outside venting.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "97ea28b8-dc37-42cd-827e-858ad00d9c70",
+              "quote": "there is also some holes on the top of the hood that is throwing out air."
+            },
+            {
+              "passageId": "5f043b63-f1ed-4951-8d17-34a32f4e5ce9",
+              "quote": "if not configured to vent to the outside, the unfiltered air gets pushed back out through the vent, covering the top of the unit with grease."
+            },
+            {
+              "passageId": "24e66c47-211e-4c24-86f0-20e739e5d6ad",
+              "quote": "as a result, some air ends up recirculating right back into the kitchen."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1011,
+          "outputTokens": 139
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:13.113Z"
+      },
+      "clientMs": 3725.2155829999992
+    },
+    {
+      "qid": "11",
+      "asin": "B00EZFPDO4",
+      "run": {
+        "id": "5ab4676a-0c2b-4987-8af6-e167dc5ca483",
+        "productId": "528ed6c1-8811-48b7-ad31-a6e76e1623a4",
+        "question": "what brand pots with lids do buyers say work best ?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "4251c92c-73c6-45a4-9d76-aa476d43125d",
+              "productId": "528ed6c1-8811-48b7-ad31-a6e76e1623a4",
+              "source": "ePQA review 70",
+              "text": "all these i can live with.other notes... we got a couple of vollrath \"intrigue\" sauce pans (very heavy) and a vollrath \"tri ply\" stock pot which work well with this cooktop, as does all our cast iron.",
+              "reference": "ePQA review 70",
+              "sha256": "1e97dc1e7e8735548eea6b75c1aeaf276f76afbf8886cd8b40935ac1234394fb",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "cbcf31e3-f31b-495f-a89b-119325c04386",
+              "productId": "528ed6c1-8811-48b7-ad31-a6e76e1623a4",
+              "source": "ePQA review 73",
+              "text": "i liked the off brand (from aldi's) as much for less than half the money.",
+              "reference": "ePQA review 73",
+              "sha256": "a7a5e2ab78102c8399462c3e0d2d3e9381ce830e0dca9d9145c6ad31d6038b44",
+              "lexicalRank": 2,
+              "semanticRank": 4,
+              "score": 0.031754032258064516
+            },
+            {
+              "id": "ebca9d7d-1f7f-4de1-8bcc-9ca364dc55e1",
+              "productId": "528ed6c1-8811-48b7-ad31-a6e76e1623a4",
+              "source": "ePQA review 72",
+              "text": "i just finished cooking a pot of dry kidney beans i'll be using in some chili that i will cook on the nuwave and i'll be using my lodge cast iron combo dutch oven with skillet lid (from amazon).",
+              "reference": "ePQA review 72",
+              "sha256": "734faecc3c099f66aa9b21a1366bea566e034707bdf3da56e09ef88e8daf68bf",
+              "lexicalRank": 4,
+              "semanticRank": 2,
+              "score": 0.031754032258064516
+            },
+            {
+              "id": "a624f835-1c3c-4ce4-aaa1-799a698f32ae",
+              "productId": "528ed6c1-8811-48b7-ad31-a6e76e1623a4",
+              "source": "ePQA review 74",
+              "text": "so, i'd recomend the ming sai brand and forget the hype and cost of the nu wave.",
+              "reference": "ePQA review 74",
+              "sha256": "9b7bc0bd8119c82431431bd77c4ca2c841823a301c54d4db44a28e144cd5f17c",
+              "lexicalRank": 3,
+              "semanticRank": 6,
+              "score": 0.031024531024531024
+            },
+            {
+              "id": "d421a8a6-f59c-4f83-ab71-7abde20ebf0e",
+              "productId": "528ed6c1-8811-48b7-ad31-a6e76e1623a4",
+              "source": "ePQA cqa 78",
+              "text": "using a sauce pan or stock pot or cast iron dutch oven you still have to wait for the contents to come to a boil.",
+              "reference": "ePQA cqa 78",
+              "sha256": "88dde9a0d1be11e91507cf5df7a24fee3e356a1bf0bffd28aa1d5e1c0a1e62bb",
+              "lexicalRank": null,
+              "semanticRank": 3,
+              "score": 0.015873015873015872
+            }
+          ],
+          "durationMs": 7.954540999999153,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-2fef7fe55cff5122528aa9f9"
+        },
+        "answer": {
+          "answer": "Buyers specifically report that Vollrath cookware works well with this cooktop, including the Intrigue sauce pans and Tri-Ply stock pot. They also mention a Lodge cast-iron combo Dutch oven with a skillet lid as cookware used on the NuWave. The evidence does not establish which brand works best overall, and it does not support a recommendation for Ming Sai or Aldi cookware with lids.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "4251c92c-73c6-45a4-9d76-aa476d43125d",
+              "quote": "we got a couple of vollrath \"intrigue\" sauce pans (very heavy) and a vollrath \"tri ply\" stock pot which work well with this cooktop, as does all our cast iron."
+            },
+            {
+              "passageId": "ebca9d7d-1f7f-4de1-8bcc-9ca364dc55e1",
+              "quote": "i just finished cooking a pot of dry kidney beans i'll be using in some chili that i will cook on the nuwave and i'll be using my lodge cast iron combo dutch oven with skillet lid (from amazon)."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1217,
+          "outputTokens": 121
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:16.851Z"
+      },
+      "clientMs": 2590.487166000001
+    },
+    {
+      "qid": "19",
+      "asin": "B00545ATZW",
+      "run": {
+        "id": "3e765be5-aac5-4840-b7a7-ce1254fe3ff6",
+        "productId": "b6f33bad-7a42-4361-a928-07362c41fffb",
+        "question": "i have a frigidaire and need a bottom crisper drawer part number 241543917...what drawer do i get?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "0efd1df6-af78-42b3-a470-6aa037a4f04f",
+              "productId": "b6f33bad-7a42-4361-a928-07362c41fffb",
+              "source": "ePQA cqa 152",
+              "text": "on amazon it's frigidaire frigidaire 240337103 refrigerator crisper drawer.",
+              "reference": "ePQA cqa 152",
+              "sha256": "b5f7f04b3746b43c8c3394837824ca56f3dcaa677e0b2ed7b49f0c052963b9e3",
+              "lexicalRank": 2,
+              "semanticRank": 1,
+              "score": 0.03252247488101534
+            },
+            {
+              "id": "6a3b7a5f-4b78-449e-a318-90bac7493ddd",
+              "productId": "b6f33bad-7a42-4361-a928-07362c41fffb",
+              "source": "ePQA cqa 154",
+              "text": "frigidaire oem part #240337103 yes this crisper drawer matches your model",
+              "reference": "ePQA cqa 154",
+              "sha256": "d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f",
+              "lexicalRank": 1,
+              "semanticRank": 2,
+              "score": 0.03252247488101534
+            },
+            {
+              "id": "9c8a4647-cd84-4f1b-b5b3-8000a947ed4a",
+              "productId": "b6f33bad-7a42-4361-a928-07362c41fffb",
+              "source": "ePQA cqa 153",
+              "text": "frigidaire part# 240599801 deli drawer cover frame (oem)",
+              "reference": "ePQA cqa 153",
+              "sha256": "9bb293dd772bd189fecf054fde355e14370b7a203c7f7c33bac10ab5e316c8d5",
+              "lexicalRank": 3,
+              "semanticRank": 3,
+              "score": 0.031746031746031744
+            },
+            {
+              "id": "2c9cf310-21c1-4047-977a-00252ee98e14",
+              "productId": "b6f33bad-7a42-4361-a928-07362c41fffb",
+              "source": "ePQA cqa 151",
+              "text": "oem part - manufacturer #240351061 this is your crisper drawer",
+              "reference": "ePQA cqa 151",
+              "sha256": "ec4864086f5b61ad5bbc68c7f1281042d29839610fccbd7599ed79741da1abab",
+              "lexicalRank": 4,
+              "semanticRank": 5,
+              "score": 0.031009615384615385
+            },
+            {
+              "id": "c5043855-5599-4f61-9635-1506b173110e",
+              "productId": "b6f33bad-7a42-4361-a928-07362c41fffb",
+              "source": "ePQA description 157",
+              "text": "frigidaire 240337103 crisper pan for refrigerator.",
+              "reference": "ePQA description 157",
+              "sha256": "2d5f13fbecef583a8a48d501e45f6b3cefe2c31ac96f303e35da6c654ffb9d51",
+              "lexicalRank": 5,
+              "semanticRank": 4,
+              "score": 0.031009615384615385
+            }
+          ],
+          "durationMs": 11.906291999999667,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-b8de89462389f84451a0a0e5"
+        },
+        "answer": {
+          "answer": "The supplied evidence identifies this product as the Frigidaire 240337103 refrigerator crisper pan/drawer. It also says this OEM part matches the questioner's model. The evidence does not establish that part 241543917 is interchangeable with 240337103, so verify compatibility using the refrigerator's complete model number before ordering.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "c5043855-5599-4f61-9635-1506b173110e",
+              "quote": "frigidaire 240337103 crisper pan for refrigerator."
+            },
+            {
+              "passageId": "6a3b7a5f-4b78-449e-a318-90bac7493ddd",
+              "quote": "frigidaire oem part #240337103 yes this crisper drawer matches your model"
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 977,
+          "outputTokens": 108
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:19.448Z"
+      },
+      "clientMs": 2314.462375000001
+    },
+    {
+      "qid": "25",
+      "asin": "B004N4MSPO",
+      "run": {
+        "id": "015ca42f-b2cd-4e81-bb3c-57e1b1594bc6",
+        "productId": "f5f93821-5a9b-4612-85e6-ea89de2f6eae",
+        "question": "what are the sizes of all the threaded connections on the inlet and drain tubes?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "69112a63-68e5-4778-9ebf-8d316bf388f2",
+              "productId": "f5f93821-5a9b-4612-85e6-ea89de2f6eae",
+              "source": "ePQA cqa 212",
+              "text": "drain hose length is 60in5/8\" i/d inlet hose connection to quick connect11/16\" i/d drain hose connection to quick connect",
+              "reference": "ePQA cqa 212",
+              "sha256": "a10bd27abbbcc4f713433ad4d07bb9dc0056e7e0a009cef07a7ce17cbdb0753e",
+              "lexicalRank": 1,
+              "semanticRank": 2,
+              "score": 0.03252247488101534
+            },
+            {
+              "id": "991d0160-aa2f-4afb-b81f-bd408bc26c94",
+              "productId": "f5f93821-5a9b-4612-85e6-ea89de2f6eae",
+              "source": "ePQA cqa 211",
+              "text": "the drain hose length is 60in5/8\" i/d inlet hose connection to quick connect1/16\" i/d drain hose connection to quick connectquick connect 7/8\" i/d, 15/16 o/d",
+              "reference": "ePQA cqa 211",
+              "sha256": "77e3928c62619b5df099c6fff52e3fa20af68415026b8cc22f3b3448f2d81190",
+              "lexicalRank": 2,
+              "semanticRank": 1,
+              "score": 0.03252247488101534
+            },
+            {
+              "id": "b428832a-2621-40a0-98d1-3ba9906310c3",
+              "productId": "f5f93821-5a9b-4612-85e6-ea89de2f6eae",
+              "source": "ePQA cqa 210",
+              "text": "garden hose connection on the top and male 55/64 in.-27 threads on the bottom.",
+              "reference": "ePQA cqa 210",
+              "sha256": "6688bc4781d53092074a0eb485e496438ec05be5b5f80bb347d1e70e0c2eb145",
+              "lexicalRank": 5,
+              "semanticRank": 3,
+              "score": 0.03125763125763126
+            },
+            {
+              "id": "4ad883ce-41c9-4301-8a7d-04963df563c1",
+              "productId": "f5f93821-5a9b-4612-85e6-ea89de2f6eae",
+              "source": "ePQA description 217",
+              "text": "our faucet adapter fits standard-sized aerator openings for both male and female connections.",
+              "reference": "ePQA description 217",
+              "sha256": "1c56751e95531c1790b28e7ab8cd840677314abcd997bb93da8d167959dd805e",
+              "lexicalRank": 4,
+              "semanticRank": 5,
+              "score": 0.031009615384615385
+            },
+            {
+              "id": "1db99be0-1a15-4047-9618-81bec4ef9177",
+              "productId": "f5f93821-5a9b-4612-85e6-ea89de2f6eae",
+              "source": "ePQA description 213",
+              "text": "the sizes: male 15/16\"\"; female 55/64\"\".",
+              "reference": "ePQA description 213",
+              "sha256": "d05f86b86bc464a44f3b06d1ee2510054dc05619e5fe24a6949314d7545781f5",
+              "lexicalRank": 3,
+              "semanticRank": 7,
+              "score": 0.030798389007344232
+            }
+          ],
+          "durationMs": 9.744209000004048,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-1e6a72fbfa8ea031b97be104"
+        },
+        "answer": {
+          "answer": "The supplied evidence is inconsistent and does not clearly identify every threaded connection on the inlet and drain tubes. It reports an inlet-hose connection to a quick-connect as 5/8\" I.D. and a drain-hose connection to a quick-connect as 11/16\" I.D. in one source. Another source reports the inlet as 5/8\" I.D., but the drain value is rendered ambiguously as 1/16\" I.D.; it also lists the quick-connect as 7/8\" I.D. and 15/16\" O.D. The evidence does not establish which dimensions are threaded connections, so a definitive complete list cannot be provided.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "69112a63-68e5-4778-9ebf-8d316bf388f2",
+              "quote": "drain hose length is 60in5/8\" i/d inlet hose connection to quick connect11/16\" i/d drain hose connection to quick connect"
+            },
+            {
+              "passageId": "991d0160-aa2f-4afb-b81f-bd408bc26c94",
+              "quote": "the drain hose length is 60in5/8\" i/d inlet hose connection to quick connect1/16\" i/d drain hose connection to quick connectquick connect 7/8\" i/d, 15/16 o/d"
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1118,
+          "outputTokens": 183
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:21.771Z"
+      },
+      "clientMs": 3148.1025420000005
+    },
+    {
+      "qid": "26",
+      "asin": "B0053F8W2K",
+      "run": {
+        "id": "de02ca67-c84f-45b6-b3fb-e4865a65d483",
+        "productId": "604e6137-2483-4635-83cf-b32612b4103a",
+        "question": "your picture shows pewter but the description says white... which is it?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "5ae6c473-0398-440a-b373-107e8aad5f55",
+              "productId": "604e6137-2483-4635-83cf-b32612b4103a",
+              "source": "ePQA review 220",
+              "text": "it is white instead of off white color.",
+              "reference": "ePQA review 220",
+              "sha256": "0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+              "lexicalRank": 2,
+              "semanticRank": 1,
+              "score": 0.03252247488101534
+            },
+            {
+              "id": "f1d62717-39ec-4263-99f4-2ca111dc4b4d",
+              "productId": "604e6137-2483-4635-83cf-b32612b4103a",
+              "source": "ePQA review 223",
+              "text": "our washer is pewter, but this is lighter in color.",
+              "reference": "ePQA review 223",
+              "sha256": "4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+              "lexicalRank": 1,
+              "semanticRank": 2,
+              "score": 0.03252247488101534
+            },
+            {
+              "id": "56920a8c-035c-4012-ae8f-81edc3addaea",
+              "productId": "604e6137-2483-4635-83cf-b32612b4103a",
+              "source": "ePQA cqa 222",
+              "text": "the handle color is off-white/light, light gray.",
+              "reference": "ePQA cqa 222",
+              "sha256": "00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+              "lexicalRank": 3,
+              "semanticRank": 3,
+              "score": 0.031746031746031744
+            },
+            {
+              "id": "f4ee2379-98d1-43c2-a4f3-31a2497eefcc",
+              "productId": "604e6137-2483-4635-83cf-b32612b4103a",
+              "source": "ePQA review 224",
+              "text": "what's to describe?remove the two torx #15 screws, remove the old broken plastic part, screw the new part on, and try not to be a dummy and break this on.the white matched the current white, so i'm happy with it.",
+              "reference": "ePQA review 224",
+              "sha256": "a3062d769f21be4f283001e0bb07a8883f6bd9a458a3683644b99220bfe5fa52",
+              "lexicalRank": 4,
+              "semanticRank": 4,
+              "score": 0.03125
+            },
+            {
+              "id": "f6d9c4ce-18c9-47ad-a8bc-8c7aed2c6aea",
+              "productId": "604e6137-2483-4635-83cf-b32612b4103a",
+              "source": "ePQA review 228",
+              "text": "the color matched and it was replaced in just a few minutes.",
+              "reference": "ePQA review 228",
+              "sha256": "7f2498a7ad9bce51a8c2200ce5328b8ce20c3a97f54e27b2ffa0066f0ead2b6a",
+              "lexicalRank": 5,
+              "semanticRank": 5,
+              "score": 0.03076923076923077
+            }
+          ],
+          "durationMs": 10.433333000000857,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-86448cf6f6cadc2da6aeeae1"
+        },
+        "answer": {
+          "answer": "The available evidence describes the handle as white to off-white/light gray, not pewter. One customer specifically says it is lighter than their pewter washer, so the photo or description may not precisely represent the shade. The exact manufacturer color is not confirmed by the supplied evidence.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "5ae6c473-0398-440a-b373-107e8aad5f55",
+              "quote": "it is white instead of off white color."
+            },
+            {
+              "passageId": "f1d62717-39ec-4263-99f4-2ca111dc4b4d",
+              "quote": "our washer is pewter, but this is lighter in color."
+            },
+            {
+              "passageId": "56920a8c-035c-4012-ae8f-81edc3addaea",
+              "quote": "the handle color is off-white/light, light gray."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1088,
+          "outputTokens": 105
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:24.927Z"
+      },
+      "clientMs": 2476.1222500000003
+    },
+    {
+      "qid": "32",
+      "asin": "B00DM8K1NS",
+      "run": {
+        "id": "b863a652-8efd-4594-9f79-9a253ea863ec",
+        "productId": "02980335-7757-4d5a-8638-ad24b5bbe99a",
+        "question": "does this fit the kitchen aid ksrj25cnst00?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "0c64e32e-d6da-483a-b07e-3d11e636c2c5",
+              "productId": "02980335-7757-4d5a-8638-ad24b5bbe99a",
+              "source": "ePQA cqa 280",
+              "text": "chances are yes, it fit my kitchen aid, ksrs25ftss00 model.",
+              "reference": "ePQA cqa 280",
+              "sha256": "93e88e2714102d3c4b1ff542ac57a1bc2cb26a889b32fbbc1cf20becd038cdf0",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "026b42b1-826f-479a-8c7b-3e4152f5f26f",
+              "productId": "02980335-7757-4d5a-8638-ad24b5bbe99a",
+              "source": "ePQA cqa 281",
+              "text": "i suggest you use this handy tool to tell if it will fit your particular model of refrigeration by typing in your model number.",
+              "reference": "ePQA cqa 281",
+              "sha256": "4c0f786fafdf062a3ee80a67fae6eb80316bc1c245c70de950dc337417fee5c9",
+              "lexicalRank": 2,
+              "semanticRank": 4,
+              "score": 0.031754032258064516
+            },
+            {
+              "id": "70ef8da2-c764-45b9-8550-442b603fb046",
+              "productId": "02980335-7757-4d5a-8638-ad24b5bbe99a",
+              "source": "ePQA cqa 282",
+              "text": "if your kitchenaid has the clear ice bin in the freezer door and is 25 or 27 cubic ft(i'm assuming by the 25 in the model number it's a 25 cu ft. model), this should work.",
+              "reference": "ePQA cqa 282",
+              "sha256": "816125bbf62f9ff90ccc05ba2ba8e5618cc75bf7235cec47ffa53d81f26f2336",
+              "lexicalRank": 4,
+              "semanticRank": 2,
+              "score": 0.031754032258064516
+            },
+            {
+              "id": "82cdf3b7-9fd8-4431-a1f4-6fda072f2026",
+              "productId": "02980335-7757-4d5a-8638-ad24b5bbe99a",
+              "source": "ePQA review 283",
+              "text": "installs quickly and works fine in my kitchenaid kscs25inss02one minor issue: the cup on the right that the water inlet feeder tube feeds into is taller on the unit i received than on the one i replaced.",
+              "reference": "ePQA review 283",
+              "sha256": "34a8f7c5364e07b1d97225a7885d0ba1c4596e285cc272e1620a3421b792f428",
+              "lexicalRank": 5,
+              "semanticRank": 3,
+              "score": 0.03125763125763126
+            },
+            {
+              "id": "fbf55a12-1e90-4ad0-9beb-f4bc2b4feafd",
+              "productId": "02980335-7757-4d5a-8638-ad24b5bbe99a",
+              "source": "ePQA cqa 284",
+              "text": "there is a \"make sure this fits:\" model number search at the top of the page.",
+              "reference": "ePQA cqa 284",
+              "sha256": "89603fd9902eeaa5abd1a8e28500e4e99190268c2cf3e4db6adbc16689eb84a8",
+              "lexicalRank": 3,
+              "semanticRank": 5,
+              "score": 0.03125763125763126
+            }
+          ],
+          "durationMs": 8.195957999996608,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-8f55ed32217aaa966dcf6780"
+        },
+        "answer": {
+          "answer": "The supplied evidence does not confirm fit for KitchenAid KSRJ25CNST00 specifically. Similar KitchenAid models are reported as compatible, but the evidence recommends checking the model number with the product’s fit tool before purchasing.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "0c64e32e-d6da-483a-b07e-3d11e636c2c5",
+              "quote": "chances are yes, it fit my kitchen aid, ksrs25ftss00 model."
+            },
+            {
+              "passageId": "026b42b1-826f-479a-8c7b-3e4152f5f26f",
+              "quote": "i suggest you use this handy tool to tell if it will fit your particular model of refrigeration by typing in your model number."
+            },
+            {
+              "passageId": "fbf55a12-1e90-4ad0-9beb-f4bc2b4feafd",
+              "quote": "there is a \"make sure this fits:\" model number search at the top of the page."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1181,
+          "outputTokens": 98
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:27.409Z"
+      },
+      "clientMs": 2469.433832999999
+    },
+    {
+      "qid": "37",
+      "asin": "B005AR75A6",
+      "run": {
+        "id": "5c3a329d-cf77-4aee-b4ca-783b59ef0eb3",
+        "productId": "83ae523b-05d9-4f74-9d8a-e17ea41741a5",
+        "question": "maytag 49022. looks like it needs wpw10130695. does it matter this part is just w not wpw?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "fe2feead-caab-4bd5-870d-d7f3672ea8fa",
+              "productId": "83ae523b-05d9-4f74-9d8a-e17ea41741a5",
+              "source": "ePQA cqa 334",
+              "text": "i have a maytag and this is a whirlpool part and it fit.",
+              "reference": "ePQA cqa 334",
+              "sha256": "8a021edbe423045e97b0820c4e9311ce908ef5c38868676ef4679e68c1df6090",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "f1ed7a34-2fec-40a1-9643-af62e269447e",
+              "productId": "83ae523b-05d9-4f74-9d8a-e17ea41741a5",
+              "source": "ePQA review 333",
+              "text": "none of this matters to me because the part is correct, intact and it is a perfect fit for my maytag quiet series 200 dishwasher.if you are repairing your dishwasher latch and handle assembly, be sure this is the correct part.",
+              "reference": "ePQA review 333",
+              "sha256": "22b8c70b2b281fb8cf71fbdad93ee8c971081d3bf3d1212008df1947cf6e361e",
+              "lexicalRank": 2,
+              "semanticRank": 3,
+              "score": 0.03200204813108039
+            },
+            {
+              "id": "cbcd7a6a-6611-4ed3-ab0f-a2f35c0ce2c7",
+              "productId": "83ae523b-05d9-4f74-9d8a-e17ea41741a5",
+              "source": "ePQA bullet 331",
+              "text": "this part is a replacement for the following part numbers: 99002577 w10130695, 99002579, w10130694, wpw10130694, 99002578, wpw10130696, w10130696",
+              "reference": "ePQA bullet 331",
+              "sha256": "0a09bd3c504581ab6f459d56ee2b640634527e786be99b79171a9556e66e90c3",
+              "lexicalRank": 4,
+              "semanticRank": 2,
+              "score": 0.031754032258064516
+            },
+            {
+              "id": "1f7c69ef-01af-45e8-a254-e5aeb9bc5c9f",
+              "productId": "83ae523b-05d9-4f74-9d8a-e17ea41741a5",
+              "source": "ePQA bullet 336",
+              "text": "this product is a replacement part",
+              "reference": "ePQA bullet 336",
+              "sha256": "ed044bac90f762c65007b6b9f3f04c8607e363db2490f8aa862b28bf7dba8847",
+              "lexicalRank": 3,
+              "semanticRank": 6,
+              "score": 0.031024531024531024
+            },
+            {
+              "id": "2a7cbddd-c46a-4f44-afae-bf7cd437efd0",
+              "productId": "83ae523b-05d9-4f74-9d8a-e17ea41741a5",
+              "source": "ePQA attribute 330",
+              "text": "part_number:  { value:\"w10130695\" }",
+              "reference": "ePQA attribute 330",
+              "sha256": "526e940f3ae7cb84872868bc4ef2a3250264eee426e1b3b068a12593d890340f",
+              "lexicalRank": 5,
+              "semanticRank": 4,
+              "score": 0.031009615384615385
+            }
+          ],
+          "durationMs": 11.382375000001048,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-e899e6e7ced56ff2d73296c8"
+        },
+        "answer": {
+          "answer": "The evidence lists W10130695 as the product’s part number and says it replaces W10130695; it does not explain whether the “W” versus “WPW” prefix represents a meaningful difference. A Maytag fit is reported, but you should still verify the latch assembly against your exact model before ordering.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "2a7cbddd-c46a-4f44-afae-bf7cd437efd0",
+              "quote": "part_number:  { value:\"w10130695\" }"
+            },
+            {
+              "passageId": "cbcd7a6a-6611-4ed3-ab0f-a2f35c0ce2c7",
+              "quote": "this part is a replacement for the following part numbers: 99002577 w10130695, 99002579, w10130694, wpw10130694, 99002578, wpw10130696, w10130696"
+            },
+            {
+              "passageId": "f1ed7a34-2fec-40a1-9643-af62e269447e",
+              "quote": "if you are repairing your dishwasher latch and handle assembly, be sure this is the correct part."
+            },
+            {
+              "passageId": "fe2feead-caab-4bd5-870d-d7f3672ea8fa",
+              "quote": "i have a maytag and this is a whirlpool part and it fit."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1135,
+          "outputTokens": 122
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:29.887Z"
+      },
+      "clientMs": 2355.6173750000016
+    },
+    {
+      "qid": "39",
+      "asin": "B00E37TR5U",
+      "run": {
+        "id": "8a94e1a5-040e-43e2-86c4-34663e5536c8",
+        "productId": "c35344e8-733b-483e-b9b3-cf078717c7c8",
+        "question": "with \"normal\" usage, how long does this filter last before replacement is needed?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "a8324ef6-08a0-4bc4-8edd-e1500ae5da87",
+              "productId": "c35344e8-733b-483e-b9b3-cf078717c7c8",
+              "source": "ePQA review 350",
+              "text": "time will tell how long it lasts, the original filter from the manufacturer was about 6 months",
+              "reference": "ePQA review 350",
+              "sha256": "51becfa7cb921646616e0118eebc26b290bc43cbdfbf53987c41a0963f0f2497",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "24ced1a0-5e60-4994-8ac0-64b855cf7b70",
+              "productId": "c35344e8-733b-483e-b9b3-cf078717c7c8",
+              "source": "ePQA review 354",
+              "text": "this is supposed to be a 6 month filter.",
+              "reference": "ePQA review 354",
+              "sha256": "061d82c7ed777a2d4b0c0391fbbf54518ef516e6e253017a509a57a1abd4ca5d",
+              "lexicalRank": 2,
+              "semanticRank": 2,
+              "score": 0.03225806451612903
+            },
+            {
+              "id": "177afc55-fcb8-49d5-bf68-cfda759d2d73",
+              "productId": "c35344e8-733b-483e-b9b3-cf078717c7c8",
+              "source": "ePQA review 351",
+              "text": "they are supposed to last around 6 months!",
+              "reference": "ePQA review 351",
+              "sha256": "956fa6b2dfdc467ef459119d572a12eac7f9befbcbc8d68b4b34f2a08956b83b",
+              "lexicalRank": 3,
+              "semanticRank": 4,
+              "score": 0.03149801587301587
+            },
+            {
+              "id": "6aee9acc-1347-463e-a8dd-b2daee48ace0",
+              "productId": "c35344e8-733b-483e-b9b3-cf078717c7c8",
+              "source": "ePQA review 352",
+              "text": "we are a family of 2 adults and 3 children and this filter lasts us about 6 months.",
+              "reference": "ePQA review 352",
+              "sha256": "c177d637387046759f181bfb9b542bc22b49f158ce352b8aa5cbb33cdde0c65b",
+              "lexicalRank": 5,
+              "semanticRank": 3,
+              "score": 0.03125763125763126
+            },
+            {
+              "id": "374cb108-1895-4344-a3fc-ade714469ebf",
+              "productId": "c35344e8-733b-483e-b9b3-cf078717c7c8",
+              "source": "ePQA review 353",
+              "text": "it needs to be changed in 3 months no matter how often and how much water is used.",
+              "reference": "ePQA review 353",
+              "sha256": "34d0428a1d0ad68302786dfaceba5e7d07cf30d558a064d768c7dfdb883be6fa",
+              "lexicalRank": 4,
+              "semanticRank": 5,
+              "score": 0.031009615384615385
+            }
+          ],
+          "durationMs": 10.44208300000173,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-98e7f653c79121802677ed97"
+        },
+        "answer": {
+          "answer": "With normal usage, the available evidence indicates replacement is generally needed about every 6 months. However, one review reports needing replacement after 3 months, so actual lifespan may vary.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "24ced1a0-5e60-4994-8ac0-64b855cf7b70",
+              "quote": "this is supposed to be a 6 month filter."
+            },
+            {
+              "passageId": "6aee9acc-1347-463e-a8dd-b2daee48ace0",
+              "quote": "we are a family of 2 adults and 3 children and this filter lasts us about 6 months."
+            },
+            {
+              "passageId": "374cb108-1895-4344-a3fc-ade714469ebf",
+              "quote": "it needs to be changed in 3 months no matter how often and how much water is used."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 999,
+          "outputTokens": 86
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:32.249Z"
+      },
+      "clientMs": 1665.2341669999987
+    },
+    {
+      "qid": "45",
+      "asin": "B00IY7B5CS",
+      "run": {
+        "id": "77d9778f-a5e1-4898-a848-3df887cd63ec",
+        "productId": "cad932f6-eacf-4689-b807-1322cd218044",
+        "question": "is this 110v only, or accepts a range of 110 to 220v?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "2201ccd7-4397-4804-8916-ad36b32c2296",
+              "productId": "cad932f6-eacf-4689-b807-1322cd218044",
+              "source": "ePQA cqa 412",
+              "text": "no, this model is for only 115 volts.",
+              "reference": "ePQA cqa 412",
+              "sha256": "6e16495271a35c633655f5edefc390c2d50ee2de53f128ee46a1d49decde1a17",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "766810ad-2a95-43fb-9585-e67cb5ba863b",
+              "productId": "cad932f6-eacf-4689-b807-1322cd218044",
+              "source": "ePQA cqa 413",
+              "text": "unfortunately we do not offer a 220 volt version of this ice maker.",
+              "reference": "ePQA cqa 413",
+              "sha256": "5222982be32279e8c72413fd35deb44033b48a2cb6b2f608c2cf52b414353d2e",
+              "lexicalRank": 2,
+              "semanticRank": 3,
+              "score": 0.03200204813108039
+            },
+            {
+              "id": "2feb83c4-5231-433f-8556-446a2faa91d3",
+              "productId": "cad932f6-eacf-4689-b807-1322cd218044",
+              "source": "ePQA review 418",
+              "text": "its a little wet so once it gets a solid freeze, it breaks apart easily to stick in the cube bin in the freezer.",
+              "reference": "ePQA review 418",
+              "sha256": "38e851db36448017d5c79a1427ce768123a3c4479f621463918182977a3ffd02",
+              "lexicalRank": 3,
+              "semanticRank": 5,
+              "score": 0.03125763125763126
+            },
+            {
+              "id": "34c0ae41-fb5a-4b0c-b8a6-ffa82747636f",
+              "productId": "cad932f6-eacf-4689-b807-1322cd218044",
+              "source": "ePQA review 419",
+              "text": "it doesn't make enough for a party without freezing batches as they are made; but we have been impressed by its efficient ice production, water conservation, and the size of the counter top unit.",
+              "reference": "ePQA review 419",
+              "sha256": "dbca6c22ce92438246edefb1581ca1f5a1ba107be8301789c71316e5ba8b9657",
+              "lexicalRank": 4,
+              "semanticRank": 8,
+              "score": 0.030330882352941176
+            },
+            {
+              "id": "6a432794-40b7-405a-9931-867ea671189b",
+              "productId": "cad932f6-eacf-4689-b807-1322cd218044",
+              "source": "ePQA attribute 411",
+              "text": "voltage:  { unit:volts, value:120. }",
+              "reference": "ePQA attribute 411",
+              "sha256": "e7b4f18f46557de369a641a495034a43db69a972816195178c1fa1743075450b",
+              "lexicalRank": null,
+              "semanticRank": 2,
+              "score": 0.016129032258064516
+            }
+          ],
+          "durationMs": 23.047082999997656,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-fc964696c9b3d5b8ee8a6825"
+        },
+        "answer": {
+          "answer": "This model is 115V only and does not accept a 110–220V range. The product evidence also lists the voltage as 120V, so the exact rated voltage is inconsistent across the supplied sources; however, both sources indicate it is not a 220V model.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "2201ccd7-4397-4804-8916-ad36b32c2296",
+              "quote": "no, this model is for only 115 volts."
+            },
+            {
+              "passageId": "766810ad-2a95-43fb-9585-e67cb5ba863b",
+              "quote": "unfortunately we do not offer a 220 volt version of this ice maker."
+            },
+            {
+              "passageId": "6a432794-40b7-405a-9931-867ea671189b",
+              "quote": "voltage:  { unit:volts, value:120."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1044,
+          "outputTokens": 107
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:33.922Z"
+      },
+      "clientMs": 2211.5642920000028
+    },
+    {
+      "qid": "47",
+      "asin": "B000WOG90E",
+      "run": {
+        "id": "61b24a7c-0859-4109-a83d-e7cfb6733c6f",
+        "productId": "e83b3439-0769-40fe-82bc-d5a5c769ed5f",
+        "question": "will this work with a wmr200 station?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "83b6d75a-1611-42ea-9fcd-88d3bf6a32a4",
+              "productId": "e83b3439-0769-40fe-82bc-d5a5c769ed5f",
+              "source": "ePQA cqa 431",
+              "text": "if it is the same freq as this senor it should work.",
+              "reference": "ePQA cqa 431",
+              "sha256": "aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "804c4b23-8acb-429f-b895-7b2b512b92d2",
+              "productId": "e83b3439-0769-40fe-82bc-d5a5c769ed5f",
+              "source": "ePQA review 430",
+              "text": "the oregon scientific website does give a list of what weather stations this works with.",
+              "reference": "ePQA review 430",
+              "sha256": "15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+              "lexicalRank": 2,
+              "semanticRank": 4,
+              "score": 0.031754032258064516
+            },
+            {
+              "id": "81727a17-c4f9-4009-8c48-a985b8fd463b",
+              "productId": "e83b3439-0769-40fe-82bc-d5a5c769ed5f",
+              "source": "ePQA review 432",
+              "text": "after trying to get it to work on any channel (it didn't after exhausting all possibilities) it definitely is not compatible apparently unless you purchase an oregon product display.",
+              "reference": "ePQA review 432",
+              "sha256": "39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+              "lexicalRank": 4,
+              "semanticRank": 2,
+              "score": 0.031754032258064516
+            },
+            {
+              "id": "462fc662-9a1f-4cfb-8c5b-a7496f752d7f",
+              "productId": "e83b3439-0769-40fe-82bc-d5a5c769ed5f",
+              "source": "ePQA description 433",
+              "text": "the sensor is compatible with various multi-channel products from oregon scientific.",
+              "reference": "ePQA description 433",
+              "sha256": "c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+              "lexicalRank": 3,
+              "semanticRank": 5,
+              "score": 0.03125763125763126
+            },
+            {
+              "id": "6265e117-9e95-4760-bd24-781a0cc9f3ac",
+              "productId": "e83b3439-0769-40fe-82bc-d5a5c769ed5f",
+              "source": "ePQA cqa 434",
+              "text": "the oregon scientific web site has a \"contact us\" tag, i suggest you send them this question to make sure that they are compatible.",
+              "reference": "ePQA cqa 434",
+              "sha256": "6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3",
+              "lexicalRank": 5,
+              "semanticRank": 3,
+              "score": 0.03125763125763126
+            }
+          ],
+          "durationMs": 9.22791600000346,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-d634b00f238f2fa4c6434ac2"
+        },
+        "answer": {
+          "answer": "Compatibility with the WMR200 station cannot be confirmed from the supplied evidence. The sensor is described as compatible with various Oregon Scientific multi-channel products, but the WMR200 is not specifically listed. Check Oregon Scientific’s compatibility list or contact them to verify.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "462fc662-9a1f-4cfb-8c5b-a7496f752d7f",
+              "quote": "the sensor is compatible with various multi-channel products from oregon scientific."
+            },
+            {
+              "passageId": "804c4b23-8acb-429f-b895-7b2b512b92d2",
+              "quote": "the oregon scientific website does give a list of what weather stations this works with."
+            },
+            {
+              "passageId": "6265e117-9e95-4760-bd24-781a0cc9f3ac",
+              "quote": "the oregon scientific web site has a \"contact us\" tag, i suggest you send them this question to make sure that they are compatible."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1055,
+          "outputTokens": 104
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:36.140Z"
+      },
+      "clientMs": 1931.825417
+    },
+    {
+      "qid": "54",
+      "asin": "B000PC4JL4",
+      "run": {
+        "id": "ddb15486-3ffd-4b48-851a-8fc9b1076aea",
+        "productId": "02934bbf-0c7d-48c7-ac88-2ada3330c9df",
+        "question": "can this transformer can convert from 100v 50hz to 120v 60hz?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "f67648d4-ba79-4143-b548-343fafe3141d",
+              "productId": "02934bbf-0c7d-48c7-ac88-2ada3330c9df",
+              "source": "ePQA description 501",
+              "text": "this transformer will convert from 120 volt to 100 volt and from 100 volt to 120 volts - input: 100/120v and output: 100/120v.",
+              "reference": "ePQA description 501",
+              "sha256": "e4f0c5493358555e40ba30854000037265cf320c26aa78f068efa666d7a3b854",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "40cdcd7a-c948-4ed6-a6f7-984c54b1c968",
+              "productId": "02934bbf-0c7d-48c7-ac88-2ada3330c9df",
+              "source": "ePQA review 503",
+              "text": "what this device does is convert united states 120 volts 60hz ac to japanese 100 volts 60hz ac with a 500 watt maximum or if your in japan, the opposite 100 volts 60hz ac 120 volts 60hz ac.the unit is a little heavy box with a slight audible hum which is to be expected since it's a transformer.",
+              "reference": "ePQA review 503",
+              "sha256": "580ce5937ebf6828d58265686b3a5f239a35343a32c4b478d39f7716a8f2b2c8",
+              "lexicalRank": 3,
+              "semanticRank": 2,
+              "score": 0.03200204813108039
+            },
+            {
+              "id": "6f297f1c-baee-4f85-98a7-bf480c30a5fb",
+              "productId": "02934bbf-0c7d-48c7-ac88-2ada3330c9df",
+              "source": "ePQA cqa 500",
+              "text": "the specifications should indicate something like ac voltage 100v to 240v range 50hz or 60hz somewhere on the specification sticker.",
+              "reference": "ePQA cqa 500",
+              "sha256": "38b3e3db37fc3be926b5d74f3d459d9b7c0862c053800f3c194a9fb5b731451b",
+              "lexicalRank": 2,
+              "semanticRank": 3,
+              "score": 0.03200204813108039
+            },
+            {
+              "id": "d5d8020d-4e66-426c-b710-3bf4fbc2c8b3",
+              "productId": "02934bbf-0c7d-48c7-ac88-2ada3330c9df",
+              "source": "ePQA cqa 504",
+              "text": "yes but only if your household voltage is 120v 60hz any higher no and some areas run 5 to 10 volts higher like central texas",
+              "reference": "ePQA cqa 504",
+              "sha256": "e7555674535890c746186586f1d7c34857217cebf31207d1235e7b7844f96ccb",
+              "lexicalRank": 4,
+              "semanticRank": 4,
+              "score": 0.03125
+            },
+            {
+              "id": "eff9a345-2eaa-4ebc-b022-34bda7227d28",
+              "productId": "02934bbf-0c7d-48c7-ac88-2ada3330c9df",
+              "source": "ePQA bullet 502",
+              "text": "it converts 110/120 volt usa power to 100 volt japan power and 100 volt to 110/120 volts (means it will convert the american power to japanese power and also convert japanese power to american)",
+              "reference": "ePQA bullet 502",
+              "sha256": "2a7e9b7541cf10deeea189c31cb5ad576a78c5b777306ae3a8ff8d439116856d",
+              "lexicalRank": 5,
+              "semanticRank": 5,
+              "score": 0.03076923076923077
+            }
+          ],
+          "durationMs": 6.824040999999852,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-96c9682b942de780733b0bc1"
+        },
+        "answer": {
+          "answer": "The evidence supports conversion between 100V and 120V, but it describes operation at 60Hz. It does not confirm that the transformer converts or accepts 50Hz input, so suitability for 100V 50Hz to 120V 60Hz is not established. Also, a transformer changes voltage, not frequency; the supplied evidence does not document frequency conversion.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "f67648d4-ba79-4143-b548-343fafe3141d",
+              "quote": "this transformer will convert from 120 volt to 100 volt and from 100 volt to 120 volts - input: 100/120v and output: 100/120v."
+            },
+            {
+              "passageId": "40cdcd7a-c948-4ed6-a6f7-984c54b1c968",
+              "quote": "what this device does is convert united states 120 volts 60hz ac to japanese 100 volts 60hz ac with a 500 watt maximum or if your in japan, the opposite 100 volts 60hz ac 120 volts 60hz ac."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1310,
+          "outputTokens": 121
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:38.075Z"
+      },
+      "clientMs": 3007.3068749999984
+    },
+    {
+      "qid": "58",
+      "asin": "B004RPQ4MM",
+      "run": {
+        "id": "158ea2cf-0e30-4a30-9ba3-5e55ef799601",
+        "productId": "5a5905b2-6d9b-4c7f-8ec7-4c3b1f317a0f",
+        "question": "what is the cfm on this hood?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "0174bd57-ab8a-4976-8d7b-e03af743740c",
+              "productId": "5a5905b2-6d9b-4c7f-8ec7-4c3b1f317a0f",
+              "source": "ePQA cqa 542",
+              "text": "the maximum ceiling height for this range hood is approximately 8.5 ft and the maximum suction capacity is 700 cubic meters per hour, or about 412 cfm.thanks again!kitchen bath collection",
+              "reference": "ePQA cqa 542",
+              "sha256": "04ef11ba21f1e6d311d1340871b1b98f32444b9b8b3909e6105cce1a842cf5ec",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "ba3b3c20-5c6b-4170-a508-b75ecb18399d",
+              "productId": "5a5905b2-6d9b-4c7f-8ec7-4c3b1f317a0f",
+              "source": "ePQA cqa 543",
+              "text": "hello, the maximum suction capacity is about 412 cfm.",
+              "reference": "ePQA cqa 543",
+              "sha256": "72dc843ac6dea03b7c3fd2f13eb02fc878dafa58a60ff75231ae0a25786ce9a1",
+              "lexicalRank": 2,
+              "semanticRank": 2,
+              "score": 0.03225806451612903
+            },
+            {
+              "id": "ac791dbb-fa82-45d8-81c9-951fc4fbe0ab",
+              "productId": "5a5905b2-6d9b-4c7f-8ec7-4c3b1f317a0f",
+              "source": "ePQA description 541",
+              "text": "maximum suction capacity: 700 cubic meters per hour, or 412 cfm.",
+              "reference": "ePQA description 541",
+              "sha256": "f2aa6100dda4197cfdeaabac55492879ccdbd16da8fea507ae7e7cd1fe41f3f4",
+              "lexicalRank": 4,
+              "semanticRank": 3,
+              "score": 0.03149801587301587
+            },
+            {
+              "id": "e551d5d3-806b-4990-a51b-6e7dc9a5a12e",
+              "productId": "5a5905b2-6d9b-4c7f-8ec7-4c3b1f317a0f",
+              "source": "ePQA cqa 540",
+              "text": "it has lightly lower cfm rate - 700 cubic meters per hour translates to 412 cubic feet per minute (or cfm).",
+              "reference": "ePQA cqa 540",
+              "sha256": "4b88f8212007f281d5c28967219e2d1d29d7b9daf041f4efde7a57b99c8e14cc",
+              "lexicalRank": 3,
+              "semanticRank": 4,
+              "score": 0.03149801587301587
+            },
+            {
+              "id": "e9c32a0e-ffb6-48c4-aa19-f19805be7ead",
+              "productId": "5a5905b2-6d9b-4c7f-8ec7-4c3b1f317a0f",
+              "source": "ePQA review 544",
+              "text": "this evacuates 450cfm with the lowest decibel rating of 48db(a), maximum 58db(a).",
+              "reference": "ePQA review 544",
+              "sha256": "2910adf05c90893626c250f520cf53ed6262a8ccc70f40bd4a88b20c4d436edd",
+              "lexicalRank": 5,
+              "semanticRank": 7,
+              "score": 0.030309988518943745
+            }
+          ],
+          "durationMs": 7.051125000012689,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-1a58c4651d7dc99a50ba7747"
+        },
+        "answer": {
+          "answer": "The hood’s maximum suction capacity is about 412 CFM (700 cubic meters per hour).",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "ac791dbb-fa82-45d8-81c9-951fc4fbe0ab",
+              "quote": "maximum suction capacity: 700 cubic meters per hour, or 412 cfm."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1191,
+          "outputTokens": 54
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:41.091Z"
+      },
+      "clientMs": 1503.2147079999995
+    },
+    {
+      "qid": "63",
+      "asin": "B00655HJJE",
+      "run": {
+        "id": "001f6412-ef41-4068-9be8-baf36f7e105c",
+        "productId": "b4845531-1e2a-41d2-ae98-d563ae9f2d80",
+        "question": "can it fit 2 slim quarter kegs?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "99be48c8-3f47-4c2b-9a68-9f25a0d3888d",
+              "productId": "b4845531-1e2a-41d2-ae98-d563ae9f2d80",
+              "source": "ePQA cqa 591",
+              "text": "i don't think 2 slim quarter kegs will fit.",
+              "reference": "ePQA cqa 591",
+              "sha256": "877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "b41a39b7-ad2f-493a-8cb5-bb2e6e67ba3e",
+              "productId": "b4845531-1e2a-41d2-ae98-d563ae9f2d80",
+              "source": "ePQA review 590",
+              "text": "this will not fit two quarter kegs.",
+              "reference": "ePQA review 590",
+              "sha256": "203a5136634941fc624a1ded36be8716b05f8f7c09c3c2569e1f1614754ec332",
+              "lexicalRank": 2,
+              "semanticRank": 2,
+              "score": 0.03225806451612903
+            },
+            {
+              "id": "b8472ba3-2833-474e-944b-618f6eb47d8d",
+              "productId": "b4845531-1e2a-41d2-ae98-d563ae9f2d80",
+              "source": "ePQA cqa 594",
+              "text": "this kegerator will fit the following kegs: one full size (1/2 barrel), one straight pony (1/4 barrel), one quarter slim (1/4 barrel) and two sixth slim (1/6 barrel)i don't think it would hold a 1/4 barrel and a 1/6 barrel at the same time.",
+              "reference": "ePQA cqa 594",
+              "sha256": "24a1549982a91a70a9c213ed6531185b14ba26754426f503ae465e52e2cf4d73",
+              "lexicalRank": 3,
+              "semanticRank": 3,
+              "score": 0.031746031746031744
+            },
+            {
+              "id": "2bfb5f1f-9009-40b3-a703-784eebdaf1f6",
+              "productId": "b4845531-1e2a-41d2-ae98-d563ae9f2d80",
+              "source": "ePQA cqa 592",
+              "text": "no, this only has enough room for one quarter keg.",
+              "reference": "ePQA cqa 592",
+              "sha256": "33dabbb17e14762fd93486372972513cc1c0e8227cf5a39f948a2bf32c99b6ea",
+              "lexicalRank": 5,
+              "semanticRank": 4,
+              "score": 0.031009615384615385
+            },
+            {
+              "id": "84efa50c-5232-4a20-9575-74522e75b692",
+              "productId": "b4845531-1e2a-41d2-ae98-d563ae9f2d80",
+              "source": "ePQA description 595",
+              "text": "acceptable keg configurations:  (1) full size keg, 1/2 barrel (124 pints) (1) pony keg, 1/4 barrel (62 pints) (1) slim-pony keg, 1/4 barrel (62 pints) up to (2) sixth barrel kegs, (42 pints each) up to (2) cornelius homebrew kegs, (40 pints each)",
+              "reference": "ePQA description 595",
+              "sha256": "0ceb8d3e3b36f5d6c5a6e803b525792a2e0834471e184723a17eb4448d3022b9",
+              "lexicalRank": 4,
+              "semanticRank": 6,
+              "score": 0.030776515151515152
+            }
+          ],
+          "durationMs": 7.5335830000112765,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-2ef29c45eda89c57526fba7e"
+        },
+        "answer": {
+          "answer": "No. The available product evidence indicates that two slim quarter kegs will not fit.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "99be48c8-3f47-4c2b-9a68-9f25a0d3888d",
+              "quote": "i don't think 2 slim quarter kegs will fit."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1229,
+          "outputTokens": 51
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:42.600Z"
+      },
+      "clientMs": 1544.2694999999949
+    },
+    {
+      "qid": "70",
+      "asin": "B000DZFTC6",
+      "run": {
+        "id": "04160bbb-b37a-4b89-8025-f97fefe1916c",
+        "productId": "da99512e-7cc7-450d-9f6a-31ff75f054b0",
+        "question": "can you vent thru a window just like you can with an ac?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "882ad723-35fa-4e24-b4fb-1abab582dccd",
+              "productId": "da99512e-7cc7-450d-9f6a-31ff75f054b0",
+              "source": "ePQA review 660",
+              "text": "it is extremely easy to install and use inside or venting thru a window.",
+              "reference": "ePQA review 660",
+              "sha256": "a2f3da8773be03e099d720dd7077a5d85971eb81fcb3ccdb628225668d4bf085",
+              "lexicalRank": 3,
+              "semanticRank": 1,
+              "score": 0.032266458495966696
+            },
+            {
+              "id": "3cf80eb9-7202-4e6a-80cf-a37c43cc9458",
+              "productId": "da99512e-7cc7-450d-9f6a-31ff75f054b0",
+              "source": "ePQA review 664",
+              "text": "humidifies the room a lot, but we can just crack a window.",
+              "reference": "ePQA review 664",
+              "sha256": "e700f55606703b71a2eddf0de970d393c30ede3ba3eb58fdbf18e4404b18da92",
+              "lexicalRank": 1,
+              "semanticRank": 4,
+              "score": 0.032018442622950824
+            },
+            {
+              "id": "b89c274b-3098-41fe-8568-f83645c6f852",
+              "productId": "da99512e-7cc7-450d-9f6a-31ff75f054b0",
+              "source": "ePQA cqa 662",
+              "text": "although, if you don't have this facilities, just open a window closest to the dryer vent to prevent humidity to build up.",
+              "reference": "ePQA cqa 662",
+              "sha256": "95670298fd3f0dbefc8753c76d032cfd58ad2e7b14e7d37e235a97d4c92f5fe2",
+              "lexicalRank": 2,
+              "semanticRank": 3,
+              "score": 0.03200204813108039
+            },
+            {
+              "id": "2249552a-73ee-4e7e-8737-e9acf9f66429",
+              "productId": "da99512e-7cc7-450d-9f6a-31ff75f054b0",
+              "source": "ePQA review 663",
+              "text": "you may need to open a window though.",
+              "reference": "ePQA review 663",
+              "sha256": "9070cb6f9d28755c10a53cda197cbb749a10479a89ed2d453653aa45c231b2a7",
+              "lexicalRank": 4,
+              "semanticRank": 2,
+              "score": 0.031754032258064516
+            },
+            {
+              "id": "8cb5707b-afc4-48f0-8371-75408a93322a",
+              "productId": "da99512e-7cc7-450d-9f6a-31ff75f054b0",
+              "source": "ePQA review 661",
+              "text": "open a door and window to generate cross draft.",
+              "reference": "ePQA review 661",
+              "sha256": "9a39f270b6e1d438467dd9d2da4fd16dc9facd3dfe6c5e9b4b1f3ea884d8e61c",
+              "lexicalRank": 5,
+              "semanticRank": 5,
+              "score": 0.03076923076923077
+            }
+          ],
+          "durationMs": 13.781875000000582,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-f53ad1ab44bacf36551e0b1f"
+        },
+        "answer": {
+          "answer": "Yes—this product evidence indicates the dryer vent kit can be used for venting through a window. However, the evidence does not establish that it works exactly like an air-conditioner window vent. Opening or cracking a window may also be needed to reduce humidity, and one review recommends opening a door and window to create cross-draft.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "882ad723-35fa-4e24-b4fb-1abab582dccd",
+              "quote": "it is extremely easy to install and use inside or venting thru a window."
+            },
+            {
+              "passageId": "3cf80eb9-7202-4e6a-80cf-a37c43cc9458",
+              "quote": "humidifies the room a lot, but we can just crack a window."
+            },
+            {
+              "passageId": "b89c274b-3098-41fe-8568-f83645c6f852",
+              "quote": "although, if you don't have this facilities, just open a window closest to the dryer vent to prevent humidity to build up."
+            },
+            {
+              "passageId": "8cb5707b-afc4-48f0-8371-75408a93322a",
+              "quote": "open a door and window to generate cross draft."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 972,
+          "outputTokens": 125
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:44.157Z"
+      },
+      "clientMs": 2540.2181249999994
+    },
+    {
+      "qid": "72",
+      "asin": "B000UVWGGK",
+      "run": {
+        "id": "8cf13afc-4073-440f-bbaf-2fda6591a0ef",
+        "productId": "ce7da7ac-32cd-41f3-9719-93b912b6e835",
+        "question": "will this work for a manufactured home, with the vent located on the exterior wall?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "799ed073-9717-4be2-b4ff-2c424f1c0abe",
+              "productId": "ce7da7ac-32cd-41f3-9719-93b912b6e835",
+              "source": "ePQA cqa 684",
+              "text": "hi jean... the hole for the vent is on the top of the unit, but i know of people who have used a 90 degree elbow vent pipe to have it vent out the back.",
+              "reference": "ePQA cqa 684",
+              "sha256": "51861be5de1e6009797861780de8add04ba017a7c1bf01d00304e8002e42c90f",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "88477ecb-2bdb-4a53-bd60-0ac9d2472905",
+              "productId": "ce7da7ac-32cd-41f3-9719-93b912b6e835",
+              "source": "ePQA cqa 681",
+              "text": "so, make sure you check to see the size and shape of your vent pipe, and that it is compatible with this hood.",
+              "reference": "ePQA cqa 681",
+              "sha256": "6fdc8e67454180c08cac7e266447057e6f7076974dd57792715177a577568add",
+              "lexicalRank": 2,
+              "semanticRank": 2,
+              "score": 0.03225806451612903
+            },
+            {
+              "id": "9cdf48b7-9267-402d-a783-13a9c800e5fe",
+              "productId": "ce7da7ac-32cd-41f3-9719-93b912b6e835",
+              "source": "ePQA cqa 683",
+              "text": "the vent and screw holes are on the top of the unit.",
+              "reference": "ePQA cqa 683",
+              "sha256": "9f4cdb6d82acca57c5d1a4d1f93a77d4d7ca0b652ecf59d3637ca36ee7455cc2",
+              "lexicalRank": 3,
+              "semanticRank": 3,
+              "score": 0.031746031746031744
+            },
+            {
+              "id": "4fe6ad97-e17c-46f0-8e15-052895d538ef",
+              "productId": "ce7da7ac-32cd-41f3-9719-93b912b6e835",
+              "source": "ePQA cqa 682",
+              "text": "it can vent out of the top or out of the back.",
+              "reference": "ePQA cqa 682",
+              "sha256": "a8363e766c79801ab1f91fe091a0f2f9e8b76b114e2d09b1c9bfb51fac440c52",
+              "lexicalRank": 4,
+              "semanticRank": 5,
+              "score": 0.031009615384615385
+            },
+            {
+              "id": "0e1f0f27-602d-4f99-b860-c92e34035abf",
+              "productId": "ce7da7ac-32cd-41f3-9719-93b912b6e835",
+              "source": "ePQA cqa 680",
+              "text": "this vents to the back or top.",
+              "reference": "ePQA cqa 680",
+              "sha256": "f3836dd7247d135e03fbfdb01f646b84d019d162cb67ce3565d2c49dbc8a7de0",
+              "lexicalRank": 6,
+              "semanticRank": 4,
+              "score": 0.030776515151515152
+            }
+          ],
+          "durationMs": 9.28916699999536,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-a4e40ee25bf7c0f1f36fe1ba"
+        },
+        "answer": {
+          "answer": "The supplied evidence does not confirm compatibility specifically with a manufactured home or an exterior-wall installation. It indicates that the hood can vent through the top or back, and that a 90-degree elbow may be used for back venting. You should verify that your exterior-wall vent pipe’s size and shape are compatible with the hood; manufactured-home installation requirements are not provided.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "4fe6ad97-e17c-46f0-8e15-052895d538ef",
+              "quote": "it can vent out of the top or out of the back."
+            },
+            {
+              "passageId": "88477ecb-2bdb-4a53-bd60-0ac9d2472905",
+              "quote": "so, make sure you check to see the size and shape of your vent pipe, and that it is compatible with this hood."
+            },
+            {
+              "passageId": "88477ecb-2bdb-4a53-bd60-0ac9d2472905",
+              "quote": "so, make sure you check to see the size and shape of your vent pipe, and that it is compatible with this hood."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1076,
+          "outputTokens": 126
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:46.707Z"
+      },
+      "clientMs": 2454.0593750000044
+    },
+    {
+      "qid": "75",
+      "asin": "B0051S4ZZM",
+      "run": {
+        "id": "7831bcf5-92da-4944-b9fc-9d0eaac44ff9",
+        "productId": "0807e008-4d68-4ad0-bcf1-b19e68236657",
+        "question": "can these pads be used on a stacked washer dryer  ?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "2da44b6d-4d6b-44cf-8ffd-a9e11c5df110",
+              "productId": "0807e008-4d68-4ad0-bcf1-b19e68236657",
+              "source": "ePQA cqa 710",
+              "text": "we actually have a dryer stacked on top of the washer and these pads are working great.",
+              "reference": "ePQA cqa 710",
+              "sha256": "9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+              "lexicalRank": 2,
+              "semanticRank": 1,
+              "score": 0.03252247488101534
+            },
+            {
+              "id": "5bd8c2b4-e627-48a5-a348-fa665f744ced",
+              "productId": "0807e008-4d68-4ad0-bcf1-b19e68236657",
+              "source": "ePQA review 711",
+              "text": "these were used in a multi unit senior apartment building on stacked washer/dryer units..",
+              "reference": "ePQA review 711",
+              "sha256": "a43d474af666f63013dca433fdc69f9004ed9b4dae17771a80a60730ff0f7149",
+              "lexicalRank": 1,
+              "semanticRank": 4,
+              "score": 0.032018442622950824
+            },
+            {
+              "id": "94669af0-3e07-4ab3-9b4a-192904678d66",
+              "productId": "0807e008-4d68-4ad0-bcf1-b19e68236657",
+              "source": "ePQA review 713",
+              "text": "i have a dryer stacked on top of my washer and they are working like a charm.",
+              "reference": "ePQA review 713",
+              "sha256": "be04360b069e4ae3e6e1873cd986669fe065d565442c025d17cb5184b3a1bcea",
+              "lexicalRank": 3,
+              "semanticRank": 2,
+              "score": 0.03200204813108039
+            },
+            {
+              "id": "aecccb95-5d19-46ab-a898-92edf8e1abab",
+              "productId": "0807e008-4d68-4ad0-bcf1-b19e68236657",
+              "source": "ePQA cqa 714",
+              "text": "i had removed two of my pads when i had to reposition my stacked washer/dryer, and i saw no indentations on the inside of the top of the pads (the tops of the pads are dish-shaped to keep the washer from walking off of them).",
+              "reference": "ePQA cqa 714",
+              "sha256": "75f29f552357225695b3cca3f297b9e94a6356088e0fa78bfdcbbafb651b5081",
+              "lexicalRank": 4,
+              "semanticRank": 3,
+              "score": 0.03149801587301587
+            },
+            {
+              "id": "7cd6d442-9032-4406-805e-61d584995068",
+              "productId": "0807e008-4d68-4ad0-bcf1-b19e68236657",
+              "source": "ePQA review 712",
+              "text": "so i built a laundry closet on the second floor and stacked our washer & dryer (we did not have them stacked downstairs, because we had wall cabinets above them).",
+              "reference": "ePQA review 712",
+              "sha256": "021b7506b59945f7d3a9d2e60e63a607dda2fdf50e71c0b02e1602f826ae7e8b",
+              "lexicalRank": 5,
+              "semanticRank": 5,
+              "score": 0.03076923076923077
+            }
+          ],
+          "durationMs": 7.840542000005371,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-792091eb224223a38ae9cd9c"
+        },
+        "answer": {
+          "answer": "Yes. Customer reports indicate these pads have been used successfully with a dryer stacked on top of a washer and on stacked washer/dryer units. The evidence is customer experience rather than a manufacturer specification, so confirm compatibility with your specific appliances if needed.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "2da44b6d-4d6b-44cf-8ffd-a9e11c5df110",
+              "quote": "we actually have a dryer stacked on top of the washer and these pads are working great."
+            },
+            {
+              "passageId": "5bd8c2b4-e627-48a5-a348-fa665f744ced",
+              "quote": "these were used in a multi unit senior apartment building on stacked washer/dryer units."
+            },
+            {
+              "passageId": "94669af0-3e07-4ab3-9b4a-192904678d66",
+              "quote": "i have a dryer stacked on top of my washer and they are working like a charm."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1069,
+          "outputTokens": 99
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:49.166Z"
+      },
+      "clientMs": 2120.842166000002
+    },
+    {
+      "qid": "77",
+      "asin": "B00BAUPS9M",
+      "run": {
+        "id": "e67999a9-bc42-46d7-a25e-565086af25c3",
+        "productId": "5bb118f2-e4ab-4997-a802-ddadd8a457e0",
+        "question": "it is enough for a fridge side by side?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "e2bb137c-3c86-41e9-bd19-a422d683db88",
+              "productId": "5bb118f2-e4ab-4997-a802-ddadd8a457e0",
+              "source": "ePQA review 730",
+              "text": "looks like a good solution, but its not enough for a fridge side by side like the picture show in the announce.",
+              "reference": "ePQA review 730",
+              "sha256": "aaf7b85ec40eea5b0d428ace2618abe849a1ef263190513357cc0e4ac35c8192",
+              "lexicalRank": 1,
+              "semanticRank": 1,
+              "score": 0.03278688524590164
+            },
+            {
+              "id": "f12c4a15-ec55-4e71-b745-d120c91b2170",
+              "productId": "5bb118f2-e4ab-4997-a802-ddadd8a457e0",
+              "source": "ePQA review 732",
+              "text": "in my case i did a large side by side refrigerator which required 2 rolls, one for each door.",
+              "reference": "ePQA review 732",
+              "sha256": "84627a2493fbbf9d05f8f337ab4dc51af40a8b225e0131ceba647f66f5f6834f",
+              "lexicalRank": 3,
+              "semanticRank": 2,
+              "score": 0.03200204813108039
+            },
+            {
+              "id": "78bbd1d4-bffa-4c0b-aff9-3cad9ccc9233",
+              "productId": "5bb118f2-e4ab-4997-a802-ddadd8a457e0",
+              "source": "ePQA review 731",
+              "text": "it didn't fix to my fridge  side by side.",
+              "reference": "ePQA review 731",
+              "sha256": "5d43f14661a1a1d7afde91fb5007ce877051627218cc30f9af7b41806e700f75",
+              "lexicalRank": 2,
+              "semanticRank": 4,
+              "score": 0.031754032258064516
+            },
+            {
+              "id": "6f20f6b3-86a6-4f48-987c-352d16995d5b",
+              "productId": "5bb118f2-e4ab-4997-a802-ddadd8a457e0",
+              "source": "ePQA cqa 734",
+              "text": "depending on how large the fridge is you may need 2 rolls.",
+              "reference": "ePQA cqa 734",
+              "sha256": "30bb5e23aa89aaf480ef96fc9c64b89c48aad3adbf412d7ae5631dfea5bbba0d",
+              "lexicalRank": 5,
+              "semanticRank": 3,
+              "score": 0.03125763125763126
+            },
+            {
+              "id": "ef7089bf-acbf-4e44-885e-830e53304f44",
+              "productId": "5bb118f2-e4ab-4997-a802-ddadd8a457e0",
+              "source": "ePQA cqa 733",
+              "text": "it depends on the size of the fridge, on my fridge since it is big, i had to buy two rolls",
+              "reference": "ePQA cqa 733",
+              "sha256": "e468c748a5867031919f5b5c22ef4c94dda4fd2634988ef60b1178ce40a61c45",
+              "lexicalRank": 4,
+              "semanticRank": 5,
+              "score": 0.031009615384615385
+            }
+          ],
+          "durationMs": 7.922791999997571,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-7b3cabcd5f70ee59acc5ac8a"
+        },
+        "answer": {
+          "answer": "It may not be enough for a side-by-side fridge. The evidence says coverage depends on the refrigerator’s size; a large side-by-side may require two rolls, one for each door.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "f12c4a15-ec55-4e71-b745-d120c91b2170",
+              "quote": "in my case i did a large side by side refrigerator which required 2 rolls, one for each door."
+            },
+            {
+              "passageId": "6f20f6b3-86a6-4f48-987c-352d16995d5b",
+              "quote": "depending on how large the fridge is you may need 2 rolls."
+            },
+            {
+              "passageId": "ef7089bf-acbf-4e44-885e-830e53304f44",
+              "quote": "it depends on the size of the fridge, on my fridge since it is big, i had to buy two rolls"
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1011,
+          "outputTokens": 89
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:51.297Z"
+      },
+      "clientMs": 1877.929541999998
+    },
+    {
+      "qid": "81",
+      "asin": "B00266BXV6",
+      "run": {
+        "id": "2a36fbf0-af20-4b54-ad21-b652042ed22b",
+        "productId": "ca451a42-5cb2-4bcc-88be-a417d98408a9",
+        "question": "i have a ktchenaid ksrb25fkss02 side by side. will this kit function properly?",
+        "mode": "live",
+        "status": "completed",
+        "retrieval": {
+          "passages": [
+            {
+              "id": "609d6b94-2f3c-4178-a327-2297041ac916",
+              "productId": "ca451a42-5cb2-4bcc-88be-a417d98408a9",
+              "source": "ePQA review 772",
+              "text": "this kit has the two circuit boards needed to replace the left and right side icemaker optics in applicable kitchenaid/whirlpool side-by-side refrigerators.",
+              "reference": "ePQA review 772",
+              "sha256": "89282788f9a13d8d468a0123f649b444c1010b49fc157e5a08e631b1e4954d57",
+              "lexicalRank": 1,
+              "semanticRank": 3,
+              "score": 0.032266458495966696
+            },
+            {
+              "id": "f3155266-d211-425b-b307-16c8eeaf673e",
+              "productId": "ca451a42-5cb2-4bcc-88be-a417d98408a9",
+              "source": "ePQA cqa 770",
+              "text": "yes - it will fit and function perfectly.",
+              "reference": "ePQA cqa 770",
+              "sha256": "6332fde062d306ad887b34168ff505676c1b2b3156d8a64e57b6035828bb272a",
+              "lexicalRank": 2,
+              "semanticRank": 2,
+              "score": 0.03225806451612903
+            },
+            {
+              "id": "8c0d48f0-cb13-4094-867d-f39c5f79d896",
+              "productId": "ca451a42-5cb2-4bcc-88be-a417d98408a9",
+              "source": "ePQA cqa 771",
+              "text": "if yours has the sensors on both sides then this will likely work.",
+              "reference": "ePQA cqa 771",
+              "sha256": "0ccf0e35c239036e429210cc3f9a71e6b5108716e7d728e8e21fd1a29a13dde2",
+              "lexicalRank": 4,
+              "semanticRank": 1,
+              "score": 0.032018442622950824
+            },
+            {
+              "id": "d33186be-f070-4d9b-ac91-21db160251f6",
+              "productId": "ca451a42-5cb2-4bcc-88be-a417d98408a9",
+              "source": "ePQA cqa 773",
+              "text": "if your refrigerator has this 2-pc board optical ice sensor on the left and right freezer walls and your refrigerator was designed by whirlpool (such as a sears kenmore), then it will fit.",
+              "reference": "ePQA cqa 773",
+              "sha256": "ccbf385a5f4d032cb05cc0fa2a26df2b4fa5a2bec538704cb3b82b20fc66dfb5",
+              "lexicalRank": 3,
+              "semanticRank": 5,
+              "score": 0.03125763125763126
+            },
+            {
+              "id": "92aab419-9fe8-4c48-83c8-6de9aefe9b61",
+              "productId": "ca451a42-5cb2-4bcc-88be-a417d98408a9",
+              "source": "ePQA cqa 774",
+              "text": "i don't know, i bought this for my whirpool fridge and it works  perfectly, you must check the product description first to verify if it replaces your oem part number",
+              "reference": "ePQA cqa 774",
+              "sha256": "d8bd8144735d7f7a7a2aad9ed7cad5794f1554eb92f6230441f1d9917df34bda",
+              "lexicalRank": 5,
+              "semanticRank": 4,
+              "score": 0.031009615384615385
+            }
+          ],
+          "durationMs": 11.496832999997423,
+          "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+          "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+          "corpusVersion": "workspace-c1d08f3f71f138dbcca0324d"
+        },
+        "answer": {
+          "answer": "The evidence does not confirm compatibility specifically for your KitchenAid KSRB25FKSS02. The kit is intended for applicable KitchenAid/Whirlpool side-by-side refrigerators and will likely work if your refrigerator has the ice-maker optical sensors on both freezer walls. Verify that it uses the two-piece left/right optical sensor boards and that the kit replaces your original part number before purchasing.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "609d6b94-2f3c-4178-a327-2297041ac916",
+              "quote": "this kit has the two circuit boards needed to replace the left and right side icemaker optics in applicable kitchenaid/whirlpool side-by-side refrigerators."
+            },
+            {
+              "passageId": "8c0d48f0-cb13-4094-867d-f39c5f79d896",
+              "quote": "if yours has the sensors on both sides then this will likely work."
+            },
+            {
+              "passageId": "d33186be-f070-4d9b-ac91-21db160251f6",
+              "quote": "if your refrigerator has this 2-pc board optical ice sensor on the left and right freezer walls and your refrigerator was designed by whirlpool (such as a sears kenmore), then it will fit."
+            },
+            {
+              "passageId": "92aab419-9fe8-4c48-83c8-6de9aefe9b61",
+              "quote": "i don't know, i bought this for my whirpool fridge and it works  perfectly, you must check the product description first to verify if it replaces your oem part number"
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1077,
+          "outputTokens": 137
+        },
+        "error": null,
+        "createdAt": "2026-09-28T05:52:53.182Z"
+      },
+      "clientMs": 2916.516499999998
+    }
+  ]
+}

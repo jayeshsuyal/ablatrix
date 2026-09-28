@@ -6,6 +6,8 @@ Ablatrix is a local product QA workspace with an evidence-based agent evaluation
 
 Open `/ask` to add a product and paste up to eight source excerpts, then ask a question. **Preview evidence** uses local hybrid retrieval and makes no model call. **Generate cited answer** is available only when the local Sapiom Router opt-in and shared planning allowance are configured. Answers, citations, retrieved evidence, and failed attempts are saved in `.data/product-workspace.sqlite`; the retrieval index is stored beside that database with a `.retrieval.sqlite` suffix. Imported products are isolated from the frozen evaluation corpora. Exact-quote checks verify citation membership, while answer correctness still needs human judgment. This is a local workflow, not a deployed multi-user service or a measured answer-quality gain.
 
+A [fixed 20-product paid smoke batch](docs/evidence/paid-qa-batch-2026-09-28/report.md) completed all 20 calls and verified 52/52 exact citation quotes. It measures execution and provenance; answer correctness has not been independently human reviewed.
+
 ## Product QA feedback loop — v0.2
 
 Open `/loop` for the saved live experiment when one exists; choose Synthetic demo to exercise **batch answers → review → propose → blind paired validation → promote/reject → final comparison**. SQLite stores the evidence, feedback, policy lineage, runs, and decisions. Rollback restores an earlier version.
