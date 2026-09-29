@@ -46,7 +46,7 @@ test('reviewer can queue a revision and continue to another answer', async ({ pa
   await page.getByRole('textbox', { name: 'New source label', exact: true }).fill('Synthetic supplemental manual');
   await page.getByRole('textbox', { name: 'New source text', exact: true }).fill('Synthetic source: this fixture supports model TEST-123.');
   await page.getByRole('textbox', { name: 'Revision reviewer name' }).first().fill('Synthetic reviewer');
-  await page.getByRole('button', { name: 'Request revision' }).click();
+  await page.getByRole('button', { name: 'Investigate and revise' }).click();
   await expect(page.locator('.pr-job')).toContainText('queued');
   await page.locator('.pr-queue button').nth(1).click();
   await expect(page.locator('.pr-detail-head')).not.toContainText('QUESTION 4');
@@ -70,7 +70,7 @@ test('a ready revision opens first with the new answer and its citations visible
     const state = payload.cases.find((item: { qid: string }) => item.qid === '19');
     const original = state.versions[0];
     state.versions.push({ id: 'test-revision-19', parentId: original.id, model: 'test-model', createdAt: new Date().toISOString(), context: { question:q19.question, product:{id:q19.asin,title:q19.title}, sources:[...q19.sources.map((s: {sha256: string}) => ({...s,id:`19:${s.sha256}`,origin:'pinned'})),added], clarifications:[{text:'Customer model TEST-123.',reviewer:'Fixture reviewer'}] }, answer: { answer: 'Revised answer for Q19. Check the full model before ordering.', status: 'answered', citations: [{ passageId: `19:${source.sha256}`, quote: source.text.slice(0, 16) }, {passageId:added.id,quote:added.text}] } });
-    state.jobs.push({ id: 'test-job-19', status: 'ready', feedback: 'Test critique', createdAt: new Date().toISOString() });
+    state.jobs.push({ id: 'test-job-19', versionId: 'test-revision-19', status: 'ready', feedback: 'Test critique', createdAt: new Date().toISOString() });
     payload.ready = 1;
     await route.fulfill({ response, json: payload });
   });
@@ -91,4 +91,49 @@ test('a ready revision opens first with the new answer and its citations visible
   await expect(page.locator('.pr-detail-head')).toContainText('QUESTION 19');
   await page.setViewportSize({ width: 360, height: 760 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
+});
+
+test('an investigation shows its missing fact without presenting a new answer', async ({ page }) => {
+  const overview = await (await page.request.get('/api/paid-review')).json();
+  const q19 = overview.cases.find((item: {qid:string}) => item.qid === '19');
+  await page.route('**/api/paid-review/revisions', async route => {
+    const response=await route.fetch(), payload=await response.json();
+    const state=payload.cases.find((item:{qid:string})=>item.qid==='19');
+    state.generationAttempts=0;
+    state.jobs=[{id:'synthetic-investigation',status:'needs_information',feedback:'Missing compatibility proof.',createdAt:new Date().toISOString(),investigation:{protocol:'revision-investigation-v1',planner:'rules',issue:'missing_evidence',status:'needs_information',query:'241543917 replacement',requestedIdentifiers:['241543917'],selectedSourceIds:[],addedSourceIds:[],newEvidence:false,externalCalls:0,stopReason:'No applicable compatibility source was found.',clarificationQuestion:'What is the full refrigerator model number?',steps:[{kind:'local_search',status:'completed',detail:'The saved customer answers concern other models.'},{kind:'web_search',status:'skipped',detail:'External discovery is disabled in this synthetic test.'}]}}];
+    await route.fulfill({response,json:payload});
+  });
+  await page.goto('/paid-review');
+  await page.locator('.pr-queue button').filter({hasText:q19.question}).click();
+  const investigation=page.getByRole('complementary',{name:'Source investigation'});
+  await expect(investigation).toContainText('What is the full refrigerator model number?');
+  await expect(investigation).toContainText('No new source evidence added.');
+  await expect(page.locator('.pr-compare')).toHaveCount(0);
+  await expect(page.getByRole('button',{name:'Investigate and revise'})).toBeVisible();
+  await investigation.getByText('See search and source decisions').click();
+  await expect(investigation).toContainText('other models');
+  await expect(page.locator('.pr-detail > section').first()).toHaveAttribute('class','pr-revision');
+  await page.setViewportSize({width:360,height:760});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
+});
+
+test('a newer investigation keeps an earlier rejected revision out of acceptance controls', async ({ page }) => {
+  await page.route('**/api/paid-review/revisions', async route => {
+    const response = await route.fetch(), payload = await response.json();
+    const state = payload.cases.find((item: {qid: string}) => item.qid === '19');
+    const original = state.versions[0];
+    state.versions.push({ ...original, id: 'synthetic-earlier-revision', parentId: original.id, answer: { ...original.answer, answer: 'Earlier synthetic revision awaiting better compatibility support.' } });
+    state.generationAttempts = 1;
+    state.jobs = [
+      { id: 'synthetic-first-job', versionId: 'synthetic-earlier-revision', status: 'ready', createdAt: new Date().toISOString() },
+      { id: 'synthetic-newer-investigation', parentId: 'synthetic-earlier-revision', status: 'needs_information', createdAt: new Date().toISOString() }
+    ];
+    await route.fulfill({ response, json: payload });
+  });
+  await page.goto('/paid-review');
+  await page.locator('.pr-queue button').filter({ hasText: '241543917' }).click();
+  await expect(page.locator('.pr-compare')).toContainText('Earlier synthetic revision');
+  await expect(page.locator('.pr-revision')).toContainText('This answer has a newer revision request.');
+  await expect(page.getByRole('button', { name: 'Accept revision', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Investigate and revise' })).toBeVisible();
 });

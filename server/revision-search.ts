@@ -1,0 +1,114 @@
+import { isIP } from 'node:net';
+import { search as sapiomSearch } from '@sapiom/tools';
+import { FeedbackExternalError, SapiomFeedbackProvider } from './feedback-provider.ts';
+
+export { FeedbackExternalError as RevisionSearchError } from './feedback-provider.ts';
+export function isRevisionSearchUncertain(error: unknown): boolean {
+  return error instanceof FeedbackExternalError && (error.code === 'unverified_outcome' || error.code === 'reconciliation_required');
+}
+export type RevisionSearchHit = { title: string; url: string; snippet: string };
+export type RevisionSearchPage = { url: string; title?: string; text: string };
+/** Injectable SDK surface for synthetic tests. Production always uses the provider's bounded transport. */
+export type RevisionSearchClient = {
+  search: {
+    webSearch(input: { query: string; intent: 'links'; depth: 'standard' }): Promise<unknown>;
+    scrape(input: { url: string; formats: ['markdown']; onlyMainContent: true; waitFor: 0 }): Promise<unknown>;
+  };
+};
+type Options = { enabled?: boolean; allowedDomains?: string[]; client?: RevisionSearchClient };
+
+function publicDomain(value: string): string | null {
+  const host = value.trim().toLowerCase();
+  if (host.length > 253 || !/^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/.test(host)) return null;
+  if (isIP(host) || /(?:^|\.)(?:localhost|local|internal|invalid|test|example)$/.test(host)) return null;
+  try { if (new URL(`https://${host}`).hostname !== host) return null; } catch { return null; }
+  return host;
+}
+
+/** Discovery snippets are never evidence; only a successfully read page supplies source text. */
+export class SapiomRevisionSearch {
+  private readonly enabled: boolean;
+  private readonly domains: Set<string>;
+  private readonly domainConfigValid: boolean;
+  private readonly client?: RevisionSearchClient;
+  constructor(private readonly provider: SapiomFeedbackProvider, options: Options = {}) {
+    this.enabled = options.enabled ?? process.env.ABLATRIX_REVISION_WEB === '1';
+    const configured = options.allowedDomains ?? (process.env.ABLATRIX_REVISION_SOURCE_DOMAINS ?? '').split(',').filter(Boolean);
+    const domains = configured.map(publicDomain);
+    this.domainConfigValid = domains.length > 0 && domains.length <= 10 && domains.every(domain => domain !== null);
+    this.domains = new Set(domains.filter((domain): domain is string => domain !== null));
+    this.client = options.client;
+  }
+  private configuration() {
+    if (!this.enabled) return { ready: false, reason: 'Web investigation is disabled. Enable ABLATRIX_REVISION_WEB for bounded Sapiom source discovery.' };
+    if (!this.domainConfigValid) return { ready: false, reason: 'Configure one to ten exact public source domains in ABLATRIX_REVISION_SOURCE_DOMAINS.' };
+    return { ready: true, reason: 'Web investigation is configured.' };
+  }
+  readiness() {
+    const config = this.configuration();
+    return config.ready ? this.provider.readiness() : config;
+  }
+  allowed(value: string): boolean {
+    if (!this.domainConfigValid || typeof value !== 'string' || value.length > 2048 || value !== value.trim() || /[\s\\\u0000-\u001f\u007f]/.test(value)) return false;
+    // Inspect the raw authority too: URL normalization otherwise hides an explicit :443 port.
+    const authority = /^https:\/\/([^/?#]+)(?:[/?#]|$)/i.exec(value)?.[1];
+    if (!authority || /[@:%\[\]]/.test(authority)) return false;
+    try {
+      const url = new URL(value), host = publicDomain(url.hostname);
+      return url.protocol === 'https:' && !url.username && !url.password && !url.port && host !== null && this.domains.has(host);
+    } catch { return false; }
+  }
+  private configured() {
+    const config = this.configuration();
+    if (!config.ready) throw new FeedbackExternalError('unavailable', config.reason);
+  }
+  private sdk(boundedFetch: typeof fetch): RevisionSearchClient {
+    // The SDK capability functions need only transport.fetch. Avoid createClient's independent
+    // analytics emitter so every outbound request goes through the shared reservation and timeout.
+    const transport = { fetch: boundedFetch } as Parameters<typeof sapiomSearch.webSearch>[1];
+    return this.client ?? { search: {
+      webSearch: input => sapiomSearch.webSearch(input, transport, 'https://api.sapiom.ai'),
+      scrape: input => sapiomSearch.scrape(input, transport, 'https://api.sapiom.ai')
+    } };
+  }
+  private hits(raw: unknown): { results: RevisionSearchHit[] } {
+    if (!raw || typeof raw !== 'object' || !('results' in raw) || !Array.isArray(raw.results)) throw new Error('invalid_search_response');
+    const seen = new Set<string>(); const results: RevisionSearchHit[] = [];
+    for (const item of raw.results.slice(0, 100)) {
+      if (!item || typeof item !== 'object' || !this.allowed(item.url) || typeof item.title !== 'string' || typeof item.snippet !== 'string') continue;
+      const url = new URL(item.url); url.hash = ''; const canonical = url.href;
+      if (seen.has(canonical)) continue;
+      seen.add(canonical); results.push({ title: item.title.slice(0, 200), url: canonical, snippet: item.snippet.slice(0, 500) });
+      if (results.length === 5) break;
+    }
+    return { results };
+  }
+  async search(query: string, runId: string): Promise<{ results: RevisionSearchHit[] }> {
+    this.configured();
+    if (typeof query !== 'string' || !query.trim() || query.length > 600 || /[\u0000-\u001f\u007f]/.test(query)) throw new FeedbackExternalError('invalid_input', 'The source search query is missing or exceeds its bounded size.');
+    const request = { query: `${query.trim()} (${[...this.domains].map(domain => `site:${domain}`).join(' OR ')})`, intent: 'links' as const, depth: 'standard' as const };
+    return this.provider.meteredExternal({ kind: 'revision_search', runId, request }, fetch => this.sdk(fetch).search.webSearch(request), raw => this.hits(raw));
+  }
+  private page(raw: unknown, receipt = false): RevisionSearchPage {
+    if (!raw || typeof raw !== 'object') throw new Error('invalid_page_response');
+    const value = raw as Record<string, unknown>;
+    // Receipts store the validated page rather than provider metadata. Revalidate its URL on replay.
+    if (receipt) {
+      if (typeof value.url !== 'string' || !this.allowed(value.url) || typeof value.text !== 'string' || !value.text.trim() || value.text.length > 6000 || (value.title !== undefined && typeof value.title !== 'string')) throw new Error('invalid_page_receipt');
+      return { url: value.url, text: value.text, ...(typeof value.title === 'string' ? { title: value.title.slice(0, 200) } : {}) };
+    }
+    const metadata = value.metadata as Record<string, unknown> | undefined;
+    if (typeof value.url !== 'string' || !this.allowed(value.url) || !metadata || typeof metadata.sourceUrl !== 'string' || !this.allowed(metadata.sourceUrl)) throw new Error('unverified_page_origin');
+    if (metadata.statusCode !== undefined && (typeof metadata.statusCode !== 'number' || metadata.statusCode < 200 || metadata.statusCode >= 300)) throw new Error('invalid_page_status');
+    if (typeof value.markdown !== 'string' || !value.markdown.trim()) throw new Error('missing_page_markdown');
+    const url = new URL(metadata.sourceUrl); url.hash = '';
+    return { url: url.href, text: value.markdown.trim().slice(0, 6000), ...(typeof metadata.title === 'string' ? { title: metadata.title.slice(0, 200) } : {}) };
+  }
+  async read(url: string, runId: string): Promise<RevisionSearchPage> {
+    this.configured();
+    if (!this.allowed(url)) throw new FeedbackExternalError('invalid_input', 'The source URL must use HTTPS and an exact configured public domain.');
+    const canonical = new URL(url); canonical.hash = '';
+    const request = { url: canonical.href, formats: ['markdown'] as ['markdown'], onlyMainContent: true as const, waitFor: 0 as const };
+    return this.provider.meteredExternal({ kind: 'revision_read', runId, request }, async fetch => this.page(await this.sdk(fetch).search.scrape(request)), raw => this.page(raw, true));
+  }
+}
