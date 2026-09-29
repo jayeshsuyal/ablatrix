@@ -7,19 +7,19 @@ test('saved paid answers can be reviewed without a model call and keep the judgm
   await expect(page.getByRole('heading', { name: 'Check the answer, not just the quote.' })).toBeVisible();
   await expect(page.locator('.pr-queue button')).toHaveCount(20);
   await expect(page.locator('.pr-metrics')).toContainText('0/20');
-  await expect(page.locator('.pr-ai-status')).toContainText('20/20 AI suggestions prepared');
+  await expect(page.locator('.pr-ai-status').first()).toContainText('20/20 AI suggestions prepared');
   const save = page.getByRole('button', { name: 'Save review' });
   await expect(save).toBeDisabled();
   await page.getByRole('button', { name: 'Prefill my review fields' }).click();
   await expect(page.getByRole('radio', { name: 'correct', exact: true })).toBeChecked();
   await expect(page.locator('.pr-source-check input:checked')).toHaveCount(0);
-  await expect(page.getByRole('textbox', { name: 'Reviewer name' })).toHaveValue('');
+  await expect(page.getByRole('textbox', { name: 'Reviewer name', exact: true })).toHaveValue('');
   await expect(save).toBeDisabled();
   await page.locator('.pr-source-check input').first().check();
   await page.getByRole('radio', { name: 'uncertain', exact: true }).first().check();
   await page.getByRole('radio', { name: 'supported', exact: true }).check();
   await page.getByRole('textbox', { name: 'Correction or uncertainty note' }).fill('The sources disagree about suitability for well water.');
-  await page.getByRole('textbox', { name: 'Reviewer name' }).fill('Synthetic browser reviewer');
+  await page.getByRole('textbox', { name: 'Reviewer name', exact: true }).fill('Synthetic browser reviewer');
   await page.getByRole('checkbox', { name: 'I checked the selected source text before judging this answer.' }).check();
   await expect(save).toBeEnabled();
   await save.click();
@@ -34,4 +34,19 @@ test('saved paid answers can be reviewed without a model call and keep the judgm
   await page.setViewportSize({ width: 360, height: 760 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
   expect(errors).toEqual([]);
+});
+
+test('reviewer can queue a revision and continue to another answer', async ({ page }) => {
+  await page.goto('/paid-review');
+  const first = page.locator('.pr-queue button').first();
+  await first.click();
+  await page.getByRole('textbox', { name: 'What is wrong or missing?' }).fill('The answer overlooks the product source and needs a more specific response.');
+  await page.getByRole('textbox', { name: 'Revision reviewer name' }).first().fill('Synthetic reviewer');
+  await page.getByRole('button', { name: 'Request revision' }).click();
+  await expect(page.locator('.pr-job')).toContainText('queued');
+  await page.locator('.pr-queue button').nth(1).click();
+  await expect(page.locator('.pr-detail-head')).not.toContainText('QUESTION 4');
+  await expect(first).toContainText('QUEUED');
+  await page.reload();
+  await expect(first).toContainText('QUEUED');
 });

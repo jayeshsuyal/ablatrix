@@ -25,7 +25,8 @@ const reviewInput = z.object({
 type ManifestCase = { qid: string; asin: string; title: string; question: string; sources: { label: string; text: string; sha256: string; originalLabel: number }[] };
 type SourceContext = { qid: string; sourceSha256: string; originalQuestion: string };
 type SavedRun = { qid: string; asin: string; run: { id: string; status: string; answer: { answer: string; status: string; citations: { passageId: string; quote: string }[] } | null; retrieval: { passages: { id: string; sha256: string; text: string; reference: string }[] } | null; model: string | null }; clientMs: number | null };
-export type PaidReview = z.infer<typeof reviewInput> & { qid: string; manifestSha256: string; sourceContextSha256: string; runId: string; createdAt: string; kind: 'human' };
+export type PaidReview = z.infer<typeof reviewInput> & { qid: string; manifestSha256: string; sourceContextSha256: string; runId: string; answerVersionId: string; createdAt: string; kind: 'human' };
+export const originalAnswerVersionId = (qid: string, runId: string) => `original-${qid}-${createHash('sha256').update(runId).digest('hex').slice(0,12)}`;
 export type PaidAiDraft = { qid: string; asin: string; runId: string; answerVerdict: 'correct' | 'incorrect' | 'uncertain'; supportVerdict: 'supported' | 'unsupported' | 'uncertain'; category: (typeof categories)[number]; confidence: 'high' | 'medium' | 'low'; sourceShas: string[]; note: string };
 
 /** Reviews a pinned historical batch; no model provider or experiment workspace is opened. */
@@ -78,18 +79,24 @@ export class PaidAnswerReview {
     this.db.exec('CREATE TABLE IF NOT EXISTS paid_answer_reviews_v2 (qid TEXT NOT NULL, manifest_sha TEXT NOT NULL, source_context_sha TEXT NOT NULL, document TEXT NOT NULL, PRIMARY KEY(qid, manifest_sha, source_context_sha))');
   }
   private reviews(): PaidReview[] {
-    return (this.db.prepare('SELECT document FROM paid_answer_reviews_v2 WHERE manifest_sha=? AND source_context_sha=?').all(pinnedManifestSha, pinnedSourceContextSha) as { document: string }[]).map(row => JSON.parse(row.document) as PaidReview);
+    return (this.db.prepare('SELECT document FROM paid_answer_reviews_v2 WHERE manifest_sha=? AND source_context_sha=?').all(pinnedManifestSha, pinnedSourceContextSha) as { document: string }[]).map(row => { const review=JSON.parse(row.document) as PaidReview; return { ...review, answerVersionId: review.answerVersionId ?? originalAnswerVersionId(review.qid,review.runId) }; });
   }
   overview() {
     const reviews = this.reviews();
+    const legacy = (this.db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='paid_answer_reviews'").get() ? this.db.prepare('SELECT document FROM paid_answer_reviews WHERE manifest_sha=?').all(pinnedManifestSha) : []) as {document:string}[];
+    const legacyByQid = new Map(legacy.map(row => { const value = JSON.parse(row.document); return [value.qid as string, value]; }));
     const byQid = new Map(reviews.map(item => [item.qid, item]));
     const judged = reviews.filter(item => item.answerVerdict !== 'uncertain');
     return {
       manifestSha256: pinnedManifestSha,
       cases: this.cases.map(item => ({ qid: item.qid, asin: item.asin, title: item.title, question: item.question,
         sources: item.sources.map(source => ({ label: source.label, text: source.text, sha256: source.sha256, originalQuestion: this.sourceContexts.get(`${item.qid}:${source.sha256}`) ?? null })),
-        result: this.runs.get(item.qid), review: byQid.get(item.qid) ?? null, aiDraft: this.aiDrafts.get(item.qid) ?? null })),
+        result: this.runs.get(item.qid), review: byQid.get(item.qid) ?? null, historicalReview: legacyByQid.get(item.qid) ?? null, aiDraft: this.aiDrafts.get(item.qid) ?? null })),
       summary: { total: this.cases.length, reviewed: reviews.length, judged: judged.length,
+        historicalReviewed: legacy.length,
+        historicalCorrect: legacy.filter(row => JSON.parse(row.document).answerVerdict === 'correct').length,
+        historicalIncorrect: legacy.filter(row => JSON.parse(row.document).answerVerdict === 'incorrect').length,
+        historicalUncertain: legacy.filter(row => JSON.parse(row.document).answerVerdict === 'uncertain').length,
         correct: judged.filter(item => item.answerVerdict === 'correct').length,
         incorrect: judged.filter(item => item.answerVerdict === 'incorrect').length,
         uncertain: reviews.filter(item => item.answerVerdict === 'uncertain').length,
@@ -106,7 +113,8 @@ export class PaidAnswerReview {
     if (input.answerVerdict === 'correct' && (input.supportVerdict !== 'supported' || input.category !== 'none')) throw new Error('Paid review: a correct answer must be supported with no failure category.');
     if (input.answerVerdict !== 'correct' && input.category === 'none') throw new Error('Paid review: choose a failure or uncertainty category.');
     if (input.answerVerdict !== 'correct' && input.note.length < 10) throw new Error('Paid review: explain the failure or uncertainty in at least 10 characters.');
-    const review: PaidReview = { ...input, qid, manifestSha256: pinnedManifestSha, sourceContextSha256: pinnedSourceContextSha, runId: this.runs.get(qid)!.run.id, createdAt: new Date().toISOString(), kind: 'human' };
+    const runId=this.runs.get(qid)!.run.id;
+    const review: PaidReview = { ...input, qid, manifestSha256: pinnedManifestSha, sourceContextSha256: pinnedSourceContextSha, runId, answerVersionId: originalAnswerVersionId(qid,runId), createdAt: new Date().toISOString(), kind: 'human' };
     try { this.db.prepare('INSERT INTO paid_answer_reviews_v2(qid,manifest_sha,source_context_sha,document) VALUES(?,?,?,?)').run(qid, pinnedManifestSha, pinnedSourceContextSha, JSON.stringify(review)); }
     catch (error) { if (error instanceof Error && /UNIQUE constraint/.test(error.message)) throw new Error('Paid review: this case has already been reviewed.'); throw error; }
     return review;

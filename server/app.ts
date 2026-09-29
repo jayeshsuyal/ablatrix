@@ -20,6 +20,7 @@ import { SapiomFeedbackProvider } from './feedback-provider.ts';
 import { LoopTelemetry } from './loop-telemetry.ts';
 import { ProductWorkspace } from './product-workspace.ts';
 import { PaidAnswerReview } from './paid-answer-review.ts';
+import { AnswerRevisions } from './answer-revisions.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -42,7 +43,7 @@ async function body(req: IncomingMessage, maxLength = 16_384): Promise<unknown> 
   return JSON.parse(text || '{}') as unknown;
 }
 
-export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview) {
+export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview, startRevisionWorker = false) {
   const runner = new ExperimentRunner(store, mode, provider);
   const optimizer = new OptimizationRunner(store, runner, mode, provider);
   let feedbackProvider: SapiomFeedbackProvider | undefined;
@@ -52,8 +53,11 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   };
   const productWorkspace = () => workspace ??= new ProductWorkspace(process.env.ABLATRIX_WORKSPACE_DB, localAnswerProvider());
   const paidAnswerReview = () => paidReview ??= new PaidAnswerReview(process.env.ABLATRIX_PAID_REVIEW_DB);
+  let revisions: AnswerRevisions | undefined;
+  const answerRevisions = () => revisions ??= new AnswerRevisions(paidAnswerReview(), localAnswerProvider(), process.env.ABLATRIX_PAID_REVIEW_DB, true, () => !feedback?.publicOverview().busy && !workspace?.overview().busy);
   const loopTelemetry = () => telemetry ??= new LoopTelemetry();
   const feedbackLoop = () => {
+    if (revisions?.hasActive()) throw new Error('Feedback revision is using the shared provider.');
     if (!feedback) {
       const corpus = loadProductCorpus();
       const finalCorpus = loadFinalProductCorpus();
@@ -92,7 +96,12 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       }
       const url = new URL(req.url ?? '/', 'http://localhost');
       const path = url.pathname;
+      if (req.method === 'POST' && path.startsWith('/api/loop/') && revisions?.hasActive()) return json(res, 409, { error: 'A revision is using the shared live provider.' });
       if (req.method === 'GET' && path === '/api/paid-review') return json(res, 200, paidAnswerReview().overview());
+      if (req.method === 'GET' && path === '/api/paid-review/revisions') return json(res, 200, answerRevisions().overview());
+      if (req.method === 'GET' && /^\/api\/paid-review\/revisions\/[a-f0-9-]{36}$/.test(path)) return json(res, 200, answerRevisions().getJob(path.split('/')[4]));
+      if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/revisions$/.test(path)) return json(res, 202, answerRevisions().request(path.split('/')[3], await body(req)));
+      if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/decisions$/.test(path)) return json(res, 201, answerRevisions().decide(path.split('/')[3], await body(req)));
       if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}$/.test(path)) return json(res, 201, paidAnswerReview().review(path.split('/')[3], await body(req)));
       if (req.method === 'GET' && path === '/api/paid-review/export') return download(res, 'ablatrix-paid-answer-reviews.json', `${JSON.stringify(paidAnswerReview().overview(), null, 2)}\n`, 'application/json');
       if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, productWorkspace().overview());
@@ -100,9 +109,9 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (req.method === 'POST' && path === '/api/workspace/questions') {
         const input = await body(req);
         const loop = input && typeof input === 'object' && 'mode' in input && input.mode === 'live' ? feedbackLoop() : undefined;
-        if (loop?.publicOverview().busy) return json(res, 409, { error: 'Finish the active feedback experiment before a workspace live answer.' });
+        if (loop?.publicOverview().busy || revisions?.hasActive()) return json(res, 409, { error: 'Finish the active live dispatch before a workspace answer.' });
         const run = await productWorkspace().ask(input, () => {
-          if (loop?.publicOverview().busy) throw new Error('Feedback experiment started during retrieval; no workspace live call was made.');
+          if (loop?.publicOverview().busy || revisions?.hasActive()) throw new Error('Feedback experiment or revision started during retrieval; no workspace live call was made.');
         });
         return json(res, run.status === 'failed' ? 502 : 201, run);
       }
@@ -221,6 +230,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (error instanceof Error && error.message.startsWith('Feedback')) return json(res, 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Workspace:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Paid review:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
+      if (error instanceof Error && error.message.startsWith('Revision:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Pilot')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted|Live optimization|holdout|frozen completed/.test(error.message)) {
         return json(res, 400, { error: error.message });
@@ -229,6 +239,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       return json(res, 500, { error: 'Internal server error.' });
     }
   });
-  server.on('close', () => { void pilot.close(); feedback?.close(); workspace?.close(); paidReview?.close(); feedbackProvider?.close(); telemetry?.close(); });
+  server.on('close', () => { void pilot.close(); revisions?.close(); feedback?.close(); workspace?.close(); paidReview?.close(); feedbackProvider?.close(); telemetry?.close(); });
+  if (startRevisionWorker) answerRevisions();
   return server;
 }

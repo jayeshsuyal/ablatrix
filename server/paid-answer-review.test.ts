@@ -32,6 +32,7 @@ test('pinned paid batch reviews persist separately and cannot be counted without
     const saved = review.review(first.qid, valid);
     assert.equal(saved.kind, 'human');
     assert.equal(saved.runId, first.result?.run.id);
+    assert.match(saved.answerVersionId, new RegExp(`^original-${first.qid}-`));
     assert.throws(() => review.review(first.qid, valid), /already been reviewed/);
     review.close();
     review = new PaidAnswerReview(path);
