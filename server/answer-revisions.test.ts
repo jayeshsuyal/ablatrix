@@ -34,6 +34,14 @@ test('revision queue is durable, idempotent, version bound, and preserves source
     assert.equal(seen.promptVersion,'answer-revision-v1');
     assert(seen.evidence.some((e:{text:string})=>e.text.includes('Original customer question:')));
     assert.throws(()=>flow.decide(first.qid,{versionId:id,reviewer:'Reviewer',decision:'accept',note:'',checkedSourceShas:[reviews.overview().cases.find(c=>c.qid===first.qid)!.sources[0].sha256]}),/stale/);
+    const current=completed.versions[1].id, checkedSourceShas=[reviews.overview().cases.find(c=>c.qid===first.qid)!.sources[0].sha256];
+    flow.decide(first.qid,{versionId:current,reviewer:'Reviewer',decision:'accept',note:'Source checked.',checkedSourceShas});
+    assert.equal(flow.overview().cases.find(c=>c.qid===first.qid)!.jobs[0].status,'accepted');
+    assert.equal(flow.overview().ready,0);
+    assert.equal(flow.overview().summary.accepted,1);
+    assert.equal(flow.overview().summary.unresolved,0);
+    assert.throws(()=>flow.decide(first.qid,{versionId:current,reviewer:'Reviewer',decision:'accept',note:'Again.',checkedSourceShas}),/already has a decision or is unavailable/);
+    assert.throws(()=>flow.request(first.qid,{...input,versionId:current,idempotencyKey:'after-accept-1'}),/has been accepted/);
     assert.equal(provider.receipt(job.id)?.status,'completed');
     assert.equal(provider.receipt(job.id)?.input_tokens,12);
     assert.equal(provider.capacity(1).ready,false);
@@ -63,4 +71,12 @@ test('completed provider receipt materializes after interrupted app persistence'
     assert.equal(state.jobs[0].status,'ready');assert.equal(state.versions.length,2);
     flow.reconcile();assert.equal(flow.overview().cases.find(c=>c.qid===item.qid)!.versions.length,2);
   } finally {flow.close();provider.close();reviews.close();rmSync(directory,{recursive:true,force:true});}
+});
+
+test('receipt replay cannot materialize output rejected by the provider schema', async () => {
+  const directory=mkdtempSync(join(tmpdir(),'revision-invalid-')),path=join(directory,'review.sqlite'),ledger=join(directory,'budget.sqlite');
+  const reviews=new PaidAnswerReview(path),item=reviews.overview().cases[0],source=item.sources[0];
+  const provider=new SapiomFeedbackProvider({enabled:true,apiKey:'fixture',capUsd:0.1,allowancePerCallUsd:0.1,callLimit:1,dbPath:ledger,fetchImpl:async()=>new Response(JSON.stringify({model:'gpt-5.6-luna',choices:[{finish_reason:'tool_calls',message:{tool_calls:[{function:{name:'answer_revision_v1',arguments:JSON.stringify({answer:'Unsupported output.',status:'answered',citations:[{passageId:`${item.qid}:${source.sha256}`,quote:''}]})}}]}}],usage:{prompt_tokens:5,completion_tokens:4}}),{status:200})});
+  const flow=new AnswerRevisions(reviews,provider,path,false);
+  try {const state=flow.overview().cases.find(c=>c.qid===item.qid)!;flow.request(item.qid,{versionId:state.versions[0].id,idempotencyKey:'invalid-receipt-1',reviewer:'Reviewer',feedback:'The answer omits a supported fact.'});await flow.tick();const after=flow.overview().cases.find(c=>c.qid===item.qid)!;assert.equal(after.jobs[0].status,'needs_information');assert.equal(after.versions.length,1);assert.equal(after.jobs[0].attempts[0].status,'invalid_output');} finally {flow.close();provider.close();reviews.close();rmSync(directory,{recursive:true,force:true});}
 });

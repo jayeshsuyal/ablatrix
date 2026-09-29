@@ -2,7 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { randomUUID, createHash } from 'node:crypto';
 import { z } from 'zod';
 import { originalAnswerVersionId, type PaidAnswerReview } from './paid-answer-review.ts';
-import type { SapiomFeedbackProvider } from './feedback-provider.ts';
+import { answerSchema, type SapiomFeedbackProvider } from './feedback-provider.ts';
 
 const requestSchema = z.object({ versionId: z.string().min(1), idempotencyKey: z.string().min(8).max(120), reviewer: z.string().trim().min(2).max(100), feedback: z.string().trim().min(10).max(2000) }).strict();
 const decisionSchema = z.object({ versionId: z.string().min(1), reviewer: z.string().trim().min(2).max(100), decision: z.enum(['accept', 'needs_information']), note: z.string().trim().max(2000), checkedSourceShas: z.array(z.string().regex(/^[a-f0-9]{64}$/)).min(1) }).strict();
@@ -42,8 +42,8 @@ export class AnswerRevisions {
   private latest(qid: string) { return this.versions(qid).at(-1)!; }
   overview() {
     const cases = this.reviews.overview().cases.map(item => ({ qid: item.qid, versions: this.versions(item.qid), jobs: this.jobs(item.qid).map(job => { const receipt = this.provider.receipt(job.id); const attempts=this.db.prepare('SELECT * FROM answer_revision_attempts WHERE job_id=? ORDER BY created_at').all(job.id); return { ...job, attempts, usage: receipt ? { inputTokens:receipt.input_tokens, outputTokens:receipt.output_tokens, planningAllowanceUsd:receipt.allowance_usd, providerCallStatus:receipt.status } : null, latencyMs: job.finishedAt ? new Date(job.finishedAt).getTime()-new Date(job.createdAt).getTime() : null }; }), events: (this.db.prepare('SELECT document FROM answer_review_events WHERE qid=? ORDER BY rowid').all(item.qid) as {document:string}[]).map(r => JSON.parse(r.document)) }));
-    const jobs=cases.flatMap(c=>c.jobs), events=cases.flatMap(c=>c.events);
-    return { cases, ready: cases.filter(c => c.jobs.at(-1)?.status === 'ready').length, pending: cases.filter(c => ['queued','running'].includes(c.jobs.at(-1)?.status ?? '')).length, readiness:this.provider.readiness(), summary: { requested:jobs.length, accepted:events.filter(e=>e.kind==='accept').length, unresolved:jobs.filter(j=>['needs_information','reconciliation','failed'].includes(j.status)).length, providerCalls:jobs.filter(j=>j.usage).length, planningAllowanceUsd:jobs.reduce((n,j)=>n+(j.usage?.planningAllowanceUsd ?? 0),0), actualProviderCharges:'unavailable' } };
+    const jobs=cases.flatMap(c=>c.jobs);
+    return { cases, ready: cases.filter(c => c.jobs.at(-1)?.status === 'ready').length, pending: cases.filter(c => ['queued','running'].includes(c.jobs.at(-1)?.status ?? '')).length, readiness:this.provider.readiness(), summary: { requested:jobs.length, accepted:cases.filter(c=>c.jobs.at(-1)?.status==='accepted').length, unresolved:cases.filter(c=>c.jobs.length && c.jobs.at(-1)?.status!=='accepted').length, providerCalls:jobs.filter(j=>j.usage).length, planningAllowanceUsd:jobs.reduce((n,j)=>n+(j.usage?.planningAllowanceUsd ?? 0),0), actualProviderCharges:'unavailable' } };
   }
   hasActive() { return this.busy; }
   getJob(id: string) { const job = this.overview().cases.flatMap(c=>c.jobs).find(j=>j.id===id); if (!job) throw new Error('Revision: job not found.'); return job; }
@@ -55,6 +55,7 @@ export class AnswerRevisions {
       if (duplicate) { const job = JSON.parse(duplicate.document) as Job; if (job.qid !== qid || job.parentId !== input.versionId || job.feedback !== input.feedback || job.reviewer !== input.reviewer) throw new Error('Revision: idempotency key belongs to a different request.'); this.db.exec('COMMIT'); return job; }
       const latest = this.latest(qid);
       if (latest.id !== input.versionId) throw new Error('Revision: stale answer version. Refresh before acting.');
+      if (this.db.prepare("SELECT 1 FROM answer_review_events WHERE version_id=? AND kind='accept' LIMIT 1").get(latest.id)) throw new Error('Revision: this answer version has been accepted.');
       if (this.jobs(qid).some(j => ['queued','running','reconciliation'].includes(j.status))) throw new Error('Revision: an active or unresolved job already exists for this case.');
       if (this.jobs(qid).length >= 2) throw new Error('Revision: two generation attempts are the per-case limit.');
       const id = randomUUID(), now = new Date().toISOString();
@@ -71,8 +72,14 @@ export class AnswerRevisions {
     try {
       if (this.latest(qid).id !== input.versionId) throw new Error('Revision: stale answer version. Refresh before acting.');
       if (this.jobs(qid).some(j => ['queued','running'].includes(j.status))) throw new Error('Revision: wait for the active revision.');
+      const version=this.latest(qid);
+      if (!version.jobId) throw new Error('Revision: decisions require a revised answer version.');
+      const job=this.jobs(qid).find(j=>j.id===version.jobId);
+      if (!job || !['ready','needs_information'].includes(job.status)) throw new Error('Revision: this answer version already has a decision or is unavailable.');
+      if (this.db.prepare("SELECT 1 FROM answer_review_events WHERE version_id=? AND kind IN ('accept','needs_information') LIMIT 1").get(version.id)) throw new Error('Revision: this answer version already has a decision.');
       const event = { id: randomUUID(), versionId: input.versionId, kind: input.decision, reviewer: input.reviewer, note: input.note, checkedSourceShas: input.checkedSourceShas, createdAt: new Date().toISOString() };
       this.db.prepare('INSERT INTO answer_review_events(id,qid,version_id,kind,document) VALUES(?,?,?,?,?)').run(event.id,qid,input.versionId,event.kind,JSON.stringify(event));
+      job.status=input.decision === 'accept' ? 'accepted' : 'needs_information'; this.saveJob(job);
       this.db.exec('COMMIT'); return event;
     } catch(error) { this.db.exec('ROLLBACK'); throw error; }
   }
@@ -81,16 +88,16 @@ export class AnswerRevisions {
     if (!receipt.receipt_json) { job.status='reconciliation'; job.error='Completed call has no durable response.'; job.attemptId=receipt.id; this.saveJob(job); return; }
     const { output, model } = JSON.parse(receipt.receipt_json);
     const item = this.case(job.qid);
-    const citations = output?.citations;
-    const valid = output && typeof output.answer === 'string' && output.answer.trim() && !/\bthe supplied evidence\b/i.test(output.answer) && ['answered','insufficient_evidence'].includes(output.status) && Array.isArray(citations) && citations.length <= 5 && (output.status !== 'answered' || citations.length > 0) && citations.every((c: {passageId:string;quote:string}) => typeof c.quote === 'string' && item.sources.some(source => source.text.includes(c.quote) && `${job.qid}:${source.sha256}` === c.passageId));
+    const parsed=answerSchema.safeParse(output);
+    const valid = parsed.success && !/\bthe supplied evidence\b/i.test(parsed.data.answer) && (parsed.data.status !== 'answered' || parsed.data.citations.length > 0) && parsed.data.citations.every(c => item.sources.some(source => source.text.includes(c.quote) && `${job.qid}:${source.sha256}` === c.passageId));
     if (!valid) { job.status='needs_information'; job.error='Revision output failed source or quote validation.'; job.finishedAt=new Date().toISOString(); job.attemptId=receipt.id; this.saveJob(job); this.db.prepare('UPDATE answer_revision_attempts SET provider_call_id=?,status=?,finished_at=? WHERE job_id=?').run(receipt.id,'invalid_output',job.finishedAt,job.id); return; }
     const id = `revision-${job.id}`;
     const parent = this.versions(job.qid).find(v => v.id === job.parentId)!;
-    const version: Version = { id, qid:job.qid,parentId:parent.id,jobId:job.id,answer:output,model,promptVersion:'answer-revision-v1',sourceContextSha256:parent.sourceContextSha256,createdAt:new Date().toISOString() };
+    const version: Version = { id, qid:job.qid,parentId:parent.id,jobId:job.id,answer:parsed.data!,model,promptVersion:'answer-revision-v1',sourceContextSha256:parent.sourceContextSha256,createdAt:new Date().toISOString() };
     this.db.exec('BEGIN IMMEDIATE');
     try {
       this.db.prepare('INSERT OR IGNORE INTO answer_versions(id,qid,parent_id,job_id,document) VALUES(?,?,?,?,?)').run(id,job.qid,parent.id,job.id,JSON.stringify(version));
-      job.versionId=id; job.status=output.status === 'answered' ? 'ready' : 'needs_information'; job.finishedAt=new Date().toISOString(); job.attemptId=receipt.id; this.saveJob(job);
+      job.versionId=id; job.status=parsed.data!.status === 'answered' ? 'ready' : 'needs_information'; job.finishedAt=new Date().toISOString(); job.attemptId=receipt.id; this.saveJob(job);
       this.db.prepare('UPDATE answer_revision_attempts SET provider_call_id=?,status=?,finished_at=? WHERE job_id=?').run(receipt.id,'completed',job.finishedAt,job.id);
       this.db.exec('COMMIT');
     } catch(error) { this.db.exec('ROLLBACK'); throw error; }

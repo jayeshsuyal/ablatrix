@@ -7,7 +7,7 @@ import type { LoopProvider, LoopUsage, RetrievedPassage } from './loop-types.ts'
 
 const MODEL = 'gpt-luna';
 const aliases = new Set(['gpt-luna', 'gpt-5.6-luna']);
-const answerSchema = z.object({
+export const answerSchema = z.object({
   answer: z.string().trim().min(1).max(10_000),
   status: z.enum(['answered', 'insufficient_evidence']),
   citations: z.array(z.object({ passageId: z.string().trim().min(1).max(160), quote: z.string().min(1).max(3000) }).strict()).max(5)
