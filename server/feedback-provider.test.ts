@@ -4,7 +4,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
-import { SapiomFeedbackProvider, quoteOptions } from './feedback-provider.ts';
+import { FeedbackExternalError, SapiomFeedbackProvider, quoteOptions } from './feedback-provider.ts';
 import type { LoopProvider } from './loop-types.ts';
 
 const input: Parameters<LoopProvider['answer']>[0] = {
@@ -177,4 +177,45 @@ test('an exact quote from an original customer question is rejected as factual e
   const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async () => reply({ answer:'It fits that Kenmore.', status:'answered', citations:[{passageId:'c1',quote:originalQuestion}] }) });
   try { await assert.rejects(provider.answer(contextInput), /output validation/); }
   finally { provider.close(); }
+});
+
+test('concurrent external operations with the same identity cannot dispatch twice', async () => {
+  let release!: (response: Response) => void; let calls = 0;
+  const pending = new Promise<Response>(resolve => { release = resolve; });
+  const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async () => { calls++; return pending; } });
+  const operation = { kind: 'revision_search' as const, runId: 'job:search:1', request: { query: 'fixture' } };
+  const execute = async (fetch: typeof globalThis.fetch) => (await fetch('https://api.sapiom.ai/v1/capabilities/web.search', { method: 'POST', body: '{}' })).json();
+  const validate = (output: unknown) => output as { results: [] };
+  const first = provider.meteredExternal(operation, execute, validate);
+  try {
+    await assert.rejects(provider.meteredExternal(operation, execute, validate), error => error instanceof FeedbackExternalError && error.code === 'reconciliation_required');
+    release(new Response('{"results":[]}')); await first;
+    assert.deepEqual(await provider.meteredExternal(operation, execute, validate), { results: [] }); assert.equal(calls, 1);
+  } finally { release(new Response('{"results":[]}')); await first.catch(() => {}); provider.close(); }
+});
+
+test('external SDK transport refuses additional requests under a single reservation', async () => {
+  let calls = 0;
+  const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async () => { calls++; return new Response('{}'); } });
+  try {
+    await assert.rejects(provider.meteredExternal({ kind: 'revision_search', runId: 'job:search:1', request: {} }, async fetch => {
+      await fetch('https://api.sapiom.ai/v1/capabilities/web.search', { method: 'POST' });
+      return fetch('https://api.sapiom.ai/v1/capabilities/web.search', { method: 'POST' });
+    }, value => value), error => error instanceof FeedbackExternalError && error.code === 'unverified_outcome');
+    assert.equal(calls, 1); assert.equal(provider.receipt('job:search:1')?.status, 'failed_or_unknown');
+  } finally { provider.close(); }
+});
+
+test('revision passes investigation triage as bounded context without treating it as source verification', async () => {
+  const investigation = { issue: 'missing_fact', query: 'fixture handle material', selectedSourceIds: ['c1'], addedSourceIds: ['c1'], stopReason: 'Retrieved a source excerpt.' };
+  const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async (_url, init) => {
+    const body = JSON.parse(String(init?.body)), payload = JSON.parse(body.messages[1].content);
+    assert.equal(payload.promptVersion, 'answer-revision-v3-investigation'); assert.deepEqual(payload.investigation, investigation);
+    assert.match(body.messages[0].content, /rule-based source triage, not verification/);
+    return reply(valid, 'gpt-5.6-luna', 'tool_calls', 'answer_revision_v1');
+  } });
+  try {
+    const result = await provider.revise({ runId: 'revision-job', question: input.question, product: input.product, rejectedAnswer: 'It is plastic.', critique: 'Wrong material.', evidence: input.passages, investigation });
+    assert.equal(result.answer.answer, 'The handle is oak.');
+  } finally { provider.close(); }
 });
