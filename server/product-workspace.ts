@@ -8,7 +8,7 @@ import { ProductRetriever } from './product-retrieval.ts';
 import { quoteOptions } from './feedback-provider.ts';
 import type { LoopAnswer, LoopProvider, LoopRetriever, LoopUsage, ProductCorpus, RetrievalResult } from './loop-types.ts';
 
-const sourceInput = z.object({ label: z.string().trim().min(2).max(80), text: z.string().trim().min(30).max(1500) }).strict();
+const sourceInput = z.object({ label: z.string().trim().min(2).max(80), text: z.string().trim().min(30).max(1500), originalQuestion: z.string().trim().min(1).max(500).optional() }).strict();
 const productInput = z.object({ title: z.string().trim().min(3).max(160), sources: z.array(sourceInput).min(1).max(8) }).strict();
 const questionInput = z.object({ productId: z.uuid(), question: z.string().trim().min(5).max(500), mode: z.enum(['preview', 'live']) }).strict();
 const baselineInstructions = 'Answer the product question using only the supplied product evidence. State supported facts directly, attribute claims to their source, and qualify missing or conflicting details. Never invent a specification. Cite an exact supporting quote for each material claim.';
@@ -33,8 +33,8 @@ function sourceChunks(text: string): string[] {
   return chunks;
 }
 
-export type WorkspaceProduct = { id: string; title: string; sources: { id: string; label: string; text: string }[]; createdAt: string };
-export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live'; status: 'retrieving' | 'evidence_ready' | 'completed' | 'failed'; retrieval: RetrievalResult | null; answer: LoopAnswer | null; model: string | null; usage: LoopUsage; error: string | null; createdAt: string };
+export type WorkspaceProduct = { id: string; title: string; sources: { id: string; label: string; text: string; originalQuestion?: string }[]; createdAt: string };
+export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live'; generationProtocol?: 'product-answer-v2-context'; status: 'retrieving' | 'evidence_ready' | 'completed' | 'failed'; retrieval: RetrievalResult | null; answer: LoopAnswer | null; model: string | null; usage: LoopUsage; error: string | null; createdAt: string };
 
 /** Local product workspace. Imported evidence never enters the frozen evaluation corpora. */
 export class ProductWorkspace {
@@ -77,7 +77,7 @@ export class ProductWorkspace {
     if (cached) return cached;
     const corpus: ProductCorpus = { version: `workspace-${textHash(JSON.stringify(product)).slice(0, 24)}`, source: 'user-supplied local evidence', license: 'user-supplied',
       products: [{ id: product.id, title: product.title, split: 'development' }],
-      passages: product.sources.flatMap(source => sourceChunks(source.text).map((chunk, index, chunks) => ({ id: chunks.length === 1 ? source.id : `${source.id}-${index + 1}`, productId: product.id, source: source.label, text: chunk, reference: chunks.length === 1 ? source.label : `${source.label} (part ${index + 1})`, sha256: textHash(chunk) }))), cases: [] };
+      passages: product.sources.flatMap(source => sourceChunks(source.text).map((chunk, index, chunks) => ({ id: chunks.length === 1 ? source.id : `${source.id}-${index + 1}`, productId: product.id, source: source.label, text: chunk, reference: chunks.length === 1 ? source.label : `${source.label} (part ${index + 1})`, sha256: textHash(chunk), ...(source.originalQuestion ? { originalQuestion: source.originalQuestion } : {}) }))), cases: [] };
     const retriever = this.retrieverFactory(corpus);
     this.retrievers.set(product.id, retriever);
     return retriever;
@@ -89,7 +89,7 @@ export class ProductWorkspace {
     if (!product) throw new Error('Workspace: product not found.');
     if (input.mode === 'live' && !this.provider.readiness().ready) throw new Error(`Workspace: ${this.provider.readiness().reason}`);
     this.busy = true;
-    const run: WorkspaceRun = { id: randomUUID(), productId: product.id, question: input.question, mode: input.mode, status: 'retrieving', retrieval: null, answer: null, model: null, usage: null, error: null, createdAt: new Date().toISOString() };
+    const run: WorkspaceRun = { id: randomUUID(), productId: product.id, question: input.question, mode: input.mode, ...(input.mode === 'live' ? { generationProtocol: 'product-answer-v2-context' as const } : {}), status: 'retrieving', retrieval: null, answer: null, model: null, usage: null, error: null, createdAt: new Date().toISOString() };
     this.saveRun(run);
     try {
       run.retrieval = await this.retriever(product).retrieve(product.id, input.question);
@@ -98,7 +98,7 @@ export class ProductWorkspace {
         const passages = run.retrieval.passages;
         if (!passages.length) throw new Error('No product evidence was retrieved.');
         beforeLiveDispatch?.();
-        const policy = { id: 'workspace-baseline-v1', parentId: null, instructions: baselineInstructions, rationale: 'Frozen local product workspace baseline.', feedbackRunIds: [], status: 'baseline' as const, mode: 'live' as const, createdAt: '2026-09-27T00:00:00.000Z' };
+        const policy = { id: 'workspace-baseline-v2-context', parentId: null, instructions: baselineInstructions, rationale: 'Local product workspace baseline with separate original customer question context.', feedbackRunIds: [], status: 'baseline' as const, mode: 'live' as const, createdAt: '2026-09-29T00:00:00.000Z' };
         const quoteCount = this.provider.answerWithSnippetIds ? quoteOptions(passages).length : 0;
         const answerMethod = quoteCount >= 1 && quoteCount <= 60 ? this.provider.answerWithSnippetIds! : this.provider.answer;
         const answer = await answerMethod.call(this.provider, { question: input.question, product: { id: product.id, title: product.title, split: 'development' }, policy, passages, runId: run.id });

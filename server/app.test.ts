@@ -65,7 +65,8 @@ test('product workspace API saves user evidence and returns a model-free preview
     const overview = await (await fetch(`${base}/api/workspace`)).json();
     assert.equal(overview.products.length, 1); assert.equal(overview.runs.length, 1);
     assert.equal(overview.readiness.ready, false);
-    const escaped = await fetch(`${base}/api/workspace/products`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ title: 'Eight excerpt listing', sources: Array.from({ length: 8 }, (_, index) => ({ label: `Source ${index + 1}`, text: 'x\n'.repeat(750) })) }) });
+    const escaped = await fetch(`${base}/api/workspace/products`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ title: 'Eight excerpt listing', sources: Array.from({ length: 8 }, () => ({ label: '\u0001'.repeat(80), text: '\u0001'.repeat(1500), originalQuestion: '\u0001'.repeat(500) })) }) });
     assert.equal(escaped.status, 201);
+    assert.equal((await escaped.json()).sources[0].originalQuestion.length, 500);
   } finally { await new Promise<void>(resolve => app.close(() => resolve())); store.close(); rmSync(directory, { recursive: true, force: true }); }
 });

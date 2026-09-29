@@ -5,6 +5,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { ProductWorkspace } from './product-workspace.ts';
+import { ProductRetriever } from './product-retrieval.ts';
+import { quoteOptions } from './feedback-provider.ts';
+import { textHash } from './product-corpus.ts';
 import type { LoopProvider, LoopRetriever, ProductCorpus } from './loop-types.ts';
 
 function retrieverFor(corpus: ProductCorpus): LoopRetriever {
@@ -29,6 +32,7 @@ test('product evidence and question previews persist without model calls or eval
     const preview = await workspace.ask({ productId: first.id, question: 'What material is the shell?', mode: 'preview' });
     assert.equal(preview.status, 'evidence_ready');
     assert.equal(preview.answer, null);
+    assert.equal(preview.generationProtocol, undefined, 'preview does not claim a generation protocol');
     assert.equal(preview.retrieval?.passages.length, 1);
     assert.equal(preview.retrieval?.passages[0].productId, first.id);
     assert.equal(calls, 0);
@@ -77,6 +81,44 @@ test('long multibyte sources become bounded passages before retrieval', async ()
     const run = await workspace.ask({ productId: product.id, question: 'What does the specification say?', mode: 'preview' });
     assert.equal(run.status, 'evidence_ready');
   } finally { workspace.close(); }
+});
+
+test('customer question context survives chunking, real retrieval, generation, and persistence without becoming citation text', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'ablatrix-workspace-context-'));
+  const path = join(directory, 'workspace.sqlite');
+  const originalQuestion = 'Will this drawer fit my Kenmore 25367889506?';
+  const sourceText = 'This OEM part matches your model. ' + Array.from({ length: 12 }, (_, index) => `Customer detail ${index + 1}: the drawer has a clear plastic front.`).join(' ');
+  let quoteQuestion = false;
+  const provider: LoopProvider = { readiness: () => ({ ready: true, reason: 'Test provider ready.' }), async answer(input) {
+    assert.equal(input.policy.id, 'workspace-baseline-v2-context');
+    assert.ok(input.passages.length > 1, 'the customer answer was split into several passages');
+    assert.ok(input.passages.every(passage => passage.originalQuestion === originalQuestion));
+    assert.ok(input.passages.every(passage => !passage.text.includes(originalQuestion) && passage.sha256 === textHash(passage.text)));
+    assert.ok(quoteOptions(input.passages).every(option => !option.quote.includes(originalQuestion)));
+    const passage = input.passages.find(item => item.text.includes('This OEM part matches your model.'))!;
+    return { answer: { answer: 'This customer answer refers to another refrigerator model; compatibility is not established.', status: 'insufficient_evidence', citations: [{ passageId: passage.id, quote: quoteQuestion ? originalQuestion : 'This OEM part matches your model.' }] }, model: 'test-model', usage: null };
+  }, async propose() { throw new Error('No proposal expected.'); } };
+  const factory = (corpus: ProductCorpus) => new ProductRetriever(corpus, ':memory:', { embed: async texts => texts.map(() => [1, 0]) });
+  let workspace = new ProductWorkspace(path, provider, factory);
+  try {
+    const product = workspace.createProduct({ title: 'Replacement refrigerator drawer', sources: [{ label: 'Customer answer', text: sourceText, originalQuestion: `  ${originalQuestion}  ` }] });
+    assert.equal(product.sources[0].originalQuestion, originalQuestion);
+    const good = await workspace.ask({ productId: product.id, question: 'Does it replace part 241543917 in my Frigidaire?', mode: 'live' });
+    assert.equal(good.status, 'completed');
+    assert.equal(good.generationProtocol, 'product-answer-v2-context');
+    quoteQuestion = true;
+    const bad = await workspace.ask({ productId: product.id, question: 'Does it replace part 241543917 in my Frigidaire?', mode: 'live' });
+    assert.equal(bad.status, 'failed', 'a question-only quote cannot pass exact answer-text validation');
+    assert.equal(bad.answer, null);
+    workspace.close();
+    workspace = new ProductWorkspace(path, provider, factory);
+    assert.equal(workspace.overview().products[0].sources[0].originalQuestion, originalQuestion);
+    assert.equal(workspace.overview().runs.find(run => run.id === good.id)?.generationProtocol, 'product-answer-v2-context');
+    assert.ok(workspace.overview().runs.find(run => run.id === good.id)?.retrieval?.passages.every(passage => passage.originalQuestion === originalQuestion));
+    for (const invalid of ['', '   ', 'x'.repeat(501), null]) {
+      assert.throws(() => workspace.createProduct({ title: 'Invalid context', sources: [{ label: 'Customer answer', text: sourceText, originalQuestion: invalid }] }));
+    }
+  } finally { workspace.close(); rmSync(directory, { recursive: true, force: true }); }
 });
 
 test('many short evidence lines use exact-quote answering when snippet options exceed the bound', async () => {

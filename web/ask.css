@@ -2,3 +2,4 @@
 .ask-app .ask-hero{display:block;padding:0;border:0}
 .ask-panel form{display:block}
 .ask-evidence article:only-of-type{grid-column:1/-1;max-width:760px}
+.ask-field-help{display:block;margin-top:7px;color:#697c70;font-size:11px;font-weight:500;line-height:1.5}.ask-evidence article .ask-original-question{padding:11px 12px;border-radius:8px;background:#edf2f6;color:#3d5365}.ask-evidence .ask-original-question strong{color:inherit}.ask-original-question small{display:block;font-size:11px;line-height:1.5;margin-top:6px;color:#667681}

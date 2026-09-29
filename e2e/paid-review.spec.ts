@@ -41,6 +41,10 @@ test('reviewer can queue a revision and continue to another answer', async ({ pa
   const first = page.locator('.pr-queue button').first();
   await first.click();
   await page.getByRole('textbox', { name: 'What is wrong or missing?' }).fill('The answer overlooks the product source and needs a more specific response.');
+  await page.getByText('Add missing information or a source', { exact: true }).click();
+  await page.getByRole('textbox', { name: 'Customer clarification (optional)', exact: true }).fill('Synthetic customer model is TEST-123.');
+  await page.getByRole('textbox', { name: 'New source label', exact: true }).fill('Synthetic supplemental manual');
+  await page.getByRole('textbox', { name: 'New source text', exact: true }).fill('Synthetic source: this fixture supports model TEST-123.');
   await page.getByRole('textbox', { name: 'Revision reviewer name' }).first().fill('Synthetic reviewer');
   await page.getByRole('button', { name: 'Request revision' }).click();
   await expect(page.locator('.pr-job')).toContainText('queued');
@@ -49,18 +53,23 @@ test('reviewer can queue a revision and continue to another answer', async ({ pa
   await expect(first).toContainText('QUEUED');
   await page.reload();
   await expect(first).toContainText('QUEUED');
+  await first.click();
+  await page.getByText('Information saved for this revision request', { exact: true }).click();
+  await expect(page.locator('.pr-revision')).toContainText('Synthetic supplemental manual');
+  await expect(page.locator('.pr-revision')).toContainText('Synthetic customer model is TEST-123.');
 });
 
 test('a ready revision opens first with the new answer and its citations visible', async ({ page }) => {
   const overview = await (await page.request.get('/api/paid-review')).json();
   const q19 = overview.cases.find((item: { qid: string }) => item.qid === '19');
   const source = q19.sources[0];
+  const added = { id: `19:${'d'.repeat(64)}`, label: 'Synthetic parts manual', text: 'This synthetic manual supports model TEST-123.', sha256: 'd'.repeat(64), originalQuestion: null, origin: 'reviewer_added', reference: 'Synthetic manual page 2', addedBy: 'Fixture reviewer' };
   await page.route('**/api/paid-review/revisions', async route => {
     const response = await route.fetch();
     const payload = await response.json();
     const state = payload.cases.find((item: { qid: string }) => item.qid === '19');
     const original = state.versions[0];
-    state.versions.push({ id: 'test-revision-19', parentId: original.id, model: 'test-model', createdAt: new Date().toISOString(), answer: { answer: 'Revised answer for Q19. Check the full model before ordering.', status: 'answered', citations: [{ passageId: `19:${source.sha256}`, quote: source.text.slice(0, 16) }] } });
+    state.versions.push({ id: 'test-revision-19', parentId: original.id, model: 'test-model', createdAt: new Date().toISOString(), context: { question:q19.question, product:{id:q19.asin,title:q19.title}, sources:[...q19.sources.map((s: {sha256: string}) => ({...s,id:`19:${s.sha256}`,origin:'pinned'})),added], clarifications:[{text:'Customer model TEST-123.',reviewer:'Fixture reviewer'}] }, answer: { answer: 'Revised answer for Q19. Check the full model before ordering.', status: 'answered', citations: [{ passageId: `19:${source.sha256}`, quote: source.text.slice(0, 16) }, {passageId:added.id,quote:added.text}] } });
     state.jobs.push({ id: 'test-job-19', status: 'ready', feedback: 'Test critique', createdAt: new Date().toISOString() });
     payload.ready = 1;
     await route.fulfill({ response, json: payload });
@@ -71,6 +80,12 @@ test('a ready revision opens first with the new answer and its citations visible
   await expect(page.locator('.pr-answer')).toHaveCount(0);
   await expect(page.locator('.pr-form')).toHaveCount(0);
   await expect(page.locator('.pr-sources article').first()).toContainText('CITED BY REVISION');
+  const supplemental = page.locator(`#source-${added.sha256}`);
+  await expect(supplemental).toContainText(added.text);
+  await expect(supplemental).toContainText('Source added by Fixture reviewer');
+  await expect(supplemental).toContainText('CITED BY REVISION');
+  await expect(page.getByRole('link', {name:`Synthetic parts manual: “${added.text}”`})).toHaveAttribute('href', `#source-${added.sha256}`);
+  await expect(page.getByRole('checkbox', {name:'Synthetic parts manual',exact:true})).toBeVisible();
   await expect(page.locator('.pr-detail').locator('.pr-revision')).toBeVisible();
   await page.getByRole('button', { name: 'Open revised answer for Q19' }).click();
   await expect(page.locator('.pr-detail-head')).toContainText('QUESTION 19');

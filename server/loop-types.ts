@@ -1,7 +1,7 @@
 export type LoopMode = 'fixture' | 'live';
 export type LoopSplit = 'development' | 'validation' | 'holdout';
 export type Product = { id: string; title: string; split: LoopSplit };
-export type Passage = { id: string; productId: string; source: string; text: string; reference: string; sha256: string };
+export type Passage = { id: string; productId: string; source: string; text: string; reference: string; sha256: string; originalQuestion?: string };
 export type ProductCase = { id: string; productId: string; question: string; split: LoopSplit; referenceAnswer: string; referencePassageIds: string[]; labelStatus: string };
 export type ProductCorpus = { version: string; source: string; license: string; products: Product[]; passages: Passage[]; cases: ProductCase[] };
 export type RetrievedPassage = Passage & { lexicalRank: number | null; semanticRank: number | null; score: number };

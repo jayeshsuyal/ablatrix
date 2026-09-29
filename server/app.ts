@@ -100,12 +100,12 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (req.method === 'GET' && path === '/api/paid-review') return json(res, 200, paidAnswerReview().overview());
       if (req.method === 'GET' && path === '/api/paid-review/revisions') return json(res, 200, answerRevisions().overview());
       if (req.method === 'GET' && /^\/api\/paid-review\/revisions\/[a-f0-9-]{36}$/.test(path)) return json(res, 200, answerRevisions().getJob(path.split('/')[4]));
-      if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/revisions$/.test(path)) return json(res, 202, answerRevisions().request(path.split('/')[3], await body(req)));
+      if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/revisions$/.test(path)) return json(res, 202, answerRevisions().request(path.split('/')[3], await body(req, 40_000)));
       if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/decisions$/.test(path)) return json(res, 201, answerRevisions().decide(path.split('/')[3], await body(req)));
       if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}$/.test(path)) return json(res, 201, paidAnswerReview().review(path.split('/')[3], await body(req)));
       if (req.method === 'GET' && path === '/api/paid-review/export') return download(res, 'ablatrix-paid-answer-reviews.json', `${JSON.stringify(paidAnswerReview().overview(), null, 2)}\n`, 'application/json');
       if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, productWorkspace().overview());
-      if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req, 100_000)));
+      if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req, 110_000)));
       if (req.method === 'POST' && path === '/api/workspace/questions') {
         const input = await body(req);
         const loop = input && typeof input === 'object' && 'mode' in input && input.mode === 'live' ? feedbackLoop() : undefined;
