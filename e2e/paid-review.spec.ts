@@ -7,7 +7,13 @@ test('saved paid answers can be reviewed without a model call and keep the judgm
   await expect(page.getByRole('heading', { name: 'Check the answer, not just the quote.' })).toBeVisible();
   await expect(page.locator('.pr-queue button')).toHaveCount(20);
   await expect(page.locator('.pr-metrics')).toContainText('0/20');
+  await expect(page.locator('.pr-ai-status')).toContainText('20/20 AI suggestions prepared');
   const save = page.getByRole('button', { name: 'Save review' });
+  await expect(save).toBeDisabled();
+  await page.getByRole('button', { name: 'Prefill my review fields' }).click();
+  await expect(page.getByRole('radio', { name: 'correct', exact: true })).toBeChecked();
+  await expect(page.locator('.pr-source-check input:checked')).toHaveCount(0);
+  await expect(page.getByRole('textbox', { name: 'Reviewer name' })).toHaveValue('');
   await expect(save).toBeDisabled();
   await page.locator('.pr-source-check input').first().check();
   await page.getByRole('radio', { name: 'uncertain', exact: true }).first().check();
@@ -22,6 +28,9 @@ test('saved paid answers can be reviewed without a model call and keep the judgm
   await page.reload();
   await expect(page.locator('.pr-verdict')).toContainText('Synthetic browser reviewer');
   await expect(page.locator('.pr-metrics')).toContainText('1/20');
+  await page.locator('.pr-queue button').filter({ hasText: 'will this kit function properly?' }).click();
+  await expect(page.locator('.pr-original-question').first()).toContainText('kenmore model 106.56369400');
+  await expect(page.locator('.pr-ai-draft')).toContainText('different Kenmore model');
   await page.setViewportSize({ width: 360, height: 760 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
   expect(errors).toEqual([]);
