@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { DatabaseSync } from 'node:sqlite';
+import { createHash } from 'node:crypto';
 import { PaidAnswerReview } from './paid-answer-review.ts';
 
 test('pinned paid batch reviews persist separately and cannot be counted without checked sources', () => {
@@ -36,6 +38,25 @@ test('pinned paid batch reviews persist separately and cannot be counted without
     assert.equal(review.overview().summary.incorrect, 1);
     assert.equal(review.overview().summary.judged, 1);
     assert.equal(review.overview().cases[0]?.review?.note, valid.note);
+  } finally { review.close(); rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('reviews saved before original customer questions were restored remain auditable but do not count', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'ablatrix-paid-legacy-review-'));
+  const path = join(directory, 'reviews.sqlite');
+  const manifestSha = createHash('sha256').update(readFileSync(new URL('../docs/evidence/paid-qa-batch-2026-09-28/manifest.json', import.meta.url))).digest('hex');
+  const legacy = new DatabaseSync(path);
+  legacy.exec('CREATE TABLE paid_answer_reviews (qid TEXT PRIMARY KEY, manifest_sha TEXT NOT NULL, document TEXT NOT NULL)');
+  legacy.prepare('INSERT INTO paid_answer_reviews(qid,manifest_sha,document) VALUES(?,?,?)').run('19', manifestSha, JSON.stringify({ qid: '19', answerVerdict: 'correct', kind: 'human' }));
+  legacy.close();
+  const review = new PaidAnswerReview(path);
+  try {
+    assert.equal(review.overview().summary.reviewed, 0);
+    const item = review.overview().cases.find(entry => entry.qid === '19')!;
+    assert.equal(item.review, null);
+    const saved = review.review(item.qid, { reviewer: 'Case reviewer', answerVerdict: 'incorrect', supportVerdict: 'unsupported', category: 'unsupported_claim', checkedSourceShas: [item.sources[0]!.sha256], note: 'The cited answer refers to a different customer model.', referenceChecked: true });
+    assert.equal(saved.sourceContextSha256.length, 64);
+    assert.equal(review.overview().summary.reviewed, 1);
   } finally { review.close(); rmSync(directory, { recursive: true, force: true }); }
 });
 

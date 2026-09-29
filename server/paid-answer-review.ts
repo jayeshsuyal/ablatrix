@@ -25,7 +25,7 @@ const reviewInput = z.object({
 type ManifestCase = { qid: string; asin: string; title: string; question: string; sources: { label: string; text: string; sha256: string; originalLabel: number }[] };
 type SourceContext = { qid: string; sourceSha256: string; originalQuestion: string };
 type SavedRun = { qid: string; asin: string; run: { id: string; status: string; answer: { answer: string; status: string; citations: { passageId: string; quote: string }[] } | null; retrieval: { passages: { id: string; sha256: string; text: string; reference: string }[] } | null; model: string | null }; clientMs: number | null };
-export type PaidReview = z.infer<typeof reviewInput> & { qid: string; manifestSha256: string; runId: string; createdAt: string; kind: 'human' };
+export type PaidReview = z.infer<typeof reviewInput> & { qid: string; manifestSha256: string; sourceContextSha256: string; runId: string; createdAt: string; kind: 'human' };
 export type PaidAiDraft = { qid: string; asin: string; runId: string; answerVerdict: 'correct' | 'incorrect' | 'uncertain'; supportVerdict: 'supported' | 'unsupported' | 'uncertain'; category: (typeof categories)[number]; confidence: 'high' | 'medium' | 'low'; sourceShas: string[]; note: string };
 
 /** Reviews a pinned historical batch; no model provider or experiment workspace is opened. */
@@ -74,10 +74,11 @@ export class PaidAnswerReview {
     this.aiDrafts = new Map(packet.drafts.map(item => [item.qid, item]));
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
-    this.db.exec('CREATE TABLE IF NOT EXISTS paid_answer_reviews (qid TEXT PRIMARY KEY, manifest_sha TEXT NOT NULL, document TEXT NOT NULL)');
+    // Keep pre-context reviews in the old table for audit, but never count them under this protocol.
+    this.db.exec('CREATE TABLE IF NOT EXISTS paid_answer_reviews_v2 (qid TEXT NOT NULL, manifest_sha TEXT NOT NULL, source_context_sha TEXT NOT NULL, document TEXT NOT NULL, PRIMARY KEY(qid, manifest_sha, source_context_sha))');
   }
   private reviews(): PaidReview[] {
-    return (this.db.prepare('SELECT document FROM paid_answer_reviews WHERE manifest_sha=?').all(pinnedManifestSha) as { document: string }[]).map(row => JSON.parse(row.document) as PaidReview);
+    return (this.db.prepare('SELECT document FROM paid_answer_reviews_v2 WHERE manifest_sha=? AND source_context_sha=?').all(pinnedManifestSha, pinnedSourceContextSha) as { document: string }[]).map(row => JSON.parse(row.document) as PaidReview);
   }
   overview() {
     const reviews = this.reviews();
@@ -105,8 +106,8 @@ export class PaidAnswerReview {
     if (input.answerVerdict === 'correct' && (input.supportVerdict !== 'supported' || input.category !== 'none')) throw new Error('Paid review: a correct answer must be supported with no failure category.');
     if (input.answerVerdict !== 'correct' && input.category === 'none') throw new Error('Paid review: choose a failure or uncertainty category.');
     if (input.answerVerdict !== 'correct' && input.note.length < 10) throw new Error('Paid review: explain the failure or uncertainty in at least 10 characters.');
-    const review: PaidReview = { ...input, qid, manifestSha256: pinnedManifestSha, runId: this.runs.get(qid)!.run.id, createdAt: new Date().toISOString(), kind: 'human' };
-    try { this.db.prepare('INSERT INTO paid_answer_reviews(qid,manifest_sha,document) VALUES(?,?,?)').run(qid, pinnedManifestSha, JSON.stringify(review)); }
+    const review: PaidReview = { ...input, qid, manifestSha256: pinnedManifestSha, sourceContextSha256: pinnedSourceContextSha, runId: this.runs.get(qid)!.run.id, createdAt: new Date().toISOString(), kind: 'human' };
+    try { this.db.prepare('INSERT INTO paid_answer_reviews_v2(qid,manifest_sha,source_context_sha,document) VALUES(?,?,?,?)').run(qid, pinnedManifestSha, pinnedSourceContextSha, JSON.stringify(review)); }
     catch (error) { if (error instanceof Error && /UNIQUE constraint/.test(error.message)) throw new Error('Paid review: this case has already been reviewed.'); throw error; }
     return review;
   }
