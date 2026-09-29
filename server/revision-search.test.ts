@@ -67,7 +67,8 @@ test('SDK search uses pinned Core origin, private provider credential, links int
   try {
     const search = new SapiomRevisionSearch(provider, searchOptions);
     const result = await search.search('fixture compatibility', 'job:search:1');
-    assert.deepEqual(Object.keys(result), ['results']); assert.equal(result.results.length, 5);
+    assert.deepEqual(Object.keys(result), ['results', 'diagnostics']); assert.equal(result.results.length, 5);
+    assert.deepEqual(result.diagnostics, { returned: 11, inspected: 11, excluded: { invalid_url: 0, off_domain: 1, invalid_shape: 0, duplicate: 1, over_limit: 4, uninspected: 0 } });
     assert.equal(result.results[0].url, 'https://manufacturer.com/a');
     assert.equal(result.results[0].title.length, 200); assert.equal(result.results[0].snippet.length, 500);
     assert.equal(provider.readiness().ready, false);
@@ -80,6 +81,25 @@ test('SDK search uses pinned Core origin, private provider credential, links int
     await assert.rejects(search.search('next query', 'job:search:2'), hasCode('unavailable'));
     assert.equal(calls, 1);
   } finally { provider.close(); }
+});
+
+test('empty and filtered search results retain distinct, bounded diagnostics in receipts', async () => {
+  for (const [raw, expected] of [
+    [[], { returned: 0, off_domain: 0, invalid_shape: 0 }],
+    [[{ title: 'off', url: 'https://retailer.com/a', snippet: 'not permitted' }], { returned: 1, off_domain: 1, invalid_shape: 0 }],
+  ] as const) {
+    const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async () => json({ results: raw }) });
+    try {
+      const search = new SapiomRevisionSearch(provider, searchOptions);
+      const result = await search.search('fixture', 'diagnostic:search:1');
+      assert.equal(result.results.length, 0);
+      assert.equal(result.diagnostics.returned, expected.returned);
+      assert.equal(result.diagnostics.excluded.off_domain, expected.off_domain);
+      assert.equal(result.diagnostics.excluded.invalid_shape, expected.invalid_shape);
+      assert.deepEqual(await search.search('fixture', 'diagnostic:search:1'), result);
+      assert.doesNotMatch(JSON.stringify(provider.receipt('diagnostic:search:1')), /retailer\.com|not permitted/);
+    } finally { provider.close(); }
+  }
 });
 
 test('SDK page reads preserve actual markdown, bound excerpts, and share search planning allowance', async () => {
