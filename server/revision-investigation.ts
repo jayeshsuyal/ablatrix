@@ -38,10 +38,28 @@ function resolvedIssue(input: Input): Exclude<InvestigationIssue, 'auto'> {
   if (compatibilityWords.test(input.context.question) && /\b(same answer|same as before|paraphrase|paraphrasing|no new|still cannot|still can't|not answer|doesn't answer)\b/i.test(input.critique)) return 'missing_evidence';
   return 'answer_quality';
 }
-function wrongQuestionScope(source: RevisionSource, requested: string[], compatibility: boolean) {
+function labeledIdentifiers(text: string, labels: string) {
+  const pattern = new RegExp(`\\b(?:${labels})(?:\\s+model)?(?:\\s+(?:number|no\\.?))?\\s*(?:is\\s+)?[:#]?\\s*([a-z0-9]+(?:-[a-z0-9]+|\\.[0-9]+)*)\\b`, 'gi');
+  return unique([...text.matchAll(pattern)].flatMap(match => identifiers(match[1])));
+}
+function wrongQuestionScope(source: RevisionSource, requested: string[], compatibility: boolean, requestText: string, productTitle: string) {
   if (!source.originalQuestion || !compatibility) return false;
   const scoped = identifiers(source.originalQuestion);
-  return scoped.length > 0 && (requested.length === 0 || scoped.some(identifier => !requested.includes(identifier)));
+  if (!scoped.length) return false;
+  if (!requested.length) return true;
+  const partLabels = 'part|product|sku';
+  const modelLabels = 'model|refrigerator|fridge|washer|dryer|dishwasher|freezer|printer';
+  const explicitTargets = labeledIdentifiers(requestText, modelLabels);
+  const requestedParts = labeledIdentifiers(requestText, partLabels);
+  const targets = explicitTargets.length ? explicitTargets : requested.filter(id => !requestedParts.includes(id));
+  const scopedModels = labeledIdentifiers(source.originalQuestion, modelLabels);
+  // An explicit different device model must not be admitted by an overlapping
+  // part number or an identifier that happens to occur in the product title.
+  if (scopedModels.some(id => !targets.includes(id))) return true;
+  const matchingTarget = targets.some(id => scoped.includes(id));
+  const extraParts = matchingTarget ? labeledIdentifiers(source.originalQuestion, partLabels) : [];
+  const knownProductIds = identifiers(productTitle);
+  return scoped.some(id => !requested.includes(id) && !extraParts.includes(id) && !knownProductIds.includes(id));
 }
 function excerpt(text: string, requested: string[], queryTerms: string[]) {
   const upper = text.toUpperCase();
@@ -54,7 +72,8 @@ function excerpt(text: string, requested: string[], queryTerms: string[]) {
 /** Bounded source discovery. Admission identifies candidates, never factual support. */
 export async function investigateRevision(input: Input, search?: RevisionInvestigationSearch, onProgress?: (trace: InvestigationTrace) => void): Promise<{ context: RevisionContext; investigation: InvestigationTrace }> {
   const context = structuredClone(input.context);
-  const requested = identifiers([context.question, ...context.clarifications.map(item => item.text)].join(' '));
+  const requestText = [context.question, ...context.clarifications.map(item => item.text)].join(' ');
+  const requested = identifiers(requestText);
   const compatibility = compatibilityWords.test(`${context.question} ${input.critique}`);
   const queryTerms = tokens(`${context.question} ${input.critique}`).slice(0, 24);
   // Do not send reviewer names or whole clarifications to the search provider.
@@ -72,7 +91,7 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
     : 'Can you provide the specific missing fact or a source that addresses it?';
   step({ kind: 'diagnosis', status: 'completed', detail: `Rule-based routing selected ${trace.issue.replaceAll('_', ' ')}. This is a search plan, not a correctness judgment.` });
   const ranked = context.sources.filter(source => {
-    if (!wrongQuestionScope(source, requested, compatibility)) return true;
+    if (!wrongQuestionScope(source, requested, compatibility, requestText, context.product.title)) return true;
     step({ kind: 'scope_check', status: 'skipped', detail: 'This customer answer refers to a different or unspecified target model in its original question.', sourceIds: [source.id] });
     return false;
   }).map(source => ({ source, score: queryTerms.filter(term => tokens(source.text).includes(term)).length + requested.filter(id => mentions(source.text, id)).length * 8 }))
@@ -83,7 +102,7 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
   step({ kind: 'local_search', status: 'completed', detail: `Ranked ${ranked.length} saved sources using the current question and critique; selected ${trace.selectedSourceIds.length}. Reusing a saved source adds no new evidence.`, sourceIds: trace.selectedSourceIds });
   const cited = new Set(input.originalCitedSourceIds ?? []);
   const applicable = (source: RevisionSource) => {
-    if (wrongQuestionScope(source, requested, compatibility)) return false;
+    if (wrongQuestionScope(source, requested, compatibility, requestText, context.product.title)) return false;
     if (compatibility) return requested.length > 0 && requested.every(id => mentions(source.text, id)) && compatibilityWords.test(source.text);
     return queryTerms.filter(term => tokens(source.text).includes(term)).length >= 2;
   };

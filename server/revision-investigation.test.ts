@@ -39,6 +39,32 @@ test('identifier extraction separates ellipses and sentence text while keeping o
   assert.deepEqual(clarified.investigation.requestedIdentifiers, ['241543917', 'RF-12345', '253.67889506']);
 });
 
+test('matching device-model Q&A retains an extra labeled part or known product identifier', async () => {
+  for (const originalQuestion of ['Does part PART123 fit model RF-12345?', 'Does part number PART123 fit refrigerator model number RF-12345?', 'Does PART999 fit RF-12345?']) {
+    const input: RevisionContext = { question: 'Does this fit RF-12345?', product: { id: 'drawer', title: 'Drawer PART999' }, sources: [source('matched', 'This drawer fits RF-12345 according to this customer report.', originalQuestion)], clarifications: [] };
+    const result = await investigateRevision({ context: input, critique: 'The answer missed this customer source.', issue: 'missed_source', runId: 'job' });
+    assert.ok(result.investigation.selectedSourceIds.includes('19:matched'), originalQuestion);
+    assert.equal(result.investigation.status, 'ready_to_revise', originalQuestion);
+    assert.deepEqual(result.investigation.requestedIdentifiers, ['RF-12345']);
+  }
+});
+
+test('an overlapping part never admits Q&A explicitly about a different device model', async () => {
+  const input: RevisionContext = { question: 'Does part PART123 fit model RF-12345?', product: { id: 'drawer', title: 'Drawer PART123 for RF-98765' }, sources: [source('wrong-device', 'Part PART123 fits the requested refrigerator.', 'Does part PART123 fit model RF-98765?')], clarifications: [] };
+  const result = await investigateRevision({ context: input, critique: 'The answer missed a customer source.', issue: 'missed_source', runId: 'job' });
+  assert.equal(result.investigation.selectedSourceIds.includes('19:wrong-device'), false);
+  assert.equal(result.investigation.status, 'needs_information');
+  const withoutRequestedModel = await investigateRevision({ context: { ...input, question: 'Does part PART123 fit?' }, critique: 'The compatibility is missing.', issue: 'missing_evidence', runId: 'job2' });
+  assert.equal(withoutRequestedModel.investigation.selectedSourceIds.includes('19:wrong-device'), false);
+});
+
+test('matching model overlap does not admit an additional ambiguous unmatched identifier', async () => {
+  const input: RevisionContext = { question: 'Does this fit model RF-12345?', product: { id: 'drawer', title: 'Drawer PART123' }, sources: [source('ambiguous', 'This drawer fits RF-12345 according to this customer report.', 'Does it fit RF-12345 and RF-98765?')], clarifications: [] };
+  const result = await investigateRevision({ context: input, critique: 'The answer missed this customer source.', issue: 'missed_source', runId: 'job' });
+  assert.equal(result.investigation.selectedSourceIds.includes('19:ambiguous'), false);
+  assert.equal(result.investigation.status, 'needs_information');
+});
+
 test('wrong-model correction can remove an unsupported claim using the retained listing', async () => {
   const { adapter, calls } = searchAdapter([]);
   const result = await investigateRevision({ context: context(), critique: 'The answer uses the wrong model from another customer.', issue: 'auto', runId: 'job' }, adapter);
