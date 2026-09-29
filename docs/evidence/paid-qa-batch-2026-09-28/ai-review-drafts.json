@@ -1,0 +1,338 @@
+{
+  "kind": "ai_assisted_review_drafts",
+  "reviewer": "Codex AI source read",
+  "protocol": "source-read-with-original-cqa-question-context-v2",
+  "manifestSha256": "125def79dfcd8823e1ca5c38b125fcdc5bdfcbd55222e4cbc1236c6b3a666dd2",
+  "resultsSha256": "cad0c449824d169c23014ad85c317a483d0b15b342241971b2a2d416e9a9b54b",
+  "disclaimer": "AI-only source assessment, including original CQA question context restored for review. These drafts are not human judgments, cannot satisfy Ablatrix promotion gates, and do not establish measured answer quality. Human reviewers must inspect sources and decide independently.",
+  "drafts": [
+    {
+      "qid": "4",
+      "asin": "B00005AUHX",
+      "runId": "d984743e-9eed-4099-8108-d3cb4d13213b",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "high",
+      "sourceShas": [
+        "4d643ddf9d3d00188504a6ffb5f1de92fb0ebe45cbe78e66274951bd94ec6d1c",
+        "5f254c226ed5ab053a6ff90c3c6592629f7c03c37282ca0d288b5ccbaf20086f"
+      ],
+      "note": "The answer reports both conflicting customer experiences and limits its conclusion to what those sources support."
+    },
+    {
+      "qid": "5",
+      "asin": "B00074TB9U",
+      "runId": "e5c298bc-1227-49a3-93bb-82caf630abdf",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "medium",
+      "sourceShas": [
+        "95b2b2cd3e49e412ea3236280dbe26196fa3d8356a2da753b446ecfbbd8d087a"
+      ],
+      "note": "The product description gives only standard large filters; no supplied source identifies a side-filter size or compatible part."
+    },
+    {
+      "qid": "8",
+      "asin": "B00074TBCW",
+      "runId": "20fe605f-efd9-4cb4-8f40-46eacf218f6c",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "medium",
+      "sourceShas": [
+        "e5ae3b55cb121b5f6c47f649612210e6ecf1eea540f426094e95b0698f43547c",
+        "43008b911cd19a07814e4299c0aa63f944977a165471e0c84ba4b3465d6f8c8e",
+        "ec1da2bf279d9efcb7ec1b6750b900f2519c3e212c0fa7c549ae1e2d47fc2088",
+        "0a572bc42234831e9ac6455d788eeca45ee17d35df41595706d0b285ddd3528e"
+      ],
+      "note": "The answer distinguishes reports of some top-slot air from an unproven claim that a large amount is normal in a properly ducted setup."
+    },
+    {
+      "qid": "11",
+      "asin": "B00EZFPDO4",
+      "runId": "5ab4676a-0c2b-4987-8af6-e167dc5ca483",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "medium",
+      "sourceShas": [
+        "1e97dc1e7e8735548eea6b75c1aeaf276f76afbf8886cd8b40935ac1234394fb",
+        "734faecc3c099f66aa9b21a1366bea566e034707bdf3da56e09ef88e8daf68bf",
+        "a7a5e2ab78102c8399462c3e0d2d3e9381ce830e0dca9d9145c6ad31d6038b44",
+        "9b7bc0bd8119c82431431bd77c4ca2c841823a301c54d4db44a28e144cd5f17c"
+      ],
+      "note": "Vollrath and Lodge use is reported, while the sources do not establish a best overall cookware brand with lids."
+    },
+    {
+      "qid": "19",
+      "asin": "B00545ATZW",
+      "runId": "3e765be5-aac5-4840-b7a7-ce1254fe3ff6",
+      "answerVerdict": "incorrect",
+      "supportVerdict": "unsupported",
+      "category": "unsupported_claim",
+      "confidence": "high",
+      "sourceShas": [
+        "ec4864086f5b61ad5bbc68c7f1281042d29839610fccbd7599ed79741da1abab",
+        "d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f",
+        "a5e496377ffae77f8032184d258fcbf02d3f70f3f87ba40ec3b701fca7602c8b",
+        "b5f7f04b3746b43c8c3394837824ca56f3dcaa677e0b2ed7b49f0c052963b9e3"
+      ],
+      "note": "The answer says an OEM part matches the current questioner\u2019s model, but that CQA response answered a different Kenmore model. The supplied evidence identifies listing part 240337103 but does not verify interchangeability with the requested part 241543917 or fit to this Frigidaire refrigerator."
+    },
+    {
+      "qid": "25",
+      "asin": "B004N4MSPO",
+      "runId": "015ca42f-b2cd-4e81-bb3c-57e1b1594bc6",
+      "answerVerdict": "uncertain",
+      "supportVerdict": "supported",
+      "category": "other",
+      "confidence": "medium",
+      "sourceShas": [
+        "77e3928c62619b5df099c6fff52e3fa20af68415026b8cc22f3b3448f2d81190",
+        "6688bc4781d53092074a0eb485e496438ec05be5b5f80bb347d1e70e0c2eb145",
+        "a10bd27abbbcc4f713433ad4d07bb9dc0056e7e0a009cef07a7ce17cbdb0753e",
+        "d05f86b86bc464a44f3b06d1ee2510054dc05619e5fe24a6949314d7545781f5",
+        "caf4655552b871bd4d0d3a4f92f98dc8c1fbea8992441715f53cf34dbb5db4f3"
+      ],
+      "note": "The hose-end Q&A gives inside diameters with conflicting drain values. Separate faucet-adapter sources list thread sizes, but do not establish all threaded inlet and drain fittings. A human should judge whether the partial answer is adequate or should mention those adapter sizes."
+    },
+    {
+      "qid": "26",
+      "asin": "B0053F8W2K",
+      "runId": "de02ca67-c84f-45b6-b3fb-e4865a65d483",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "high",
+      "sourceShas": [
+        "0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+        "00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+        "4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+        "a3062d769f21be4f283001e0bb07a8883f6bd9a458a3683644b99220bfe5fa52"
+      ],
+      "note": "Multiple customer sources describe white or off-white/light-gray material and lighter color than a pewter washer."
+    },
+    {
+      "qid": "32",
+      "asin": "B00DM8K1NS",
+      "runId": "b863a652-8efd-4594-9f79-9a253ea863ec",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "high",
+      "sourceShas": [
+        "93e88e2714102d3c4b1ff542ac57a1bc2cb26a889b32fbbc1cf20becd038cdf0",
+        "816125bbf62f9ff90ccc05ba2ba8e5618cc75bf7235cec47ffa53d81f26f2336",
+        "4c0f786fafdf062a3ee80a67fae6eb80316bc1c245c70de950dc337417fee5c9",
+        "34a8f7c5364e07b1d97225a7885d0ba1c4596e285cc272e1620a3421b792f428",
+        "89603fd9902eeaa5abd1a8e28500e4e99190268c2cf3e4db6adbc16689eb84a8"
+      ],
+      "note": "No supplied source confirms the exact KSRJ25CNST00 model; the answer appropriately distinguishes similar models and directs an exact fit check."
+    },
+    {
+      "qid": "37",
+      "asin": "B005AR75A6",
+      "runId": "5c3a329d-cf77-4aee-b4ca-783b59ef0eb3",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "medium",
+      "sourceShas": [
+        "0a09bd3c504581ab6f459d56ee2b640634527e786be99b79171a9556e66e90c3",
+        "526e940f3ae7cb84872868bc4ef2a3250264eee426e1b3b068a12593d890340f",
+        "c1b4611c6d95174f57d8c6ad3970befd127ec1e60e9b20b0704a1bab0d6663a7",
+        "22b8c70b2b281fb8cf71fbdad93ee8c971081d3bf3d1212008df1947cf6e361e",
+        "8a021edbe423045e97b0820c4e9311ce908ef5c38868676ef4679e68c1df6090"
+      ],
+      "note": "The source list names W10130695 and other WPW part numbers but does not establish equivalence with WPW10130695 for the named Maytag model."
+    },
+    {
+      "qid": "39",
+      "asin": "B00E37TR5U",
+      "runId": "8a94e1a5-040e-43e2-86c4-34663e5536c8",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "high",
+      "sourceShas": [
+        "34d0428a1d0ad68302786dfaceba5e7d07cf30d558a064d768c7dfdb883be6fa",
+        "061d82c7ed777a2d4b0c0391fbbf54518ef516e6e253017a509a57a1abd4ca5d",
+        "51becfa7cb921646616e0118eebc26b290bc43cbdfbf53987c41a0963f0f2497",
+        "956fa6b2dfdc467ef459119d572a12eac7f9befbcbc8d68b4b34f2a08956b83b",
+        "c177d637387046759f181bfb9b542bc22b49f158ce352b8aa5cbb33cdde0c65b"
+      ],
+      "note": "Several customer reports point to roughly six months and one reports three months; the answer includes that variability."
+    },
+    {
+      "qid": "45",
+      "asin": "B00IY7B5CS",
+      "runId": "77d9778f-a5e1-4898-a848-3df887cd63ec",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "high",
+      "sourceShas": [
+        "6e16495271a35c633655f5edefc390c2d50ee2de53f128ee46a1d49decde1a17",
+        "5222982be32279e8c72413fd35deb44033b48a2cb6b2f608c2cf52b414353d2e",
+        "e7b4f18f46557de369a641a495034a43db69a972816195178c1fa1743075450b"
+      ],
+      "note": "The sources disagree between 115V and 120V rating but agree there is no 220V version; the answer preserves the discrepancy."
+    },
+    {
+      "qid": "47",
+      "asin": "B000WOG90E",
+      "runId": "61b24a7c-0859-4109-a83d-e7cfb6733c6f",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "high",
+      "sourceShas": [
+        "39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+        "15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+        "aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe",
+        "c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+        "6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3"
+      ],
+      "note": "The evidence discusses broad Oregon Scientific compatibility but never names WMR200; the answer does not invent exact compatibility."
+    },
+    {
+      "qid": "54",
+      "asin": "B000PC4JL4",
+      "runId": "ddb15486-3ffd-4b48-851a-8fc9b1076aea",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "high",
+      "sourceShas": [
+        "e4f0c5493358555e40ba30854000037265cf320c26aa78f068efa666d7a3b854",
+        "2a7e9b7541cf10deeea189c31cb5ad576a78c5b777306ae3a8ff8d439116856d",
+        "38b3e3db37fc3be926b5d74f3d459d9b7c0862c053800f3c194a9fb5b731451b",
+        "580ce5937ebf6828d58265686b3a5f239a35343a32c4b478d39f7716a8f2b2c8"
+      ],
+      "note": "The sources document voltage conversion at 60Hz but do not document 50Hz input or frequency conversion; the answer keeps that limit."
+    },
+    {
+      "qid": "58",
+      "asin": "B004RPQ4MM",
+      "runId": "158ea2cf-0e30-4a30-9ba3-5e55ef799601",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "medium",
+      "sourceShas": [
+        "4b88f8212007f281d5c28967219e2d1d29d7b9daf041f4efde7a57b99c8e14cc",
+        "f2aa6100dda4197cfdeaabac55492879ccdbd16da8fea507ae7e7cd1fe41f3f4",
+        "04ef11ba21f1e6d311d1340871b1b98f32444b9b8b3909e6105cce1a842cf5ec",
+        "72dc843ac6dea03b7c3fd2f13eb02fc878dafa58a60ff75231ae0a25786ce9a1",
+        "2910adf05c90893626c250f520cf53ed6262a8ccc70f40bd4a88b20c4d436edd"
+      ],
+      "note": "Manufacturer-facing product description and Q&A state 412 CFM; one customer review gives 450 CFM without stronger specification evidence."
+    },
+    {
+      "qid": "63",
+      "asin": "B00655HJJE",
+      "runId": "001f6412-ef41-4068-9be8-baf36f7e105c",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "high",
+      "sourceShas": [
+        "33dabbb17e14762fd93486372972513cc1c0e8227cf5a39f948a2bf32c99b6ea",
+        "203a5136634941fc624a1ded36be8716b05f8f7c09c3c2569e1f1614754ec332",
+        "877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+        "1162814d3f71aeb0668a89286ead579c4369358ff7da69e8ac66f707baefeca6",
+        "24a1549982a91a70a9c213ed6531185b14ba26754426f503ae465e52e2cf4d73",
+        "0ceb8d3e3b36f5d6c5a6e803b525792a2e0834471e184723a17eb4448d3022b9"
+      ],
+      "note": "The product configuration lists one slim quarter keg or two sixth-barrel kegs, supporting the answer that two slim quarters do not fit."
+    },
+    {
+      "qid": "70",
+      "asin": "B000DZFTC6",
+      "runId": "04160bbb-b37a-4b89-8025-f97fefe1916c",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "medium",
+      "sourceShas": [
+        "a2f3da8773be03e099d720dd7077a5d85971eb81fcb3ccdb628225668d4bf085",
+        "9a39f270b6e1d438467dd9d2da4fd16dc9facd3dfe6c5e9b4b1f3ea884d8e61c",
+        "95670298fd3f0dbefc8753c76d032cfd58ad2e7b14e7d37e235a97d4c92f5fe2",
+        "9070cb6f9d28755c10a53cda197cbb749a10479a89ed2d453653aa45c231b2a7",
+        "e700f55606703b71a2eddf0de970d393c30ede3ba3eb58fdbf18e4404b18da92"
+      ],
+      "note": "A customer reports venting through a window; the answer avoids claiming an AC-style window fitting and notes reported ventilation needs."
+    },
+    {
+      "qid": "72",
+      "asin": "B000UVWGGK",
+      "runId": "8cf13afc-4073-440f-bbaf-2fda6591a0ef",
+      "answerVerdict": "uncertain",
+      "supportVerdict": "supported",
+      "category": "other",
+      "confidence": "low",
+      "sourceShas": [
+        "51861be5de1e6009797861780de8add04ba017a7c1bf01d00304e8002e42c90f",
+        "f3836dd7247d135e03fbfdb01f646b84d019d162cb67ce3565d2c49dbc8a7de0",
+        "6fdc8e67454180c08cac7e266447057e6f7076974dd57792715177a577568add",
+        "a8363e766c79801ab1f91fe091a0f2f9e8b76b114e2d09b1c9bfb51fac440c52",
+        "9f4cdb6d82acca57c5d1a4d1f93a77d4d7ca0b652ecf59d3637ca36ee7455cc2",
+        "2e95badc2ff23de6e3ebb92ec4d9282f9463253ef42ebe05bfca9a1eba9352c1"
+      ],
+      "note": "Rear exhaust is documented, so the answer gives useful conditional guidance. A human should decide whether the insufficient-evidence status is too cautious for the manufactured-home question."
+    },
+    {
+      "qid": "75",
+      "asin": "B0051S4ZZM",
+      "runId": "7831bcf5-92da-4944-b9fc-9d0eaac44ff9",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "high",
+      "sourceShas": [
+        "9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+        "a43d474af666f63013dca433fdc69f9004ed9b4dae17771a80a60730ff0f7149",
+        "021b7506b59945f7d3a9d2e60e63a607dda2fdf50e71c0b02e1602f826ae7e8b",
+        "be04360b069e4ae3e6e1873cd986669fe065d565442c025d17cb5184b3a1bcea",
+        "75f29f552357225695b3cca3f297b9e94a6356088e0fa78bfdcbbafb651b5081"
+      ],
+      "note": "Several customer reports describe successful use with stacked washer/dryer arrangements; the answer attributes the evidence to customers."
+    },
+    {
+      "qid": "77",
+      "asin": "B00BAUPS9M",
+      "runId": "e67999a9-bc42-46d7-a25e-565086af25c3",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "high",
+      "sourceShas": [
+        "aaf7b85ec40eea5b0d428ace2618abe849a1ef263190513357cc0e4ac35c8192",
+        "5d43f14661a1a1d7afde91fb5007ce877051627218cc30f9af7b41806e700f75",
+        "84627a2493fbbf9d05f8f337ab4dc51af40a8b225e0131ceba647f66f5f6834f",
+        "e468c748a5867031919f5b5c22ef4c94dda4fd2634988ef60b1178ce40a61c45",
+        "30bb5e23aa89aaf480ef96fc9c64b89c48aad3adbf412d7ae5631dfea5bbba0d"
+      ],
+      "note": "Customer reports say one roll may be insufficient for a large side-by-side refrigerator and two rolls may be needed."
+    },
+    {
+      "qid": "81",
+      "asin": "B00266BXV6",
+      "runId": "2a36fbf0-af20-4b54-ad21-b652042ed22b",
+      "answerVerdict": "correct",
+      "supportVerdict": "supported",
+      "category": "none",
+      "confidence": "high",
+      "sourceShas": [
+        "6332fde062d306ad887b34168ff505676c1b2b3156d8a64e57b6035828bb272a",
+        "0ccf0e35c239036e429210cc3f9a71e6b5108716e7d728e8e21fd1a29a13dde2",
+        "89282788f9a13d8d468a0123f649b444c1010b49fc157e5a08e631b1e4954d57",
+        "ccbf385a5f4d032cb05cc0fa2a26df2b4fa5a2bec538704cb3b82b20fc66dfb5",
+        "d8bd8144735d7f7a7a2aad9ed7cad5794f1554eb92f6230441f1d9917df34bda"
+      ],
+      "note": "The seemingly affirmative customer Q&A actually answered a different Kenmore model. No supplied source confirms the asked KitchenAid KSRB25FKSS02 exactly, so the answer\u2019s conditional sensor-board guidance is appropriately cautious."
+    }
+  ]
+}

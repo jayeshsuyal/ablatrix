@@ -1,0 +1,218 @@
+{
+  "kind": "original_cqa_question_context",
+  "manifestSha256": "125def79dfcd8823e1ca5c38b125fcdc5bdfcbd55222e4cbc1236c6b3a666dd2",
+  "upstreamSha256": "b63de9681b770573240367e919f7f04f087f6a4745ab1f79a77e6b800105ea25",
+  "note": "The paid model saw cleaned source text without these original CQA question suffixes. Restore them only in review so a source answer is not mistaken for an answer to the batch question.",
+  "contexts": [
+    {
+      "qid": "5",
+      "sourceSha256": "0b05a3a5f4be0992331f00d416ebd8eac49148cc0da681728084b0b1b65462a9",
+      "originalQuestion": "where exactly does the curve begin on the front? at the 12\" point? my new cabinet doors currently pinch the hood on the hinge side."
+    },
+    {
+      "qid": "8",
+      "sourceSha256": "43008b911cd19a07814e4299c0aa63f944977a165471e0c84ba4b3465d6f8c8e",
+      "originalQuestion": "why does my ducted fan blow air thru the vent back into the kitchen.  we did re-install the baffle"
+    },
+    {
+      "qid": "11",
+      "sourceSha256": "88dde9a0d1be11e91507cf5df7a24fee3e356a1bf0bffd28aa1d5e1c0a1e62bb",
+      "originalQuestion": "hello to anyone who is using the 1800 watt induction cooker from nuwave. i posted under comments but i want to further explain myself and my questions. first off, i already appreciate some answers. i am a blind person so it's really necessary to know the answer to the following question in detail. can someone please gi\u2026"
+    },
+    {
+      "qid": "19",
+      "sourceSha256": "ec4864086f5b61ad5bbc68c7f1281042d29839610fccbd7599ed79741da1abab",
+      "originalQuestion": "will this fit ffhs2622msu?"
+    },
+    {
+      "qid": "19",
+      "sourceSha256": "d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f",
+      "originalQuestion": "will this fit kenmore refrigerator 25367889506?"
+    },
+    {
+      "qid": "19",
+      "sourceSha256": "b5f7f04b3746b43c8c3394837824ca56f3dcaa677e0b2ed7b49f0c052963b9e3",
+      "originalQuestion": "i have a model frt18il6jw1.. what crisper would work with my fridge please."
+    },
+    {
+      "qid": "19",
+      "sourceSha256": "9bb293dd772bd189fecf054fde355e14370b7a203c7f7c33bac10ab5e316c8d5",
+      "originalQuestion": "i need the glass that goes on top of the crisper drawer frigidaire fridge  15x18"
+    },
+    {
+      "qid": "25",
+      "sourceSha256": "77e3928c62619b5df099c6fff52e3fa20af68415026b8cc22f3b3448f2d81190",
+      "originalQuestion": "what size are the ends on the hoses that come with it? i need to attatch extension hoses, but it's proving pretty difficult to get the right size."
+    },
+    {
+      "qid": "25",
+      "sourceSha256": "6688bc4781d53092074a0eb485e496438ec05be5b5f80bb347d1e70e0c2eb145",
+      "originalQuestion": "what are some faucets that fit this? i went to lowe's hardware with the adapter and none worked, i contacted the company and they did not help."
+    },
+    {
+      "qid": "25",
+      "sourceSha256": "a10bd27abbbcc4f713433ad4d07bb9dc0056e7e0a009cef07a7ce17cbdb0753e",
+      "originalQuestion": "how long are the hoses ?"
+    },
+    {
+      "qid": "26",
+      "sourceSha256": "00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+      "originalQuestion": "i have a front loading duet model ghw9300pw4. will this handle fit my model? what color is the handle?"
+    },
+    {
+      "qid": "32",
+      "sourceSha256": "93e88e2714102d3c4b1ff542ac57a1bc2cb26a889b32fbbc1cf20becd038cdf0",
+      "originalQuestion": "will this part fit a kitchen aid, model # ksrs24ikbt03?"
+    },
+    {
+      "qid": "32",
+      "sourceSha256": "816125bbf62f9ff90ccc05ba2ba8e5618cc75bf7235cec47ffa53d81f26f2336",
+      "originalQuestion": "does this work for kitchenaid model ksrg25fkwh05 (superba side-by-side w/ door dispenser)?"
+    },
+    {
+      "qid": "32",
+      "sourceSha256": "4c0f786fafdf062a3ee80a67fae6eb80316bc1c245c70de950dc337417fee5c9",
+      "originalQuestion": "does this fit whirlpool gc3shexns03?"
+    },
+    {
+      "qid": "32",
+      "sourceSha256": "89603fd9902eeaa5abd1a8e28500e4e99190268c2cf3e4db6adbc16689eb84a8",
+      "originalQuestion": "does this fit kenmore elite 106.56703500?"
+    },
+    {
+      "qid": "37",
+      "sourceSha256": "8a021edbe423045e97b0820c4e9311ce908ef5c38868676ef4679e68c1df6090",
+      "originalQuestion": "will thisswitch work for amana model adb 1500 awb"
+    },
+    {
+      "qid": "45",
+      "sourceSha256": "6e16495271a35c633655f5edefc390c2d50ee2de53f128ee46a1d49decde1a17",
+      "originalQuestion": "is it possible to use the voltage of 220 volts?"
+    },
+    {
+      "qid": "45",
+      "sourceSha256": "5222982be32279e8c72413fd35deb44033b48a2cb6b2f608c2cf52b414353d2e",
+      "originalQuestion": "is there a 220 version of this?"
+    },
+    {
+      "qid": "47",
+      "sourceSha256": "aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe",
+      "originalQuestion": "will this work with model ws-1171a?"
+    },
+    {
+      "qid": "47",
+      "sourceSha256": "6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3",
+      "originalQuestion": "i have a baa968hg base unit, and thgr228n sensors 433 mhz.  i have checked the oregon scientific sensor guide, nil joy.  will this sensor work?"
+    },
+    {
+      "qid": "54",
+      "sourceSha256": "38b3e3db37fc3be926b5d74f3d459d9b7c0862c053800f3c194a9fb5b731451b",
+      "originalQuestion": "i will be moving to japan from usa and i have a large gaming laptop with 19.5v ac adapter. will this be safe to use on my laptop?"
+    },
+    {
+      "qid": "54",
+      "sourceSha256": "e7555674535890c746186586f1d7c34857217cebf31207d1235e7b7844f96ccb",
+      "originalQuestion": "my appliance is from japan but i have to use it in the united states, will this voltage transformer works for it? the input is ac100v 5w 50-6-hz."
+    },
+    {
+      "qid": "58",
+      "sourceSha256": "4b88f8212007f281d5c28967219e2d1d29d7b9daf041f4efde7a57b99c8e14cc",
+      "originalQuestion": "i too would like to know the cfm rating."
+    },
+    {
+      "qid": "58",
+      "sourceSha256": "04ef11ba21f1e6d311d1340871b1b98f32444b9b8b3909e6105cce1a842cf5ec",
+      "originalQuestion": "does this model work for a 9 foot ceiling? is this a good range hood? and how bout suction?"
+    },
+    {
+      "qid": "58",
+      "sourceSha256": "72dc843ac6dea03b7c3fd2f13eb02fc878dafa58a60ff75231ae0a25786ce9a1",
+      "originalQuestion": "what is the cfm?"
+    },
+    {
+      "qid": "63",
+      "sourceSha256": "33dabbb17e14762fd93486372972513cc1c0e8227cf5a39f948a2bf32c99b6ea",
+      "originalQuestion": "will this keg fit a slim quarter keg and a sixth keg at the same time?"
+    },
+    {
+      "qid": "63",
+      "sourceSha256": "877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+      "originalQuestion": "can you fit two pony (1/4 bbl) kegs?"
+    },
+    {
+      "qid": "63",
+      "sourceSha256": "24a1549982a91a70a9c213ed6531185b14ba26754426f503ae465e52e2cf4d73",
+      "originalQuestion": "what size kegs can i use? i thought i saw that you can combine a 1/4 & 1/6.is it possible to use a 1/2 by itself?thanks"
+    },
+    {
+      "qid": "70",
+      "sourceSha256": "95670298fd3f0dbefc8753c76d032cfd58ad2e7b14e7d37e235a97d4c92f5fe2",
+      "originalQuestion": "no venting outside and using this will it make the room hot and steamed up?"
+    },
+    {
+      "qid": "72",
+      "sourceSha256": "51861be5de1e6009797861780de8add04ba017a7c1bf01d00304e8002e42c90f",
+      "originalQuestion": "can this be vented from the back?"
+    },
+    {
+      "qid": "72",
+      "sourceSha256": "f3836dd7247d135e03fbfdb01f646b84d019d162cb67ce3565d2c49dbc8a7de0",
+      "originalQuestion": "can you install a microwave on top of it?"
+    },
+    {
+      "qid": "72",
+      "sourceSha256": "6fdc8e67454180c08cac7e266447057e6f7076974dd57792715177a577568add",
+      "originalQuestion": "can the hood be removed and installed without it?"
+    },
+    {
+      "qid": "72",
+      "sourceSha256": "a8363e766c79801ab1f91fe091a0f2f9e8b76b114e2d09b1c9bfb51fac440c52",
+      "originalQuestion": "where is the vent at"
+    },
+    {
+      "qid": "72",
+      "sourceSha256": "9f4cdb6d82acca57c5d1a4d1f93a77d4d7ca0b652ecf59d3637ca36ee7455cc2",
+      "originalQuestion": "can this ducted hood be wall mounted without a cabinet over it?"
+    },
+    {
+      "qid": "75",
+      "sourceSha256": "9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+      "originalQuestion": "have a whirlpool front load washer,do i need two or four pads ?"
+    },
+    {
+      "qid": "75",
+      "sourceSha256": "75f29f552357225695b3cca3f297b9e94a6356088e0fa78bfdcbbafb651b5081",
+      "originalQuestion": "what is the hardness degree of these rubber pads?"
+    },
+    {
+      "qid": "77",
+      "sourceSha256": "e468c748a5867031919f5b5c22ef4c94dda4fd2634988ef60b1178ce40a61c45",
+      "originalQuestion": "is it enough to cover the sides of the fridge to?"
+    },
+    {
+      "qid": "77",
+      "sourceSha256": "30bb5e23aa89aaf480ef96fc9c64b89c48aad3adbf412d7ae5631dfea5bbba0d",
+      "originalQuestion": "can this stainless steel be applied up and down on my french doors on the refrigerator and then across the pull out drawer on the bottom and it still"
+    },
+    {
+      "qid": "81",
+      "sourceSha256": "6332fde062d306ad887b34168ff505676c1b2b3156d8a64e57b6035828bb272a",
+      "originalQuestion": "does this fit kenmore model 106.56369400?"
+    },
+    {
+      "qid": "81",
+      "sourceSha256": "0ccf0e35c239036e429210cc3f9a71e6b5108716e7d728e8e21fd1a29a13dde2",
+      "originalQuestion": "will this fit kenmore model 10651552104 ?"
+    },
+    {
+      "qid": "81",
+      "sourceSha256": "ccbf385a5f4d032cb05cc0fa2a26df2b4fa5a2bec538704cb3b82b20fc66dfb5",
+      "originalQuestion": "does this work with model gs6nbexrsoo"
+    },
+    {
+      "qid": "81",
+      "sourceSha256": "d8bd8144735d7f7a7a2aad9ed7cad5794f1554eb92f6230441f1d9917df34bda",
+      "originalQuestion": "would this be compatible with kitchenaid kscs23inss00"
+    }
+  ]
+}
