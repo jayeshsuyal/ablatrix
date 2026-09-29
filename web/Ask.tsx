@@ -3,7 +3,7 @@ import type { WorkspaceProduct, WorkspaceRun } from '../server/product-workspace
 import './ask.css';
 
 type WorkspaceOverview = { products: WorkspaceProduct[]; runs: WorkspaceRun[]; readiness: { ready: boolean; reason: string }; busy: boolean };
-type SourceDraft = { label: string; text: string };
+type SourceDraft = { label: string; text: string; originalQuestion: string };
 
 async function request<T>(path: string, body?: unknown): Promise<T> {
   const response = await fetch(path, body === undefined ? undefined : { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
@@ -15,7 +15,7 @@ async function request<T>(path: string, body?: unknown): Promise<T> {
 export default function Ask() {
   const [overview, setOverview] = useState<WorkspaceOverview | null>(null);
   const [title, setTitle] = useState('');
-  const [sources, setSources] = useState<SourceDraft[]>([{ label: 'Product listing', text: '' }]);
+  const [sources, setSources] = useState<SourceDraft[]>([{ label: 'Product listing', text: '', originalQuestion: '' }]);
   const [productId, setProductId] = useState('');
   const [question, setQuestion] = useState('');
   const [selectedRunId, setSelectedRunId] = useState('');
@@ -30,8 +30,8 @@ export default function Ask() {
   async function addProduct(event: React.FormEvent) {
     event.preventDefault(); setBusy(true); setError(''); setNotice('');
     try {
-      const product = await request<WorkspaceProduct>('/api/workspace/products', { title, sources });
-      await refresh(); setProductId(product.id); setTitle(''); setSources([{ label: 'Product listing', text: '' }]); setNotice('Product evidence saved. Ask a question to inspect the matching passages.');
+      const product = await request<WorkspaceProduct>('/api/workspace/products', { title, sources: sources.map(({ originalQuestion, ...source }) => ({ ...source, ...(originalQuestion.trim() ? { originalQuestion: originalQuestion.trim() } : {}) })) });
+      await refresh(); setProductId(product.id); setTitle(''); setSources([{ label: 'Product listing', text: '', originalQuestion: '' }]); setNotice('Product evidence saved. Ask a question to inspect the matching passages.');
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'Could not save product.'); }
     finally { setBusy(false); }
   }
@@ -53,8 +53,8 @@ export default function Ask() {
       <div className="ask-grid">
         <section className="ask-panel" aria-labelledby="ask-import-title"><div className="ask-panel-heading"><span>01 / EVIDENCE</span><h2 id="ask-import-title">Add a product</h2><p>Paste source text you have permission to use. Each source stays attached to this product and is kept out of the evaluation corpus.</p></div>
           <form onSubmit={addProduct}><label>Product name<input value={title} onChange={event => setTitle(event.target.value)} placeholder="e.g. Trail running jacket" minLength={3} maxLength={160} required /></label>
-            {sources.map((source, index) => <fieldset key={index}><legend>Source {index + 1}</legend><label>Source label<input value={source.label} onChange={event => setSources(items => items.map((item, i) => i === index ? { ...item, label: event.target.value } : item))} maxLength={80} required /></label><label>Evidence text<textarea value={source.text} onChange={event => setSources(items => items.map((item, i) => i === index ? { ...item, text: event.target.value } : item))} placeholder="Paste the product specification, listing detail, or customer report…" minLength={30} maxLength={1500} rows={5} required /></label>{sources.length > 1 && <button type="button" className="ask-text-button" onClick={() => setSources(items => items.filter((_, i) => i !== index))}>Remove source</button>}</fieldset>)}
-            <div className="ask-form-actions"><button type="button" className="ask-secondary" disabled={sources.length >= 8 || busy} onClick={() => setSources(items => [...items, { label: '', text: '' }])}>+ Add source</button><button className="ask-primary" disabled={busy || !title.trim() || sources.some(source => source.text.trim().length < 30 || source.label.trim().length < 2)}>{busy ? 'Saving…' : 'Save product'}</button></div>
+            {sources.map((source, index) => <fieldset key={index}><legend>Source {index + 1}</legend><label>Source label<input value={source.label} onChange={event => setSources(items => items.map((item, i) => i === index ? { ...item, label: event.target.value } : item))} maxLength={80} required /></label><label>Evidence text<textarea value={source.text} onChange={event => setSources(items => items.map((item, i) => i === index ? { ...item, text: event.target.value } : item))} placeholder="Paste the product specification, listing detail, or customer answer…" minLength={30} maxLength={1500} rows={5} required /></label><label>Original customer question (optional)<textarea value={source.originalQuestion} onChange={event => setSources(items => items.map((item, i) => i === index ? { ...item, originalQuestion: event.target.value } : item))} placeholder="For a customer answer, paste the question it answered…" maxLength={500} rows={2} /><small className="ask-field-help">Keeps model numbers and conditions attached to the answer. A question alone does not establish a product fact.</small></label>{sources.length > 1 && <button type="button" className="ask-text-button" onClick={() => setSources(items => items.filter((_, i) => i !== index))}>Remove source</button>}</fieldset>)}
+            <div className="ask-form-actions"><button type="button" className="ask-secondary" disabled={sources.length >= 8 || busy} onClick={() => setSources(items => [...items, { label: '', text: '', originalQuestion: '' }])}>+ Add source</button><button className="ask-primary" disabled={busy || !title.trim() || sources.some(source => source.text.trim().length < 30 || source.label.trim().length < 2)}>{busy ? 'Saving…' : 'Save product'}</button></div>
           </form>
         </section>
         <section className="ask-panel ask-question-panel" aria-labelledby="ask-question-title"><div className="ask-panel-heading"><span>02 / QUESTION</span><h2 id="ask-question-title">Find an answer</h2><p>Preview evidence without a model call, or generate one answer when the local Sapiom plan is configured.</p></div>
@@ -69,7 +69,7 @@ export default function Ask() {
       <section className="ask-panel ask-result" aria-labelledby="ask-result-title"><div className="ask-panel-heading"><span>03 / RESULT</span><h2 id="ask-result-title">{selectedRun ? selectedRun.question : 'Evidence and answer'}</h2><p>{selectedRun?.mode === 'preview' ? 'Retrieval preview · no model call or quality score.' : selectedRun ? 'Saved local model attempt. Citations verify quote membership, not full semantic correctness.' : 'Select a saved question to inspect its answer and source passages.'}</p></div>
         {selectedRun?.answer && <div className="ask-answer"><span>{selectedRun.answer.status === 'answered' ? 'ANSWERED FROM EVIDENCE' : 'INSUFFICIENT EVIDENCE'}</span><p>{selectedRun.answer.answer}</p><small>{selectedRun.model} · {selectedRun.usage ? `${selectedRun.usage.inputTokens + selectedRun.usage.outputTokens} tokens` : 'token usage unavailable'}</small></div>}
         {selectedRun?.error && <p className="ask-alert">{selectedRun.error}</p>}
-        {selectedRun?.retrieval && <div className="ask-evidence"><h3>Retrieved product evidence</h3>{selectedRun.retrieval.passages.map((passage, index) => { const citations = selectedRun.answer?.citations.filter(item => item.passageId === passage.id) ?? []; return <article key={passage.id} id={`source-${passage.id}`}><div><span>#{index + 1} · {passage.reference}</span>{citations.length > 0 && <strong>CITED</strong>}</div><p>{passage.text}</p>{citations.map((citation, i) => <blockquote key={i}>“{citation.quote}”</blockquote>)}</article>; })}</div>}
+        {selectedRun?.retrieval && <div className="ask-evidence"><h3>Retrieved product evidence</h3>{selectedRun.retrieval.passages.map((passage, index) => { const citations = selectedRun.answer?.citations.filter(item => item.passageId === passage.id) ?? []; return <article key={passage.id} id={`source-${passage.id}`}><div><span>#{index + 1} · {passage.reference}</span>{citations.length > 0 && <strong>CITED</strong>}</div>{passage.originalQuestion && <p className="ask-original-question"><strong>Original customer question:</strong> {passage.originalQuestion}<small>Context for this answer; the question is not a confirmed product fact.</small></p>}<p>{passage.text}</p>{citations.map((citation, i) => <blockquote key={i}>“{citation.quote}”</blockquote>)}</article>; })}</div>}
       </section>
     </main>
   </div>;

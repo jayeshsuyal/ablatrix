@@ -24,7 +24,8 @@ test('feedback provider pins model/settings, sends bounded evidence, and enforce
     calls++; const body = JSON.parse(String(init?.body));
     assert.equal(body.model, 'gpt-luna'); assert.equal(body.reasoning_effort, 'none'); assert.equal(body.max_tokens, 4096);
     const payload = JSON.parse(body.messages[1].content);
-    assert.deepEqual(Object.keys(payload).sort(), ['answerPolicy', 'evidence', 'product', 'question']);
+    assert.deepEqual(Object.keys(payload).sort(), ['answerPolicy', 'evidence', 'product', 'promptVersion', 'question']);
+    assert.equal(payload.promptVersion, 'product-answer-v2-context');
     assert.equal(payload.evidence[0].id, 'c1');
     return reply(valid);
   } });
@@ -150,4 +151,30 @@ test('snippet-ID arm rejects invented IDs and uncited answered outputs', async (
     const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async () => reply(output, 'gpt-5.6-luna', 'tool_calls', 'product_answer_snippet') });
     try { await assert.rejects(provider.answerWithSnippetIds(input)); } finally { provider.close(); }
   }
+});
+
+test('customer questions reach both answer methods as context and never become quote options', async () => {
+  for (const inline of [false, true]) {
+    const originalQuestion = 'Will this fit Kenmore model 25367889506?';
+    const text = 'Yes, this drawer fits that model.';
+    const contextInput = { ...input, passages: [{ ...input.passages[0], source: 'cqa', text: inline ? `${text} Question: ${originalQuestion}` : text, ...(inline ? {} : { originalQuestion }) }] };
+    assert.deepEqual(quoteOptions(contextInput.passages).map(option => option.quote), [text]);
+    const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async (_url, init) => {
+      const body = JSON.parse(String(init?.body)), payload = JSON.parse(body.messages[1].content);
+      assert.equal(payload.evidence[0].originalQuestion, originalQuestion);
+      assert.equal(payload.evidence[0].text, text);
+      const snippet = body.tools[0].function.name === 'product_answer_snippet';
+      return reply({ answer: 'The customer report applies to its named Kenmore model.', status: 'answered', citations: snippet ? [{ quoteId: 'p1q1' }] : [{ passageId: 'c1', quote: text }] }, 'gpt-5.6-luna', 'tool_calls', snippet ? 'product_answer_snippet' : 'product_answer');
+    } });
+    try { await provider.answer(contextInput); await provider.answerWithSnippetIds(contextInput); }
+    finally { provider.close(); }
+  }
+});
+
+test('an exact quote from an original customer question is rejected as factual evidence', async () => {
+  const originalQuestion = 'Will this fit Kenmore model 25367889506?';
+  const contextInput = { ...input, passages: [{ ...input.passages[0], source:'cqa', text:`Yes, this drawer fits that model. Question: ${originalQuestion}` }] };
+  const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async () => reply({ answer:'It fits that Kenmore.', status:'answered', citations:[{passageId:'c1',quote:originalQuestion}] }) });
+  try { await assert.rejects(provider.answer(contextInput), /output validation/); }
+  finally { provider.close(); }
 });

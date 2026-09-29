@@ -84,6 +84,34 @@ test('persistent passage embeddings are reused but model revisions invalidate th
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('identical customer answers with different parent questions remain distinct after retrieval and cache reuse', async () => {
+  const corpus = sample(), text = 'This OEM part matches your model.';
+  const source = { productId: 'a', text, sha256: textHash(text), source: 'customer answer', reference: 'test:customer' };
+  corpus.cases = [];
+  corpus.passages = [
+    { ...source, id: 'answer-kenmore', originalQuestion: 'Will this fit Kenmore 25367889506?' },
+    { ...source, id: 'answer-frigidaire', originalQuestion: 'Will this fit Frigidaire FFTR1814TW?' },
+    { ...source, id: 'answer-kenmore-copy', originalQuestion: 'Will this fit Kenmore 25367889506?' }
+  ];
+  const directory = mkdtempSync(join(tmpdir(), 'ablatrix-retrieval-context-')), path = join(directory, 'cache.sqlite');
+  let embeddedPassages = 0;
+  const embed: EmbeddingFunction = async (texts, kind) => { if (kind === 'passage') { embeddedPassages += texts.length; assert.ok(texts.every(item => item === text)); } return texts.map(() => [1, 0]); };
+  try {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const retriever = new ProductRetriever(corpus, path, { embed });
+      try {
+        const result = await retriever.retrieve('a', 'Does this OEM part match my model?');
+        assert.equal(result.passages.length, 2, 'deduplication compares both answer and original question');
+        assert.deepEqual(new Set(result.passages.map(passage => passage.originalQuestion)), new Set(corpus.passages.map(passage => passage.originalQuestion)));
+        assert.ok(result.passages.every(passage => passage.text === text));
+        const comparison = await retriever.compareRankings('a', '25367889506');
+        assert.deepEqual(comparison.rankings.bm25, [], 'upstream questions stay out of answer-only relevance indexing');
+      } finally { retriever.close(); }
+    }
+    assert.equal(embeddedPassages, 3, 'reopening reuses answer embeddings while keeping parent metadata');
+  } finally { rmSync(directory, { recursive: true, force: true }); }
+});
+
 test('embedding failure remains an error rather than silently reporting BM25 as hybrid', async () => {
   const retriever = new ProductRetriever(sample(), ':memory:', { embed: async () => { throw new Error('Model unavailable'); } });
   try { await assert.rejects(retriever.retrieve('a', 'panels'), /Model unavailable/); }

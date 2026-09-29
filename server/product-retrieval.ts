@@ -205,8 +205,11 @@ export class ProductRetriever implements LoopRetriever {
       const chosen: string[] = [], seenText = new Set<string>(); let chars = 0;
       for (const id of ids) {
         const passage = byId.get(id)!;
-        if (seenText.has(passage.sha256) || chars + passage.text.length > CONTEXT_CHAR_BUDGET) continue;
-        chosen.push(id); seenText.add(passage.sha256); chars += passage.text.length;
+        // Identical answers can describe different models in their parent questions.
+        const contextKey = JSON.stringify([passage.sha256, passage.originalQuestion ?? null]);
+        const contextLength = passage.text.length + (passage.originalQuestion?.length ?? 0);
+        if (seenText.has(contextKey) || chars + contextLength > CONTEXT_CHAR_BUDGET) continue;
+        chosen.push(id); seenText.add(contextKey); chars += contextLength;
         if (chosen.length === MAX_PASSAGES) break;
       }
       return chosen;

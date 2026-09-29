@@ -4,6 +4,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
+import { createHash } from 'node:crypto';
 import { PaidAnswerReview } from './paid-answer-review.ts';
 import { AnswerRevisions } from './answer-revisions.ts';
 import { SapiomFeedbackProvider } from './feedback-provider.ts';
@@ -31,8 +32,9 @@ test('revision queue is durable, idempotent, version bound, and preserves source
     assert.equal(completed.versions.length,2);
     assert.equal(completed.versions[1].parentId,id);
     assert.equal(completed.versions[1].model,'gpt-5.6-luna');
-    assert.equal(seen.promptVersion,'answer-revision-v1');
-    assert(seen.evidence.some((e:{text:string})=>e.text.includes('Original customer question:')));
+    assert.equal(seen.promptVersion,'answer-revision-v2-context');
+    assert(seen.evidence.some((e:{originalQuestion?:string})=>Boolean(e.originalQuestion)));
+    assert(seen.evidence.every((e:{text:string})=>!e.text.startsWith('Original customer question:')));
     assert.throws(()=>flow.decide(first.qid,{versionId:id,reviewer:'Reviewer',decision:'accept',note:'',checkedSourceShas:[reviews.overview().cases.find(c=>c.qid===first.qid)!.sources[0].sha256]}),/stale/);
     const current=completed.versions[1].id, checkedSourceShas=[reviews.overview().cases.find(c=>c.qid===first.qid)!.sources[0].sha256];
     flow.decide(first.qid,{versionId:current,reviewer:'Reviewer',decision:'accept',note:'Source checked.',checkedSourceShas});
@@ -65,12 +67,150 @@ test('completed provider receipt materializes after interrupted app persistence'
     const id=flow.overview().cases.find(c=>c.qid===item.qid)!.versions[0].id;
     const job=flow.request(item.qid,{versionId:id,idempotencyKey:'receipt-replay-1',reviewer:'Reviewer',feedback:'The first answer omits a key fact.'});
     await provider.revise({runId:job.id,question:item.question,product:{id:item.asin,title:item.title},rejectedAnswer:item.result!.run.answer!.answer,critique:job.feedback,evidence:[{id:`${item.qid}:${source.sha256}`,source:source.label,text:source.text}]});
-    const db=new DatabaseSync(path);db.prepare('UPDATE answer_revision_jobs SET status=?,document=?,lease_expires=? WHERE id=?').run('running',JSON.stringify({...job,status:'running'}),0,job.id);db.close();
+    // Existing v1 jobs do not contain a context snapshot. They must still replay.
+    const { context: _context, promptVersion: _promptVersion, additionalSources: _additionalSources, clarification: _clarification, ...legacyJob }=job;
+    const db=new DatabaseSync(path);db.prepare('UPDATE answer_revision_jobs SET status=?,document=?,lease_expires=? WHERE id=?').run('running',JSON.stringify({...legacyJob,status:'running'}),0,job.id);db.close();
     flow.close();flow=new AnswerRevisions(reviews,provider,path,false);
     const state=flow.overview().cases.find(c=>c.qid===item.qid)!;
     assert.equal(state.jobs[0].status,'ready');assert.equal(state.versions.length,2);
+    assert.equal(state.versions[1].promptVersion,'answer-revision-v1');
+    assert.equal(state.versions[1].sourceContextSha256,state.versions[0].sourceContextSha256);
+    assert.equal(state.versions[1].context,undefined);
     flow.reconcile();assert.equal(flow.overview().cases.find(c=>c.qid===item.qid)!.versions.length,2);
   } finally {flow.close();provider.close();reviews.close();rmSync(directory,{recursive:true,force:true});}
+});
+
+test('added sources and customer clarification persist, bind idempotency, and carry into the next revision', async () => {
+  const directory=mkdtempSync(join(tmpdir(),'revision-context-')),path=join(directory,'review.sqlite'),ledger=join(directory,'budget.sqlite');
+  const reviews=new PaidAnswerReview(path);
+  const seen: { evidence:{id:string;source:string;text:string;originalQuestion?:string}[];clarifications:{text:string;reviewer:string}[] }[]=[];
+  const provider=new SapiomFeedbackProvider({enabled:true,apiKey:'fixture',capUsd:0.2,allowancePerCallUsd:0.1,callLimit:2,dbPath:ledger,fetchImpl:async(_url,init)=>{
+    const input=JSON.parse(JSON.parse(String(init?.body)).messages[1].content);seen.push(input);
+    const source=input.evidence.find((entry:{source:string})=>entry.source==='Synthetic fixture manual');
+    return new Response(JSON.stringify({model:'gpt-5.6-luna',choices:[{finish_reason:'tool_calls',message:{tool_calls:[{function:{name:'answer_revision_v1',arguments:JSON.stringify({answer:'The fixture manual identifies the compatible model.',status:'answered',citations:[{passageId:source.id,quote:source.text}]})}}]}}],usage:{prompt_tokens:12,completion_tokens:8}}),{status:200});
+  }});
+  let flow=new AnswerRevisions(reviews,provider,path,false);
+  try {
+    const first=flow.overview().cases[0],originalContextSha=first.versions[0].sourceContextSha256;
+    const source={label:'Synthetic fixture manual',text:'Synthetic fixture only: replacement drawer ZX-11 is compatible with refrigerator model AB-123.',reference:'https://example.test/fixture-manual',originalQuestion:'Does the fixture drawer fit refrigerator model AB-123?'};
+    const sourceBefore={...source};
+    const input={versionId:first.versions[0].id,idempotencyKey:'context-durable-1',reviewer:'Fixture reviewer',feedback:'Check the supplied fixture manual for the exact refrigerator model.',additionalSources:[source],clarification:'The customer reports owning fixture model AB-123.'};
+    const job=flow.request(first.qid,input);
+    assert.equal(flow.request(first.qid,input).id,job.id);
+    assert.throws(()=>flow.request(first.qid,{...input,clarification:'The customer reports a different fixture model.'}),/different request/);
+    assert.throws(()=>flow.request(first.qid,{...input,additionalSources:[{...source,text:'Synthetic fixture only: this is a different source statement for the same label.'}]}),/different request/);
+    assert.throws(()=>flow.request(first.qid,{...input,additionalSources:[{...source,originalQuestion:'Does it fit a different fixture model?'}]}),/different request/);
+    source.text='Caller mutation must not change the saved source snapshot.';
+    input.clarification='Caller mutation must not change the saved clarification.';
+    flow.close();flow=new AnswerRevisions(reviews,provider,path,false);
+    const savedJob=flow.overview().cases.find(c=>c.qid===first.qid)!.jobs[0];
+    const savedSource=savedJob.context!.sources.find(s=>s.origin==='reviewer_added')!;
+    assert.equal(savedSource.text,sourceBefore.text);
+    assert.equal(savedSource.originalQuestion,sourceBefore.originalQuestion);
+    assert.equal(savedSource.reference,sourceBefore.reference);
+    assert.equal(savedSource.addedBy,'Fixture reviewer');
+    assert.deepEqual(savedJob.context!.clarifications,[{text:'The customer reports owning fixture model AB-123.',reviewer:'Fixture reviewer'}]);
+    await flow.tick();
+    const firstRevision=flow.overview().cases.find(c=>c.qid===first.qid)!.versions.at(-1)!;
+    assert.equal(firstRevision.answer.citations[0].passageId,savedSource.id);
+    assert.deepEqual(firstRevision.context,savedJob.context);
+    assert.equal(firstRevision.sourceContextSha256,createHash('sha256').update(JSON.stringify(firstRevision.context)).digest('hex'));
+    assert.notEqual(firstRevision.sourceContextSha256,originalContextSha);
+    assert.equal(firstRevision.promptVersion,'answer-revision-v2-context');
+    const supplied=seen[0].evidence.find(s=>s.id===savedSource.id)!;
+    assert.equal(supplied.text,sourceBefore.text);
+    assert.equal(supplied.originalQuestion,sourceBefore.originalQuestion);
+    assert.deepEqual(seen[0].clarifications,savedJob.context!.clarifications);
+    const second=flow.request(first.qid,{versionId:firstRevision.id,idempotencyKey:'context-inherit-2',reviewer:'Second fixture reviewer',feedback:'Retain the source and account for the customer clarification.',clarification:'The customer confirms fixture model AB-123 from its label.'});
+    assert.deepEqual(second.context!.sources,firstRevision.context!.sources);
+    assert.equal(second.context!.clarifications.length,2);
+    await flow.tick();
+    const finalState=flow.overview().cases.find(c=>c.qid===first.qid)!,latest=finalState.versions.at(-1)!;
+    assert.equal(finalState.jobs.at(-1)!.status,'ready');
+    assert.equal(seen.length,2);
+    assert.equal(seen[1].evidence.find(s=>s.id===savedSource.id)!.text,sourceBefore.text);
+    assert.equal(seen[1].clarifications.length,2);
+    assert.notEqual(latest.sourceContextSha256,firstRevision.sourceContextSha256);
+    assert.throws(()=>flow.decide(first.qid,{versionId:latest.id,reviewer:'Fixture reviewer',decision:'accept',note:'Checked.',checkedSourceShas:['f'.repeat(64)]}),/source/);
+    flow.decide(first.qid,{versionId:latest.id,reviewer:'Fixture reviewer',decision:'accept',note:'Checked the added fixture source.',checkedSourceShas:[savedSource.sha256]});
+    assert.equal(flow.overview().cases.find(c=>c.qid===first.qid)!.jobs.at(-1)!.status,'accepted');
+  } finally {flow.close();provider.close();reviews.close();rmSync(directory,{recursive:true,force:true});}
+});
+
+test('an interrupted receipt replays an added-source citation from its saved context', async () => {
+  const directory=mkdtempSync(join(tmpdir(),'revision-added-replay-')),path=join(directory,'review.sqlite'),ledger=join(directory,'budget.sqlite');
+  const reviews=new PaidAnswerReview(path);let calls=0;
+  const provider=new SapiomFeedbackProvider({enabled:true,apiKey:'fixture',capUsd:0.1,allowancePerCallUsd:0.1,callLimit:1,dbPath:ledger,fetchImpl:async(_url,init)=>{
+    calls++;
+    const input=JSON.parse(JSON.parse(String(init?.body)).messages[1].content),source=input.evidence.at(-1);
+    return new Response(JSON.stringify({model:'gpt-5.6-luna',choices:[{finish_reason:'tool_calls',message:{tool_calls:[{function:{name:'answer_revision_v1',arguments:JSON.stringify({answer:'This answer uses the added fixture source.',status:'answered',citations:[{passageId:source.id,quote:source.text}]})}}]}}],usage:{prompt_tokens:9,completion_tokens:5}}),{status:200});
+  }});
+  let flow=new AnswerRevisions(reviews,provider,path,false);
+  try {
+    const first=flow.overview().cases[0];
+    const job=flow.request(first.qid,{versionId:first.versions[0].id,idempotencyKey:'added-receipt-replay-1',reviewer:'Fixture reviewer',feedback:'The new fixture source answers the missing model question.',additionalSources:[{label:'Synthetic replay source',text:'Synthetic fixture only: this manual states that drawer ZX-11 fits refrigerator AB-123.'}]});
+    const context=job.context!,source=context.sources.at(-1)!;
+    await provider.revise({runId:job.id,question:context.question,product:context.product,rejectedAnswer:first.versions[0].answer.answer,critique:job.feedback,evidence:context.sources.map(s=>({id:s.id,source:s.label,text:s.text,originalQuestion:s.originalQuestion ?? undefined})),clarifications:context.clarifications});
+    const db=new DatabaseSync(path);db.prepare('UPDATE answer_revision_jobs SET status=?,document=?,lease_expires=? WHERE id=?').run('running',JSON.stringify({...job,status:'running'}),0,job.id);db.close();
+    flow.close();flow=new AnswerRevisions(reviews,provider,path,false);
+    const state=flow.overview().cases.find(c=>c.qid===first.qid)!;
+    assert.equal(state.jobs[0].status,'ready');
+    assert.equal(state.versions.length,2);
+    assert.equal(state.versions[1].answer.citations[0].passageId,source.id);
+    assert.deepEqual(state.versions[1].context,context);
+    flow.reconcile();await flow.tick();
+    assert.equal(calls,1);
+    assert.equal(flow.overview().cases.find(c=>c.qid===first.qid)!.versions.length,2);
+  } finally {flow.close();provider.close();reviews.close();rmSync(directory,{recursive:true,force:true});}
+});
+
+test('oversized serialized revision context is rejected before a job can enter an endless pre-dispatch retry', async () => {
+  const directory=mkdtempSync(join(tmpdir(),'revision-context-bound-')),path=join(directory,'review.sqlite'),ledger=join(directory,'budget.sqlite');
+  const reviews=new PaidAnswerReview(path);let calls=0;
+  const provider=new SapiomFeedbackProvider({enabled:true,apiKey:'fixture',capUsd:0.2,allowancePerCallUsd:0.1,callLimit:2,dbPath:ledger,fetchImpl:async(_url,init)=>{
+    calls++;
+    const input=JSON.parse(JSON.parse(String(init?.body)).messages[1].content),source=input.evidence[0];
+    // Escapes count once in the schema's answer limit but twice in the next JSON payload.
+    return new Response(JSON.stringify({model:'gpt-5.6-luna',choices:[{finish_reason:'tool_calls',message:{tool_calls:[{function:{name:'answer_revision_v1',arguments:JSON.stringify({answer:'\\'.repeat(9999)+'x',status:'answered',citations:[{passageId:source.id,quote:source.text.slice(0,30)}]})}}]}}],usage:{prompt_tokens:12,completion_tokens:8}}),{status:200});
+  }});
+  const flow=new AnswerRevisions(reviews,provider,path,false);
+  const additions=(start:number)=>Array.from({length:3},(_,i)=>({label:`Synthetic long source ${start+i}`,text:`Fixture ${start+i}: `.padEnd(2000,'a'),reference:'r'.repeat(500),originalQuestion:'q'.repeat(500)}));
+  try {
+    const first=flow.overview().cases[0];
+    flow.request(first.qid,{versionId:first.versions[0].id,idempotencyKey:'context-size-first',reviewer:'Fixture reviewer',feedback:'Use the supplied synthetic source excerpts.',additionalSources:additions(0)});
+    await flow.tick();
+    const latest=flow.overview().cases.find(c=>c.qid===first.qid)!.versions.at(-1)!;
+    assert.notEqual(latest.id,first.versions[0].id);
+    assert.throws(()=>flow.request(first.qid,{versionId:latest.id,idempotencyKey:'context-size-second',reviewer:'Fixture reviewer',feedback:'\\'.repeat(1999)+'x',additionalSources:additions(3)}),/too large|context size/);
+    assert.equal(flow.overview().cases.find(c=>c.qid===first.qid)!.jobs.length,1);
+    assert.equal(calls,1);
+  } finally {flow.close();provider.close();reviews.close();rmSync(directory,{recursive:true,force:true});}
+});
+
+test('revision citations must quote the identified source body rather than another source or its question', async t => {
+  for (const failure of ['wrong_source_id','question_as_evidence'] as const) await t.test(failure,async()=>{
+    const directory=mkdtempSync(join(tmpdir(),'revision-quote-context-')),path=join(directory,'review.sqlite'),ledger=join(directory,'budget.sqlite');
+    const reviews=new PaidAnswerReview(path);let calls=0;
+    const provider=new SapiomFeedbackProvider({enabled:true,apiKey:'fixture',capUsd:0.1,allowancePerCallUsd:0.1,callLimit:1,dbPath:ledger,fetchImpl:async(_url,init)=>{
+      calls++;
+      const input=JSON.parse(JSON.parse(String(init?.body)).messages[1].content),source=input.evidence.at(-1);
+      const citation=failure==='wrong_source_id' ? {passageId:input.evidence[0].id,quote:source.text} : {passageId:source.id,quote:source.originalQuestion};
+      return new Response(JSON.stringify({model:'gpt-5.6-luna',choices:[{finish_reason:'tool_calls',message:{tool_calls:[{function:{name:'answer_revision_v1',arguments:JSON.stringify({answer:'An unsupported fixture answer.',status:'answered',citations:[citation]})}}]}}],usage:{prompt_tokens:7,completion_tokens:4}}),{status:200});
+    }});
+    const flow=new AnswerRevisions(reviews,provider,path,false);
+    try {
+      const first=flow.overview().cases[0];
+      const rejected=flow.request(first.qid,{versionId:first.versions[0].id,idempotencyKey:`invalid-${failure}`,reviewer:'Fixture reviewer',feedback:'Use the new fixture source and preserve its question context.',additionalSources:[{label:'Synthetic source with question',text:'Synthetic fixture only: the listing identifies drawer ZX-11 but gives no refrigerator compatibility.',originalQuestion:'Can I assume this fixture drawer fits refrigerator AB-123?'}],clarification:'The customer confirms owning the synthetic fixture model AB-123.'});
+      await flow.tick();await flow.tick();
+      const state=flow.overview().cases.find(c=>c.qid===first.qid)!;
+      assert.equal(state.jobs[0].status,'needs_information');
+      assert.equal(state.jobs[0].attempts[0].status,'invalid_output');
+      assert.equal(state.versions.length,1);
+      assert.equal(calls,1);
+      const retry=flow.request(first.qid,{versionId:first.versions[0].id,idempotencyKey:`retry-${failure}`,reviewer:'Fixture reviewer',feedback:'Use the source answer body for citations and keep the earlier customer context.'});
+      assert.deepEqual(retry.context,rejected.context,'An invalid output must not discard the source additions needed by the next attempt.');
+    } finally {flow.close();provider.close();reviews.close();rmSync(directory,{recursive:true,force:true});}
+  });
 });
 
 test('receipt replay cannot materialize output rejected by the provider schema', async () => {
