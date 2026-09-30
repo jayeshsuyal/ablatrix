@@ -7,6 +7,7 @@ export function isRevisionSearchUncertain(error: unknown): boolean {
   return error instanceof FeedbackExternalError && (error.code === 'unverified_outcome' || error.code === 'reconciliation_required');
 }
 export type RevisionSearchHit = { title: string; url: string; snippet: string };
+export type RevisionSearchDiagnostics = { returned: number; inspected: number; excluded: Record<'invalid_url' | 'off_domain' | 'invalid_shape' | 'duplicate' | 'over_limit' | 'uninspected', number> };
 export type RevisionSearchPage = { url: string; title?: string; text: string };
 /** Injectable SDK surface for synthetic tests. Production always uses the provider's bounded transport. */
 export type RevisionSearchClient = {
@@ -71,23 +72,43 @@ export class SapiomRevisionSearch {
       scrape: input => sapiomSearch.scrape(input, transport, 'https://api.sapiom.ai')
     } };
   }
-  private hits(raw: unknown): { results: RevisionSearchHit[] } {
+  private hits(raw: unknown, replay: boolean): { results: RevisionSearchHit[]; diagnostics?: RevisionSearchDiagnostics } {
     if (!raw || typeof raw !== 'object' || !('results' in raw) || !Array.isArray(raw.results)) throw new Error('invalid_search_response');
-    const seen = new Set<string>(); const results: RevisionSearchHit[] = [];
-    for (const item of raw.results.slice(0, 100)) {
-      if (!item || typeof item !== 'object' || !this.allowed(item.url) || typeof item.title !== 'string' || typeof item.snippet !== 'string') continue;
-      const url = new URL(item.url); url.hash = ''; const canonical = url.href;
-      if (seen.has(canonical)) continue;
-      seen.add(canonical); results.push({ title: item.title.slice(0, 200), url: canonical, snippet: item.snippet.slice(0, 500) });
-      if (results.length === 5) break;
+    // A completed receipt already contains the filtered result. Revalidate it
+    // without recomputing the original raw-result diagnostics from five leads.
+    if (replay && !('diagnostics' in raw)) {
+      // Older receipts contain eligible leads only. Their raw count is unknown.
+      if (raw.results.length > 5 || raw.results.some(hit => !hit || typeof hit !== 'object' || !('url' in hit) || !this.allowed(hit.url as string) || !('title' in hit) || typeof hit.title !== 'string' || !('snippet' in hit) || typeof hit.snippet !== 'string')) throw new Error('invalid_search_receipt');
+      return { results: raw.results as RevisionSearchHit[] };
     }
-    return { results };
+    if (replay && 'diagnostics' in raw) {
+      const value = raw as { results: unknown[]; diagnostics: RevisionSearchDiagnostics };
+      const counts = value.diagnostics;
+      if (!counts || !Number.isSafeInteger(counts.returned) || !Number.isSafeInteger(counts.inspected) || counts.returned < 0 || counts.inspected < 0 || counts.inspected > counts.returned ||
+        !counts.excluded || !(['invalid_url', 'off_domain', 'invalid_shape', 'duplicate', 'over_limit', 'uninspected'] as const).every(key => Number.isSafeInteger(counts.excluded[key]) && counts.excluded[key] >= 0) ||
+        value.results.length > 5 || value.results.some(hit => !hit || typeof hit !== 'object' || !('url' in hit) || !this.allowed(hit.url as string) || !('title' in hit) || typeof hit.title !== 'string' || !('snippet' in hit) || typeof hit.snippet !== 'string')) throw new Error('invalid_search_receipt');
+      return value as { results: RevisionSearchHit[]; diagnostics: RevisionSearchDiagnostics };
+    }
+    const seen = new Set<string>(); const results: RevisionSearchHit[] = [];
+    const diagnostics: RevisionSearchDiagnostics = { returned: raw.results.length, inspected: Math.min(raw.results.length, 100), excluded: { invalid_url: 0, off_domain: 0, invalid_shape: 0, duplicate: 0, over_limit: 0, uninspected: Math.max(0, raw.results.length - 100) } };
+    for (const item of raw.results.slice(0, 100)) {
+      if (!item || typeof item !== 'object' || typeof item.url !== 'string' || typeof item.title !== 'string' || typeof item.snippet !== 'string') { diagnostics.excluded.invalid_shape++; continue; }
+      if (!/^https:\/\//i.test(item.url)) { diagnostics.excluded.invalid_url++; continue; }
+      try { new URL(item.url); } catch { diagnostics.excluded.invalid_url++; continue; }
+      if (!this.allowed(item.url)) { diagnostics.excluded.off_domain++; continue; }
+      const url = new URL(item.url); url.hash = ''; const canonical = url.href;
+      if (seen.has(canonical)) { diagnostics.excluded.duplicate++; continue; }
+      seen.add(canonical);
+      if (results.length === 5) { diagnostics.excluded.over_limit++; continue; }
+      results.push({ title: item.title.slice(0, 200), url: canonical, snippet: item.snippet.slice(0, 500) });
+    }
+    return { results, diagnostics };
   }
-  async search(query: string, runId: string): Promise<{ results: RevisionSearchHit[] }> {
+  async search(query: string, runId: string): Promise<{ results: RevisionSearchHit[]; diagnostics?: RevisionSearchDiagnostics }> {
     this.configured();
     if (typeof query !== 'string' || !query.trim() || query.length > 600 || /[\u0000-\u001f\u007f]/.test(query)) throw new FeedbackExternalError('invalid_input', 'The source search query is missing or exceeds its bounded size.');
     const request = { query: `${query.trim()} (${[...this.domains].map(domain => `site:${domain}`).join(' OR ')})`, intent: 'links' as const, depth: 'standard' as const };
-    return this.provider.meteredExternal({ kind: 'revision_search', runId, request }, fetch => this.sdk(fetch).search.webSearch(request), raw => this.hits(raw));
+    return this.provider.meteredExternal({ kind: 'revision_search', runId, request }, fetch => this.sdk(fetch).search.webSearch(request), (raw, replay) => this.hits(raw, replay));
   }
   private page(raw: unknown, receipt = false): RevisionSearchPage {
     if (!raw || typeof raw !== 'object') throw new Error('invalid_page_response');

@@ -13,22 +13,47 @@ export type InvestigationTrace = {
 export interface RevisionInvestigationSearch {
   readiness(): { ready: boolean; reason: string };
   allowed(url: string): boolean;
-  search(query: string, runId: string): Promise<{ results: { title: string; url: string; snippet: string }[] }>;
+  search(query: string, runId: string): Promise<{ results: { title: string; url: string; snippet: string }[]; diagnostics?: { returned: number; inspected: number; excluded: Record<string, number> } }>;
   read(url: string, runId: string): Promise<{ url: string; title?: string; text: string }>;
 }
-type Input = { context: RevisionContext; critique: string; issue: InvestigationIssue; runId: string; originalCitedSourceIds?: string[]; originalSourceIds?: string[] };
+type Input = { context: RevisionContext; critique: string; issue: InvestigationIssue; runId: string; originalCitedSourceIds?: string[]; originalSourceIds?: string[]; searchQuery?: string };
 const unique = <T>(items: T[]) => [...new Set(items)];
 const normalizedContent = (value: string) => value.normalize('NFKC').replace(/\s+/g, ' ').trim().toLowerCase();
 // Identical answers to different customer questions retain different scope.
 // For ordinary documents, a different URL does not create new evidence.
 const alreadyCovered = (prior: RevisionSource, candidate: RevisionSource) => normalizedContent(prior.text).includes(normalizedContent(candidate.text)) && normalizedContent(prior.originalQuestion ?? '') === normalizedContent(candidate.originalQuestion ?? '');
 const stopWords = new Set('about after again also answer available because before better both could does evidence first from have into just listing make missing model more need number only original other part please product question really same should source sources still supplied than that their them then there these they this those using very want what when where which will with would your'.split(' '));
-const tokens = (text: string) => unique(text.toLowerCase().match(/[a-z0-9][a-z0-9.-]{2,}/g) ?? []).filter(word => !stopWords.has(word));
+const tokens = (text: string) => unique(text.toLowerCase().replace(/\.{2,}/g, ' ').match(/\b[a-z0-9]+(?:[-.][a-z0-9]+)*\b/g) ?? []).filter(word => word.length >= 3 && !stopWords.has(word));
 // Customer identifiers come only from their question and clarification. Digits
 // from a source's historical question must never become the current model.
 const identifiers = (text: string) => unique((text.match(/\b[a-z0-9]+(?:-[a-z0-9]+|\.[0-9]+)*\b/gi) ?? []).map(value => value.toUpperCase())).filter(value => value.length >= 5 && /\d/.test(value));
 const mentions = (text: string, identifier: string) => identifiers(text).includes(identifier);
 const compatibilityWords = /\b(fit|fits|fitting|compatible|compatibility|interchangeable|interchangeability|replace|replaces|replacement|replacing|cross.reference)\b/i;
+/** Search the customer's target and question, using listing words only for product context. */
+export function buildInvestigationQuery(question: string, productTitle: string, requested: string[]): string {
+  const intent = compatibilityWords.test(question) ? ['compatibility', 'replacement']
+    : /\b(dimensions?|measurements?|size|height|width|wide|depth|deep|long|length|weight)\b/i.test(question) ? ['dimensions', 'specifications']
+    : /\b(material|made of|fabric|leather|composition|ingredients?)\b/i.test(question) ? ['material', 'composition']
+    : /\b(install|installation|assemble|assembly|mount|setup)\b/i.test(question) ? ['installation', 'instructions']
+    : /\b(warranty|guarantee|lifespan|last|durability)\b/i.test(question) ? ['warranty', 'durability']
+    : [];
+  const targets = new Set(requested.map(id => id.toLowerCase()));
+  const title = tokens(productTitle).filter(word => !/\d/.test(word) || targets.has(word)).slice(0, 6);
+  const questionWords = tokens(question).slice(0, 12);
+  const seen = new Set<string>();
+  const terms = [...requested.slice(0, 6), ...questionWords, ...intent, ...title].filter(term => {
+    const key = term.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  let query = '';
+  for (const term of terms) {
+    if ((query.length ? query.length + 1 : 0) + term.length > 240) break;
+    query += `${query ? ' ' : ''}${term}`;
+  }
+  return query || 'product information';
+}
 function resolvedIssue(input: Input): Exclude<InvestigationIssue, 'auto'> {
   if (input.issue !== 'auto') return input.issue;
   if (/\b(wrong|different|another|unrelated)\b.{0,45}\b(model|part|refrigerator|product)\b|\bmodel\b.{0,30}\b(mismatch|wrong)\b/i.test(input.critique)) return 'wrong_model';
@@ -75,9 +100,11 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
   const requestText = [context.question, ...context.clarifications.map(item => item.text)].join(' ');
   const requested = identifiers(requestText);
   const compatibility = compatibilityWords.test(`${context.question} ${input.critique}`);
-  const queryTerms = tokens(`${context.question} ${input.critique}`).slice(0, 24);
+  const questionTerms = tokens(context.question).slice(0, 16);
+  const queryTerms = unique([...questionTerms, ...tokens(input.critique)]).slice(0, 24);
   // Do not send reviewer names or whole clarifications to the search provider.
-  const query = unique([context.product.title.slice(0, 120), ...requested.slice(0, 6), ...tokens(context.question).slice(0, 12)]).join(' ').slice(0, 500);
+  // A persisted plan must replay the exact metered search request after restart.
+  const query = input.searchQuery ?? buildInvestigationQuery(context.question, context.product.title, requested);
   const trace: InvestigationTrace = { protocol: 'revision-investigation-v1', planner: 'rules', issue: resolvedIssue(input), status: 'running', query, requestedIdentifiers: requested, steps: [], selectedSourceIds: [], addedSourceIds: [], newEvidence: false, externalCalls: 0 };
   const progress = () => onProgress?.(structuredClone(trace));
   const step = (entry: InvestigationTrace['steps'][number]) => { trace.steps.push(entry); progress(); };
@@ -101,11 +128,19 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
   trace.selectedSourceIds = ranked.slice(0, 12).map(item => item.source.id);
   step({ kind: 'local_search', status: 'completed', detail: `Ranked ${ranked.length} saved sources using the current question and critique; selected ${trace.selectedSourceIds.length}. Reusing a saved source adds no new evidence.`, sourceIds: trace.selectedSourceIds });
   const cited = new Set(input.originalCitedSourceIds ?? []);
-  const applicable = (source: RevisionSource) => {
-    if (wrongQuestionScope(source, requested, compatibility, requestText, context.product.title)) return false;
-    if (compatibility) return requested.length > 0 && requested.every(id => mentions(source.text, id)) && compatibilityWords.test(source.text);
-    return queryTerms.filter(term => tokens(source.text).includes(term)).length >= 2;
+  const applicability = (source: RevisionSource): { applicable: boolean; reason: string } => {
+    if (wrongQuestionScope(source, requested, compatibility, requestText, context.product.title)) return { applicable: false, reason: 'The source belongs to a different customer question or device model.' };
+    if (compatibility) {
+      if (!requested.length || requested.some(id => !mentions(source.text, id))) return { applicable: false, reason: 'The source does not mention every requested identifier.' };
+      if (!compatibilityWords.test(source.text)) return { applicable: false, reason: 'The source mentions the identifiers but does not state a fit or replacement relationship.' };
+      return { applicable: true, reason: 'The source is a compatibility candidate; its claim still requires review.' };
+    }
+    const overlap = questionTerms.filter(term => tokens(source.text).includes(term)).length;
+    return overlap >= Math.min(2, questionTerms.length) && questionTerms.length > 0
+      ? { applicable: true, reason: 'The source addresses terms in the customer question; its claim still requires review.' }
+      : { applicable: false, reason: 'The source excerpt does not address enough terms in the customer question.' };
   };
+  const applicable = (source: RevisionSource) => applicability(source).applicable;
   const candidates = ranked.filter(item => applicable(item.source));
   const uncited = candidates.filter(item => !cited.has(item.source.id));
   // Without a parent snapshot, novelty is unknown: conservatively treat the
@@ -139,10 +174,16 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
     return stop('needs_information', 'External discovery is unavailable and the missing claim remains unresolved.', clarification());
   }
   let hits: { title: string; url: string; snippet: string }[];
+  let searchOutcome: Awaited<ReturnType<RevisionInvestigationSearch['search']>>;
   try {
     trace.externalCalls++; progress();
-    hits = (await search.search(query, `${input.runId}:search:1`)).results;
-    step({ kind: 'web_search', status: 'completed', detail: `Received ${hits.length} search leads. Search snippets are not citation sources.` });
+    searchOutcome = await search.search(query, `${input.runId}:search:1`);
+    hits = searchOutcome.results;
+    const diagnostics = searchOutcome.diagnostics;
+    const excluded = diagnostics ? Object.entries(diagnostics.excluded).filter(([, count]) => count > 0).map(([reason, count]) => `${count} ${reason.replaceAll('_', ' ')}`).join(', ') : '';
+    step({ kind: 'web_search', status: 'completed', detail: diagnostics
+      ? `${diagnostics.returned} raw results; ${diagnostics.inspected} inspected; ${hits.length} eligible leads${excluded ? `; excluded: ${excluded}` : ''}. Search snippets are not citation sources.`
+      : `Received ${hits.length} search leads. Search snippets are not citation sources.` });
   } catch (error) {
     step({ kind: 'web_search', status: 'failed', detail: 'Source discovery did not return a verified result; no automatic retry was made.' });
     if (error && typeof error === 'object' && 'code' in error && ['unverified_outcome', 'reconciliation_required'].includes(String(error.code))) throw error;
@@ -166,7 +207,8 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
       if (text.length < 30) { step({ kind: 'source_read', status: 'skipped', detail: 'The page did not provide a usable source excerpt.', url: page.url }); continue; }
       const digest = createHash('sha256').update(JSON.stringify([page.url, text])).digest('hex');
       const source: RevisionSource = { id: `${context.sources[0]?.id.split(':')[0] ?? context.product.id}:${digest}`, label: (page.title || hit.title || new URL(page.url).hostname).slice(0, 80), text, sha256: digest, originalQuestion: null, origin: 'agent_retrieved', reference: page.url, retrievedAt: new Date().toISOString() };
-      if (!applicable(source)) { step({ kind: 'scope_check', status: 'skipped', detail: 'The read excerpt did not contain the requested identifiers or enough question terms to admit it as a candidate.', url: page.url }); continue; }
+      const relevance = applicability(source);
+      if (!relevance.applicable) { step({ kind: 'scope_check', status: 'skipped', detail: relevance.reason, url: page.url }); continue; }
       if (context.sources.some(item => alreadyCovered(item, source))) { step({ kind: 'source_read', status: 'skipped', detail: 'This source content is already saved; a different URL or formatting does not add evidence.', url: page.url }); continue; }
       if (JSON.stringify({ ...context, sources: [...context.sources, source] }).length > 30_000) { step({ kind: 'source_read', status: 'skipped', detail: 'Adding this excerpt would exceed the bounded source context.', url: page.url }); continue; }
       context.sources.push(source); trace.selectedSourceIds.push(source.id); trace.addedSourceIds.push(source.id); trace.newEvidence = true;
@@ -177,5 +219,10 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
       return stop('blocked', 'A source read failed before its outcome could be used.');
     }
   }
-  return trace.newEvidence ? stop('ready_to_revise', 'New source candidates were saved for the revision to assess; claim support requires review.') : stop('needs_information', 'The bounded search found no new applicable source candidate for the missing claim.', clarification());
+  const noLeads = hits.length === 0 && searchOutcome!.diagnostics;
+  const reason = noLeads && searchOutcome!.diagnostics!.returned > 0
+    ? 'The provider returned search results, but none passed the configured source checks.'
+    : noLeads ? 'The provider returned no search results for the bounded query.'
+    : 'The bounded search found no new applicable source candidate for the missing claim.';
+  return trace.newEvidence ? stop('ready_to_revise', 'New source candidates were saved for the revision to assess; claim support requires review.') : stop('needs_information', reason, clarification());
 }

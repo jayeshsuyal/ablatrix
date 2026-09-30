@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { investigateRevision, type InvestigationTrace, type RevisionInvestigationSearch } from './revision-investigation.ts';
+import { readFileSync } from 'node:fs';
+import { buildInvestigationQuery, investigateRevision, type InvestigationTrace, type RevisionInvestigationSearch } from './revision-investigation.ts';
 import type { RevisionContext, RevisionSource } from './answer-revisions.ts';
 
 const source = (id: string, text: string, originalQuestion: string | null = null): RevisionSource => ({ id: `19:${id}`, label: 'Saved listing', text, sha256: id.padEnd(64, 'a'), originalQuestion, origin: 'pinned' });
@@ -34,9 +35,51 @@ test('identifier extraction separates ellipses and sentence text while keeping o
   const input = context(); input.question = 'I need part number 241543917...what drawer replaces it?';
   const result = await investigateRevision({ context: input, critique: 'Compatibility is missing.', issue: 'missing_evidence', runId: 'job' });
   assert.deepEqual(result.investigation.requestedIdentifiers, ['241543917']);
+  assert.match(result.investigation.query, /\b241543917\b/);
+  assert.equal(result.investigation.query.match(/241543917/g)?.length, 1);
+  assert.match(result.investigation.query, /replacement/);
+  assert.doesNotMatch(result.investigation.query, /240337103|241543917\.\.\.what/);
   input.clarifications.push({ text: 'The full model is RF-12345 and the old Kenmore model is 253.67889506.', reviewer: 'Reviewer' });
   const clarified = await investigateRevision({ context: input, critique: 'Compatibility is missing.', issue: 'missing_evidence', runId: 'job2' });
   assert.deepEqual(clarified.investigation.requestedIdentifiers, ['241543917', 'RF-12345', '253.67889506']);
+});
+
+test('question-led queries cover the pinned 20-product batch without leaking listing-only identifiers', () => {
+  const manifest = JSON.parse(readFileSync(new URL('../docs/evidence/paid-qa-batch-2026-09-28/manifest.json', import.meta.url), 'utf8')) as { cases: { title: string; question: string }[] };
+  assert.equal(manifest.cases.length, 20);
+  for (const item of manifest.cases) {
+    const query = buildInvestigationQuery(item.question, item.title, []);
+    assert.ok(query.length > 0 && query.length <= 240, item.question);
+    assert.doesNotMatch(query, /\.\.\.|[\r\n]/, item.question);
+    const titleIdentifiers = item.title.match(/\b\d{5,}\b/g) ?? [];
+    for (const id of titleIdentifiers) assert.equal(query.split(' ').includes(id), false, `${item.question}: ${id}`);
+  }
+  assert.match(buildInvestigationQuery('How wide is it?', 'Drawer 240337103', []), /dimensions specifications/);
+  assert.match(buildInvestigationQuery('What material is this made of?', 'Jacket X123456', []), /material.*composition/);
+  assert.match(buildInvestigationQuery('How do I install it?', 'Fixture X123456', []), /installation instructions/);
+  assert.match(buildInvestigationQuery('Is it 110V?', 'Appliance X123456', []), /110v/);
+});
+
+test('a digit-bearing non-compatibility question can admit matching source text', async () => {
+  const input: RevisionContext = { question: 'Is it 110V?', product: { id: 'appliance', title: 'Fixture appliance X123456' }, sources: [source('voltage', 'This fixture appliance operates at 110V.')], clarifications: [] };
+  const result = await investigateRevision({ context: input, critique: 'The voltage detail was missed.', issue: 'missed_source', runId: 'voltage', originalCitedSourceIds: [] });
+  assert.equal(result.investigation.status, 'ready_to_revise');
+  assert.deepEqual(result.investigation.selectedSourceIds, ['19:voltage']);
+});
+
+test('search diagnostics distinguish no raw results from leads rejected by source checks', async () => {
+  for (const returned of [0, 2]) {
+    const adapter: RevisionInvestigationSearch = {
+      readiness: () => ({ ready: true, reason: 'Fixture' }), allowed: () => true,
+      search: async () => ({ results: [], diagnostics: { returned, inspected: returned, excluded: { off_domain: returned ? 1 : 0, invalid_shape: returned ? 1 : 0 } } }),
+      read: async () => { throw new Error('No eligible read'); }
+    };
+    const result = await investigateRevision({ context: context(), critique: 'Compatibility missing.', issue: 'missing_evidence', runId: `empty-${returned}` }, adapter);
+    assert.equal(result.investigation.status, 'needs_information');
+    assert.equal(result.investigation.externalCalls, 1);
+    assert.match(result.investigation.steps.find(step => step.kind === 'web_search')!.detail, new RegExp(`${returned} raw results`));
+    assert.match(result.investigation.stopReason!, returned ? /none passed/ : /no search results/);
+  }
 });
 
 test('matching device-model Q&A retains an extra labeled part or known product identifier', async () => {

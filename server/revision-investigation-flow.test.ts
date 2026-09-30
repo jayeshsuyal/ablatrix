@@ -126,7 +126,9 @@ test('a restarted investigation replays completed search and read receipts witho
   try {
     const job = state.request('interrupted-investigation');
     // Simulate a crash after external receipts are durable, before the new context is persisted.
-    const result = await investigateRevision({ context: job.context!, critique: job.feedback, issue: 'missing_evidence', runId: job.id }, state.search);
+    const legacyQuery = 'Frigidaire 240337103 Crisper Pan for Refrigerator 241543917';
+    const result = await investigateRevision({ context: job.context!, critique: job.feedback, issue: 'missing_evidence', runId: job.id, searchQuery: legacyQuery }, state.search);
+    assert.equal(result.investigation.query, legacyQuery);
     assert.equal(state.calls.length, 2);
     assert.equal(result.investigation.newEvidence, true);
     const db = new DatabaseSync(state.path);

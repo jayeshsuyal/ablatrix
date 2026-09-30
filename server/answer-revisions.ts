@@ -173,7 +173,7 @@ export class AnswerRevisions {
             return job.context!.sources.find(source => source.id === c.passageId || source.sha256 === savedPassage?.sha256)?.id ?? c.passageId;
           });
           const originalSourceIds = (parent.context ?? this.pinnedContext(job.qid)).sources.map(source => source.id);
-          const result = await investigateRevision({ context:job.context, critique:job.feedback, issue:job.issue ?? 'auto', runId:job.id, originalCitedSourceIds, originalSourceIds }, boundedSearch, trace => { job.investigation=structuredClone(trace); this.saveJob(job); });
+          const result = await investigateRevision({ context:job.context, critique:job.feedback, issue:job.issue ?? 'auto', runId:job.id, originalCitedSourceIds, originalSourceIds, searchQuery: job.investigation?.query }, boundedSearch, trace => { job.investigation=structuredClone(trace); this.saveJob(job); });
           job.context=result.context; job.investigation=result.investigation; job.investigationComplete=true;
           if (result.investigation.status !== 'ready_to_revise' || !result.investigation.selectedSourceIds.length) { job.status='needs_information'; job.finishedAt=new Date().toISOString(); this.saveJob(job); return; }
           if (JSON.stringify(job.context).length + JSON.stringify(parent.answer.answer).length + JSON.stringify(job.feedback).length > 35_000) { job.status='needs_information'; job.error='Investigation found more source text than the bounded answer context permits. Narrow the excerpts before revising.'; job.finishedAt=new Date().toISOString(); this.saveJob(job); return; }
