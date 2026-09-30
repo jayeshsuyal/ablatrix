@@ -177,7 +177,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
   }
   /** Meter one SDK operation with this provider's credential and durable planning allowance. */
   async meteredExternal<T>(input: { kind: 'revision_search' | 'revision_read'; runId: string; request: unknown },
-    execute: (boundedFetch: typeof fetch) => Promise<unknown>, validate: (output: unknown) => T): Promise<T> {
+    execute: (boundedFetch: typeof fetch) => Promise<unknown>, validate: (output: unknown, replay: boolean) => T): Promise<T> {
     const serialized = JSON.stringify(input.request);
     if (!input.runId.trim() || input.runId.length > 200 || !serialized || serialized.length > 8000) {
       throw new FeedbackExternalError('invalid_input', 'Investigation operation exceeds the bounded input.');
@@ -189,7 +189,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
         try {
           const receipt = JSON.parse(previous.receipt_json);
           if (receipt.kind !== input.kind || receipt.requestHash !== requestHash) throw new Error('receipt_mismatch');
-          return validate(receipt.output);
+          return validate(receipt.output, true);
         } catch { /* Changed requests and invalid receipts require reconciliation, never another dispatch. */ }
       }
       throw new FeedbackExternalError('reconciliation_required', 'This investigation operation already has a recorded attempt. Reconcile its result before proceeding; it was not retried.');
@@ -226,7 +226,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
     try {
       const raw = await execute(boundedFetch);
       errorCode = 'external_output_validation';
-      const output = validate(raw);
+      const output = validate(raw, false);
       const receipt = JSON.stringify({ kind: input.kind, requestHash, output, model: null, usage: null });
       if (receipt.length > 64_000) throw new Error('external_output_size');
       this.db.prepare("UPDATE loop_provider_calls SET status='completed',receipt_json=? WHERE id=?").run(receipt, id);

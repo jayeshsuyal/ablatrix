@@ -57,6 +57,14 @@ test('question-led queries cover the pinned 20-product batch without leaking lis
   assert.match(buildInvestigationQuery('How wide is it?', 'Drawer 240337103', []), /dimensions specifications/);
   assert.match(buildInvestigationQuery('What material is this made of?', 'Jacket X123456', []), /material.*composition/);
   assert.match(buildInvestigationQuery('How do I install it?', 'Fixture X123456', []), /installation instructions/);
+  assert.match(buildInvestigationQuery('Is it 110V?', 'Appliance X123456', []), /110v/);
+});
+
+test('a digit-bearing non-compatibility question can admit matching source text', async () => {
+  const input: RevisionContext = { question: 'Is it 110V?', product: { id: 'appliance', title: 'Fixture appliance X123456' }, sources: [source('voltage', 'This fixture appliance operates at 110V.')], clarifications: [] };
+  const result = await investigateRevision({ context: input, critique: 'The voltage detail was missed.', issue: 'missed_source', runId: 'voltage', originalCitedSourceIds: [] });
+  assert.equal(result.investigation.status, 'ready_to_revise');
+  assert.deepEqual(result.investigation.selectedSourceIds, ['19:voltage']);
 });
 
 test('search diagnostics distinguish no raw results from leads rejected by source checks', async () => {

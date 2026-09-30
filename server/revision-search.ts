@@ -72,11 +72,16 @@ export class SapiomRevisionSearch {
       scrape: input => sapiomSearch.scrape(input, transport, 'https://api.sapiom.ai')
     } };
   }
-  private hits(raw: unknown): { results: RevisionSearchHit[]; diagnostics: RevisionSearchDiagnostics } {
+  private hits(raw: unknown, replay: boolean): { results: RevisionSearchHit[]; diagnostics?: RevisionSearchDiagnostics } {
     if (!raw || typeof raw !== 'object' || !('results' in raw) || !Array.isArray(raw.results)) throw new Error('invalid_search_response');
     // A completed receipt already contains the filtered result. Revalidate it
     // without recomputing the original raw-result diagnostics from five leads.
-    if ('diagnostics' in raw) {
+    if (replay && !('diagnostics' in raw)) {
+      // Older receipts contain eligible leads only. Their raw count is unknown.
+      if (raw.results.length > 5 || raw.results.some(hit => !hit || typeof hit !== 'object' || !('url' in hit) || !this.allowed(hit.url as string) || !('title' in hit) || typeof hit.title !== 'string' || !('snippet' in hit) || typeof hit.snippet !== 'string')) throw new Error('invalid_search_receipt');
+      return { results: raw.results as RevisionSearchHit[] };
+    }
+    if (replay && 'diagnostics' in raw) {
       const value = raw as { results: unknown[]; diagnostics: RevisionSearchDiagnostics };
       const counts = value.diagnostics;
       if (!counts || !Number.isSafeInteger(counts.returned) || !Number.isSafeInteger(counts.inspected) || counts.returned < 0 || counts.inspected < 0 || counts.inspected > counts.returned ||
@@ -99,11 +104,11 @@ export class SapiomRevisionSearch {
     }
     return { results, diagnostics };
   }
-  async search(query: string, runId: string): Promise<{ results: RevisionSearchHit[]; diagnostics: RevisionSearchDiagnostics }> {
+  async search(query: string, runId: string): Promise<{ results: RevisionSearchHit[]; diagnostics?: RevisionSearchDiagnostics }> {
     this.configured();
     if (typeof query !== 'string' || !query.trim() || query.length > 600 || /[\u0000-\u001f\u007f]/.test(query)) throw new FeedbackExternalError('invalid_input', 'The source search query is missing or exceeds its bounded size.');
     const request = { query: `${query.trim()} (${[...this.domains].map(domain => `site:${domain}`).join(' OR ')})`, intent: 'links' as const, depth: 'standard' as const };
-    return this.provider.meteredExternal({ kind: 'revision_search', runId, request }, fetch => this.sdk(fetch).search.webSearch(request), raw => this.hits(raw));
+    return this.provider.meteredExternal({ kind: 'revision_search', runId, request }, fetch => this.sdk(fetch).search.webSearch(request), (raw, replay) => this.hits(raw, replay));
   }
   private page(raw: unknown, receipt = false): RevisionSearchPage {
     if (!raw || typeof raw !== 'object') throw new Error('invalid_page_response');

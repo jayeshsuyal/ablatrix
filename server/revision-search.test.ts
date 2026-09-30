@@ -93,13 +93,31 @@ test('empty and filtered search results retain distinct, bounded diagnostics in 
       const search = new SapiomRevisionSearch(provider, searchOptions);
       const result = await search.search('fixture', 'diagnostic:search:1');
       assert.equal(result.results.length, 0);
-      assert.equal(result.diagnostics.returned, expected.returned);
-      assert.equal(result.diagnostics.excluded.off_domain, expected.off_domain);
-      assert.equal(result.diagnostics.excluded.invalid_shape, expected.invalid_shape);
+      assert.equal(result.diagnostics!.returned, expected.returned);
+      assert.equal(result.diagnostics!.excluded.off_domain, expected.off_domain);
+      assert.equal(result.diagnostics!.excluded.invalid_shape, expected.invalid_shape);
       assert.deepEqual(await search.search('fixture', 'diagnostic:search:1'), result);
       assert.doesNotMatch(JSON.stringify(provider.receipt('diagnostic:search:1')), /retailer\.com|not permitted/);
     } finally { provider.close(); }
   }
+});
+
+test('legacy filtered receipts replay without inventing an unknown raw-result count', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'revision-legacy-search-')); const dbPath = join(directory, 'budget.sqlite');
+  const provider = new SapiomFeedbackProvider({ ...options, dbPath, fetchImpl: async () => json({ results: [{ title: 'Off domain', url: 'https://retailer.com/a', snippet: 'Not retained.' }] }) });
+  try {
+    const search = new SapiomRevisionSearch(provider, searchOptions);
+    const first = await search.search('fixture', 'legacy:search:1');
+    assert.equal(first.diagnostics!.returned, 1);
+    const db = new DatabaseSync(dbPath);
+    try {
+      const receipt = JSON.parse(provider.receipt('legacy:search:1')!.receipt_json!);
+      receipt.output = { results: [] };
+      db.prepare('UPDATE loop_provider_calls SET receipt_json=? WHERE run_id=?').run(JSON.stringify(receipt), 'legacy:search:1');
+    } finally { db.close(); }
+    const replay = await search.search('fixture', 'legacy:search:1');
+    assert.deepEqual(replay, { results: [] });
+  } finally { provider.close(); rmSync(directory, { recursive: true, force: true }); }
 });
 
 test('SDK page reads preserve actual markdown, bound excerpts, and share search planning allowance', async () => {

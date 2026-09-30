@@ -16,7 +16,7 @@ export interface RevisionInvestigationSearch {
   search(query: string, runId: string): Promise<{ results: { title: string; url: string; snippet: string }[]; diagnostics?: { returned: number; inspected: number; excluded: Record<string, number> } }>;
   read(url: string, runId: string): Promise<{ url: string; title?: string; text: string }>;
 }
-type Input = { context: RevisionContext; critique: string; issue: InvestigationIssue; runId: string; originalCitedSourceIds?: string[]; originalSourceIds?: string[] };
+type Input = { context: RevisionContext; critique: string; issue: InvestigationIssue; runId: string; originalCitedSourceIds?: string[]; originalSourceIds?: string[]; searchQuery?: string };
 const unique = <T>(items: T[]) => [...new Set(items)];
 const normalizedContent = (value: string) => value.normalize('NFKC').replace(/\s+/g, ' ').trim().toLowerCase();
 // Identical answers to different customer questions retain different scope.
@@ -39,7 +39,7 @@ export function buildInvestigationQuery(question: string, productTitle: string, 
     : [];
   const targets = new Set(requested.map(id => id.toLowerCase()));
   const title = tokens(productTitle).filter(word => !/\d/.test(word) || targets.has(word)).slice(0, 6);
-  const questionWords = tokens(question).filter(word => !/\d/.test(word) || targets.has(word)).slice(0, 12);
+  const questionWords = tokens(question).slice(0, 12);
   const seen = new Set<string>();
   const terms = [...requested.slice(0, 6), ...questionWords, ...intent, ...title].filter(term => {
     const key = term.toLowerCase();
@@ -100,10 +100,11 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
   const requestText = [context.question, ...context.clarifications.map(item => item.text)].join(' ');
   const requested = identifiers(requestText);
   const compatibility = compatibilityWords.test(`${context.question} ${input.critique}`);
-  const questionTerms = tokens(context.question).filter(term => !/\d/.test(term)).slice(0, 16);
+  const questionTerms = tokens(context.question).slice(0, 16);
   const queryTerms = unique([...questionTerms, ...tokens(input.critique)]).slice(0, 24);
   // Do not send reviewer names or whole clarifications to the search provider.
-  const query = buildInvestigationQuery(context.question, context.product.title, requested);
+  // A persisted plan must replay the exact metered search request after restart.
+  const query = input.searchQuery ?? buildInvestigationQuery(context.question, context.product.title, requested);
   const trace: InvestigationTrace = { protocol: 'revision-investigation-v1', planner: 'rules', issue: resolvedIssue(input), status: 'running', query, requestedIdentifiers: requested, steps: [], selectedSourceIds: [], addedSourceIds: [], newEvidence: false, externalCalls: 0 };
   const progress = () => onProgress?.(structuredClone(trace));
   const step = (entry: InvestigationTrace['steps'][number]) => { trace.steps.push(entry); progress(); };
