@@ -83,7 +83,7 @@ test('a failed review write preserves the successful answer response and recover
     try {
       const insert = historyDb.prepare('INSERT INTO workspace_runs(id,created_at,document) VALUES(?,?,?)');
       for (let i = 0; i < 21; i++) {
-        const copy = { ...history.runs[0], id: randomUUID(), createdAt: new Date(Date.UTC(2026, 9, 10, 0, 0, i)).toISOString() };
+        const copy = { ...history.runs[0], id: randomUUID(), createdAt: new Date(Date.parse(saved.createdAt) + (i + 1) * 1000).toISOString() };
         insert.run(copy.id, copy.createdAt, JSON.stringify(copy));
       }
     } finally { historyDb.close(); }

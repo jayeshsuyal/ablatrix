@@ -17,6 +17,8 @@ type ReviewEvent = { id?: string; versionId: string; kind: 'reject' | 'accept' |
 type Job = { id: string; qid: string; parentId: string; feedback: string; reviewer: string; status: string; createdAt: string; startedAt?: string; finishedAt?: string; attemptId?: string; error?: string; versionId?: string; context?: RevisionContext; promptVersion?: string; additionalSources?: z.infer<typeof additionalSourceSchema>[]; clarification?: string; investigate?: boolean; issue?: InvestigationIssue; investigation?: InvestigationTrace; investigationComplete?: boolean; phase?: 'investigation' | 'generation' };
 type RevisionSearch = NonNullable<Parameters<typeof investigateRevision>[1]>;
 const sha = (text: string) => createHash('sha256').update(text).digest('hex');
+// Numeric UTC time also orders valid ISO strings with different fractional precision.
+const workspaceCreatedAtSql = "julianday(json_extract(document, '$.createdAt'))";
 
 /** A local, single-worker queue. Tables and receipts make a later shared worker possible. */
 export class AnswerRevisions {
@@ -37,6 +39,7 @@ export class AnswerRevisions {
       CREATE TABLE IF NOT EXISTS answer_revision_attempts(id TEXT PRIMARY KEY,job_id TEXT NOT NULL,provider_call_id TEXT,status TEXT NOT NULL,created_at TEXT NOT NULL,finished_at TEXT);
       CREATE INDEX IF NOT EXISTS answer_revision_attempts_job ON answer_revision_attempts(job_id);
       CREATE TABLE IF NOT EXISTS workspace_review_answers(id TEXT PRIMARY KEY,run_id TEXT NOT NULL UNIQUE,document TEXT NOT NULL);
+      CREATE INDEX IF NOT EXISTS workspace_review_chronology ON workspace_review_answers(${workspaceCreatedAtSql} DESC,id DESC);
     `);
     const columns = new Set((this.db.prepare('PRAGMA table_info(answer_revision_jobs)').all() as {name:string}[]).map(r=>r.name));
     if (!columns.has('lease_owner')) this.db.exec('ALTER TABLE answer_revision_jobs ADD COLUMN lease_owner TEXT');
@@ -101,18 +104,18 @@ export class AnswerRevisions {
       const total = (this.db.prepare('SELECT COUNT(*) AS total FROM workspace_review_answers').get() as { total: number }).total;
       let page = options.page !== undefined && Number.isSafeInteger(options.page) && options.page > 0 ? options.page : 1;
       if (options.answer) {
-        const anchor = this.db.prepare('SELECT rowid AS position FROM workspace_review_answers WHERE id=?').get(options.answer) as { position: number } | undefined;
+        const anchor = this.db.prepare(`SELECT ${workspaceCreatedAtSql} AS created FROM workspace_review_answers WHERE id=?`).get(options.answer) as { created: number } | undefined;
         if (anchor) {
-          const newer = (this.db.prepare('SELECT COUNT(*) AS total FROM workspace_review_answers WHERE rowid>?').get(anchor.position) as { total: number }).total;
+          const newer = (this.db.prepare(`SELECT COUNT(*) AS total FROM workspace_review_answers WHERE ${workspaceCreatedAtSql}>? OR (${workspaceCreatedAtSql}=? AND id>?)`).get(anchor.created, anchor.created, options.answer) as { total: number }).total;
           page = Math.floor(newer / pageSize) + 1;
         }
       }
       page = Math.min(page, Math.max(1, Math.ceil(total / pageSize)));
       // Select the page before loading any answer, source context, job or event documents.
-      ids = (this.db.prepare('SELECT id FROM workspace_review_answers ORDER BY rowid DESC LIMIT ? OFFSET ?').all(pageSize, (page - 1) * pageSize) as { id: string }[]).map(item => item.id);
+      ids = (this.db.prepare(`SELECT id FROM workspace_review_answers ORDER BY ${workspaceCreatedAtSql} DESC,id DESC LIMIT ? OFFSET ?`).all(pageSize, (page - 1) * pageSize) as { id: string }[]).map(item => item.id);
       pagination = { page, pageSize, total, hasMore: page * pageSize < total };
     } else {
-      ids = [ ...this.reviews.overview().cases.map(item => item.qid), ...(scope === 'pinned' ? [] : (this.db.prepare('SELECT id FROM workspace_review_answers ORDER BY rowid DESC').all() as { id: string }[]).map(item => item.id)) ];
+      ids = [ ...this.reviews.overview().cases.map(item => item.qid), ...(scope === 'pinned' ? [] : (this.db.prepare(`SELECT id FROM workspace_review_answers ORDER BY ${workspaceCreatedAtSql} DESC,id DESC`).all() as { id: string }[]).map(item => item.id)) ];
     }
     const cases = ids.map(qid => ({ qid, generationAttempts:this.generationAttempts(qid), versions: this.versions(qid), jobs: this.jobs(qid).map(job => { const receipt = this.provider.receipt(job.id); const attempts=this.db.prepare('SELECT * FROM answer_revision_attempts WHERE job_id=? ORDER BY created_at').all(job.id); return { ...job, attempts, externalUsage:this.externalReceipts(job).map(call => ({ id:call.id, kind:call.kind, status:call.status, planningAllowanceUsd:call.allowance_usd })), usage: receipt ? { inputTokens:receipt.input_tokens, outputTokens:receipt.output_tokens, planningAllowanceUsd:receipt.allowance_usd, providerCallStatus:receipt.status } : null, latencyMs: job.finishedAt ? new Date(job.finishedAt).getTime()-new Date(job.createdAt).getTime() : null }; }), events: (this.db.prepare('SELECT document FROM answer_review_events WHERE qid=? ORDER BY rowid').all(qid) as {document:string}[]).map(r => JSON.parse(r.document) as ReviewEvent) }));
     const jobs=cases.flatMap(c=>c.jobs);

@@ -1,6 +1,6 @@
 # From a product answer to a reviewed revision
 
-Completed answers from `/ask` enter `/review` automatically. The queue shows 20 answers per page, with previous/next controls and direct links to older answers. Pending, ready, accepted, and usage counts in a workspace review response describe its current page. Retrieval previews and failed generations have no completed answer to review. The historical 20-case packet at `/paid-review` retains its separate queue, source protocol, and result counts.
+Completed answers from `/ask` enter `/review` automatically. The queue shows 20 answers per page, newest creation time first, with previous/next controls and direct links to older answers. Equal timestamps use a stable answer-ID tie-break; import order does not change the queue. Pending, ready, accepted, and usage counts in a workspace review response describe its current page. Retrieval previews and failed generations have no completed answer to review. The historical 20-case packet at `/paid-review` retains its separate queue, source protocol, and result counts.
 
 ## One workflow
 

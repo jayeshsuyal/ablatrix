@@ -160,7 +160,7 @@ test('workspace review pages load only their answers and preserve older deep lin
   try {
     const pinned = flow.overview('pinned');
     assert.deepEqual(flow.overview('workspace').pagination, { page: 1, pageSize: 20, total: 0, hasMore: false });
-    const inputs = Array.from({ length: 45 }, () => snapshot());
+    const inputs = Array.from({ length: 45 }, (_, index) => ({ ...snapshot(), createdAt: new Date(Date.UTC(2026, 9, 9, 12, 0, index)).toISOString() }));
     const originals = inputs.map(input => flow.registerAnswer(input));
     flow.decide(inputs[0].id, { versionId: originals[0].id, reviewer: 'Synthetic pagination reviewer', decision: 'accept', note: 'Checked the oldest synthetic answer.', checkedSourceShas: [inputs[0].context.sources[0].sha256] });
     flow.request(inputs[1].id, { versionId: originals[1].id, idempotencyKey: 'synthetic-old-page-job', reviewer: 'Synthetic pagination reviewer', feedback: 'Investigate the older synthetic answer detail.' });
@@ -196,6 +196,44 @@ test('workspace review pages load only their answers and preserve older deep lin
       assert.throws(() => flow.overview('workspace', { answer: inputs[0].id }), SyntaxError, 'the malformed record is on the deep-linked page');
     } finally { db.prepare('UPDATE answer_versions SET document=? WHERE id=?').run(originalDocument, originals[0].id); }
     assert.equal((db.prepare('SELECT COUNT(*) AS total FROM workspace_review_answers').get() as { total: number }).total, 45, 'pagination never removes older answers');
+  } finally { db.close(); flow.close(); provider.close(); reviews.close(); rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('workspace pages order saved timestamps across mixed imports, existing rows and later answers', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'workspace-review-chronology-')), path = join(directory, 'review.sqlite');
+  const reviews = new PaidAnswerReview(path), provider = new SapiomFeedbackProvider({ enabled: false, dbPath: join(directory, 'ledger.sqlite') });
+  let flow = new AnswerRevisions(reviews, provider, path, false);
+  const db = new DatabaseSync(path);
+  try {
+    const pinned = flow.overview('pinned');
+    const inputs = Array.from({ length: 25 }, (_, index) => ({ ...snapshot(), createdAt: ['2026-10-09T12:00:00Z', '2026-10-09T12:00:00.000Z', '2026-10-09T12:00:00.100Z'][index % 3] }));
+    const ordered = [...inputs].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt) || (a.id < b.id ? 1 : -1));
+    // Start with the newest answer, then mix newer and older records as recovery may do.
+    const importOrder = [...ordered.filter((_, index) => index % 2 === 0), ...ordered.filter((_, index) => index % 2 === 1).reverse()];
+    for (const input of importOrder) flow.registerAnswer(input);
+    const ids = (page: number) => flow.overview('workspace', { page }).cases.map(item => item.qid);
+    assert.deepEqual(ids(1), ordered.slice(0, 20).map(input => input.id));
+    assert.deepEqual(ids(2), ordered.slice(20).map(input => input.id));
+    const documents = db.prepare('SELECT id,document FROM workspace_review_answers ORDER BY id').all();
+    flow.close();
+    // Simulate the prior schema: answers exist before the chronology index is added.
+    db.exec('DROP INDEX workspace_review_chronology');
+    flow = new AnswerRevisions(reviews, provider, path, false);
+    assert.deepEqual(ids(1), ordered.slice(0, 20).map(input => input.id));
+    assert.deepEqual(ids(2), ordered.slice(20).map(input => input.id));
+    for (const input of inputs) flow.registerAnswer(input);
+    assert.deepEqual(db.prepare('SELECT id,document FROM workspace_review_answers ORDER BY id').all(), documents, 'restart and idempotent import preserve the original snapshots');
+    assert.equal(flow.overview('workspace', { answer: ordered[19].id }).pagination?.page, 1, 'equal-time ID tie resolves the last answer on page one');
+    assert.equal(flow.overview('workspace', { answer: ordered[20].id }).pagination?.page, 2, 'equal-time ID tie resolves the first answer on page two');
+    assert.equal(flow.overview('workspace', { answer: ordered[24].id }).pagination?.page, 2);
+    const newer = { ...snapshot(), createdAt: '2026-10-09T12:00:01.000Z' };
+    flow.registerAnswer(newer);
+    assert.deepEqual(ids(1), [newer.id, ...ordered.slice(0, 19).map(input => input.id)]);
+    assert.deepEqual(ids(2), ordered.slice(19).map(input => input.id));
+    const shifted = flow.overview('workspace', { answer: ordered[19].id });
+    assert.equal(shifted.pagination?.page, 2, 'a deep link follows its answer across the page boundary after a new answer');
+    assert.equal(shifted.cases[0].qid, ordered[19].id);
+    assert.deepEqual(flow.overview('pinned'), pinned);
   } finally { db.close(); flow.close(); provider.close(); reviews.close(); rmSync(directory, { recursive: true, force: true }); }
 });
 
