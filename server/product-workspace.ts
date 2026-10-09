@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { textHash } from './product-corpus.ts';
 import { ProductRetriever } from './product-retrieval.ts';
 import { quoteOptions } from './feedback-provider.ts';
+import { workspaceReviewSourceHash, type ReviewAnswerSnapshot, type RevisionContext } from './answer-review-source.ts';
 import type { LoopAnswer, LoopProvider, LoopRetriever, LoopUsage, ProductCorpus, RetrievalResult } from './loop-types.ts';
 
 const sourceInput = z.object({ label: z.string().trim().min(2).max(80), text: z.string().trim().min(30).max(1500), originalQuestion: z.string().trim().min(1).max(500).optional() }).strict();
@@ -34,7 +35,7 @@ function sourceChunks(text: string): string[] {
 }
 
 export type WorkspaceProduct = { id: string; title: string; sources: { id: string; label: string; text: string; originalQuestion?: string }[]; createdAt: string };
-export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live'; generationProtocol?: 'product-answer-v2-context'; status: 'retrieving' | 'evidence_ready' | 'completed' | 'failed'; retrieval: RetrievalResult | null; answer: LoopAnswer | null; model: string | null; usage: LoopUsage; error: string | null; createdAt: string };
+export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live'; generationProtocol?: 'product-answer-v2-context'; reviewContext?: RevisionContext; status: 'retrieving' | 'evidence_ready' | 'completed' | 'failed'; retrieval: RetrievalResult | null; answer: LoopAnswer | null; model: string | null; usage: LoopUsage; error: string | null; createdAt: string };
 
 /** Local product workspace. Imported evidence never enters the frozen evaluation corpora. */
 export class ProductWorkspace {
@@ -54,10 +55,34 @@ export class ProductWorkspace {
   private products(): WorkspaceProduct[] {
     return (this.db.prepare('SELECT document FROM workspace_products ORDER BY created_at DESC').all() as { document: string }[]).map(row => JSON.parse(row.document) as WorkspaceProduct);
   }
-  private runs(): WorkspaceRun[] {
-    return (this.db.prepare('SELECT document FROM workspace_runs ORDER BY created_at DESC LIMIT 100').all() as { document: string }[]).map(row => JSON.parse(row.document) as WorkspaceRun);
+  private runs(limit?: number): WorkspaceRun[] {
+    // Limit interactive history in SQL; recovery and review import read every run.
+    const query = this.db.prepare(`SELECT document FROM workspace_runs ORDER BY created_at DESC, id${limit === undefined ? '' : ' LIMIT ?'}`);
+    return (query.all(...(limit === undefined ? [] : [limit])) as { document: string }[]).map(row => JSON.parse(row.document) as WorkspaceRun);
   }
-  overview() { return { products: this.products(), runs: this.runs(), readiness: this.provider.readiness(), busy: this.busy }; }
+  overview() { return { products: this.products(), runs: this.runs(100), readiness: this.provider.readiness(), busy: this.busy }; }
+  hasActive() { return this.busy; }
+  /** Detect both this connection's writes and commits from another connection. */
+  reviewImportVersion() {
+    const external = this.db.prepare('PRAGMA data_version').get() as { data_version: number };
+    const local = this.db.prepare('SELECT total_changes() AS changes').get() as { changes: number };
+    return `${external.data_version}:${local.changes}`;
+  }
+  reviewSnapshots(): ReviewAnswerSnapshot[] {
+    return this.runs().filter(run => run.mode === 'live' && run.status === 'completed' && run.answer && run.model && run.retrieval?.passages.length).map(run => ({
+      id: `workspace-${run.id}`, runId: run.id,
+      // Older runs did not freeze the full source set or original product title.
+      // Their retrieved passages are the only historical context we can assert.
+      context: run.reviewContext ?? { question: run.question, product: { id: run.productId, title: `Saved product ${run.productId} (original title unavailable)` },
+        sources: run.retrieval!.passages.map(passage => {
+          const source = { id: passage.id, label: passage.reference || passage.source, text: passage.text, originalQuestion: passage.originalQuestion ?? null, origin: 'workspace' as const, reference: passage.reference };
+          return { ...source, sha256: workspaceReviewSourceHash(source) };
+        }), clarifications: [] },
+      answer: run.answer!, model: run.model!, promptVersion: run.generationProtocol ?? 'workspace-legacy-protocol-unknown', createdAt: run.createdAt,
+      contextProvenance: run.reviewContext ? 'workspace_source_snapshot' as const : 'saved_retrieval_only' as const,
+      generationSourceIds: run.retrieval!.passages.map(passage => passage.id)
+    }));
+  }
   createProduct(raw: unknown): WorkspaceProduct {
     const input = productInput.parse(raw);
     if (this.products().length >= 20) throw new Error('Workspace: this local workspace is limited to 20 products.');
@@ -72,12 +97,15 @@ export class ProductWorkspace {
   private saveRun(run: WorkspaceRun): void {
     this.db.prepare('INSERT INTO workspace_runs(id,created_at,document) VALUES(?,?,?) ON CONFLICT(id) DO UPDATE SET document=excluded.document').run(run.id, run.createdAt, JSON.stringify(run));
   }
+  private corpus(product: WorkspaceProduct): ProductCorpus {
+    return { version: `workspace-${textHash(JSON.stringify(product)).slice(0, 24)}`, source: 'user-supplied local evidence', license: 'user-supplied',
+      products: [{ id: product.id, title: product.title, split: 'development' }],
+      passages: product.sources.flatMap(source => sourceChunks(source.text).map((chunk, index, chunks) => ({ id: chunks.length === 1 ? source.id : `${source.id}-${index + 1}`, productId: product.id, source: source.label, text: chunk, reference: chunks.length === 1 ? source.label : `${source.label} (part ${index + 1})`, sha256: textHash(chunk), ...(source.originalQuestion ? { originalQuestion: source.originalQuestion } : {}) }))), cases: [] };
+  }
   private retriever(product: WorkspaceProduct): LoopRetriever {
     const cached = this.retrievers.get(product.id);
     if (cached) return cached;
-    const corpus: ProductCorpus = { version: `workspace-${textHash(JSON.stringify(product)).slice(0, 24)}`, source: 'user-supplied local evidence', license: 'user-supplied',
-      products: [{ id: product.id, title: product.title, split: 'development' }],
-      passages: product.sources.flatMap(source => sourceChunks(source.text).map((chunk, index, chunks) => ({ id: chunks.length === 1 ? source.id : `${source.id}-${index + 1}`, productId: product.id, source: source.label, text: chunk, reference: chunks.length === 1 ? source.label : `${source.label} (part ${index + 1})`, sha256: textHash(chunk), ...(source.originalQuestion ? { originalQuestion: source.originalQuestion } : {}) }))), cases: [] };
+    const corpus = this.corpus(product);
     const retriever = this.retrieverFactory(corpus);
     this.retrievers.set(product.id, retriever);
     return retriever;
@@ -89,7 +117,12 @@ export class ProductWorkspace {
     if (!product) throw new Error('Workspace: product not found.');
     if (input.mode === 'live' && !this.provider.readiness().ready) throw new Error(`Workspace: ${this.provider.readiness().reason}`);
     this.busy = true;
-    const run: WorkspaceRun = { id: randomUUID(), productId: product.id, question: input.question, mode: input.mode, ...(input.mode === 'live' ? { generationProtocol: 'product-answer-v2-context' as const } : {}), status: 'retrieving', retrieval: null, answer: null, model: null, usage: null, error: null, createdAt: new Date().toISOString() };
+    const run: WorkspaceRun = { id: randomUUID(), productId: product.id, question: input.question, mode: input.mode, ...(input.mode === 'live' ? { generationProtocol: 'product-answer-v2-context' as const,
+      reviewContext: { question: input.question, product: { id: product.id, title: product.title }, sources: this.corpus(product).passages.map(passage => {
+        const source = { id: passage.id, label: passage.reference, text: passage.text, originalQuestion: passage.originalQuestion ?? null, origin: 'workspace' as const, reference: passage.reference };
+        return { ...source, sha256: workspaceReviewSourceHash(source) };
+      }), clarifications: [] }
+    } : {}), status: 'retrieving', retrieval: null, answer: null, model: null, usage: null, error: null, createdAt: new Date().toISOString() };
     this.saveRun(run);
     try {
       run.retrieval = await this.retriever(product).retrieve(product.id, input.question);
@@ -97,6 +130,8 @@ export class ProductWorkspace {
       else {
         const passages = run.retrieval.passages;
         if (!passages.length) throw new Error('No product evidence was retrieved.');
+        if (passages.some(passage => passage.productId !== product.id || passage.sha256 !== textHash(passage.text) || !run.reviewContext!.sources.some(source => source.id === passage.id && source.text === passage.text && source.originalQuestion === (passage.originalQuestion ?? null)))) throw new Error('Retrieved evidence does not match the saved product snapshot.');
+        this.saveRun(run);
         beforeLiveDispatch?.();
         const policy = { id: 'workspace-baseline-v2-context', parentId: null, instructions: baselineInstructions, rationale: 'Local product workspace baseline with separate original customer question context.', feedbackRunIds: [], status: 'baseline' as const, mode: 'live' as const, createdAt: '2026-09-29T00:00:00.000Z' };
         const quoteCount = this.provider.answerWithSnippetIds ? quoteOptions(passages).length : 0;

@@ -1,6 +1,6 @@
 # Investigate before revising
 
-On `/paid-review`, describe what is wrong, optionally choose a failure category, and select **Investigate and revise**. The reviewer can continue to another answer while the existing durable worker processes the job.
+On `/review` for completed Product QA answers, or `/paid-review` for the pinned historical batch, describe what is wrong, optionally choose a failure category, and select **Investigate and revise**. The reviewer can continue to another answer while the same durable worker processes the job. See [workspace answer handoff and recovery](workspace-answer-review.md).
 
 ## What happens
 

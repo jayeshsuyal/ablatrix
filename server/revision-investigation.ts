@@ -210,8 +210,10 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
       const relevance = applicability(source);
       if (!relevance.applicable) { step({ kind: 'scope_check', status: 'skipped', detail: relevance.reason, url: page.url }); continue; }
       if (context.sources.some(item => alreadyCovered(item, source))) { step({ kind: 'source_read', status: 'skipped', detail: 'This source content is already saved; a different URL or formatting does not add evidence.', url: page.url }); continue; }
-      if (JSON.stringify({ ...context, sources: [...context.sources, source] }).length > 30_000) { step({ kind: 'source_read', status: 'skipped', detail: 'Adding this excerpt would exceed the bounded source context.', url: page.url }); continue; }
-      context.sources.push(source); trace.selectedSourceIds.push(source.id); trace.addedSourceIds.push(source.id); trace.newEvidence = true;
+      const selectedIds = unique([...trace.addedSourceIds, source.id, ...trace.selectedSourceIds]).slice(0, 12);
+      const selectedSources = [...context.sources, source].filter(item => selectedIds.includes(item.id));
+      if (JSON.stringify({ ...context, sources: selectedSources }).length > 30_000) { step({ kind: 'source_read', status: 'skipped', detail: 'Adding this excerpt would exceed the bounded selected source context.', url: page.url }); continue; }
+      context.sources.push(source); trace.selectedSourceIds = selectedIds; trace.addedSourceIds.push(source.id); trace.newEvidence = true;
       step({ kind: 'source_read', status: 'completed', detail: 'Saved an exact excerpt and its URL as a source candidate. Matching terms and source domain do not prove the claim.', url: page.url, sourceIds: [source.id] });
     } catch (error) {
       step({ kind: 'source_read', status: 'failed', detail: 'Reading this source did not return a verified result; no automatic retry was made.', url });
