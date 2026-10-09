@@ -89,7 +89,7 @@ export default function WorkspaceReview() {
   const ready = data?.cases.filter(item => reviewStatus(item) === 'Ready to recheck') ?? [];
   const hasRevision = (selected?.versions.length ?? 0) > 1;
   const panel = selected && context ? <RevisionPanel key={`${selected.qid}-${latest?.id}`} item={{ qid: selected.qid, sources: context.sources }} state={selected} refresh={refresh} endpoint="/api/workspace/reviews" allowOriginalDecision /> : null;
-  return <div className="pr-app"><nav className="ask-nav" aria-label="Main navigation"><a className="ask-brand" href="/ask"><span>a↗</span> ablatrix <small>Answer review</small></a><div><a href="/ask">Product QA ↗</a><a href="/paid-review">Pinned evaluation ↗</a><a href="/loop">Feedback lab ↗</a><span className="ask-local">LOCAL WORKSPACE</span></div></nav>
+  return <div className="pr-app"><nav className="ask-nav" aria-label="Main navigation"><a className="ask-brand" href="/ask"><span>a↗</span> ablatrix <small>Answer review</small></a><div><a href="/ask">Product QA ↗</a><a href="/compare">Compare answers ↗</a><a href="/paid-review">Pinned evaluation ↗</a><a href="/loop">Feedback lab ↗</a><span className="ask-local">LOCAL WORKSPACE</span></div></nav>
     <main className="pr-main"><header className="pr-hero"><span>ASK → REVIEW → REVISE</span><h1>Make the next answer better.</h1><p>Check an answer against its saved sources. Explain a flaw, then keep reviewing while the revision runs in the background.</p></header>
       {error && <p className="pr-error" role="alert">{error}</p>}
       {!data && !error && <p role="status">Loading saved answers…</p>}
