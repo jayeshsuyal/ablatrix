@@ -5,13 +5,14 @@ import type { ExperimentRecord, OptimizationRecord, RunRecord } from './contract
 
 export class RunStore {
   private db: DatabaseSync;
-  private lockPath: string;
+  private lockPath: string | null;
   private static owners = new Map<string, number>();
   constructor(path: string) {
-    mkdirSync(dirname(path), { recursive: true });
-    this.lockPath = `${resolve(path)}.lock`;
-    const count = RunStore.owners.get(this.lockPath) ?? 0;
-    if (!count) {
+    if (path !== ':memory:') mkdirSync(dirname(path), { recursive: true });
+    // Every :memory: connection owns a separate database, even across processes.
+    this.lockPath = path === ':memory:' ? null : `${resolve(path)}.lock`;
+    const count = this.lockPath ? RunStore.owners.get(this.lockPath) ?? 0 : 0;
+    if (this.lockPath && !count) {
       try {
         const fd = openSync(this.lockPath, 'wx');
         writeFileSync(fd, String(process.pid)); closeSync(fd);
@@ -27,7 +28,7 @@ export class RunStore {
         writeFileSync(fd, String(process.pid)); closeSync(fd);
       }
     }
-    RunStore.owners.set(this.lockPath, count + 1);
+    if (this.lockPath) RunStore.owners.set(this.lockPath, count + 1);
     this.db = new DatabaseSync(path);
     this.db.exec(`CREATE TABLE IF NOT EXISTS runs (
       id TEXT PRIMARY KEY, task_id TEXT NOT NULL, status TEXT NOT NULL,
@@ -195,6 +196,7 @@ export class RunStore {
   }
   close(): void {
     this.db.close();
+    if (!this.lockPath) return;
     const count = RunStore.owners.get(this.lockPath) ?? 1;
     if (count <= 1) { RunStore.owners.delete(this.lockPath); unlinkSync(this.lockPath); }
     else RunStore.owners.set(this.lockPath, count - 1);
