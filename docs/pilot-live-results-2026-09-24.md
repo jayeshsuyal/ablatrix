@@ -1,6 +1,6 @@
 # Live search ablation: first measured batch
 
-Date: 2026-09-24. Local evidence: `outputs/pilot-live-batch-1790283160661.json` (ignored by Git; contains answers and request IDs, no credential). Frozen suite SHA-256: `d68f066051c6fd3d3e69123f88a540b8eee534c56d2c24d23614b6d51fbccd0d`. Search agent: `ablatrix-pilot-search`, definition `873`, ready build `2221`.
+Date: 2026-09-24. Local evidence: `outputs/pilot-live-batch-1790283160661.json` (ignored by Git; contains answers and request IDs, no credential). The [public per-call measurements](evidence/search-ablation-2026-09-24.csv) omit answers and request IDs while retaining the 32 timings, arm assignments, call counts, token counts, and model IDs needed to recompute the reported latency and meter-derived cost. Frozen suite SHA-256: `d68f066051c6fd3d3e69123f88a540b8eee534c56d2c24d23614b6d51fbccd0d`. Search agent: `ablatrix-pilot-search`, definition `873`, ready build `2221`.
 
 ## Question and setup
 
@@ -20,6 +20,8 @@ The search ran through a separate deployed Sapiom agent; answers ran through dir
 | Meter-derived cost | $0.100216 | $0.003858 |
 
 Search off was faster in all 16 matched pairs. The median of the 16 paired percentage reductions was **81.2%**; the cost reduction from the visible meters was about **96.2%**. These are observations for this narrow workflow, not a general performance guarantee. The eight questions, rather than the 16 repetitions, are the independent tasks.
+
+To recompute, pair rows by `task_id` and `repetition`, then take the median of `(search-on duration_ms - search-off duration_ms) / search-on duration_ms`. For cost, sum `search_calls × $0.006 + input_tokens × $0.20 / 1,000,000 + output_tokens × $1.20 / 1,000,000` by arm; `(search-on total - search-off total) / search-on total` is **96.15%**. This is a ratio of aggregate metered costs, not a median paired cost reduction.
 
 The Sapiom billing page showed 4 to 20 `search.web` units, 5 to 21 included agent runs, and accrued account usage of $0.096206 immediately before the batch versus $0.200281 afterward: a $0.104075 increase. The published on-page rates at inspection were $0.006 per search, $0.20 per million `gpt-5.6-luna` input tokens, and $1.20 per million output tokens. Applying those rates to the saved token counts gives $0.1040746 total ($0.096 search + $0.0080746 Router), consistent with the billing delta after rounding. This is meter-derived aggregate cost, not a settled per-request receipt. The displayed account balance was $14.93 after the batch; it is rounded and lags accrued usage.
 

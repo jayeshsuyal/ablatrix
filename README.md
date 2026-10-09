@@ -36,13 +36,7 @@ flowchart LR
 
 The review worker saves jobs and source decisions in SQLite. It can use saved evidence or, with a separate opt-in, search approved hosts once and read at most two pages before requesting one revised answer. Search snippets are leads, not citations. The lab keeps development, validation, and final products separate; synthetic demo scores never count as model improvement.
 
-## What has been measured
-
-- **20/20** product-disjoint paid answer calls completed in the [pinned batch](docs/evidence/paid-qa-batch-2026-09-28/report.md).
-- **52/52** citation quotes matched saved source text. Quote matching checks provenance, not whether the answer is correct.
-- **No measured answer-quality gain** has been established. Policy candidates that did not show a gain were not promoted.
-
-## Run locally
+## Reproduce one workflow
 
 Requires Node.js **24.10+**. The first preparation downloads pinned public embedding weights.
 
@@ -52,6 +46,17 @@ npm run feedback:prepare
 npm run local
 ```
 
-Open [Product QA](http://127.0.0.1:4173/ask), [Answer review](http://127.0.0.1:4173/paid-review), or the [Feedback lab](http://127.0.0.1:4173/loop). Fixture mode is the default; it needs no Sapiom key and makes no paid calls. Live Router answers and optional source discovery require explicit local opt-in, a server-side credential, and a shared planning allowance. The allowance is **not** a provider-enforced spending cap or a settled bill.
+Open [Feedback lab](http://127.0.0.1:4173/loop), choose **Synthetic demo**, then select **Canvas Panel 8X10 Pack of 12** and its development question **“how many are included?”**. Get an answer: the deterministic baseline abstains. Open the retrieved passage, mark the abstention as unnecessary, and save a review explaining that the supported package count should be stated directly, with that passage selected. In **Propose an update**, select the reviewed failure and inspect the candidate policy. Run **paired validation** on held-back questions, then inspect the saved decision and policy history. This is a deterministic workflow demonstration: its answers and validation verdicts are synthetic, so they establish no model-quality gain.
+
+The same interface saves live Router answers only with explicit local opt-in, a server-side credential, and a shared planning allowance. Optional source discovery has a separate opt-in. The allowance is **not** a provider-enforced spending cap or a settled bill. The [Product QA](http://127.0.0.1:4173/ask) and [Answer review](http://127.0.0.1:4173/paid-review) workspaces show the other parts of the same answer and review path.
+
+## Saved results
+
+| Experiment | Verified observation | What it establishes |
+| --- | --- | --- |
+| [Pinned product QA batch](docs/evidence/paid-qa-batch-2026-09-28/report.md) | **20/20** one-attempt live Router calls completed on 20 distinct products; **52/52** returned citation quotes occur verbatim in their saved retrieved passages. [Inputs](docs/evidence/paid-qa-batch-2026-09-28/manifest.json) and [outputs](docs/evidence/paid-qa-batch-2026-09-28/results.json) are saved. | Call completion and mechanical quote provenance on curated evidence, **not** answer correctness or citation relevance. |
+| [Live search ablation](docs/pilot-live-results-2026-09-24.md) | **16 matched pairs / 32 answers** across eight GitHub Actions questions; omitting an extra web search cut the **median paired answer-stage time by 81.2%** and **meter-derived aggregate cost by about 96.2%**. [Per-call measurements](docs/evidence/search-ablation-2026-09-24.csv) are public. | A narrow source-given search decision. Timing starts before optional search and ends after the Router answer; shared source collection is excluded. Cost uses 16 searches × $0.006 plus published Router token rates: $0.100216 search-on versus $0.003858 search-off. It is not a settled per-call bill. |
+
+**Quality status:** Exact quote membership is distinct from whether a quote supports a claim, whether an answer is correct, and whether users prefer it. The product batch has 20 historical human judgments, but they predate restoration of the original customer-question context and are excluded by the current review protocol; **0/20 context-aware human judgments** are saved. The ablation's independent blind human correctness review is also pending. Neither experiment proves an answer-quality improvement; no policy was promoted on these results.
 
 For implementation details, see [architecture](docs/architecture.md), [feedback-loop setup](docs/feedback-loop-local.md), [investigation limits](docs/revision-investigation.md), [corpus provenance and license](docs/product-corpus.md), and the [build and evidence ledger](docs/build-plan.md). The earlier [search ablation](docs/search-ablation.md) and [research agent](docs/sapiom-accounting.md) are documented separately.
