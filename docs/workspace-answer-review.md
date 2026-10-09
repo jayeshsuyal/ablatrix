@@ -1,6 +1,6 @@
 # From a product answer to a reviewed revision
 
-Completed answers from `/ask` enter `/review` automatically. Retrieval previews and failed generations have no completed answer to review. The historical 20-case packet at `/paid-review` retains its separate queue, source protocol, and result counts.
+Completed answers from `/ask` enter `/review` automatically. The queue shows 20 answers per page, with previous/next controls and direct links to older answers. Pending, ready, accepted, and usage counts in a workspace review response describe its current page. Retrieval previews and failed generations have no completed answer to review. The historical 20-case packet at `/paid-review` retains its separate queue, source protocol, and result counts.
 
 ## One workflow
 
@@ -28,10 +28,11 @@ The HTTP tests create isolated SQLite files and inject synthetic provider respon
 
 - A review identity is `workspace-<run UUID>`. Registration atomically saves a frozen original answer and its snapshot; replaying an identical handoff is safe, while changing an existing snapshot is rejected.
 - New live runs freeze the product title, question, and complete chunked source set before generation. `generationSourceIds` records the subset actually supplied to the model. Available source candidates are distinct from retrieved and cited passages.
-- Older completed runs have only their saved retrieval imported. They are labeled `saved_retrieval_only`; an unavailable original product title or full source set is not reconstructed from current product data.
+- Older completed runs have only their saved retrieval imported. They are labeled `saved_retrieval_only`; an unavailable original product title or full source set is not reconstructed from current product data. The page reads this warning from the original version, so it remains visible after revisions, including previously saved children without their own provenance label.
 - Startup and review reads reconcile completed runs into the review ledger. An interrupted handoff does not require another model call. Completed provider receipts replay into one child version; uncertain outcomes cannot be blindly redispatched.
 - If review registration fails after generation succeeds, the question API still returns `201` with the saved answer and `reviewHandoff: "pending"`. `/ask` keeps that answer selected and explains that review is temporarily unavailable. Reopen its review after storage recovers; generating another answer is unnecessary.
 - Interactive history reads only the newest 100 runs, with the limit applied before parsing stored snapshots. Recovery and review import still read the full history, including older completed and interrupted runs.
+- Review polling loads at most 20 cases before reading their source snapshots, versions, jobs, and events. Full recovery runs on startup and after workspace database changes; unchanged polling reuses the completed import. Failed registration remains retryable, and changes from another SQLite connection invalidate the import cache.
 - Review decisions name an exact answer version and checked source hashes. Workspace review hashes bind each excerpt to its source identity and original question, so identical answer text in different Q&A contexts remains distinguishable. Retrieval retains its original content hashes. Newer requests block acceptance of older answers. Source text, original questions, added information, events, and earlier versions remain available for inspection.
 
 `ABLATRIX_WORKSPACE_DB` stores products and generated runs. `ABLATRIX_PAID_REVIEW_DB` holds the shared revision tables plus the separate historical review records. Back up both and the provider ledger together. This is still a local, single-worker prototype; the reviewer name is a local attribution field, not authenticated identity.
@@ -40,7 +41,8 @@ The HTTP tests create isolated SQLite files and inject synthetic provider respon
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| GET | `/api/workspace/reviews` | Workspace versions, jobs, decisions, readiness, and revision usage |
+| GET | `/api/workspace/reviews?page=1` | At most 20 workspace cases, page-scoped counts/usage, and pagination metadata |
+| GET | `/api/workspace/reviews?answer=workspace-<run UUID>` | Locate the page containing a linked older answer |
 | POST | `/api/workspace/reviews/:answerId/revisions` | Persist rejection and job; return `202` with job ID |
 | POST | `/api/workspace/reviews/:answerId/decisions` | Save source-checked acceptance or missing-information decision |
 

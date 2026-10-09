@@ -6,6 +6,7 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { setTimeout as delay } from 'node:timers/promises';
 import { DatabaseSync } from 'node:sqlite';
+import { randomUUID } from 'node:crypto';
 import { createApp } from './app.ts';
 import { RunStore } from './store.ts';
 import { ProductWorkspace } from './product-workspace.ts';
@@ -35,6 +36,9 @@ test('a failed review write preserves the successful answer response and recover
     return new Response(JSON.stringify({ model: 'gpt-5.6-luna', choices: [{ finish_reason: 'tool_calls', message: { tool_calls: [{ function: { name, arguments: JSON.stringify({ answer: 'Synthetic fixture: the handle is oak wood.', status: 'answered', citations: [{ quoteId: input.quoteOptions[0].id }] }) } }] } }], usage: { prompt_tokens: 12, completion_tokens: 8 } }), { status: 200 });
   } });
   const workspace = new ProductWorkspace(join(directory, 'workspace.sqlite'), provider, retriever);
+  let snapshotReads = 0;
+  const readSnapshots = workspace.reviewSnapshots.bind(workspace);
+  workspace.reviewSnapshots = () => { snapshotReads++; return readSnapshots(); };
   const corpus: ProductCorpus = { version: 'synthetic-handoff-fixture', source: 'synthetic', license: 'synthetic', products: [], passages: [], cases: [] };
   const loop = new FeedbackLoop(corpus, retriever(corpus), provider, join(directory, 'loop.sqlite'));
   const store = new RunStore(join(directory, 'store.sqlite'));
@@ -68,9 +72,36 @@ test('a failed review write preserves the successful answer response and recover
     assert.equal(recovered.cases.length, 1);
     assert.equal(recovered.cases[0].qid, `workspace-${saved.id}`);
     assert.deepEqual(recovered.cases[0].versions[0].answer, saved.answer);
+    const readsAfterRecovery = snapshotReads;
     await fetch(base + '/api/workspace/reviews');
+    assert.equal(snapshotReads, readsAfterRecovery, 'unchanged polling must not reparse historical snapshots');
     assert.equal((reviewDb.prepare('SELECT COUNT(*) AS n FROM workspace_review_answers').get() as {n:number}).n, 1);
     assert.equal(calls, 1, 'handoff recovery reuses the saved answer and never dispatches again');
+
+    // Another connection can restore historical runs without going through this app.
+    const historyDb = new DatabaseSync(join(directory, 'workspace.sqlite'));
+    try {
+      const insert = historyDb.prepare('INSERT INTO workspace_runs(id,created_at,document) VALUES(?,?,?)');
+      for (let i = 0; i < 21; i++) {
+        const copy = { ...history.runs[0], id: randomUUID(), createdAt: new Date(Date.UTC(2026, 9, 10, 0, 0, i)).toISOString() };
+        insert.run(copy.id, copy.createdAt, JSON.stringify(copy));
+      }
+    } finally { historyDb.close(); }
+    const firstPage: Overview = await (await fetch(base + '/api/workspace/reviews')).json();
+    assert.equal(firstPage.cases.length, 20);
+    assert.deepEqual(firstPage.pagination, { page: 1, pageSize: 20, total: 22, hasMore: true });
+    assert.equal(snapshotReads, readsAfterRecovery + 1, 'external commits trigger one full recovery import');
+    const older: Overview = await (await fetch(base + '/api/workspace/reviews?page=2')).json();
+    assert.equal(older.cases.length, 2);
+    assert.equal(older.pagination?.page, 2);
+    const direct: Overview = await (await fetch(base + `/api/workspace/reviews?answer=workspace-${saved.id}`)).json();
+    assert.equal(direct.pagination?.page, 2);
+    assert.ok(direct.cases.some(item => item.qid === `workspace-${saved.id}`));
+    assert.equal(snapshotReads, readsAfterRecovery + 1, 'page navigation reuses the completed import');
+    for (const query of ['page=0', 'page=-1', 'page=1.5', 'page=9007199254740992', 'answer=not-a-workspace-id']) {
+      assert.equal((await fetch(base + '/api/workspace/reviews?' + query)).status, 400);
+    }
+    assert.equal(calls, 1, 'polling, pagination and recovery never dispatch another model call');
   } finally {
     reviewDb.close();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));

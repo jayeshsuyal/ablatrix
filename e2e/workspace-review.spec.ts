@@ -19,7 +19,7 @@ test('new answer links to review; rejected answer returns while the reviewer con
   let requestPayload: Record<string, unknown> | undefined;
   let decisionPayload: Record<string, unknown> | undefined;
   await page.route('**/api/workspace', route => route.fulfill({ json: { products: [], runs: [{ id: runId, productId: 'synthetic-product', question: data.cases[0].versions[0].context.question, mode: 'live', status: 'completed', answer: data.cases[0].versions[0].answer, model: 'synthetic-browser-model', retrieval: { passages: [{ ...source, reference: source.label }] }, usage: { inputTokens: 0, outputTokens: 0 }, createdAt }], readiness: { ready: false, reason: 'Synthetic browser fixture; no live calls are available.' }, busy: false } }));
-  await page.route('**/api/workspace/reviews', route => route.fulfill({ json: data }));
+  await page.route(/\/api\/workspace\/reviews(?:\?.*)?$/, route => route.fulfill({ json: data }));
   await page.route(`**/api/workspace/reviews/${qid}/revisions`, async route => {
     requestPayload = route.request().postDataJSON();
     data.cases[0].jobs.push({ id: 'synthetic-job', status: 'queued', feedback: String(requestPayload!.feedback), createdAt });
@@ -75,7 +75,7 @@ test('new answer links to review; rejected answer returns while the reviewer con
 });
 
 test('preview-only workspace has an empty review queue', async ({ page }) => {
-  await page.route('**/api/workspace/reviews', route => route.fulfill({ json: { ...packet(), cases: [] } }));
+  await page.route(/\/api\/workspace\/reviews(?:\?.*)?$/, route => route.fulfill({ json: { ...packet(), cases: [] } }));
   await page.goto('/review');
   await expect(page.getByRole('heading', { name: 'No answers to review yet.' })).toBeVisible();
   await expect(page.getByText('Retrieval previews do not create an answer or enter this queue.', { exact: false })).toBeVisible();
@@ -89,7 +89,7 @@ test('an insufficient-evidence revision needs information instead of a ready not
   const original = item.versions[0];
   item.versions.push({ ...original, id: 'synthetic-abstention', parentId: original.id, answer: { status: 'insufficient_evidence', answer: 'Synthetic revision: a waterproof rating is missing from the supplied specification.', citations: [] } });
   item.jobs.push({ id: 'synthetic-abstention-job', status: 'needs_information', feedback: 'Find a waterproof rating.', createdAt, versionId: 'synthetic-abstention' });
-  await page.route('**/api/workspace/reviews', route => route.fulfill({ json: data }));
+  await page.route(/\/api\/workspace\/reviews(?:\?.*)?$/, route => route.fulfill({ json: data }));
   await page.goto(`/review?answer=${qid}`);
   await expect(page.locator('.pr-detail-head')).toContainText('NEEDS INFORMATION');
   await expect(page.locator('.pr-queue button').first()).toContainText('NEEDS INFORMATION');
@@ -124,4 +124,104 @@ test('saved answer remains visible when review handoff and history refresh are u
   await expect(page.getByRole('button', { name: 'Generate cited answer' })).toBeEnabled();
   expect(questionPosts).toBe(1);
   expect(overviewRequests).toBe(2);
+});
+
+test('older deep links locate their page, polling stays bounded, and revised legacy sources keep their warning', async ({ page }) => {
+  const recent = Array.from({ length: 20 }, (_, i) => reviewCase(`workspace-30000000-0000-4000-8000-${String(i).padStart(12, '0')}`, `Recent synthetic question ${i + 1}?`));
+  const older = reviewCase(qid, 'Older synthetic jacket question?');
+  const original = { ...older.versions[0], contextProvenance: 'saved_retrieval_only' };
+  older.versions[0] = original;
+  older.jobs.push({ id: 'synthetic-old-job', status: 'queued', feedback: 'Explain the seams.', createdAt });
+  const queries: string[] = [];
+  let holdNextPoll = true;
+  let releasePoll!: () => void;
+  const pollRelease = new Promise<void>(resolve => { releasePoll = resolve; });
+  let pollStarted!: () => void;
+  const started = new Promise<void>(resolve => { pollStarted = resolve; });
+  let pollFinished!: () => void;
+  const finished = new Promise<void>(resolve => { pollFinished = resolve; });
+  await page.route(/\/api\/workspace\/reviews(?:\?.*)?$/, async route => {
+    const params = new URL(route.request().url()).searchParams;
+    queries.push(params.toString());
+    const currentPage = params.get('answer') === qid ? 2 : Number(params.get('page') ?? 1);
+    const payload = { ...packet(), cases: currentPage === 2 ? [older] : recent, ready: currentPage === 2 && older.jobs[0].status === 'ready' ? 1 : 0, pending: currentPage === 2 && older.jobs[0].status === 'queued' ? 1 : 0, pagination: { page: currentPage, pageSize: 20, total: 21, hasMore: currentPage === 1 } };
+    if (currentPage === 2 && queries.length > 1 && holdNextPoll) {
+      holdNextPoll = false;
+      const stale = JSON.stringify(payload);
+      pollStarted();
+      await pollRelease;
+      await route.fulfill({ contentType: 'application/json', body: stale });
+      pollFinished();
+      return;
+    }
+    await route.fulfill({ json: payload });
+  });
+  await page.goto(`/review?answer=${qid}`);
+  await expect(page.getByRole('navigation', { name: 'Review queue pages' })).toContainText('Page 2 of 2');
+  await expect(page.locator('.pr-detail-head')).toContainText(older.versions[0].context.question);
+  await expect(page.locator('.wr-status')).toContainText('On this page: 1 saved answers · 1 pending');
+  await expect(page.locator('.pr-detail')).toContainText('Its full product source snapshot was not saved at generation time.');
+  await started;
+  expect(new URLSearchParams(queries[0]).get('answer')).toBe(qid);
+  expect(new URLSearchParams(queries[1]).get('page')).toBe('2');
+  expect(new URLSearchParams(queries[1]).get('answer')).toBe(qid);
+  await page.getByRole('button', { name: 'Previous page', exact: true }).click();
+  await expect(page.getByRole('navigation', { name: 'Review queue pages' })).toContainText('Page 1 of 2');
+  await expect(page.locator('.pr-queue button')).toHaveCount(20);
+  await expect(page.locator('.pr-detail-head')).toContainText('Recent synthetic question 1?');
+  releasePoll();
+  await finished;
+  await expect(page.getByRole('navigation', { name: 'Review queue pages' })).toContainText('Page 1 of 2');
+  await expect(page.locator('.wr-status')).toContainText('0 pending · 0 ready to recheck');
+
+  older.versions.push({ ...reviewCase(qid, original.context.question).versions[0], id: 'synthetic-legacy-revision', parentId: original.id, answer: { ...original.answer, answer: 'Synthetic revised answer about taped seams.' } });
+  older.jobs[0].status = 'ready'; older.jobs[0].versionId = 'synthetic-legacy-revision';
+  await expect(page.getByRole('button', { name: /^Recheck:/ })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Next page', exact: true }).click();
+  await expect(page.getByRole('navigation', { name: 'Review queue pages' })).toContainText('Page 2 of 2');
+  await expect(page.getByRole('button', { name: /^Recheck:/ })).toBeVisible();
+  await expect(page.locator('.pr-compare')).toContainText('Synthetic revised answer about taped seams.');
+  await expect(page.locator('.pr-detail')).toContainText('Its full product source snapshot was not saved at generation time.');
+  await expect(page.getByRole('button', { name: 'Next page', exact: true })).toBeDisabled();
+});
+
+test('an unknown deep link remains explicit instead of silently selecting another answer', async ({ page }) => {
+  await page.route(/\/api\/workspace\/reviews(?:\?.*)?$/, route => route.fulfill({ json: { ...packet(), pagination: { page: 1, pageSize: 20, total: 2, hasMore: false } } }));
+  await page.goto('/review?answer=workspace-40000000-0000-4000-8000-000000000001');
+  await expect(page.getByRole('heading', { name: 'Saved answer not found.' })).toBeVisible();
+  await expect(page.locator('.pr-queue button.active')).toHaveCount(0);
+  await page.locator('.pr-queue button').first().click();
+  await expect(page.locator('.pr-detail-head')).toContainText('Will this synthetic jacket keep rain out?');
+});
+
+test('a slow poll follows the selected answer across pages without discarding its review draft', async ({ page }) => {
+  await page.clock.install();
+  const item = reviewCase(qid, 'Synthetic answer at the page boundary?');
+  let requests = 0;
+  let releasePoll!: () => void;
+  const pollRelease = new Promise<void>(resolve => { releasePoll = resolve; });
+  let pollStarted!: () => void;
+  const started = new Promise<void>(resolve => { pollStarted = resolve; });
+  await page.route(/\/api\/workspace\/reviews(?:\?.*)?$/, async route => {
+    requests++;
+    if (requests > 1) {
+      expect(new URL(route.request().url()).searchParams.get('answer')).toBe(qid);
+      pollStarted();
+      await pollRelease;
+    }
+    await route.fulfill({ json: { ...packet(), cases: [item], pagination: { page: requests > 1 ? 2 : 1, pageSize: 20, total: requests > 1 ? 21 : 20, hasMore: false } } });
+  });
+  await page.goto(`/review?answer=${qid}`);
+  await expect(page.locator('.pr-detail-head')).toContainText(item.versions[0].context.question);
+  const critique = page.getByRole('textbox', { name: 'What is wrong or missing?' });
+  await critique.fill('Keep this draft while new answers arrive ahead of this one.');
+  await page.clock.fastForward(2500);
+  await started;
+  await page.clock.fastForward(7500);
+  expect(requests).toBe(2);
+  releasePoll();
+  await expect(page.getByRole('navigation', { name: 'Review queue pages' })).toContainText('Page 2 of 2');
+  await expect(critique).toHaveValue('Keep this draft while new answers arrive ahead of this one.');
+  await expect(page).toHaveURL(`/review?page=2&answer=${qid}`);
+  await expect(page.locator('.pr-detail-head')).toContainText(item.versions[0].context.question);
 });

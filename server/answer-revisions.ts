@@ -29,10 +29,13 @@ export class AnswerRevisions {
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`PRAGMA busy_timeout=5000;
       CREATE TABLE IF NOT EXISTS answer_versions(id TEXT PRIMARY KEY,qid TEXT NOT NULL,parent_id TEXT,job_id TEXT,document TEXT NOT NULL);
+      CREATE INDEX IF NOT EXISTS answer_versions_qid ON answer_versions(qid);
       CREATE TABLE IF NOT EXISTS answer_review_events(id TEXT PRIMARY KEY,qid TEXT NOT NULL,version_id TEXT NOT NULL,kind TEXT NOT NULL,document TEXT NOT NULL);
+      CREATE INDEX IF NOT EXISTS answer_review_events_qid ON answer_review_events(qid);
       CREATE TABLE IF NOT EXISTS answer_revision_jobs(id TEXT PRIMARY KEY,qid TEXT NOT NULL,parent_id TEXT NOT NULL,idempotency_key TEXT NOT NULL UNIQUE,status TEXT NOT NULL,document TEXT NOT NULL,lease_owner TEXT,lease_expires INTEGER);
       CREATE INDEX IF NOT EXISTS answer_revision_qid ON answer_revision_jobs(qid);
       CREATE TABLE IF NOT EXISTS answer_revision_attempts(id TEXT PRIMARY KEY,job_id TEXT NOT NULL,provider_call_id TEXT,status TEXT NOT NULL,created_at TEXT NOT NULL,finished_at TEXT);
+      CREATE INDEX IF NOT EXISTS answer_revision_attempts_job ON answer_revision_attempts(job_id);
       CREATE TABLE IF NOT EXISTS workspace_review_answers(id TEXT PRIMARY KEY,run_id TEXT NOT NULL UNIQUE,document TEXT NOT NULL);
     `);
     const columns = new Set((this.db.prepare('PRAGMA table_info(answer_revision_jobs)').all() as {name:string}[]).map(r=>r.name));
@@ -90,13 +93,32 @@ export class AnswerRevisions {
     return ['search:1','read:1','read:2'].map(step => this.provider.receipt(`${job.id}:${step}`)).filter((receipt): receipt is NonNullable<typeof receipt> => receipt !== undefined && receipt !== null);
   }
   private generationAttempts(qid: string) { return this.jobs(qid).filter(job => this.provider.receipt(job.id)).length; }
-  overview(scope?: 'workspace' | 'pinned') {
-    const ids = [ ...(scope === 'workspace' ? [] : this.reviews.overview().cases.map(item => item.qid)), ...(scope === 'pinned' ? [] : (this.db.prepare('SELECT id FROM workspace_review_answers ORDER BY rowid DESC').all() as { id: string }[]).map(item => item.id)) ];
+  overview(scope?: 'workspace' | 'pinned', options: { page?: number; answer?: string } = {}) {
+    let pagination: { page: number; pageSize: number; total: number; hasMore: boolean } | undefined;
+    let ids: string[];
+    if (scope === 'workspace') {
+      const pageSize = 20;
+      const total = (this.db.prepare('SELECT COUNT(*) AS total FROM workspace_review_answers').get() as { total: number }).total;
+      let page = options.page !== undefined && Number.isSafeInteger(options.page) && options.page > 0 ? options.page : 1;
+      if (options.answer) {
+        const anchor = this.db.prepare('SELECT rowid AS position FROM workspace_review_answers WHERE id=?').get(options.answer) as { position: number } | undefined;
+        if (anchor) {
+          const newer = (this.db.prepare('SELECT COUNT(*) AS total FROM workspace_review_answers WHERE rowid>?').get(anchor.position) as { total: number }).total;
+          page = Math.floor(newer / pageSize) + 1;
+        }
+      }
+      page = Math.min(page, Math.max(1, Math.ceil(total / pageSize)));
+      // Select the page before loading any answer, source context, job or event documents.
+      ids = (this.db.prepare('SELECT id FROM workspace_review_answers ORDER BY rowid DESC LIMIT ? OFFSET ?').all(pageSize, (page - 1) * pageSize) as { id: string }[]).map(item => item.id);
+      pagination = { page, pageSize, total, hasMore: page * pageSize < total };
+    } else {
+      ids = [ ...this.reviews.overview().cases.map(item => item.qid), ...(scope === 'pinned' ? [] : (this.db.prepare('SELECT id FROM workspace_review_answers ORDER BY rowid DESC').all() as { id: string }[]).map(item => item.id)) ];
+    }
     const cases = ids.map(qid => ({ qid, generationAttempts:this.generationAttempts(qid), versions: this.versions(qid), jobs: this.jobs(qid).map(job => { const receipt = this.provider.receipt(job.id); const attempts=this.db.prepare('SELECT * FROM answer_revision_attempts WHERE job_id=? ORDER BY created_at').all(job.id); return { ...job, attempts, externalUsage:this.externalReceipts(job).map(call => ({ id:call.id, kind:call.kind, status:call.status, planningAllowanceUsd:call.allowance_usd })), usage: receipt ? { inputTokens:receipt.input_tokens, outputTokens:receipt.output_tokens, planningAllowanceUsd:receipt.allowance_usd, providerCallStatus:receipt.status } : null, latencyMs: job.finishedAt ? new Date(job.finishedAt).getTime()-new Date(job.createdAt).getTime() : null }; }), events: (this.db.prepare('SELECT document FROM answer_review_events WHERE qid=? ORDER BY rowid').all(qid) as {document:string}[]).map(r => JSON.parse(r.document) as ReviewEvent) }));
     const jobs=cases.flatMap(c=>c.jobs);
     const external = jobs.flatMap(job => job.externalUsage);
     const accepted = (item: typeof cases[number]) => item.events.some(event => event.kind === 'accept' && event.versionId === item.versions.at(-1)?.id);
-    return { cases, ready: cases.filter(c => c.jobs.at(-1)?.status === 'ready').length, pending: cases.filter(c => ['queued','running'].includes(c.jobs.at(-1)?.status ?? '')).length, readiness:this.provider.readiness(), investigationReadiness:this.search.readiness(), summary: { requested:jobs.length, accepted:cases.filter(accepted).length, unresolved:cases.filter(c=>(c.jobs.length || c.events.some(event => event.kind === 'needs_information')) && !accepted(c)).length, providerCalls:jobs.filter(j=>j.usage).length + external.length, answerCalls:jobs.filter(j=>j.usage).length, searchAndReadCalls:external.length, planningAllowanceUsd:jobs.reduce((n,j)=>n+(j.usage?.planningAllowanceUsd ?? 0),0) + external.reduce((n,call)=>n+call.planningAllowanceUsd,0), actualProviderCharges:'unavailable' } };
+    return { cases, ...(pagination ? { pagination } : {}), ready: cases.filter(c => c.jobs.at(-1)?.status === 'ready').length, pending: cases.filter(c => ['queued','running'].includes(c.jobs.at(-1)?.status ?? '')).length, readiness:this.provider.readiness(), investigationReadiness:this.search.readiness(), summary: { requested:jobs.length, accepted:cases.filter(accepted).length, unresolved:cases.filter(c=>(c.jobs.length || c.events.some(event => event.kind === 'needs_information')) && !accepted(c)).length, providerCalls:jobs.filter(j=>j.usage).length + external.length, answerCalls:jobs.filter(j=>j.usage).length, searchAndReadCalls:external.length, planningAllowanceUsd:jobs.reduce((n,j)=>n+(j.usage?.planningAllowanceUsd ?? 0),0) + external.reduce((n,call)=>n+call.planningAllowanceUsd,0), actualProviderCharges:'unavailable' } };
   }
   hasActive() { return this.busy; }
   getJob(id: string) { const job = this.overview().cases.flatMap(c=>c.jobs).find(j=>j.id===id); if (!job) throw new Error('Revision: job not found.'); return job; }

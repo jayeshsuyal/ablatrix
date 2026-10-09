@@ -153,6 +153,52 @@ test('registration is durable, immutable, atomic and isolated from the frozen pa
   } finally { flow.close(); provider.close(); reviews.close(); rmSync(directory, { recursive: true, force: true }); }
 });
 
+test('workspace review pages load only their answers and preserve older deep links and pinned review', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'workspace-review-pages-')), path = join(directory, 'review.sqlite');
+  const reviews = new PaidAnswerReview(path), provider = new SapiomFeedbackProvider({ enabled: false, dbPath: join(directory, 'ledger.sqlite') });
+  const flow = new AnswerRevisions(reviews, provider, path, false), db = new DatabaseSync(path);
+  try {
+    const pinned = flow.overview('pinned');
+    assert.deepEqual(flow.overview('workspace').pagination, { page: 1, pageSize: 20, total: 0, hasMore: false });
+    const inputs = Array.from({ length: 45 }, () => snapshot());
+    const originals = inputs.map(input => flow.registerAnswer(input));
+    flow.decide(inputs[0].id, { versionId: originals[0].id, reviewer: 'Synthetic pagination reviewer', decision: 'accept', note: 'Checked the oldest synthetic answer.', checkedSourceShas: [inputs[0].context.sources[0].sha256] });
+    flow.request(inputs[1].id, { versionId: originals[1].id, idempotencyKey: 'synthetic-old-page-job', reviewer: 'Synthetic pagination reviewer', feedback: 'Investigate the older synthetic answer detail.' });
+    const orderedIds = inputs.map(input => input.id).reverse();
+    const first = flow.overview('workspace');
+    const second = flow.overview('workspace', { page: 2 });
+    const third = flow.overview('workspace', { page: 3 });
+    assert.deepEqual(first.pagination, { page: 1, pageSize: 20, total: 45, hasMore: true });
+    assert.deepEqual(second.pagination, { page: 2, pageSize: 20, total: 45, hasMore: true });
+    assert.deepEqual(third.pagination, { page: 3, pageSize: 20, total: 45, hasMore: false });
+    assert.deepEqual(first.cases.map(item => item.qid), orderedIds.slice(0, 20));
+    assert.deepEqual(second.cases.map(item => item.qid), orderedIds.slice(20, 40));
+    assert.deepEqual(third.cases.map(item => item.qid), orderedIds.slice(40));
+    assert.equal(first.summary.accepted, 0);
+    assert.equal(first.summary.requested, 0);
+    assert.equal(first.pending, 0);
+    assert.equal(third.summary.accepted, 1, 'summary counts describe only the returned page');
+    assert.equal(third.summary.requested, 1);
+    assert.equal(third.pending, 1);
+    const deepLink = flow.overview('workspace', { page: 1, answer: inputs[0].id });
+    assert.deepEqual(deepLink.pagination, third.pagination);
+    assert.deepEqual(deepLink.cases, third.cases);
+    assert.deepEqual(flow.overview('workspace', { page: 2, answer: `workspace-${randomUUID()}` }).pagination, second.pagination);
+    assert.deepEqual(flow.overview('workspace', { page: 99 }).pagination, third.pagination);
+    assert.deepEqual(flow.overview('workspace', { page: Number.NaN }).pagination, first.pagination);
+    assert.deepEqual(flow.overview('pinned', { page: 3, answer: inputs[0].id }), pinned, 'workspace pages never change the frozen review cohort');
+    const originalDocument = (db.prepare('SELECT document FROM answer_versions WHERE id=?').get(originals[0].id) as { document: string }).document;
+    db.prepare('UPDATE answer_versions SET document=? WHERE id=?').run('{malformed', originals[0].id);
+    try {
+      assert.deepEqual(flow.overview('workspace').cases, first.cases, 'off-page version documents must not be parsed');
+      assert.deepEqual(flow.overview('workspace', { page: 2 }).cases, second.cases);
+      assert.deepEqual(flow.overview('pinned'), pinned);
+      assert.throws(() => flow.overview('workspace', { answer: inputs[0].id }), SyntaxError, 'the malformed record is on the deep-linked page');
+    } finally { db.prepare('UPDATE answer_versions SET document=? WHERE id=?').run(originalDocument, originals[0].id); }
+    assert.equal((db.prepare('SELECT COUNT(*) AS total FROM workspace_review_answers').get() as { total: number }).total, 45, 'pagination never removes older answers');
+  } finally { db.close(); flow.close(); provider.close(); reviews.close(); rmSync(directory, { recursive: true, force: true }); }
+});
+
 test('original workspace decisions require checked answer sources and leave pinned review gates intact', () => {
   const directory = mkdtempSync(join(tmpdir(), 'workspace-review-decide-')), path = join(directory, 'review.sqlite');
   const reviews = new PaidAnswerReview(path), provider = new SapiomFeedbackProvider({ enabled: false, dbPath: join(directory, 'ledger.sqlite') });

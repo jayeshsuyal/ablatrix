@@ -55,11 +55,16 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   const reviewDbPath = localOptions.reviewDbPath ?? process.env.ABLATRIX_PAID_REVIEW_DB;
   const paidAnswerReview = () => paidReview ??= new PaidAnswerReview(reviewDbPath);
   let revisions: AnswerRevisions | undefined;
+  let importedWorkspaceVersion: string | undefined;
   const answerRevisions = () => {
-    revisions ??= new AnswerRevisions(paidAnswerReview(), localAnswerProvider(), reviewDbPath, true, () => !feedback?.publicOverview().busy && !workspace?.overview().busy);
-    // A completed run is durable before registration. Repeating this import also
-    // recovers a crash between saving an answer and adding it to the review queue.
-    for (const snapshot of productWorkspace().reviewSnapshots()) revisions.registerAnswer(snapshot);
+    revisions ??= new AnswerRevisions(paidAnswerReview(), localAnswerProvider(), reviewDbPath, true, () => !feedback?.publicOverview().busy && !workspace?.hasActive());
+    const version = productWorkspace().reviewImportVersion();
+    // Recover all historical handoffs at startup or after workspace writes, not
+    // on every poll. A failed import leaves the old token so the next read retries.
+    if (version !== importedWorkspaceVersion) {
+      for (const snapshot of productWorkspace().reviewSnapshots()) revisions.registerAnswer(snapshot);
+      importedWorkspaceVersion = version;
+    }
     return revisions;
   };
   const loopTelemetry = () => telemetry ??= new LoopTelemetry();
@@ -115,7 +120,14 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}$/.test(path)) return json(res, 201, paidAnswerReview().review(path.split('/')[3], await body(req)));
       if (req.method === 'GET' && path === '/api/paid-review/export') return download(res, 'ablatrix-paid-answer-reviews.json', `${JSON.stringify(paidAnswerReview().overview(), null, 2)}\n`, 'application/json');
       if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, productWorkspace().overview());
-      if (req.method === 'GET' && path === '/api/workspace/reviews') return json(res, 200, answerRevisions().overview('workspace'));
+      if (req.method === 'GET' && path === '/api/workspace/reviews') {
+        const rawPage = url.searchParams.get('page') ?? '1';
+        const page = Number(rawPage), answer = url.searchParams.get('answer') ?? undefined;
+        if (!/^[1-9]\d*$/.test(rawPage) || !Number.isSafeInteger(page) || (answer !== undefined && !/^workspace-[a-f0-9-]{36}$/.test(answer))) {
+          return json(res, 400, { error: 'A positive page number and a valid workspace answer ID are required.' });
+        }
+        return json(res, 200, answerRevisions().overview('workspace', { page, answer }));
+      }
       if (req.method === 'POST' && /^\/api\/workspace\/reviews\/workspace-[a-f0-9-]{36}\/revisions$/.test(path)) return json(res, 202, answerRevisions().request(path.split('/')[4], await body(req, 40_000)));
       if (req.method === 'POST' && /^\/api\/workspace\/reviews\/workspace-[a-f0-9-]{36}\/decisions$/.test(path)) return json(res, 201, answerRevisions().decide(path.split('/')[4], await body(req)));
       if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req, 110_000)));

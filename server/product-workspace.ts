@@ -61,6 +61,13 @@ export class ProductWorkspace {
     return (query.all(...(limit === undefined ? [] : [limit])) as { document: string }[]).map(row => JSON.parse(row.document) as WorkspaceRun);
   }
   overview() { return { products: this.products(), runs: this.runs(100), readiness: this.provider.readiness(), busy: this.busy }; }
+  hasActive() { return this.busy; }
+  /** Detect both this connection's writes and commits from another connection. */
+  reviewImportVersion() {
+    const external = this.db.prepare('PRAGMA data_version').get() as { data_version: number };
+    const local = this.db.prepare('SELECT total_changes() AS changes').get() as { changes: number };
+    return `${external.data_version}:${local.changes}`;
+  }
   reviewSnapshots(): ReviewAnswerSnapshot[] {
     return this.runs().filter(run => run.mode === 'live' && run.status === 'completed' && run.answer && run.model && run.retrieval?.passages.length).map(run => ({
       id: `workspace-${run.id}`, runId: run.id,
