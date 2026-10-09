@@ -74,7 +74,7 @@ test('workspace freezes all source chunks before dispatch and hands off only com
   } finally { workspace.close(); rmSync(directory, { recursive: true, force: true }); }
 });
 
-test('legacy review import uses saved retrieval only and includes runs older than the first 100', async () => {
+test('interactive history is bounded while full review import and older interrupted-run recovery remain durable', async () => {
   const directory = mkdtempSync(join(tmpdir(), 'workspace-review-history-')), path = join(directory, 'workspace.sqlite');
   let workspace = new ProductWorkspace(path, workspaceProvider, firstPassage);
   try {
@@ -100,7 +100,23 @@ test('legacy review import uses saved retrieval only and includes runs older tha
     assert.equal(fallback.context.sources[0].id, original.retrieval!.passages[0].id);
     assert.match(fallback.context.product.title, /original title unavailable/);
     assert.equal(fallback.promptVersion, 'workspace-legacy-protocol-unknown');
-    assert.equal(workspace.overview().runs.find(item => item.id === interrupted.id)!.status, 'failed');
+    const history = workspace.overview().runs;
+    assert.equal(history.length, 100);
+    assert.equal(history[0].id, original.id, 'interactive history retains the newest completed answer');
+    assert.ok(!history.some(item => item.id === interrupted.id), 'the older recovered run stays outside the newest 100');
+    const recovered = new DatabaseSync(path);
+    const saved = JSON.parse((recovered.prepare('SELECT document FROM workspace_runs WHERE id=?').get(interrupted.id) as {document:string}).document);
+    assert.equal(saved.status, 'failed');
+    assert.match(saved.error, /interrupted/);
+    // An old malformed document proves interactive history is limited before parsing.
+    const malformedId = randomUUID();
+    recovered.prepare('INSERT INTO workspace_runs(id,created_at,document) VALUES(?,?,?)').run(malformedId, '2026-07-01T00:00:00.000Z', '{malformed');
+    try { assert.equal(workspace.overview().runs.length, 100); }
+    finally { recovered.prepare('DELETE FROM workspace_runs WHERE id=?').run(malformedId); recovered.close(); }
+    workspace.close();
+    workspace = new ProductWorkspace(path, workspaceProvider, firstPassage);
+    assert.equal(workspace.overview().runs.length, 100);
+    assert.equal(workspace.reviewSnapshots().length, 102, 'import still includes all completed answers after restart');
   } finally { workspace.close(); rmSync(directory, { recursive: true, force: true }); }
 });
 

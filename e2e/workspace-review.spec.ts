@@ -96,3 +96,32 @@ test('an insufficient-evidence revision needs information instead of a ready not
   await expect(page.locator('.wr-status')).toContainText('0 ready to recheck');
   await expect(page.getByRole('button', { name: /^Recheck:/ })).toHaveCount(0);
 });
+
+test('saved answer remains visible when review handoff and history refresh are unavailable', async ({ page }) => {
+  const question = 'Will this synthetic jacket keep rain out?';
+  const saved = { id: runId, productId: 'synthetic-product', question, mode: 'live', status: 'completed', answer: packet().cases[0].versions[0].answer, model: 'synthetic-browser-model', retrieval: { passages: [{ ...source, reference: source.label }] }, usage: { inputTokens: 0, outputTokens: 0 }, createdAt, reviewHandoff: 'pending' };
+  let questionPosts = 0;
+  let overviewRequests = 0;
+  await page.route('**/api/workspace', route => {
+    overviewRequests++;
+    if (overviewRequests > 1) return route.fulfill({ status: 500, json: { error: 'Synthetic saved-history outage.' } });
+    return route.fulfill({ json: { products: [{ id: 'synthetic-product', title: 'Synthetic trail jacket', sources: [source], createdAt }], runs: Array.from({ length: 100 }, (_, i) => ({ ...saved, id: `older-synthetic-run-${i}`, mode: 'preview', status: 'evidence_ready', answer: null, question: `Earlier synthetic preview ${i}` })), readiness: { ready: true, reason: 'Synthetic browser routes; no paid calls.' }, busy: false } });
+  });
+  await page.route('**/api/workspace/questions', route => {
+    questionPosts++;
+    expect(route.request().method()).toBe('POST');
+    return route.fulfill({ status: 201, json: saved });
+  });
+  await page.goto('/ask');
+  await page.getByRole('textbox', { name: 'Question', exact: true }).fill(question);
+  await page.getByRole('button', { name: 'Generate cited answer' }).click();
+  await expect(page.getByRole('status')).toHaveText('Answer saved. Review is temporarily unavailable; try opening its review again later.');
+  await expect(page.locator('.ask-answer')).toContainText(saved.answer.answer);
+  await expect(page.getByRole('link', { name: 'Review this answer' })).toHaveAttribute('href', `/review?answer=${qid}`);
+  await expect(page.locator('.ask-history button[aria-pressed="true"]')).toContainText(question);
+  await expect(page.locator('.ask-history button')).toHaveCount(100);
+  await expect(page.getByRole('alert')).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Generate cited answer' })).toBeEnabled();
+  expect(questionPosts).toBe(1);
+  expect(overviewRequests).toBe(2);
+});

@@ -55,10 +55,12 @@ export class ProductWorkspace {
   private products(): WorkspaceProduct[] {
     return (this.db.prepare('SELECT document FROM workspace_products ORDER BY created_at DESC').all() as { document: string }[]).map(row => JSON.parse(row.document) as WorkspaceProduct);
   }
-  private runs(): WorkspaceRun[] {
-    return (this.db.prepare('SELECT document FROM workspace_runs ORDER BY created_at DESC, id').all() as { document: string }[]).map(row => JSON.parse(row.document) as WorkspaceRun);
+  private runs(limit?: number): WorkspaceRun[] {
+    // Limit interactive history in SQL; recovery and review import read every run.
+    const query = this.db.prepare(`SELECT document FROM workspace_runs ORDER BY created_at DESC, id${limit === undefined ? '' : ' LIMIT ?'}`);
+    return (query.all(...(limit === undefined ? [] : [limit])) as { document: string }[]).map(row => JSON.parse(row.document) as WorkspaceRun);
   }
-  overview() { return { products: this.products(), runs: this.runs(), readiness: this.provider.readiness(), busy: this.busy }; }
+  overview() { return { products: this.products(), runs: this.runs(100), readiness: this.provider.readiness(), busy: this.busy }; }
   reviewSnapshots(): ReviewAnswerSnapshot[] {
     return this.runs().filter(run => run.mode === 'live' && run.status === 'completed' && run.answer && run.model && run.retrieval?.passages.length).map(run => ({
       id: `workspace-${run.id}`, runId: run.id,

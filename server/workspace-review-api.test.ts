@@ -5,6 +5,7 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { setTimeout as delay } from 'node:timers/promises';
+import { DatabaseSync } from 'node:sqlite';
 import { createApp } from './app.ts';
 import { RunStore } from './store.ts';
 import { ProductWorkspace } from './product-workspace.ts';
@@ -20,6 +21,60 @@ const retriever = (corpus: ProductCorpus): LoopRetriever => ({
   close() {},
   async retrieve(productId) {
     return { passages: corpus.passages.filter(p => p.productId === productId).map(p => ({ ...p, lexicalRank: 1, semanticRank: null, score: 1 })), durationMs: 1, method: 'synthetic API fixture', embeddingModel: 'synthetic', corpusVersion: corpus.version };
+  }
+});
+
+test('a failed review write preserves the successful answer response and recovers without another provider call', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'ablatrix-review-handoff-failure-'));
+  const reviewPath = join(directory, 'review.sqlite');
+  let calls = 0;
+  const provider = new SapiomFeedbackProvider({ enabled: true, apiKey: 'synthetic-fixture', dbPath: join(directory, 'budget.sqlite'), capUsd: 0.1, allowancePerCallUsd: 0.1, callLimit: 1, fetchImpl: async (_url, init) => {
+    calls++;
+    const request = JSON.parse(String(init?.body)), input = JSON.parse(request.messages[1].content);
+    const name = request.tool_choice.function.name;
+    return new Response(JSON.stringify({ model: 'gpt-5.6-luna', choices: [{ finish_reason: 'tool_calls', message: { tool_calls: [{ function: { name, arguments: JSON.stringify({ answer: 'Synthetic fixture: the handle is oak wood.', status: 'answered', citations: [{ quoteId: input.quoteOptions[0].id }] }) } }] } }], usage: { prompt_tokens: 12, completion_tokens: 8 } }), { status: 200 });
+  } });
+  const workspace = new ProductWorkspace(join(directory, 'workspace.sqlite'), provider, retriever);
+  const corpus: ProductCorpus = { version: 'synthetic-handoff-fixture', source: 'synthetic', license: 'synthetic', products: [], passages: [], cases: [] };
+  const loop = new FeedbackLoop(corpus, retriever(corpus), provider, join(directory, 'loop.sqlite'));
+  const store = new RunStore(join(directory, 'store.sqlite'));
+  const paid = new PaidAnswerReview(reviewPath);
+  const server = createApp(store, 'fixture', undefined, new PilotRunner(new PilotStore()), loop, undefined, workspace, paid, true, { answerProvider: provider, reviewDbPath: reviewPath });
+  const reviewDb = new DatabaseSync(reviewPath);
+  server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  const address = server.address(); assert.ok(address && typeof address !== 'string');
+  const base = `http://127.0.0.1:${address.port}`;
+  try {
+    // Fail the real database handoff only after generation has saved its output.
+    reviewDb.exec("CREATE TRIGGER fixture_review_unavailable BEFORE INSERT ON workspace_review_answers BEGIN SELECT RAISE(ABORT, 'Synthetic review storage failure'); END");
+    const product = workspace.createProduct({ title: 'Synthetic tool', sources: [{ label: 'Synthetic manual', text: 'Synthetic fixture only: this tool has an oak wood handle.' }] });
+    const response = await fetch(base + '/api/workspace/questions', { method: 'POST', headers: { 'content-type': 'application/json', origin: base }, body: JSON.stringify({ productId: product.id, question: 'What is the handle made from?', mode: 'live' }) });
+    const saved = await response.json();
+    assert.equal(response.status, 201, JSON.stringify(saved));
+    assert.equal(saved.status, 'completed');
+    assert.equal(saved.reviewHandoff, 'pending');
+    assert.equal(saved.error, null);
+    assert.equal(saved.answer.answer, 'Synthetic fixture: the handle is oak wood.');
+    assert.equal(calls, 1);
+    assert.equal(provider.receipt(saved.id)?.status, 'completed');
+    assert.equal(provider.capacity(1).ready, false, 'the completed answer still consumes its one reserved call');
+    const history = await (await fetch(base + '/api/workspace')).json();
+    assert.equal(history.runs.find((run: {id:string}) => run.id === saved.id).status, 'completed');
+    assert.equal((reviewDb.prepare('SELECT COUNT(*) AS n FROM workspace_review_answers').get() as {n:number}).n, 0);
+    reviewDb.exec('DROP TRIGGER fixture_review_unavailable');
+    const recoveredResponse = await fetch(base + '/api/workspace/reviews');
+    assert.equal(recoveredResponse.status, 200);
+    const recovered: Overview = await recoveredResponse.json();
+    assert.equal(recovered.cases.length, 1);
+    assert.equal(recovered.cases[0].qid, `workspace-${saved.id}`);
+    assert.deepEqual(recovered.cases[0].versions[0].answer, saved.answer);
+    await fetch(base + '/api/workspace/reviews');
+    assert.equal((reviewDb.prepare('SELECT COUNT(*) AS n FROM workspace_review_answers').get() as {n:number}).n, 1);
+    assert.equal(calls, 1, 'handoff recovery reuses the saved answer and never dispatches again');
+  } finally {
+    reviewDb.close();
+    await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+    store.close(); rmSync(directory, { recursive: true, force: true });
   }
 });
 

@@ -126,7 +126,15 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
         const run = await productWorkspace().ask(input, () => {
           if (loop?.publicOverview().busy || revisions?.hasActive()) throw new Error('Feedback experiment or revision started during retrieval; no workspace live call was made.');
         });
-        if (run.status === 'completed') answerRevisions();
+        if (run.status === 'completed') {
+          try { answerRevisions(); }
+          catch {
+            // Generation and its receipt are already durable. Review import is
+            // replayable, so its failure must not invite another paid answer.
+            console.warn('Review handoff deferred for saved workspace answer:', run.id);
+            return json(res, 201, { ...run, reviewHandoff: 'pending' });
+          }
+        }
         return json(res, run.status === 'failed' ? 502 : 201, run);
       }
       if (req.method === 'GET' && path === '/api/loop/telemetry') return json(res, 200, loopTelemetry().status());

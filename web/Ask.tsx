@@ -4,6 +4,8 @@ import './ask.css';
 
 type WorkspaceOverview = { products: WorkspaceProduct[]; runs: WorkspaceRun[]; readiness: { ready: boolean; reason: string }; busy: boolean };
 type SourceDraft = { label: string; text: string; originalQuestion: string };
+type QuestionResponse = WorkspaceRun & { reviewHandoff?: 'pending' };
+const withSavedRun = (overview: WorkspaceOverview, run: WorkspaceRun): WorkspaceOverview => ({ ...overview, runs: [run, ...overview.runs.filter(item => item.id !== run.id)].slice(0, 100) });
 
 async function request<T>(path: string, body?: unknown): Promise<T> {
   const response = await fetch(path, body === undefined ? undefined : { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
@@ -38,12 +40,29 @@ export default function Ask() {
   async function ask(mode: 'preview' | 'live') {
     if (!productId || !question.trim()) return;
     setBusy(true); setError(''); setNotice('');
+    let run: QuestionResponse;
     try {
-      const run = await request<WorkspaceRun>('/api/workspace/questions', { productId, question, mode });
-      await refresh(); setSelectedRunId(run.id);
-      setNotice(mode === 'preview' ? 'Evidence retrieved. No model call was made.' : 'Answer saved. Open its review to accept it or request a background revision.');
-    } catch (reason) { const value = await refresh().catch(() => null); if (value?.runs[0]?.status === 'failed') setSelectedRunId(value.runs[0].id); setError(reason instanceof Error ? reason.message : 'Question failed.'); }
-    finally { setBusy(false); }
+      run = await request<QuestionResponse>('/api/workspace/questions', { productId, question, mode });
+    } catch (reason) {
+      const value = await refresh().catch(() => null);
+      if (value?.runs[0]?.status === 'failed') setSelectedRunId(value.runs[0].id);
+      setError(reason instanceof Error ? reason.message : 'Question failed.');
+      setBusy(false);
+      return;
+    }
+    // The POST already saved this result. A later review or history failure must not suggest regenerating it.
+    setOverview(current => current ? withSavedRun(current, run) : current);
+    setSelectedRunId(run.id);
+    const savedNotice = run.reviewHandoff === 'pending'
+      ? 'Answer saved. Review is temporarily unavailable; try opening its review again later.'
+      : mode === 'preview' ? 'Evidence retrieved. No model call was made.' : 'Answer saved. Open its review to accept it or request a background revision.';
+    setNotice(savedNotice);
+    try {
+      const value = await request<WorkspaceOverview>('/api/workspace');
+      setOverview(withSavedRun(value, run));
+    } catch {
+      if (run.reviewHandoff !== 'pending') setNotice(`${savedNotice} The saved question list could not refresh; your result is shown below.`);
+    } finally { setBusy(false); }
   }
   return <div className="ask-app">
     <nav className="ask-nav" aria-label="Main navigation"><a className="ask-brand" href="/ask"><span>a↗</span> ablatrix <small>Product QA</small></a><div><a href="/review">Answer review ↗</a><a href="/paid-review">Pinned evaluation ↗</a><a href="/loop">Feedback lab ↗</a><a href="/pilot">Search pilot ↗</a><span className="ask-local">LOCAL WORKSPACE</span></div></nav>
