@@ -5,13 +5,15 @@ import { originalAnswerVersionId, type PaidAnswerReview } from './paid-answer-re
 import { answerSchema, type SapiomFeedbackProvider } from './feedback-provider.ts';
 import { investigateRevision, type InvestigationIssue, type InvestigationTrace } from './revision-investigation.ts';
 import { SapiomRevisionSearch } from './revision-search.ts';
+import { parseReviewAnswerSnapshot, type ReviewAnswerSnapshot, type ReviewContextProvenance, type RevisionContext, type RevisionSource } from './answer-review-source.ts';
+
+export type { ReviewAnswerSnapshot, RevisionContext, RevisionSource } from './answer-review-source.ts';
 
 const additionalSourceSchema = z.object({ label: z.string().trim().min(2).max(80), text: z.string().trim().min(30).max(2000), reference: z.string().trim().min(1).max(500).optional(), originalQuestion: z.string().trim().min(1).max(500).optional() }).strict();
 const requestSchema = z.object({ versionId: z.string().min(1), idempotencyKey: z.string().min(8).max(120), reviewer: z.string().trim().min(2).max(100), feedback: z.string().trim().min(10).max(2000), additionalSources: z.array(additionalSourceSchema).max(3).default([]), clarification: z.string().trim().min(1).max(500).optional(), investigate: z.boolean().default(true), issue: z.enum(['auto','wrong_model','missing_evidence','conflicting_sources','missed_source','answer_quality']).default('auto') }).strict();
 const decisionSchema = z.object({ versionId: z.string().min(1), reviewer: z.string().trim().min(2).max(100), decision: z.enum(['accept', 'needs_information']), note: z.string().trim().max(2000), checkedSourceShas: z.array(z.string().regex(/^[a-f0-9]{64}$/)).min(1) }).strict();
-export type RevisionSource = { id: string; label: string; text: string; sha256: string; originalQuestion: string | null; origin: 'pinned' | 'reviewer_added' | 'agent_retrieved'; reference?: string; addedBy?: string; retrievedAt?: string };
-export type RevisionContext = { question: string; product: { id: string; title: string }; sources: RevisionSource[]; clarifications: { text: string; reviewer: string }[] };
-type Version = { id: string; qid: string; parentId: string | null; jobId: string | null; answer: { answer: string; status: string; citations: { passageId: string; quote: string }[] }; model: string; promptVersion: string; sourceContextSha256: string; createdAt: string; context?: RevisionContext; investigation?: InvestigationTrace };
+type Version = { id: string; qid: string; parentId: string | null; jobId: string | null; answer: { answer: string; status: string; citations: { passageId: string; quote: string }[] }; model: string; promptVersion: string; sourceContextSha256: string; createdAt: string; context?: RevisionContext; contextProvenance?: ReviewContextProvenance; generationSourceIds?: string[]; investigation?: InvestigationTrace };
+type ReviewEvent = { id?: string; versionId: string; kind: 'reject' | 'accept' | 'needs_information'; reviewer: string; note: string; checkedSourceShas?: string[]; createdAt: string; reviewKind?: 'human' };
 type Job = { id: string; qid: string; parentId: string; feedback: string; reviewer: string; status: string; createdAt: string; startedAt?: string; finishedAt?: string; attemptId?: string; error?: string; versionId?: string; context?: RevisionContext; promptVersion?: string; additionalSources?: z.infer<typeof additionalSourceSchema>[]; clarification?: string; investigate?: boolean; issue?: InvestigationIssue; investigation?: InvestigationTrace; investigationComplete?: boolean; phase?: 'investigation' | 'generation' };
 type RevisionSearch = NonNullable<Parameters<typeof investigateRevision>[1]>;
 const sha = (text: string) => createHash('sha256').update(text).digest('hex');
@@ -31,6 +33,7 @@ export class AnswerRevisions {
       CREATE TABLE IF NOT EXISTS answer_revision_jobs(id TEXT PRIMARY KEY,qid TEXT NOT NULL,parent_id TEXT NOT NULL,idempotency_key TEXT NOT NULL UNIQUE,status TEXT NOT NULL,document TEXT NOT NULL,lease_owner TEXT,lease_expires INTEGER);
       CREATE INDEX IF NOT EXISTS answer_revision_qid ON answer_revision_jobs(qid);
       CREATE TABLE IF NOT EXISTS answer_revision_attempts(id TEXT PRIMARY KEY,job_id TEXT NOT NULL,provider_call_id TEXT,status TEXT NOT NULL,created_at TEXT NOT NULL,finished_at TEXT);
+      CREATE TABLE IF NOT EXISTS workspace_review_answers(id TEXT PRIMARY KEY,run_id TEXT NOT NULL UNIQUE,document TEXT NOT NULL);
     `);
     const columns = new Set((this.db.prepare('PRAGMA table_info(answer_revision_jobs)').all() as {name:string}[]).map(r=>r.name));
     if (!columns.has('lease_owner')) this.db.exec('ALTER TABLE answer_revision_jobs ADD COLUMN lease_owner TEXT');
@@ -44,8 +47,39 @@ export class AnswerRevisions {
     this.reconcile();
     if (automatic) { this.timer = setInterval(() => { void this.tick(); }, 1500); this.timer.unref(); }
   }
-  private case(qid: string) { const item = this.reviews.overview().cases.find(c => c.qid === qid); if (!item) throw new Error('Revision: case not found.'); return item; }
+  /** Register one immutable original; repeated handoffs may replay but never replace it. */
+  registerAnswer(raw: ReviewAnswerSnapshot) {
+    const snapshot = parseReviewAnswerSnapshot(raw), document = JSON.stringify(snapshot);
+    const version: Version = { id: originalAnswerVersionId(snapshot.id, snapshot.runId), qid: snapshot.id, parentId: null, jobId: null,
+      answer: snapshot.answer, model: snapshot.model, promptVersion: snapshot.promptVersion, sourceContextSha256: sha(JSON.stringify(snapshot.context)), createdAt: snapshot.createdAt,
+      context: snapshot.context, contextProvenance: snapshot.contextProvenance, generationSourceIds: snapshot.generationSourceIds };
+    this.db.exec('BEGIN IMMEDIATE');
+    try {
+      const previous = this.db.prepare('SELECT document FROM workspace_review_answers WHERE id=? OR run_id=?').get(snapshot.id, snapshot.runId) as { document: string } | undefined;
+      if (previous && previous.document !== document) throw new Error('Revision: workspace answer was already registered with a different snapshot.');
+      this.db.prepare('INSERT OR IGNORE INTO workspace_review_answers(id,run_id,document) VALUES(?,?,?)').run(snapshot.id, snapshot.runId, document);
+      const original = this.db.prepare('SELECT document FROM answer_versions WHERE id=?').get(version.id) as { document: string } | undefined;
+      if (original && original.document !== JSON.stringify(version)) throw new Error('Revision: saved original answer does not match its workspace snapshot.');
+      this.db.prepare('INSERT OR IGNORE INTO answer_versions(id,qid,parent_id,job_id,document) VALUES(?,?,?,?,?)').run(version.id, snapshot.id, null, null, JSON.stringify(version));
+      this.db.exec('COMMIT');
+      return version;
+    } catch (error) { this.db.exec('ROLLBACK'); throw error; }
+  }
+  private workspaceAnswer(qid: string): ReviewAnswerSnapshot | null {
+    const row = this.db.prepare('SELECT document FROM workspace_review_answers WHERE id=?').get(qid) as { document: string } | undefined;
+    return row ? JSON.parse(row.document) as ReviewAnswerSnapshot : null;
+  }
+  private case(qid: string) {
+    const snapshot = this.workspaceAnswer(qid);
+    if (snapshot) return { qid: snapshot.id, question: snapshot.context.question, asin: snapshot.context.product.id, title: snapshot.context.product.title, sources: snapshot.context.sources,
+      result: { run: { retrieval: { passages: snapshot.context.sources } } } };
+    const item = this.reviews.overview().cases.find(c => c.qid === qid);
+    if (!item) throw new Error('Revision: case not found.');
+    return item;
+  }
   private pinnedContext(qid: string): RevisionContext {
+    const workspace = this.workspaceAnswer(qid);
+    if (workspace) return workspace.context;
     const item = this.case(qid);
     return { question: item.question, product: { id: item.asin, title: item.title }, sources: item.sources.map(source => ({ ...source, id: `${qid}:${source.sha256}`, origin: 'pinned' })), clarifications: [] };
   }
@@ -56,11 +90,13 @@ export class AnswerRevisions {
     return ['search:1','read:1','read:2'].map(step => this.provider.receipt(`${job.id}:${step}`)).filter((receipt): receipt is NonNullable<typeof receipt> => receipt !== undefined && receipt !== null);
   }
   private generationAttempts(qid: string) { return this.jobs(qid).filter(job => this.provider.receipt(job.id)).length; }
-  overview() {
-    const cases = this.reviews.overview().cases.map(item => ({ qid: item.qid, generationAttempts:this.generationAttempts(item.qid), versions: this.versions(item.qid), jobs: this.jobs(item.qid).map(job => { const receipt = this.provider.receipt(job.id); const attempts=this.db.prepare('SELECT * FROM answer_revision_attempts WHERE job_id=? ORDER BY created_at').all(job.id); return { ...job, attempts, externalUsage:this.externalReceipts(job).map(call => ({ id:call.id, kind:call.kind, status:call.status, planningAllowanceUsd:call.allowance_usd })), usage: receipt ? { inputTokens:receipt.input_tokens, outputTokens:receipt.output_tokens, planningAllowanceUsd:receipt.allowance_usd, providerCallStatus:receipt.status } : null, latencyMs: job.finishedAt ? new Date(job.finishedAt).getTime()-new Date(job.createdAt).getTime() : null }; }), events: (this.db.prepare('SELECT document FROM answer_review_events WHERE qid=? ORDER BY rowid').all(item.qid) as {document:string}[]).map(r => JSON.parse(r.document)) }));
+  overview(scope?: 'workspace' | 'pinned') {
+    const ids = [ ...(scope === 'workspace' ? [] : this.reviews.overview().cases.map(item => item.qid)), ...(scope === 'pinned' ? [] : (this.db.prepare('SELECT id FROM workspace_review_answers ORDER BY rowid DESC').all() as { id: string }[]).map(item => item.id)) ];
+    const cases = ids.map(qid => ({ qid, generationAttempts:this.generationAttempts(qid), versions: this.versions(qid), jobs: this.jobs(qid).map(job => { const receipt = this.provider.receipt(job.id); const attempts=this.db.prepare('SELECT * FROM answer_revision_attempts WHERE job_id=? ORDER BY created_at').all(job.id); return { ...job, attempts, externalUsage:this.externalReceipts(job).map(call => ({ id:call.id, kind:call.kind, status:call.status, planningAllowanceUsd:call.allowance_usd })), usage: receipt ? { inputTokens:receipt.input_tokens, outputTokens:receipt.output_tokens, planningAllowanceUsd:receipt.allowance_usd, providerCallStatus:receipt.status } : null, latencyMs: job.finishedAt ? new Date(job.finishedAt).getTime()-new Date(job.createdAt).getTime() : null }; }), events: (this.db.prepare('SELECT document FROM answer_review_events WHERE qid=? ORDER BY rowid').all(qid) as {document:string}[]).map(r => JSON.parse(r.document) as ReviewEvent) }));
     const jobs=cases.flatMap(c=>c.jobs);
     const external = jobs.flatMap(job => job.externalUsage);
-    return { cases, ready: cases.filter(c => c.jobs.at(-1)?.status === 'ready').length, pending: cases.filter(c => ['queued','running'].includes(c.jobs.at(-1)?.status ?? '')).length, readiness:this.provider.readiness(), investigationReadiness:this.search.readiness(), summary: { requested:jobs.length, accepted:cases.filter(c=>c.jobs.at(-1)?.status==='accepted').length, unresolved:cases.filter(c=>c.jobs.length && c.jobs.at(-1)?.status!=='accepted').length, providerCalls:jobs.filter(j=>j.usage).length + external.length, answerCalls:jobs.filter(j=>j.usage).length, searchAndReadCalls:external.length, planningAllowanceUsd:jobs.reduce((n,j)=>n+(j.usage?.planningAllowanceUsd ?? 0),0) + external.reduce((n,call)=>n+call.planningAllowanceUsd,0), actualProviderCharges:'unavailable' } };
+    const accepted = (item: typeof cases[number]) => item.events.some(event => event.kind === 'accept' && event.versionId === item.versions.at(-1)?.id);
+    return { cases, ready: cases.filter(c => c.jobs.at(-1)?.status === 'ready').length, pending: cases.filter(c => ['queued','running'].includes(c.jobs.at(-1)?.status ?? '')).length, readiness:this.provider.readiness(), investigationReadiness:this.search.readiness(), summary: { requested:jobs.length, accepted:cases.filter(accepted).length, unresolved:cases.filter(c=>(c.jobs.length || c.events.some(event => event.kind === 'needs_information')) && !accepted(c)).length, providerCalls:jobs.filter(j=>j.usage).length + external.length, answerCalls:jobs.filter(j=>j.usage).length, searchAndReadCalls:external.length, planningAllowanceUsd:jobs.reduce((n,j)=>n+(j.usage?.planningAllowanceUsd ?? 0),0) + external.reduce((n,call)=>n+call.planningAllowanceUsd,0), actualProviderCharges:'unavailable' } };
   }
   hasActive() { return this.busy; }
   getJob(id: string) { const job = this.overview().cases.flatMap(c=>c.jobs).find(j=>j.id===id); if (!job) throw new Error('Revision: job not found.'); return job; }
@@ -84,7 +120,7 @@ export class AnswerRevisions {
       }
       if (input.clarification) context.clarifications.push({ text: input.clarification, reviewer: input.reviewer });
       // Leave room below the provider's 40,000-character input limit for field names.
-      if (JSON.stringify(context).length + JSON.stringify(latest.answer.answer).length + JSON.stringify(input.feedback).length > 35_000) throw new Error('Revision: combined source context is too large. Shorten the added excerpts.');
+      if (!input.investigate && JSON.stringify(context).length + JSON.stringify(latest.answer.answer).length + JSON.stringify(input.feedback).length > 35_000) throw new Error('Revision: combined source context is too large. Shorten the added excerpts.');
       const id = randomUUID(), now = new Date().toISOString();
       const job: Job = { id, qid, parentId: latest.id, feedback: input.feedback, reviewer: input.reviewer, status: 'queued', createdAt: now, context, promptVersion: 'answer-revision-v2-context', additionalSources: input.additionalSources, clarification: input.clarification, investigate:input.investigate, issue:input.issue };
       this.db.prepare('INSERT INTO answer_review_events(id,qid,version_id,kind,document) VALUES(?,?,?,?,?)').run(randomUUID(),qid,latest.id,'reject',JSON.stringify({ versionId: latest.id, kind:'reject', reviewer:input.reviewer, note:input.feedback, createdAt:now, jobId:id }));
@@ -97,19 +133,21 @@ export class AnswerRevisions {
     this.db.exec('BEGIN IMMEDIATE');
     try {
       if (this.latest(qid).id !== input.versionId) throw new Error('Revision: stale answer version. Refresh before acting.');
-      if (this.jobs(qid).some(j => ['queued','running'].includes(j.status))) throw new Error('Revision: wait for the active revision.');
+      if (this.jobs(qid).some(j => ['queued','running','reconciliation'].includes(j.status))) throw new Error('Revision: wait for the active revision.');
       const version=this.latest(qid);
       if (input.decision === 'accept' && this.jobs(qid).some(job => job.parentId === version.id)) throw new Error('Revision: this answer was rejected for a newer investigation. Supply the missing information and review the next revision before accepting.');
       const context = version.context ?? this.pinnedContext(qid);
-      if (input.checkedSourceShas.some(s => !context.sources.some(source => source.sha256 === s))) throw new Error('Revision: checked source does not belong to this answer version.');
+      if (new Set(input.checkedSourceShas).size !== input.checkedSourceShas.length || input.checkedSourceShas.some(s => !context.sources.some(source => source.sha256 === s))) throw new Error('Revision: checked sources must be distinct and belong to this answer version.');
       if (input.decision === 'accept' && version.investigation && !context.sources.some(source => version.investigation!.selectedSourceIds.includes(source.id) && input.checkedSourceShas.includes(source.sha256))) throw new Error('Revision: check a source used by the revised answer before accepting it.');
-      if (!version.jobId) throw new Error('Revision: decisions require a revised answer version.');
-      const job=this.jobs(qid).find(j=>j.id===version.jobId);
-      if (!job || !['ready','needs_information'].includes(job.status)) throw new Error('Revision: this answer version already has a decision or is unavailable.');
+      const originalWorkspace = !version.jobId && !!this.workspaceAnswer(qid);
+      if (!version.jobId && !originalWorkspace) throw new Error('Revision: decisions require a revised answer version.');
+      if (originalWorkspace && input.decision === 'accept' && version.answer.citations.length && !context.sources.some(source => input.checkedSourceShas.includes(source.sha256) && version.answer.citations.some(citation => citation.passageId === source.id))) throw new Error('Revision: check a source cited by this answer before accepting it.');
+      const job=version.jobId ? this.jobs(qid).find(j=>j.id===version.jobId) : undefined;
+      if (!originalWorkspace && (!job || !['ready','needs_information'].includes(job.status))) throw new Error('Revision: this answer version already has a decision or is unavailable.');
       if (this.db.prepare("SELECT 1 FROM answer_review_events WHERE version_id=? AND kind IN ('accept','needs_information') LIMIT 1").get(version.id)) throw new Error('Revision: this answer version already has a decision.');
-      const event = { id: randomUUID(), versionId: input.versionId, kind: input.decision, reviewer: input.reviewer, note: input.note, checkedSourceShas: input.checkedSourceShas, createdAt: new Date().toISOString() };
+      const event = { id: randomUUID(), versionId: input.versionId, kind: input.decision, reviewer: input.reviewer, note: input.note, checkedSourceShas: input.checkedSourceShas, reviewKind: 'human' as const, createdAt: new Date().toISOString() };
       this.db.prepare('INSERT INTO answer_review_events(id,qid,version_id,kind,document) VALUES(?,?,?,?,?)').run(event.id,qid,input.versionId,event.kind,JSON.stringify(event));
-      job.status=input.decision === 'accept' ? 'accepted' : 'needs_information'; this.saveJob(job);
+      if (job) { job.status=input.decision === 'accept' ? 'accepted' : 'needs_information'; this.saveJob(job); }
       this.db.exec('COMMIT'); return event;
     } catch(error) { this.db.exec('ROLLBACK'); throw error; }
   }
@@ -176,7 +214,8 @@ export class AnswerRevisions {
           const result = await investigateRevision({ context:job.context, critique:job.feedback, issue:job.issue ?? 'auto', runId:job.id, originalCitedSourceIds, originalSourceIds, searchQuery: job.investigation?.query }, boundedSearch, trace => { job.investigation=structuredClone(trace); this.saveJob(job); });
           job.context=result.context; job.investigation=result.investigation; job.investigationComplete=true;
           if (result.investigation.status !== 'ready_to_revise' || !result.investigation.selectedSourceIds.length) { job.status='needs_information'; job.finishedAt=new Date().toISOString(); this.saveJob(job); return; }
-          if (JSON.stringify(job.context).length + JSON.stringify(parent.answer.answer).length + JSON.stringify(job.feedback).length > 35_000) { job.status='needs_information'; job.error='Investigation found more source text than the bounded answer context permits. Narrow the excerpts before revising.'; job.finishedAt=new Date().toISOString(); this.saveJob(job); return; }
+          const selectedContext = { ...job.context, sources: job.context.sources.filter(source => result.investigation.selectedSourceIds.includes(source.id)) };
+          if (JSON.stringify(selectedContext).length + JSON.stringify(parent.answer.answer).length + JSON.stringify(job.feedback).length > 35_000) { job.status='needs_information'; job.error='Investigation found more source text than the bounded answer context permits. Narrow the excerpts before revising.'; job.finishedAt=new Date().toISOString(); this.saveJob(job); return; }
           job.promptVersion='answer-revision-v3-investigation'; job.phase='generation'; this.saveJob(job);
         } catch (error) {
           const code = error && typeof error === 'object' && 'code' in error ? error.code : '';

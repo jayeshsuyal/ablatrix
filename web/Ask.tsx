@@ -41,12 +41,12 @@ export default function Ask() {
     try {
       const run = await request<WorkspaceRun>('/api/workspace/questions', { productId, question, mode });
       await refresh(); setSelectedRunId(run.id);
-      setNotice(mode === 'preview' ? 'Evidence retrieved. No model call was made.' : 'Answer saved with its cited evidence.');
+      setNotice(mode === 'preview' ? 'Evidence retrieved. No model call was made.' : 'Answer saved. Open its review to accept it or request a background revision.');
     } catch (reason) { const value = await refresh().catch(() => null); if (value?.runs[0]?.status === 'failed') setSelectedRunId(value.runs[0].id); setError(reason instanceof Error ? reason.message : 'Question failed.'); }
     finally { setBusy(false); }
   }
   return <div className="ask-app">
-    <nav className="ask-nav" aria-label="Main navigation"><a className="ask-brand" href="/ask"><span>a↗</span> ablatrix <small>Product QA</small></a><div><a href="/paid-review">Answer review ↗</a><a href="/loop">Feedback lab ↗</a><a href="/pilot">Search pilot ↗</a><span className="ask-local">LOCAL WORKSPACE</span></div></nav>
+    <nav className="ask-nav" aria-label="Main navigation"><a className="ask-brand" href="/ask"><span>a↗</span> ablatrix <small>Product QA</small></a><div><a href="/review">Answer review ↗</a><a href="/paid-review">Pinned evaluation ↗</a><a href="/loop">Feedback lab ↗</a><a href="/pilot">Search pilot ↗</a><span className="ask-local">LOCAL WORKSPACE</span></div></nav>
     <main className="ask-main">
       <header className="ask-hero"><span className="ask-kicker">PRODUCT EVIDENCE → GROUNDED ANSWER</span><h1>Ask your product evidence.</h1><p>Add a product’s source text, find the relevant passages, and inspect an answer with citations. This local workspace is separate from Ablatrix’s frozen evaluation sets.</p></header>
       {error && <p className="ask-alert" role="alert">{error}</p>}{notice && <p className="ask-notice" role="status">{notice}</p>}
@@ -68,6 +68,7 @@ export default function Ask() {
       </div>
       <section className="ask-panel ask-result" aria-labelledby="ask-result-title"><div className="ask-panel-heading"><span>03 / RESULT</span><h2 id="ask-result-title">{selectedRun ? selectedRun.question : 'Evidence and answer'}</h2><p>{selectedRun?.mode === 'preview' ? 'Retrieval preview · no model call or quality score.' : selectedRun ? 'Saved local model attempt. Citations verify quote membership, not full semantic correctness.' : 'Select a saved question to inspect its answer and source passages.'}</p></div>
         {selectedRun?.answer && <div className="ask-answer"><span>{selectedRun.answer.status === 'answered' ? 'ANSWERED FROM EVIDENCE' : 'INSUFFICIENT EVIDENCE'}</span><p>{selectedRun.answer.answer}</p><small>{selectedRun.model} · {selectedRun.usage ? `${selectedRun.usage.inputTokens + selectedRun.usage.outputTokens} tokens` : 'token usage unavailable'}</small></div>}
+        {selectedRun?.status === 'completed' && selectedRun.mode === 'live' && selectedRun.answer && <p className="ask-review-link"><a className="ask-primary" href={`/review?answer=${encodeURIComponent(`workspace-${selectedRun.id}`)}`}>Review this answer ↗</a><span>Check its sources, record a decision, or request a background revision.</span></p>}
         {selectedRun?.error && <p className="ask-alert">{selectedRun.error}</p>}
         {selectedRun?.retrieval && <div className="ask-evidence"><h3>Retrieved product evidence</h3>{selectedRun.retrieval.passages.map((passage, index) => { const citations = selectedRun.answer?.citations.filter(item => item.passageId === passage.id) ?? []; return <article key={passage.id} id={`source-${passage.id}`}><div><span>#{index + 1} · {passage.reference}</span>{citations.length > 0 && <strong>CITED</strong>}</div>{passage.originalQuestion && <p className="ask-original-question"><strong>Original customer question:</strong> {passage.originalQuestion}<small>Context for this answer; the question is not a confirmed product fact.</small></p>}<p>{passage.text}</p>{citations.map((citation, i) => <blockquote key={i}>“{citation.quote}”</blockquote>)}</article>; })}</div>}
       </section>

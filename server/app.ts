@@ -43,18 +43,25 @@ async function body(req: IncomingMessage, maxLength = 16_384): Promise<unknown> 
   return JSON.parse(text || '{}') as unknown;
 }
 
-export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview, startRevisionWorker = false) {
+export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview, startRevisionWorker = false, localOptions: { answerProvider?: SapiomFeedbackProvider; reviewDbPath?: string } = {}) {
   const runner = new ExperimentRunner(store, mode, provider);
   const optimizer = new OptimizationRunner(store, runner, mode, provider);
-  let feedbackProvider: SapiomFeedbackProvider | undefined;
+  let feedbackProvider: SapiomFeedbackProvider | undefined = localOptions.answerProvider;
   const localAnswerProvider = () => {
     if (!feedbackProvider) feedbackProvider = new SapiomFeedbackProvider();
     return feedbackProvider;
   };
   const productWorkspace = () => workspace ??= new ProductWorkspace(process.env.ABLATRIX_WORKSPACE_DB, localAnswerProvider());
-  const paidAnswerReview = () => paidReview ??= new PaidAnswerReview(process.env.ABLATRIX_PAID_REVIEW_DB);
+  const reviewDbPath = localOptions.reviewDbPath ?? process.env.ABLATRIX_PAID_REVIEW_DB;
+  const paidAnswerReview = () => paidReview ??= new PaidAnswerReview(reviewDbPath);
   let revisions: AnswerRevisions | undefined;
-  const answerRevisions = () => revisions ??= new AnswerRevisions(paidAnswerReview(), localAnswerProvider(), process.env.ABLATRIX_PAID_REVIEW_DB, true, () => !feedback?.publicOverview().busy && !workspace?.overview().busy);
+  const answerRevisions = () => {
+    revisions ??= new AnswerRevisions(paidAnswerReview(), localAnswerProvider(), reviewDbPath, true, () => !feedback?.publicOverview().busy && !workspace?.overview().busy);
+    // A completed run is durable before registration. Repeating this import also
+    // recovers a crash between saving an answer and adding it to the review queue.
+    for (const snapshot of productWorkspace().reviewSnapshots()) revisions.registerAnswer(snapshot);
+    return revisions;
+  };
   const loopTelemetry = () => telemetry ??= new LoopTelemetry();
   const feedbackLoop = () => {
     if (revisions?.hasActive()) throw new Error('Feedback revision is using the shared provider.');
@@ -98,13 +105,19 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       const path = url.pathname;
       if (req.method === 'POST' && path.startsWith('/api/loop/') && revisions?.hasActive()) return json(res, 409, { error: 'A revision is using the shared live provider.' });
       if (req.method === 'GET' && path === '/api/paid-review') return json(res, 200, paidAnswerReview().overview());
-      if (req.method === 'GET' && path === '/api/paid-review/revisions') return json(res, 200, answerRevisions().overview());
-      if (req.method === 'GET' && /^\/api\/paid-review\/revisions\/[a-f0-9-]{36}$/.test(path)) return json(res, 200, answerRevisions().getJob(path.split('/')[4]));
+      if (req.method === 'GET' && path === '/api/paid-review/revisions') return json(res, 200, answerRevisions().overview('pinned'));
+      if (req.method === 'GET' && /^\/api\/paid-review\/revisions\/[a-f0-9-]{36}$/.test(path)) {
+        const job = answerRevisions().getJob(path.split('/')[4]);
+        return /^\d+$/.test(job.qid) ? json(res, 200, job) : json(res, 404, { error: 'Revision: job not found.' });
+      }
       if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/revisions$/.test(path)) return json(res, 202, answerRevisions().request(path.split('/')[3], await body(req, 40_000)));
       if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/decisions$/.test(path)) return json(res, 201, answerRevisions().decide(path.split('/')[3], await body(req)));
       if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}$/.test(path)) return json(res, 201, paidAnswerReview().review(path.split('/')[3], await body(req)));
       if (req.method === 'GET' && path === '/api/paid-review/export') return download(res, 'ablatrix-paid-answer-reviews.json', `${JSON.stringify(paidAnswerReview().overview(), null, 2)}\n`, 'application/json');
       if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, productWorkspace().overview());
+      if (req.method === 'GET' && path === '/api/workspace/reviews') return json(res, 200, answerRevisions().overview('workspace'));
+      if (req.method === 'POST' && /^\/api\/workspace\/reviews\/workspace-[a-f0-9-]{36}\/revisions$/.test(path)) return json(res, 202, answerRevisions().request(path.split('/')[4], await body(req, 40_000)));
+      if (req.method === 'POST' && /^\/api\/workspace\/reviews\/workspace-[a-f0-9-]{36}\/decisions$/.test(path)) return json(res, 201, answerRevisions().decide(path.split('/')[4], await body(req)));
       if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req, 110_000)));
       if (req.method === 'POST' && path === '/api/workspace/questions') {
         const input = await body(req);
@@ -113,6 +126,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
         const run = await productWorkspace().ask(input, () => {
           if (loop?.publicOverview().busy || revisions?.hasActive()) throw new Error('Feedback experiment or revision started during retrieval; no workspace live call was made.');
         });
+        if (run.status === 'completed') answerRevisions();
         return json(res, run.status === 'failed' ? 502 : 201, run);
       }
       if (req.method === 'GET' && path === '/api/loop/telemetry') return json(res, 200, loopTelemetry().status());

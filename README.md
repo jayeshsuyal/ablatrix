@@ -21,8 +21,8 @@ flowchart LR
   subgraph Ask["/ask · Product QA"]
     A[Product sources] --> B[BM25 + BGE retrieval] --> C[Cited answer]
   end
-  subgraph Review["/paid-review · Answer review"]
-    D[Saved answer + sources] --> E[Human source check]
+  subgraph Review["/review · Answer review"]
+    C --> D[Saved answer + source snapshot] --> E[Human source check]
     E -->|Reject + explain| F[Bounded investigation]
     F --> G[Versioned revision]
     G --> E
@@ -34,7 +34,7 @@ flowchart LR
   end
 ```
 
-The review worker saves jobs and source decisions in SQLite. It can use saved evidence or, with a separate opt-in, search approved hosts once and read at most two pages before requesting one revised answer. Search snippets are leads, not citations. The lab keeps development, validation, and final products separate; synthetic demo scores never count as model improvement.
+Every completed `/ask` answer enters `/review`. One local worker saves jobs, source decisions, and immutable answer versions in SQLite. It can use saved evidence or, with a separate opt-in, search approved hosts once and read at most two pages before requesting one revised answer. Search snippets are leads, not citations. The historical 20-answer evaluation remains at `/paid-review`; workspace decisions never enter its results. The lab keeps development, validation, and final products separate; synthetic demo scores never count as model improvement.
 
 ## Reproduce one workflow
 
@@ -48,7 +48,9 @@ npm run local
 
 Open [Feedback lab](http://127.0.0.1:4173/loop), choose **Synthetic demo**, then select **Canvas Panel 8X10 Pack of 12** and its development question **“how many are included?”**. Get an answer: the deterministic baseline abstains. Open the retrieved passage, mark the abstention as unnecessary, and save a review explaining that the supported package count should be stated directly, with that passage selected. In **Propose an update**, select the reviewed failure and inspect the candidate policy. Run **paired validation** on held-back questions, then inspect the saved decision and policy history. This is a deterministic workflow demonstration: its answers and validation verdicts are synthetic, so they establish no model-quality gain.
 
-The same interface saves live Router answers only with explicit local opt-in, a server-side credential, and a shared planning allowance. Optional source discovery has a separate opt-in. The allowance is **not** a provider-enforced spending cap or a settled bill. The [Product QA](http://127.0.0.1:4173/ask) and [Answer review](http://127.0.0.1:4173/paid-review) workspaces show the other parts of the same answer and review path.
+For your own products, open [Product QA](http://127.0.0.1:4173/ask), save source text, and preview retrieval. A completed answer links to [Answer review](http://127.0.0.1:4173/review): explain a flaw, continue reviewing another answer, then return to compare and source-check the revision. Live Router answers require explicit local opt-in, a server-side credential, and a shared planning allowance. Optional source discovery has a separate opt-in. The allowance is **not** a provider-enforced spending cap or a settled bill.
+
+To reproduce that answer-to-review workflow without paid calls, run `node --import tsx --test server/workspace-review-api.test.ts`. It exercises the HTTP API and real background worker with an injected synthetic transport, including duplicate rejection requests, stale decisions, and restart recovery. See [workflow and limits](docs/workspace-answer-review.md).
 
 ## Saved results
 
