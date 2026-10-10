@@ -1,0 +1,4 @@
+.demo-session-banner { display:flex; flex-wrap:wrap; align-items:center; gap:10px 20px; padding:12px 24px; background:#10241f; color:#ebf5ef; font:13px/1.5 system-ui,sans-serif; border-bottom:1px solid #375a48; }
+.demo-session-banner nav { display:flex; flex-wrap:wrap; gap:16px; margin-left:auto; }
+.demo-session-banner a { color:#ebf5ef; text-underline-offset:3px; }
+.demo-session-message { max-width:620px; margin:15vh auto; padding:24px; font:16px/1.6 system-ui,sans-serif; }

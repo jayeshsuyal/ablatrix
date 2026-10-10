@@ -1,5 +1,7 @@
 # Six PR build plan and evidence ledger
 
+October 9, 2026 — restricted demo package: PR #23 is merged. The next slice adds verified gateway JWT identity and three server-enforced roles, trusted reviewer attribution, explicitly synthetic answer/revision receipts, graceful worker drain, single-container SQLite locking, and complete offline backup/restore. Hosted paid/web/telemetry routes remain closed; existing live results and pending human quality judgments are unchanged. External hosting and gateway configuration are pending. See [setup, workflow, and recovery](hosted-demo.md). Verification results are recorded in the slice PR.
+
 ## Current release sequence
 
 The historical six-PR ledger below is retained for provenance. The current build has [five product stages](next-release-plan.md): baseline and rubric, general answer records, asynchronous correction, frozen comparison, and a restricted hosted demo. PR #22 merged the general answer/revision workflow. Reviewing its single live trial is separate from completing the remaining implementation.

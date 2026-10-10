@@ -8,6 +8,7 @@ export type ReviewContextProvenance = 'workspace_source_snapshot' | 'saved_retri
 export type ReviewAnswerSnapshot = {
   id: string;
   runId: string;
+  mode?: 'live' | 'synthetic';
   context: RevisionContext;
   answer: z.infer<typeof answerSchema>;
   model: string;
@@ -25,6 +26,7 @@ export function workspaceReviewSourceHash(source: Pick<RevisionSource, 'id' | 'l
 const snapshotSchema = z.object({
   id: z.string().regex(/^workspace-[a-f0-9-]{36}$/),
   runId: z.uuid(),
+  mode: z.enum(['live', 'synthetic']).optional(),
   context: z.object({
     question: z.string().min(1).max(500),
     product: z.object({ id: z.string().min(1).max(160), title: z.string().min(1).max(200) }).strict(),
@@ -47,6 +49,7 @@ const snapshotSchema = z.object({
 export function parseReviewAnswerSnapshot(raw: ReviewAnswerSnapshot): ReviewAnswerSnapshot {
   const snapshot = snapshotSchema.parse(raw);
   const sources = snapshot.context.sources;
+  if (snapshot.mode === 'synthetic' && (snapshot.model !== 'synthetic-fixture' || !snapshot.answer.answer.startsWith('SYNTHETIC'))) throw new Error('Revision: synthetic snapshots require explicit synthetic output provenance.');
   if (snapshot.id !== `workspace-${snapshot.runId}` || new Set(sources.map(source => source.id)).size !== sources.length ||
     new Set(snapshot.generationSourceIds).size !== snapshot.generationSourceIds.length ||
     snapshot.generationSourceIds.some(id => !sources.some(source => source.id === id)) ||

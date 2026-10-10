@@ -11,7 +11,7 @@ import type { LoopAnswer, LoopProvider, LoopRetriever, LoopUsage, ProductCorpus,
 
 const sourceInput = z.object({ label: z.string().trim().min(2).max(80), text: z.string().trim().min(30).max(1500), originalQuestion: z.string().trim().min(1).max(500).optional() }).strict();
 const productInput = z.object({ title: z.string().trim().min(3).max(160), sources: z.array(sourceInput).min(1).max(8) }).strict();
-const questionInput = z.object({ productId: z.uuid(), question: z.string().trim().min(5).max(500), mode: z.enum(['preview', 'live']) }).strict();
+const questionInput = z.object({ productId: z.uuid(), question: z.string().trim().min(5).max(500), mode: z.enum(['preview', 'live', 'synthetic']) }).strict();
 const baselineInstructions = 'Answer the product question using only the supplied product evidence. State supported facts directly, attribute claims to their source, and qualify missing or conflicting details. Never invent a specification. Cite an exact supporting quote for each material claim.';
 
 // A byte is an upper bound on byte-level BPE tokens. Keep each passage below
@@ -35,14 +35,14 @@ function sourceChunks(text: string): string[] {
 }
 
 export type WorkspaceProduct = { id: string; title: string; sources: { id: string; label: string; text: string; originalQuestion?: string }[]; createdAt: string };
-export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live'; generationProtocol?: 'product-answer-v2-context'; reviewContext?: RevisionContext; status: 'retrieving' | 'evidence_ready' | 'completed' | 'failed'; retrieval: RetrievalResult | null; answer: LoopAnswer | null; model: string | null; usage: LoopUsage; error: string | null; createdAt: string };
+export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live' | 'synthetic'; generationProtocol?: 'product-answer-v2-context' | 'synthetic-product-answer-v1'; reviewContext?: RevisionContext; status: 'retrieving' | 'evidence_ready' | 'completed' | 'failed'; retrieval: RetrievalResult | null; answer: LoopAnswer | null; model: string | null; usage: LoopUsage; error: string | null; createdAt: string };
 
 /** Local product workspace. Imported evidence never enters the frozen evaluation corpora. */
 export class ProductWorkspace {
   private db: DatabaseSync;
   private retrievers = new Map<string, LoopRetriever>();
   private busy = false;
-  constructor(dbPath = '.data/product-workspace.sqlite', private provider: LoopProvider, private retrieverFactory: (corpus: ProductCorpus) => LoopRetriever = corpus => new ProductRetriever(corpus, dbPath === ':memory:' ? ':memory:' : `${dbPath}.retrieval.sqlite`)) {
+  constructor(dbPath = '.data/product-workspace.sqlite', private provider: LoopProvider & { executionMode?: 'live' | 'synthetic' }, private retrieverFactory: (corpus: ProductCorpus) => LoopRetriever = corpus => new ProductRetriever(corpus, dbPath === ':memory:' ? ':memory:' : `${dbPath}.retrieval.sqlite`)) {
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`CREATE TABLE IF NOT EXISTS workspace_products (id TEXT PRIMARY KEY, created_at TEXT NOT NULL, document TEXT NOT NULL);
@@ -69,8 +69,8 @@ export class ProductWorkspace {
     return `${external.data_version}:${local.changes}`;
   }
   reviewSnapshots(): ReviewAnswerSnapshot[] {
-    return this.runs().filter(run => run.mode === 'live' && run.status === 'completed' && run.answer && run.model && run.retrieval?.passages.length).map(run => ({
-      id: `workspace-${run.id}`, runId: run.id,
+    return this.runs().filter(run => (run.mode === 'live' || run.mode === 'synthetic') && run.status === 'completed' && run.answer && run.model && run.retrieval?.passages.length).map(run => ({
+      id: `workspace-${run.id}`, runId: run.id, ...(run.mode === 'synthetic' ? { mode: 'synthetic' as const } : {}),
       // Older runs did not freeze the full source set or original product title.
       // Their retrieved passages are the only historical context we can assert.
       context: run.reviewContext ?? { question: run.question, product: { id: run.productId, title: `Saved product ${run.productId} (original title unavailable)` },
@@ -115,9 +115,10 @@ export class ProductWorkspace {
     if (this.busy) throw new Error('Workspace: finish the current question before starting another.');
     const product = this.getProduct(input.productId);
     if (!product) throw new Error('Workspace: product not found.');
-    if (input.mode === 'live' && !this.provider.readiness().ready) throw new Error(`Workspace: ${this.provider.readiness().reason}`);
+    if (input.mode !== 'preview' && (input.mode === 'synthetic') !== (this.provider.executionMode === 'synthetic')) throw new Error('Workspace: requested answer mode does not match the configured provider.');
+    if (input.mode !== 'preview' && !this.provider.readiness().ready) throw new Error(`Workspace: ${this.provider.readiness().reason}`);
     this.busy = true;
-    const run: WorkspaceRun = { id: randomUUID(), productId: product.id, question: input.question, mode: input.mode, ...(input.mode === 'live' ? { generationProtocol: 'product-answer-v2-context' as const,
+    const run: WorkspaceRun = { id: randomUUID(), productId: product.id, question: input.question, mode: input.mode, ...(input.mode !== 'preview' ? { generationProtocol: input.mode === 'synthetic' ? 'synthetic-product-answer-v1' as const : 'product-answer-v2-context' as const,
       reviewContext: { question: input.question, product: { id: product.id, title: product.title }, sources: this.corpus(product).passages.map(passage => {
         const source = { id: passage.id, label: passage.reference, text: passage.text, originalQuestion: passage.originalQuestion ?? null, origin: 'workspace' as const, reference: passage.reference };
         return { ...source, sha256: workspaceReviewSourceHash(source) };
@@ -132,11 +133,12 @@ export class ProductWorkspace {
         if (!passages.length) throw new Error('No product evidence was retrieved.');
         if (passages.some(passage => passage.productId !== product.id || passage.sha256 !== textHash(passage.text) || !run.reviewContext!.sources.some(source => source.id === passage.id && source.text === passage.text && source.originalQuestion === (passage.originalQuestion ?? null)))) throw new Error('Retrieved evidence does not match the saved product snapshot.');
         this.saveRun(run);
-        beforeLiveDispatch?.();
-        const policy = { id: 'workspace-baseline-v2-context', parentId: null, instructions: baselineInstructions, rationale: 'Local product workspace baseline with separate original customer question context.', feedbackRunIds: [], status: 'baseline' as const, mode: 'live' as const, createdAt: '2026-09-29T00:00:00.000Z' };
+        if (input.mode === 'live') beforeLiveDispatch?.();
+        const policy = { id: 'workspace-baseline-v2-context', parentId: null, instructions: baselineInstructions, rationale: 'Local product workspace baseline with separate original customer question context.', feedbackRunIds: [], status: 'baseline' as const, mode: input.mode === 'synthetic' ? 'fixture' as const : 'live' as const, createdAt: '2026-09-29T00:00:00.000Z' };
         const quoteCount = this.provider.answerWithSnippetIds ? quoteOptions(passages).length : 0;
         const answerMethod = quoteCount >= 1 && quoteCount <= 60 ? this.provider.answerWithSnippetIds! : this.provider.answer;
         const answer = await answerMethod.call(this.provider, { question: input.question, product: { id: product.id, title: product.title, split: 'development' }, policy, passages, runId: run.id });
+        if (input.mode === 'synthetic' && (answer.model !== 'synthetic-fixture' || !answer.answer.answer.startsWith('SYNTHETIC'))) throw new Error('Synthetic answer provenance is missing.');
         if (answer.answer.status === 'answered' && !answer.answer.citations.length || answer.answer.citations.some(citation => !passages.some(passage => passage.id === citation.passageId && passage.text.includes(citation.quote)))) throw new Error('Answer citation did not match supplied product evidence.');
         run.answer = answer.answer; run.model = answer.model; run.usage = answer.usage; run.status = 'completed';
       }

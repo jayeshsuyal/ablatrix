@@ -9,3 +9,6 @@ test-results/
 playwright-report/
 __pycache__/
 *.pyc
+deploy/access.json
+deploy/backups/
+deploy/data/

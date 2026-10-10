@@ -16,12 +16,15 @@
     "compare": "node --import tsx server/context-comparison-cli.ts",
     "feedback:prepare": "node --env-file-if-exists=.env --import tsx server/feedback-prepare.ts",
     "feedback:retrieval-audit": "node --import tsx scripts/evaluate_product_retrieval.ts",
-    "feedback:import-validation": "node --import tsx scripts/import_validation_packet.ts"
+    "feedback:import-validation": "node --import tsx scripts/import_validation_packet.ts",
+    "demo:backup": "node --import tsx scripts/demo-backup.ts backup",
+    "demo:restore": "node --import tsx scripts/demo-backup.ts restore"
   },
   "dependencies": {
     "@huggingface/transformers": "4.3.0",
     "@sapiom/agent": "0.14.2",
     "@sapiom/tools": "0.38.0",
+    "jose": "6.2.12",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "zod": "4.5.4"
