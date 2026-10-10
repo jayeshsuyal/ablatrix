@@ -54,6 +54,8 @@ To reproduce that answer-to-review workflow without paid calls, run `node --impo
 
 ### Compare saved answers
 
+For a focused local correction demonstration, follow the [five-case walkthrough](docs/local-correction-walkthrough.md): a supported control, clearer wording, a missed source, a saved wrong-context correction, and a missing-information stop. `npm run walkthrough -- --out /tmp/ablatrix-walkthrough.json` freezes its inputs and checks source-routing without paid calls. Live revisions and human decisions are separate, pending steps.
+
 Open [Compare answers](http://127.0.0.1:4173/compare) and load the **synthetic example**. Review anonymous A/B answers against their complete source context, record correctness, support, and adequacy, then inspect the report and export. The example makes no model calls; its reviews and results stay labeled synthetic. Missing judgments remain pending, and uncertain judgments remain unresolved.
 
 The workbench also imports completed experiment packets through `npm run compare -- import --db .data/context-comparisons.sqlite --packet /absolute/path/packet.json`. Packets freeze answers, sources, and the original-question context intervention. A saved packet protects review integrity; it does not prove that an experiment was planned before generation or authenticate provider records. See the [comparison protocol](docs/context-comparison-protocol.md) and [packet format](docs/context-comparison-contract.md).

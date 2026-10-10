@@ -6,6 +6,12 @@ import type { RevisionContext, RevisionSource } from './answer-revisions.ts';
 
 const source = (id: string, text: string, originalQuestion: string | null = null): RevisionSource => ({ id: `19:${id}`, label: 'Saved listing', text, sha256: id.padEnd(64, 'a'), originalQuestion, origin: 'pinned' });
 const context = (): RevisionContext => ({ question: 'Does drawer 240337103 replace part 241543917?', product: { id: 'product-19', title: 'Frigidaire 240337103 crisper drawer' }, sources: [source('listing', 'This listing identifies the Frigidaire refrigerator crisper drawer as part 240337103.'), source('customer', 'Yes, this drawer matches your model.', 'Will this fit Kenmore refrigerator 25367889506?')], clarifications: [] });
+function savedContext(qid: string): RevisionContext {
+  const manifest = JSON.parse(readFileSync(new URL('../docs/evidence/paid-qa-batch-2026-09-28/manifest.json', import.meta.url), 'utf8')) as { cases: { qid: string; asin: string; title: string; question: string; sources: { label: string; text: string; sha256: string }[] }[] };
+  const sourceContext = JSON.parse(readFileSync(new URL('../docs/evidence/paid-qa-batch-2026-09-28/source-context.json', import.meta.url), 'utf8')) as { contexts: { qid: string; sourceSha256: string; originalQuestion: string }[] };
+  const saved = manifest.cases.find(item => item.qid === qid)!;
+  return { question: saved.question, product: { id: saved.asin, title: saved.title }, clarifications: [], sources: saved.sources.map(item => ({ ...item, id: `${saved.qid}:${item.sha256}`, origin: 'pinned', originalQuestion: sourceContext.contexts.find(context => context.qid === saved.qid && context.sourceSha256 === item.sha256)?.originalQuestion ?? null })) };
+}
 function searchAdapter(reads: { url: string; title?: string; text: string }[], results?: { title: string; url: string; snippet: string }[]) {
   const calls: { kind: string; id: string; input: string }[] = [];
   const adapter: RevisionInvestigationSearch = {
@@ -65,6 +71,116 @@ test('a digit-bearing non-compatibility question can admit matching source text'
   const result = await investigateRevision({ context: input, critique: 'The voltage detail was missed.', issue: 'missed_source', runId: 'voltage', originalCitedSourceIds: [] });
   assert.equal(result.investigation.status, 'ready_to_revise');
   assert.deepEqual(result.investigation.selectedSourceIds, ['19:voltage']);
+});
+
+test('saved Q63 capacity sources admit the uncited configuration without asking for a replacement model', async () => {
+  const input = savedContext('63');
+  const cited = input.sources.find(item => item.label === 'ePQA cqa 591')!;
+  const configuration = input.sources.find(item => item.label === 'ePQA description 595')!;
+  const result = await investigateRevision({ context: input, critique: 'The No cites only a tentative customer opinion. Use the saved configuration description to explain one slim quarter keg versus up to two sixth-barrel kegs. Cite the exact listing text and do not claim independently tested physical fit.', issue: 'missed_source', runId: 'saved-capacity', originalCitedSourceIds: [cited.id] });
+  assert.equal(result.investigation.status, 'ready_to_revise');
+  assert.equal(result.investigation.clarificationQuestion, undefined);
+  assert.deepEqual(result.investigation.requestedIdentifiers, []);
+  assert.equal(result.investigation.externalCalls, 0);
+  assert.equal(result.investigation.newEvidence, false);
+  assert.ok(result.investigation.steps.find(item => item.kind === 'candidate_found')!.sourceIds!.includes(configuration.id));
+  assert.ok(result.investigation.selectedSourceIds.includes(configuration.id));
+  assert.match(result.investigation.query, /capacity dimensions/);
+  assert.doesNotMatch(result.investigation.query, /compatibility|replacement/);
+});
+
+test('physical fit recognizes quantities on either side of fit while bare fit remains conservative', async () => {
+  for (const question of ['Will two storage bins fit?', 'Can it fit 2 storage bins?', 'Will storage bins fit inside this cabinet?']) {
+    const input: RevisionContext = { question, product: { id: 'cabinet', title: 'Storage cabinet' }, sources: [source('capacity', 'This cabinet holds two storage bins on its lower shelf.')], clarifications: [] };
+    const result = await investigateRevision({ context: input, critique: 'The answer missed the saved capacity detail.', issue: 'missed_source', runId: 'capacity' });
+    assert.equal(result.investigation.status, 'ready_to_revise', question);
+    assert.equal(result.investigation.clarificationQuestion, undefined, question);
+    assert.match(result.investigation.query, /capacity dimensions/, question);
+  }
+  for (const question of ['Will this fit?', 'Will two models fit?', 'Can it fit two parts?']) {
+    const input: RevisionContext = { question, product: { id: 'part', title: 'Replacement part' }, sources: [source('generic', 'This will fit two models according to the customer.')], clarifications: [] };
+    const result = await investigateRevision({ context: input, critique: 'The saved source was missed.', issue: 'missed_source', runId: 'unspecified-fit' });
+    assert.equal(result.investigation.status, 'needs_information', question);
+    assert.match(result.investigation.clarificationQuestion!, /full device model/, question);
+    assert.match(result.investigation.query, /compatibility replacement/, question);
+  }
+});
+
+test('physical capacity keeps historical model-scope checks with or without a requested model', async () => {
+  for (const question of ['Will two storage bins fit in model RF-12345?', 'Will two storage bins fit?']) {
+    const wrong = source('wrong-capacity', 'Two storage bins fit inside the cabinet.', 'Will two storage bins fit in model RF-98765?');
+    const input: RevisionContext = { question, product: { id: 'cabinet', title: 'Cabinet RF-98765' }, sources: [wrong], clarifications: [] };
+    const result = await investigateRevision({ context: input, critique: 'The answer missed the saved capacity detail.', issue: 'missed_source', runId: 'wrong-capacity' });
+    assert.equal(result.investigation.status, 'needs_information', question);
+    assert.equal(result.investigation.selectedSourceIds.includes(wrong.id), false, question);
+    assert.ok(result.investigation.steps.some(item => item.kind === 'scope_check' && item.sourceIds?.includes(wrong.id)), question);
+    assert.equal(result.investigation.externalCalls, 0);
+  }
+});
+
+test('physical capacity requires the requested model in ordinary listing text', async () => {
+  for (const text of ['Cabinet model RF-98765 holds two storage bins and has space for two bins inside.', 'This cabinet holds two storage bins and has space for two bins inside.']) {
+    const input: RevisionContext = { question: 'Will two storage bins fit in model RF-12345?', product: { id: 'cabinet', title: 'Cabinet RF-12345' }, sources: [source('listing-capacity', text)], clarifications: [] };
+    const result = await investigateRevision({ context: input, critique: 'The saved capacity detail was missed.', issue: 'missed_source', runId: 'listing-capacity' });
+    assert.equal(result.investigation.status, 'needs_information', text);
+    assert.equal(result.investigation.steps.some(item => item.kind === 'candidate_found'), false, text);
+    assert.equal(result.investigation.externalCalls, 0, text);
+  }
+  const exact = source('exact-capacity', 'Cabinet model RF-12345 holds two storage bins and has space for two bins inside.');
+  const result = await investigateRevision({ context: { question: 'Will two storage bins fit in model RF-12345?', product: { id: 'cabinet', title: 'Cabinet' }, sources: [exact], clarifications: [] }, critique: 'The saved capacity detail was missed.', issue: 'missed_source', runId: 'exact-capacity' });
+  assert.equal(result.investigation.status, 'ready_to_revise');
+  assert.match(result.investigation.query, /capacity dimensions/);
+  assert.deepEqual(result.investigation.steps.find(item => item.kind === 'candidate_found')!.sourceIds, [exact.id]);
+  assert.equal(result.investigation.newEvidence, false);
+});
+
+test('inside cannot bypass identifier and relationship requirements for named parts and devices', async () => {
+  for (const text of ['Cartridge PART123 fits inside printer HP99999.', 'Cartridge PART123 and printer HP12345 have the following dimensions.']) {
+    const input: RevisionContext = { question: 'Will cartridge PART123 fit inside printer HP12345?', product: { id: 'cartridge', title: 'Cartridge PART123' }, sources: [source('device-fit', text)], clarifications: [] };
+    const result = await investigateRevision({ context: input, critique: 'The saved source was missed.', issue: 'missed_source', runId: 'device-fit' });
+    assert.equal(result.investigation.status, 'needs_information', text);
+    assert.equal(result.investigation.steps.some(item => item.kind === 'candidate_found'), false, text);
+    assert.match(result.investigation.query, /compatibility replacement/, text);
+    assert.equal(result.investigation.externalCalls, 0, text);
+  }
+});
+
+test('explicit replacement and compatibility take precedence over physical capacity language', async () => {
+  for (const question of ['Will replacement shelf PART123 fit model RF-12345 and hold two bins?', 'Is this compatible with model RF-12345 and will two storage bins fit?', 'Will two storage bins fit on this replacement shelf?']) {
+    const wrong = source('wrong-device-capacity', 'PART123 fits RF-12345 and holds two storage bins.', 'Does part PART123 fit model RF-98765?');
+    const generic = source('generic-capacity', 'Two storage bins fit on this shelf, which holds two bins.');
+    const input: RevisionContext = { question, product: { id: 'shelf', title: 'Shelf PART123' }, sources: [wrong, generic], clarifications: [] };
+    const result = await investigateRevision({ context: input, critique: 'The saved capacity detail was missed.', issue: 'missed_source', runId: 'replacement-capacity' });
+    assert.equal(result.investigation.status, 'needs_information', question);
+    assert.equal(result.investigation.selectedSourceIds.includes(wrong.id), false, question);
+    assert.match(result.investigation.clarificationQuestion!, /full device model/, question);
+    assert.match(result.investigation.query, /\bcompatibility\b/, question);
+    assert.match(result.investigation.query, /\breplacement\b/, question);
+  }
+});
+
+test('Q26 color sources are not excluded by a reviewer asking not to claim fit', async () => {
+  const input = savedContext('26');
+  const result = await investigateRevision({ context: input, critique: 'Make the answer concise, preserve buyer color descriptions, and do not claim an exact manufacturer color or fit.', issue: 'answer_quality', runId: 'color' });
+  assert.equal(result.investigation.status, 'ready_to_revise');
+  const colorAnswer = input.sources.find(item => item.label === 'ePQA cqa 222')!;
+  assert.ok(colorAnswer.originalQuestion?.includes('ghw9300pw4'));
+  assert.ok(result.investigation.selectedSourceIds.includes(colorAnswer.id));
+  assert.doesNotMatch(result.investigation.query, /compatibility|replacement/);
+});
+
+test('saved replacement and work-with questions still stop on missing compatibility', async () => {
+  for (const qid of ['19', '47']) {
+    const input = savedContext(qid);
+    const result = await investigateRevision({ context: input, critique: 'The requested relationship remains unverified.', issue: 'missing_evidence', runId: `saved-${qid}` });
+    assert.equal(result.investigation.status, 'needs_information', qid);
+    assert.match(result.investigation.clarificationQuestion!, /full device model/, qid);
+    assert.match(result.investigation.query, /\bcompatibility\b/, qid);
+    assert.equal(result.investigation.newEvidence, false, qid);
+    assert.equal(result.investigation.externalCalls, 0, qid);
+    const wrongModel = input.sources.find(item => item.label === (qid === '19' ? 'ePQA cqa 154' : 'ePQA cqa 431'))!;
+    assert.equal(result.investigation.selectedSourceIds.includes(wrongModel.id), false, qid);
+  }
 });
 
 test('search diagnostics distinguish no raw results from leads rejected by source checks', async () => {

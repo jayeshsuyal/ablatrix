@@ -28,11 +28,33 @@ const tokens = (text: string) => unique(text.toLowerCase().replace(/\.{2,}/g, ' 
 // from a source's historical question must never become the current model.
 const identifiers = (text: string) => unique((text.match(/\b[a-z0-9]+(?:-[a-z0-9]+|\.[0-9]+)*\b/gi) ?? []).map(value => value.toUpperCase())).filter(value => value.length >= 5 && /\d/.test(value));
 const mentions = (text: string, identifier: string) => identifiers(text).includes(identifier);
-const compatibilityWords = /\b(fit|fits|fitting|compatible|compatibility|interchangeable|interchangeability|replace|replaces|replacement|replacing|cross.reference)\b/i;
+const fitWords = /\b(fit|fits|fitting)\b/i;
+const explicitCompatibilityWords = /\b(compatible|compatibility|interchangeable|interchangeability|replace|replaces|replacement|replacing|cross.reference)\b|\b(?:work|works|working)\s+with\b/i;
+const compatibilityWords = new RegExp(`${fitWords.source}|${explicitCompatibilityWords.source}`, 'i');
+const dimensionWords = /\b(dimensions?|measurements?|size|height|width|wide|depth|deep|long|length|weight)\b/i;
+function fitIntent(text: string): 'compatibility' | 'physical' | null {
+  // An explicit replacement/compatibility question takes precedence over size
+  // language. Bare "fit" stays conservative; quantities of objects and spatial
+  // language identify physical capacity without requiring a replacement part.
+  if (explicitCompatibilityWords.test(text) || (labeledIdentifiers(text, 'part').length > 0 && /\b(need|buy|order)\b|\blooking for\b/i.test(text))) return 'compatibility';
+  if (!fitWords.test(text)) return null;
+  // "Inside" does not relax a fit relationship between identified parts/devices.
+  if (identifiers(text).length > 1) return 'compatibility';
+  const amount = '(?:[2-9][0-9]*|1[0-9]+|two|three|four|five|six|seven|eight|nine|ten|several|multiple)';
+  const objects = `${amount}\\s+(?:[a-z]+(?:-[a-z]+)?\\s+){0,3}[a-z]+s`;
+  const countedFit = new RegExp(`\\b(?:fit|fits|fitting)\\s+(?:up to\\s+)?${objects}\\b|\\b${objects}\\s+(?:all\\s+)?fit\\b`, 'gi');
+  const physicalCount = [...text.matchAll(countedFit)].some(match => !/\b(models|parts|replacements)\b/i.test(match[0]));
+  return dimensionWords.test(text) || /\b(capacity|space|room|inside|within)\b/i.test(text) || physicalCount ? 'physical' : 'compatibility';
+}
+// Component matching lets a physical description such as "slim-pony" address
+// "slim" without changing model identifiers or interpreting it as proof of fit.
+const matchingTokens = (text: string, physical: boolean) => tokens(physical ? text.replace(/(?<=[a-z])-(?=[a-z])/gi, ' ') : text);
 /** Search the customer's target and question, using listing words only for product context. */
 export function buildInvestigationQuery(question: string, productTitle: string, requested: string[]): string {
-  const intent = compatibilityWords.test(question) ? ['compatibility', 'replacement']
-    : /\b(dimensions?|measurements?|size|height|width|wide|depth|deep|long|length|weight)\b/i.test(question) ? ['dimensions', 'specifications']
+  const fit = fitIntent(question);
+  const intent = fit === 'compatibility' ? ['compatibility', 'replacement']
+    : fit === 'physical' ? ['capacity', 'dimensions']
+    : dimensionWords.test(question) ? ['dimensions', 'specifications']
     : /\b(material|made of|fabric|leather|composition|ingredients?)\b/i.test(question) ? ['material', 'composition']
     : /\b(install|installation|assemble|assembly|mount|setup)\b/i.test(question) ? ['installation', 'instructions']
     : /\b(warranty|guarantee|lifespan|last|durability)\b/i.test(question) ? ['warranty', 'durability']
@@ -67,8 +89,8 @@ function labeledIdentifiers(text: string, labels: string) {
   const pattern = new RegExp(`\\b(?:${labels})(?:\\s+model)?(?:\\s+(?:number|no\\.?))?\\s*(?:is\\s+)?[:#]?\\s*([a-z0-9]+(?:-[a-z0-9]+|\\.[0-9]+)*)\\b`, 'gi');
   return unique([...text.matchAll(pattern)].flatMap(match => identifiers(match[1])));
 }
-function wrongQuestionScope(source: RevisionSource, requested: string[], compatibility: boolean, requestText: string, productTitle: string) {
-  if (!source.originalQuestion || !compatibility) return false;
+function wrongQuestionScope(source: RevisionSource, requested: string[], scopedFit: boolean, requestText: string, productTitle: string) {
+  if (!source.originalQuestion || !scopedFit) return false;
   const scoped = identifiers(source.originalQuestion);
   if (!scoped.length) return false;
   if (!requested.length) return true;
@@ -99,9 +121,14 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
   const context = structuredClone(input.context);
   const requestText = [context.question, ...context.clarifications.map(item => item.text)].join(' ');
   const requested = identifiers(requestText);
-  const compatibility = compatibilityWords.test(`${context.question} ${input.critique}`);
-  const questionTerms = tokens(context.question).slice(0, 16);
-  const queryTerms = unique([...questionTerms, ...tokens(input.critique)]).slice(0, 24);
+  const fit = fitIntent(requestText);
+  // Reviewer feedback can name a claim to avoid ("do not claim fit"). Only
+  // customer question/clarifications establish the requested relationship.
+  const compatibility = fit === 'compatibility';
+  const physical = fit === 'physical' && !compatibility;
+  const scopedFit = compatibility || physical;
+  const questionTerms = matchingTokens(context.question, physical).slice(0, 16);
+  const queryTerms = unique([...questionTerms, ...matchingTokens(input.critique, physical)]).slice(0, 24);
   // Do not send reviewer names or whole clarifications to the search provider.
   // A persisted plan must replay the exact metered search request after restart.
   const query = input.searchQuery ?? buildInvestigationQuery(context.question, context.product.title, requested);
@@ -118,10 +145,10 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
     : 'Can you provide the specific missing fact or a source that addresses it?';
   step({ kind: 'diagnosis', status: 'completed', detail: `Rule-based routing selected ${trace.issue.replaceAll('_', ' ')}. This is a search plan, not a correctness judgment.` });
   const ranked = context.sources.filter(source => {
-    if (!wrongQuestionScope(source, requested, compatibility, requestText, context.product.title)) return true;
+    if (!wrongQuestionScope(source, requested, scopedFit, requestText, context.product.title)) return true;
     step({ kind: 'scope_check', status: 'skipped', detail: 'This customer answer refers to a different or unspecified target model in its original question.', sourceIds: [source.id] });
     return false;
-  }).map(source => ({ source, score: queryTerms.filter(term => tokens(source.text).includes(term)).length + requested.filter(id => mentions(source.text, id)).length * 8 }))
+  }).map(source => ({ source, score: queryTerms.filter(term => matchingTokens(source.text, physical).includes(term)).length + requested.filter(id => mentions(source.text, id)).length * 8 }))
     .sort((a, b) => b.score - a.score);
   // Preserve all original sources in the audit snapshot; the provider receives
   // only this explicit selection. Source questions are context, not proof.
@@ -129,13 +156,16 @@ export async function investigateRevision(input: Input, search?: RevisionInvesti
   step({ kind: 'local_search', status: 'completed', detail: `Ranked ${ranked.length} saved sources using the current question and critique; selected ${trace.selectedSourceIds.length}. Reusing a saved source adds no new evidence.`, sourceIds: trace.selectedSourceIds });
   const cited = new Set(input.originalCitedSourceIds ?? []);
   const applicability = (source: RevisionSource): { applicable: boolean; reason: string } => {
-    if (wrongQuestionScope(source, requested, compatibility, requestText, context.product.title)) return { applicable: false, reason: 'The source belongs to a different customer question or device model.' };
+    if (wrongQuestionScope(source, requested, scopedFit, requestText, context.product.title)) return { applicable: false, reason: 'The source belongs to a different customer question or device model.' };
+    // Capacity sources still need to address the customer's named model. An
+    // ordinary listing has no historical question on which to run the CQA guard.
+    if (scopedFit && requested.some(id => !mentions(source.text, id))) return { applicable: false, reason: 'The source does not mention every requested identifier.' };
     if (compatibility) {
-      if (!requested.length || requested.some(id => !mentions(source.text, id))) return { applicable: false, reason: 'The source does not mention every requested identifier.' };
+      if (!requested.length) return { applicable: false, reason: 'The source does not mention every requested identifier.' };
       if (!compatibilityWords.test(source.text)) return { applicable: false, reason: 'The source mentions the identifiers but does not state a fit or replacement relationship.' };
       return { applicable: true, reason: 'The source is a compatibility candidate; its claim still requires review.' };
     }
-    const overlap = questionTerms.filter(term => tokens(source.text).includes(term)).length;
+    const overlap = questionTerms.filter(term => matchingTokens(source.text, physical).includes(term)).length;
     return overlap >= Math.min(2, questionTerms.length) && questionTerms.length > 0
       ? { applicable: true, reason: 'The source addresses terms in the customer question; its claim still requires review.' }
       : { applicable: false, reason: 'The source excerpt does not address enough terms in the customer question.' };
