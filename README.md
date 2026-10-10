@@ -52,6 +52,12 @@ For your own products, open [Product QA](http://127.0.0.1:4173/ask), save source
 
 To reproduce that answer-to-review workflow without paid calls, run `node --import tsx --test server/workspace-review-api.test.ts`. It exercises the HTTP API and real background worker with an injected synthetic transport, including duplicate rejection requests, stale decisions, and restart recovery. See [workflow and limits](docs/workspace-answer-review.md).
 
+### Compare saved answers
+
+Open [Compare answers](http://127.0.0.1:4173/compare) and load the **synthetic example**. Review anonymous A/B answers against their complete source context, record correctness, support, and adequacy, then inspect the report and export. The example makes no model calls; its reviews and results stay labeled synthetic. Missing judgments remain pending, and uncertain judgments remain unresolved.
+
+The workbench also imports completed experiment packets through `npm run compare -- import --db .data/context-comparisons.sqlite --packet /absolute/path/packet.json`. Packets freeze answers, sources, and the original-question context intervention. A saved packet protects review integrity; it does not prove that an experiment was planned before generation or authenticate provider records. See the [comparison protocol](docs/context-comparison-protocol.md) and [packet format](docs/context-comparison-contract.md).
+
 ## Saved results
 
 | Experiment | Verified observation | What it establishes |
@@ -61,4 +67,4 @@ To reproduce that answer-to-review workflow without paid calls, run `node --impo
 
 **Quality status:** Exact quote membership is distinct from whether a quote supports a claim, whether an answer is correct, and whether users prefer it. The product batch has 20 historical human judgments, but they predate restoration of the original customer-question context and are excluded by the current review protocol; **0/20 context-aware human judgments** are saved. The ablation's independent blind human correctness review is also pending. Neither experiment proves an answer-quality improvement; no policy was promoted on these results.
 
-For implementation details, see [architecture](docs/architecture.md), [feedback-loop setup](docs/feedback-loop-local.md), [investigation limits](docs/revision-investigation.md), [corpus provenance and license](docs/product-corpus.md), and the [build and evidence ledger](docs/build-plan.md). The earlier [search ablation](docs/search-ablation.md) and [research agent](docs/sapiom-accounting.md) are documented separately.
+For implementation details, see [architecture](docs/architecture.md), [feedback-loop setup](docs/feedback-loop-local.md), [investigation limits](docs/revision-investigation.md), [corpus provenance and license](docs/product-corpus.md), the [remaining release plan](docs/next-release-plan.md), and the [build and evidence ledger](docs/build-plan.md). The earlier [search ablation](docs/search-ablation.md) and [research agent](docs/sapiom-accounting.md) are documented separately.

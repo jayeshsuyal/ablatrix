@@ -21,6 +21,7 @@ import { LoopTelemetry } from './loop-telemetry.ts';
 import { ProductWorkspace } from './product-workspace.ts';
 import { PaidAnswerReview } from './paid-answer-review.ts';
 import { AnswerRevisions } from './answer-revisions.ts';
+import { ContextComparisonStore, createContextComparisonFixture } from './context-comparison.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -43,7 +44,7 @@ async function body(req: IncomingMessage, maxLength = 16_384): Promise<unknown> 
   return JSON.parse(text || '{}') as unknown;
 }
 
-export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview, startRevisionWorker = false, localOptions: { answerProvider?: SapiomFeedbackProvider; reviewDbPath?: string } = {}) {
+export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview, startRevisionWorker = false, localOptions: { answerProvider?: SapiomFeedbackProvider; reviewDbPath?: string; comparisonDbPath?: string } = {}) {
   const runner = new ExperimentRunner(store, mode, provider);
   const optimizer = new OptimizationRunner(store, runner, mode, provider);
   let feedbackProvider: SapiomFeedbackProvider | undefined = localOptions.answerProvider;
@@ -54,6 +55,8 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   const productWorkspace = () => workspace ??= new ProductWorkspace(process.env.ABLATRIX_WORKSPACE_DB, localAnswerProvider());
   const reviewDbPath = localOptions.reviewDbPath ?? process.env.ABLATRIX_PAID_REVIEW_DB;
   const paidAnswerReview = () => paidReview ??= new PaidAnswerReview(reviewDbPath);
+  let comparisons: ContextComparisonStore | undefined;
+  const contextComparisons = () => comparisons ??= new ContextComparisonStore(localOptions.comparisonDbPath ?? process.env.ABLATRIX_COMPARISON_DB);
   let revisions: AnswerRevisions | undefined;
   let importedWorkspaceVersion: string | undefined;
   const answerRevisions = () => {
@@ -108,6 +111,19 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       }
       const url = new URL(req.url ?? '/', 'http://localhost');
       const path = url.pathname;
+      if (req.method === 'GET' && path === '/api/context-comparisons') return json(res, 200, contextComparisons().list());
+      if (req.method === 'POST' && path === '/api/context-comparisons/fixture') {
+        const input = await body(req);
+        if (!input || typeof input !== 'object' || Array.isArray(input) || Object.keys(input).length) return json(res, 400, { error: 'The synthetic example takes an empty object.' });
+        return json(res, 201, contextComparisons().importPacket(createContextComparisonFixture()));
+      }
+      if (/^\/api\/context-comparisons\/[A-Za-z0-9_-]{1,120}(\/(reviews|report|export))?$/.test(path)) {
+        const id = path.split('/')[3], action = path.split('/')[4];
+        if (req.method === 'GET' && !action) return json(res, 200, contextComparisons().get(id));
+        if (req.method === 'POST' && action === 'reviews') return json(res, 201, contextComparisons().review(id, await body(req, 40_000)));
+        if (req.method === 'GET' && action === 'report') return json(res, 200, contextComparisons().report(id));
+        if (req.method === 'GET' && action === 'export') return download(res, `ablatrix-context-comparison-${id}.json`, `${JSON.stringify(contextComparisons().exportPacket(id), null, 2)}\n`, 'application/json');
+      }
       if (req.method === 'POST' && path.startsWith('/api/loop/') && revisions?.hasActive()) return json(res, 409, { error: 'A revision is using the shared live provider.' });
       if (req.method === 'GET' && path === '/api/paid-review') return json(res, 200, paidAnswerReview().overview());
       if (req.method === 'GET' && path === '/api/paid-review/revisions') return json(res, 200, answerRevisions().overview('pinned'));
@@ -264,6 +280,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (error instanceof Error && error.message.startsWith('Feedback')) return json(res, 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Workspace:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Paid review:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
+      if (error instanceof Error && error.message.startsWith('Context comparison:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Revision:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Pilot')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted|Live optimization|holdout|frozen completed/.test(error.message)) {
@@ -273,7 +290,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       return json(res, 500, { error: 'Internal server error.' });
     }
   });
-  server.on('close', () => { void pilot.close(); revisions?.close(); feedback?.close(); workspace?.close(); paidReview?.close(); feedbackProvider?.close(); telemetry?.close(); });
+  server.on('close', () => { void pilot.close(); revisions?.close(); feedback?.close(); workspace?.close(); paidReview?.close(); feedbackProvider?.close(); telemetry?.close(); comparisons?.close(); });
   if (startRevisionWorker) answerRevisions();
   return server;
 }

@@ -6,6 +6,7 @@ import FeedbackLoop from './FeedbackLoop';
 import Ask from './Ask';
 import PaidReview from './PaidReview';
 import WorkspaceReview from './WorkspaceReview';
+import ContextComparison from './ContextComparison';
 
 type Run = {
   id: string; taskId: string; mode: 'fixture' | 'live'; status: 'running' | 'completed' | 'failed';
@@ -222,4 +223,4 @@ function App() {
 }
 
 const route = window.location.pathname.replace(/\/$/, '');
-createRoot(document.getElementById('root')!).render(route === '/ask' ? <Ask /> : route === '/review' ? <WorkspaceReview /> : route === '/paid-review' ? <PaidReview /> : route === '/loop' ? <FeedbackLoop /> : route === '/pilot' ? <Pilot /> : <App />);
+createRoot(document.getElementById('root')!).render(route === '/ask' ? <Ask /> : route === '/compare' ? <ContextComparison /> : route === '/review' ? <WorkspaceReview /> : route === '/paid-review' ? <PaidReview /> : route === '/loop' ? <FeedbackLoop /> : route === '/pilot' ? <Pilot /> : <App />);
