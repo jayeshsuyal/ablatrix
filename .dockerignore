@@ -18,3 +18,5 @@ deploy/backups
 deploy/data
 **/*.pem
 **/*.key
+**/__pycache__
+**/*.pyc
