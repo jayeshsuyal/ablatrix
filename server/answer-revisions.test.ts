@@ -25,6 +25,7 @@ test('revision queue is durable, idempotent, version bound, and preserves source
     const first=flow.overview().cases.find(c => reviews.overview().cases.find(i=>i.qid===c.qid)?.sources.some(source=>source.originalQuestion))!, id=first.versions[0].id;
     const input={versionId:id,idempotencyKey:'duplicate-click-1',reviewer:'Reviewer',feedback:'The original answer misses relevant source information.'};
     const job=directRequest(flow,first.qid,input);
+    assert.equal(job.reviewKind,'human');
     assert.equal(directRequest(flow,first.qid,input).id,job.id);
     assert.throws(()=>directRequest(flow,first.qid,{...input,idempotencyKey:'different-click-2'}),/active or unresolved job/);
     flow.close(); flow=new AnswerRevisions(reviews,provider,path,false);
@@ -41,6 +42,7 @@ test('revision queue is durable, idempotent, version bound, and preserves source
     assert.throws(()=>flow.decide(first.qid,{versionId:id,reviewer:'Reviewer',decision:'accept',note:'',checkedSourceShas:[reviews.overview().cases.find(c=>c.qid===first.qid)!.sources[0].sha256]}),/stale/);
     const current=completed.versions[1].id, checkedSourceShas=[reviews.overview().cases.find(c=>c.qid===first.qid)!.sources[0].sha256];
     flow.decide(first.qid,{versionId:current,reviewer:'Reviewer',decision:'accept',note:'Source checked.',checkedSourceShas});
+    assert.equal(flow.overview().cases.find(c=>c.qid===first.qid)!.events.at(-1)!.reviewKind,'human');
     assert.equal(flow.overview().cases.find(c=>c.qid===first.qid)!.jobs[0].status,'accepted');
     assert.equal(flow.overview().ready,0);
     assert.equal(flow.overview().summary.accepted,1);
@@ -51,6 +53,55 @@ test('revision queue is durable, idempotent, version bound, and preserves source
     assert.equal(provider.receipt(job.id)?.input_tokens,12);
     assert.equal(provider.capacity(1).ready,false);
   } finally { flow.close();provider.close();reviews.close();rmSync(directory,{recursive:true,force:true}); }
+});
+
+test('AI critique provenance persists without relabeling live answers and binds replay attribution', () => {
+  const directory=mkdtempSync(join(tmpdir(),'revision-critique-provenance-')),path=join(directory,'review.sqlite'),ledger=join(directory,'budget.sqlite');
+  const reviews=new PaidAnswerReview(path);
+  const provider=new SapiomFeedbackProvider({enabled:false,dbPath:ledger,fetchImpl:async()=>{throw new Error('No provider calls in this provenance test.');}});
+  let flow=new AnswerRevisions(reviews,provider,path,false);
+  try {
+    const [first,second]=flow.overview().cases;
+    const aiInput={versionId:first.versions[0].id,idempotencyKey:'ai-critique-provenance-1',reviewer:'AI development source check',reviewKind:'ai_assisted',feedback:'The source question scopes this claim to a different model.'};
+    const aiJob=directRequest(flow,first.qid,aiInput);
+    assert.equal(aiJob.reviewKind,'ai_assisted');
+    assert.equal(aiJob.mode,'live');
+    assert.equal(directRequest(flow,first.qid,aiInput).id,aiJob.id);
+    assert.throws(()=>directRequest(flow,first.qid,{...aiInput,reviewKind:'human'}),/different request/);
+    const {reviewKind:_aiKind,...withoutKind}=aiInput;
+    assert.throws(()=>directRequest(flow,first.qid,withoutKind),/different request/);
+
+    const humanInput={versionId:second.versions[0].id,idempotencyKey:'human-critique-provenance-2',reviewer:'Fixture human reviewer',feedback:'Check the product scope before carrying this claim forward.'};
+    const humanJob=directRequest(flow,second.qid,humanInput);
+    assert.equal(humanJob.reviewKind,'human');
+    assert.equal(directRequest(flow,second.qid,{...humanInput,reviewKind:'human'}).id,humanJob.id);
+    assert.throws(()=>directRequest(flow,second.qid,{...humanInput,reviewKind:'ai_assisted'}),/different request/);
+    assert.throws(()=>flow.decide(first.qid,{versionId:first.versions[0].id,reviewer:'AI development source check',reviewKind:'ai_assisted',decision:'accept',note:'',checkedSourceShas:[first.versions[0].sourceContextSha256]}),/Unrecognized key/);
+
+    // Old persisted requests did not carry reviewKind. They remain human for
+    // replay comparison without rewriting their original document or event.
+    const {reviewKind:_humanKind,...legacy}=humanJob;
+    const db=new DatabaseSync(path);
+    db.prepare('UPDATE answer_revision_jobs SET document=? WHERE id=?').run(JSON.stringify(legacy),humanJob.id);
+    db.close();
+    flow.close();flow=new AnswerRevisions(reviews,provider,path,false);
+    assert.equal(directRequest(flow,second.qid,humanInput).id,humanJob.id);
+    assert.equal(directRequest(flow,second.qid,{...humanInput,reviewKind:'human'}).id,humanJob.id);
+    assert.throws(()=>directRequest(flow,second.qid,{...humanInput,reviewKind:'ai_assisted'}),/different request/);
+    const ai=flow.overview().cases.find(item=>item.qid===first.qid)!;
+    assert.equal(ai.jobs[0].reviewKind,'ai_assisted');
+    assert.equal(ai.events.length,1,'idempotent replay never creates another critique event');
+    assert.equal(ai.events[0].kind,'reject');
+    assert.equal(ai.events[0].reviewKind,'ai_assisted');
+    assert.equal(ai.events[0].qualityClaimEligible,false);
+    assert.equal(ai.events[0].mode,'live');
+    assert.equal(ai.versions[0].mode,'live','AI feedback does not make the original live generation synthetic');
+    const human=flow.overview().cases.find(item=>item.qid===second.qid)!;
+    assert.equal(human.events[0].reviewKind,'human');
+    assert.equal(human.events[0].qualityClaimEligible,true,'existing human event behavior is unchanged');
+    assert.equal(flow.overview().summary.accepted,0,'critiques never create human acceptance');
+    assert.equal(provider.receipt(aiJob.id),undefined);
+  } finally {flow.close();provider.close();reviews.close();rmSync(directory,{recursive:true,force:true});}
 });
 
 test('uncertain provider outcome consumes allowance and is not redispatched', async () => {
