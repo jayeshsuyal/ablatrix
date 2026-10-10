@@ -1,0 +1,11 @@
+{
+  "origin": "https://ablatrix.example.com",
+  "issuer": "https://YOUR-TEAM.cloudflareaccess.com",
+  "audience": "YOUR-ACCESS-APPLICATION-AUD",
+  "jwksUrl": "https://YOUR-TEAM.cloudflareaccess.com/cdn-cgi/access/certs",
+  "members": [
+    { "subject": "INVITED-OPERATOR-SUBJECT", "role": "operator", "name": "Operator" },
+    { "subject": "INVITED-REVIEWER-SUBJECT", "role": "reviewer", "name": "Reviewer" },
+    { "subject": "INVITED-VIEWER-SUBJECT", "role": "viewer", "name": "Viewer" }
+  ]
+}

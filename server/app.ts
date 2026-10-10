@@ -22,6 +22,8 @@ import { ProductWorkspace } from './product-workspace.ts';
 import { PaidAnswerReview } from './paid-answer-review.ts';
 import { AnswerRevisions } from './answer-revisions.ts';
 import { ContextComparisonStore, createContextComparisonFixture } from './context-comparison.ts';
+import { DemoAccess, DemoAccessError, type DemoActor } from './demo-access.ts';
+import { SyntheticAnswerProvider } from './synthetic-answer-provider.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -44,12 +46,15 @@ async function body(req: IncomingMessage, maxLength = 16_384): Promise<unknown> 
   return JSON.parse(text || '{}') as unknown;
 }
 
-export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview, startRevisionWorker = false, localOptions: { answerProvider?: SapiomFeedbackProvider; reviewDbPath?: string; comparisonDbPath?: string } = {}) {
+export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview, startRevisionWorker = false, localOptions: { answerProvider?: SapiomFeedbackProvider | SyntheticAnswerProvider; reviewDbPath?: string; comparisonDbPath?: string; demoAccess?: DemoAccess } = {}) {
   const runner = new ExperimentRunner(store, mode, provider);
   const optimizer = new OptimizationRunner(store, runner, mode, provider);
-  let feedbackProvider: SapiomFeedbackProvider | undefined = localOptions.answerProvider;
+  let feedbackProvider: SapiomFeedbackProvider | SyntheticAnswerProvider | undefined = localOptions.answerProvider;
   const localAnswerProvider = () => {
-    if (!feedbackProvider) feedbackProvider = new SapiomFeedbackProvider();
+    if (!feedbackProvider) {
+      if (localOptions.demoAccess) throw new Error('Hosted demo requires an explicit synthetic provider.');
+      feedbackProvider = new SapiomFeedbackProvider();
+    }
     return feedbackProvider;
   };
   const productWorkspace = () => workspace ??= new ProductWorkspace(process.env.ABLATRIX_WORKSPACE_DB, localAnswerProvider());
@@ -72,6 +77,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   };
   const loopTelemetry = () => telemetry ??= new LoopTelemetry();
   const feedbackLoop = () => {
+    if (localOptions.demoAccess) throw new DemoAccessError(403, 'The hosted demo does not run legacy experiments.');
     if (revisions?.hasActive()) throw new Error('Feedback revision is using the shared provider.');
     if (!feedback) {
       const corpus = loadProductCorpus();
@@ -94,11 +100,28 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
     }
     return feedback;
   };
+  let stopping = false;
   const server = createServer(async (req, res) => {
     try {
+      if (stopping) return json(res, 503, { error: 'Workspace is shutting down. Retry after restart.' });
+      const url = new URL(req.url ?? '/', 'http://localhost');
+      const path = url.pathname;
+      let actor: DemoActor | undefined;
+      if (localOptions.demoAccess) {
+        actor = await localOptions.demoAccess.authenticate(req);
+        localOptions.demoAccess.authorize(actor, req.method ?? '', path);
+        res.setHeader('cache-control', 'no-store');
+        res.setHeader('x-content-type-options', 'nosniff');
+        res.setHeader('referrer-policy', 'same-origin');
+        res.setHeader('content-security-policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");
+      }
+      const authenticatedBody = async (limit?: number) => {
+        const input = await body(req, limit);
+        return actor && input && typeof input === 'object' && !Array.isArray(input) ? { ...input, reviewer: actor.reviewer } : input;
+      };
       const host = req.headers.host ?? '';
-      if (!/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(host)) return json(res, 403, { error: 'Local host required.' });
-      if (req.method === 'POST') {
+      if (!localOptions.demoAccess && !/^(127\.0\.0\.1|localhost)(:\d+)?$/.test(host)) return json(res, 403, { error: 'Local host required.' });
+      if (!localOptions.demoAccess && req.method === 'POST') {
         const origin = req.headers.origin;
         if (origin) {
           let originHost = '';
@@ -109,8 +132,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
           return json(res, 415, { error: 'JSON content type required.' });
         }
       }
-      const url = new URL(req.url ?? '/', 'http://localhost');
-      const path = url.pathname;
+      if (req.method === 'GET' && path === '/api/session') return json(res, 200, { hosted: !!localOptions.demoAccess, providerMode: localOptions.demoAccess ? 'synthetic' : 'local', actor: actor ? { name: actor.name, role: actor.role, reviewer: actor.reviewer } : null });
       if (req.method === 'GET' && path === '/api/context-comparisons') return json(res, 200, contextComparisons().list());
       if (req.method === 'POST' && path === '/api/context-comparisons/fixture') {
         const input = await body(req);
@@ -120,7 +142,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (/^\/api\/context-comparisons\/[A-Za-z0-9_-]{1,120}(\/(reviews|report|export))?$/.test(path)) {
         const id = path.split('/')[3], action = path.split('/')[4];
         if (req.method === 'GET' && !action) return json(res, 200, contextComparisons().get(id));
-        if (req.method === 'POST' && action === 'reviews') return json(res, 201, contextComparisons().review(id, await body(req, 40_000)));
+        if (req.method === 'POST' && action === 'reviews') return json(res, 201, contextComparisons().review(id, await authenticatedBody(40_000)));
         if (req.method === 'GET' && action === 'report') return json(res, 200, contextComparisons().report(id));
         if (req.method === 'GET' && action === 'export') return download(res, `ablatrix-context-comparison-${id}.json`, `${JSON.stringify(contextComparisons().exportPacket(id), null, 2)}\n`, 'application/json');
       }
@@ -131,11 +153,17 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
         const job = answerRevisions().getJob(path.split('/')[4]);
         return /^\d+$/.test(job.qid) ? json(res, 200, job) : json(res, 404, { error: 'Revision: job not found.' });
       }
-      if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/revisions$/.test(path)) return json(res, 202, answerRevisions().request(path.split('/')[3], await body(req, 40_000)));
-      if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/decisions$/.test(path)) return json(res, 201, answerRevisions().decide(path.split('/')[3], await body(req)));
-      if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}$/.test(path)) return json(res, 201, paidAnswerReview().review(path.split('/')[3], await body(req)));
+      if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/revisions$/.test(path)) return json(res, 202, answerRevisions().request(path.split('/')[3], await authenticatedBody(40_000)));
+      if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/decisions$/.test(path)) return json(res, 201, answerRevisions().decide(path.split('/')[3], await authenticatedBody()));
+      if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}$/.test(path)) return json(res, 201, paidAnswerReview().review(path.split('/')[3], await authenticatedBody()));
       if (req.method === 'GET' && path === '/api/paid-review/export') return download(res, 'ablatrix-paid-answer-reviews.json', `${JSON.stringify(paidAnswerReview().overview(), null, 2)}\n`, 'application/json');
       if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, productWorkspace().overview());
+      if (req.method === 'GET' && path === '/api/workspace/reviews/export') {
+        const first = answerRevisions().overview('workspace');
+        const cases = [...first.cases];
+        for (let page = 2; (page - 1) * 20 < (first.pagination?.total ?? 0); page++) cases.push(...answerRevisions().overview('workspace', { page }).cases);
+        return download(res, 'ablatrix-workspace-reviews.json', JSON.stringify({ scope: 'workspace', providerMode: localOptions.demoAccess ? 'synthetic' : 'local', note: 'Versioned workflow records. Synthetic answers do not measure model quality; source matching does not establish correctness.', cases }, null, 2) + '\n', 'application/json');
+      }
       if (req.method === 'GET' && path === '/api/workspace/reviews') {
         const rawPage = url.searchParams.get('page') ?? '1';
         const page = Number(rawPage), answer = url.searchParams.get('answer') ?? undefined;
@@ -144,11 +172,12 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
         }
         return json(res, 200, answerRevisions().overview('workspace', { page, answer }));
       }
-      if (req.method === 'POST' && /^\/api\/workspace\/reviews\/workspace-[a-f0-9-]{36}\/revisions$/.test(path)) return json(res, 202, answerRevisions().request(path.split('/')[4], await body(req, 40_000)));
-      if (req.method === 'POST' && /^\/api\/workspace\/reviews\/workspace-[a-f0-9-]{36}\/decisions$/.test(path)) return json(res, 201, answerRevisions().decide(path.split('/')[4], await body(req)));
+      if (req.method === 'POST' && /^\/api\/workspace\/reviews\/workspace-[a-f0-9-]{36}\/revisions$/.test(path)) return json(res, 202, answerRevisions().request(path.split('/')[4], await authenticatedBody(40_000)));
+      if (req.method === 'POST' && /^\/api\/workspace\/reviews\/workspace-[a-f0-9-]{36}\/decisions$/.test(path)) return json(res, 201, answerRevisions().decide(path.split('/')[4], await authenticatedBody()));
       if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req, 110_000)));
       if (req.method === 'POST' && path === '/api/workspace/questions') {
         const input = await body(req);
+        if (localOptions.demoAccess && (!input || typeof input !== 'object' || !('mode' in input) || !['preview', 'synthetic'].includes(String(input.mode)))) return json(res, 403, { error: 'The hosted demo accepts preview or synthetic generation only.' });
         const loop = input && typeof input === 'object' && 'mode' in input && input.mode === 'live' ? feedbackLoop() : undefined;
         if (loop?.publicOverview().busy || revisions?.hasActive()) return json(res, 409, { error: 'Finish the active live dispatch before a workspace answer.' });
         const run = await productWorkspace().ask(input, () => {
@@ -274,6 +303,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {
+      if (error instanceof DemoAccessError) return json(res, error.status, { error: error.message });
       if (error instanceof ZodError) return json(res, 400, { error: 'Invalid request fields.' });
       if (error instanceof SyntaxError) return json(res, 400, { error: 'Invalid JSON body.' });
       if (error instanceof Error && error.message === 'Request body too large') return json(res, 413, { error: error.message });
@@ -290,7 +320,33 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       return json(res, 500, { error: 'Internal server error.' });
     }
   });
-  server.on('close', () => { void pilot.close(); revisions?.close(); feedback?.close(); workspace?.close(); paidReview?.close(); feedbackProvider?.close(); telemetry?.close(); comparisons?.close(); });
+  let disposal: Promise<void> | undefined;
+  const dispose = () => disposal ??= (async () => {
+    await revisions?.pauseAndDrain();
+    await pilot.close();
+    revisions?.close(); feedback?.close(); workspace?.close(); paidReview?.close(); feedbackProvider?.close(); telemetry?.close(); comparisons?.close();
+  })();
+  const closeHttp = server.close.bind(server);
+  server.close = (callback?: (error?: Error) => void) => {
+    stopping = true;
+    void revisions?.pauseAndDrain();
+    closeHttp(error => {
+      if (error) { callback?.(error); return; }
+      void dispose().then(() => callback?.()).catch(reason => {
+        if (callback) callback(reason instanceof Error ? reason : new Error('Shutdown failed.'));
+        else console.error('Ablatrix shutdown failed:', reason);
+      });
+    });
+    return server;
+  };
+  server.requestTimeout = 30_000; server.headersTimeout = 15_000;
+  let shutdown: Promise<void> | undefined;
+  const result = Object.assign(server, { shutdown: () => shutdown ??= (async () => {
+    stopping = true;
+    const worker = revisions?.pauseAndDrain();
+    await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+    await worker; await dispose();
+  })() });
   if (startRevisionWorker) answerRevisions();
-  return server;
+  return result;
 }

@@ -2,19 +2,22 @@ import { DatabaseSync } from 'node:sqlite';
 import { randomUUID, createHash } from 'node:crypto';
 import { z } from 'zod';
 import { originalAnswerVersionId, type PaidAnswerReview } from './paid-answer-review.ts';
-import { answerSchema, type SapiomFeedbackProvider } from './feedback-provider.ts';
+import { answerSchema, SapiomFeedbackProvider } from './feedback-provider.ts';
 import { investigateRevision, type InvestigationIssue, type InvestigationTrace } from './revision-investigation.ts';
 import { SapiomRevisionSearch } from './revision-search.ts';
 import { parseReviewAnswerSnapshot, type ReviewAnswerSnapshot, type ReviewContextProvenance, type RevisionContext, type RevisionSource } from './answer-review-source.ts';
 
 export type { ReviewAnswerSnapshot, RevisionContext, RevisionSource } from './answer-review-source.ts';
+export type AnswerRevisionReceipt = NonNullable<ReturnType<SapiomFeedbackProvider['receipt']>> & { executionMode?: 'synthetic'; accounting?: 'no_provider_call' };
+export type AnswerRevisionProvider = Pick<SapiomFeedbackProvider, 'readiness' | 'capacity' | 'revise'> & { receipt(runId: string): AnswerRevisionReceipt | undefined; executionMode?: 'live' | 'synthetic' };
+const offlineSearch = { readiness: () => ({ ready: false, reason: 'Synthetic investigation uses saved sources only; external search and page reads are disabled.' }), allowed: () => false, async search(): Promise<{ results: [] }> { throw new Error('Synthetic external search is disabled.'); }, async read(): Promise<{ url: string; text: string }> { throw new Error('Synthetic external reads are disabled.'); } };
 
 const additionalSourceSchema = z.object({ label: z.string().trim().min(2).max(80), text: z.string().trim().min(30).max(2000), reference: z.string().trim().min(1).max(500).optional(), originalQuestion: z.string().trim().min(1).max(500).optional() }).strict();
 const requestSchema = z.object({ versionId: z.string().min(1), idempotencyKey: z.string().min(8).max(120), reviewer: z.string().trim().min(2).max(100), feedback: z.string().trim().min(10).max(2000), additionalSources: z.array(additionalSourceSchema).max(3).default([]), clarification: z.string().trim().min(1).max(500).optional(), investigate: z.boolean().default(true), issue: z.enum(['auto','wrong_model','missing_evidence','conflicting_sources','missed_source','answer_quality']).default('auto') }).strict();
 const decisionSchema = z.object({ versionId: z.string().min(1), reviewer: z.string().trim().min(2).max(100), decision: z.enum(['accept', 'needs_information']), note: z.string().trim().max(2000), checkedSourceShas: z.array(z.string().regex(/^[a-f0-9]{64}$/)).min(1) }).strict();
-type Version = { id: string; qid: string; parentId: string | null; jobId: string | null; answer: { answer: string; status: string; citations: { passageId: string; quote: string }[] }; model: string; promptVersion: string; sourceContextSha256: string; createdAt: string; context?: RevisionContext; contextProvenance?: ReviewContextProvenance; generationSourceIds?: string[]; investigation?: InvestigationTrace };
-type ReviewEvent = { id?: string; versionId: string; kind: 'reject' | 'accept' | 'needs_information'; reviewer: string; note: string; checkedSourceShas?: string[]; createdAt: string; reviewKind?: 'human' };
-type Job = { id: string; qid: string; parentId: string; feedback: string; reviewer: string; status: string; createdAt: string; startedAt?: string; finishedAt?: string; attemptId?: string; error?: string; versionId?: string; context?: RevisionContext; promptVersion?: string; additionalSources?: z.infer<typeof additionalSourceSchema>[]; clarification?: string; investigate?: boolean; issue?: InvestigationIssue; investigation?: InvestigationTrace; investigationComplete?: boolean; phase?: 'investigation' | 'generation' };
+type Version = { mode?: 'live' | 'synthetic'; id: string; qid: string; parentId: string | null; jobId: string | null; answer: { answer: string; status: string; citations: { passageId: string; quote: string }[] }; model: string; promptVersion: string; sourceContextSha256: string; createdAt: string; context?: RevisionContext; contextProvenance?: ReviewContextProvenance; generationSourceIds?: string[]; investigation?: InvestigationTrace };
+type ReviewEvent = { mode?: 'live' | 'synthetic'; qualityClaimEligible?: boolean; id?: string; versionId: string; kind: 'reject' | 'accept' | 'needs_information'; reviewer: string; note: string; checkedSourceShas?: string[]; createdAt: string; reviewKind?: 'human' };
+type Job = { mode?: 'live' | 'synthetic'; id: string; qid: string; parentId: string; feedback: string; reviewer: string; status: string; createdAt: string; startedAt?: string; finishedAt?: string; attemptId?: string; error?: string; versionId?: string; context?: RevisionContext; promptVersion?: string; additionalSources?: z.infer<typeof additionalSourceSchema>[]; clarification?: string; investigate?: boolean; issue?: InvestigationIssue; investigation?: InvestigationTrace; investigationComplete?: boolean; phase?: 'investigation' | 'generation' };
 type RevisionSearch = NonNullable<Parameters<typeof investigateRevision>[1]>;
 const sha = (text: string) => createHash('sha256').update(text).digest('hex');
 // Numeric UTC time also orders valid ISO strings with different fractional precision.
@@ -25,9 +28,12 @@ export class AnswerRevisions {
   private db: DatabaseSync;
   private timer: NodeJS.Timeout | null = null;
   private busy = false;
+  private paused = false;
+  private closed = false;
+  private inFlight: Promise<void> | null = null;
   private readonly search: RevisionSearch;
-  constructor(private readonly reviews: PaidAnswerReview, private readonly provider: SapiomFeedbackProvider, dbPath = '.data/paid-answer-review.sqlite', private readonly automatic = true, private readonly canDispatch: () => boolean = () => true, search?: RevisionSearch) {
-    this.search = search ?? new SapiomRevisionSearch(provider);
+  constructor(private readonly reviews: PaidAnswerReview, private readonly provider: AnswerRevisionProvider, dbPath = '.data/paid-answer-review.sqlite', private readonly automatic = true, private readonly canDispatch: () => boolean = () => true, search?: RevisionSearch) {
+    this.search = provider.executionMode === 'synthetic' ? offlineSearch : search ?? (provider instanceof SapiomFeedbackProvider ? new SapiomRevisionSearch(provider) : offlineSearch);
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`PRAGMA busy_timeout=5000;
       CREATE TABLE IF NOT EXISTS answer_versions(id TEXT PRIMARY KEY,qid TEXT NOT NULL,parent_id TEXT,job_id TEXT,document TEXT NOT NULL);
@@ -51,14 +57,14 @@ export class AnswerRevisions {
       this.db.prepare('INSERT OR IGNORE INTO answer_versions(id,qid,parent_id,job_id,document) VALUES(?,?,?,?,?)').run(id,item.qid,null,null,JSON.stringify(version));
     }
     this.reconcile();
-    if (automatic) { this.timer = setInterval(() => { void this.tick(); }, 1500); this.timer.unref(); }
+    if (automatic) { this.timer = setInterval(() => { void this.tick().catch(error => console.error('Revision worker failed:', error)); }, 1500); this.timer.unref(); }
   }
   /** Register one immutable original; repeated handoffs may replay but never replace it. */
   registerAnswer(raw: ReviewAnswerSnapshot) {
     const snapshot = parseReviewAnswerSnapshot(raw), document = JSON.stringify(snapshot);
     const version: Version = { id: originalAnswerVersionId(snapshot.id, snapshot.runId), qid: snapshot.id, parentId: null, jobId: null,
       answer: snapshot.answer, model: snapshot.model, promptVersion: snapshot.promptVersion, sourceContextSha256: sha(JSON.stringify(snapshot.context)), createdAt: snapshot.createdAt,
-      context: snapshot.context, contextProvenance: snapshot.contextProvenance, generationSourceIds: snapshot.generationSourceIds };
+      context: snapshot.context, ...(snapshot.mode === 'synthetic' ? { mode: 'synthetic' as const } : {}), contextProvenance: snapshot.contextProvenance, generationSourceIds: snapshot.generationSourceIds };
     this.db.exec('BEGIN IMMEDIATE');
     try {
       const previous = this.db.prepare('SELECT document FROM workspace_review_answers WHERE id=? OR run_id=?').get(snapshot.id, snapshot.runId) as { document: string } | undefined;
@@ -117,16 +123,19 @@ export class AnswerRevisions {
     } else {
       ids = [ ...this.reviews.overview().cases.map(item => item.qid), ...(scope === 'pinned' ? [] : (this.db.prepare(`SELECT id FROM workspace_review_answers ORDER BY ${workspaceCreatedAtSql} DESC,id DESC`).all() as { id: string }[]).map(item => item.id)) ];
     }
-    const cases = ids.map(qid => ({ qid, generationAttempts:this.generationAttempts(qid), versions: this.versions(qid), jobs: this.jobs(qid).map(job => { const receipt = this.provider.receipt(job.id); const attempts=this.db.prepare('SELECT * FROM answer_revision_attempts WHERE job_id=? ORDER BY created_at').all(job.id); return { ...job, attempts, externalUsage:this.externalReceipts(job).map(call => ({ id:call.id, kind:call.kind, status:call.status, planningAllowanceUsd:call.allowance_usd })), usage: receipt ? { inputTokens:receipt.input_tokens, outputTokens:receipt.output_tokens, planningAllowanceUsd:receipt.allowance_usd, providerCallStatus:receipt.status } : null, latencyMs: job.finishedAt ? new Date(job.finishedAt).getTime()-new Date(job.createdAt).getTime() : null }; }), events: (this.db.prepare('SELECT document FROM answer_review_events WHERE qid=? ORDER BY rowid').all(qid) as {document:string}[]).map(r => JSON.parse(r.document) as ReviewEvent) }));
+    const cases = ids.map(qid => ({ qid, mode: this.workspaceAnswer(qid)?.mode ?? 'live', qualityClaimEligible: this.workspaceAnswer(qid)?.mode !== 'synthetic', generationAttempts:this.generationAttempts(qid), versions: this.versions(qid).map(version => ({ ...version, mode: version.mode ?? this.workspaceAnswer(qid)?.mode ?? 'live' })), jobs: this.jobs(qid).map(job => { const receipt = this.provider.receipt(job.id); const attempts=this.db.prepare('SELECT * FROM answer_revision_attempts WHERE job_id=? ORDER BY created_at').all(job.id); return { ...job, mode: job.mode ?? this.workspaceAnswer(qid)?.mode ?? 'live', attempts, externalUsage:this.externalReceipts(job).map(call => ({ id:call.id, kind:call.kind, status:call.status, planningAllowanceUsd:call.allowance_usd })), usage: receipt ? { inputTokens:receipt.input_tokens, outputTokens:receipt.output_tokens, planningAllowanceUsd:job.mode === 'synthetic' ? null : receipt.allowance_usd, providerCallStatus:receipt.status, executionMode:job.mode ?? 'live', accounting:job.mode === 'synthetic' ? 'no_provider_call' : 'planning_allowance' } : null, latencyMs: job.finishedAt ? new Date(job.finishedAt).getTime()-new Date(job.createdAt).getTime() : null }; }), events: (this.db.prepare('SELECT document FROM answer_review_events WHERE qid=? ORDER BY rowid').all(qid) as {document:string}[]).map(r => JSON.parse(r.document) as ReviewEvent) }));
     const jobs=cases.flatMap(c=>c.jobs);
     const external = jobs.flatMap(job => job.externalUsage);
     const accepted = (item: typeof cases[number]) => item.events.some(event => event.kind === 'accept' && event.versionId === item.versions.at(-1)?.id);
-    return { cases, ...(pagination ? { pagination } : {}), ready: cases.filter(c => c.jobs.at(-1)?.status === 'ready').length, pending: cases.filter(c => ['queued','running'].includes(c.jobs.at(-1)?.status ?? '')).length, readiness:this.provider.readiness(), investigationReadiness:this.search.readiness(), summary: { requested:jobs.length, accepted:cases.filter(accepted).length, unresolved:cases.filter(c=>(c.jobs.length || c.events.some(event => event.kind === 'needs_information')) && !accepted(c)).length, providerCalls:jobs.filter(j=>j.usage).length + external.length, answerCalls:jobs.filter(j=>j.usage).length, searchAndReadCalls:external.length, planningAllowanceUsd:jobs.reduce((n,j)=>n+(j.usage?.planningAllowanceUsd ?? 0),0) + external.reduce((n,call)=>n+call.planningAllowanceUsd,0), actualProviderCharges:'unavailable' } };
+    return { cases, ...(pagination ? { pagination } : {}), ready: cases.filter(c => c.jobs.at(-1)?.status === 'ready').length, pending: cases.filter(c => ['queued','running'].includes(c.jobs.at(-1)?.status ?? '')).length, readiness:this.provider.readiness(), investigationReadiness:this.search.readiness(), summary: { requested:jobs.length, accepted:cases.filter(accepted).length, liveAccepted:cases.filter(item => item.mode === 'live' && accepted(item)).length, syntheticAccepted:cases.filter(item => item.mode === 'synthetic' && accepted(item)).length, unresolved:cases.filter(c=>(c.jobs.length || c.events.some(event => event.kind === 'needs_information')) && !accepted(c)).length, providerCalls:jobs.filter(j=>j.mode !== 'synthetic' && j.usage).length + external.length, answerCalls:jobs.filter(j=>j.mode !== 'synthetic' && j.usage).length, syntheticOperations:jobs.filter(j=>j.mode === 'synthetic' && j.usage).length, searchAndReadCalls:external.length, planningAllowanceUsd:jobs.reduce((n,j)=>n+(j.usage?.planningAllowanceUsd ?? 0),0) + external.reduce((n,call)=>n+call.planningAllowanceUsd,0), actualProviderCharges:this.provider.executionMode === 'synthetic' ? 'not_applicable_no_provider_calls' : 'unavailable' } };
   }
   hasActive() { return this.busy; }
   getJob(id: string) { const job = this.overview().cases.flatMap(c=>c.jobs).find(j=>j.id===id); if (!job) throw new Error('Revision: job not found.'); return job; }
   request(qid: string, raw: unknown): Job {
+    if (this.paused || this.closed) throw new Error('Revision: worker is paused for shutdown.');
     const input = requestSchema.parse(raw); this.case(qid);
+    const mode = this.workspaceAnswer(qid)?.mode ?? 'live';
+    if (mode !== (this.provider.executionMode ?? 'live')) throw new Error('Revision: answer provenance does not match the configured provider.');
     this.db.exec('BEGIN IMMEDIATE');
     try {
       const duplicate = this.db.prepare('SELECT document FROM answer_revision_jobs WHERE idempotency_key=?').get(input.idempotencyKey) as {document:string}|undefined;
@@ -147,8 +156,8 @@ export class AnswerRevisions {
       // Leave room below the provider's 40,000-character input limit for field names.
       if (!input.investigate && JSON.stringify(context).length + JSON.stringify(latest.answer.answer).length + JSON.stringify(input.feedback).length > 35_000) throw new Error('Revision: combined source context is too large. Shorten the added excerpts.');
       const id = randomUUID(), now = new Date().toISOString();
-      const job: Job = { id, qid, parentId: latest.id, feedback: input.feedback, reviewer: input.reviewer, status: 'queued', createdAt: now, context, promptVersion: 'answer-revision-v2-context', additionalSources: input.additionalSources, clarification: input.clarification, investigate:input.investigate, issue:input.issue };
-      this.db.prepare('INSERT INTO answer_review_events(id,qid,version_id,kind,document) VALUES(?,?,?,?,?)').run(randomUUID(),qid,latest.id,'reject',JSON.stringify({ versionId: latest.id, kind:'reject', reviewer:input.reviewer, note:input.feedback, createdAt:now, jobId:id }));
+      const job: Job = { mode, id, qid, parentId: latest.id, feedback: input.feedback, reviewer: input.reviewer, status: 'queued', createdAt: now, context, promptVersion: 'answer-revision-v2-context', additionalSources: input.additionalSources, clarification: input.clarification, investigate:input.investigate, issue:input.issue };
+      this.db.prepare('INSERT INTO answer_review_events(id,qid,version_id,kind,document) VALUES(?,?,?,?,?)').run(randomUUID(),qid,latest.id,'reject',JSON.stringify({ mode, qualityClaimEligible:mode !== 'synthetic', reviewKind:'human', versionId: latest.id, kind:'reject', reviewer:input.reviewer, note:input.feedback, createdAt:now, jobId:id }));
       this.db.prepare('INSERT INTO answer_revision_jobs(id,qid,parent_id,idempotency_key,status,document) VALUES(?,?,?,?,?,?)').run(id,qid,latest.id,input.idempotencyKey,'queued',JSON.stringify(job));
       this.db.exec('COMMIT'); return job;
     } catch(error) { this.db.exec('ROLLBACK'); throw error; }
@@ -170,24 +179,26 @@ export class AnswerRevisions {
       const job=version.jobId ? this.jobs(qid).find(j=>j.id===version.jobId) : undefined;
       if (!originalWorkspace && (!job || !['ready','needs_information'].includes(job.status))) throw new Error('Revision: this answer version already has a decision or is unavailable.');
       if (this.db.prepare("SELECT 1 FROM answer_review_events WHERE version_id=? AND kind IN ('accept','needs_information') LIMIT 1").get(version.id)) throw new Error('Revision: this answer version already has a decision.');
-      const event = { id: randomUUID(), versionId: input.versionId, kind: input.decision, reviewer: input.reviewer, note: input.note, checkedSourceShas: input.checkedSourceShas, reviewKind: 'human' as const, createdAt: new Date().toISOString() };
+      const event = { mode: version.mode ?? this.workspaceAnswer(qid)?.mode ?? 'live', qualityClaimEligible:(version.mode ?? this.workspaceAnswer(qid)?.mode) !== 'synthetic', id: randomUUID(), versionId: input.versionId, kind: input.decision, reviewer: input.reviewer, note: input.note, checkedSourceShas: input.checkedSourceShas, reviewKind: 'human' as const, createdAt: new Date().toISOString() };
       this.db.prepare('INSERT INTO answer_review_events(id,qid,version_id,kind,document) VALUES(?,?,?,?,?)').run(event.id,qid,input.versionId,event.kind,JSON.stringify(event));
       if (job) { job.status=input.decision === 'accept' ? 'accepted' : 'needs_information'; this.saveJob(job); }
       this.db.exec('COMMIT'); return event;
     } catch(error) { this.db.exec('ROLLBACK'); throw error; }
   }
   private saveJob(job: Job) { this.db.prepare('UPDATE answer_revision_jobs SET status=?,document=? WHERE id=?').run(job.status,JSON.stringify(job),job.id); }
-  private materialize(job: Job, receipt: NonNullable<ReturnType<SapiomFeedbackProvider['receipt']>>) {
+  private materialize(job: Job, receipt: AnswerRevisionReceipt) {
     if (!receipt.receipt_json) { job.status='reconciliation'; job.error='Completed call has no durable response.'; job.attemptId=receipt.id; this.saveJob(job); return; }
     const { output, model } = JSON.parse(receipt.receipt_json);
     const context = job.context ?? this.pinnedContext(job.qid);
     const parsed=answerSchema.safeParse(output);
+    const mode = job.mode ?? this.workspaceAnswer(job.qid)?.mode ?? 'live';
+    const validProvenance = mode === 'synthetic' ? model === 'synthetic-fixture' && receipt.executionMode === 'synthetic' && parsed.success && parsed.data.answer.startsWith('SYNTHETIC') : receipt.executionMode !== 'synthetic';
     const eligibleSources = job.investigationComplete && job.investigation ? context.sources.filter(source => job.investigation!.selectedSourceIds.includes(source.id)) : context.sources;
-    const valid = parsed.success && !/\bthe supplied evidence\b/i.test(parsed.data.answer) && (parsed.data.status !== 'answered' || parsed.data.citations.length > 0) && parsed.data.citations.every(c => eligibleSources.some(source => source.text.includes(c.quote) && source.id === c.passageId));
+    const valid = validProvenance && parsed.success && !/\bthe supplied evidence\b/i.test(parsed.data.answer) && (parsed.data.status !== 'answered' || parsed.data.citations.length > 0) && parsed.data.citations.every(c => eligibleSources.some(source => source.text.includes(c.quote) && source.id === c.passageId));
     if (!valid) { job.status='needs_information'; job.error='Revision output failed source or quote validation.'; job.finishedAt=new Date().toISOString(); job.attemptId=receipt.id; this.saveJob(job); this.db.prepare('UPDATE answer_revision_attempts SET provider_call_id=?,status=?,finished_at=? WHERE job_id=?').run(receipt.id,'invalid_output',job.finishedAt,job.id); return; }
     const id = `revision-${job.id}`;
     const parent = this.versions(job.qid).find(v => v.id === job.parentId)!;
-    const version: Version = { id, qid:job.qid,parentId:parent.id,jobId:job.id,answer:parsed.data!,model,promptVersion:job.promptVersion ?? 'answer-revision-v1',sourceContextSha256:job.context ? sha(JSON.stringify(context)) : parent.sourceContextSha256,createdAt:new Date().toISOString(), ...(job.context ? { context } : {}), ...(job.investigation ? {investigation:job.investigation} : {}) };
+    const version: Version = { mode, id, qid:job.qid,parentId:parent.id,jobId:job.id,answer:parsed.data!,model,promptVersion:job.promptVersion ?? 'answer-revision-v1',sourceContextSha256:job.context ? sha(JSON.stringify(context)) : parent.sourceContextSha256,createdAt:new Date().toISOString(), ...(job.context ? { context } : {}), ...(job.investigation ? {investigation:job.investigation} : {}) };
     this.db.exec('BEGIN IMMEDIATE');
     try {
       this.db.prepare('INSERT OR IGNORE INTO answer_versions(id,qid,parent_id,job_id,document) VALUES(?,?,?,?,?)').run(id,job.qid,parent.id,job.id,JSON.stringify(version));
@@ -205,7 +216,14 @@ export class AnswerRevisions {
       else { job.status='queued'; this.saveJob(job); }
     }
   }
-  async tick() {
+  tick(): Promise<void> {
+    if (this.paused || this.closed) return Promise.resolve();
+    if (this.inFlight) return this.inFlight;
+    const pending = this.runTick().finally(() => { if (this.inFlight === pending) this.inFlight = null; });
+    this.inFlight = pending;
+    return pending;
+  }
+  private async runTick() {
     if (this.busy) return; this.busy=true;
     try {
       this.reconcile();
@@ -216,6 +234,9 @@ export class AnswerRevisions {
         const row = this.db.prepare("SELECT document FROM answer_revision_jobs WHERE status='queued' ORDER BY rowid LIMIT 1").get() as {document:string}|undefined;
         if (!row) { this.db.exec('COMMIT'); return; }
         job = JSON.parse(row.document) as Job;
+        const mode = job.mode ?? this.workspaceAnswer(job.qid)?.mode ?? 'live';
+        if (mode !== (this.provider.executionMode ?? 'live')) { job.status='needs_information'; job.error='Answer provenance does not match the configured provider.'; this.saveJob(job); this.db.exec('COMMIT'); return; }
+        job.mode = mode;
         if ((!job.investigate || job.investigationComplete) && !this.provider.readiness().ready) { this.db.exec('COMMIT'); return; }
         job.status='running'; job.startedAt ??= new Date().toISOString();
         job.phase = job.investigate && !job.investigationComplete ? 'investigation' : 'generation';
@@ -262,5 +283,15 @@ export class AnswerRevisions {
       else { job.status=receipt ? 'reconciliation' : 'queued'; job.attemptId=receipt?.id; job.error=receipt ? 'Provider outcome is uncertain; allowance consumed. Reconcile before redispatch.' : job.error; this.saveJob(job); if(receipt) this.db.prepare('UPDATE answer_revision_attempts SET provider_call_id=?,status=?,finished_at=? WHERE job_id=?').run(receipt.id,'uncertain',new Date().toISOString(),job.id); }
     } finally { this.busy=false; }
   }
-  close() { if(this.timer) clearInterval(this.timer); this.db.close(); }
+  async pauseAndDrain(): Promise<void> {
+    this.paused = true;
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    await this.inFlight;
+  }
+  close() {
+    this.paused = true;
+    if (this.timer) { clearInterval(this.timer); this.timer = null; }
+    if (this.busy) throw new Error('Revision: await pauseAndDrain before closing an active worker.');
+    if (!this.closed) { this.closed = true; this.db.close(); }
+  }
 }

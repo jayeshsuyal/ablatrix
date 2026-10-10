@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import type { WorkspaceProduct, WorkspaceRun } from '../server/product-workspace.ts';
 import './ask.css';
+import { useDemoSession } from './DemoSession';
 
 type WorkspaceOverview = { products: WorkspaceProduct[]; runs: WorkspaceRun[]; readiness: { ready: boolean; reason: string }; busy: boolean };
 type SourceDraft = { label: string; text: string; originalQuestion: string };
@@ -15,6 +16,9 @@ async function request<T>(path: string, body?: unknown): Promise<T> {
 }
 
 export default function Ask() {
+  const session = useDemoSession();
+  const synthetic = session.hosted && session.providerMode === 'synthetic';
+  const canWrite = !session.hosted || session.actor?.role === 'operator';
   const [overview, setOverview] = useState<WorkspaceOverview | null>(null);
   const [title, setTitle] = useState('');
   const [sources, setSources] = useState<SourceDraft[]>([{ label: 'Product listing', text: '', originalQuestion: '' }]);
@@ -37,7 +41,7 @@ export default function Ask() {
     } catch (reason) { setError(reason instanceof Error ? reason.message : 'Could not save product.'); }
     finally { setBusy(false); }
   }
-  async function ask(mode: 'preview' | 'live') {
+  async function ask(mode: 'preview' | 'live' | 'synthetic') {
     if (!productId || !question.trim()) return;
     setBusy(true); setError(''); setNotice('');
     let run: QuestionResponse;
@@ -55,7 +59,7 @@ export default function Ask() {
     setSelectedRunId(run.id);
     const savedNotice = run.reviewHandoff === 'pending'
       ? 'Answer saved. Review is temporarily unavailable; try opening its review again later.'
-      : mode === 'preview' ? 'Evidence retrieved. No model call was made.' : 'Answer saved. Open its review to accept it or request a background revision.';
+      : mode === 'preview' ? 'Evidence retrieved. No model call was made.' : mode === 'synthetic' ? 'Synthetic answer saved. Review its source excerpts or request a scripted background correction.' : 'Answer saved. Open its review to accept it or request a background revision.';
     setNotice(savedNotice);
     try {
       const value = await request<WorkspaceOverview>('/api/workspace');
@@ -65,29 +69,30 @@ export default function Ask() {
     } finally { setBusy(false); }
   }
   return <div className="ask-app">
-    <nav className="ask-nav" aria-label="Main navigation"><a className="ask-brand" href="/ask"><span>a↗</span> ablatrix <small>Product QA</small></a><div><a href="/review">Answer review ↗</a><a href="/compare">Compare answers ↗</a><a href="/paid-review">Pinned evaluation ↗</a><a href="/loop">Feedback lab ↗</a><a href="/pilot">Search pilot ↗</a><span className="ask-local">LOCAL WORKSPACE</span></div></nav>
+    <nav className="ask-nav" aria-label="Main navigation"><a className="ask-brand" href="/ask"><span>a↗</span> ablatrix <small>Product QA</small></a><div><a href="/review">Answer review ↗</a><a href="/compare">Compare answers ↗</a>{!session.hosted && <><a href="/paid-review">Pinned evaluation ↗</a><a href="/loop">Feedback lab ↗</a><a href="/pilot">Search pilot ↗</a></>}<span className="ask-local">{synthetic ? 'SYNTHETIC WORKSPACE' : 'LOCAL WORKSPACE'}</span></div></nav>
     <main className="ask-main">
-      <header className="ask-hero"><span className="ask-kicker">PRODUCT EVIDENCE → GROUNDED ANSWER</span><h1>Ask your product evidence.</h1><p>Add a product’s source text, find the relevant passages, and inspect an answer with citations. This local workspace is separate from Ablatrix’s frozen evaluation sets.</p></header>
+      <header className="ask-hero"><span className="ask-kicker">PRODUCT EVIDENCE → GROUNDED ANSWER</span><h1>Ask your product evidence.</h1><p>Add a product’s source text, find the relevant passages, and inspect an answer with citations. Workspace sources stay separate from Ablatrix’s frozen evaluation sets.</p></header>
+      {synthetic && <p className="ask-notice"><strong>Synthetic demonstration.</strong> Answers are deterministic source-excerpt templates. No model calls, billing, or measured quality gain.</p>}{!canWrite && <p className="ask-notice">Operators can add products and generate answers. Your role can inspect the saved workspace.</p>}
       {error && <p className="ask-alert" role="alert">{error}</p>}{notice && <p className="ask-notice" role="status">{notice}</p>}
       <div className="ask-grid">
         <section className="ask-panel" aria-labelledby="ask-import-title"><div className="ask-panel-heading"><span>01 / EVIDENCE</span><h2 id="ask-import-title">Add a product</h2><p>Paste source text you have permission to use. Each source stays attached to this product and is kept out of the evaluation corpus.</p></div>
           <form onSubmit={addProduct}><label>Product name<input value={title} onChange={event => setTitle(event.target.value)} placeholder="e.g. Trail running jacket" minLength={3} maxLength={160} required /></label>
             {sources.map((source, index) => <fieldset key={index}><legend>Source {index + 1}</legend><label>Source label<input value={source.label} onChange={event => setSources(items => items.map((item, i) => i === index ? { ...item, label: event.target.value } : item))} maxLength={80} required /></label><label>Evidence text<textarea value={source.text} onChange={event => setSources(items => items.map((item, i) => i === index ? { ...item, text: event.target.value } : item))} placeholder="Paste the product specification, listing detail, or customer answer…" minLength={30} maxLength={1500} rows={5} required /></label><label>Original customer question (optional)<textarea value={source.originalQuestion} onChange={event => setSources(items => items.map((item, i) => i === index ? { ...item, originalQuestion: event.target.value } : item))} placeholder="For a customer answer, paste the question it answered…" maxLength={500} rows={2} /><small className="ask-field-help">Keeps model numbers and conditions attached to the answer. A question alone does not establish a product fact.</small></label>{sources.length > 1 && <button type="button" className="ask-text-button" onClick={() => setSources(items => items.filter((_, i) => i !== index))}>Remove source</button>}</fieldset>)}
-            <div className="ask-form-actions"><button type="button" className="ask-secondary" disabled={sources.length >= 8 || busy} onClick={() => setSources(items => [...items, { label: '', text: '', originalQuestion: '' }])}>+ Add source</button><button className="ask-primary" disabled={busy || !title.trim() || sources.some(source => source.text.trim().length < 30 || source.label.trim().length < 2)}>{busy ? 'Saving…' : 'Save product'}</button></div>
+            <div className="ask-form-actions"><button type="button" className="ask-secondary" disabled={!canWrite || sources.length >= 8 || busy} onClick={() => setSources(items => [...items, { label: '', text: '', originalQuestion: '' }])}>+ Add source</button><button className="ask-primary" disabled={!canWrite || busy || !title.trim() || sources.some(source => source.text.trim().length < 30 || source.label.trim().length < 2)}>{busy ? 'Saving…' : 'Save product'}</button></div>
           </form>
         </section>
-        <section className="ask-panel ask-question-panel" aria-labelledby="ask-question-title"><div className="ask-panel-heading"><span>02 / QUESTION</span><h2 id="ask-question-title">Find an answer</h2><p>Preview evidence without a model call, or generate one answer when the local Sapiom plan is configured.</p></div>
+        <section className="ask-panel ask-question-panel" aria-labelledby="ask-question-title"><div className="ask-panel-heading"><span>02 / QUESTION</span><h2 id="ask-question-title">Find an answer</h2><p>{synthetic ? 'Preview the sources or generate a scripted answer to exercise the review workflow.' : 'Preview evidence without a model call, or generate one answer when the local Sapiom plan is configured.'}</p></div>
           <label>Product<select value={productId} onChange={event => setProductId(event.target.value)} disabled={!overview?.products.length || busy}><option value="">Choose a saved product</option>{overview?.products.map(product => <option value={product.id} key={product.id}>{product.title}</option>)}</select></label>
           {selectedProduct && <div className="ask-source-count">{selectedProduct.sources.length} saved {selectedProduct.sources.length === 1 ? 'source' : 'sources'} · added {new Date(selectedProduct.createdAt).toLocaleDateString()}</div>}
           <label>Question<textarea value={question} onChange={event => setQuestion(event.target.value)} placeholder="What does the evidence say about…?" minLength={5} maxLength={500} rows={4} /></label>
-          <div className="ask-form-actions"><button className="ask-secondary" disabled={busy || !productId || question.trim().length < 5} onClick={() => ask('preview')}>{busy ? 'Working…' : 'Preview evidence'}</button><button className="ask-primary" disabled={busy || !productId || question.trim().length < 5 || !overview?.readiness.ready} onClick={() => ask('live')}>Generate cited answer ↗</button></div>
-          <p className="ask-readiness">{overview?.readiness.ready ? 'Live answer ready. A model call uses the shared local planning allowance; actual billed charges are unavailable.' : liveReason ?? 'Checking model readiness…'}</p>
-          <div className="ask-history"><h3>Saved questions</h3>{overview?.runs.length ? overview.runs.map(run => <button key={run.id} aria-pressed={selectedRunId === run.id} onClick={() => setSelectedRunId(run.id)}><strong>{run.question}</strong><span>{run.mode === 'live' ? 'Model answer' : 'Evidence preview'} · {run.status.replaceAll('_', ' ')}</span></button>) : <p>No questions yet. Start with an evidence preview.</p>}</div>
+          <div className="ask-form-actions"><button className="ask-secondary" disabled={!canWrite || busy || !productId || question.trim().length < 5} onClick={() => ask('preview')}>{busy ? 'Working…' : 'Preview evidence'}</button><button className="ask-primary" disabled={!canWrite || busy || !productId || question.trim().length < 5 || !overview?.readiness.ready} onClick={() => ask(synthetic ? 'synthetic' : 'live')}>{synthetic ? 'Generate synthetic answer' : 'Generate cited answer ↗'}</button></div>
+          <p className="ask-readiness">{synthetic ? 'Offline scripted output only. No model tokens, provider charges, or planning reservations.' : overview?.readiness.ready ? 'Live answer ready. A model call uses the shared local planning allowance; actual billed charges are unavailable.' : liveReason ?? 'Checking model readiness…'}</p>
+          <div className="ask-history"><h3>Saved questions</h3>{overview?.runs.length ? overview.runs.map(run => <button key={run.id} aria-pressed={selectedRunId === run.id} onClick={() => setSelectedRunId(run.id)}><strong>{run.question}</strong><span>{run.mode === 'synthetic' ? 'Synthetic answer' : run.mode === 'live' ? 'Model answer' : 'Evidence preview'} · {run.status.replaceAll('_', ' ')}</span></button>) : <p>No questions yet. Start with an evidence preview.</p>}</div>
         </section>
       </div>
-      <section className="ask-panel ask-result" aria-labelledby="ask-result-title"><div className="ask-panel-heading"><span>03 / RESULT</span><h2 id="ask-result-title">{selectedRun ? selectedRun.question : 'Evidence and answer'}</h2><p>{selectedRun?.mode === 'preview' ? 'Retrieval preview · no model call or quality score.' : selectedRun ? 'Saved local model attempt. Citations verify quote membership, not full semantic correctness.' : 'Select a saved question to inspect its answer and source passages.'}</p></div>
-        {selectedRun?.answer && <div className="ask-answer"><span>{selectedRun.answer.status === 'answered' ? 'ANSWERED FROM EVIDENCE' : 'INSUFFICIENT EVIDENCE'}</span><p>{selectedRun.answer.answer}</p><small>{selectedRun.model} · {selectedRun.usage ? `${selectedRun.usage.inputTokens + selectedRun.usage.outputTokens} tokens` : 'token usage unavailable'}</small></div>}
-        {selectedRun?.status === 'completed' && selectedRun.mode === 'live' && selectedRun.answer && <p className="ask-review-link"><a className="ask-primary" href={`/review?answer=${encodeURIComponent(`workspace-${selectedRun.id}`)}`}>Review this answer ↗</a><span>Check its sources, record a decision, or request a background revision.</span></p>}
+      <section className="ask-panel ask-result" aria-labelledby="ask-result-title"><div className="ask-panel-heading"><span>03 / RESULT</span><h2 id="ask-result-title">{selectedRun ? selectedRun.question : 'Evidence and answer'}</h2><p>{selectedRun?.mode === 'synthetic' ? 'Synthetic saved output. This example and its review do not enter live quality results.' : selectedRun?.mode === 'preview' ? 'Retrieval preview · no model call or quality score.' : selectedRun ? 'Saved local model attempt. Citations verify quote membership, not full semantic correctness.' : 'Select a saved question to inspect its answer and source passages.'}</p></div>
+        {selectedRun?.answer && <div className="ask-answer"><span>{selectedRun.mode === 'synthetic' ? 'SYNTHETIC ANSWER' : selectedRun.answer.status === 'answered' ? 'ANSWERED FROM EVIDENCE' : 'INSUFFICIENT EVIDENCE'}</span><p>{selectedRun.answer.answer}</p><small>{selectedRun.model} · {selectedRun.mode === 'synthetic' ? 'no model tokens or charges' : selectedRun.usage ? `${selectedRun.usage.inputTokens + selectedRun.usage.outputTokens} tokens` : 'token usage unavailable'}</small></div>}
+        {selectedRun?.status === 'completed' && selectedRun.mode !== 'preview' && selectedRun.answer && <p className="ask-review-link"><a className="ask-primary" href={`/review?answer=${encodeURIComponent(`workspace-${selectedRun.id}`)}`}>Review this answer ↗</a><span>Check its sources, record a decision, or request a background revision.</span></p>}
         {selectedRun?.error && <p className="ask-alert">{selectedRun.error}</p>}
         {selectedRun?.retrieval && <div className="ask-evidence"><h3>Retrieved product evidence</h3>{selectedRun.retrieval.passages.map((passage, index) => { const citations = selectedRun.answer?.citations.filter(item => item.passageId === passage.id) ?? []; return <article key={passage.id} id={`source-${passage.id}`}><div><span>#{index + 1} · {passage.reference}</span>{citations.length > 0 && <strong>CITED</strong>}</div>{passage.originalQuestion && <p className="ask-original-question"><strong>Original customer question:</strong> {passage.originalQuestion}<small>Context for this answer; the question is not a confirmed product fact.</small></p>}<p>{passage.text}</p>{citations.map((citation, i) => <blockquote key={i}>“{citation.quote}”</blockquote>)}</article>; })}</div>}
       </section>

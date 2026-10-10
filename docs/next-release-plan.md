@@ -9,8 +9,8 @@ Updated October 9, 2026. These five stages describe the product roadmap; their n
 | 1. Baseline and rubric | A saved answer, inspectable sources, and explicit quality judgments | Existing product QA, historical review packets, and feedback-lab rubrics provide the foundation. Context-aware human review remains pending. |
 | 2. General product answers | New questions can enter the same review workflow | PR #22 connects completed `/ask` answers to `/review` through an immutable, recoverable source snapshot. |
 | 3. Asynchronous correction | A reviewer explains a flaw, moves on, and returns to a versioned revision | PR #22 joins general answers to the existing bounded investigation/revision worker. Jobs, receipts, decisions, source provenance, and restart guards are preserved. |
-| 4. Frozen quality comparison | Import a completed experiment, review anonymous pairs, and publish an honest report | Implemented on `codex/frozen-context-comparison`: 193 server tests, 28 browser checks, build and independent review pass. A fresh live quality comparison remains a separate execution step. |
-| 5. Restricted hosted demo | Another person can inspect and exercise a bounded, durable workflow | Follow the workbench with authentication, access controls, deployment recovery, and a reproducible demonstration. |
+| 4. Frozen quality comparison | Import a completed experiment, review anonymous pairs, and publish an honest report | Merged in [PR #23](https://github.com/jayeshsuyal/ablatrix/pull/23). A fresh live quality comparison remains a separate execution step. |
+| 5. Restricted hosted demo | Another person can inspect and exercise a bounded, durable workflow | Deployable package on `codex/restricted-hosted-demo`: verified gateway identity, roles, offline synthetic correction, persistent storage, and backup/restore. External host and login configuration remain pending; see [operating guide](hosted-demo.md). |
 
 PR #22 completes the shared engineering workflow across the first three stages, building on earlier implementations. Its merge does not establish a quality gain or complete the pending human judgments.
 

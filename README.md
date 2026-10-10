@@ -58,6 +58,10 @@ Open [Compare answers](http://127.0.0.1:4173/compare) and load the **synthetic e
 
 The workbench also imports completed experiment packets through `npm run compare -- import --db .data/context-comparisons.sqlite --packet /absolute/path/packet.json`. Packets freeze answers, sources, and the original-question context intervention. A saved packet protects review integrity; it does not prove that an experiment was planned before generation or authenticate provider records. See the [comparison protocol](docs/context-comparison-protocol.md) and [packet format](docs/context-comparison-contract.md).
 
+## Private demo package
+
+The [restricted hosted demo](docs/hosted-demo.md) packages `/ask` → `/review` → correction → export with verified gateway identity, viewer/reviewer/operator roles, one persistent SQLite volume, and offline backup/restore. Synthetic templates let invited users rehearse the workflow without paid calls. Hosting, HTTPS identity configuration, and an external deployment are still pending; this is not a public live service.
+
 ## Saved results
 
 | Experiment | Verified observation | What it establishes |

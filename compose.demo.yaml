@@ -1,0 +1,24 @@
+services:
+  demo:
+    build: .
+    image: ablatrix-demo:local
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 45s
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    ports: ["127.0.0.1:4180:4173"]
+    environment:
+      ABLATRIX_HOSTED_DEMO: "1"
+      ABLATRIX_DATA_DIR: /data
+      ABLATRIX_DEMO_ACCESS_CONFIG: /run/config/access.json
+    volumes:
+      - demo-data:/data
+      - ./deploy/access.json:/run/config/access.json:ro
+    tmpfs: [/tmp:size=32m,mode=1777]
+    mem_limit: 768m
+    cpus: 1
+
+volumes:
+  demo-data:
