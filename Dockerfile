@@ -2,6 +2,9 @@ FROM node:24-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca92
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
+# npm can silently omit an optional native package after a failed download.
+# Retry the locked install once using its cache; the build still fails if unavailable.
+RUN node --input-type=module -e "await import('rolldown');" || npm ci --prefer-offline --include=optional --no-audit --no-fund
 COPY tsconfig.json vite.config.ts ./
 COPY server ./server
 COPY web ./web

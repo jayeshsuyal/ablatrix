@@ -17,7 +17,12 @@ containers = []
 
 
 def run(*args, expected=0):
-    result = subprocess.run(docker + list(args), capture_output=True, text=True, timeout=90)
+    args = list(args)
+    if args[0] == 'run' and '--name' not in args:
+        job_name = name + '-job-' + uuid.uuid4().hex[:6]
+        containers.append(job_name)
+        args[1:1] = ['--name', job_name]
+    result = subprocess.run(docker + args, capture_output=True, text=True, timeout=90)
     if result.returncode != expected:
         raise RuntimeError(f'{args[0]} returned {result.returncode}, expected {expected}: {result.stdout}\n{result.stderr}')
     return result.stdout.strip()
