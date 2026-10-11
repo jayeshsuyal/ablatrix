@@ -51,7 +51,7 @@ Raw cohort SHA256: `9cc29d9987f8e76245d7ac89d32db13fa998d0e6ff9357eab88bda888978
 
 Canonical cohort SHA256: `6b336ab83740b17cc7b949f6ae719f5001a2399f984dd803f14540a53ce39d77`.
 
-Publication required the passed [offline citation qualification](offline-qualification.json), unchanged qualified implementation hashes and the exact cohort-bound family audit. The separate [execution manifest](execution-plan.json) now freezes five retrieved sources per case and request identities at implementation commit `6ce8e28278a91020acd72fa645078c025c1de0c7`. Its plan SHA256 is `0d32ec0deba075cb3cf8ffa38fa0e96bc7288d03c834a0cdc8c5f00fcb0e128e`. Neither packet permits dispatch without separate approval.
+Publication required the passed [offline citation qualification](offline-qualification.json), unchanged qualified implementation hashes and the exact cohort-bound family audit. The [current execution manifest](execution-plan-v2.json) freezes five retrieved sources per case and request identities at implementation commit `6be3416384059faf8f4efcdf61833287818af8d8`. Its plan SHA256 is `ce5c3d288781218dcf67e72ac77cbacb8c160e19a40384eaa2bf5d1722e489ee`. Version 1 remains immutable in [execution-plan.json](execution-plan.json); the [supersession record](plan-supersession.md) explains the prospective runner correction. No packet permits dispatch without separate approval.
 
 ## Future execution and interpretation
 
