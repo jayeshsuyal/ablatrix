@@ -52,7 +52,7 @@ test('comparison HTTP boundary preserves blind review and only permits the no-ca
   }
 });
 
-for (const citationInterface of ['passage_quotes', 'source_ids_v1'] as const) test(`tagged ${citationInterface} correction packets reuse blind HTTP review without exposing AI critique or prompt identities`, async () => {
+for (const citationInterface of ['passage_quotes', 'source_ids_v1', 'source_ids_v2'] as const) test(`tagged ${citationInterface} correction packets reuse blind HTTP review without exposing AI critique or prompt identities`, async () => {
   const directory = mkdtempSync(join(tmpdir(), 'correction-comparison-api-')), path = join(directory, 'comparisons.sqlite');
   const packet = createCorrectionComparisonFixture(), imported = new ContextComparisonStore(path);
   packet.protocol = correctionComparisonProtocol('synthetic-model', null, citationInterface);

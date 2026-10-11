@@ -1,0 +1,148 @@
+{
+  "format": "ablatrix-constrained-source-id-offline-qualification-v1",
+  "createdAt": "2026-10-11T19:11:06.172Z",
+  "passed": true,
+  "sourceIdInterface": "source_ids_v2",
+  "newProviderCalls": 0,
+  "implementationSha256": {
+    "server/citation-options.ts": "0845b2922b7880de4f641453c307d042a31211948514dc4e57e4f9ad4cb1d93d",
+    "server/feedback-provider.ts": "e9d68a560d468527ae7aee22196b1566a0d535e73545969c66d38ff039009b05",
+    "server/revision-policy.ts": "718c3718e384d83751035e503da874cb72041a6c4a84b65cd3cc482e39d92fb2",
+    "server/context-comparison.ts": "8688c6fc93aa21a819e7bcb5412f24bc1ec4e3e5c27ab30af0f46d7999a0c812",
+    "web/ContextComparison.tsx": "0ef8c4cc18045cd9fdf9c8f393e86b547f1220ce28a82efb2ee1b8efbf1479ed",
+    "server/citation-options.test.ts": "65c125716758dae267b496a8932c1aed384759288e44e33c5de98b08e312d269",
+    "server/feedback-provider.test.ts": "e32dcb19c4401ea1ca91b3dabd5a60ac7dce9ed300bf1b4fe3fbc16494672251",
+    "server/constrained-source-ids.test.ts": "29016343974f51504908dd3b0141b41fbcbb19e02a033000657766fd5537cd4f",
+    "server/context-comparison.test.ts": "18cc722a697772fedc5beafbff0d95a3ec0275b28d516566c9125d76d022730c",
+    "server/context-comparison-api.test.ts": "9eb6414a61c0a9710f3137f0e9a395b0e48ff14a016cf47ac5a485386bfbfa81",
+    "e2e/context-comparison.spec.ts": "f9d41cdef55dcf4c8fcf9de2bd5a34e04a97c82ff4422b9f9897701c7d91da6b"
+  },
+  "verification": {
+    "focused": {
+      "command": "node --import tsx --test server/citation-options.test.ts server/feedback-provider.test.ts server/constrained-source-ids.test.ts server/context-comparison.test.ts server/context-comparison-api.test.ts",
+      "exitCode": 0,
+      "outputSha256": "7cd918b9cc4e568ac3bf9c2fecbf5b98fa64755c9848b6176dab89bf5eff1304",
+      "passed": 59,
+      "failed": 0,
+      "skipped": 0
+    },
+    "fullSuite": {
+      "command": "npm test",
+      "exitCode": 0,
+      "outputSha256": "46f9a943501ac136866e38a311ac39fc04588b254b8a6777181eec644d1583f3",
+      "passed": 268,
+      "failed": 0,
+      "skipped": 1,
+      "skipReason": "Linux-only external process smoke test."
+    },
+    "build": {
+      "command": "npm run build",
+      "exitCode": 0,
+      "outputSha256": "8e49ea539ddd24124218452215b45634d65d642461d7dd3cd1b5d93f8075ad20"
+    },
+    "browser": {
+      "command": "npx playwright test e2e/context-comparison.spec.ts",
+      "exitCode": 0,
+      "outputSha256": "85cfa3e2d2b1ab1059259733cb5fedeb8134f3266adba8af5b31383ca45884e5",
+      "passed": 4,
+      "failed": 0,
+      "transport": "Isolated local fixture server with live dispatch disabled."
+    },
+    "checks": [
+      "Each original and both revision policy schemas enumerate exactly the offered ordered source IDs.",
+      "The Q10021 offered 28-character ID is valid; its observed 27-character truncation fails server validation without repair or retry.",
+      "Captured synthetic dispatch bodies match pure helpers; receipts retain exact option and response-schema hashes.",
+      "Unknown, foreign, duplicate and unresolved IDs and uncited answered outputs remain rejected locally.",
+      "Request schemas are independent deep clones; mutation and concurrent requests do not contaminate v1 or other requests.",
+      "Synthetic v2 comparison import, blind review and export preserve source-bound human review and provenance gates.",
+      "Historical v1 original request hashes and protocol configurations reproduce unchanged."
+    ],
+    "transport": "Injected synthetic provider responses with temporary/in-memory ledgers; no remote request."
+  },
+  "integrity": {
+    "format": "ablatrix-constrained-source-id-integrity-check-v1",
+    "passed": true,
+    "historicalEvidenceFilesChecked": 32,
+    "historicalEvidenceUnchanged": true,
+    "privateStoppedResultSha256": "b7dfbb0ac2d3b32b3051482a1a472d3022902ff73166fe32aec1afcd225f9475",
+    "privateStoppedResultUnchanged": true,
+    "sharedLedgerAttempts": 81,
+    "pendingReservations": 0,
+    "newProviderCalls": 0,
+    "historicalV1OriginalRequestHashesPreserved": 8,
+    "historicalV1ProtocolPreserved": true,
+    "v2PublicContextPureRequestChecks": 24,
+    "cases": [
+      {
+        "caseId": "source-id-train-8297",
+        "offeredIds": 5,
+        "originalRequestPreserved": true,
+        "threeRequestEnumsIdentical": true,
+        "responseSchemaSha256": "efca82489f51bc2cee1e10c69fc8310abafab168e587b22760f94be639534d4f"
+      },
+      {
+        "caseId": "source-id-train-12820",
+        "offeredIds": 5,
+        "originalRequestPreserved": true,
+        "threeRequestEnumsIdentical": true,
+        "responseSchemaSha256": "4e53ab920a144234b3f87c38205b9c99791474a0d4927ad1ecea1b3a48b4e12c"
+      },
+      {
+        "caseId": "source-id-train-10021",
+        "offeredIds": 5,
+        "originalRequestPreserved": true,
+        "threeRequestEnumsIdentical": true,
+        "responseSchemaSha256": "57a3776c2f3c675d6dee69b8ac3d9741259fc3272c5484b083509b94e88cc151"
+      },
+      {
+        "caseId": "source-id-train-12547",
+        "offeredIds": 5,
+        "originalRequestPreserved": true,
+        "threeRequestEnumsIdentical": true,
+        "responseSchemaSha256": "369269dbb1ec161185f8800bc2860b9e8d76101002dac39688928177d5895fe6"
+      },
+      {
+        "caseId": "source-id-train-14506",
+        "offeredIds": 5,
+        "originalRequestPreserved": true,
+        "threeRequestEnumsIdentical": true,
+        "responseSchemaSha256": "022892d15c667b245c23bc0c73f9dd96827cdb6c85c9faaa3ed5fd9158c9ee35"
+      },
+      {
+        "caseId": "source-id-train-11847",
+        "offeredIds": 5,
+        "originalRequestPreserved": true,
+        "threeRequestEnumsIdentical": true,
+        "responseSchemaSha256": "67bb027e3cbc40ef33cb3ceea45236da00cdf0056c367fb9d4b8f6672c8b4b64"
+      },
+      {
+        "caseId": "source-id-train-8746",
+        "offeredIds": 5,
+        "originalRequestPreserved": true,
+        "threeRequestEnumsIdentical": true,
+        "responseSchemaSha256": "d6f7f29e15e2912e3d82020c49fa533ea80490aebfd926bdbef3b2baa7e139d0"
+      },
+      {
+        "caseId": "source-id-train-12894",
+        "offeredIds": 5,
+        "originalRequestPreserved": true,
+        "threeRequestEnumsIdentical": true,
+        "responseSchemaSha256": "7132c72dec84b05e72544654a6204cff1c11fb3a8ef80879e830b9f3d7e624ef"
+      }
+    ],
+    "note": "Offline pure helper checks only, using published source contexts and synthetic placeholder originals. No provider is constructed, private generated answer parsed, cohort selected or live plan prepared."
+  },
+  "paidExecutionAuthorized": false,
+  "newLiveCohortPrepared": false,
+  "newLiveExecutionPlanPrepared": false,
+  "routerConstrainedDecodingVerified": false,
+  "liveModelBehaviorQualified": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "limitations": [
+    "The enum declares legal values in the tool schema; Sapiom Router enforcement of constrained decoding has not been verified.",
+    "Version 2 adds explicit ID-selection prompt guidance as well as enum schemas, so a future comparison tests the combined interface rather than the enum alone.",
+    "Accepted source IDs establish exact quotation membership, not semantic claim support, answer correctness or human-reviewed quality gain.",
+    "The previous live round remains stopped. Its exposed cases were reused only as public offline contexts; no paid retry, cohort replacement or plan was prepared."
+  ]
+}

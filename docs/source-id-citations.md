@@ -1,5 +1,7 @@
 # Server-resolved citations
 
+The subsequent [version 2 interface](constrained-source-ids.md) additionally declares each request's legal IDs in its response schema. It is qualified offline; no live test has used it. This page records the historical version 1 comparison and its stopped outcome.
+
 The `source_ids_v1` interface is implemented for explicitly selected comparison runs. The model selects IDs from a frozen source list. The server reconstructs each citation from the corresponding literal source body. Historical formats and ordinary product-generation defaults keep their existing behavior; saved answers are not rewritten.
 
 ## The failure this addresses
@@ -18,9 +20,9 @@ This prevents accepted citations from containing model-rewritten quotations. **I
 
 The [offline qualification](evidence/source-id-correction-2026-10-10/offline-qualification.json) passed 29 resolver/provider tests, including the exact failed 259-character dimensions source. All transports were injected synthetic responses. The full application passed 258 server tests with one Linux-only skip, its build, and four focused browser checks.
 
-The separate [preparation record](evidence/source-id-correction-2026-10-10/preparation.md) and [current execution manifest](evidence/source-id-correction-2026-10-10/execution-plan-v2.json) freeze a new eight-product comparison, with five retrieved sources per case. All products from the stopped round, including its unattempted cases, are excluded. Any eligible prior preparation-only products are excluded too. Sixteen final revised answers would require independent human source checks; no quality gain or policy promotion follows automatically.
+The separate [preparation record](evidence/source-id-correction-2026-10-10/preparation.md) and [executed manifest](evidence/source-id-correction-2026-10-10/execution-plan-v2.json) froze an eight-product comparison, with five retrieved sources per case. All products from the previous stopped round, including its unattempted cases, were excluded. Eligible prior preparation-only products were excluded too. Sixteen final revised answers would require independent human source checks; no quality gain or policy promotion follows automatically.
 
-Current frozen plan SHA256: `ce5c3d288781218dcf67e72ac77cbacb8c160e19a40384eaa2bf5d1722e489ee`. Implementation commit: `6be3416384059faf8f4efcdf61833287818af8d8`. The [prospective supersession record](evidence/source-id-correction-2026-10-10/plan-supersession.md) preserves version 1 and explains the bot's model-alias correction. The original plan's code fingerprint no longer matches the current runner.
+Executed plan SHA256: `ce5c3d288781218dcf67e72ac77cbacb8c160e19a40384eaa2bf5d1722e489ee`. Implementation commit: `6be3416384059faf8f4efcdf61833287818af8d8`. The [prospective supersession record](evidence/source-id-correction-2026-10-10/plan-supersession.md) preserves the first plan version and explains the bot's model-alias correction. Historical plan file fingerprints bind their recorded implementation; they do not match the current checkout.
 
 A synthetic in-memory check covered all 24 request bodies: each original and both revision arms offer the same ordered citation catalog. All eight cases and 16 synthetic revisions imported with zero reviews, anonymous A/B labels, and locked results/exports. This checked packet wiring only; no provider was constructed and no live database was written. A mismatched approval hash was also rejected before provider construction or output/database creation.
 
@@ -30,9 +32,8 @@ The frozen retriever does not select every useful source: Q12820 omits the item-
 
 ```sh
 node --import tsx --test server/citation-options.test.ts server/feedback-provider.test.ts
-node --import tsx scripts/source-id-comparison.ts --prepare --out /tmp/new-source-id-plan.json
 ```
 
-Preparation uses the audited source cohort and the existing local hybrid retriever. It writes a new file, without opening provider credentials or live/review ledgers. Preparation timestamps and the recorded checkout commit can change the plan hash; use the saved immutable manifest for an approved execution. Original request hashes are frozen before generation; revision bodies depend on the shared original and are reconstructed and hashed before their own dispatch.
+The historical preparer, `scripts/source-id-comparison.ts`, requires its recorded implementation commit and rejects changed file fingerprints before provider construction. Its frozen source cohort has already been exposed and is not a fresh validation set. Current regression tests reconstruct version 1 request bodies without executing the old round. Original request hashes were frozen before generation; revision bodies depended on the shared original and were reconstructed and hashed before their own dispatch.
 
 The implementation and offline preparation made no paid calls. After separate user approval, [live execution](evidence/source-id-correction-2026-10-10/live-report.md) used eight of the 24 allowed attempts and stopped on an unknown citation ID. Seven outputs passed with 22 exact source-body citations; two of eight pairs completed, with no reduced import or human quality result. The shared ledger moved from 73 to 81, using $0.80 in local planning allowances; actual settled charges are unavailable. The immutable manifest's `paidExecutionAuthorized: false` records its preparation state, while the private execution record binds the later operator approval to its hash. The $10 planning cap remains in force. The unused 16 attempts do not authorize a retry or a new experiment.

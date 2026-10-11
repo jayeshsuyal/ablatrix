@@ -142,6 +142,43 @@ function sourceIdOutput(output: unknown, scope: SourceCitationScope) {
   return { answer: answerSchema.parse({ answer, status: selected.status, citations }), rawAnswer: selected.answer, quoteIds };
 }
 
+/** Opt-in v2 schema contract. Provider enforcement is unverified; server validation remains mandatory. */
+export const CONSTRAINED_SOURCE_ID_CITATION_INTERFACE = 'source_ids_v2' as const;
+const constrainedSourceIdInstructions = 'Each citation quoteId must exactly equal one ID in the response schema enum and the supplied quoteOptions catalog. Select the complete ID without shortening, rewriting, or inventing characters. If no offered source supports the claim, preserve uncertainty instead of fabricating an ID.';
+export function constrainedSourceIdAnswerPromptIdentity() {
+  const original = sourceIdAnswerPromptIdentity();
+  const systemInstructions = original.systemInstructions.replace('Return the product_answer_source_ids_v1 tool.', `${constrainedSourceIdInstructions} Return the product_answer_source_ids_v2 tool.`);
+  return Object.freeze({ promptVersion: 'product-answer-source-ids-v2', systemInstructions, systemInstructionsSha256: instructionHash(systemInstructions) });
+}
+export function constrainedSourceIdRevisionPromptIdentity(policy: RevisionPolicySelector = 'baseline', hasInvestigation = true): RevisionPromptIdentity {
+  const original = sourceIdRevisionPromptIdentity(policy, hasInvestigation);
+  const systemInstructions = original.systemInstructions.replace('Return answer_revision_source_ids_v1.', `${constrainedSourceIdInstructions} Return answer_revision_source_ids_v2.`);
+  return Object.freeze({ policy: original.policy, promptVersion: original.promptVersion.replace(/-source-ids-v1$/, '-source-ids-v2'), systemInstructions, systemInstructionsSha256: instructionHash(systemInstructions) });
+}
+function constrainedSourceIdParameters(options: ReturnType<typeof sourceCitationOptions>) {
+  // Fresh deep clone per request: v1 and other requests must never inherit this enum.
+  const parameters = structuredClone(sourceIdAnswerParameters), citations = parameters.properties.citations;
+  return { ...parameters, properties: { ...parameters.properties, citations: { ...citations, items: { ...citations.items,
+    properties: { ...citations.items.properties, quoteId: { ...citations.items.properties.quoteId, enum: options.map(option => option.id) } } } } } };
+}
+function constrainedSourceIdAnswerParts(input: Parameters<LoopProvider['answer']>[0]) {
+  const original = sourceIdAnswerParts(input), prompt = constrainedSourceIdAnswerPromptIdentity();
+  return { ...original, prompt, payload: { ...original.payload, promptVersion: prompt.promptVersion, citationInterface: CONSTRAINED_SOURCE_ID_CITATION_INTERFACE }, parameters: constrainedSourceIdParameters(original.quoteOptions) };
+}
+function constrainedSourceIdRevisionParts(input: RevisionInput) {
+  const original = sourceIdRevisionParts(input), prompt = constrainedSourceIdRevisionPromptIdentity(input.revisionPolicy, Boolean(input.investigation));
+  return { ...original, prompt, payload: { ...original.payload, promptVersion: prompt.promptVersion, citationInterface: CONSTRAINED_SOURCE_ID_CITATION_INTERFACE }, parameters: constrainedSourceIdParameters(original.quoteOptions) };
+}
+/** Pure exact-body helpers bind each request's complete ordered enum before any reservation. */
+export function constrainedSourceIdAnswerRequestBody(input: Parameters<LoopProvider['answer']>[0]) {
+  const { prompt, payload, parameters } = constrainedSourceIdAnswerParts(input);
+  return completionBody('product_answer_source_ids_v2', prompt.systemInstructions, payload, parameters);
+}
+export function constrainedSourceIdRevisionRequestBody(input: RevisionInput) {
+  const { prompt, payload, parameters } = constrainedSourceIdRevisionParts(input);
+  return completionBody('answer_revision_source_ids_v2', prompt.systemInstructions, payload, parameters);
+}
+
 export type FeedbackProviderOptions = {
   enabled?: boolean; apiKey?: string; credentialsFile?: string; fetchImpl?: typeof fetch;
   dbPath?: string; capUsd?: number; priorSpendUsd?: number; allowancePerCallUsd?: number; callLimit?: number;
@@ -314,7 +351,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
       throw new FeedbackExternalError('unverified_outcome', `Investigation Sapiom operation has an unverified outcome (${errorCode}; attempt ${id}). The allowance remains recorded and the operation was not retried.`);
     }
   }
-  private async request(kind: string, system: string, input: unknown, parameters: object, runId?: string, revisionIdentity?: { revisionPolicy?: RevisionPolicySelector; systemInstructionsSha256: string; citationInterface?: typeof SOURCE_ID_CITATION_INTERFACE; optionSetSha256?: string }): Promise<{ id: string; output: unknown; model: string; usage: LoopUsage }> {
+  private async request(kind: string, system: string, input: unknown, parameters: object, runId?: string, revisionIdentity?: { revisionPolicy?: RevisionPolicySelector; systemInstructionsSha256: string; citationInterface?: typeof SOURCE_ID_CITATION_INTERFACE | typeof CONSTRAINED_SOURCE_ID_CITATION_INTERFACE; optionSetSha256?: string; responseSchemaSha256?: string }): Promise<{ id: string; output: unknown; model: string; usage: LoopUsage }> {
     const body = completionBody(kind, system, input, parameters);
     const id = this.reserve(kind, runId);
     let errorCode = 'network';
@@ -412,6 +449,22 @@ export class SapiomFeedbackProvider implements LoopProvider {
     const result = await this.request('answer_revision_source_ids_v1', prompt.systemInstructions, payload, sourceIdAnswerParameters, input.runId, identity);
     try { return { ...sourceIdOutput(result.output, scope), attemptId: result.id, model: result.model, usage: result.usage, promptVersion: prompt.promptVersion, optionCount: quoteOptions.length, ...identity }; }
     catch { this.markOutputInvalid(result.id); throw new Error(`Feedback source-ID revision failed output validation (attempt ${result.id}).`); }
+  }
+  async answerWithConstrainedSourceIds(input: Parameters<LoopProvider['answer']>[0]) {
+    const { prompt, scope, quoteOptions, payload, parameters } = constrainedSourceIdAnswerParts(input);
+    const identity = { systemInstructionsSha256: prompt.systemInstructionsSha256, citationInterface: CONSTRAINED_SOURCE_ID_CITATION_INTERFACE,
+      optionSetSha256: instructionHash(JSON.stringify(quoteOptions)), responseSchemaSha256: instructionHash(JSON.stringify(parameters)) };
+    const result = await this.request('product_answer_source_ids_v2', prompt.systemInstructions, payload, parameters, input.runId, identity);
+    try { return { ...sourceIdOutput(result.output, scope), attemptId: result.id, model: result.model, usage: result.usage, promptVersion: prompt.promptVersion, optionCount: quoteOptions.length, ...identity }; }
+    catch { this.markOutputInvalid(result.id); throw new Error(`Feedback constrained source-ID answer failed output validation (attempt ${result.id}).`); }
+  }
+  async reviseWithConstrainedSourceIds(input: RevisionInput) {
+    const { prompt, scope, quoteOptions, payload, parameters } = constrainedSourceIdRevisionParts(input);
+    const identity = { revisionPolicy: prompt.policy, systemInstructionsSha256: prompt.systemInstructionsSha256, citationInterface: CONSTRAINED_SOURCE_ID_CITATION_INTERFACE,
+      optionSetSha256: instructionHash(JSON.stringify(quoteOptions)), responseSchemaSha256: instructionHash(JSON.stringify(parameters)) };
+    const result = await this.request('answer_revision_source_ids_v2', prompt.systemInstructions, payload, parameters, input.runId, identity);
+    try { return { ...sourceIdOutput(result.output, scope), attemptId: result.id, model: result.model, usage: result.usage, promptVersion: prompt.promptVersion, optionCount: quoteOptions.length, ...identity }; }
+    catch { this.markOutputInvalid(result.id); throw new Error(`Feedback constrained source-ID revision failed output validation (attempt ${result.id}).`); }
   }
   async propose(input: Parameters<LoopProvider['propose']>[0]) {
     const result = await this.request('policy_update',
