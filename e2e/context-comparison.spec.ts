@@ -1,5 +1,6 @@
 import { expect, test, type Locator } from '@playwright/test';
 import type { ContextComparisonDetail, ContextComparisonReview } from '../server/context-comparison.ts';
+import { ContextComparisonStore, createCorrectionComparisonFixture } from '../server/context-comparison.ts';
 
 async function assess(form: Locator, label: 'A' | 'B', negative = false) {
   await form.getByRole('combobox', { name: `Answer ${label} correctness`, exact: true }).selectOption(negative ? 'incorrect' : 'correct');
@@ -166,4 +167,53 @@ test('a late review refresh cannot replace the completed packet with an older pe
   release(); await lateFinished;
   await expect(page.locator('.cc-progress')).toContainText('2/2 answers reviewed');
   await expect(page.getByRole('region', { name: 'Comparison results' })).toContainText('Practice packet complete.');
+});
+
+test('correction-policy packets label shared inputs and hide AI critique until synthetic reviews are locked', async ({ page }) => {
+  // Browser fixture backed by the actual in-memory importer/review store. No live
+  // packet, human judgment, database file or generation endpoint is involved.
+  const store = new ContextComparisonStore(':memory:'), packet = createCorrectionComparisonFixture();
+  store.importPacket(packet);
+  const mutations: string[] = [];
+  await page.route(/\/api\/context-comparisons(?:\/[^?]*)?$/, async route => {
+    const path = new URL(route.request().url()).pathname;
+    try {
+      if (route.request().method() === 'POST') {
+        mutations.push(path);
+        return route.fulfill({ status: 201, json: store.review(packet.id, route.request().postDataJSON()) });
+      }
+      return route.fulfill({ json: path.endsWith('/report') ? store.report(packet.id) : path.endsWith('/export') ? store.exportPacket(packet.id) : path === '/api/context-comparisons' ? store.list() : store.get(packet.id) });
+    } catch (reason) { return route.fulfill({ status: 409, json: { error: reason instanceof Error ? reason.message : 'Synthetic fixture error.' } }); }
+  });
+  try {
+    await page.goto(`/compare?packet=${packet.id}`);
+    await expect(page.getByRole('heading', { name: 'Synthetic correction-policy rehearsal' })).toBeVisible();
+    await expect(page.getByText('Correction-policy experiment.', { exact: true })).toBeVisible();
+    await expect(page.getByText('Both arms revise the same original answer', { exact: false })).toBeVisible();
+    await expect(page.locator('.cc-main')).not.toContainText(packet.cases[0].original.answer.answer);
+    await expect(page.locator('.cc-main')).not.toContainText(packet.cases[0].critique.text);
+    await expect(page.locator('.cc-main')).not.toContainText(packet.protocol.policies.candidate.promptVersion);
+    await expect(page.getByRole('region', { name: 'Frozen source context' })).toContainText(packet.cases[0].sources[1].originalQuestion!);
+    await expect(page.getByRole('region', { name: 'Comparison results' })).toContainText('Results wait for the reviews.');
+    await page.getByRole('textbox', { name: 'Synthetic reviewer label', exact: true }).fill('Synthetic correction browser review');
+    for (const source of packet.cases[0].sources) await page.getByRole('checkbox', { name: `Checked source: ${source.label}`, exact: true }).check();
+    for (const label of ['A', 'B'] as const) {
+      const form = page.getByRole('form', { name: `Review answer ${label}`, exact: true });
+      await assess(form, label); await form.getByRole('checkbox').check();
+      await form.getByRole('button', { name: `Save synthetic review for ${label}`, exact: true }).click();
+      await expect(page.getByRole('region', { name: `Saved answer ${label} review`, exact: true })).toContainText('Synthetic review saved');
+    }
+    await expect(page.getByRole('region', { name: 'Comparison results' })).toContainText('Practice packet complete.');
+    await page.getByText('Inspect correction instructions and shared inputs after review', { exact: true }).click();
+    await expect(page.getByRole('region', { name: 'Comparison results' })).toContainText(packet.cases[0].original.answer.answer);
+    await expect(page.getByRole('region', { name: 'Comparison results' })).toContainText(packet.cases[0].critique.text);
+    await expect(page.getByRole('region', { name: 'Comparison results' })).toContainText(packet.protocol.policies.candidate.configurationSha256);
+    await expect(page.getByLabel('Paired quality outcomes')).toHaveCount(0);
+    expect(mutations).toEqual([`/api/context-comparisons/${packet.id}/reviews`, `/api/context-comparisons/${packet.id}/reviews`]);
+    const exported = store.exportPacket(packet.id);
+    expect(exported.reviews.every(review => review.kind === 'synthetic')).toBe(true);
+    expect(exported.report.qualityClaimEligible).toBe(false);
+    await page.setViewportSize({ width: 390, height: 844 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
+  } finally { store.close(); }
 });

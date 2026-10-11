@@ -2,6 +2,8 @@
 
 Status: protocol for the next evaluation workbench, October 9, 2026. No fresh live comparison or human-reviewed quality result is recorded by this document. This document distinguishes the workbench's import/review contract from the additional requirements for a future prospective experiment.
 
+This original-question protocol and its `ablatrix-context-comparison-v1` format remain unchanged. The workbench also supports the separately tagged correction-policy experiment described below and in [its execution protocol](correction-policy-experiment.md). A correction-policy result is not an original-question metadata ablation.
+
 ## Question and scope
 
 Does retaining a customer answer's original question improve supported, adequate answers to a new product question?
@@ -80,6 +82,18 @@ An answer meets the primary criterion only when correctness, support, and adequa
 The report preserves the planned and eligible pair counts, review provenance, per-pair outcomes, citation membership, response-status coverage, model identities, timing definitions, and recorded per-attempt token usage where available. Imported retrospective records support descriptive, exploratory review outcomes only: their selection, execution, and pre-generation freeze remain unverified. The workbench reports `qualityClaimEligible: false` and no inferential interval. A numerical advantage or a degenerate small-sample bootstrap interval cannot establish improvement. Actual provider charges remain unavailable unless separately verified; planning allowances are never reported as billed savings.
 
 Each judgment becomes immutable on its first save; replaying the same submission is safe, but even a mistaken judgment cannot currently be edited. Reporting requires a judgment on every completed answer. The report is derived from the frozen packet and saved judgments; this release has no amendment API. A future correction mechanism must preserve the original report and attach a versioned amendment with its reason and provenance. A tie, regression, inconclusive result, or no useful effect is a valid outcome. Do not keep modifying the intervention against the same exposed cohort until it wins. No report automatically changes the active policy or accepts a product answer.
+
+## Separate correction-policy comparison
+
+The implemented `ablatrix-correction-comparison-v1` format tests **revision instructions**, using `baseline` and `candidate` arms. Both receive the same completed original answer, prewritten AI-authored critique, ordered generation sources with original customer questions, and frozen investigation context. Each revises the shared original independently. The candidate must not receive the baseline revision, extra sources, or different retrieval. Generation settings and output handling are shared; complete instruction/configuration identities and exact request hashes are checked by the [import contract](context-comparison-contract.md#correction-policy-packet).
+
+This format accepts 1–20 distinct products, at most eight generation chunks per case and up to 128 full-pool reviewer chunks. The [current experiment](correction-policy-experiment.md) separately specifies its eight-product cohort, development gate, execution bounds and stopping rules; the generic importer does not certify those conditions.
+
+Review uses the same correctness, support and adequacy rubric. Hide arm metadata **and the shared original answer and AI critique** until every completed final answer has a locked review. The complete source pool remains visible. AI-assisted development assessments do not satisfy this independent human-review gate.
+
+A stopped arm is explicitly `not_attempted`, with no provider outcome; failed and uncertain calls retain their own statuses. Any incomplete arm leaves quality null and cannot count as a tie. Preserve original-generation failures in the execution record and planned cohort denominator even though the review format requires a completed original. Synthetic packets and judgments remain synthetic.
+
+The importer checks submitted consistency, not provider authenticity or a freeze before generation. A separate public manifest does not remove those limits. Reports remain descriptive with `qualityClaimEligible: false`, no inferential interval, and no automatic quality claim or policy promotion. Recorded correction latency covers the revision stage only; it excludes original generation and retrieval. Actual billed cost remains unavailable.
 
 ## Release checks without paid calls
 

@@ -1,0 +1,121 @@
+{
+  "format": "ablatrix-correction-cohort-audit-v1",
+  "createdAt": "2026-10-11T02:16:42.570381Z",
+  "kind": "ai_pre_dispatch_family_source_audit",
+  "passed": false,
+  "cohortFileSha256": "47d82f1b20c2d494dad831e546e38f1d1962595d5e7a90fa67a0488f045f2e1c",
+  "cohortSha256": "636e8d64011edb27a7ba960b87d9c056d3fa6e84cc4c9371b475dd456bd46bfa",
+  "generationPerformed": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "cases": [
+    {
+      "id": "correction-train-6559",
+      "passed": true,
+      "status": "pass",
+      "productId": "B000BSMKPY",
+      "sourceCount": 27,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "Azden lavalier microphone; no protected/selected brand, model, or close title family. Cable-length question fits the intended documented-measurement group."
+      ]
+    },
+    {
+      "id": "correction-train-7794",
+      "passed": true,
+      "status": "pass",
+      "productId": "B000UZI26E",
+      "sourceCount": 19,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "TOMY/John Deere toy dump truck; distinct product family. Length-versus-height question is a documented-dimensions probe."
+      ]
+    },
+    {
+      "id": "correction-train-7525",
+      "passed": true,
+      "status": "pass",
+      "productId": "B002BH4U56",
+      "sourceCount": 28,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "Diamond Select Star Trek Enterprise model; NCC-1701 does not occur in protected product titles. Material question is explicit."
+      ]
+    },
+    {
+      "id": "correction-train-3629",
+      "passed": true,
+      "status": "pass",
+      "productId": "B00F9L8DHC",
+      "sourceCount": 17,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "Siser heat-transfer vinyl for textiles; distinct from the protected decorative stainless appliance film and paper roll. Printing capability is a material-use question, not a pre-established supported outcome."
+      ]
+    },
+    {
+      "id": "correction-train-8825",
+      "passed": false,
+      "status": "fail",
+      "productId": "B003IVGJBC",
+      "sourceCount": 25,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "SupcoRIM597 replacement icemaker shares near-identical KitchenAid KSRG25FK targets with historical LIFTREN2198597 icemaker. Fresh targetKSRG25FKWH03 versus protectedKSRG25FKWH05/KSRG25FKSS02; sourceED5LVAXB02 versus historicalED5LVAXWQ00. Treat as the same target-model/component family, regardless of differentASIN/brand."
+      ]
+    },
+    {
+      "id": "correction-train-4957",
+      "passed": true,
+      "status": "pass",
+      "productId": "B00347AJAC",
+      "sourceCount": 19,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "Poulan/Husqvarna hedge-trimmer attachment; explicit128LDX question with differently scoped128LD/Craftsman CQA. No protected title or long-identifier family overlap found."
+      ]
+    },
+    {
+      "id": "correction-train-3039",
+      "passed": true,
+      "status": "pass",
+      "productId": "B00943C890",
+      "sourceCount": 25,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "GE/Hotpoint/Kenmore oven rack; neither rack part WB48K5019/WB48T10095 nor requested RB747P matches protected exact identifiers. Different part family from historical refrigerator/dishwasher parts; no stated compatibility conclusion."
+      ]
+    },
+    {
+      "id": "correction-train-11262",
+      "passed": true,
+      "status": "pass",
+      "productId": "B00BEYDFA8",
+      "sourceCount": 20,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "Gretsch Jim Dandy acoustic guitar; distinct from protected Meinl cajon. Included-pickup question is a preservation probe, not a declaration that its original will be correct."
+      ]
+    }
+  ],
+  "blockingFindings": [
+    "Exact identifier checking missed suffix variants of the same protected refrigerator model family in Supco product sources and requested target."
+  ],
+  "action": "Do not dispatchv2. Preserve it and this audit. Amend generic source-identifier and near-model family eligibility prospectively, privately audit all8, and only then freezev3. No fresh model output exists."
+}

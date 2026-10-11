@@ -9,7 +9,11 @@ import { parseReviewAnswerSnapshot, type ReviewAnswerSnapshot, type ReviewContex
 
 export type { ReviewAnswerSnapshot, RevisionContext, RevisionSource } from './answer-review-source.ts';
 export type AnswerRevisionReceipt = NonNullable<ReturnType<SapiomFeedbackProvider['receipt']>> & { executionMode?: 'synthetic'; accounting?: 'no_provider_call' };
-export type AnswerRevisionProvider = Pick<SapiomFeedbackProvider, 'readiness' | 'capacity' | 'revise'> & { receipt(runId: string): AnswerRevisionReceipt | undefined; executionMode?: 'live' | 'synthetic' };
+type RevisionResult = Awaited<ReturnType<SapiomFeedbackProvider['revise']>>;
+export type AnswerRevisionProvider = Pick<SapiomFeedbackProvider, 'readiness' | 'capacity'> & {
+  revise(input: Parameters<SapiomFeedbackProvider['revise']>[0]): Promise<Omit<RevisionResult, 'promptVersion' | 'systemInstructionsSha256'> & Partial<Pick<RevisionResult, 'promptVersion' | 'systemInstructionsSha256'>>>;
+  receipt(runId: string): AnswerRevisionReceipt | undefined; executionMode?: 'live' | 'synthetic';
+};
 const offlineSearch = { readiness: () => ({ ready: false, reason: 'Synthetic investigation uses saved sources only; external search and page reads are disabled.' }), allowed: () => false, async search(): Promise<{ results: [] }> { throw new Error('Synthetic external search is disabled.'); }, async read(): Promise<{ url: string; text: string }> { throw new Error('Synthetic external reads are disabled.'); } };
 
 const additionalSourceSchema = z.object({ label: z.string().trim().min(2).max(80), text: z.string().trim().min(30).max(2000), reference: z.string().trim().min(1).max(500).optional(), originalQuestion: z.string().trim().min(1).max(500).optional() }).strict();

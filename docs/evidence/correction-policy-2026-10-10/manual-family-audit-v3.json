@@ -1,0 +1,200 @@
+{
+  "format": "ablatrix-correction-cohort-audit-v1",
+  "createdAt": "2026-10-11T02:18:43.088840Z",
+  "kind": "ai_pre_dispatch_family_source_audit",
+  "passed": true,
+  "cohortFileSha256": "9e930fe9841d4800f0abec10d9c8fcc62b4dead50bc670a77f2e86dbd4b9f1b3",
+  "cohortSha256": "a5c4642937b63be9ce4de76291d74d0a4b547838c99c85ee634b385edf021a2b",
+  "preparationRevision": "v3-prospective-full-source-family-audit",
+  "generationPerformed": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "protectedProducts": 56,
+  "cases": [
+    {
+      "id": "correction-train-6559",
+      "passed": true,
+      "productId": "B000BSMKPY",
+      "sourceCount": 27,
+      "upstreamRowCount": 30,
+      "sourcesWithOriginalQuestion": 8,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "protectedExactIdentifierConflicts": [],
+      "protectedNearIdentifierConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.125,
+        "closestProductId": "B00006IE1F",
+        "scope": "Non-attribute sources of at least100characters; token-set comparison, with generic tokens removed."
+      },
+      "notes": [
+        "AzdenEX-503 lavalier microphone is a distinct brand/model family. Other-camera CQA contexts remain attached to their answers; the requested cable-length fact concerns this microphone."
+      ]
+    },
+    {
+      "id": "correction-train-7794",
+      "passed": true,
+      "productId": "B000UZI26E",
+      "sourceCount": 19,
+      "upstreamRowCount": 20,
+      "sourcesWithOriginalQuestion": 1,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "protectedExactIdentifierConflicts": [],
+      "protectedNearIdentifierConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.1111111111111111,
+        "closestProductId": "B0051S4ZZM",
+        "scope": "Non-attribute sources of at least100characters; token-set comparison, with generic tokens removed."
+      },
+      "notes": [
+        "TOMY/John Deere toy dump truck has no protected brand/model family match. Distinct from unrelated vehicles mentioned in protected automotive accessories. Length-versus-height question remains a dimensional probe."
+      ]
+    },
+    {
+      "id": "correction-train-7525",
+      "passed": true,
+      "productId": "B002BH4U56",
+      "sourceCount": 28,
+      "upstreamRowCount": 30,
+      "sourcesWithOriginalQuestion": 6,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "protectedExactIdentifierConflicts": [],
+      "protectedNearIdentifierConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.13043478260869565,
+        "closestProductId": "B0053F8W2K",
+        "scope": "Non-attribute sources of at least100characters; token-set comparison, with generic tokens removed."
+      },
+      "notes": [
+        "Diamond Select Star Trek NCC-1701 collectible ship has no protected franchise/model/brand family match. Source variations about14/16-inch versions remain in full context; none were filtered to make material answering easier."
+      ]
+    },
+    {
+      "id": "correction-train-3629",
+      "passed": true,
+      "productId": "B00F9L8DHC",
+      "sourceCount": 17,
+      "upstreamRowCount": 20,
+      "sourcesWithOriginalQuestion": 7,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "protectedExactIdentifierConflicts": [],
+      "protectedNearIdentifierConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.10344827586206896,
+        "closestProductId": "B009W9APU0",
+        "scope": "Non-attribute sources of at least100characters; token-set comparison, with generic tokens removed."
+      },
+      "notes": [
+        "SiserEasyweed heat-transfer vinyl for textiles differs in manufacturer and use from protected decorative stainless appliance film and craft paper. Printability is a material-use question; this audit does not label its answer correct or supported."
+      ]
+    },
+    {
+      "id": "correction-train-4957",
+      "passed": true,
+      "productId": "B00347AJAC",
+      "sourceCount": 19,
+      "upstreamRowCount": 20,
+      "sourcesWithOriginalQuestion": 4,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "protectedExactIdentifierConflicts": [],
+      "protectedNearIdentifierConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.15789473684210525,
+        "closestProductId": "B00002ND4G",
+        "scope": "Non-attribute sources of at least100characters; token-set comparison, with generic tokens removed."
+      },
+      "notes": [
+        "PoulanPP6000H attachment targets Husqvarna128LDX, with differently scoped128LD/Craftsman CQA and contradictory customer reports preserved. No protected model family match or same-family selected case."
+      ]
+    },
+    {
+      "id": "correction-train-8777",
+      "passed": true,
+      "productId": "B000HB2TJ2",
+      "sourceCount": 19,
+      "upstreamRowCount": 20,
+      "sourcesWithOriginalQuestion": 7,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "protectedExactIdentifierConflicts": [],
+      "protectedNearIdentifierConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.14814814814814814,
+        "closestProductId": "B0789HCT6J",
+        "scope": "Non-attribute sources of at least100characters; token-set comparison, with generic tokens removed."
+      },
+      "notes": [
+        "Delkin cameraLCD shade targets SonyA5100 and contains other-camera CQA. Distinct from the Azden microphone and protected phone mounts/cases: no shared target-model or alternate-part identifiers despite general camera/accessory terminology."
+      ]
+    },
+    {
+      "id": "correction-train-3039",
+      "passed": true,
+      "productId": "B00943C890",
+      "sourceCount": 25,
+      "upstreamRowCount": 30,
+      "sourcesWithOriginalQuestion": 10,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "protectedExactIdentifierConflicts": [],
+      "protectedNearIdentifierConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.1111111111111111,
+        "closestProductId": "B0789HCT6J",
+        "scope": "Non-attribute sources of at least100characters; token-set comparison, with generic tokens removed."
+      },
+      "notes": [
+        "GE/Hotpoint/Kenmore oven rack partsWB48K5019/WB48T10095 targetRB747P. No protected exact or near part/model match. Historical refrigerator and dishwasher parts share appliance terminology but no identified part/model family with this oven-rack pool."
+      ]
+    },
+    {
+      "id": "correction-train-11262",
+      "passed": true,
+      "productId": "B00BEYDFA8",
+      "sourceCount": 20,
+      "upstreamRowCount": 20,
+      "sourcesWithOriginalQuestion": 4,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "protectedExactIdentifierConflicts": [],
+      "protectedNearIdentifierConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.10526315789473684,
+        "closestProductId": "B005SWX65G",
+        "scope": "Non-attribute sources of at least100characters; token-set comparison, with generic tokens removed."
+      },
+      "notes": [
+        "GretschJimDandy acoustic guitar is a distinct brand/instrument family from the protected Meinl cajon. Pickup recommendation and case-fit contexts are preserved. The control label does not assume a correct original answer."
+      ]
+    }
+  ],
+  "checks": {
+    "allEightFullPoolsRebuiltFromPinnedTrain": true,
+    "all174SourceIdentityHashesMatchReconstruction": true,
+    "allEightFamiliesReviewedBeforeGeneration": true,
+    "noExactOrNearProtectedSourceIdentifiers": true,
+    "noCrossSelectedExactOrNearSourceIdentifiers": true,
+    "noSubstantiveSourceNearDuplicatesIdentified": true,
+    "labelsAndGoldAnswersNotUsed": true,
+    "testSplitNotUsed": true
+  },
+  "limitations": [
+    "This is anAI source/provenance and conservative family audit, not human answer-quality review.",
+    "Identifier and text heuristics cannot guarantee that every unmentioned manufacturer alias has been excluded. No such relation was found in the frozen sources.",
+    "Generic appliance/camera/material categories are shared with some historical items; different categories alone do not establish or eliminate a product-family relation. Exact/near model identifiers, source context, manufacturer and purpose were checked.",
+    "All source distractors, conflicts and insufficient information remain. This audit does not guarantee retrieval coverage or answerability.",
+    "The cohort itself still records retrievalFrozen:false and manualFamilyAuditComplete:false because its immutable source freeze precedes this separate audit. This audit resolves the manual family gate only; the execution manifest must still bind offline retrieval and policies."
+  ]
+}

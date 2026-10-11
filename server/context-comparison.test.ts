@@ -1,10 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, rmSync, readFileSync } from 'node:fs';
+import { mkdtempSync, rmSync, readFileSync, writeFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
-import { ContextComparisonStore, createContextComparisonFixture, contextComparisonHash, contextComparisonInput, type ContextComparisonPacket, type ContextComparisonDetail } from './context-comparison.ts';
+import { ContextComparisonStore, createContextComparisonFixture, createCorrectionComparisonFixture, contextComparisonHash, contextComparisonInput, correctionComparisonInput, correctionComparisonProtocol, correctionComparisonRequest, correctionComparisonRequestHash, type CorrectionComparisonPacket, type ContextComparisonPacket, type ContextComparisonDetail } from './context-comparison.ts';
+import { revisionRequestBody } from './feedback-provider.ts';
 import { workspaceReviewSourceHash } from './answer-review-source.ts';
 
 // All packets and judgments in this file are synthetic test data, including
@@ -186,4 +189,149 @@ test('invalid citation records stay inspectable but cannot receive a supported j
       assert.equal(report.quality?.baseline.supported, 1); assert.equal(report.quality?.verdict, 'exploratory_only'); assert.equal(report.qualityClaimEligible, false);
     } finally { store.close(); }
   }
+});
+
+function rehashCorrection(packet: CorrectionComparisonPacket) {
+  for (const item of packet.cases) for (const arm of ['baseline', 'candidate'] as const) {
+    item.arms[arm].inputSha256 = contextComparisonHash(correctionComparisonInput(packet.protocol, item, arm));
+    item.arms[arm].requestSha256 = correctionComparisonRequestHash(packet.protocol, item, arm, item.arms[arm].id);
+  }
+  return packet;
+}
+function correctionImportedShape() {
+  const packet = createCorrectionComparisonFixture();
+  packet.mode = 'live'; packet.id = 'synthetic-correction-live-shape'; packet.protocol = correctionComparisonProtocol('gpt-luna');
+  packet.provenance = { kind: 'imported_live', note: 'Synthetic test shaped like imported live receipts; no calls or real judgments.', sourcePacketSha256: 'a'.repeat(64) };
+  for (const item of packet.cases) {
+    item.original.model = 'gpt-5.6-luna'; item.original.providerCallId = `synthetic-receipt-${item.original.id}`;
+    for (const arm of ['baseline', 'candidate'] as const) { item.arms[arm].model = 'gpt-5.6-luna'; item.arms[arm].providerCallId = `synthetic-receipt-${item.id}-${arm}`; }
+  }
+  return rehashCorrection(packet);
+}
+
+test('correction policies use the same original, critique and ordered context with exact transport hashes', () => {
+  assert.equal(contextComparisonHash(createContextComparisonFixture()), '80d0d3a500d2e921ca8779f73d51d979da73806902589556311409b87409495b', 'the original context experiment fixture remains byte-compatible');
+  const packet = correctionImportedShape(), item = packet.cases[0];
+  const baseline = correctionComparisonInput(packet.protocol, item, 'baseline'), candidate = correctionComparisonInput(packet.protocol, item, 'candidate');
+  assert.deepEqual({ ...candidate, revisionPolicy: 'baseline' }, baseline);
+  assert.equal(baseline.rejectedAnswer, item.original.answer.answer);
+  assert.notEqual(candidate.rejectedAnswer, item.arms.baseline.answer!.answer);
+  assert.equal(baseline.evidence[1].originalQuestion, item.sources[1].originalQuestion);
+  const { modelAlias: _alias, ...providerInput } = baseline;
+  assert.deepEqual(correctionComparisonRequest(packet.protocol, item, 'baseline', item.arms.baseline.id), revisionRequestBody({ ...providerInput, runId: item.arms.baseline.id }));
+  const requestA = correctionComparisonRequest(packet.protocol, item, 'baseline', item.arms.baseline.id), requestB = correctionComparisonRequest(packet.protocol, item, 'candidate', item.arms.candidate.id);
+  const userA = JSON.parse(requestA.messages[1].content), userB = JSON.parse(requestB.messages[1].content);
+  assert.deepEqual({ ...userB, promptVersion: userA.promptVersion }, userA);
+  assert.deepEqual({ ...requestB, messages: requestA.messages }, requestA, 'generation settings and output schema are identical');
+  assert.notEqual(packet.protocol.policies.baseline.configurationSha256, packet.protocol.policies.candidate.configurationSha256);
+  const store = new ContextComparisonStore(':memory:');
+  try { assert.equal(store.importPacket(packet).experiment, 'correction_policy'); } finally { store.close(); }
+});
+
+test('correction imports reject changed shared inputs, request identity, source order and hidden arm overrides', () => {
+  const packet = createCorrectionComparisonFixture();
+  const mutations: [string, (value: CorrectionComparisonPacket) => void][] = [
+    ['prompt configuration', value => { value.protocol.policies.candidate.systemInstructions += 'Changed rule.'; }],
+    ['prompt configuration', value => { value.protocol.policies.baseline.configurationSha256 = 'f'.repeat(64); }],
+    ['shared original', value => { value.cases[0].original.answer.answer += 'Changed original.'; }],
+    ['shared original', value => { value.cases[0].critique.text += ' Changed feedback.'; }],
+    ['source context hash', value => { value.cases[0].sources[1].originalQuestion = 'Changed source context?'; }],
+    ['shared original', value => { const item = value.cases[0]; item.generationSourceIds.reverse(); item.investigation.selectedSourceIds = [...item.generationSourceIds]; }],
+    ['investigation selection', value => { value.cases[0].investigation.selectedSourceIds.reverse(); }],
+    ['request hash', value => { value.cases[0].arms.candidate.requestSha256 = 'f'.repeat(64); }],
+    ['duplicate attempt', value => { value.cases[0].arms.candidate.id = value.cases[0].original.id; }],
+    ['invalid packet', value => { Object.assign(value.cases[0].arms.candidate, { original: value.cases[0].arms.baseline.answer }); }],
+    ['invalid packet', value => { Object.assign(value.cases[0].critique, { kind: 'human' }); }]
+  ];
+  for (const [reason, mutate] of mutations) {
+    const store = new ContextComparisonStore(':memory:');
+    try { const changed = structuredClone(packet); mutate(changed); assert.throws(() => store.importPacket(changed), new RegExp(reason)); assert.equal(store.list().comparisons.length, 0); }
+    finally { store.close(); }
+  }
+});
+
+test('correction review keeps policies, original and AI critique blind until independent judgments are locked', () => {
+  const store = new ContextComparisonStore(':memory:');
+  try {
+    const packet = correctionImportedShape(); store.importPacket(packet);
+    const detail = store.get(packet.id), serialized = JSON.stringify([store.list(), detail]);
+    assert.equal(detail.hypothesis, 'compare_correction_policy');
+    assert.doesNotMatch(serialized, /"(?:original|critique|investigation|protocol|policies|model|inputSha256|requestSha256|providerCallId|generationSourceIds)"/);
+    assert.ok(!serialized.includes(packet.cases[0].original.answer.answer));
+    assert.ok(!serialized.includes(packet.cases[0].critique.text));
+    assert.throws(() => store.exportPacket(packet.id), /all completed answers/);
+    assert.throws(() => store.review(packet.id, { ...judgment(detail), independentReview: false }), /independent source check/);
+    assert.throws(() => store.review(packet.id, { ...judgment(detail), kind: 'human', reviewKind: 'ai_assisted' }), /invalid packet/);
+    reviewAll(store, packet.id);
+    const report = store.report(packet.id), exported = store.exportPacket(packet.id);
+    assert.equal(exported.format, 'ablatrix-correction-comparison-evidence-v1');
+    assert.deepEqual(report.protocol, packet.protocol);
+    assert.deepEqual(report.cases[0].original, packet.cases[0].original);
+    assert.equal(report.cases[0].critique!.kind, 'ai_assisted');
+    assert.equal(report.qualityClaimEligible, false); assert.equal(report.quality?.verdict, 'exploratory_only');
+    assert.equal(report.quality?.ties, 1); assert.equal(report.quality?.wins, 0);
+    assert.throws(() => store.review(packet.id, { ...judgment(detail), correctness: 'incorrect', note: 'Changed after the labels were revealed.' }), /already has a different/);
+    assert.equal(JSON.stringify(exported), JSON.stringify(store.exportPacket(packet.id)));
+  } finally { store.close(); }
+});
+
+test('correction full review pools stay separate from bounded generation and quotation matching', () => {
+  const store = new ContextComparisonStore(':memory:'), packet = createCorrectionComparisonFixture(), item = packet.cases[0];
+  try {
+    for (let index = 0; index < 18; index++) {
+      const source = { id: `review-only-${index}`, label: `Synthetic reference ${index}`, text: `Supplemental synthetic source ${index} has a distinct product detail.`, originalQuestion: null, reference: `synthetic://review-only/${index}` };
+      item.sources.push({ ...source, sha256: workspaceReviewSourceHash(source) });
+    }
+    // A literal quotation from an unsupplied review source must not pass the generation-source check.
+    const extra = item.sources.at(-1)!;
+    item.arms.candidate.answer!.citations = [{ passageId: extra.id, quote: extra.text }];
+    store.importPacket(packet);
+    const detail = store.get(packet.id), index = detail.cases[0].answers.findIndex(answer => answer.answer!.answer === item.arms.candidate.answer!.answer);
+    assert.equal(detail.cases[0].sources.length, 20);
+    assert.equal(detail.cases[0].answers[index].citationCheck!.matching, 0);
+    assert.throws(() => store.review(packet.id, judgment(detail, 0, index)), /matching source quotes/);
+    store.review(packet.id, { ...judgment(detail, 0, index), support: 'unsupported', note: 'This synthetic citation came from outside the frozen generation input.' });
+    reviewAll(store, packet.id);
+    assert.equal(store.report(packet.id).quality, null, 'fixture judgments never become human quality');
+  } finally { store.close(); }
+});
+
+test('a stopped correction arm remains not attempted, never a failed call or quality tie', () => {
+  const store = new ContextComparisonStore(':memory:'), packet = correctionImportedShape();
+  try {
+    const attempt = packet.cases[0].arms.candidate;
+    Object.assign(attempt, { status: 'not_attempted', answer: null, model: null, latencyMs: null, usage: null, providerCallId: null, error: 'Stopped before dispatch; no request was made.' });
+    const summary = store.importPacket(packet);
+    assert.deepEqual(summary.attempts, { completed: 1, failed: 0, uncertain: 0, notAttempted: 1 });
+    reviewAll(store, packet.id);
+    const report = store.report(packet.id);
+    assert.equal(report.status, 'incomplete'); assert.equal(report.quality, null); assert.equal(report.timing.candidateMedianMs, null);
+  } finally { store.close(); }
+});
+
+test('the existing offline CLI imports tagged correction packets and exports only locked reviews', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'ablatrix-correction-cli-'));
+  const packet = createCorrectionComparisonFixture(), packetPath = join(directory, 'synthetic-packet.json'), dbPath = join(directory, 'comparison.sqlite'), outputPath = join(directory, 'reviewed.json');
+  const cli = (...args: string[]) => spawnSync(process.execPath, ['--import', fileURLToPath(new URL('../node_modules/tsx/dist/loader.mjs', import.meta.url)), fileURLToPath(new URL('./context-comparison-cli.ts', import.meta.url)), ...args], { cwd: directory, encoding: 'utf8', env: { PATH: process.env.PATH } });
+  try {
+    writeFileSync(packetPath, JSON.stringify(packet));
+    const imported = cli('import', '--db', dbPath, '--packet', packetPath);
+    assert.equal(imported.status, 0, imported.stderr);
+    assert.equal(JSON.parse(imported.stdout).experiment, 'correction_policy');
+    const locked = cli('export', '--db', dbPath, '--id', packet.id, '--out', outputPath);
+    assert.notEqual(locked.status, 0);
+    assert.match(locked.stderr, /all completed answers require source-checked review/);
+    const store = new ContextComparisonStore(dbPath);
+    try { reviewAll(store, packet.id); } finally { store.close(); }
+    const exported = cli('export', '--db', dbPath, '--id', packet.id, '--out', outputPath);
+    assert.equal(exported.status, 0, exported.stderr);
+    const result = JSON.parse(readFileSync(outputPath, 'utf8'));
+    assert.equal(result.format, 'ablatrix-correction-comparison-evidence-v1');
+    assert.deepEqual(result.packet, packet);
+    assert.equal(result.report.qualityClaimEligible, false);
+    assert.ok(result.reviews.every((review: { kind: string }) => review.kind === 'synthetic'));
+    const repeat = cli('export', '--db', dbPath, '--id', packet.id, '--out', outputPath);
+    assert.notEqual(repeat.status, 0);
+    assert.match(repeat.stderr, /EEXIST/);
+  } finally { rmSync(directory, { recursive: true, force: true }); }
 });
