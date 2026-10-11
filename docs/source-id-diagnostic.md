@@ -20,7 +20,7 @@ The maximum is six attempts: original then baseline revision for Q10021, Q12820 
 
 The manifest binds source and case-audit hashes, code and qualification fingerprints, prompt identities, original request hashes, ordered source catalogs and response-schema hashes. Revision prose depends on its newly generated original; the fixed derivation rule constructs and hashes the actual revision request before dispatch. Each receipt must match the recorded interface, option-set and schema identities.
 
-Execution must hold the shared provider ledger, require the app and review workers to be stopped, and preserve earlier receipts and review tables. Results are written to a new private file. There is no resume, retry, ID repair, replacement case, extra call, web operation or reduced-cohort import. The first dispatch, response, identity, citation or persistence failure stops the run; remaining steps stay unattempted.
+Execution must hold the shared provider ledger and preserve earlier receipts and review tables. Before creating output or a provider, it checks configured/default port listeners, other processes holding the exact shared budget/review files, app/loop PID locks, provider leases and queued/running review jobs. The measured stopped state is retained in private results. Results are written to a new private file. There is no resume, retry, ID repair, replacement case, extra call, web operation or reduced-cohort import. The first dispatch, response, identity, citation or persistence failure stops the run; remaining steps stay unattempted.
 
 ## What completion means
 
@@ -30,16 +30,18 @@ Even six accepted outputs with observed selection establish only behavior in thi
 
 ## Preparation and execution status
 
-The [case audit](evidence/source-id-diagnostic-2026-10-11/case-audit.json), [offline qualification](evidence/source-id-diagnostic-2026-10-11/offline-qualification.json) and [preparation record](evidence/source-id-diagnostic-2026-10-11/preparation.json) bind the code and sources. The [frozen plan](evidence/source-id-diagnostic-2026-10-11/execution-plan.json) has canonical SHA-256 `37fce24b69437b9152312bd563b86170161fb7c303aa77b08bded209928e02df` and uses implementation commit `f9b64b3f748f12a107e7a7d48d5b81b7012c78ef`. Its `paidExecutionAuthorized: false` describes preparation; the later execution record binds the operator's scope approval to this exact hash.
+The [supersession record](evidence/source-id-diagnostic-2026-10-11/plan-supersession.md) preserves the unused first manifest and explains the bot-found shutdown repair.
+
+The [case audit](evidence/source-id-diagnostic-2026-10-11/case-audit.json), [offline qualification](evidence/source-id-diagnostic-2026-10-11/offline-qualification-v2.json) and [preparation record](evidence/source-id-diagnostic-2026-10-11/preparation-v2.json) bind the code and sources. The [frozen plan](evidence/source-id-diagnostic-2026-10-11/execution-plan-v2.json) has canonical SHA-256 `262bfa97b93f7eb4bc9daf1986f8e1d55959475efaf9bce8b73a96cddada8642` and uses implementation commit `2191ffbdc16738736138fbf8f25866e100ae0620`. Its `paidExecutionAuthorized: false` describes preparation; the later execution record binds the operator's scope approval to this exact hash.
 
 Reproduce preparation to a new file:
 
 ```sh
 node --import tsx scripts/source-id-diagnostic.ts --prepare \
   --source-plan docs/evidence/source-id-correction-2026-10-10/execution-plan-v2.json \
-  --qualification docs/evidence/source-id-diagnostic-2026-10-11/offline-qualification.json \
+  --qualification docs/evidence/source-id-diagnostic-2026-10-11/offline-qualification-v2.json \
   --case-audit docs/evidence/source-id-diagnostic-2026-10-11/case-audit.json \
-  --implementation-commit f9b64b3f748f12a107e7a7d48d5b81b7012c78ef \
+  --implementation-commit 2191ffbdc16738736138fbf8f25866e100ae0620 \
   --out /tmp/new-source-id-diagnostic-plan.json
 ```
 
