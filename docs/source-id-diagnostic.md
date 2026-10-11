@@ -20,7 +20,7 @@ The maximum is six attempts: original then baseline revision for Q10021, Q12820 
 
 The manifest binds source and case-audit hashes, code and qualification fingerprints, prompt identities, original request hashes, ordered source catalogs and response-schema hashes. Revision prose depends on its newly generated original; the fixed derivation rule constructs and hashes the actual revision request before dispatch. Each receipt must match the recorded interface, option-set and schema identities.
 
-Execution must hold the shared provider ledger and preserve earlier receipts and review tables. Before creating output or a provider, it checks configured/default port listeners, other processes holding the exact shared budget/review files, app/loop PID locks, provider leases and queued/running review jobs. The measured stopped state is retained in private results. Results are written to a new private file. There is no resume, retry, ID repair, replacement case, extra call, web operation or reduced-cohort import. The first dispatch, response, identity, citation or persistence failure stops the run; remaining steps stay unattempted.
+Execution must hold the shared provider ledger and preserve earlier receipts and review tables. Before creating output or a provider, it checks configured/default port listeners, other processes holding the exact shared budget/review files, app/loop PID locks, provider leases and queued/running review jobs. The measured stopped state is retained in private results. These checks repeat before each reservation, immediately before dispatch and after responses, including saved-history and own-reservation/lease checks. An observed restart or state change stops further dispatches. This does not prevent an external process starting during an in-flight request or undo a spent call. Results are written to a new private file. There is no resume, retry, ID repair, replacement case, extra call, web operation or reduced-cohort import. The first dispatch, response, identity, citation or persistence failure stops the run; remaining steps stay unattempted.
 
 ## What completion means
 
@@ -30,18 +30,18 @@ Even six accepted outputs with observed selection establish only behavior in thi
 
 ## Preparation and execution status
 
-The [supersession record](evidence/source-id-diagnostic-2026-10-11/plan-supersession.md) preserves the unused first manifest and explains the bot-found shutdown repair.
+The [supersession record](evidence/source-id-diagnostic-2026-10-11/plan-supersession-v3.md) preserves the unused earlier manifests and explains both bot-found shutdown repairs.
 
-The [case audit](evidence/source-id-diagnostic-2026-10-11/case-audit.json), [offline qualification](evidence/source-id-diagnostic-2026-10-11/offline-qualification-v2.json) and [preparation record](evidence/source-id-diagnostic-2026-10-11/preparation-v2.json) bind the code and sources. The [frozen plan](evidence/source-id-diagnostic-2026-10-11/execution-plan-v2.json) has canonical SHA-256 `262bfa97b93f7eb4bc9daf1986f8e1d55959475efaf9bce8b73a96cddada8642` and uses implementation commit `2191ffbdc16738736138fbf8f25866e100ae0620`. Its `paidExecutionAuthorized: false` describes preparation; the later execution record binds the operator's scope approval to this exact hash.
+The [case audit](evidence/source-id-diagnostic-2026-10-11/case-audit.json), [offline qualification](evidence/source-id-diagnostic-2026-10-11/offline-qualification-v3.json) and [preparation record](evidence/source-id-diagnostic-2026-10-11/preparation-v3.json) bind the code and sources. The [frozen plan](evidence/source-id-diagnostic-2026-10-11/execution-plan-v3.json) has canonical SHA-256 `5239294ddec363335de2b176afa5df58ce16204ebbafeb31a976001c881a7164` and uses implementation commit `9cba21c6ecf6cb700ac01a990a65576f0b83b293`. Its `paidExecutionAuthorized: false` describes preparation; the later execution record binds the operator's scope approval to this exact hash.
 
 Reproduce preparation to a new file:
 
 ```sh
 node --import tsx scripts/source-id-diagnostic.ts --prepare \
   --source-plan docs/evidence/source-id-correction-2026-10-10/execution-plan-v2.json \
-  --qualification docs/evidence/source-id-diagnostic-2026-10-11/offline-qualification-v2.json \
+  --qualification docs/evidence/source-id-diagnostic-2026-10-11/offline-qualification-v3.json \
   --case-audit docs/evidence/source-id-diagnostic-2026-10-11/case-audit.json \
-  --implementation-commit 2191ffbdc16738736138fbf8f25866e100ae0620 \
+  --implementation-commit 9cba21c6ecf6cb700ac01a990a65576f0b83b293 \
   --out /tmp/new-source-id-diagnostic-plan.json
 ```
 
