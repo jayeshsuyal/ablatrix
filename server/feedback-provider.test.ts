@@ -4,8 +4,10 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
-import { FeedbackExternalError, SapiomFeedbackProvider, quoteOptions } from './feedback-provider.ts';
+import { createHash } from 'node:crypto';
+import { FeedbackExternalError, SapiomFeedbackProvider, quoteOptions, revisionRequestBody, type RevisionInput } from './feedback-provider.ts';
 import type { LoopProvider } from './loop-types.ts';
+import { revisionPromptIdentity, type RevisionPolicySelector } from './revision-policy.ts';
 
 const input: Parameters<LoopProvider['answer']>[0] = {
   question: 'What material is the handle?', product: { id: 'p1', title: 'Example fixture item', split: 'development' },
@@ -23,6 +25,7 @@ test('feedback provider pins model/settings, sends bounded evidence, and enforce
   const provider = new SapiomFeedbackProvider({ ...options, callLimit: 1, fetchImpl: async (_url, init) => {
     calls++; const body = JSON.parse(String(init?.body));
     assert.equal(body.model, 'gpt-luna'); assert.equal(body.reasoning_effort, 'none'); assert.equal(body.max_tokens, 4096);
+    assert.equal(createHash('sha256').update(body.messages[0].content).digest('hex'), '072372a766c4021be6e7ff5417bb38c2ed128b301bd64992f08c762d8466f008');
     const payload = JSON.parse(body.messages[1].content);
     assert.deepEqual(Object.keys(payload).sort(), ['answerPolicy', 'evidence', 'product', 'promptVersion', 'question']);
     assert.equal(payload.promptVersion, 'product-answer-v2-context');
@@ -128,6 +131,7 @@ test('snippet-ID arm maps literal spans and strips selected IDs from shopper ans
   const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async (_url, init) => {
     const body = JSON.parse(String(init?.body));
     assert.equal(body.model, 'gpt-luna');
+    assert.equal(createHash('sha256').update(body.messages[0].content).digest('hex'), '8e6a986e17e3474388d1aed7d9f2e353546ddba592f2c466452ff47ced9edc2e');
     assert.equal(body.tools[0].function.name, 'product_answer_snippet');
     const payload = JSON.parse(body.messages[1].content);
     assert.deepEqual(payload.quoteOptions, optionsForInput);
@@ -217,5 +221,90 @@ test('revision passes investigation triage as bounded context without treating i
   try {
     const result = await provider.revise({ runId: 'revision-job', question: input.question, product: input.product, rejectedAnswer: 'It is plastic.', critique: 'Wrong material.', evidence: input.passages, investigation });
     assert.equal(result.answer.answer, 'The handle is oak.');
+  } finally { provider.close(); }
+});
+
+test('revision policy defaults preserve the exact current instructions and reject mutation', () => {
+  const baseline = revisionPromptIdentity();
+  assert.equal(baseline.policy, 'baseline');
+  assert.equal(baseline.promptVersion, 'answer-revision-v3-investigation');
+  assert.equal(baseline.systemInstructionsSha256, 'ffb69c36e6ed056e38d4c5ee4754cbdae5058a3a757ed27193ee98d632dfcd19');
+  assert.equal(createHash('sha256').update(baseline.systemInstructions).digest('hex'), baseline.systemInstructionsSha256);
+  assert.equal(revisionPromptIdentity('baseline', false).promptVersion, 'answer-revision-v2-context');
+  assert.equal(revisionPromptIdentity('baseline', false).systemInstructions, baseline.systemInstructions);
+  assert.equal(Object.isFrozen(baseline), true);
+  assert.throws(() => { (baseline as { systemInstructions: string }).systemInstructions = 'mutated'; }, TypeError);
+  assert.equal(revisionPromptIdentity().systemInstructionsSha256, baseline.systemInstructionsSha256);
+  const candidate = revisionPromptIdentity('candidate_v4');
+  assert.equal(Object.isFrozen(candidate), true);
+  assert.equal(candidate.promptVersion, 'answer-revision-v4-attributed-listing');
+  assert.notEqual(candidate.systemInstructionsSha256, baseline.systemInstructionsSha256);
+});
+
+test('revision evaluation changes only system instructions and version while receipts identify the dispatched prompt', async () => {
+  const original: RevisionInput = { runId: 'unused', question: input.question, product: input.product, rejectedAnswer: 'It is plastic.', critique: 'Use the saved listing material.', evidence: input.passages, clarifications: [{ text: 'The model is already in this context: HP12345.', reviewer: 'Fixture reviewer' }], investigation: { issue: 'missed_source', query: 'handle material', selectedSourceIds: ['c1'], addedSourceIds: [], stopReason: 'Saved source candidate, not a quality judgment.' } };
+  const policies = [undefined, 'baseline', 'candidate_v4'] as const;
+  const bodies: ReturnType<typeof revisionRequestBody>[] = [];
+  const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async (_url, init) => {
+    const current = bodies.length < policies.length ? { ...original, runId: `revision-${bodies.length}`, revisionPolicy: policies[bodies.length] }
+      : { ...original, investigation: undefined, runId: 'legacy-revision' };
+    assert.equal(String(init?.body), JSON.stringify(revisionRequestBody(current)));
+    bodies.push(JSON.parse(String(init?.body)));
+    return reply(valid, 'gpt-5.6-luna', 'tool_calls', 'answer_revision_v1');
+  } });
+  try {
+    for (const [index, revisionPolicy] of policies.entries()) {
+      const runId = `revision-${index}`;
+      const result = await provider.revise({ ...original, runId, revisionPolicy });
+      const identity = revisionPromptIdentity(revisionPolicy);
+      assert.equal(result.promptVersion, identity.promptVersion);
+      assert.equal(result.systemInstructionsSha256, identity.systemInstructionsSha256);
+      const receipt = JSON.parse(provider.receipt(runId)!.receipt_json!);
+      assert.equal(receipt.promptVersion, result.promptVersion);
+      assert.equal(receipt.systemInstructionsSha256, result.systemInstructionsSha256);
+      assert.equal(receipt.revisionPolicy, identity.policy);
+    }
+    assert.deepEqual(bodies[0], bodies[1]);
+    const normalized = bodies.map(body => {
+      const copy = structuredClone(body), payload = JSON.parse(copy.messages[1].content);
+      assert.deepEqual(payload.evidence, original.evidence);
+      assert.deepEqual(payload.investigation, original.investigation);
+      assert.deepEqual(payload.clarifications, original.clarifications);
+      delete payload.promptVersion;
+      copy.messages[0].content = '<policy>'; copy.messages[1].content = JSON.stringify(payload);
+      return copy;
+    });
+    assert.deepEqual(normalized[0], normalized[2]);
+    // A caller inspecting a body cannot mutate shared schemas or future requests.
+    const inspected = revisionRequestBody(original);
+    (inspected.tools[0].function.parameters as { required: string[] }).required.push('injected');
+    assert.deepEqual(revisionRequestBody(original), bodies[0]);
+    const legacy = await provider.revise({ ...original, investigation: undefined, runId: 'legacy-revision' });
+    assert.equal(legacy.promptVersion, 'answer-revision-v2-context');
+    assert.equal(legacy.systemInstructionsSha256, revisionPromptIdentity('baseline').systemInstructionsSha256);
+  } finally { provider.close(); }
+});
+
+test('an unknown revision policy is rejected before any reservation or transport', async () => {
+  let calls = 0;
+  const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async () => { calls++; return reply(valid); } });
+  const invalid: RevisionInput = { runId: 'invalid-policy', question: input.question, product: input.product, rejectedAnswer: 'Plastic.', critique: 'Wrong material.', evidence: input.passages, revisionPolicy: 'unreviewed-env-policy' as RevisionPolicySelector };
+  try {
+    assert.throws(() => revisionRequestBody(invalid), /Unknown revision policy/);
+    await assert.rejects(provider.revise(invalid), /Unknown revision policy/);
+    assert.equal(provider.receipt(invalid.runId), undefined);
+    assert.equal(calls, 0);
+    assert.match(provider.readiness().reason, /0\/20 calls/);
+  } finally { provider.close(); }
+});
+
+test('candidate revisions retain source-body-only citation validation', async () => {
+  const originalQuestion = 'Does this fit model HP12345?';
+  const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async () => reply({ answer: 'This fits the model.', status: 'answered', citations: [{ passageId: 'c1', quote: originalQuestion }] }, 'gpt-5.6-luna', 'tool_calls', 'answer_revision_v1') });
+  try {
+    await assert.rejects(provider.revise({ runId: 'candidate-invalid-citation', question: originalQuestion, product: input.product, rejectedAnswer: 'Unknown.', critique: 'Assess the source.', evidence: [{ id: 'c1', source: 'cqa', text: 'The handle is made of oak.', originalQuestion }], revisionPolicy: 'candidate_v4' }), /revision failed output validation/);
+    const receipt = provider.receipt('candidate-invalid-citation')!;
+    assert.equal(receipt.error_code, 'output_validation');
+    assert.equal(JSON.parse(receipt.receipt_json!).promptVersion, 'answer-revision-v4-attributed-listing');
   } finally { provider.close(); }
 });
