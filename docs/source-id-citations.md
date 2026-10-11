@@ -1,6 +1,6 @@
 # Server-resolved citations
 
-The subsequent [version 2 interface](constrained-source-ids.md) additionally declares each request's legal IDs in its response schema. It is qualified offline; no live test has used it. This page records the historical version 1 comparison and its stopped outcome.
+The subsequent [version 2 interface](constrained-source-ids.md) additionally declares each request's legal IDs in its response schema. Its [separate live diagnostic](evidence/source-id-diagnostic-2026-10-11/live-report.md) stopped at five of six planned attempts: four accepted outputs, 12/12 full-source matches and one rejected citation-container shape. This page records the historical version 1 comparison and its stopped outcome.
 
 The `source_ids_v1` interface is implemented for explicitly selected comparison runs. The model selects IDs from a frozen source list. The server reconstructs each citation from the corresponding literal source body. Historical formats and ordinary product-generation defaults keep their existing behavior; saved answers are not rewritten.
 

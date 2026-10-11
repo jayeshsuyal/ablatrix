@@ -1,10 +1,10 @@
 # Six-call citation delivery diagnostic
 
-[PR #29](https://github.com/jayeshsuyal/ablatrix/pull/29) merged the explicitly selected `source_ids_v2` interface. This diagnostic prepares a small live check of its request-specific citation enums and server resolver. The user approved the six-call/$0.60 scope after the proposal. Execution waits for a frozen plan, qualified merged runner and its safety gates; the operator records that scope approval against the exact plan hash.
+[PR #29](https://github.com/jayeshsuyal/ablatrix/pull/29) merged the explicitly selected `source_ids_v2` interface. This diagnostic checked its request-specific citation enums and server resolver. The user approved the six-call/$0.60 scope after the proposal. The execution prerequisites were a frozen plan, qualified merged runner and passing safety gates. The operator bound that scope approval to the exact executed plan hash.
 
 ## Fixed scope
 
-The three cases reuse the public [stopped comparison's source manifest](evidence/source-id-correction-2026-10-10/execution-plan-v2.json). Their questions, original answer policy, five ordered retrieved sources, original customer questions and prewritten AI-authored critique remain fixed. Earlier generated answers are not used. Each case receives a new original answer followed by one baseline revision of that new answer.
+The three cases reuse the public [stopped comparison's source manifest](evidence/source-id-correction-2026-10-10/execution-plan-v2.json). Their questions, original answer policy, five ordered retrieved sources, original customer questions and prewritten AI-authored critique remain fixed. Earlier generated answers are not used. The plan specified a new original followed by one baseline revision per case; the stopped result records which steps completed.
 
 | Case | Diagnostic target | Interpretation limit |
 | --- | --- | --- |
@@ -29,6 +29,8 @@ Accepted output and citation coverage are separate. An `insufficient_evidence` a
 Even six accepted outputs with observed selection establish only behavior in this diagnostic. They do not prove Sapiom Router enforces constrained decoding, estimate general failure probability, establish claim support or answer correctness, or demonstrate human-reviewed improvement. A later quality comparison needs a separately frozen fresh cohort and independent blind source review.
 
 ## Preparation and execution status
+
+The approved version 3 plan was executed once after PR #30 merged. The [live report](evidence/source-id-diagnostic-2026-10-11/live-report.md) records five attempts, four accepted outputs, 12/12 exact citations, one response-shape rejection and one unattempted revision. Ledger 81→86; $0.50 added planning allowance; no retry or quality claim. Localhost was restored with paid/web/telemetry modes disabled.
 
 The [supersession record](evidence/source-id-diagnostic-2026-10-11/plan-supersession-v3.md) preserves the unused earlier manifests and explains both bot-found shutdown repairs.
 
