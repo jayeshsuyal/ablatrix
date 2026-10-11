@@ -3,7 +3,7 @@ import { readFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { z } from 'zod';
-import { answerSchema, quoteOptions, revisionRequestBody, sourceIdRevisionPromptIdentity, sourceIdRevisionRequestBody, type RevisionInput } from './feedback-provider.ts';
+import { answerSchema, quoteOptions, revisionRequestBody, sourceIdRevisionPromptIdentity, sourceIdRevisionRequestBody, constrainedSourceIdRevisionPromptIdentity, constrainedSourceIdRevisionRequestBody, type RevisionInput } from './feedback-provider.ts';
 import { revisionPromptIdentity } from './revision-policy.ts';
 import { workspaceReviewSourceHash } from './answer-review-source.ts';
 import { sourceCitationOptions, stripSourceIdMarkers, type SourceCitationOption } from './citation-options.ts';
@@ -27,7 +27,7 @@ const caseSchema = z.object({ id, product: z.object({ id, title: z.string().trim
 const packetSchema = z.object({ format: z.literal('ablatrix-context-comparison-v1'), id, title: z.string().trim().min(3).max(120), mode: z.enum(['fixture', 'live']), createdAt: z.iso.datetime(), hypothesis: z.literal('preserve_original_customer_question'), protocol: protocolSchema, provenance: z.object({ kind: z.enum(['synthetic_fixture', 'imported_live']), note: z.string().trim().min(10).max(1000), sourcePacketSha256: digest.nullable() }).strict(), cases: z.array(caseSchema).min(1).max(20) }).strict();
 export type ContextComparisonPacket = z.infer<typeof packetSchema>;
 const correctionPolicySchema = z.object({ policy: z.enum(['baseline', 'candidate_v4']), promptVersion: z.string().min(1).max(100), systemInstructions: z.string().min(40).max(6000), systemInstructionsSha256: digest, configurationSha256: digest }).strict();
-const correctionProtocolSchema = z.object({ modelAlias: z.enum(['gpt-luna', 'synthetic-model']), citationInterface: z.enum(['passage_quotes', 'source_ids_v1']), codeCommit: z.string().regex(/^[a-f0-9]{7,40}$/).nullable(), policies: z.object({ baseline: correctionPolicySchema, candidate: correctionPolicySchema }).strict() }).strict();
+const correctionProtocolSchema = z.object({ modelAlias: z.enum(['gpt-luna', 'synthetic-model']), citationInterface: z.enum(['passage_quotes', 'source_ids_v1', 'source_ids_v2']), codeCommit: z.string().regex(/^[a-f0-9]{7,40}$/).nullable(), policies: z.object({ baseline: correctionPolicySchema, candidate: correctionPolicySchema }).strict() }).strict();
 const correctionAttemptSchema = attemptSchema.extend({ status: z.enum(['completed', 'failed', 'uncertain', 'not_attempted']), requestSha256: digest }).strict();
 const correctionCaseSchema = z.object({ id, product: caseSchema.shape.product, question: caseSchema.shape.question, sources: z.array(sourceSchema).min(1).max(128), generationSourceIds: z.array(id).min(1).max(8),
   original: z.object({ id, answer: answerSchema, model: z.string().min(1).max(100), providerCallId: z.string().min(1).max(200).nullable(), inputSha256: digest, requestSha256: digest }).strict(),
@@ -59,10 +59,11 @@ export function contextComparisonInput(protocol: z.infer<typeof protocolSchema>,
 }
 /** Exact common revision inputs. Both arms revise this same original, never one another. */
 export function correctionComparisonInput(protocol: CorrectionComparisonPacket['protocol'], item: Omit<CorrectionCase, 'arms'>, arm: PairedArm) {
-  const evidence = item.generationSourceIds.map(sourceId => { const source = item.sources.find(source => source.id === sourceId) ?? fail('generation source does not belong to its case.'); return { id: source.id, source: source.label, text: source.text, ...(source.originalQuestion ? { originalQuestion: source.originalQuestion } : {}), ...(protocol.citationInterface === 'source_ids_v1' ? { reference: source.reference } : {}) }; });
+  const usesSourceIds = protocol.citationInterface !== 'passage_quotes';
+  const evidence = item.generationSourceIds.map(sourceId => { const source = item.sources.find(source => source.id === sourceId) ?? fail('generation source does not belong to its case.'); return { id: source.id, source: source.label, text: source.text, ...(source.originalQuestion ? { originalQuestion: source.originalQuestion } : {}), ...(usesSourceIds ? { reference: source.reference } : {}) }; });
   return { modelAlias: protocol.modelAlias, question: item.question, product: item.product, rejectedAnswer: item.original.answer.answer, critique: item.critique.text,
     evidence, clarifications: item.clarifications, investigation: item.investigation, revisionPolicy: protocol.policies[arm].policy,
-    ...(protocol.citationInterface === 'source_ids_v1' ? { citationInterface: protocol.citationInterface, quoteOptions: correctionSourceOptions(item, evidence) } : {}) };
+    ...(usesSourceIds ? { citationInterface: protocol.citationInterface, quoteOptions: correctionSourceOptions(item, evidence) } : {}) };
 }
 function correctionSourceOptions(item: Pick<CorrectionCase, 'product' | 'question'>, evidence: RevisionInput['evidence']): SourceCitationOption[] {
   try { return sourceCitationOptions({ productId: item.product.id, question: item.question, evidence }); }
@@ -70,17 +71,19 @@ function correctionSourceOptions(item: Pick<CorrectionCase, 'product' | 'questio
 }
 export function correctionComparisonRequest(protocol: CorrectionComparisonPacket['protocol'], item: Omit<CorrectionCase, 'arms'>, arm: PairedArm, runId: string) {
   const { modelAlias, ...input } = correctionComparisonInput(protocol, item, arm);
-  const body = protocol.citationInterface === 'source_ids_v1' ? sourceIdRevisionRequestBody({ ...input, runId }) : revisionRequestBody({ ...input, runId });
+  const body = protocol.citationInterface === 'source_ids_v2' ? constrainedSourceIdRevisionRequestBody({ ...input, runId }) : protocol.citationInterface === 'source_ids_v1' ? sourceIdRevisionRequestBody({ ...input, runId }) : revisionRequestBody({ ...input, runId });
   return { ...body, model: modelAlias };
 }
 export const correctionComparisonRequestHash = (protocol: CorrectionComparisonPacket['protocol'], item: Omit<CorrectionCase, 'arms'>, arm: PairedArm, runId: string) => createHash('sha256').update(JSON.stringify(correctionComparisonRequest(protocol, item, arm, runId))).digest('hex');
 export function correctionComparisonProtocol(modelAlias: 'gpt-luna' | 'synthetic-model' = 'gpt-luna', codeCommit: string | null = null, citationInterface: CorrectionComparisonPacket['protocol']['citationInterface'] = 'passage_quotes'): CorrectionComparisonPacket['protocol'] {
   const policy = (name: 'baseline' | 'candidate_v4') => {
-    const identity = citationInterface === 'source_ids_v1' ? sourceIdRevisionPromptIdentity(name, true) : revisionPromptIdentity(name, true);
+    const identity = citationInterface === 'source_ids_v2' ? constrainedSourceIdRevisionPromptIdentity(name, true) : citationInterface === 'source_ids_v1' ? sourceIdRevisionPromptIdentity(name, true) : revisionPromptIdentity(name, true);
     const input: RevisionInput = { runId: 'configuration', question: '', product: { id: '', title: '' }, rejectedAnswer: '', critique: '', evidence: [], clarifications: [], investigation: { issue: 'answer_quality', query: '', selectedSourceIds: [], addedSourceIds: [] }, revisionPolicy: name };
-    const body = citationInterface === 'source_ids_v1' ? sourceIdRevisionRequestBody({ ...input, question: 'Configuration binding only?', product: { id: 'configuration', title: 'Configuration binding' }, evidence: [{ id: 'configuration-source', source: 'Synthetic configuration', text: 'Synthetic configuration body.' }] }) : revisionRequestBody(input);
+    const configurationInput: RevisionInput = { ...input, question: 'Configuration binding only?', product: { id: 'configuration', title: 'Configuration binding' }, evidence: [{ id: 'configuration-source', source: 'Synthetic configuration', text: 'Synthetic configuration body.' }] };
+    const body = citationInterface === 'source_ids_v2' ? constrainedSourceIdRevisionRequestBody(configurationInput) : citationInterface === 'source_ids_v1' ? sourceIdRevisionRequestBody(configurationInput) : revisionRequestBody(input);
     // Bind all generation settings, system instructions, tool schema and tool
-    // choice; case-specific user content is bound by each actual request hash.
+    // choice using the fixed synthetic configuration. Each actual request hash
+    // binds its case-specific user content and, for v2, its exact quote-ID enum.
     return { ...identity, configurationSha256: contextComparisonHash({ ...body, model: modelAlias, messages: body.messages.filter(message => message.role === 'system') }) };
   };
   return { modelAlias, citationInterface, codeCommit, policies: { baseline: policy('baseline'), candidate: policy('candidate_v4') } };
@@ -143,7 +146,7 @@ function validateCorrectionPacket(raw: unknown): CorrectionComparisonPacket {
     recordIdentity(item.original.id, item.original.providerCallId);
     if (packet.mode === 'fixture' ? item.original.model !== 'synthetic-model' || item.original.providerCallId !== null || !item.original.answer.answer.startsWith('SYNTHETIC') : !['gpt-luna', 'gpt-5.6-luna'].includes(item.original.model) || !item.original.providerCallId) fail('shared original identity does not match the recorded protocol.');
     if (item.original.answer.status === 'answered' && !item.original.answer.citations.length || item.original.answer.citations.some(citation => !item.generationSourceIds.includes(citation.passageId) || !item.sources.some(source => source.id === citation.passageId && source.text.includes(citation.quote)))) fail('shared original citations must match its frozen generation sources.');
-    const offered = packet.protocol.citationInterface === 'source_ids_v1' ? correctionComparisonInput(packet.protocol, item, 'baseline').quoteOptions : undefined;
+    const offered = packet.protocol.citationInterface !== 'passage_quotes' ? correctionComparisonInput(packet.protocol, item, 'baseline').quoteOptions : undefined;
     const validateOffered = (answer: z.infer<typeof answerSchema>) => {
       if (!offered) return;
       try { if (stripSourceIdMarkers(answer.answer, []) !== answer.answer) fail('source-ID answer text must already be resolved.'); }

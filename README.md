@@ -62,6 +62,8 @@ The workbench also imports experiment packets through `npm run compare -- import
 
 The [server-resolved citation comparison](docs/evidence/source-id-correction-2026-10-10/live-report.md) stopped after eight of 24 planned calls: seven accepted outputs with 22 exact source-body citations, then a rejected malformed citation ID. Two of eight revision pairs completed; the remaining calls were not attempted. No human quality result or measured improvement was established.
 
+The subsequent [citation-schema fix](docs/constrained-source-ids.md) declares only the IDs offered in each request. Offline regressions cover the malformed ID and exact schema/receipt hashes; its live behavior has not been tested.
+
 ## Private demo package
 
 The [restricted hosted demo](docs/hosted-demo.md) packages `/ask` → `/review` → correction → export with verified gateway identity, viewer/reviewer/operator roles, one persistent SQLite volume, and offline backup/restore. Synthetic templates let invited users rehearse the workflow without paid calls. Hosting, HTTPS identity configuration, and an external deployment are still pending; this is not a public live service.
