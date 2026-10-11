@@ -99,7 +99,7 @@ export function prepareSourceIdDiagnostic(input: DiagnosticPreparation) {
   return { createdAt: input.createdAt, planSha256: contextComparisonHash(plan), plan };
 }
 export type DiagnosticManifest = ReturnType<typeof prepareSourceIdDiagnostic>;
-export type DiagnosticState = { ledgerAttempts: number; pendingReservations: number; activeOwners: number; activeReviewJobs: number; historicalReceiptsSha256: string; reviewStateSha256: string; newRunIds: string[] };
+export type DiagnosticState = { ledgerAttempts: number; pendingReservations: number; activeOwners: number; activeOwnerPid: number | null; activeReviewJobs: number; historicalReceiptsSha256: string; reviewStateSha256: string; newRunIds: string[] };
 export type DiagnosticAppState = { configuredPort: number; checkedPorts: number[]; listenerPids: number[]; sharedFileOwnerPids: number[]; activeLockPids: number[]; stopped: boolean };
 /** Same port contract as server/index.ts; a missing PORT means 4173. */
 export function diagnosticAppPort(value?: string): number {
@@ -136,6 +136,13 @@ export function inspectDiagnosticApp(input: { port?: string; budgetPath: string;
   return { configuredPort, checkedPorts, listenerPids, sharedFileOwnerPids, activeLockPids: [...new Set(activeLockPids)], stopped: !listenerPids.length && !sharedFileOwnerPids.length && !activeLockPids.length };
 }
 
+function assertAppStopped(appState: DiagnosticAppState, port?: string) {
+  assert.equal(appState.configuredPort, diagnosticAppPort(port)); assert.deepEqual(appState.checkedPorts, [...new Set([4173, appState.configuredPort])]);
+  assert.equal(appState.stopped, true, 'Stop the local application and shared database owners before executing.');
+  assert.deepEqual(appState.listenerPids, []); assert.deepEqual(appState.sharedFileOwnerPids, []); assert.deepEqual(appState.activeLockPids, []);
+}
+export type DiagnosticBoundaryCheck = { phase: 'preflight' | 'before_reservation' | 'before_transport' | 'after_transport'; checkedAt: string; runId?: string; appState?: DiagnosticAppState; state?: DiagnosticState; passed: boolean; failure?: 'application_or_history_changed' };
+
 type Provider = Pick<SapiomFeedbackProvider, 'answerWithConstrainedSourceIds' | 'reviseWithConstrainedSourceIds' | 'receipt' | 'capacity' | 'close'>;
 export type DiagnosticStep = { caseId: string; arm: 'original' | 'baseline'; runId: string; status: 'not_attempted' | 'dispatching' | 'completed' | 'failed_or_uncertain'; dispatched?: boolean; input?: OriginalInput | RevisionInput; requestBody?: Body; requestSha256?: string; inputSha256?: string; dispatchIntentAt?: string; dispatchedAt?: string; httpStatus?: number; durationMs?: number; result?: Output; receipt?: Receipt | null; citationSelection?: 'observed' | 'unexercised'; quoteChecks?: { passageId: string; matched: boolean }[] };
 export type DiagnosticResult = {
@@ -143,7 +150,7 @@ export type DiagnosticResult = {
   steps: DiagnosticStep[]; networkDispatches: number; newProviderAttempts: number; acceptedOutputs: number; citationSelectionRequests: number;
   deliveryOutcome: 'incomplete' | 'completed_with_observed_selection' | 'completed_with_unexercised_selection';
   targetCoverage: { caseId: string; selectedTargetSourceIds: string[]; status: 'observed' | 'inconclusive' }[];
-  appState: DiagnosticAppState; before: DiagnosticState; after?: DiagnosticState; existingReceiptsUnchanged?: boolean; existingReviewStateUnchanged?: boolean;
+  appState: DiagnosticAppState; boundaryChecks: DiagnosticBoundaryCheck[]; before: DiagnosticState; after?: DiagnosticState; existingReceiptsUnchanged?: boolean; existingReviewStateUnchanged?: boolean;
   qualityClaimEligible: false; routerConstrainedDecodingVerified: false; humanJudgments: 0; actualProviderCharges: 'unavailable';
 };
 export type DiagnosticExecution = {
@@ -160,24 +167,47 @@ export async function executeSourceIdDiagnostic(manifest: DiagnosticManifest, de
   assert.equal(deps.implementationMerged, true, 'Implementation must be merged and unchanged.');
   assert.equal(deps.env.ABLATRIX_LOOP_LIVE, '1'); assert.equal(deps.env.ABLATRIX_REVISION_WEB, '0'); assert.equal(deps.env.ABLATRIX_LOOP_CALL_LIMIT, '87');
   const appState = deps.inspectApp();
-  assert.equal(appState.configuredPort, diagnosticAppPort(deps.env.PORT)); assert.deepEqual(appState.checkedPorts, [...new Set([4173, appState.configuredPort])]);
-  assert.equal(appState.stopped, true, 'Stop the local application and shared database owners before executing.');
-  assert.deepEqual(appState.listenerPids, []); assert.deepEqual(appState.sharedFileOwnerPids, []); assert.deepEqual(appState.activeLockPids, []);
+  assertAppStopped(appState, deps.env.PORT);
   const before = deps.readState(); assert.equal(before.ledgerAttempts, 81); assert.equal(before.pendingReservations, 0); assert.equal(before.activeOwners, 0); assert.equal(before.activeReviewJobs, 0); assert.deepEqual(before.newRunIds, []);
   const result: DiagnosticResult = { format: 'ablatrix-source-id-diagnostic-results-v1', mode: 'live', planSha256: manifest.planSha256, operatorApprovalPlanSha256: deps.approvedPlanSha256, startedAt: new Date().toISOString(), status: 'running',
     steps: manifest.plan.order.map(s => ({ ...s, runId: `source-id-diagnostic-${manifest.planSha256.slice(0, 14)}-${s.caseId}-${s.arm}`, status: 'not_attempted' })),
-    networkDispatches: 0, newProviderAttempts: 0, acceptedOutputs: 0, citationSelectionRequests: 0, deliveryOutcome: 'incomplete', targetCoverage: [], appState, before, qualityClaimEligible: false, routerConstrainedDecodingVerified: false, humanJudgments: 0, actualProviderCharges: 'unavailable' };
+    networkDispatches: 0, newProviderAttempts: 0, acceptedOutputs: 0, citationSelectionRequests: 0, deliveryOutcome: 'incomplete', targetCoverage: [], appState, boundaryChecks: [{ phase: 'preflight', checkedAt: new Date().toISOString(), appState, state: before, passed: true }], before, qualityClaimEligible: false, routerConstrainedDecodingVerified: false, humanJudgments: 0, actualProviderCharges: 'unavailable' };
   deps.output.create(clone(result));
   let provider: Provider | undefined, active: DiagnosticStep | undefined;
   const checkpoint = () => deps.output.save(clone(result));
+  // These observations stop later dispatches after a detected restart. They
+  // cannot prevent another process starting during an in-flight paid request.
+  const checkBoundary = (phase: Exclude<DiagnosticBoundaryCheck['phase'], 'preflight'>) => {
+    const check: DiagnosticBoundaryCheck = { phase, checkedAt: new Date().toISOString(), runId: active?.runId, passed: false };
+    result.boundaryChecks.push(check);
+    try {
+      check.appState = deps.inspectApp(); assertAppStopped(check.appState, deps.env.PORT);
+      check.state = deps.readState();
+      assert.equal(check.state.historicalReceiptsSha256, before.historicalReceiptsSha256, 'Historical provider receipts changed.');
+      assert.equal(check.state.reviewStateSha256, before.reviewStateSha256, 'Review history changed.'); assert.equal(check.state.activeReviewJobs, 0);
+      const ownReceipts = result.steps.flatMap(step => { const receipt = provider?.receipt(step.runId); return receipt ? [{ runId: step.runId, status: receipt.status }] : []; });
+      assert.equal(check.state.ledgerAttempts, 81 + ownReceipts.length); assert.ok(ownReceipts.length <= 6);
+      assert.deepEqual([...check.state.newRunIds].sort(), ownReceipts.map(receipt => receipt.runId).sort());
+      // The current dispatch has already reserved one pending call and may own
+      // the provider lease. Only this process and this run's receipts are allowed.
+      assert.equal(check.state.pendingReservations, ownReceipts.filter(receipt => receipt.status === 'pending').length);
+      assert.ok(check.state.pendingReservations <= (phase === 'before_reservation' ? 0 : 1));
+      assert.ok(check.state.activeOwners === 0 || (check.state.activeOwners === 1 && check.state.activeOwnerPid === process.pid));
+      check.passed = true;
+    } catch (error) { check.failure = 'application_or_history_changed'; throw error; }
+    finally { checkpoint(); }
+  };
   try {
     provider = deps.createProvider(async (url, init) => {
       assert.ok(active && !active.dispatched); assert.equal(String(url), 'https://router.sapiom.ai/v1/chat/completions'); assert.equal(init?.method, 'POST');
       assert.equal(init.body, JSON.stringify(active.requestBody), 'Dispatch differs from the exact frozen/derived request.');
       assert.ok(result.networkDispatches < 6); active.dispatchIntentAt = new Date().toISOString(); checkpoint();
-      // Persist intent first. Increment only when actually entering the transport; a failed checkpoint must not count as a dispatch.
+      // Recheck after persisting intent, before entering the actual transport.
+      checkBoundary('before_transport');
       active.dispatched = true; result.networkDispatches++; active.dispatchedAt = new Date().toISOString();
-      const response = await deps.transport(url, { ...init, redirect: 'error' }); active.httpStatus = response.status; checkpoint(); return response;
+      const response = await deps.transport(url, { ...init, redirect: 'error' }); active.httpStatus = response.status;
+      try { checkBoundary('after_transport'); } catch (error) { await response.body?.cancel(); throw error; }
+      return response;
     });
     assert.equal(provider.capacity(6).ready, true);
     for (const step of result.steps) {
@@ -185,6 +215,7 @@ export async function executeSourceIdDiagnostic(manifest: DiagnosticManifest, de
       const c = manifest.plan.cases.find(c => c.id === step.caseId)!;
       const started = performance.now();
       try {
+        checkBoundary('before_reservation');
         assert.equal(provider.receipt(step.runId), undefined, 'Never resume an existing attempt.');
         if (step.arm === 'original') { step.input = { ...clone(c.originalInput), runId: step.runId }; step.requestBody = constrainedSourceIdAnswerRequestBody(step.input); assert.equal(hashes(step.requestBody).requestSha256, c.originalRequestSha256); }
         else { const original = result.steps.find(s => s.caseId === step.caseId && s.arm === 'original'); assert.equal(original?.status, 'completed'); assert.ok(original.result); step.input = diagnosticRevisionInput(c, original.result.answer.answer, step.runId); step.requestBody = constrainedSourceIdRevisionRequestBody(step.input); }
@@ -275,8 +306,8 @@ export async function sourceIdDiagnosticCli(argv: string[]) {
   try {
     const readState = (): DiagnosticState => {
       const rows = budget.prepare('SELECT * FROM loop_provider_calls ORDER BY rowid').all();
-      const owner = budget.prepare('SELECT expires_at FROM loop_provider_owner WHERE id=1').get();
-      return { ledgerAttempts: rows.length, pendingReservations: rows.filter(r => r.status === 'pending').length, activeOwners: owner && Number(owner.expires_at) > Date.now() ? 1 : 0,
+      const owner = budget.prepare('SELECT expires_at,pid FROM loop_provider_owner WHERE id=1').get();
+      return { ledgerAttempts: rows.length, pendingReservations: rows.filter(r => r.status === 'pending').length, activeOwners: owner && Number(owner.expires_at) > Date.now() ? 1 : 0, activeOwnerPid: owner && Number(owner.expires_at) > Date.now() ? Number(owner.pid) : null,
         activeReviewJobs: Number(review.prepare("SELECT COUNT(*) n FROM answer_revision_jobs WHERE status IN ('queued','running','reconciliation')").get()!.n),
         historicalReceiptsSha256: contextComparisonHash(rows.slice(0, 81)), newRunIds: rows.slice(81).map(r => String(r.run_id)),
         reviewStateSha256: contextComparisonHash(Object.fromEntries(reviewTables.map(t => [t, contextComparisonHash(review.prepare(`SELECT * FROM ${t} ORDER BY rowid`).all())]))) };

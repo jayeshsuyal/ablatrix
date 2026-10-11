@@ -6,6 +6,7 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, readFileSync, rmSync, statSync, symlinkSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { RunStore } from './store.ts';
 import { contextComparisonHash } from './context-comparison.ts';
 import { SapiomFeedbackProvider, constrainedSourceIdAnswerRequestBody, constrainedSourceIdRevisionRequestBody } from './feedback-provider.ts';
 import { DIAGNOSTIC_CASE_IDS, DIAGNOSTIC_CODE_FILES, diagnosticSha256, diagnosticRevisionInput, prepareSourceIdDiagnostic, executeSourceIdDiagnostic, privateDiagnosticOutput, sourceIdDiagnosticCli, inspectDiagnosticApp, diagnosticAppPort, type DiagnosticArtifact, type DiagnosticExecution, type DiagnosticPreparation, type DiagnosticResult, type DiagnosticState } from './source-id-diagnostic.ts';
@@ -22,18 +23,22 @@ function preparation(): DiagnosticPreparation {
 }
 type Body = ReturnType<typeof constrainedSourceIdAnswerRequestBody>;
 function payload(body: Body) { return JSON.parse(body.messages[1].content); }
-const before: DiagnosticState = { ledgerAttempts: 81, pendingReservations: 0, activeOwners: 0, activeReviewJobs: 0, historicalReceiptsSha256: 'opaque-prior-receipts', reviewStateSha256: 'opaque-review-history', newRunIds: [] };
+const before: DiagnosticState = { ledgerAttempts: 81, pendingReservations: 0, activeOwners: 0, activeOwnerPid: null, activeReviewJobs: 0, historicalReceiptsSha256: 'opaque-prior-receipts', reviewStateSha256: 'opaque-review-history', newRunIds: [] };
 function harness(response: (body: Body, index: number) => unknown, model = 'gpt-luna') {
   const prep = preparation(), manifest = prepareSourceIdDiagnostic(prep), checkpoints: DiagnosticResult[] = [], bodies: Body[] = [];
   const receipts = new Map<string, NonNullable<ReturnType<SapiomFeedbackProvider['receipt']>>>();
-  let providerCreations = 0, outputCreations = 0, closed = false;
+  let providerCreations = 0, outputCreations = 0, closed = false, liveProvider: SapiomFeedbackProvider | undefined;
   const deps: DiagnosticExecution = {
     preparation: prep, approvedPlanSha256: manifest.planSha256, env: { ABLATRIX_LOOP_LIVE: '1', ABLATRIX_REVISION_WEB: '0', ABLATRIX_LOOP_CALL_LIMIT: '87' }, implementationMerged: true, inspectApp: () => ({ configuredPort: 4173, checkedPorts: [4173], listenerPids: [], sharedFileOwnerPids: [], activeLockPids: [], stopped: true }),
-    readState: () => ({ ...before, ledgerAttempts: 81 + receipts.size, newRunIds: [...receipts.keys()] }),
+    readState: () => {
+      if (liveProvider && !closed) for (const step of manifest.plan.order) { const runId = `source-id-diagnostic-${manifest.planSha256.slice(0, 14)}-${step.caseId}-${step.arm}`, receipt = liveProvider.receipt(runId); if (receipt) receipts.set(runId, receipt); }
+      return { ...before, ledgerAttempts: 81 + receipts.size, pendingReservations: [...receipts.values()].filter(receipt => receipt.status === 'pending').length, newRunIds: [...receipts.keys()] };
+    },
     output: { create: result => { outputCreations++; checkpoints.push(result); }, save: result => checkpoints.push(result) },
     createProvider: fetchImpl => {
       providerCreations++;
       const p = new SapiomFeedbackProvider({ enabled: true, apiKey: 'synthetic-test-key-not-a-credential', dbPath: ':memory:', capUsd: 10, priorSpendUsd: .200281, allowancePerCallUsd: .1, callLimit: 87, fetchImpl });
+      liveProvider = p;
       const remember = (runId: string) => { const receipt = p.receipt(runId); if (receipt) receipts.set(runId, receipt); return receipt; };
       return { capacity: n => p.capacity(n), receipt: remember, answerWithConstrainedSourceIds: async input => { try { return await p.answerWithConstrainedSourceIds(input); } finally { if (input.runId) remember(input.runId); } }, reviseWithConstrainedSourceIds: async input => { try { return await p.reviseWithConstrainedSourceIds(input); } finally { if (input.runId) remember(input.runId); } }, close: () => { closed = true; p.close(); } };
     },
@@ -121,7 +126,7 @@ test('network failure and post-run history drift are terminal and never trigger 
   const stopped = await executeSourceIdDiagnostic(network.manifest, network.deps); assert.equal(stopped.networkDispatches, 1); assert.equal(stopped.newProviderAttempts, 1); assert.equal(stopped.steps[0].receipt!.status, 'failed_or_unknown'); assert.equal(stopped.status, 'stopped');
   const history = harness(valid), read = history.deps.readState;
   history.deps.readState = () => { const state = read(); return state.ledgerAttempts === 81 ? state : { ...state, reviewStateSha256: 'changed' }; };
-  const changed = await executeSourceIdDiagnostic(history.manifest, history.deps); assert.equal(changed.status, 'stopped'); assert.equal(changed.existingReviewStateUnchanged, false); assert.equal(changed.deliveryOutcome, 'incomplete'); assert.equal(changed.networkDispatches, 6);
+  const changed = await executeSourceIdDiagnostic(history.manifest, history.deps); assert.equal(changed.status, 'stopped'); assert.equal(changed.existingReviewStateUnchanged, false); assert.equal(changed.deliveryOutcome, 'incomplete'); assert.equal(changed.networkDispatches, 0); assert.equal(changed.newProviderAttempts, 1); assert.equal(changed.boundaryChecks.at(-1)!.phase, 'before_transport');
 });
 
 test('private output starts exclusively with 0600 permissions and checkpoints preserve those permissions', () => {
@@ -218,4 +223,50 @@ test('live application ownership locks fail closed independently of ports, and m
     const state = inspectDiagnosticApp(paths); assert.equal(state.stopped, false); assert.deepEqual(state.activeLockPids, [process.pid]);
     writeFileSync(paths.appDbPath + '.lock', 'not-a-pid'); assert.throws(() => inspectDiagnosticApp(paths), /lock is malformed/); assert.equal(readFileSync(paths.appDbPath + '.lock', 'utf8'), 'not-a-pid');
   } finally { rmSync(directory, { recursive: true, force: true }); }
+});
+
+
+test('an app restart after initial preflight or after reservation prevents the first transport dispatch', async () => {
+  for (const restartAt of ['after_preflight', 'before_transport'] as const) {
+    const { directory, paths } = temporaryAppPaths(); let appStore: RunStore | undefined;
+    try {
+      const h = harness(valid), create = h.deps.output.create, save = h.deps.output.save;
+      h.deps.inspectApp = () => inspectDiagnosticApp(paths);
+      h.deps.output.create = result => { create(result); if (restartAt === 'after_preflight') appStore = new RunStore(paths.appDbPath); };
+      h.deps.output.save = result => { save(result); if (restartAt === 'before_transport' && !appStore && result.steps.some(s => s.dispatchIntentAt)) appStore = new RunStore(paths.appDbPath); };
+      const result = await executeSourceIdDiagnostic(h.manifest, h.deps);
+      assert.equal(result.status, 'stopped'); assert.equal(result.networkDispatches, 0); assert.equal(h.bodies.length, 0); assert.equal(result.steps.length, 6); assert.equal(result.steps.filter(s => s.status === 'not_attempted').length, 5);
+      assert.equal(result.newProviderAttempts, restartAt === 'after_preflight' ? 0 : 1);
+      const failed = result.boundaryChecks.at(-1)!; assert.equal(failed.phase, restartAt === 'after_preflight' ? 'before_reservation' : 'before_transport'); assert.equal(failed.passed, false); assert.equal(failed.failure, 'application_or_history_changed'); assert.ok(failed.checkedAt); assert.equal(failed.appState!.stopped, false);
+      if (restartAt === 'before_transport') assert.equal(result.steps[0].receipt!.status, 'failed_or_unknown'); else assert.equal(result.steps[0].receipt, null);
+    } finally { appStore?.close(); rmSync(directory, { recursive: true, force: true }); }
+  }
+});
+
+test('an app restarting during the first transport stops at its response, preserves the spent receipt, and never dispatches a second request', async () => {
+  const { directory, paths } = temporaryAppPaths(), server = createServer((_req, res) => res.end('SYNTHETIC restarted app'));
+  try {
+    const h = harness(valid), transport = h.deps.transport;
+    h.deps.inspectApp = () => inspectDiagnosticApp(paths);
+    h.deps.transport = async (url, init) => { const response = await transport(url, init); await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(4173, '127.0.0.1', resolve); }); return response; };
+    const result = await executeSourceIdDiagnostic(h.manifest, h.deps);
+    assert.equal(result.status, 'stopped'); assert.equal(result.networkDispatches, 1); assert.equal(result.newProviderAttempts, 1); assert.equal(h.bodies.length, 1); assert.equal(result.steps[0].httpStatus, 200); assert.equal(result.steps[0].receipt!.status, 'failed_or_unknown');
+    assert.equal(result.steps.filter(s => s.status === 'not_attempted').length, 5); assert.equal(result.acceptedOutputs, 0);
+    const failed = result.boundaryChecks.at(-1)!; assert.equal(failed.phase, 'after_transport'); assert.equal(failed.passed, false); assert.equal(failed.failure, 'application_or_history_changed'); assert.ok(failed.appState!.listenerPids.includes(process.pid));
+    assert.ok(h.checkpoints.some(snapshot => snapshot.boundaryChecks.some(check => check.phase === 'after_transport' && !check.passed)));
+  } finally { await new Promise<void>(resolve => server.close(() => resolve())); rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('each request boundary checks history/jobs while accepting only this process and its pending reservation', async () => {
+  const own = harness(valid), ownRead = own.deps.readState;
+  own.deps.readState = () => { const state = ownRead(); const leased = state.ledgerAttempts > 81 && !own.counts().closed; return { ...state, activeOwners: leased ? 1 : 0, activeOwnerPid: leased ? process.pid : null }; };
+  const accepted = await executeSourceIdDiagnostic(own.manifest, own.deps); assert.equal(accepted.status, 'completed');
+  assert.equal(accepted.boundaryChecks.length, 19); assert.ok(accepted.boundaryChecks.every(check => check.passed));
+  assert.equal(accepted.boundaryChecks.filter(check => check.phase === 'before_transport' && check.state!.pendingReservations === 1 && check.state!.activeOwnerPid === process.pid).length, 6);
+  for (const field of ['activeReviewJobs', 'historicalReceiptsSha256', 'reviewStateSha256', 'activeOwnerPid'] as const) {
+    const h = harness(valid), read = h.deps.readState;
+    h.deps.readState = () => { const state = read(); if (!state.newRunIds.length) return state; return field === 'activeOwnerPid' ? { ...state, activeOwners: 1, activeOwnerPid: process.pid + 1 } : { ...state, [field]: field === 'activeReviewJobs' ? 1 : 'changed' }; };
+    const result = await executeSourceIdDiagnostic(h.manifest, h.deps); assert.equal(result.status, 'stopped'); assert.equal(result.networkDispatches, 0); assert.equal(result.newProviderAttempts, 1);
+    const failed = result.boundaryChecks.at(-1)!; assert.equal(failed.phase, 'before_transport'); assert.equal(failed.passed, false); assert.equal(failed.failure, 'application_or_history_changed'); assert.ok(failed.state);
+  }
 });
