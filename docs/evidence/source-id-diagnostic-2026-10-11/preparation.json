@@ -1,0 +1,35 @@
+{
+  "format": "ablatrix-source-id-diagnostic-preparation-v1",
+  "createdAt": "2026-10-11T19:45:01.384Z",
+  "plan": {
+    "path": "docs/evidence/source-id-diagnostic-2026-10-11/execution-plan.json",
+    "fileSha256": "e3bee995c2804f9a83139adca752924517de86c62a042ab05eb6f33b517d86f8",
+    "planSha256": "37fce24b69437b9152312bd563b86170161fb7c303aa77b08bded209928e02df",
+    "implementationCommit": "f9b64b3f748f12a107e7a7d48d5b81b7012c78ef"
+  },
+  "newProviderCalls": 0,
+  "plannedAttempts": 6,
+  "planningAllowanceUsd": 0.6,
+  "initialSharedAttempts": 81,
+  "absoluteCallLimit": 87,
+  "sourceFreshness": "already_exposed_diagnostic_contexts",
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "routerConstrainedDecodingVerified": false,
+  "successfulCliPreparation": true,
+  "mismatchedApprovalProbe": {
+    "exitCode": 1,
+    "rejectedBeforeProviderConstruction": true,
+    "createdPrivateOutput": false,
+    "outputSha256": "b74143080e05163e8646e8a59c773ba270929e1df91d35bc1a49802377fb93f4"
+  },
+  "integrity": {
+    "historicalEvidenceFilesChecked": 33,
+    "historicalEvidenceUnchanged": true,
+    "privateStoppedResultSha256": "b7dfbb0ac2d3b32b3051482a1a472d3022902ff73166fe32aec1afcd225f9475",
+    "privateStoppedResultUnchanged": true,
+    "sharedLedgerAttempts": 81,
+    "pendingReservations": 0
+  },
+  "execution": "User approved the six-call/$0.60 scope after the proposal. No call was made during preparation; execution must wait for qualified merged unchanged runner code and record this scope approval against the exact manifest hash."
+}

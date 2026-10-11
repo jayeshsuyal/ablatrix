@@ -1,0 +1,117 @@
+{
+  "format": "ablatrix-source-id-diagnostic-offline-qualification-v1",
+  "createdAt": "2026-10-11T20:06:26.336059Z",
+  "passed": true,
+  "sourceIdInterface": "source_ids_v2",
+  "newProviderCalls": 0,
+  "implementationSha256": {
+    "server/citation-options.ts": "0845b2922b7880de4f641453c307d042a31211948514dc4e57e4f9ad4cb1d93d",
+    "server/feedback-provider.ts": "e9d68a560d468527ae7aee22196b1566a0d535e73545969c66d38ff039009b05",
+    "server/revision-policy.ts": "718c3718e384d83751035e503da874cb72041a6c4a84b65cd3cc482e39d92fb2",
+    "server/context-comparison.ts": "8688c6fc93aa21a819e7bcb5412f24bc1ec4e3e5c27ab30af0f46d7999a0c812",
+    "web/ContextComparison.tsx": "0ef8c4cc18045cd9fdf9c8f393e86b547f1220ce28a82efb2ee1b8efbf1479ed",
+    "server/citation-options.test.ts": "65c125716758dae267b496a8932c1aed384759288e44e33c5de98b08e312d269",
+    "server/feedback-provider.test.ts": "e32dcb19c4401ea1ca91b3dabd5a60ac7dce9ed300bf1b4fe3fbc16494672251",
+    "server/constrained-source-ids.test.ts": "29016343974f51504908dd3b0141b41fbcbb19e02a033000657766fd5537cd4f",
+    "server/context-comparison.test.ts": "18cc722a697772fedc5beafbff0d95a3ec0275b28d516566c9125d76d022730c",
+    "server/context-comparison-api.test.ts": "9eb6414a61c0a9710f3137f0e9a395b0e48ff14a016cf47ac5a485386bfbfa81",
+    "e2e/context-comparison.spec.ts": "f9d41cdef55dcf4c8fcf9de2bd5a34e04a97c82ff4422b9f9897701c7d91da6b",
+    "server/source-id-diagnostic.ts": "ac8d1434e79aa147fd5d15da43ab81ab94b5e65d4798966d548a9c09e775793e",
+    "server/source-id-diagnostic.test.ts": "a1b0b1182727cceaab7f486a3d9944f0744111c85b03aeb8ed907fd8535a9c35",
+    "scripts/source-id-diagnostic.ts": "7cbb53f72b64eeaa72d215c7bcbb5be43a62bb72aa59ac1a3176e18eaffa07d2"
+  },
+  "upstreamQualification": {
+    "path": "docs/evidence/constrained-source-ids-2026-10-11/offline-qualification.json",
+    "fileSha256": "a6988d79411b5d2bccc980b75a12a458b072b50ccae9510995c95c60f9366a50",
+    "qualifiedMergeCommit": "dff46e5a825f7cc4caf0a936df9f7218ba16a732"
+  },
+  "caseAudit": {
+    "path": "docs/evidence/source-id-diagnostic-2026-10-11/case-audit.json",
+    "fileSha256": "72f0f50178e3926bf53046e9e7358018197f3e51e4b2232f07d06076281fe747"
+  },
+  "verification": {
+    "focused": {
+      "command": "node --import tsx --test server/source-id-diagnostic.test.ts",
+      "exitCode": 0,
+      "outputSha256": "18fb56604d0d3d73a93092f1b16c4a09bd9fc40ed45a9813c0fb5552025e9c7c",
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    "fullSuite": {
+      "command": "npm test",
+      "exitCode": 0,
+      "outputSha256": "4df27e9e2b4e38f630e00f73d376d0f18c1f639bbbd2246aa59922404e0ad621",
+      "passed": 284,
+      "failed": 0,
+      "skipped": 1,
+      "skipReason": "Linux-only entrypoint smoke test."
+    },
+    "build": {
+      "command": "npm run build",
+      "exitCode": 0,
+      "outputSha256": "de9140f7815a7f7538a54e1db99f0f68843c2e02bf832d5fd0d16e5f04040125"
+    },
+    "cliTypecheck": {
+      "command": "npx tsc --noEmit --allowImportingTsExtensions --module ESNext --moduleResolution Bundler --target ES2022 --lib ES2022,DOM --types node --strict --skipLibCheck scripts/source-id-diagnostic.ts",
+      "exitCode": 0,
+      "outputSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "transport": "Injected synthetic provider responses, temporary files and SQLite databases, loopback listeners and a synthetic child worker. No remote request.",
+    "independentCodeReview": "Read-only audit found no material remaining issue: stopped-app checks run before each reservation, immediately before transport and after responses; failures preserve attempted receipts and stop before the next dispatch. Restart regressions cover zero attempts, one reservation/zero dispatches, and one spent dispatch/no second request. This is detection at boundaries, not exclusive process ownership.",
+    "shutdownRepair": {
+      "botFinding": "https://github.com/jayeshsuyal/ablatrix/pull/30#discussion_r4242971949",
+      "checks": [
+        "Configured PORT and default 4173 listeners",
+        "Other processes holding the exact shared budget or review database",
+        "Active app/loop PID ownership locks",
+        "Existing ledger reservations, provider leases and review-job gates"
+      ],
+      "beforeProviderAndOutputCreation": true,
+      "appStateMeasuredAndSaved": true
+    },
+    "repeatedBoundaryRepair": {
+      "botFinding": "https://github.com/jayeshsuyal/ablatrix/pull/30#discussion_r4243008691",
+      "phases": [
+        "before_reservation",
+        "before_transport",
+        "after_transport"
+      ],
+      "savedMeasuredChecks": true,
+      "checks": [
+        "Stopped-app contract",
+        "Frozen historical receipt and review-state hashes",
+        "No active review jobs",
+        "Only this run reservations and this process provider lease"
+      ],
+      "inFlightLimitation": "An external process can start during a request; observing it at the response boundary stops later dispatches but cannot undo the spent call."
+    }
+  },
+  "integrity": {
+    "historicalEvidenceFilesChecked": 33,
+    "historicalEvidenceUnchanged": true,
+    "privateStoppedResultSha256": "b7dfbb0ac2d3b32b3051482a1a472d3022902ff73166fe32aec1afcd225f9475",
+    "privateStoppedResultUnchanged": true,
+    "sharedLedgerAttempts": 81,
+    "pendingReservations": 0,
+    "originalPreparationArtifactsUnchanged": true
+  },
+  "paidExecutionAuthorized": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "routerConstrainedDecodingVerified": false,
+  "liveModelBehaviorQualified": false,
+  "limitations": [
+    "Qualification is offline and uses injected responses; it does not establish live model quality or Router-enforced decoding.",
+    "The prepared diagnostic uses three already-exposed contexts; no fresh quality cohort is selected.",
+    "Six attempts and $0.60 planning allowance are the approved scope; execution must bind approval to a frozen manifest and merged unchanged implementation.",
+    "An empty-citation insufficient_evidence output is valid but does not exercise citation selection; missing target citations remain inconclusive.",
+    "Repeated boundary checks detect observed restarts and history changes; they do not hold exclusive app ownership or undo an in-flight call."
+  ],
+  "revision": 3,
+  "supersedesUnusedQualification": {
+    "path": "docs/evidence/source-id-diagnostic-2026-10-11/offline-qualification-v2.json",
+    "fileSha256": "3c194a70e69275203d2171a6aa12e598ca79776519ae75e8e4c78ed45dba3170",
+    "reason": "PR #30 bot P1: a single stopped-app snapshot allowed restart after the check."
+  }
+}
