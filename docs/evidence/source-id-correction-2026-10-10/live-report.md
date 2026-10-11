@@ -32,7 +32,7 @@ Offered:  src_d6dec31ee5a0006a8e2e684a
 Returned: src_d6dec31ee5a0006a8e2e684
 ```
 
-The server rejected the unknown ID rather than guessing its intended source. No retry, ID repair, replacement product, new critique or web call followed. The remaining 16 planned steps retain their unattempted state. Successful answers and named-arm outcomes remain private to preserve future review integrity.
+The server rejected the unknown ID rather than guessing its intended source. No retry, ID repair, replacement product, new critique or web call followed. The remaining 16 planned steps retain their unattempted state. Successful answer text remains private; no human quality judgments have been recorded. The published dispatch order and stop point make the failed arm inferable.
 
 The next mechanical change should constrain the response schema to the IDs actually offered in each request, with a regression using this malformed selection. That would require a newly qualified interface/manifest before another paid run; it would not change this experiment's outcome or prove answer quality.
 
