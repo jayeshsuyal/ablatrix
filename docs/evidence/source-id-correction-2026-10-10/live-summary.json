@@ -1,0 +1,75 @@
+{
+  "format": "ablatrix-source-id-live-summary-v1",
+  "mode": "live",
+  "status": "stopped",
+  "planSha256": "ce5c3d288781218dcf67e72ac77cbacb8c160e19a40384eaa2bf5d1722e489ee",
+  "operatorApprovalPlanSha256": "ce5c3d288781218dcf67e72ac77cbacb8c160e19a40384eaa2bf5d1722e489ee",
+  "implementationCommit": "6be3416384059faf8f4efcdf61833287818af8d8",
+  "mergedMainCommit": "939b4c58d3d641dda64fbd2c66678bb97e024248",
+  "rawPrivateResultSha256": "b7dfbb0ac2d3b32b3051482a1a472d3022902ff73166fe32aec1afcd225f9475",
+  "counts": {
+    "plannedProducts": 8,
+    "plannedPairs": 8,
+    "maximumPlannedCalls": 24,
+    "reservedAttempts": 8,
+    "networkDispatches": 8,
+    "transportReceiptsCompleted": 8,
+    "acceptedOutputs": 7,
+    "rejectedOutputs": 1,
+    "notAttempted": 16,
+    "completedPairs": 2,
+    "acceptedCitationChecks": 22,
+    "matchingCitationChecks": 22,
+    "humanJudgments": 0
+  },
+  "acceptedModelStatusCounts": {
+    "insufficient_evidence": 4,
+    "answered": 3
+  },
+  "failure": {
+    "httpStatus": 200,
+    "errorCode": "output_validation",
+    "category": "unknown_source_id",
+    "offeredId": "src_d6dec31ee5a0006a8e2e684a",
+    "returnedId": "src_d6dec31ee5a0006a8e2e684",
+    "automaticRepair": false,
+    "retry": false
+  },
+  "ledger": {
+    "before": 73,
+    "after": 81,
+    "absoluteApprovedCeiling": 97,
+    "pendingReservationsAfter": 0,
+    "planningAllowancePerAttemptUsd": 0.1,
+    "additionalPlanningAllowanceUsd": 0.8,
+    "capUsd": 10,
+    "actualSettledCharges": "unavailable"
+  },
+  "receiptTokenUsage": {
+    "observations": 8,
+    "inputTokens": 15464,
+    "outputTokens": 1308
+  },
+  "integrity": {
+    "priorReceiptsUnchanged": true,
+    "priorReviewStateUnchanged": true,
+    "independentAggregateAuditPassed": true,
+    "successfulProseNotInspected": true
+  },
+  "comparisonImported": false,
+  "qualityClaimEligible": false,
+  "webCalls": 0,
+  "retries": 0,
+  "localAppRestored": {
+    "port": 4194,
+    "live": false,
+    "web": false,
+    "langfuse": false
+  },
+  "limitations": [
+    "Stopped/incomplete round; two completed pairs cannot replace the planned eight-pair denominator.",
+    "Exact source matching does not establish claim support, correctness or human-reviewed quality.",
+    "Fixed retrieval omits useful sources in two planned cases.",
+    "Provider receipt authenticity and settled charges are not independently authenticated by the public aggregate record."
+  ]
+}
