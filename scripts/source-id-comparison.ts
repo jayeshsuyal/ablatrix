@@ -102,7 +102,7 @@ if(command==='--prepare'){
       active.inputSha256=contextComparisonHash(active.input);active.status='dispatching';checkpoint();const started=performance.now();
       try{
         const output: Awaited<ReturnType<SapiomFeedbackProvider['answerWithSourceIds']>> | Awaited<ReturnType<SapiomFeedbackProvider['reviseWithSourceIds']>> = step.arm==='original'?await provider.answerWithSourceIds(active.input):await provider.reviseWithSourceIds(active.input);
-        active.result=output;active.durationMs=Math.round(performance.now()-started);active.receipt=provider.receipt(step.runId);assert.equal(active.receipt.status,'completed');assert.equal(active.receipt.error_code,null);assert.equal(output.model,'gpt-5.6-luna');
+        active.result=output;active.durationMs=Math.round(performance.now()-started);active.receipt=provider.receipt(step.runId);assert.equal(active.receipt.status,'completed');assert.equal(active.receipt.error_code,null);assert.ok(['gpt-luna','gpt-5.6-luna'].includes(output.model),'Returned model must match the requested alias or its accepted resolved identity.');
         assert.equal(output.citationInterface,'source_ids_v1');
         const returnedReceipt=JSON.parse(active.receipt.receipt_json);assert.equal(returnedReceipt.citationInterface,'source_ids_v1');assert.equal(returnedReceipt.optionSetSha256,sha(JSON.stringify(c.quoteOptions)));
         const selected=c.retrieval.passages;
@@ -115,6 +115,8 @@ if(command==='--prepare'){
         }else{
           const expected=plan.protocol.policies[step.arm],receipt=JSON.parse(active.receipt.receipt_json);assert.equal(receipt.promptVersion,expected.promptVersion);assert.equal(receipt.systemInstructionsSha256,expected.systemInstructionsSha256);
           const attempt=completed!.arms[step.arm as 'baseline'|'candidate'];assert.equal(active.requestSha256,attempt.requestSha256);
+          const sibling=completed!.arms[step.arm==='baseline'?'candidate':'baseline'];
+          if(sibling.status==='completed')assert.equal(output.model,sibling.model,'Paired returned model identities must match before proceeding to later cases.');
           Object.assign(attempt,{status:'completed',answer:output.answer,model:output.model,latencyMs:active.durationMs,usage:output.usage,providerCallId:active.receipt.id,error:null});
         }
         active.status='completed';checkpoint();console.log(JSON.stringify({caseId:c.id,arm:step.arm,status:'completed'}));
