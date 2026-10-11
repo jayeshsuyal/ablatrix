@@ -1,0 +1,350 @@
+{
+  "format": "ablatrix-source-id-diagnostic-case-audit-v1",
+  "createdAt": "2026-10-11T19:31:41.240395+00:00",
+  "kind": "ai_source_only_diagnostic_preparation",
+  "passed": true,
+  "sourceManifest": {
+    "path": "docs/evidence/source-id-correction-2026-10-10/execution-plan-v2.json",
+    "fileSha256": "9195102ca9065ed52dfc361608626777682ff590b96da1326cb064ef2872be13",
+    "planSha256": "ce5c3d288781218dcf67e72ac77cbacb8c160e19a40384eaa2bf5d1722e489ee",
+    "citationInterface": "source_ids_v1",
+    "role": "Source context provenance only; its earlier execution authority and budget do not authorize this diagnostic."
+  },
+  "intendedInterface": "source_ids_v2",
+  "caseOrder": [
+    "source-id-train-10021",
+    "source-id-train-12820",
+    "source-id-train-8746"
+  ],
+  "cases": [
+    {
+      "id": "source-id-train-10021",
+      "product": {
+        "id": "B0051POK1E",
+        "title": "Baby Einstein Caterpillar & Friends Play Gym with Lights and Melodies, Ages Newborn +"
+      },
+      "question": "is the material of the mat soft cotton or is it slippery?",
+      "priorExposure": "Public frozen cohort, full source context and retrieval catalog were exposed before this diagnostic; no freshness claim.",
+      "sourceManifestCaseId": "source-id-train-10021",
+      "fullSourcePoolCount": 29,
+      "fullSourcePoolSha256": "19e00113abcc53de86c6ff49bc6bbcb287f38ae104aed0433bb58a097ff403b3",
+      "generationSourceIds": [
+        "epqa-B0051POK1E-review-18ea39b439fecdee",
+        "epqa-B0051POK1E-review-259bc2a79a3b0fc7",
+        "epqa-B0051POK1E-review-607d90078ba112c8",
+        "epqa-B0051POK1E-review-a1f61e13f28f19ca",
+        "epqa-B0051POK1E-review-0fba59ed04814fc3"
+      ],
+      "selectedSources": [
+        {
+          "id": "epqa-B0051POK1E-review-18ea39b439fecdee",
+          "label": "review",
+          "text": "the mat itself is thin and therefore hard when placed on the floor to date, i am looking for a piece of foam mat or something soft to place under the mat so that my baby can use it.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=68760&qa_pair_id=98228&chars=0-181",
+          "sha256": "d1f9f1501dc3c65afff1d6c79bb4b62e1dcba415744af7bf58e8032d5cf8073b",
+          "bodySha256": "de82be3e4380c66e7c82933f956d33219280b820d6f670119180013a5969fa70",
+          "sourceBodyCharacters": 181,
+          "offeredId": "src_d6dec31ee5a0006a8e2e684a"
+        },
+        {
+          "id": "epqa-B0051POK1E-review-259bc2a79a3b0fc7",
+          "label": "review",
+          "text": "the mat is slippery, but he does not have a problem rolling around on it.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=68764&qa_pair_id=98232&chars=0-73",
+          "sha256": "0a64ada999d7a8073ff85cb6837571c598e3ae647f80f046e90beaa38d5ad66f",
+          "bodySha256": "527931c2b57cf57a7f0e2505a344f95366dcc58f66930c279f02f9f0e9f7a1b9",
+          "sourceBodyCharacters": 73,
+          "offeredId": "src_322c601264ef72b9c5e7b8a0"
+        },
+        {
+          "id": "epqa-B0051POK1E-review-607d90078ba112c8",
+          "label": "review",
+          "text": "i think the mat has enough padding and the material isn't slick at all.i just wanted to add that my grandson is now 10 weeks old.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=68766&qa_pair_id=98234&chars=0-129",
+          "sha256": "5fcae67296b495703100d61e2527f1102670e6bbd00b13d1565c8be0d2e276bf",
+          "bodySha256": "2935672923486b44bb24d094104f798b972ae38070e9df637701fe963ca9ca7c",
+          "sourceBodyCharacters": 129,
+          "offeredId": "src_a8ac3bdaeb0c043b6a8ee9b9"
+        },
+        {
+          "id": "epqa-B0051POK1E-review-a1f61e13f28f19ca",
+          "label": "review",
+          "text": "the blinking light was so fast and crazy it scared her, so when we use it, we lay it face down on the floor, which negates half of its purpose* the material is very slippery, so when my daughter started rolling, she would slip around and then get caught up on the armsmy biggest complaint is the star and how fast it blinks.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=68763&qa_pair_id=98231&chars=0-324",
+          "sha256": "15cf9e8a5ea156767c8f9147c27d965f965b18b32c4f366ee4b61c597381bbd0",
+          "bodySha256": "b3b634717c938835a41dcfdd28eb982d6a513eef6b8321b3b1b11be5366fc419",
+          "sourceBodyCharacters": 324,
+          "offeredId": "src_1d30ffa0b022ad0337eac691"
+        },
+        {
+          "id": "epqa-B0051POK1E-review-0fba59ed04814fc3",
+          "label": "review",
+          "text": "for example, my son really enjoys his bright starts take along carrier toy bar, and i was able to attach it to the activity mat very easily (see photo).overall this is a versatile mat that can be used with or without the arches and it is easy to pack with you to grandma's house or a playdate.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=68755&qa_pair_id=98223&chars=0-293",
+          "sha256": "739d4a21dcb3dec726edc735d803ec49809d10cc0db1ccd487a05342cb1a6edf",
+          "bodySha256": "e4891ef56bb86b828cb77f27ed53caa2b4cdd70caffb69e48bb77949efaed3e7",
+          "sourceBodyCharacters": 293,
+          "offeredId": "src_62272aa17bd10efa32abe3ff"
+        }
+      ],
+      "critique": {
+        "text": "Review the existing answer against the supplied source context. Correct unsupported claims or model/question mismatches. Answer the customer question directly when the listing or an applicable customer report supports it, with clear attribution. Keep a correct, supported answer substantively unchanged. Preserve uncertainty where the requested relationship or fact is absent; do not invent a fit result. Use concise natural language, avoid repeated evidence framing or internal status labels, and request only genuinely missing information. For each material claim, select a supplied source ID that directly supports it. Do not copy or rewrite quote text.",
+        "kind": "ai_assisted"
+      },
+      "critiqueProvenance": {
+        "kind": "ai_assisted",
+        "frozenBeforeAnyDiagnosticGeneration": true,
+        "humanAuthored": false,
+        "adaptedAfterDiagnosticOutput": false,
+        "rule": "Reuse the exact common rubric-only critique from the public source manifest; it is not feedback from a new human judgment."
+      },
+      "role": "observed_shortened_id_context",
+      "targetSourceIds": [
+        "epqa-B0051POK1E-review-18ea39b439fecdee"
+      ],
+      "rationale": "Reuses the exact public source catalog containing the ID that was shortened in the stopped run. This is a regression context, not a new quality-validation product.",
+      "observedFailure": {
+        "offeredId": "src_d6dec31ee5a0006a8e2e684a",
+        "returnedId": "src_d6dec31ee5a0006a8e2e684",
+        "publicRecord": "docs/evidence/source-id-correction-2026-10-10/live-summary.json",
+        "targetSourceId": "epqa-B0051POK1E-review-18ea39b439fecdee",
+        "newResponseRequiredToCiteThisSource": false
+      },
+      "sourceLimitations": [
+        "The selected customer reviews disagree on whether the material is slippery. They do not establish an exact cotton composition. Preserve source authority and uncertainty; no expected answer verdict is assigned."
+      ]
+    },
+    {
+      "id": "source-id-train-12820",
+      "product": {
+        "id": "B00O4HP9JW",
+        "title": "Woodford Reserve Bourbon Ball Gift Box, 16 Candies per box, delicious and perfect for holiday gifts"
+      },
+      "question": "what are the dimensions of the box?",
+      "priorExposure": "Public frozen cohort, full source context and retrieval catalog were exposed before this diagnostic; no freshness claim.",
+      "sourceManifestCaseId": "source-id-train-12820",
+      "fullSourcePoolCount": 10,
+      "fullSourcePoolSha256": "39455b37a1d530e37ce7fdc3af51ab28f2b96e1a23f95384c3c20cf6ea6ca985",
+      "generationSourceIds": [
+        "epqa-B00O4HP9JW-cqa-ff9c95c9b28fc1ea",
+        "epqa-B00O4HP9JW-attribute-78cb8106c076ce97",
+        "epqa-B00O4HP9JW-cqa-aa38350ba4f08bb6",
+        "epqa-B00O4HP9JW-cqa-98359ba717fea6d4",
+        "epqa-B00O4HP9JW-attribute-3ef0619cd4a3a665"
+      ],
+      "selectedSources": [
+        {
+          "id": "epqa-B00O4HP9JW-cqa-ff9c95c9b28fc1ea",
+          "label": "cqa",
+          "text": "i ordered this over a year ago, but i recall the box being small... like the size of an adult hand with the fingers spread out.",
+          "originalQuestion": "what size is the box? trying to put in a goody bag for a wedding shower.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=96265&qa_pair_id=125733&chars=0-127",
+          "sha256": "6b91c8b9bdbd44cb120b636adddf3600d8ffef4afc710f32b4e385c53c8b4450",
+          "bodySha256": "4d250792936045075c3bbd92982a290a7c1b78ed9286fa4b9288f12cc3310b3c",
+          "sourceBodyCharacters": 127,
+          "offeredId": "src_095bba1d9f2a65c96feefe84"
+        },
+        {
+          "id": "epqa-B00O4HP9JW-attribute-78cb8106c076ce97",
+          "label": "attribute",
+          "text": "container:  { type:[ { value:\"box\" } ] }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=96269&qa_pair_id=125737&chars=0-40",
+          "sha256": "7201ceff0b9df49c3ca3530d943ef4a6c382f45fdf39d67e8d60392b37d9e223",
+          "bodySha256": "8da4e55f99c88940c84c2b954a5d3a8f08ebe2c9475d694a172a0a2d92c9395d",
+          "sourceBodyCharacters": 40,
+          "offeredId": "src_da86f0d6b31abafc155b8159"
+        },
+        {
+          "id": "epqa-B00O4HP9JW-cqa-aa38350ba4f08bb6",
+          "label": "cqa",
+          "text": "the product description says the box is 4.5 ounces.",
+          "originalQuestion": "what size is the box? trying to put in a goody bag for a wedding shower.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=96266&qa_pair_id=125734&chars=0-51",
+          "sha256": "f2aa328ebb168b8383a8a136042b02e80d4dfab0f30cfecacc21189688cf79bb",
+          "bodySha256": "d557effedabcf52c476e5372ee79bd319441b03b71653c93281ace76125c5a2d",
+          "sourceBodyCharacters": 51,
+          "offeredId": "src_a97161bdabe760d97439a118"
+        },
+        {
+          "id": "epqa-B00O4HP9JW-cqa-98359ba717fea6d4",
+          "label": "cqa",
+          "text": "two bourbon balls per individual box so probably 3 inches by 1 1/2 inches.",
+          "originalQuestion": "how big are the individual boxes?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=96264&qa_pair_id=125732&chars=0-74",
+          "sha256": "f5ab749ebcf2f2e8cc94a8b82e32398118adbc6bb3986459eeb70ca7e9ecde5f",
+          "bodySha256": "7cdd522e55f048d14513d655a337afa38b737ae2b21c21d505e36e4e4000f122",
+          "sourceBodyCharacters": 74,
+          "offeredId": "src_e0bc45db90b144b37904cf2a"
+        },
+        {
+          "id": "epqa-B00O4HP9JW-attribute-3ef0619cd4a3a665",
+          "label": "attribute",
+          "text": "item_package_dimensions:  { length:{ unit:centimeters, normalized_value:{ unit:inches, value:7.91 }, value:3.4 }, width:{ unit:centimeters, normalized_value:{ unit:inches, value:7.87 }, value:19.99 }, height:{ unit:centimeters, normalized_value:{ unit:inches, value:1.34 }, value:20.09 } }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=96263&qa_pair_id=125731&chars=0-289",
+          "sha256": "978b7033f9a58946bb8896ce35fa15d5fad64b67f36675b7774d5b84fbcf0471",
+          "bodySha256": "53ec464ed56d08522da12441cfd7d77dfde8479592084fdea65023e477171ca9",
+          "sourceBodyCharacters": 289,
+          "offeredId": "src_1374917b5ea7473099f9bd7f"
+        }
+      ],
+      "critique": {
+        "text": "Review the existing answer against the supplied source context. Correct unsupported claims or model/question mismatches. Answer the customer question directly when the listing or an applicable customer report supports it, with clear attribution. Keep a correct, supported answer substantively unchanged. Preserve uncertainty where the requested relationship or fact is absent; do not invent a fit result. Use concise natural language, avoid repeated evidence framing or internal status labels, and request only genuinely missing information. For each material claim, select a supplied source ID that directly supports it. Do not copy or rewrite quote text.",
+        "kind": "ai_assisted"
+      },
+      "critiqueProvenance": {
+        "kind": "ai_assisted",
+        "frozenBeforeAnyDiagnosticGeneration": true,
+        "humanAuthored": false,
+        "adaptedAfterDiagnosticOutput": false,
+        "rule": "Reuse the exact common rubric-only critique from the public source manifest; it is not feedback from a new human judgment."
+      },
+      "role": "structured_dimensions_body",
+      "targetSourceIds": [
+        "epqa-B00O4HP9JW-attribute-3ef0619cd4a3a665"
+      ],
+      "rationale": "Offers one complete 289-character nested package-dimensions source with decimal values, repeated fields and literal spacing. It exercises delivery of a structured body if that source is actually selected.",
+      "sourceLimitations": [
+        "The package attribute contains inconsistent raw centimeter and normalized inch values for length/height. It must not be silently corrected or treated as an independently verified measurement.",
+        "The item_dimensions source epqa-B00O4HP9JW-attribute-1bad4a812fc009b9 exists in the full public source pool but is not among the five frozen generation sources. This diagnostic does not change retrieval to include it.",
+        "Other selected CQA concerns individual boxes or approximate recollections. A legitimate insufficient_evidence response is allowed; absent target citation leaves structured-body selection coverage unexercised."
+      ]
+    },
+    {
+      "id": "source-id-train-8746",
+      "product": {
+        "id": "B00ISKS416",
+        "title": "Seagate Laptop Thin 500 GB 7200RPM SATA 6 GB/s 32 MB Cache 2.5 Inch Hard Disk Drive (ST500LM021)"
+      },
+      "question": "is this compatible with lenovo thinkpad e545 laptop?",
+      "priorExposure": "Public frozen cohort, full source context and retrieval catalog were exposed before this diagnostic; no freshness claim.",
+      "sourceManifestCaseId": "source-id-train-8746",
+      "fullSourcePoolCount": 26,
+      "fullSourcePoolSha256": "951e73f7b53689e6092b338e15a7598ee4df7698f23385416c8def8f82cd2f03",
+      "generationSourceIds": [
+        "epqa-B00ISKS416-cqa-63e33c6d8d0523b2",
+        "epqa-B00ISKS416-cqa-e1c89aee4c5a29f5",
+        "epqa-B00ISKS416-cqa-b9de821c9afb4e63",
+        "epqa-B00ISKS416-cqa-01fad80c08f612a0",
+        "epqa-B00ISKS416-cqa-cbdfcc41388dcf12"
+      ],
+      "selectedSources": [
+        {
+          "id": "epqa-B00ISKS416-cqa-63e33c6d8d0523b2",
+          "label": "cqa",
+          "text": "this is a 2.5\" laptop hard drive, it will work with any laptop that uses a 2.5\" hdd or 2.5\" ssd.",
+          "originalQuestion": "will this work with hp dv6 series laptops? do rpms need to match?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=56333&qa_pair_id=85681&chars=0-96",
+          "sha256": "1f85c158f28bacb7089e137082666fdd3764aa37ef1106c84f2d3af9390c6730",
+          "bodySha256": "56308f638de46bb77f71340fe0e0f1213a578b7766790a80d481ddcd25431305",
+          "sourceBodyCharacters": 96,
+          "offeredId": "src_80109087ff1cfa0f6bf265b7"
+        },
+        {
+          "id": "epqa-B00ISKS416-cqa-e1c89aee4c5a29f5",
+          "label": "cqa",
+          "text": "sure, it will work with any laptop that utilizes 2.5\" drives",
+          "originalQuestion": "is this going to work with asus x202e laptop?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=56335&qa_pair_id=85683&chars=0-60",
+          "sha256": "64ae673443e220454a3acdfab5eb3f62530772b1fc9e071777fd50fe5e4ea2cf",
+          "bodySha256": "11abaa8d22314fffc96f526edf60d18fb6e969dff49a22f9b1854a66c45191ae",
+          "sourceBodyCharacters": 60,
+          "offeredId": "src_20ffb64a039538dac45eca28"
+        },
+        {
+          "id": "epqa-B00ISKS416-cqa-b9de821c9afb4e63",
+          "label": "cqa",
+          "text": "it will work with any laptop that has a normal sata connector.",
+          "originalQuestion": "will this work with an early 2011 13\" macbook pro?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=56343&qa_pair_id=85691&chars=0-62",
+          "sha256": "e1542243c5d210a9a8252c68a75007d1cbc6527cfd8905cf836f8f037ea2a324",
+          "bodySha256": "a2a84eb215fff842c78d3f34bc1090260e71927d762c42dbc3fa4ad77455d5bd",
+          "sourceBodyCharacters": 62,
+          "offeredId": "src_1908f1e93de82b879429d853"
+        },
+        {
+          "id": "epqa-B00ISKS416-cqa-01fad80c08f612a0",
+          "label": "cqa",
+          "text": "it should work with any laptop, except smaller netbooks.",
+          "originalQuestion": "works for latitude d531?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=56332&qa_pair_id=85680&chars=0-56",
+          "sha256": "0b2a1d6a7154477bec5388277670aa6d9780b1a5b34fbf03e59c95b12b606462",
+          "bodySha256": "1fdfc5e927a1dcb4ffa6f390843655d74c92f0babc952ab777afc08a21442816",
+          "sourceBodyCharacters": 56,
+          "offeredId": "src_54f8e0aacd82fdd040abf62b"
+        },
+        {
+          "id": "epqa-B00ISKS416-cqa-cbdfcc41388dcf12",
+          "label": "cqa",
+          "text": "yes it will work in any laptop as it is a 2.5 inch drive",
+          "originalQuestion": "will this work in a hp probook 6440b?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=56336&qa_pair_id=85684&chars=0-56",
+          "sha256": "78b0e5d70e7780cfc1d29b5c5b872f9df88dabc4a6e2562a552507c4399ff900",
+          "bodySha256": "158d29df95b15e23a08cd521ec9e81ad04a1182b571a54b54dc5f1853d1378c9",
+          "sourceBodyCharacters": 56,
+          "offeredId": "src_564b61e7adce032489ee887b"
+        }
+      ],
+      "critique": {
+        "text": "Review the existing answer against the supplied source context. Correct unsupported claims or model/question mismatches. Answer the customer question directly when the listing or an applicable customer report supports it, with clear attribution. Keep a correct, supported answer substantively unchanged. Preserve uncertainty where the requested relationship or fact is absent; do not invent a fit result. Use concise natural language, avoid repeated evidence framing or internal status labels, and request only genuinely missing information. For each material claim, select a supplied source ID that directly supports it. Do not copy or rewrite quote text.",
+        "kind": "ai_assisted"
+      },
+      "critiqueProvenance": {
+        "kind": "ai_assisted",
+        "frozenBeforeAnyDiagnosticGeneration": true,
+        "humanAuthored": false,
+        "adaptedAfterDiagnosticOutput": false,
+        "rule": "Reuse the exact common rubric-only critique from the public source manifest; it is not feedback from a new human judgment."
+      },
+      "role": "original_question_model_scope",
+      "targetSourceIds": [
+        "epqa-B00ISKS416-cqa-63e33c6d8d0523b2",
+        "epqa-B00ISKS416-cqa-e1c89aee4c5a29f5",
+        "epqa-B00ISKS416-cqa-b9de821c9afb4e63",
+        "epqa-B00ISKS416-cqa-01fad80c08f612a0",
+        "epqa-B00ISKS416-cqa-cbdfcc41388dcf12"
+      ],
+      "rationale": "All five selected sources are CQA answers attached to original questions about other laptops. Any citation selection exercises literal answer-body resolution while its original customer question remains separate non-quotable metadata.",
+      "sourceLimitations": [
+        "The user question names Lenovo ThinkPad E545. Selected original questions concern HP DV6, Asus X202E, a 2011 MacBook Pro, Latitude D531 and HP ProBook 6440b. Generic customer statements do not independently establish compatibility with the requested Lenovo model.",
+        "Legitimate abstention may select no citation. That is valid schema behavior but does not exercise source selection; it is not a reason to force a citation or add a call."
+      ]
+    }
+  ],
+  "coverage": {
+    "catalogCoverage": "Each target source is present, unchanged, in the ordered request catalog and enum. This alone does not show that the model selected it.",
+    "targetSelectionCoverage": "Report separately for each case whether either new response selected at least one targetSourceId. For the CQA case, every offered source is a target.",
+    "methodSelectionCoverage": "Report whether at least one original and at least one baseline revision selected a valid offered source ID.",
+    "validEmptyCitations": "An insufficient_evidence response may have no citations. Count it as accepted schema behavior with unexercised citation selection, not a citation-delivery success or answer-quality failure.",
+    "noForcedCitations": true,
+    "inconclusiveCoverage": "If every attempt is accepted but a target or method selection path is unexercised, report that limitation; do not add calls, alter the critique or silently substitute a case."
+  },
+  "recommendedStopRules": [
+    "Stop the diagnostic on the first dispatch, transport, output-validation, request-identity or receipt-reconciliation failure.",
+    "Do not repair an ID, retry, replace a case, change source selection or adapt the critique after seeing an output.",
+    "A planned baseline revision depends on its new original; never use an old private answer or the other case’s output.",
+    "Keep transport acceptance, literal citation matching, target coverage and answer quality as separate fields. This audit defines no human quality verdict."
+  ],
+  "newProviderCalls": 0,
+  "generationPerformed": false,
+  "privateSuccessfulAnswersRead": false,
+  "humanJudgments": 0,
+  "freshValidation": false,
+  "causalQualityComparison": false,
+  "reliabilityProbabilityEstimate": false,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false,
+  "newExecutionPlanCreatedByThisAudit": false,
+  "limitations": [
+    "These are deliberately reused development contexts, not independent or product-disjoint validation cases.",
+    "Six observations, if later separately authorized, cannot establish an error probability or prove that Sapiom enforces constrained decoding.",
+    "Version2 combines an enum schema with added selection guidance; any future observation would not isolate the schema’s causal effect.",
+    "Exact literal source membership does not establish semantic support, factual correctness or answer-quality improvement."
+  ]
+}
