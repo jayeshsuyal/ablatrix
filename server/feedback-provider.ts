@@ -179,6 +179,49 @@ export function constrainedSourceIdRevisionRequestBody(input: RevisionInput) {
   return completionBody('answer_revision_source_ids_v2', prompt.systemInstructions, payload, parameters);
 }
 
+/** Opt-in v3 flat string-ID contract. Enums guide output; server validation remains mandatory. */
+export const FLAT_SOURCE_ID_CITATION_INTERFACE = 'source_ids_v3' as const;
+const flatSourceIdSchema = z.object({ answer: z.string().trim().min(1).max(10_000), status: z.enum(['answered', 'insufficient_evidence']), citations: z.array(z.string().min(1).max(32)).max(5) }).strict();
+const flatSourceIdInstructions = 'The citations field must be a flat JSON array of source ID strings, with at most five distinct entries. Do not return objects, quoteId fields, passage IDs, or copied source text in citations. Each string must exactly equal one complete ID in the response schema enum and the supplied quoteOptions catalog; never shorten, rewrite, or invent an ID. Format example for a supported answer: {"answer":"An attributed supported answer.","status":"answered","citations":["<offered source ID>"]}. The placeholder illustrates the string-array shape only: replace it with an actual offered ID, never emit the placeholder. Format example when no supplied source supports an answer: {"answer":"The supplied sources do not establish that relationship.","status":"insufficient_evidence","citations":[]}. Preserve uncertainty instead of fabricating an ID.';
+export function flatSourceIdAnswerPromptIdentity() {
+  const original = sourceIdAnswerPromptIdentity();
+  const systemInstructions = original.systemInstructions.replace('Return the product_answer_source_ids_v1 tool.', `${flatSourceIdInstructions} Return the product_answer_source_ids_v3 tool.`);
+  return Object.freeze({ promptVersion: 'product-answer-source-ids-v3', systemInstructions, systemInstructionsSha256: instructionHash(systemInstructions) });
+}
+export function flatSourceIdRevisionPromptIdentity(policy: RevisionPolicySelector = 'baseline', hasInvestigation = true): RevisionPromptIdentity {
+  const original = sourceIdRevisionPromptIdentity(policy, hasInvestigation);
+  const systemInstructions = original.systemInstructions.replace('Return answer_revision_source_ids_v1.', `${flatSourceIdInstructions} Return answer_revision_source_ids_v3.`);
+  return Object.freeze({ policy: original.policy, promptVersion: original.promptVersion.replace(/-source-ids-v1$/, '-source-ids-v3'), systemInstructions, systemInstructionsSha256: instructionHash(systemInstructions) });
+}
+function flatSourceIdParameters(options: ReturnType<typeof sourceCitationOptions>) {
+  const parameters = structuredClone(sourceIdAnswerParameters);
+  return { ...parameters, properties: { ...parameters.properties, citations: { type: 'array', maxItems: 5, uniqueItems: true,
+    items: { type: 'string', minLength: 1, maxLength: 32, enum: options.map(option => option.id) } } } };
+}
+function flatSourceIdAnswerParts(input: Parameters<LoopProvider['answer']>[0]) {
+  const original = sourceIdAnswerParts(input), prompt = flatSourceIdAnswerPromptIdentity();
+  return { ...original, prompt, payload: { ...original.payload, promptVersion: prompt.promptVersion, citationInterface: FLAT_SOURCE_ID_CITATION_INTERFACE }, parameters: flatSourceIdParameters(original.quoteOptions) };
+}
+function flatSourceIdRevisionParts(input: RevisionInput) {
+  const original = sourceIdRevisionParts(input), prompt = flatSourceIdRevisionPromptIdentity(input.revisionPolicy, Boolean(input.investigation));
+  return { ...original, prompt, payload: { ...original.payload, promptVersion: prompt.promptVersion, citationInterface: FLAT_SOURCE_ID_CITATION_INTERFACE }, parameters: flatSourceIdParameters(original.quoteOptions) };
+}
+export function flatSourceIdAnswerRequestBody(input: Parameters<LoopProvider['answer']>[0]) {
+  const { prompt, payload, parameters } = flatSourceIdAnswerParts(input);
+  return completionBody('product_answer_source_ids_v3', prompt.systemInstructions, payload, parameters);
+}
+export function flatSourceIdRevisionRequestBody(input: RevisionInput) {
+  const { prompt, payload, parameters } = flatSourceIdRevisionParts(input);
+  return completionBody('answer_revision_source_ids_v3', prompt.systemInstructions, payload, parameters);
+}
+function flatSourceIdOutput(output: unknown, scope: SourceCitationScope) {
+  const selected = flatSourceIdSchema.parse(output), quoteIds = selected.citations;
+  const citations = resolveSourceCitationIds(scope, quoteIds);
+  if (selected.status === 'answered' && !citations.length) throw new Error('Answered output requires a selected source ID.');
+  const answer = stripSourceIdMarkers(selected.answer, quoteIds);
+  return { answer: answerSchema.parse({ answer, status: selected.status, citations }), rawAnswer: selected.answer, quoteIds };
+}
+
 export type FeedbackProviderOptions = {
   enabled?: boolean; apiKey?: string; credentialsFile?: string; fetchImpl?: typeof fetch;
   dbPath?: string; capUsd?: number; priorSpendUsd?: number; allowancePerCallUsd?: number; callLimit?: number;
@@ -351,7 +394,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
       throw new FeedbackExternalError('unverified_outcome', `Investigation Sapiom operation has an unverified outcome (${errorCode}; attempt ${id}). The allowance remains recorded and the operation was not retried.`);
     }
   }
-  private async request(kind: string, system: string, input: unknown, parameters: object, runId?: string, revisionIdentity?: { revisionPolicy?: RevisionPolicySelector; systemInstructionsSha256: string; citationInterface?: typeof SOURCE_ID_CITATION_INTERFACE | typeof CONSTRAINED_SOURCE_ID_CITATION_INTERFACE; optionSetSha256?: string; responseSchemaSha256?: string }): Promise<{ id: string; output: unknown; model: string; usage: LoopUsage }> {
+  private async request(kind: string, system: string, input: unknown, parameters: object, runId?: string, revisionIdentity?: { revisionPolicy?: RevisionPolicySelector; systemInstructionsSha256: string; citationInterface?: typeof SOURCE_ID_CITATION_INTERFACE | typeof CONSTRAINED_SOURCE_ID_CITATION_INTERFACE | typeof FLAT_SOURCE_ID_CITATION_INTERFACE; optionSetSha256?: string; responseSchemaSha256?: string }): Promise<{ id: string; output: unknown; model: string; usage: LoopUsage }> {
     const body = completionBody(kind, system, input, parameters);
     const id = this.reserve(kind, runId);
     let errorCode = 'network';
@@ -465,6 +508,22 @@ export class SapiomFeedbackProvider implements LoopProvider {
     const result = await this.request('answer_revision_source_ids_v2', prompt.systemInstructions, payload, parameters, input.runId, identity);
     try { return { ...sourceIdOutput(result.output, scope), attemptId: result.id, model: result.model, usage: result.usage, promptVersion: prompt.promptVersion, optionCount: quoteOptions.length, ...identity }; }
     catch { this.markOutputInvalid(result.id); throw new Error(`Feedback constrained source-ID revision failed output validation (attempt ${result.id}).`); }
+  }
+  async answerWithFlatSourceIds(input: Parameters<LoopProvider['answer']>[0]) {
+    const { prompt, scope, quoteOptions, payload, parameters } = flatSourceIdAnswerParts(input);
+    const identity = { systemInstructionsSha256: prompt.systemInstructionsSha256, citationInterface: FLAT_SOURCE_ID_CITATION_INTERFACE,
+      optionSetSha256: instructionHash(JSON.stringify(quoteOptions)), responseSchemaSha256: instructionHash(JSON.stringify(parameters)) };
+    const result = await this.request('product_answer_source_ids_v3', prompt.systemInstructions, payload, parameters, input.runId, identity);
+    try { return { ...flatSourceIdOutput(result.output, scope), attemptId: result.id, model: result.model, usage: result.usage, promptVersion: prompt.promptVersion, optionCount: quoteOptions.length, ...identity }; }
+    catch { this.markOutputInvalid(result.id); throw new Error(`Feedback flat source-ID answer failed output validation (attempt ${result.id}).`); }
+  }
+  async reviseWithFlatSourceIds(input: RevisionInput) {
+    const { prompt, scope, quoteOptions, payload, parameters } = flatSourceIdRevisionParts(input);
+    const identity = { revisionPolicy: prompt.policy, systemInstructionsSha256: prompt.systemInstructionsSha256, citationInterface: FLAT_SOURCE_ID_CITATION_INTERFACE,
+      optionSetSha256: instructionHash(JSON.stringify(quoteOptions)), responseSchemaSha256: instructionHash(JSON.stringify(parameters)) };
+    const result = await this.request('answer_revision_source_ids_v3', prompt.systemInstructions, payload, parameters, input.runId, identity);
+    try { return { ...flatSourceIdOutput(result.output, scope), attemptId: result.id, model: result.model, usage: result.usage, promptVersion: prompt.promptVersion, optionCount: quoteOptions.length, ...identity }; }
+    catch { this.markOutputInvalid(result.id); throw new Error(`Feedback flat source-ID revision failed output validation (attempt ${result.id}).`); }
   }
   async propose(input: Parameters<LoopProvider['propose']>[0]) {
     const result = await this.request('policy_update',

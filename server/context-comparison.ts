@@ -3,7 +3,7 @@ import { readFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { z } from 'zod';
-import { answerSchema, quoteOptions, revisionRequestBody, sourceIdRevisionPromptIdentity, sourceIdRevisionRequestBody, constrainedSourceIdRevisionPromptIdentity, constrainedSourceIdRevisionRequestBody, type RevisionInput } from './feedback-provider.ts';
+import { answerSchema, quoteOptions, revisionRequestBody, sourceIdRevisionPromptIdentity, sourceIdRevisionRequestBody, constrainedSourceIdRevisionPromptIdentity, constrainedSourceIdRevisionRequestBody, flatSourceIdRevisionPromptIdentity, flatSourceIdRevisionRequestBody, type RevisionInput } from './feedback-provider.ts';
 import { revisionPromptIdentity } from './revision-policy.ts';
 import { workspaceReviewSourceHash } from './answer-review-source.ts';
 import { sourceCitationOptions, stripSourceIdMarkers, type SourceCitationOption } from './citation-options.ts';
@@ -27,7 +27,7 @@ const caseSchema = z.object({ id, product: z.object({ id, title: z.string().trim
 const packetSchema = z.object({ format: z.literal('ablatrix-context-comparison-v1'), id, title: z.string().trim().min(3).max(120), mode: z.enum(['fixture', 'live']), createdAt: z.iso.datetime(), hypothesis: z.literal('preserve_original_customer_question'), protocol: protocolSchema, provenance: z.object({ kind: z.enum(['synthetic_fixture', 'imported_live']), note: z.string().trim().min(10).max(1000), sourcePacketSha256: digest.nullable() }).strict(), cases: z.array(caseSchema).min(1).max(20) }).strict();
 export type ContextComparisonPacket = z.infer<typeof packetSchema>;
 const correctionPolicySchema = z.object({ policy: z.enum(['baseline', 'candidate_v4']), promptVersion: z.string().min(1).max(100), systemInstructions: z.string().min(40).max(6000), systemInstructionsSha256: digest, configurationSha256: digest }).strict();
-const correctionProtocolSchema = z.object({ modelAlias: z.enum(['gpt-luna', 'synthetic-model']), citationInterface: z.enum(['passage_quotes', 'source_ids_v1', 'source_ids_v2']), codeCommit: z.string().regex(/^[a-f0-9]{7,40}$/).nullable(), policies: z.object({ baseline: correctionPolicySchema, candidate: correctionPolicySchema }).strict() }).strict();
+const correctionProtocolSchema = z.object({ modelAlias: z.enum(['gpt-luna', 'synthetic-model']), citationInterface: z.enum(['passage_quotes', 'source_ids_v1', 'source_ids_v2', 'source_ids_v3']), codeCommit: z.string().regex(/^[a-f0-9]{7,40}$/).nullable(), policies: z.object({ baseline: correctionPolicySchema, candidate: correctionPolicySchema }).strict() }).strict();
 const correctionAttemptSchema = attemptSchema.extend({ status: z.enum(['completed', 'failed', 'uncertain', 'not_attempted']), requestSha256: digest }).strict();
 const correctionCaseSchema = z.object({ id, product: caseSchema.shape.product, question: caseSchema.shape.question, sources: z.array(sourceSchema).min(1).max(128), generationSourceIds: z.array(id).min(1).max(8),
   original: z.object({ id, answer: answerSchema, model: z.string().min(1).max(100), providerCallId: z.string().min(1).max(200).nullable(), inputSha256: digest, requestSha256: digest }).strict(),
@@ -71,19 +71,19 @@ function correctionSourceOptions(item: Pick<CorrectionCase, 'product' | 'questio
 }
 export function correctionComparisonRequest(protocol: CorrectionComparisonPacket['protocol'], item: Omit<CorrectionCase, 'arms'>, arm: PairedArm, runId: string) {
   const { modelAlias, ...input } = correctionComparisonInput(protocol, item, arm);
-  const body = protocol.citationInterface === 'source_ids_v2' ? constrainedSourceIdRevisionRequestBody({ ...input, runId }) : protocol.citationInterface === 'source_ids_v1' ? sourceIdRevisionRequestBody({ ...input, runId }) : revisionRequestBody({ ...input, runId });
+  const body = protocol.citationInterface === 'source_ids_v3' ? flatSourceIdRevisionRequestBody({ ...input, runId }) : protocol.citationInterface === 'source_ids_v2' ? constrainedSourceIdRevisionRequestBody({ ...input, runId }) : protocol.citationInterface === 'source_ids_v1' ? sourceIdRevisionRequestBody({ ...input, runId }) : revisionRequestBody({ ...input, runId });
   return { ...body, model: modelAlias };
 }
 export const correctionComparisonRequestHash = (protocol: CorrectionComparisonPacket['protocol'], item: Omit<CorrectionCase, 'arms'>, arm: PairedArm, runId: string) => createHash('sha256').update(JSON.stringify(correctionComparisonRequest(protocol, item, arm, runId))).digest('hex');
 export function correctionComparisonProtocol(modelAlias: 'gpt-luna' | 'synthetic-model' = 'gpt-luna', codeCommit: string | null = null, citationInterface: CorrectionComparisonPacket['protocol']['citationInterface'] = 'passage_quotes'): CorrectionComparisonPacket['protocol'] {
   const policy = (name: 'baseline' | 'candidate_v4') => {
-    const identity = citationInterface === 'source_ids_v2' ? constrainedSourceIdRevisionPromptIdentity(name, true) : citationInterface === 'source_ids_v1' ? sourceIdRevisionPromptIdentity(name, true) : revisionPromptIdentity(name, true);
+    const identity = citationInterface === 'source_ids_v3' ? flatSourceIdRevisionPromptIdentity(name, true) : citationInterface === 'source_ids_v2' ? constrainedSourceIdRevisionPromptIdentity(name, true) : citationInterface === 'source_ids_v1' ? sourceIdRevisionPromptIdentity(name, true) : revisionPromptIdentity(name, true);
     const input: RevisionInput = { runId: 'configuration', question: '', product: { id: '', title: '' }, rejectedAnswer: '', critique: '', evidence: [], clarifications: [], investigation: { issue: 'answer_quality', query: '', selectedSourceIds: [], addedSourceIds: [] }, revisionPolicy: name };
     const configurationInput: RevisionInput = { ...input, question: 'Configuration binding only?', product: { id: 'configuration', title: 'Configuration binding' }, evidence: [{ id: 'configuration-source', source: 'Synthetic configuration', text: 'Synthetic configuration body.' }] };
-    const body = citationInterface === 'source_ids_v2' ? constrainedSourceIdRevisionRequestBody(configurationInput) : citationInterface === 'source_ids_v1' ? sourceIdRevisionRequestBody(configurationInput) : revisionRequestBody(input);
+    const body = citationInterface === 'source_ids_v3' ? flatSourceIdRevisionRequestBody(configurationInput) : citationInterface === 'source_ids_v2' ? constrainedSourceIdRevisionRequestBody(configurationInput) : citationInterface === 'source_ids_v1' ? sourceIdRevisionRequestBody(configurationInput) : revisionRequestBody(input);
     // Bind all generation settings, system instructions, tool schema and tool
     // choice using the fixed synthetic configuration. Each actual request hash
-    // binds its case-specific user content and, for v2, its exact quote-ID enum.
+    // binds its case-specific user content and, for v2/v3, its exact source-ID enum.
     return { ...identity, configurationSha256: contextComparisonHash({ ...body, model: modelAlias, messages: body.messages.filter(message => message.role === 'system') }) };
   };
   return { modelAlias, citationInterface, codeCommit, policies: { baseline: policy('baseline'), candidate: policy('candidate_v4') } };

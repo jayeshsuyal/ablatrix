@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
 import { createHash } from 'node:crypto';
 import { ContextComparisonStore, createContextComparisonFixture, createCorrectionComparisonFixture, contextComparisonHash, contextComparisonInput, correctionComparisonInput, correctionComparisonProtocol, correctionComparisonRequest, correctionComparisonRequestHash, type CorrectionComparisonPacket, type ContextComparisonPacket, type ContextComparisonDetail } from './context-comparison.ts';
-import { revisionRequestBody, sourceIdRevisionRequestBody, constrainedSourceIdRevisionRequestBody, sourceCitationOptions } from './feedback-provider.ts';
+import { revisionRequestBody, sourceIdRevisionRequestBody, constrainedSourceIdRevisionRequestBody, flatSourceIdRevisionRequestBody, sourceCitationOptions } from './feedback-provider.ts';
 import { workspaceReviewSourceHash } from './answer-review-source.ts';
 
 // All packets and judgments in this file are synthetic test data, including
@@ -233,7 +233,7 @@ test('correction policies use the same original, critique and ordered context wi
   try { assert.equal(store.importPacket(packet).experiment, 'correction_policy'); } finally { store.close(); }
 });
 
-for (const citationInterface of ['source_ids_v1', 'source_ids_v2'] as const) test(`${citationInterface} comparisons bind a common offered menu and exact transport without changing legacy hashes`, () => {
+for (const citationInterface of ['source_ids_v1', 'source_ids_v2', 'source_ids_v3'] as const) test(`${citationInterface} comparisons bind a common offered menu and exact transport without changing legacy hashes`, () => {
   const packet = correctionImportedShape(citationInterface), item = packet.cases[0];
   const baseline = correctionComparisonInput(packet.protocol, item, 'baseline'), candidate = correctionComparisonInput(packet.protocol, item, 'candidate');
   assert.deepEqual({ ...candidate, revisionPolicy: 'baseline' }, baseline);
@@ -245,7 +245,7 @@ for (const citationInterface of ['source_ids_v1', 'source_ids_v2'] as const) tes
   assert.equal(baseline.quoteOptions![1].quote, item.sources[1].text, 'the customer question is context, not quoted proof');
   const { modelAlias: _alias, ...providerInput } = baseline;
   const requestA = correctionComparisonRequest(packet.protocol, item, 'baseline', item.arms.baseline.id), requestB = correctionComparisonRequest(packet.protocol, item, 'candidate', item.arms.candidate.id);
-  const requestBody = citationInterface === 'source_ids_v2' ? constrainedSourceIdRevisionRequestBody : sourceIdRevisionRequestBody;
+  const requestBody = citationInterface === 'source_ids_v3' ? flatSourceIdRevisionRequestBody : citationInterface === 'source_ids_v2' ? constrainedSourceIdRevisionRequestBody : sourceIdRevisionRequestBody;
   assert.deepEqual(requestA, requestBody({ ...providerInput, runId: item.arms.baseline.id }));
   const payloadA = JSON.parse(requestA.messages[1].content), payloadB = JSON.parse(requestB.messages[1].content);
   assert.deepEqual(payloadA.quoteOptions, baseline.quoteOptions);
@@ -276,7 +276,7 @@ test('source-ID imports reject substrings, duplicate choices and citations outsi
     packet => { const source = { ...packet.cases[0].sources[0], id: 'review-only-copy' }; packet.cases[0].sources.push({ ...source, sha256: workspaceReviewSourceHash(source) }); packet.cases[0].arms.candidate.answer!.citations[0].passageId = source.id; },
     packet => { packet.cases[0].arms.candidate.answer!.citations = []; }
   ];
-  for (const citationInterface of ['source_ids_v1', 'source_ids_v2'] as const) for (const mutate of mutations) {
+  for (const citationInterface of ['source_ids_v1', 'source_ids_v2', 'source_ids_v3'] as const) for (const mutate of mutations) {
     const packet = correctionImportedShape(citationInterface), store = new ContextComparisonStore(':memory:');
     try { mutate(packet); assert.throws(() => store.importPacket(packet), /source-ID citations must resolve/); assert.equal(store.list().comparisons.length, 0); }
     finally { store.close(); }
@@ -307,7 +307,7 @@ test('source-ID interface swaps, stale scoped menus and excessive source bodies 
       item.investigation.selectedSourceIds = [...item.generationSourceIds];
     }]
   ];
-  for (const citationInterface of ['source_ids_v1', 'source_ids_v2'] as const) for (const [message, mutate] of mutations) {
+  for (const citationInterface of ['source_ids_v1', 'source_ids_v2', 'source_ids_v3'] as const) for (const [message, mutate] of mutations) {
     const packet = correctionImportedShape(citationInterface), store = new ContextComparisonStore(':memory:');
     try { mutate(packet); assert.throws(() => store.importPacket(packet), message); assert.equal(store.list().comparisons.length, 0); }
     finally { store.close(); }
@@ -347,6 +347,47 @@ test('v2 comparison request hashes bind the exact per-case ordered citation enum
   const changedRequest = correctionComparisonRequest(packet.protocol, changedCase, 'baseline', changedCase.arms.baseline.id);
   assert.notDeepEqual(schema(changedRequest).properties.citations.items.properties.quoteId.enum, offeredIds, 'a different case scope has a different constrained enum');
   assert.equal(contextComparisonHash(packet.protocol), contextComparisonHash(correctionComparisonProtocol('gpt-luna', null, 'source_ids_v2')), 'the deterministic configuration descriptor remains independent of the reviewed case');
+});
+
+test('v3 comparisons bind the flat string enum and reject schema or interface substitutions', () => {
+  const packet = correctionImportedShape('source_ids_v3'), item = packet.cases[0];
+  const input = correctionComparisonInput(packet.protocol, item, 'baseline');
+  const v2Input = correctionComparisonInput(correctionComparisonProtocol('gpt-luna', null, 'source_ids_v2'), item, 'baseline');
+  assert.deepEqual(input.quoteOptions, v2Input.quoteOptions, 'only the wire format changes; the source catalog stays the same');
+  assert.deepEqual(input.evidence, v2Input.evidence);
+  type Parameters = { properties: { citations: { maxItems: number; uniqueItems?: boolean; items: { type: string; enum?: string[] } } } };
+  const schema = (body: ReturnType<typeof correctionComparisonRequest>) => body.tools[0].function.parameters as Parameters;
+  const exact = correctionComparisonRequest(packet.protocol, item, 'baseline', item.arms.baseline.id);
+  const candidate = correctionComparisonRequest(packet.protocol, item, 'candidate', item.arms.candidate.id);
+  const offeredIds = input.quoteOptions!.map(option => option.id);
+  assert.deepEqual(schema(exact).properties.citations, { type: 'array', items: { type: 'string', minLength: 1, maxLength: 32, enum: offeredIds }, maxItems: 5, uniqueItems: true });
+  assert.deepEqual(candidate.tools[0].function.parameters, exact.tools[0].function.parameters);
+  const mutations: ((parameters: Parameters) => void)[] = [
+    parameters => { parameters.properties.citations.items.enum!.reverse(); },
+    parameters => { parameters.properties.citations.items.enum = ['src_not_offered']; },
+    parameters => { delete parameters.properties.citations.items.enum; },
+    parameters => { delete parameters.properties.citations.uniqueItems; },
+    parameters => { parameters.properties.citations.items.type = 'object'; }
+  ];
+  for (const mutate of mutations) {
+    const changedPacket = structuredClone(packet), changedRequest = structuredClone(exact), store = new ContextComparisonStore(':memory:');
+    try {
+      mutate(schema(changedRequest));
+      changedPacket.cases[0].arms.baseline.requestSha256 = createHash('sha256').update(JSON.stringify(changedRequest)).digest('hex');
+      assert.throws(() => store.importPacket(changedPacket), /request hash does not match/);
+      assert.equal(store.list().comparisons.length, 0);
+    } finally { store.close(); }
+  }
+  for (const replacement of ['source_ids_v1', 'source_ids_v2'] as const) {
+    const changedPacket = structuredClone(packet), store = new ContextComparisonStore(':memory:');
+    try {
+      changedPacket.protocol.citationInterface = replacement;
+      assert.throws(() => store.importPacket(changedPacket), /prompt configuration/);
+    } finally { store.close(); }
+  }
+  const changedCase = structuredClone(item);
+  changedCase.question = 'Can the same synthetic cabinet hold the requested storage bins?';
+  assert.notDeepEqual(schema(correctionComparisonRequest(packet.protocol, changedCase, 'baseline', changedCase.arms.baseline.id)).properties.citations.items.enum, offeredIds);
 });
 
 test('correction imports reject changed shared inputs, request identity, source order and hidden arm overrides', () => {
