@@ -24,6 +24,8 @@ Frozen plan SHA256: `0d32ec0deba075cb3cf8ffa38fa0e96bc7288d03c834a0cdc8c5f00fcb0
 
 A synthetic in-memory check covered all 24 request bodies: each original and both revision arms offer the same ordered citation catalog. All eight cases and 16 synthetic revisions imported with zero reviews, anonymous A/B labels, and locked results/exports. This checked packet wiring only; no provider was constructed and no live database was written. A mismatched approval hash was also rejected before provider construction or output/database creation.
 
+The frozen retriever does not select every useful source: Q12820 omits the item-dimensions attribute, and Q11847 omits the customer-answer mismatch reports. Those records remain visible in the full review pool. This comparison tests correction prompts under fixed retrieval; it cannot establish retrieval completeness or coverage of every intended source conflict.
+
 ## Reproduce without calls
 
 ```sh
