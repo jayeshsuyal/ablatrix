@@ -30,4 +30,17 @@ Even six accepted outputs with observed selection establish only behavior in thi
 
 ## Preparation and execution status
 
-The [case audit](evidence/source-id-diagnostic-2026-10-11/case-audit.json) records exposure, source identities and interpretation limits. The execution plan and offline qualification will be linked here when frozen. Preparation makes no provider calls. The user's scope approval is recorded separately at execution; the previous stopped experiments remain unchanged.
+The [case audit](evidence/source-id-diagnostic-2026-10-11/case-audit.json), [offline qualification](evidence/source-id-diagnostic-2026-10-11/offline-qualification.json) and [preparation record](evidence/source-id-diagnostic-2026-10-11/preparation.json) bind the code and sources. The [frozen plan](evidence/source-id-diagnostic-2026-10-11/execution-plan.json) has canonical SHA-256 `37fce24b69437b9152312bd563b86170161fb7c303aa77b08bded209928e02df` and uses implementation commit `f9b64b3f748f12a107e7a7d48d5b81b7012c78ef`. Its `paidExecutionAuthorized: false` describes preparation; the later execution record binds the operator's scope approval to this exact hash.
+
+Reproduce preparation to a new file:
+
+```sh
+node --import tsx scripts/source-id-diagnostic.ts --prepare \
+  --source-plan docs/evidence/source-id-correction-2026-10-10/execution-plan-v2.json \
+  --qualification docs/evidence/source-id-diagnostic-2026-10-11/offline-qualification.json \
+  --case-audit docs/evidence/source-id-diagnostic-2026-10-11/case-audit.json \
+  --implementation-commit f9b64b3f748f12a107e7a7d48d5b81b7012c78ef \
+  --out /tmp/new-source-id-diagnostic-plan.json
+```
+
+The creation timestamp changes a regenerated plan hash. Execution uses the published immutable manifest, never a silently regenerated plan. Preparation makes no provider calls; the previous stopped experiments remain unchanged.
