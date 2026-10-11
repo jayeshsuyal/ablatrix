@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
 import { ContextComparisonStore, createContextComparisonFixture, createCorrectionComparisonFixture, contextComparisonHash, contextComparisonInput, correctionComparisonInput, correctionComparisonProtocol, correctionComparisonRequest, correctionComparisonRequestHash, type CorrectionComparisonPacket, type ContextComparisonPacket, type ContextComparisonDetail } from './context-comparison.ts';
-import { revisionRequestBody } from './feedback-provider.ts';
+import { revisionRequestBody, sourceIdRevisionRequestBody, sourceCitationOptions } from './feedback-provider.ts';
 import { workspaceReviewSourceHash } from './answer-review-source.ts';
 
 // All packets and judgments in this file are synthetic test data, including
@@ -198,9 +198,9 @@ function rehashCorrection(packet: CorrectionComparisonPacket) {
   }
   return packet;
 }
-function correctionImportedShape() {
+function correctionImportedShape(citationInterface: CorrectionComparisonPacket['protocol']['citationInterface'] = 'passage_quotes') {
   const packet = createCorrectionComparisonFixture();
-  packet.mode = 'live'; packet.id = 'synthetic-correction-live-shape'; packet.protocol = correctionComparisonProtocol('gpt-luna');
+  packet.mode = 'live'; packet.id = 'synthetic-correction-live-shape'; packet.protocol = correctionComparisonProtocol('gpt-luna', null, citationInterface);
   packet.provenance = { kind: 'imported_live', note: 'Synthetic test shaped like imported live receipts; no calls or real judgments.', sourcePacketSha256: 'a'.repeat(64) };
   for (const item of packet.cases) {
     item.original.model = 'gpt-5.6-luna'; item.original.providerCallId = `synthetic-receipt-${item.original.id}`;
@@ -211,6 +211,7 @@ function correctionImportedShape() {
 
 test('correction policies use the same original, critique and ordered context with exact transport hashes', () => {
   assert.equal(contextComparisonHash(createContextComparisonFixture()), '80d0d3a500d2e921ca8779f73d51d979da73806902589556311409b87409495b', 'the original context experiment fixture remains byte-compatible');
+  assert.equal(contextComparisonHash(createCorrectionComparisonFixture()), '1ae61dfc93152a5daf3962a7e77627f611ded771c9cdf437af228b10b8e254d8', 'legacy passage-quotes policy identities, inputs and request hashes remain byte-compatible');
   const packet = correctionImportedShape(), item = packet.cases[0];
   const baseline = correctionComparisonInput(packet.protocol, item, 'baseline'), candidate = correctionComparisonInput(packet.protocol, item, 'candidate');
   assert.deepEqual({ ...candidate, revisionPolicy: 'baseline' }, baseline);
@@ -226,6 +227,86 @@ test('correction policies use the same original, critique and ordered context wi
   assert.notEqual(packet.protocol.policies.baseline.configurationSha256, packet.protocol.policies.candidate.configurationSha256);
   const store = new ContextComparisonStore(':memory:');
   try { assert.equal(store.importPacket(packet).experiment, 'correction_policy'); } finally { store.close(); }
+});
+
+test('source-ID comparisons bind a common offered menu and exact new transport without changing legacy hashes', () => {
+  const packet = correctionImportedShape('source_ids_v1'), item = packet.cases[0];
+  const baseline = correctionComparisonInput(packet.protocol, item, 'baseline'), candidate = correctionComparisonInput(packet.protocol, item, 'candidate');
+  assert.deepEqual({ ...candidate, revisionPolicy: 'baseline' }, baseline);
+  assert.equal(baseline.citationInterface, 'source_ids_v1');
+  assert.equal(baseline.rejectedAnswer, item.original.answer.answer);
+  assert.deepEqual(baseline.quoteOptions, sourceCitationOptions({ productId: item.product.id, question: item.question, evidence: baseline.evidence }));
+  assert.equal(baseline.evidence[1].originalQuestion, item.sources[1].originalQuestion);
+  assert.equal(baseline.evidence[1].reference, item.sources[1].reference);
+  assert.equal(baseline.quoteOptions![1].quote, item.sources[1].text, 'the customer question is context, not quoted proof');
+  const { modelAlias: _alias, ...providerInput } = baseline;
+  const requestA = correctionComparisonRequest(packet.protocol, item, 'baseline', item.arms.baseline.id), requestB = correctionComparisonRequest(packet.protocol, item, 'candidate', item.arms.candidate.id);
+  assert.deepEqual(requestA, sourceIdRevisionRequestBody({ ...providerInput, runId: item.arms.baseline.id }));
+  const payloadA = JSON.parse(requestA.messages[1].content), payloadB = JSON.parse(requestB.messages[1].content);
+  assert.deepEqual(payloadA.quoteOptions, baseline.quoteOptions);
+  assert.deepEqual({ ...payloadB, promptVersion: payloadA.promptVersion }, payloadA);
+  assert.deepEqual({ ...requestB, messages: requestA.messages }, requestA, 'both arms use the identical ID schema and generation settings');
+  assert.notEqual(packet.protocol.policies.baseline.configurationSha256, correctionComparisonProtocol('gpt-luna').policies.baseline.configurationSha256);
+  assert.match(packet.protocol.policies.baseline.promptVersion, /source-ids-v1$/);
+  const store = new ContextComparisonStore(':memory:');
+  try {
+    store.importPacket(packet); const detail = store.get(packet.id);
+    assert.doesNotMatch(JSON.stringify(detail), /"(?:quoteOptions|citationInterface|protocol|original|critique|requestSha256|inputSha256)"/);
+    assert.throws(() => store.report(packet.id), /all completed answers/);
+    assert.throws(() => store.review(packet.id, { ...judgment(detail), independentReview: false }), /independent source check/);
+    reviewAll(store, packet.id);
+    const report = store.report(packet.id);
+    assert.equal(report.protocol!.citationInterface, 'source_ids_v1');
+    assert.equal(report.qualityClaimEligible, false); assert.equal(report.quality?.verdict, 'exploratory_only');
+    assert.deepEqual(store.exportPacket(packet.id).packet, packet);
+  } finally { store.close(); }
+});
+
+test('source-ID imports reject substrings, duplicate choices and citations outside the actually offered generation menu', () => {
+  const mutations: ((packet: CorrectionComparisonPacket) => void)[] = [
+    packet => { packet.cases[0].original.answer.citations[0].quote = 'two narrow storage bins'; },
+    packet => { packet.cases[0].arms.candidate.answer!.citations[0].quote = 'two narrow storage bins'; },
+    packet => { const answer = packet.cases[0].arms.baseline.answer!; answer.citations.push({ ...answer.citations[0] }); },
+    packet => { packet.cases[0].original.answer.citations.push({ ...packet.cases[0].original.answer.citations[0] }); },
+    packet => { const source = { ...packet.cases[0].sources[0], id: 'review-only-copy' }; packet.cases[0].sources.push({ ...source, sha256: workspaceReviewSourceHash(source) }); packet.cases[0].arms.candidate.answer!.citations[0].passageId = source.id; },
+    packet => { packet.cases[0].arms.candidate.answer!.citations = []; }
+  ];
+  for (const mutate of mutations) {
+    const packet = correctionImportedShape('source_ids_v1'), store = new ContextComparisonStore(':memory:');
+    try { mutate(packet); assert.throws(() => store.importPacket(packet), /source-ID citations must resolve/); assert.equal(store.list().comparisons.length, 0); }
+    finally { store.close(); }
+  }
+  // Old passage-quote packets deliberately retain their original substring contract.
+  const legacy = correctionImportedShape(), store = new ContextComparisonStore(':memory:');
+  try {
+    legacy.cases[0].original.answer.citations[0].quote = 'two narrow storage bins';
+    legacy.cases[0].arms.candidate.answer!.citations[0].quote = 'two narrow storage bins';
+    assert.equal(store.importPacket(legacy).reviewableAnswers, 2);
+  } finally { store.close(); }
+});
+
+test('source-ID interface swaps, stale scoped menus and excessive source bodies fail before an import is frozen', () => {
+  const mutations: [RegExp, (packet: CorrectionComparisonPacket) => void][] = [
+    [/prompt configuration/, packet => { packet.protocol.citationInterface = 'passage_quotes'; }],
+    [/prompt configuration/, packet => { packet.protocol.policies.candidate = correctionComparisonProtocol('gpt-luna').policies.candidate; }],
+    [/shared original/, packet => { const source = packet.cases[0].sources[0]; source.reference += '/changed'; source.sha256 = workspaceReviewSourceHash(source); }],
+    [/shared original/, packet => { const item = packet.cases[0]; item.generationSourceIds.reverse(); item.investigation.selectedSourceIds = [...item.generationSourceIds]; }],
+    [/unresolved option IDs/, packet => { packet.cases[0].original.answer.answer += ' [src_unresolved]'; }],
+    [/unresolved option IDs/, packet => { packet.cases[0].arms.candidate.answer!.answer += ' [src_unresolved]'; }],
+    [/source-ID quote options/, packet => {
+      const item = packet.cases[0];
+      for (let index = 0; index < 6; index++) {
+        const source = { id: `long-source-${index}`, label: `Synthetic bounded source ${index}`, text: `${index}${'x'.repeat(1999)}`, originalQuestion: null, reference: `synthetic://long-source/${index}` };
+        item.sources.push({ ...source, sha256: workspaceReviewSourceHash(source) }); item.generationSourceIds.push(source.id);
+      }
+      item.investigation.selectedSourceIds = [...item.generationSourceIds];
+    }]
+  ];
+  for (const [message, mutate] of mutations) {
+    const packet = correctionImportedShape('source_ids_v1'), store = new ContextComparisonStore(':memory:');
+    try { mutate(packet); assert.throws(() => store.importPacket(packet), message); assert.equal(store.list().comparisons.length, 0); }
+    finally { store.close(); }
+  }
 });
 
 test('correction imports reject changed shared inputs, request identity, source order and hidden arm overrides', () => {

@@ -60,9 +60,20 @@ Import rejects the 56 products in the existing development/validation corpus, fi
 - One shared investigation whose ordered `selectedSourceIds` equal those generation IDs. This format permits no added sources or clarifications.
 - Sibling `baseline` and `candidate` revision attempts, each starting from that same original. The candidate never receives the baseline revision as its original.
 
-Both arms retain original customer questions. Only the selected revision instructions and prompt-version label differ: `baseline` uses the existing revision policy; `candidate` selects `candidate_v4`. The protocol binds both full system instructions, their hashes, the full generation-configuration hashes, model alias and citation interface. Import checks these against the versioned implementation. Model route, settings, response schema and output handling are shared.
+Both arms retain original customer questions. Only the selected revision instructions and prompt-version label differ: `baseline` uses the existing revision policy; `candidate` selects `candidate_v4`. The protocol binds both full system instructions, their hashes, the full generation-configuration hashes, model alias and citation interface. Import checks these against the versioned implementation. Model route, settings, response schema and output handling are shared within an experiment.
 
-`correctionComparisonInput()` defines each controlled input. Its `inputSha256` uses `contextComparisonHash()`; `correctionComparisonRequestHash()` computes SHA-256 of the serialized request body constructed by `revisionRequestBody()` with the protocol's model alias. For live packets this is the exact transport-body projection; fixtures use a synthetic model and never dispatch it. Completed live arms retain separate provider-call IDs. These checks reconstruct declared revision requests; they cannot authenticate dispatch or provider responses. The original-generation input/request fingerprints are recorded declarations, not a reconstruction of its transport body.
+The same packet tag supports two explicit `protocol.citationInterface` values:
+
+| Interface | Citation delivery and import validation |
+| --- | --- |
+| `passage_quotes` | Existing copied passage IDs/quotes, prompt identities, request hashes and substring checks remain unchanged. This is the helper's default. |
+| `source_ids_v1` | Separately versioned original and revision interfaces offer one whole literal body per selected source. The model selects scoped quote-option IDs; the server resolves them to passage IDs and exact quote text. |
+
+Select the new protocol explicitly with `correctionComparisonProtocol(modelAlias, codeCommit, 'source_ids_v1')`. Its instruction identities and output schema differ from the old citation-delivery interface; both revision arms must use the same interface. A changed interface is a new experiment, not a retry or reinterpretation of frozen `passage_quotes` records.
+
+For `source_ids_v1`, options bind product, question, ordered selected bodies, source labels/references and original-question context. Original questions remain context and never enter quote text. The comparison still permits at most eight generation sources of at most 2,000 characters each, with an additional 12,000-character total body bound. No sentence splitting or silent clipping occurs. The full reviewer pool remains separate. Every citation in the shared original and completed revisions must resolve to a distinct **actually offered** `{passageId, quote}` option. A literal substring, citation to a review-only source, duplicate selection, or unsupported interface/configuration fails import. This mechanical check does not establish semantic support.
+
+`correctionComparisonInput()` defines each controlled input. Its `inputSha256` uses `contextComparisonHash()`; the new interface additionally binds the interface label and derived quote menu. `correctionComparisonRequestHash()` computes SHA-256 of the serialized request body constructed by `revisionRequestBody()` or `sourceIdRevisionRequestBody()`, according to the declared interface, with the protocol's model alias. For live packets this is the exact transport-body projection; fixtures use a synthetic model and never dispatch it. Completed live arms retain separate provider-call IDs. These checks reconstruct declared revision requests; they cannot authenticate dispatch or provider responses. The original-generation input/request fingerprints are recorded declarations, not a reconstruction of its transport body; new-interface original citations are nevertheless checked against the frozen offered options.
 
 Correction arms additionally support `not_attempted`: answer, model, latency, usage and provider-call ID must be null, with an explanation. Its request hash describes the planned request only. It is neither a failed provider call nor a completed answer. If original generation fails, retain that execution record outside this import format, which requires a completed shared original; do not silently shrink the planned cohort.
 
@@ -72,7 +83,7 @@ The same CLI `import` command and product-exposure checks accept this tag. `crea
 
 Public cards contain `label` (`A` or `B`), an opaque `versionId`, attempt status, answer, mechanical `citationCheck`, and saved review. A private persisted key determines A/B assignment. Public cards and lists omit model, timing, arm identity, attempt IDs and input hashes. Full context is available to check both answers.
 
-Correction cards additionally hide the shared original answer, AI-authored critique, investigation, selected generation IDs, policy/configuration metadata and request hashes until every completed answer has a locked judgment. The reviewer sees both final answers and the full source pool. The revealed critique remains an AI-authored generation input, never a human judgment.
+Correction cards additionally hide the shared original answer, AI-authored critique, investigation, selected generation IDs, offered quote-option IDs, interface/policy/configuration metadata and request hashes until every completed answer has a locked judgment. The reviewer sees both final answers and the full source pool. The revealed critique remains an AI-authored generation input, never a human judgment.
 
 Review payload:
 

@@ -60,6 +60,8 @@ Open [Compare answers](http://127.0.0.1:4173/compare) and load the **synthetic e
 
 The workbench also imports experiment packets through `npm run compare -- import --db .data/context-comparisons.sqlite --packet /absolute/path/packet.json`. Separate formats compare original-question metadata or revision policies. The latter holds the original answer, critique and sources constant while changing the revision instructions. A saved packet protects review integrity; it does not prove that an experiment was planned before generation or authenticate provider records. See the [comparison protocol](docs/context-comparison-protocol.md) and [packet format](docs/context-comparison-contract.md).
 
+The next comparison uses [server-resolved citation IDs](docs/source-id-citations.md): the model selects a source and the server returns its exact text. Offline regression checks pass; the separate live comparison is prepared but has not run. This establishes citation plumbing, not an answer-quality gain.
+
 ## Private demo package
 
 The [restricted hosted demo](docs/hosted-demo.md) packages `/ask` → `/review` → correction → export with verified gateway identity, viewer/reviewer/operator roles, one persistent SQLite volume, and offline backup/restore. Synthetic templates let invited users rehearse the workflow without paid calls. Hosting, HTTPS identity configuration, and an external deployment are still pending; this is not a public live service.

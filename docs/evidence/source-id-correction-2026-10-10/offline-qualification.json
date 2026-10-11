@@ -1,0 +1,40 @@
+{
+  "format": "ablatrix-source-id-offline-qualification-v1",
+  "createdAt": "2026-10-11T02:44:34.674674+00:00",
+  "passed": true,
+  "newProviderCalls": 0,
+  "sourceIdInterface": "source_ids_v1",
+  "implementationSha256": {
+    "server/citation-options.ts": "0845b2922b7880de4f641453c307d042a31211948514dc4e57e4f9ad4cb1d93d",
+    "server/feedback-provider.ts": "16f491ad27de9cecef64aead1ff85082b13577ad29be72481545dad8aa9de9cc",
+    "server/revision-policy.ts": "718c3718e384d83751035e503da874cb72041a6c4a84b65cd3cc482e39d92fb2",
+    "server/citation-options.test.ts": "65c125716758dae267b496a8932c1aed384759288e44e33c5de98b08e312d269",
+    "server/feedback-provider.test.ts": "e32dcb19c4401ea1ca91b3dabd5a60ac7dce9ed300bf1b4fe3fbc16494672251"
+  },
+  "verification": {
+    "command": "node --import tsx --test server/citation-options.test.ts server/feedback-provider.test.ts",
+    "passed": 29,
+    "failed": 0,
+    "skipped": 0,
+    "outputSha256": "2c4bd7846e62ad63b5c3d9c5e2793e9317e0f9b91c7b83dc28fa0b43ca5dc72a",
+    "transport": "Injected synthetic responses and temporary/in-memory ledgers; no remote provider request.",
+    "checks": [
+      "Q7794 complete 259-character structured attribute remains one literal option with its original spacing and value fields.",
+      "Decimals and structured attributes are not split into fragments.",
+      "Original customer questions remain separate, non-quotable metadata.",
+      "Option IDs bind product, question and the full ordered source context; duplicate or foreign IDs are rejected.",
+      "Unknown IDs, unresolved markers and citationless answered responses fail output validation without retries.",
+      "Exact request helpers match captured synthetic transports for original and both sibling revisions.",
+      "Legacy methods, options and request identities remain unchanged."
+    ]
+  },
+  "liveModelBehaviorQualified": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false,
+  "limitations": [
+    "These are mechanical code checks using synthetic model responses, not live model outcomes or semantic quality judgments.",
+    "Server-resolved source text guarantees quotation membership for accepted IDs; selecting a source does not establish claim support.",
+    "The previous stopped live record remains unchanged. A new live plan needs separate execution authorization."
+  ]
+}

@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { createHash } from 'node:crypto';
-import { FeedbackExternalError, SapiomFeedbackProvider, quoteOptions, revisionRequestBody, type RevisionInput } from './feedback-provider.ts';
+import { FeedbackExternalError, SapiomFeedbackProvider, quoteOptions, revisionRequestBody, sourceIdAnswerRequestBody, sourceIdRevisionRequestBody, sourceIdAnswerPromptIdentity, sourceIdRevisionPromptIdentity, sourceCitationOptions, type RevisionInput } from './feedback-provider.ts';
 import type { LoopProvider } from './loop-types.ts';
 import { revisionPromptIdentity, type RevisionPolicySelector } from './revision-policy.ts';
 
@@ -306,5 +306,145 @@ test('candidate revisions retain source-body-only citation validation', async ()
     const receipt = provider.receipt('candidate-invalid-citation')!;
     assert.equal(receipt.error_code, 'output_validation');
     assert.equal(JSON.parse(receipt.receipt_json!).promptVersion, 'answer-revision-v4-attributed-listing');
+  } finally { provider.close(); }
+});
+
+test('new source-ID originals dispatch the frozen exact body and resolve literal attribute text on the server', async () => {
+  const text = 'item_dimensions:  { length:{ normalized_value:{ unit:inches, value:21.5 }, value:21.5 }, height:{ normalized_value:{ unit:inches, value:12. }, value:12. } }';
+  const original = { ...input, runId: 'source-id-original', passages: [{ ...input.passages[0], source: 'attribute', text }] };
+  let calls = 0, chosen = '';
+  const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async (_url, init) => {
+    calls++;
+    assert.equal(String(init?.body), JSON.stringify(sourceIdAnswerRequestBody(original)));
+    const body = JSON.parse(String(init?.body)), payload = JSON.parse(body.messages[1].content);
+    assert.equal(payload.citationInterface, 'source_ids_v1');
+    assert.equal(body.tool_choice.function.name, 'product_answer_source_ids_v1');
+    assert.equal(payload.quoteOptions.length, 1); assert.equal(payload.quoteOptions[0].quote, text);
+    assert.equal(payload.evidence[0].reference, 'fixture');
+    chosen = payload.quoteOptions[0].id;
+    return reply({ answer: `The listing gives a length of 21.5 inches. [${chosen}]`, status: 'answered', citations: [{ quoteId: chosen }] }, 'gpt-5.6-luna', 'tool_calls', 'product_answer_source_ids_v1');
+  } });
+  try {
+    const result = await provider.answerWithSourceIds(original);
+    assert.equal(result.answer.answer, 'The listing gives a length of 21.5 inches.');
+    assert.deepEqual(result.answer.citations, [{ passageId: 'c1', quote: text }]);
+    assert.deepEqual(result.quoteIds, [chosen]); assert.equal(calls, 1);
+    assert.equal(result.promptVersion, 'product-answer-source-ids-v1');
+    assert.equal(result.systemInstructionsSha256, sourceIdAnswerPromptIdentity().systemInstructionsSha256);
+    const receipt = provider.receipt(original.runId)!;
+    assert.equal(receipt.error_code, null);
+    const identity = JSON.parse(receipt.receipt_json!);
+    assert.equal(identity.citationInterface, result.citationInterface);
+    assert.equal(identity.optionSetSha256, result.optionSetSha256);
+    assert.equal(identity.systemInstructionsSha256, result.systemInstructionsSha256);
+    assert.equal(identity.promptVersion, result.promptVersion);
+  } finally { provider.close(); }
+});
+
+test('new source-ID sibling revisions share exact context/options and differ only in versioned policy instructions', async () => {
+  const original: RevisionInput = { runId: 'unused', question: input.question, product: input.product, rejectedAnswer: 'It is plastic.', critique: 'Recheck the material and model scope.', evidence: [{ id: 'c1', source: 'cqa', text: 'It is oak. Question: What is the material for model AB100?', reference: 'fixture://customer' }], investigation: { issue: 'answer_quality', query: input.question, selectedSourceIds: ['c1'], addedSourceIds: [] } };
+  const bodies: ReturnType<typeof sourceIdRevisionRequestBody>[] = [];
+  const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async (_url, init) => {
+    const revisionPolicy = bodies.length === 0 ? 'baseline' : 'candidate_v4';
+    assert.equal(String(init?.body), JSON.stringify(sourceIdRevisionRequestBody({ ...original, revisionPolicy })));
+    const body = JSON.parse(String(init?.body)), payload = JSON.parse(body.messages[1].content); bodies.push(body);
+    assert.equal(payload.evidence[0].text, 'It is oak.');
+    assert.equal(payload.evidence[0].originalQuestion, 'What is the material for model AB100?');
+    assert.equal(payload.quoteOptions[0].quote, 'It is oak.');
+    assert.equal(body.tool_choice.function.name, 'answer_revision_source_ids_v1');
+    assert.match(body.messages[0].content, /originalQuestion.*not factual source assertions/);
+    assert.doesNotMatch(body.messages[0].content, /exact copied quote/);
+    return reply({ answer: 'The customer reports oak for model AB100.', status: 'answered', citations: [{ quoteId: payload.quoteOptions[0].id }] }, 'gpt-5.6-luna', 'tool_calls', 'answer_revision_source_ids_v1');
+  } });
+  try {
+    for (const revisionPolicy of ['baseline', 'candidate_v4'] as const) {
+      const runId = `source-id-revision-${revisionPolicy}`;
+      const result = await provider.reviseWithSourceIds({ ...original, runId, revisionPolicy });
+      const prompt = sourceIdRevisionPromptIdentity(revisionPolicy);
+      assert.equal(result.promptVersion, prompt.promptVersion);
+      assert.equal(result.systemInstructionsSha256, prompt.systemInstructionsSha256);
+      assert.deepEqual(result.answer.citations, [{ passageId: 'c1', quote: 'It is oak.' }]);
+      const receipt = JSON.parse(provider.receipt(runId)!.receipt_json!);
+      assert.equal(receipt.revisionPolicy, revisionPolicy); assert.equal(receipt.citationInterface, 'source_ids_v1');
+      assert.equal(receipt.optionSetSha256, result.optionSetSha256);
+    }
+    const withoutPolicy = bodies.map(body => {
+      const copy = structuredClone(body), payload = JSON.parse(copy.messages[1].content);
+      delete payload.promptVersion; copy.messages[0].content = '<policy>'; copy.messages[1].content = JSON.stringify(payload); return copy;
+    });
+    assert.deepEqual(withoutPolicy[0], withoutPolicy[1]);
+    assert.notEqual(bodies[0].messages[0].content, bodies[1].messages[0].content);
+    assert.equal(sourceIdRevisionPromptIdentity().systemInstructionsSha256, sourceIdRevisionPromptIdentity('baseline').systemInstructionsSha256);
+    assert.equal(sourceIdRevisionPromptIdentity('baseline', false).promptVersion, 'answer-revision-v2-context-source-ids-v1');
+    const mutated = sourceIdRevisionRequestBody(original);
+    (mutated.tools[0].function.parameters as { required: string[] }).required.push('injected');
+    assert.deepEqual(sourceIdRevisionRequestBody(original), bodies[0]);
+  } finally { provider.close(); }
+});
+
+test('source-ID outputs reject foreign IDs, duplicates, unresolved markers and uncited answers without retrying', async () => {
+  const evidence = input.passages.map(({ id, source, text, reference }) => ({ id, source, text, reference }));
+  const selected = sourceCitationOptions({ productId: input.product.id, question: input.question, evidence })[0].id;
+  const foreign = sourceCitationOptions({ productId: 'different-product', question: input.question, evidence })[0].id;
+  const outputs = [
+    { answer: 'Oak.', status: 'answered', citations: [{ quoteId: foreign }] },
+    { answer: 'Oak.', status: 'answered', citations: [{ quoteId: selected }, { quoteId: selected }] },
+    { answer: 'Oak.', status: 'answered', citations: [] },
+    { answer: `Oak. [${foreign}]`, status: 'answered', citations: [{ quoteId: selected }] },
+    { answer: `Oak. ${selected}`, status: 'answered', citations: [{ quoteId: selected }] },
+    { answer: 'Oak.', status: 'answered', citations: [{ quoteId: selected, quote: 'A fabricated quote.' }] },
+  ];
+  for (const [index, output] of outputs.entries()) {
+    let calls = 0; const runId = `invalid-source-id-${index}`;
+    const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async () => { calls++; return reply(output, 'gpt-5.6-luna', 'tool_calls', 'product_answer_source_ids_v1'); } });
+    try {
+      await assert.rejects(provider.answerWithSourceIds({ ...input, runId }), /output validation/);
+      assert.equal(calls, 1); assert.equal(provider.receipt(runId)!.error_code, 'output_validation');
+    } finally { provider.close(); }
+  }
+});
+
+test('source-ID preflight rejects duplicate sources, oversized bodies, foreign products and unknown policies without reserving calls', async () => {
+  let calls = 0;
+  const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async () => { calls++; return reply(valid); } });
+  try {
+    for (const [index, passages] of [[input.passages[0], input.passages[0]], [{ ...input.passages[0], text: 'x'.repeat(3001) }], [{ ...input.passages[0], productId: 'foreign' }]].entries()) {
+      const runId = `source-preflight-${index}`;
+      await assert.rejects(provider.answerWithSourceIds({ ...input, runId, passages }), /Source-ID/);
+      assert.equal(provider.receipt(runId), undefined);
+    }
+    await assert.rejects(provider.reviseWithSourceIds({ runId: 'source-preflight-policy', question: input.question, product: input.product, rejectedAnswer: 'Plastic.', critique: 'Check source.', evidence: input.passages, revisionPolicy: 'unknown' as RevisionPolicySelector }), /Unknown revision policy/);
+    assert.equal(provider.receipt('source-preflight-policy'), undefined);
+    assert.equal(calls, 0); assert.match(provider.readiness().reason, /0\/20 calls/);
+  } finally { provider.close(); }
+});
+
+test('source-ID identities are independently versioned while the historical revision body stays byte-identical', () => {
+  const frozen: RevisionInput = { runId: 'frozen-serialization', question: 'What material is the handle?', product: { id: 'p1', title: 'Example fixture item' }, rejectedAnswer: 'Plastic.', critique: 'Check the supplied material.', evidence: [{ id: 'c1', source: 'manufacturer', text: 'The handle is made of oak.' }], investigation: { issue: 'answer_quality', query: 'handle material', selectedSourceIds: ['c1'], addedSourceIds: [] } };
+  assert.equal(createHash('sha256').update(JSON.stringify(revisionRequestBody(frozen))).digest('hex'), '787a67173ae5e849867b3a5b1cd6458522362972ddd6efa3fcd7d1032e8de993');
+  for (const [identity, expected] of [
+    [sourceIdAnswerPromptIdentity(), '29bef50129107f14d3dac0b4b9cc42c382127e1543f76c405f9c34712d9a2202'],
+    [sourceIdRevisionPromptIdentity('baseline'), 'ec06924d7590acf51f7e52b19a9edd700e5c51c24b8ab38db9e10352cb314862'],
+    [sourceIdRevisionPromptIdentity('candidate_v4'), 'b06b92911b87f06c9f215ce5e23bf8a4a9762220be74cc1f69d0e8be83ffa53f']
+  ] as const) {
+    assert.equal(identity.systemInstructionsSha256, expected);
+    assert.equal(createHash('sha256').update(identity.systemInstructions).digest('hex'), expected);
+    assert.equal(Object.isFrozen(identity), true);
+  }
+});
+
+test('source-ID revisions reject invalid IDs and preserve uncited uncertainty without fabricating a citation', async () => {
+  const revision: RevisionInput = { runId: 'source-uncertain', question: input.question, product: input.product, rejectedAnswer: 'Plastic.', critique: 'Check the missing source relationship.', evidence: input.passages, revisionPolicy: 'candidate_v4' };
+  let calls = 0;
+  const provider = new SapiomFeedbackProvider({ ...options, fetchImpl: async () => {
+    calls++;
+    return reply(calls === 1 ? { answer: 'The source does not establish the requested relationship.', status: 'insufficient_evidence', citations: [] }
+      : { answer: 'The handle is oak.', status: 'answered', citations: [{ quoteId: 'src_invented' }] }, 'gpt-5.6-luna', 'tool_calls', 'answer_revision_source_ids_v1');
+  } });
+  try {
+    const result = await provider.reviseWithSourceIds(revision);
+    assert.equal(result.answer.status, 'insufficient_evidence'); assert.deepEqual(result.answer.citations, []);
+    await assert.rejects(provider.reviseWithSourceIds({ ...revision, runId: 'source-invalid-revision' }), /output validation/);
+    assert.equal(provider.receipt('source-invalid-revision')!.error_code, 'output_validation'); assert.equal(calls, 2);
   } finally { provider.close(); }
 });

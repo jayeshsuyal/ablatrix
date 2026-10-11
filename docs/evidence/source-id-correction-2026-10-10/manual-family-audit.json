@@ -1,0 +1,289 @@
+{
+  "format": "ablatrix-source-id-cohort-audit-v1",
+  "createdAt": "2026-10-11T02:54:54.601643+00:00",
+  "kind": "ai_pre_dispatch_family_source_coverage_audit",
+  "passed": true,
+  "cohortFileSha256": "9cc29d9987f8e76245d7ac89d32db13fa998d0e6ff9357eab88bda8889785fba",
+  "cohortSha256": "6b336ab83740b17cc7b949f6ae719f5001a2399f984dd803f14540a53ce39d77",
+  "exposureAuditSha256": "db69bc76ff2b08e3a8f150824ec7ece732cb4eb27935f2401412b99f443bdb7d",
+  "preparationRevision": "source-ids-v3-prospective-coverage-and-brand-repair",
+  "newProviderCalls": 0,
+  "generationPerformed": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false,
+  "protectedProducts": 67,
+  "sourceCount": 175,
+  "sourceRows": 190,
+  "uniformCriteria": [
+    "Preserve exact dataset product/source/question provenance and every full-pool candidate, including distractors and contradictions.",
+    "Check direct dimension/capacity; direct color/material/finish; explicit named-model relation with differently scoped CQA; missing relationship; included-feature control as assigned.",
+    "Compare exact ASIN, normalized source manufacturer/brand, prefix-normalized title family, full source/question/title identifiers and near model families against all67 protected products and other selected cases.",
+    "Exclude weapon/firearm/ammunition compatibility or optimization from this consumer demonstration before ranking.",
+    "Missing or conflicting support is eligible within its intended stratum; no model response or expected improvement is used to select cases."
+  ],
+  "cases": [
+    {
+      "id": "source-id-train-8297",
+      "passed": true,
+      "productId": "B003M01720",
+      "stratum": "capacity_dimensions",
+      "coverageChecked": true,
+      "sourceCount": 20,
+      "upstreamRowCount": 20,
+      "sourcesWithOriginalQuestion": 2,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "sourceRowsAndOffsetsMatch": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "javascriptWorkspaceHashVerified": true,
+      "sourceManufacturerBrandIdentifiers": [],
+      "fullContextModelIdentifiers": [
+        "18007278790"
+      ],
+      "protectedExactOrNearIdentifierConflicts": [],
+      "protectedBrandOrTitleFamilyConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.23076923076923078,
+        "closestProductId": "B00IY7B5CS",
+        "scope": "All non-attribute source bodies at least 80 characters; lowercased word-set Jaccard. A diagnostic, not semantic proof."
+      },
+      "notes": [
+        "Rio Brands/Wonder Wheeler beach cart differs from every protected manufacturer/model family. The question directly asks chair/accessory capacity; the pool preserves positive capacity reports and a bent arm after four chairs. No five-chair fit label is supplied."
+      ]
+    },
+    {
+      "id": "source-id-train-12820",
+      "passed": true,
+      "productId": "B00O4HP9JW",
+      "stratum": "capacity_dimensions",
+      "coverageChecked": true,
+      "sourceCount": 10,
+      "upstreamRowCount": 10,
+      "sourcesWithOriginalQuestion": 3,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "sourceRowsAndOffsetsMatch": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "javascriptWorkspaceHashVerified": true,
+      "sourceManufacturerBrandIdentifiers": [],
+      "fullContextModelIdentifiers": [],
+      "protectedExactOrNearIdentifierConflicts": [],
+      "protectedBrandOrTitleFamilyConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.24242424242424243,
+        "closestProductId": "B009W9APU0",
+        "scope": "All non-attribute source bodies at least 80 characters; lowercased word-set Jaccard. A diagnostic, not semantic proof."
+      },
+      "notes": [
+        "Woodford Reserve food gift box is unrelated to protected storage boxes or the cajon box drum. Dimension attributes and differently scoped individual-box CQA are retained, including internally inconsistent package unit values; these are not corrected during preparation."
+      ]
+    },
+    {
+      "id": "source-id-train-10021",
+      "passed": true,
+      "productId": "B0051POK1E",
+      "stratum": "appearance_material",
+      "coverageChecked": true,
+      "sourceCount": 29,
+      "upstreamRowCount": 30,
+      "sourcesWithOriginalQuestion": 2,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "sourceRowsAndOffsetsMatch": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "javascriptWorkspaceHashVerified": true,
+      "sourceManufacturerBrandIdentifiers": [],
+      "fullContextModelIdentifiers": [
+        "10wks"
+      ],
+      "protectedExactOrNearIdentifierConflicts": [],
+      "protectedBrandOrTitleFamilyConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.2549019607843137,
+        "closestProductId": "B00AHVR5U0",
+        "scope": "All non-attribute source bodies at least 80 characters; lowercased word-set Jaccard. A diagnostic, not semantic proof."
+      },
+      "notes": [
+        "Baby Einstein play gym differs from protected Safety 1st mattress and Graco sleep system. Bright Starts is mentioned as another toy in a customer review; no protected source identifies that family. Material identification is the requested topic; plush listing metadata and conflicting slippery/slick customer reports all remain."
+      ]
+    },
+    {
+      "id": "source-id-train-12547",
+      "passed": true,
+      "productId": "B07DDMRXYV",
+      "stratum": "appearance_material",
+      "coverageChecked": true,
+      "sourceCount": 17,
+      "upstreamRowCount": 20,
+      "sourcesWithOriginalQuestion": 0,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "sourceRowsAndOffsetsMatch": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "javascriptWorkspaceHashVerified": true,
+      "sourceManufacturerBrandIdentifiers": [
+        "amazonbasics"
+      ],
+      "fullContextModelIdentifiers": [],
+      "protectedExactOrNearIdentifierConflicts": [],
+      "protectedBrandOrTitleFamilyConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.25,
+        "closestProductId": "B004RPQ4MM",
+        "scope": "All non-attribute source bodies at least 80 characters; lowercased word-set Jaccard. A diagnostic, not semantic proof."
+      },
+      "notes": [
+        "Amazon Basics glass writing board is unrelated to protected products. Direct white-versus-greenish color intent is explicit; non-magnetic frosted attribute and blue/green/off-white customer descriptions remain. No source was chosen for agreeing with a preferred color."
+      ]
+    },
+    {
+      "id": "source-id-train-14506",
+      "passed": true,
+      "productId": "B006ZPAYPU",
+      "stratum": "model_scope",
+      "coverageChecked": true,
+      "sourceCount": 27,
+      "upstreamRowCount": 30,
+      "sourcesWithOriginalQuestion": 4,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "sourceRowsAndOffsetsMatch": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "javascriptWorkspaceHashVerified": true,
+      "sourceManufacturerBrandIdentifiers": [],
+      "fullContextModelIdentifiers": [
+        "20120619t00",
+        "2can",
+        "pspds3ds",
+        "usg001"
+      ],
+      "protectedExactOrNearIdentifierConflicts": [],
+      "protectedBrandOrTitleFamilyConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.25,
+        "closestProductId": "B009XGZGZG",
+        "scope": "All non-attribute source bodies at least 80 characters; lowercased word-set Jaccard. A diagnostic, not semantic proof."
+      },
+      "notes": [
+        "LEGO Batman Nintendo DS game and USG-001 target differ from the protected Microsoft Xbox console family. Original CQA questions about 2DS/3DS/DSi XL remain attached; explicit DS Lite text is retained without treating every Nintendo device as identical."
+      ]
+    },
+    {
+      "id": "source-id-train-11847",
+      "passed": true,
+      "productId": "B00004SU18",
+      "stratum": "model_scope",
+      "coverageChecked": true,
+      "sourceCount": 29,
+      "upstreamRowCount": 30,
+      "sourcesWithOriginalQuestion": 5,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "sourceRowsAndOffsetsMatch": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "javascriptWorkspaceHashVerified": true,
+      "sourceManufacturerBrandIdentifiers": [
+        "brita"
+      ],
+      "fullContextModelIdentifiers": [
+        "060258355031",
+        "0calorie",
+        "10153491015610",
+        "f003",
+        "oboobo3"
+      ],
+      "protectedExactOrNearIdentifierConflicts": [],
+      "protectedBrandOrTitleFamilyConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.23333333333333334,
+        "closestProductId": "B00E37TR5U",
+        "scope": "All non-attribute source bodies at least 80 characters; lowercased word-set Jaccard. A diagnostic, not semantic proof."
+      },
+      "notes": [
+        "Brita pitcher/dispenser filters and Great Value F-003 target differ from protected EcoAqua refrigerator cartridge and Watersafe test kit. Full product/source identifiers do not cross-reference protected parts. The only protected text matching great value is generic praise (great value and match), not a Great Value filter identifier. Original questions about Up & Up/PUR/other Brita variants and Stream exclusion remain."
+      ]
+    },
+    {
+      "id": "source-id-train-8746",
+      "passed": true,
+      "productId": "B00ISKS416",
+      "stratum": "missing_information",
+      "coverageChecked": true,
+      "sourceCount": 26,
+      "upstreamRowCount": 30,
+      "sourcesWithOriginalQuestion": 11,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "sourceRowsAndOffsetsMatch": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "javascriptWorkspaceHashVerified": true,
+      "sourceManufacturerBrandIdentifiers": [
+        "seagate"
+      ],
+      "fullContextModelIdentifiers": [
+        "14f002la",
+        "6440b",
+        "a42f",
+        "d531",
+        "e545",
+        "n4110",
+        "st500lm021",
+        "ul30aa2",
+        "x202e"
+      ],
+      "protectedExactOrNearIdentifierConflicts": [],
+      "protectedBrandOrTitleFamilyConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.21875,
+        "closestProductId": "B00EZFPDO4",
+        "scope": "All non-attribute source bodies at least 80 characters; lowercased word-set Jaccard. A diagnostic, not semantic proof."
+      },
+      "notes": [
+        "Seagate ST500LM021 and Lenovo ThinkPad E545 target have no protected model/brand-family match. CQA answers concern several other laptop models; they remain paired with their original questions. The requested exact relationship is absent, so missing information is a legitimate response; this audit is not a model judgment."
+      ]
+    },
+    {
+      "id": "source-id-train-12894",
+      "passed": true,
+      "productId": "B089NXYL3W",
+      "stratum": "preservation_control",
+      "coverageChecked": true,
+      "sourceCount": 17,
+      "upstreamRowCount": 20,
+      "sourcesWithOriginalQuestion": 1,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "sourceRowsAndOffsetsMatch": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "javascriptWorkspaceHashVerified": true,
+      "sourceManufacturerBrandIdentifiers": [],
+      "fullContextModelIdentifiers": [
+        "usd11"
+      ],
+      "protectedExactOrNearIdentifierConflicts": [],
+      "protectedBrandOrTitleFamilyConflicts": [],
+      "protectedSubstantiveSourceSimilarity": {
+        "maxTokenJaccard": 0.21428571428571427,
+        "closestProductId": "B000PD0HQE",
+        "scope": "All non-attribute source bodies at least 80 characters; lowercased word-set Jaccard. A diagnostic, not semantic proof."
+      },
+      "notes": [
+        "Lashscoop monthly eyelash subscription is unrelated to protected brands or model families. Glue inclusion is a direct included-accessory control. Several customer reports say glue was not included; they stay attributed to customers, without converting them to a manufacturer guarantee."
+      ]
+    }
+  ],
+  "limitations": [
+    "This is AI source/eligibility inspection, not blinded answer grading or human review.",
+    "Brand/model heuristics and manual comparison reduce detectable contamination but do not prove latent pretraining independence or exhaust every commercial relationship.",
+    "Candidate source data are historical and may be incomplete or internally inconsistent; factual uncertainty must remain visible.",
+    "The initial model answer and both revision outcomes have not been generated. No answer-quality gain is established."
+  ],
+  "priorRejectedPreparationRecords": [
+    "docs/evidence/source-id-correction-2026-10-10/cohort-preparation-v1.json",
+    "docs/evidence/source-id-correction-2026-10-10/failed-coverage-audit-v1.json",
+    "docs/evidence/source-id-correction-2026-10-10/cohort-preparation-v2.json",
+    "docs/evidence/source-id-correction-2026-10-10/failed-coverage-audit-v2.json",
+    "docs/evidence/source-id-correction-2026-10-10/manual-eligibility-decisions.json"
+  ]
+}
