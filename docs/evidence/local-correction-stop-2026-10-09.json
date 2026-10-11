@@ -1,0 +1,181 @@
+{
+  "kind": "local_no_call_worker_stop",
+  "createdAt": "2026-10-10T01:48:41.784Z",
+  "planSha256": "30b61763299300b732797223b9d12be97a5800d9509fc07e652859be567beefe",
+  "qid": "47",
+  "request": {
+    "versionId": "original-47-a63471539a58",
+    "idempotencyKey": "walkthrough-30b61763299300b732797223-47",
+    "reviewer": "Codex AI development walkthrough",
+    "reviewKind": "ai_assisted",
+    "feedback": "No saved source establishes WMR200 compatibility. Request exact compatibility documentation rather than generalizing from other stations.",
+    "issue": "missing_evidence",
+    "investigate": true
+  },
+  "job": {
+    "mode": "live",
+    "id": "a724111d-e5b8-49d5-8a7a-d6d5e4908aa4",
+    "qid": "47",
+    "parentId": "original-47-a63471539a58",
+    "feedback": "No saved source establishes WMR200 compatibility. Request exact compatibility documentation rather than generalizing from other stations.",
+    "reviewer": "Codex AI development walkthrough",
+    "reviewKind": "ai_assisted",
+    "status": "needs_information",
+    "createdAt": "2026-10-10T01:48:41.149Z",
+    "context": {
+      "question": "will this work with a wmr200 station?",
+      "product": {
+        "id": "B000WOG90E",
+        "title": "Oregon Scientific THGR122NX Water Resistant Remote Sensor W/ LCD Display. Measures and Displays Humidity & Temperature from -22F to 140F"
+      },
+      "sources": [
+        {
+          "label": "ePQA review 432",
+          "text": "after trying to get it to work on any channel (it didn't after exhausting all possibilities) it definitely is not compatible apparently unless you purchase an oregon product display.",
+          "sha256": "39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+          "originalQuestion": null,
+          "id": "47:39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+          "origin": "pinned"
+        },
+        {
+          "label": "ePQA review 430",
+          "text": "the oregon scientific website does give a list of what weather stations this works with.",
+          "sha256": "15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+          "originalQuestion": null,
+          "id": "47:15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+          "origin": "pinned"
+        },
+        {
+          "label": "ePQA cqa 431",
+          "text": "if it is the same freq as this senor it should work.",
+          "sha256": "aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe",
+          "originalQuestion": "will this work with model ws-1171a?",
+          "id": "47:aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe",
+          "origin": "pinned"
+        },
+        {
+          "label": "ePQA description 433",
+          "text": "the sensor is compatible with various multi-channel products from oregon scientific.",
+          "sha256": "c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+          "originalQuestion": null,
+          "id": "47:c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+          "origin": "pinned"
+        },
+        {
+          "label": "ePQA cqa 434",
+          "text": "the oregon scientific web site has a \"contact us\" tag, i suggest you send them this question to make sure that they are compatible.",
+          "sha256": "6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3",
+          "originalQuestion": "i have a baa968hg base unit, and thgr228n sensors 433 mhz.  i have checked the oregon scientific sensor guide, nil joy.  will this sensor work?",
+          "id": "47:6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3",
+          "origin": "pinned"
+        },
+        {
+          "label": "ePQA attribute 435",
+          "text": "brand:  { value:\"oregon scientific\" }",
+          "sha256": "805f717c8b2076d682132fee6f2a4e348fa198fd44eb33b7d086328852834a76",
+          "originalQuestion": null,
+          "id": "47:805f717c8b2076d682132fee6f2a4e348fa198fd44eb33b7d086328852834a76",
+          "origin": "pinned"
+        },
+        {
+          "label": "ePQA attribute 436",
+          "text": "manufacturer:  { value:\"oregon scientific\" }",
+          "sha256": "a740b6175bb1530f49cf52daa8a5b99e447f4b0080790868fdab80c1481ecc04",
+          "originalQuestion": null,
+          "id": "47:a740b6175bb1530f49cf52daa8a5b99e447f4b0080790868fdab80c1481ecc04",
+          "origin": "pinned"
+        },
+        {
+          "label": "ePQA attribute 437",
+          "text": "country_as_labeled:  { value:cn }",
+          "sha256": "03df9962f2d62e0fe1cfef684695e055c24cac0aa6f7732fbc2cdc4fb970999e",
+          "originalQuestion": null,
+          "id": "47:03df9962f2d62e0fe1cfef684695e055c24cac0aa6f7732fbc2cdc4fb970999e",
+          "origin": "pinned"
+        }
+      ],
+      "clarifications": []
+    },
+    "promptVersion": "answer-revision-v2-context",
+    "additionalSources": [],
+    "investigate": true,
+    "issue": "missing_evidence",
+    "startedAt": "2026-10-10T01:48:41.673Z",
+    "phase": "investigation",
+    "investigation": {
+      "protocol": "revision-investigation-v1",
+      "planner": "rules",
+      "issue": "missing_evidence",
+      "status": "needs_information",
+      "query": "WMR200 work station compatibility replacement oregon scientific water resistant remote sensor",
+      "requestedIdentifiers": [
+        "WMR200"
+      ],
+      "steps": [
+        {
+          "kind": "diagnosis",
+          "status": "completed",
+          "detail": "Rule-based routing selected missing evidence. This is a search plan, not a correctness judgment."
+        },
+        {
+          "kind": "scope_check",
+          "status": "skipped",
+          "detail": "This customer answer refers to a different or unspecified target model in its original question.",
+          "sourceIds": [
+            "47:aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe"
+          ]
+        },
+        {
+          "kind": "scope_check",
+          "status": "skipped",
+          "detail": "This customer answer refers to a different or unspecified target model in its original question.",
+          "sourceIds": [
+            "47:6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3"
+          ]
+        },
+        {
+          "kind": "local_search",
+          "status": "completed",
+          "detail": "Ranked 6 saved sources using the current question and critique; selected 6. Reusing a saved source adds no new evidence.",
+          "sourceIds": [
+            "47:39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+            "47:15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+            "47:c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+            "47:805f717c8b2076d682132fee6f2a4e348fa198fd44eb33b7d086328852834a76",
+            "47:a740b6175bb1530f49cf52daa8a5b99e447f4b0080790868fdab80c1481ecc04",
+            "47:03df9962f2d62e0fe1cfef684695e055c24cac0aa6f7732fbc2cdc4fb970999e"
+          ]
+        },
+        {
+          "kind": "web_search",
+          "status": "skipped",
+          "detail": "Web investigation is disabled. Enable ABLATRIX_REVISION_WEB for bounded Sapiom source discovery."
+        }
+      ],
+      "selectedSourceIds": [
+        "47:39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+        "47:15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+        "47:c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+        "47:805f717c8b2076d682132fee6f2a4e348fa198fd44eb33b7d086328852834a76",
+        "47:a740b6175bb1530f49cf52daa8a5b99e447f4b0080790868fdab80c1481ecc04",
+        "47:03df9962f2d62e0fe1cfef684695e055c24cac0aa6f7732fbc2cdc4fb970999e"
+      ],
+      "addedSourceIds": [],
+      "newEvidence": false,
+      "externalCalls": 0,
+      "stopReason": "External discovery is unavailable and the missing claim remains unresolved.",
+      "clarificationQuestion": "What is the full device model number, or can you supply documentation confirming the requested compatibility (WMR200)?"
+    },
+    "investigationComplete": true,
+    "finishedAt": "2026-10-10T01:48:41.683Z",
+    "attempts": [],
+    "externalUsage": [],
+    "usage": null,
+    "latencyMs": 534
+  },
+  "versionsBefore": 1,
+  "versionsAfter": 1,
+  "newProviderCalls": 0,
+  "newHumanJudgments": 0,
+  "qualityClaimEligible": false
+}

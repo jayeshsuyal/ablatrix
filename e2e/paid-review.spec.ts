@@ -1,5 +1,28 @@
 import { expect, test } from '@playwright/test';
 
+test('pinned case links persist selection, preserve other parameters, and support browser history without review writes', async ({ page }) => {
+  const writes: string[] = [];
+  page.on('request', request => { if (request.method() !== 'GET' && request.url().includes('/api/paid-review')) writes.push(request.url()); });
+  const overview = await (await page.request.get('/api/paid-review')).json();
+  const first = overview.cases[0], target = overview.cases.find((item: { qid: string }) => item.qid === '19');
+  await page.goto(`/paid-review?walkthrough=five&qid=${target.qid}#answer`);
+  await expect(page.locator('.pr-detail-head h2')).toHaveText(target.question);
+  await expect(page.locator('.pr-queue button[aria-current="true"]')).toContainText(target.question);
+  await page.locator('.pr-queue button').first().click();
+  await expect(page).toHaveURL(`/paid-review?walkthrough=five&qid=${first.qid}#answer`);
+  await expect(page.locator('.pr-detail-head h2')).toHaveText(first.question);
+  await page.goBack();
+  await expect(page.locator('.pr-detail-head h2')).toHaveText(target.question);
+  await page.goForward();
+  await expect(page.locator('.pr-detail-head h2')).toHaveText(first.question);
+  await page.reload();
+  await expect(page.locator('.pr-detail-head h2')).toHaveText(first.question);
+  await page.goto('/paid-review?walkthrough=five&qid=not-a-saved-case#answer');
+  await expect(page.locator('.pr-detail-head h2')).toHaveText(first.question);
+  await expect(page).toHaveURL(`/paid-review?walkthrough=five&qid=${first.qid}#answer`);
+  expect(writes).toEqual([]);
+});
+
 test('saved paid answers can be reviewed without a model call and keep the judgment after reload', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
@@ -70,12 +93,14 @@ test('a ready revision opens first with the new answer and its citations visible
     const state = payload.cases.find((item: { qid: string }) => item.qid === '19');
     const original = state.versions[0];
     state.versions.push({ id: 'test-revision-19', parentId: original.id, model: 'test-model', createdAt: new Date().toISOString(), context: { question:q19.question, product:{id:q19.asin,title:q19.title}, sources:[...q19.sources.map((s: {sha256: string}) => ({...s,id:`19:${s.sha256}`,origin:'pinned'})),added], clarifications:[{text:'Customer model TEST-123.',reviewer:'Fixture reviewer'}] }, answer: { answer: 'Revised answer for Q19. Check the full model before ordering.', status: 'answered', citations: [{ passageId: `19:${source.sha256}`, quote: source.text.slice(0, 16) }, {passageId:added.id,quote:added.text}] } });
-    state.jobs.push({ id: 'test-job-19', versionId: 'test-revision-19', status: 'ready', feedback: 'Test critique', createdAt: new Date().toISOString() });
+    state.jobs.push({ id: 'test-job-19', versionId: 'test-revision-19', status: 'ready', reviewKind: 'ai_assisted', feedback: 'Synthetic AI-authored development critique', createdAt: new Date().toISOString() });
     payload.ready = 1;
     await route.fulfill({ response, json: payload });
   });
   await page.goto('/paid-review');
   await expect(page.locator('.pr-detail-head')).toContainText('QUESTION 19');
+  await expect(page).toHaveURL('/paid-review?qid=19');
+  await expect(page.getByRole('region', { name: 'Revised answer for review' })).toContainText('AI-authored development feedback. Human decision pending.');
   await expect(page.getByRole('region', { name: 'Revised answer for review' })).toContainText('Revised answer for Q19');
   await expect(page.locator('.pr-answer')).toHaveCount(0);
   await expect(page.locator('.pr-form')).toHaveCount(0);
@@ -87,8 +112,11 @@ test('a ready revision opens first with the new answer and its citations visible
   await expect(page.getByRole('link', {name:`Synthetic parts manual: “${added.text}”`})).toHaveAttribute('href', `#source-${added.sha256}`);
   await expect(page.getByRole('checkbox', {name:'Synthetic parts manual',exact:true})).toBeVisible();
   await expect(page.locator('.pr-detail').locator('.pr-revision')).toBeVisible();
+  await page.goto('/paid-review?walkthrough=five&qid=4');
+  await expect(page.locator('.pr-detail-head')).toContainText('QUESTION 4');
   await page.getByRole('button', { name: 'Open revised answer for Q19' }).click();
   await expect(page.locator('.pr-detail-head')).toContainText('QUESTION 19');
+  await expect(page).toHaveURL('/paid-review?walkthrough=five&qid=19');
   await page.setViewportSize({ width: 360, height: 760 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
 });

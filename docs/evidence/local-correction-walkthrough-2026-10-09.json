@@ -1,0 +1,1018 @@
+{
+  "kind": "no_call_development_walkthrough",
+  "createdAt": "2026-10-10T01:47:35.899Z",
+  "planSha256": "30b61763299300b732797223b9d12be97a5800d9509fc07e652859be567beefe",
+  "plan": {
+    "protocol": "correction-development-walkthrough-v1",
+    "manifestSha256": "125def79dfcd8823e1ca5c38b125fcdc5bdfcbd55222e4cbc1236c6b3a666dd2",
+    "implementationSha256": {
+      "investigation": "eb3f233512d065593ebe290a3b01b4327a24b287f400a9891d256cb1f526730e",
+      "feedbackProvider": "79ea9bfd5ece2d8a92fb0d408ca7f0586f10445ed10b9e17d10fae50454e8269",
+      "answerRevisions": "0a562235351ce86c2071459c9af028f61d31a151f1508c74ee0e1f66c18efea7"
+    },
+    "selection": "ai_assisted_development_selection",
+    "freshValidation": false,
+    "qualityClaimEligible": false,
+    "humanJudgments": 0,
+    "humanReviewStatus": "pending",
+    "reviewContextProvenance": "restored_original_customer_questions_after_original_generation",
+    "limits": {
+      "maxNewRevisionAttempts": 2,
+      "planningAllowancePerAttemptUsd": 0.1,
+      "maxNewPlanningAllowanceUsd": 0.2,
+      "actualProviderCharges": "unavailable",
+      "webEnabled": false,
+      "automaticRetries": 0
+    },
+    "generationPlan": {
+      "requestedModelAlias": "gpt-luna",
+      "promptVersion": "answer-revision-v3-investigation",
+      "execution": "not_implemented_by_this_command"
+    },
+    "cases": [
+      {
+        "qid": "75",
+        "action": "unchanged_control",
+        "issue": null,
+        "feedback": null,
+        "expectedRoute": null,
+        "maxNewRevisionAttempts": 0,
+        "reviewKind": "ai_assisted",
+        "context": {
+          "question": "can these pads be used on a stacked washer dryer  ?",
+          "product": {
+            "id": "B0051S4ZZM",
+            "title": "Washer anti vibration anti walking pads"
+          },
+          "sources": [
+            {
+              "label": "ePQA cqa 710",
+              "text": "we actually have a dryer stacked on top of the washer and these pads are working great.",
+              "sha256": "9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+              "originalQuestion": "have a whirlpool front load washer,do i need two or four pads ?",
+              "id": "75:9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA review 711",
+              "text": "these were used in a multi unit senior apartment building on stacked washer/dryer units..",
+              "sha256": "a43d474af666f63013dca433fdc69f9004ed9b4dae17771a80a60730ff0f7149",
+              "originalQuestion": null,
+              "id": "75:a43d474af666f63013dca433fdc69f9004ed9b4dae17771a80a60730ff0f7149",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA review 712",
+              "text": "so i built a laundry closet on the second floor and stacked our washer & dryer (we did not have them stacked downstairs, because we had wall cabinets above them).",
+              "sha256": "021b7506b59945f7d3a9d2e60e63a607dda2fdf50e71c0b02e1602f826ae7e8b",
+              "originalQuestion": null,
+              "id": "75:021b7506b59945f7d3a9d2e60e63a607dda2fdf50e71c0b02e1602f826ae7e8b",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA review 713",
+              "text": "i have a dryer stacked on top of my washer and they are working like a charm.",
+              "sha256": "be04360b069e4ae3e6e1873cd986669fe065d565442c025d17cb5184b3a1bcea",
+              "originalQuestion": null,
+              "id": "75:be04360b069e4ae3e6e1873cd986669fe065d565442c025d17cb5184b3a1bcea",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA cqa 714",
+              "text": "i had removed two of my pads when i had to reposition my stacked washer/dryer, and i saw no indentations on the inside of the top of the pads (the tops of the pads are dish-shaped to keep the washer from walking off of them).",
+              "sha256": "75f29f552357225695b3cca3f297b9e94a6356088e0fa78bfdcbbafb651b5081",
+              "originalQuestion": "what is the hardness degree of these rubber pads?",
+              "id": "75:75f29f552357225695b3cca3f297b9e94a6356088e0fa78bfdcbbafb651b5081",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA description 715",
+              "text": "type of flooring, size and balance of the load, machine level, etc.",
+              "sha256": "e1260f3457cc630194a5cec2163464c76b8f628a398df3c1ee784c15a41f2d3e",
+              "originalQuestion": null,
+              "id": "75:e1260f3457cc630194a5cec2163464c76b8f628a398df3c1ee784c15a41f2d3e",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA description 716",
+              "text": "checking each washer foot when in spin cycle and lowering until movement is minimized)!",
+              "sha256": "68deb2699aeefb0d8ccaa8fff388ee6e59b4d766f2d06be8a6f0e5a4bb6cc558",
+              "originalQuestion": null,
+              "id": "75:68deb2699aeefb0d8ccaa8fff388ee6e59b4d766f2d06be8a6f0e5a4bb6cc558",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA attribute 717",
+              "text": "part_number:  { value:\"1001\" }",
+              "sha256": "267cef08b8ba92f39fe6916a6e1832fee65a18b7e892b4a139758644bdc6ba58",
+              "originalQuestion": null,
+              "id": "75:267cef08b8ba92f39fe6916a6e1832fee65a18b7e892b4a139758644bdc6ba58",
+              "origin": "pinned"
+            }
+          ],
+          "clarifications": []
+        },
+        "sourceContextSha256": "7452b47326b1ccacac43471541c6b57cbebd11cc57db086842817de1cdd6eb74",
+        "original": {
+          "mode": "live",
+          "runId": "7831bcf5-92da-4944-b9fc-9d0eaac44ff9",
+          "versionId": "original-75-9c24a157a4a8",
+          "model": "gpt-5.6-luna",
+          "answer": {
+            "answer": "Yes. Customer reports indicate these pads have been used successfully with a dryer stacked on top of a washer and on stacked washer/dryer units. The evidence is customer experience rather than a manufacturer specification, so confirm compatibility with your specific appliances if needed.",
+            "status": "answered",
+            "citations": [
+              {
+                "passageId": "2da44b6d-4d6b-44cf-8ffd-a9e11c5df110",
+                "quote": "we actually have a dryer stacked on top of the washer and these pads are working great."
+              },
+              {
+                "passageId": "5bd8c2b4-e627-48a5-a348-fa665f744ced",
+                "quote": "these were used in a multi unit senior apartment building on stacked washer/dryer units."
+              },
+              {
+                "passageId": "94669af0-3e07-4ab3-9b4a-192904678d66",
+                "quote": "i have a dryer stacked on top of my washer and they are working like a charm."
+              }
+            ]
+          },
+          "retrievedSourceIds": [
+            "75:9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+            "75:a43d474af666f63013dca433fdc69f9004ed9b4dae17771a80a60730ff0f7149",
+            "75:be04360b069e4ae3e6e1873cd986669fe065d565442c025d17cb5184b3a1bcea",
+            "75:75f29f552357225695b3cca3f297b9e94a6356088e0fa78bfdcbbafb651b5081",
+            "75:021b7506b59945f7d3a9d2e60e63a607dda2fdf50e71c0b02e1602f826ae7e8b"
+          ]
+        },
+        "originalSourceIds": [
+          "75:9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+          "75:a43d474af666f63013dca433fdc69f9004ed9b4dae17771a80a60730ff0f7149",
+          "75:021b7506b59945f7d3a9d2e60e63a607dda2fdf50e71c0b02e1602f826ae7e8b",
+          "75:be04360b069e4ae3e6e1873cd986669fe065d565442c025d17cb5184b3a1bcea",
+          "75:75f29f552357225695b3cca3f297b9e94a6356088e0fa78bfdcbbafb651b5081",
+          "75:e1260f3457cc630194a5cec2163464c76b8f628a398df3c1ee784c15a41f2d3e",
+          "75:68deb2699aeefb0d8ccaa8fff388ee6e59b4d766f2d06be8a6f0e5a4bb6cc558",
+          "75:267cef08b8ba92f39fe6916a6e1832fee65a18b7e892b4a139758644bdc6ba58"
+        ],
+        "originalCitedSourceIds": [
+          "75:9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+          "75:a43d474af666f63013dca433fdc69f9004ed9b4dae17771a80a60730ff0f7149",
+          "75:be04360b069e4ae3e6e1873cd986669fe065d565442c025d17cb5184b3a1bcea"
+        ],
+        "citationMapping": [
+          {
+            "passageId": "2da44b6d-4d6b-44cf-8ffd-a9e11c5df110",
+            "quote": "we actually have a dryer stacked on top of the washer and these pads are working great.",
+            "sourceId": "75:9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+            "sourceSha256": "9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+            "exactQuoteMatch": true
+          },
+          {
+            "passageId": "5bd8c2b4-e627-48a5-a348-fa665f744ced",
+            "quote": "these were used in a multi unit senior apartment building on stacked washer/dryer units.",
+            "sourceId": "75:a43d474af666f63013dca433fdc69f9004ed9b4dae17771a80a60730ff0f7149",
+            "sourceSha256": "a43d474af666f63013dca433fdc69f9004ed9b4dae17771a80a60730ff0f7149",
+            "exactQuoteMatch": true
+          },
+          {
+            "passageId": "94669af0-3e07-4ab3-9b4a-192904678d66",
+            "quote": "i have a dryer stacked on top of my washer and they are working like a charm.",
+            "sourceId": "75:be04360b069e4ae3e6e1873cd986669fe065d565442c025d17cb5184b3a1bcea",
+            "sourceSha256": "be04360b069e4ae3e6e1873cd986669fe065d565442c025d17cb5184b3a1bcea",
+            "exactQuoteMatch": true
+          }
+        ],
+        "outcome": "original_retained_unreviewed",
+        "inputSha256": "7af0972ecf9868f83f2c861e89afbaefbc99c899b32f425407a2ce5ba7fb5699"
+      },
+      {
+        "qid": "26",
+        "action": "proposed_revision",
+        "issue": "answer_quality",
+        "feedback": "Make the answer concise and natural. Remove repeated evidence framing. Retain buyers’ white/off-white/light-gray descriptions and lighter-than-pewter comparison; do not claim an exact manufacturer color.",
+        "expectedRoute": "ready_to_revise",
+        "maxNewRevisionAttempts": 1,
+        "reviewKind": "ai_assisted",
+        "context": {
+          "question": "your picture shows pewter but the description says white... which is it?",
+          "product": {
+            "id": "B0053F8W2K",
+            "title": "Whirlpool 8181846 Handle for Washing Machine"
+          },
+          "sources": [
+            {
+              "label": "ePQA review 220",
+              "text": "it is white instead of off white color.",
+              "sha256": "0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+              "originalQuestion": null,
+              "id": "26:0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA cqa 222",
+              "text": "the handle color is off-white/light, light gray.",
+              "sha256": "00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+              "originalQuestion": "i have a front loading duet model ghw9300pw4. will this handle fit my model? what color is the handle?",
+              "id": "26:00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA review 223",
+              "text": "our washer is pewter, but this is lighter in color.",
+              "sha256": "4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+              "originalQuestion": null,
+              "id": "26:4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA review 224",
+              "text": "what's to describe?remove the two torx #15 screws, remove the old broken plastic part, screw the new part on, and try not to be a dummy and break this on.the white matched the current white, so i'm happy with it.",
+              "sha256": "a3062d769f21be4f283001e0bb07a8883f6bd9a458a3683644b99220bfe5fa52",
+              "originalQuestion": null,
+              "id": "26:a3062d769f21be4f283001e0bb07a8883f6bd9a458a3683644b99220bfe5fa52",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA attribute 225",
+              "text": "part_number:  { value:\"8181846\" }",
+              "sha256": "10298c78e1018789871debadd7d224bbdd3abdc0f95202b3f45d55c7ca0332e2",
+              "originalQuestion": null,
+              "id": "26:10298c78e1018789871debadd7d224bbdd3abdc0f95202b3f45d55c7ca0332e2",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA attribute 226",
+              "text": "item_package_weight:  { unit:kilograms, normalized_value:{ unit:pounds, value:0.2 }, value:0.09 }",
+              "sha256": "644e13f289ab5aea7916c89cd09909c76a8d62de42c9a60f61e5e7afc9f02ff8",
+              "originalQuestion": null,
+              "id": "26:644e13f289ab5aea7916c89cd09909c76a8d62de42c9a60f61e5e7afc9f02ff8",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA description 227",
+              "text": "this is a genuine replacement part.",
+              "sha256": "d628fd55b53af4f77ed93c7ff8f91c13fb18f3d4cebda082db417f99e0cff5c5",
+              "originalQuestion": null,
+              "id": "26:d628fd55b53af4f77ed93c7ff8f91c13fb18f3d4cebda082db417f99e0cff5c5",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA review 228",
+              "text": "the color matched and it was replaced in just a few minutes.",
+              "sha256": "7f2498a7ad9bce51a8c2200ce5328b8ce20c3a97f54e27b2ffa0066f0ead2b6a",
+              "originalQuestion": null,
+              "id": "26:7f2498a7ad9bce51a8c2200ce5328b8ce20c3a97f54e27b2ffa0066f0ead2b6a",
+              "origin": "pinned"
+            }
+          ],
+          "clarifications": []
+        },
+        "sourceContextSha256": "750bd16cddf0aa154896141d3695b5610296d2f2e9657fae769e3723a87f3e39",
+        "original": {
+          "mode": "live",
+          "runId": "de02ca67-c84f-45b6-b3fb-e4865a65d483",
+          "versionId": "original-26-1f25f029c1ea",
+          "model": "gpt-5.6-luna",
+          "answer": {
+            "answer": "The available evidence describes the handle as white to off-white/light gray, not pewter. One customer specifically says it is lighter than their pewter washer, so the photo or description may not precisely represent the shade. The exact manufacturer color is not confirmed by the supplied evidence.",
+            "status": "answered",
+            "citations": [
+              {
+                "passageId": "5ae6c473-0398-440a-b373-107e8aad5f55",
+                "quote": "it is white instead of off white color."
+              },
+              {
+                "passageId": "f1d62717-39ec-4263-99f4-2ca111dc4b4d",
+                "quote": "our washer is pewter, but this is lighter in color."
+              },
+              {
+                "passageId": "56920a8c-035c-4012-ae8f-81edc3addaea",
+                "quote": "the handle color is off-white/light, light gray."
+              }
+            ]
+          },
+          "retrievedSourceIds": [
+            "26:0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+            "26:4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+            "26:00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+            "26:a3062d769f21be4f283001e0bb07a8883f6bd9a458a3683644b99220bfe5fa52",
+            "26:7f2498a7ad9bce51a8c2200ce5328b8ce20c3a97f54e27b2ffa0066f0ead2b6a"
+          ]
+        },
+        "originalSourceIds": [
+          "26:0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+          "26:00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+          "26:4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+          "26:a3062d769f21be4f283001e0bb07a8883f6bd9a458a3683644b99220bfe5fa52",
+          "26:10298c78e1018789871debadd7d224bbdd3abdc0f95202b3f45d55c7ca0332e2",
+          "26:644e13f289ab5aea7916c89cd09909c76a8d62de42c9a60f61e5e7afc9f02ff8",
+          "26:d628fd55b53af4f77ed93c7ff8f91c13fb18f3d4cebda082db417f99e0cff5c5",
+          "26:7f2498a7ad9bce51a8c2200ce5328b8ce20c3a97f54e27b2ffa0066f0ead2b6a"
+        ],
+        "originalCitedSourceIds": [
+          "26:0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+          "26:4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+          "26:00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528"
+        ],
+        "citationMapping": [
+          {
+            "passageId": "5ae6c473-0398-440a-b373-107e8aad5f55",
+            "quote": "it is white instead of off white color.",
+            "sourceId": "26:0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+            "sourceSha256": "0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+            "exactQuoteMatch": true
+          },
+          {
+            "passageId": "f1d62717-39ec-4263-99f4-2ca111dc4b4d",
+            "quote": "our washer is pewter, but this is lighter in color.",
+            "sourceId": "26:4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+            "sourceSha256": "4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+            "exactQuoteMatch": true
+          },
+          {
+            "passageId": "56920a8c-035c-4012-ae8f-81edc3addaea",
+            "quote": "the handle color is off-white/light, light gray.",
+            "sourceId": "26:00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+            "sourceSha256": "00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+            "exactQuoteMatch": true
+          }
+        ],
+        "outcome": "not_executed",
+        "inputSha256": "f704ecfb39b4999d056e92798621d6859b5f752142073125bad22c3a74631783"
+      },
+      {
+        "qid": "63",
+        "action": "proposed_revision",
+        "issue": "missed_source",
+        "feedback": "The No cites only a tentative customer opinion. Use saved description 595 to explain one slim quarter keg versus up to two sixth-barrel kegs. Cite exact listing text and do not claim independently tested fit.",
+        "expectedRoute": "ready_to_revise",
+        "maxNewRevisionAttempts": 1,
+        "reviewKind": "ai_assisted",
+        "context": {
+          "question": "can it fit 2 slim quarter kegs?",
+          "product": {
+            "id": "B00655HJJE",
+            "title": "EdgeStar KC2000SSTWIN Full Size Stainless Steel Dual Tap Kegerator & Draft Beer Dispenser - Stainless Steel"
+          },
+          "sources": [
+            {
+              "label": "ePQA cqa 592",
+              "text": "no, this only has enough room for one quarter keg.",
+              "sha256": "33dabbb17e14762fd93486372972513cc1c0e8227cf5a39f948a2bf32c99b6ea",
+              "originalQuestion": "will this keg fit a slim quarter keg and a sixth keg at the same time?",
+              "id": "63:33dabbb17e14762fd93486372972513cc1c0e8227cf5a39f948a2bf32c99b6ea",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA review 590",
+              "text": "this will not fit two quarter kegs.",
+              "sha256": "203a5136634941fc624a1ded36be8716b05f8f7c09c3c2569e1f1614754ec332",
+              "originalQuestion": null,
+              "id": "63:203a5136634941fc624a1ded36be8716b05f8f7c09c3c2569e1f1614754ec332",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA cqa 591",
+              "text": "i don't think 2 slim quarter kegs will fit.",
+              "sha256": "877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+              "originalQuestion": "can you fit two pony (1/4 bbl) kegs?",
+              "id": "63:877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA bullet 593",
+              "text": "stores up to a full sized half shell sankey standard keg or two sixth kegs; does not support use of coors, miller rubberized or other oversized kegs",
+              "sha256": "1162814d3f71aeb0668a89286ead579c4369358ff7da69e8ac66f707baefeca6",
+              "originalQuestion": null,
+              "id": "63:1162814d3f71aeb0668a89286ead579c4369358ff7da69e8ac66f707baefeca6",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA cqa 594",
+              "text": "this kegerator will fit the following kegs: one full size (1/2 barrel), one straight pony (1/4 barrel), one quarter slim (1/4 barrel) and two sixth slim (1/6 barrel)i don't think it would hold a 1/4 barrel and a 1/6 barrel at the same time.",
+              "sha256": "24a1549982a91a70a9c213ed6531185b14ba26754426f503ae465e52e2cf4d73",
+              "originalQuestion": "what size kegs can i use? i thought i saw that you can combine a 1/4 & 1/6.is it possible to use a 1/2 by itself?thanks",
+              "id": "63:24a1549982a91a70a9c213ed6531185b14ba26754426f503ae465e52e2cf4d73",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA description 595",
+              "text": "acceptable keg configurations:  (1) full size keg, 1/2 barrel (124 pints) (1) pony keg, 1/4 barrel (62 pints) (1) slim-pony keg, 1/4 barrel (62 pints) up to (2) sixth barrel kegs, (42 pints each) up to (2) cornelius homebrew kegs, (40 pints each)",
+              "sha256": "0ceb8d3e3b36f5d6c5a6e803b525792a2e0834471e184723a17eb4448d3022b9",
+              "originalQuestion": null,
+              "id": "63:0ceb8d3e3b36f5d6c5a6e803b525792a2e0834471e184723a17eb4448d3022b9",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA bullet 597",
+              "text": "for freestanding use only and indoor use only; 5 lb.",
+              "sha256": "c9673407444f1c2d41f20a7c23f5f25968e7a1ed77226d51cdcbcbbd061b0884",
+              "originalQuestion": null,
+              "id": "63:c9673407444f1c2d41f20a7c23f5f25968e7a1ed77226d51cdcbcbbd061b0884",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA review 598",
+              "text": "when i contacted edge star customer service, they said they would not ship me a second one and to look on the internet for how to drill holes into the metal refrigerator.",
+              "sha256": "3e5206a3557c68afe5c95bb54e03e69c708cf642df9c07c97a6584eb0b1f3617",
+              "originalQuestion": null,
+              "id": "63:3e5206a3557c68afe5c95bb54e03e69c708cf642df9c07c97a6584eb0b1f3617",
+              "origin": "pinned"
+            }
+          ],
+          "clarifications": []
+        },
+        "sourceContextSha256": "5c7fc824efbffa4093377d316fa0658d414e9db66312352040619e2e203e655b",
+        "original": {
+          "mode": "live",
+          "runId": "001f6412-ef41-4068-9be8-baf36f7e105c",
+          "versionId": "original-63-51bea155002c",
+          "model": "gpt-5.6-luna",
+          "answer": {
+            "answer": "No. The available product evidence indicates that two slim quarter kegs will not fit.",
+            "status": "answered",
+            "citations": [
+              {
+                "passageId": "99be48c8-3f47-4c2b-9a68-9f25a0d3888d",
+                "quote": "i don't think 2 slim quarter kegs will fit."
+              }
+            ]
+          },
+          "retrievedSourceIds": [
+            "63:877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+            "63:203a5136634941fc624a1ded36be8716b05f8f7c09c3c2569e1f1614754ec332",
+            "63:24a1549982a91a70a9c213ed6531185b14ba26754426f503ae465e52e2cf4d73",
+            "63:33dabbb17e14762fd93486372972513cc1c0e8227cf5a39f948a2bf32c99b6ea",
+            "63:0ceb8d3e3b36f5d6c5a6e803b525792a2e0834471e184723a17eb4448d3022b9"
+          ]
+        },
+        "originalSourceIds": [
+          "63:33dabbb17e14762fd93486372972513cc1c0e8227cf5a39f948a2bf32c99b6ea",
+          "63:203a5136634941fc624a1ded36be8716b05f8f7c09c3c2569e1f1614754ec332",
+          "63:877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+          "63:1162814d3f71aeb0668a89286ead579c4369358ff7da69e8ac66f707baefeca6",
+          "63:24a1549982a91a70a9c213ed6531185b14ba26754426f503ae465e52e2cf4d73",
+          "63:0ceb8d3e3b36f5d6c5a6e803b525792a2e0834471e184723a17eb4448d3022b9",
+          "63:c9673407444f1c2d41f20a7c23f5f25968e7a1ed77226d51cdcbcbbd061b0884",
+          "63:3e5206a3557c68afe5c95bb54e03e69c708cf642df9c07c97a6584eb0b1f3617"
+        ],
+        "originalCitedSourceIds": [
+          "63:877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031"
+        ],
+        "citationMapping": [
+          {
+            "passageId": "99be48c8-3f47-4c2b-9a68-9f25a0d3888d",
+            "quote": "i don't think 2 slim quarter kegs will fit.",
+            "sourceId": "63:877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+            "sourceSha256": "877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+            "exactQuoteMatch": true
+          }
+        ],
+        "outcome": "not_executed",
+        "inputSha256": "ffe1d16d78b4d4dd6b5ed34cad6d4d06fdcc20a2fc9e74a700b625cc378efcc5"
+      },
+      {
+        "qid": "19",
+        "action": "reuse_historical_correction",
+        "issue": null,
+        "feedback": null,
+        "expectedRoute": null,
+        "maxNewRevisionAttempts": 0,
+        "reviewKind": "ai_assisted",
+        "context": {
+          "question": "i have a frigidaire and need a bottom crisper drawer part number 241543917...what drawer do i get?",
+          "product": {
+            "id": "B00545ATZW",
+            "title": "Frigidaire 240337103 Crisper Pan for Refrigerator"
+          },
+          "sources": [
+            {
+              "label": "ePQA cqa 151",
+              "text": "oem part - manufacturer #240351061 this is your crisper drawer",
+              "sha256": "ec4864086f5b61ad5bbc68c7f1281042d29839610fccbd7599ed79741da1abab",
+              "originalQuestion": "will this fit ffhs2622msu?",
+              "id": "19:ec4864086f5b61ad5bbc68c7f1281042d29839610fccbd7599ed79741da1abab",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA cqa 154",
+              "text": "frigidaire oem part #240337103 yes this crisper drawer matches your model",
+              "sha256": "d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f",
+              "originalQuestion": "will this fit kenmore refrigerator 25367889506?",
+              "id": "19:d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA attribute 150",
+              "text": "part_number:  { value:\"240337103\" }",
+              "sha256": "a5e496377ffae77f8032184d258fcbf02d3f70f3f87ba40ec3b701fca7602c8b",
+              "originalQuestion": null,
+              "id": "19:a5e496377ffae77f8032184d258fcbf02d3f70f3f87ba40ec3b701fca7602c8b",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA cqa 152",
+              "text": "on amazon it's frigidaire frigidaire 240337103 refrigerator crisper drawer.",
+              "sha256": "b5f7f04b3746b43c8c3394837824ca56f3dcaa677e0b2ed7b49f0c052963b9e3",
+              "originalQuestion": "i have a model frt18il6jw1.. what crisper would work with my fridge please.",
+              "id": "19:b5f7f04b3746b43c8c3394837824ca56f3dcaa677e0b2ed7b49f0c052963b9e3",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA cqa 153",
+              "text": "frigidaire part# 240599801 deli drawer cover frame (oem)",
+              "sha256": "9bb293dd772bd189fecf054fde355e14370b7a203c7f7c33bac10ab5e316c8d5",
+              "originalQuestion": "i need the glass that goes on top of the crisper drawer frigidaire fridge  15x18",
+              "id": "19:9bb293dd772bd189fecf054fde355e14370b7a203c7f7c33bac10ab5e316c8d5",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA attribute 155",
+              "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:11.6 }, value:11.6 }, length:{ unit:inches, normalized_value:{ unit:inches, value:17. }, value:17. }, height:{ unit:inches, normalized_value:{ unit:inches, value:8.25 }, value:8.25 } }",
+              "sha256": "b256102581f9e08c0e1e4e6fcece89c23cb5863683cbb814e9ba4ef9b350a7cf",
+              "originalQuestion": null,
+              "id": "19:b256102581f9e08c0e1e4e6fcece89c23cb5863683cbb814e9ba4ef9b350a7cf",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA description 157",
+              "text": "frigidaire 240337103 crisper pan for refrigerator.",
+              "sha256": "2d5f13fbecef583a8a48d501e45f6b3cefe2c31ac96f303e35da6c654ffb9d51",
+              "originalQuestion": null,
+              "id": "19:2d5f13fbecef583a8a48d501e45f6b3cefe2c31ac96f303e35da6c654ffb9d51",
+              "origin": "pinned"
+            }
+          ],
+          "clarifications": []
+        },
+        "sourceContextSha256": "39a4eea3205788c4008707221dbf64065fbc69c0735ee35d3322e4f6bfb63251",
+        "original": {
+          "mode": "live",
+          "runId": "3e765be5-aac5-4840-b7a7-ce1254fe3ff6",
+          "versionId": "original-19-a12aaf7d040c",
+          "model": "gpt-5.6-luna",
+          "answer": {
+            "answer": "The supplied evidence identifies this product as the Frigidaire 240337103 refrigerator crisper pan/drawer. It also says this OEM part matches the questioner's model. The evidence does not establish that part 241543917 is interchangeable with 240337103, so verify compatibility using the refrigerator's complete model number before ordering.",
+            "status": "answered",
+            "citations": [
+              {
+                "passageId": "c5043855-5599-4f61-9635-1506b173110e",
+                "quote": "frigidaire 240337103 crisper pan for refrigerator."
+              },
+              {
+                "passageId": "6a3b7a5f-4b78-449e-a318-90bac7493ddd",
+                "quote": "frigidaire oem part #240337103 yes this crisper drawer matches your model"
+              }
+            ]
+          },
+          "retrievedSourceIds": [
+            "19:b5f7f04b3746b43c8c3394837824ca56f3dcaa677e0b2ed7b49f0c052963b9e3",
+            "19:d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f",
+            "19:9bb293dd772bd189fecf054fde355e14370b7a203c7f7c33bac10ab5e316c8d5",
+            "19:ec4864086f5b61ad5bbc68c7f1281042d29839610fccbd7599ed79741da1abab",
+            "19:2d5f13fbecef583a8a48d501e45f6b3cefe2c31ac96f303e35da6c654ffb9d51"
+          ]
+        },
+        "originalSourceIds": [
+          "19:ec4864086f5b61ad5bbc68c7f1281042d29839610fccbd7599ed79741da1abab",
+          "19:d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f",
+          "19:a5e496377ffae77f8032184d258fcbf02d3f70f3f87ba40ec3b701fca7602c8b",
+          "19:b5f7f04b3746b43c8c3394837824ca56f3dcaa677e0b2ed7b49f0c052963b9e3",
+          "19:9bb293dd772bd189fecf054fde355e14370b7a203c7f7c33bac10ab5e316c8d5",
+          "19:b256102581f9e08c0e1e4e6fcece89c23cb5863683cbb814e9ba4ef9b350a7cf",
+          "19:2d5f13fbecef583a8a48d501e45f6b3cefe2c31ac96f303e35da6c654ffb9d51"
+        ],
+        "originalCitedSourceIds": [
+          "19:2d5f13fbecef583a8a48d501e45f6b3cefe2c31ac96f303e35da6c654ffb9d51",
+          "19:d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f"
+        ],
+        "citationMapping": [
+          {
+            "passageId": "c5043855-5599-4f61-9635-1506b173110e",
+            "quote": "frigidaire 240337103 crisper pan for refrigerator.",
+            "sourceId": "19:2d5f13fbecef583a8a48d501e45f6b3cefe2c31ac96f303e35da6c654ffb9d51",
+            "sourceSha256": "2d5f13fbecef583a8a48d501e45f6b3cefe2c31ac96f303e35da6c654ffb9d51",
+            "exactQuoteMatch": true
+          },
+          {
+            "passageId": "6a3b7a5f-4b78-449e-a318-90bac7493ddd",
+            "quote": "frigidaire oem part #240337103 yes this crisper drawer matches your model",
+            "sourceId": "19:d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f",
+            "sourceSha256": "d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f",
+            "exactQuoteMatch": true
+          }
+        ],
+        "outcome": "historical_document_only",
+        "inputSha256": "24753f19a14711a7d0e23a237e4b174ff1225de71c1733e8a543fc25753347d9"
+      },
+      {
+        "qid": "47",
+        "action": "offline_missing_information",
+        "issue": "missing_evidence",
+        "feedback": "No saved source establishes WMR200 compatibility. Request exact compatibility documentation rather than generalizing from other stations.",
+        "expectedRoute": "needs_information",
+        "maxNewRevisionAttempts": 0,
+        "reviewKind": "ai_assisted",
+        "context": {
+          "question": "will this work with a wmr200 station?",
+          "product": {
+            "id": "B000WOG90E",
+            "title": "Oregon Scientific THGR122NX Water Resistant Remote Sensor W/ LCD Display. Measures and Displays Humidity & Temperature from -22F to 140F"
+          },
+          "sources": [
+            {
+              "label": "ePQA review 432",
+              "text": "after trying to get it to work on any channel (it didn't after exhausting all possibilities) it definitely is not compatible apparently unless you purchase an oregon product display.",
+              "sha256": "39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+              "originalQuestion": null,
+              "id": "47:39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA review 430",
+              "text": "the oregon scientific website does give a list of what weather stations this works with.",
+              "sha256": "15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+              "originalQuestion": null,
+              "id": "47:15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA cqa 431",
+              "text": "if it is the same freq as this senor it should work.",
+              "sha256": "aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe",
+              "originalQuestion": "will this work with model ws-1171a?",
+              "id": "47:aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA description 433",
+              "text": "the sensor is compatible with various multi-channel products from oregon scientific.",
+              "sha256": "c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+              "originalQuestion": null,
+              "id": "47:c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA cqa 434",
+              "text": "the oregon scientific web site has a \"contact us\" tag, i suggest you send them this question to make sure that they are compatible.",
+              "sha256": "6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3",
+              "originalQuestion": "i have a baa968hg base unit, and thgr228n sensors 433 mhz.  i have checked the oregon scientific sensor guide, nil joy.  will this sensor work?",
+              "id": "47:6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA attribute 435",
+              "text": "brand:  { value:\"oregon scientific\" }",
+              "sha256": "805f717c8b2076d682132fee6f2a4e348fa198fd44eb33b7d086328852834a76",
+              "originalQuestion": null,
+              "id": "47:805f717c8b2076d682132fee6f2a4e348fa198fd44eb33b7d086328852834a76",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA attribute 436",
+              "text": "manufacturer:  { value:\"oregon scientific\" }",
+              "sha256": "a740b6175bb1530f49cf52daa8a5b99e447f4b0080790868fdab80c1481ecc04",
+              "originalQuestion": null,
+              "id": "47:a740b6175bb1530f49cf52daa8a5b99e447f4b0080790868fdab80c1481ecc04",
+              "origin": "pinned"
+            },
+            {
+              "label": "ePQA attribute 437",
+              "text": "country_as_labeled:  { value:cn }",
+              "sha256": "03df9962f2d62e0fe1cfef684695e055c24cac0aa6f7732fbc2cdc4fb970999e",
+              "originalQuestion": null,
+              "id": "47:03df9962f2d62e0fe1cfef684695e055c24cac0aa6f7732fbc2cdc4fb970999e",
+              "origin": "pinned"
+            }
+          ],
+          "clarifications": []
+        },
+        "sourceContextSha256": "3c9fd4c82ef00fb63bf603596b54b15f1433a96e0719e2210e253681be783e7a",
+        "original": {
+          "mode": "live",
+          "runId": "61b24a7c-0859-4109-a83d-e7cfb6733c6f",
+          "versionId": "original-47-a63471539a58",
+          "model": "gpt-5.6-luna",
+          "answer": {
+            "answer": "Compatibility with the WMR200 station cannot be confirmed from the supplied evidence. The sensor is described as compatible with various Oregon Scientific multi-channel products, but the WMR200 is not specifically listed. Check Oregon Scientific’s compatibility list or contact them to verify.",
+            "status": "insufficient_evidence",
+            "citations": [
+              {
+                "passageId": "462fc662-9a1f-4cfb-8c5b-a7496f752d7f",
+                "quote": "the sensor is compatible with various multi-channel products from oregon scientific."
+              },
+              {
+                "passageId": "804c4b23-8acb-429f-b895-7b2b512b92d2",
+                "quote": "the oregon scientific website does give a list of what weather stations this works with."
+              },
+              {
+                "passageId": "6265e117-9e95-4760-bd24-781a0cc9f3ac",
+                "quote": "the oregon scientific web site has a \"contact us\" tag, i suggest you send them this question to make sure that they are compatible."
+              }
+            ]
+          },
+          "retrievedSourceIds": [
+            "47:aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe",
+            "47:15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+            "47:39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+            "47:c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+            "47:6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3"
+          ]
+        },
+        "originalSourceIds": [
+          "47:39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+          "47:15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+          "47:aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe",
+          "47:c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+          "47:6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3",
+          "47:805f717c8b2076d682132fee6f2a4e348fa198fd44eb33b7d086328852834a76",
+          "47:a740b6175bb1530f49cf52daa8a5b99e447f4b0080790868fdab80c1481ecc04",
+          "47:03df9962f2d62e0fe1cfef684695e055c24cac0aa6f7732fbc2cdc4fb970999e"
+        ],
+        "originalCitedSourceIds": [
+          "47:c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+          "47:15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+          "47:6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3"
+        ],
+        "citationMapping": [
+          {
+            "passageId": "462fc662-9a1f-4cfb-8c5b-a7496f752d7f",
+            "quote": "the sensor is compatible with various multi-channel products from oregon scientific.",
+            "sourceId": "47:c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+            "sourceSha256": "c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+            "exactQuoteMatch": true
+          },
+          {
+            "passageId": "804c4b23-8acb-429f-b895-7b2b512b92d2",
+            "quote": "the oregon scientific website does give a list of what weather stations this works with.",
+            "sourceId": "47:15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+            "sourceSha256": "15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+            "exactQuoteMatch": true
+          },
+          {
+            "passageId": "6265e117-9e95-4760-bd24-781a0cc9f3ac",
+            "quote": "the oregon scientific web site has a \"contact us\" tag, i suggest you send them this question to make sure that they are compatible.",
+            "sourceId": "47:6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3",
+            "sourceSha256": "6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3",
+            "exactQuoteMatch": true
+          }
+        ],
+        "outcome": "rules_only_no_revision",
+        "inputSha256": "7836ef3919a09d1cc0f0c8e78ffdac854583425fc46826f5c07cec4a2315ef82"
+      }
+    ],
+    "historicalCorrection": {
+      "qid": "19",
+      "path": "docs/evidence/q19-live-revision-2026-09-29.md",
+      "documentSha256": "7c3b23613aa0554b1c767cc09b7778057b148a70ac485cc27138eac5063edc96",
+      "document": "# Q19 live answer revision, September 29, 2026 UTC\n\nThis is one local Sapiom Router revision of an answer from the pinned 20-product ePQA **train** batch. It tests the asynchronous revision workflow and records its output. It is a development example, not fresh validation or a measured answer-quality gain.\n\n## Why this case\n\nThe question asks which bottom crisper drawer replaces Frigidaire part `241543917`. The original answer identified listing part `240337103` and said that OEM part \"matches the questioner's model.\" Its affirmative customer Q&A source originally answered **\"will this fit kenmore refrigerator 25367889506?\"** The question and cited answer therefore concern different models. The original customer question was restored after the paid batch; it was not available to that answer model.\n\nThe historical human review marked Q19 correct on the older review screen, before original customer questions were displayed. That record remains intact and is not represented as a human rejection of Q19. Codex submitted an explicitly **AI-identified** critique for this diagnostic revision. The revised answer still requires a new source-checked human decision.\n\n## Saved attempt\n\n| Item | Saved value |\n| --- | --- |\n| Revision job | `22ed2497-ada9-40ef-841a-5deddd41a819` |\n| Provider attempt | `19fccdd7-d8fa-41ba-9a24-7c76981de6ad` |\n| Parent answer version | `original-19-a12aaf7d040c` |\n| New answer version | `revision-22ed2497-ada9-40ef-841a-5deddd41a819` |\n| Prompt / model | `answer-revision-v1` / `gpt-5.6-luna` |\n| Result | Completed; `ready` for human recheck |\n| Time from queued to ready | 4,213 ms |\n| Usage | 1,195 input tokens; 216 output tokens |\n| Local allowance | $0.10 for this attempt; shared ledger now 59 attempts and $5.90 reserved |\n| Provider charge | Unavailable from this record |\n\nThe saved revision says:\n\n> This listing is for the Frigidaire 240337103 crisper pan/drawer. The available information does not establish that it is interchangeable with part 241543917, so I can’t recommend it as the replacement based on the part number alone. Please provide the refrigerator’s full model number to verify the correct drawer before ordering.\n\nIts two cited quotes are exact substrings of the pinned listing description (`\"frigidaire 240337103 crisper pan for refrigerator.\"`) and part-number attribute (`\"part_number:  { value:\\\"240337103\\\" }\"`). The revision does not repeat the cross-model compatibility claim. Quote membership and the source-context audit support that narrow observation; they do not establish the right replacement part or a general improvement rate.\n\nNo second revision call, policy promotion, or human acceptance was recorded in this round. The review page at `/paid-review` shows Q19 as **Ready to recheck**.\n\nVerification for this slice: `npm test` passed all 116 server tests and `npm run build` passed on the report commit; `git diff --check` found no whitespace errors. No additional paid call was made during verification.\n",
+      "answerText": "This listing is for the Frigidaire 240337103 crisper pan/drawer. The available information does not establish that it is interchangeable with part 241543917, so I can’t recommend it as the replacement based on the part number alone. Please provide the refrigerator’s full model number to verify the correct drawer before ordering.",
+      "mode": "historical_live",
+      "newCalls": 0,
+      "humanDecision": "pending_as_recorded",
+      "qualityClaimEligible": false
+    }
+  },
+  "execution": {
+    "newProviderCalls": 0,
+    "newAnswersGenerated": 0,
+    "newHumanJudgments": 0,
+    "qualityClaimEligible": false
+  },
+  "preflight": {
+    "passed": true,
+    "checks": [
+      {
+        "name": "q75_citation_mapping",
+        "passed": true,
+        "detail": "Exact quote membership and passage-to-source mapping only; this does not judge answer correctness."
+      },
+      {
+        "name": "q26_citation_mapping",
+        "passed": true,
+        "detail": "Exact quote membership and passage-to-source mapping only; this does not judge answer correctness."
+      },
+      {
+        "name": "q63_citation_mapping",
+        "passed": true,
+        "detail": "Exact quote membership and passage-to-source mapping only; this does not judge answer correctness."
+      },
+      {
+        "name": "q19_citation_mapping",
+        "passed": true,
+        "detail": "Exact quote membership and passage-to-source mapping only; this does not judge answer correctness."
+      },
+      {
+        "name": "q47_citation_mapping",
+        "passed": true,
+        "detail": "Exact quote membership and passage-to-source mapping only; this does not judge answer correctness."
+      },
+      {
+        "name": "q26_route",
+        "passed": true,
+        "detail": "Expected ready_to_revise; observed ready_to_revise; external calls 0. Routing is not a quality verdict."
+      },
+      {
+        "name": "q26_color_sources_available",
+        "passed": true,
+        "detail": "White, off-white/light-gray, and lighter-than-pewter buyer descriptions must remain available; their original questions remain attached."
+      },
+      {
+        "name": "q63_route",
+        "passed": true,
+        "detail": "Expected ready_to_revise; observed ready_to_revise; external calls 0. Routing is not a quality verdict."
+      },
+      {
+        "name": "q63_listing_candidate",
+        "passed": true,
+        "detail": "The saved listing configuration must remain available to the proposed revision."
+      },
+      {
+        "name": "q47_route",
+        "passed": true,
+        "detail": "Expected needs_information; observed needs_information; external calls 0. Routing is not a quality verdict."
+      },
+      {
+        "name": "q47_other_station_questions_excluded",
+        "passed": true,
+        "detail": "Customer answers about WS-1171A and BAA968HG/THGR228N must not become source candidates for WMR200 compatibility."
+      }
+    ],
+    "investigations": [
+      {
+        "qid": "26",
+        "inputSha256": "f704ecfb39b4999d056e92798621d6859b5f752142073125bad22c3a74631783",
+        "trace": {
+          "protocol": "revision-investigation-v1",
+          "planner": "rules",
+          "issue": "answer_quality",
+          "status": "ready_to_revise",
+          "query": "picture shows pewter but the description says white whirlpool handle for washing machine",
+          "requestedIdentifiers": [],
+          "steps": [
+            {
+              "kind": "diagnosis",
+              "status": "completed",
+              "detail": "Rule-based routing selected answer quality. This is a search plan, not a correctness judgment."
+            },
+            {
+              "kind": "local_search",
+              "status": "completed",
+              "detail": "Ranked 8 saved sources using the current question and critique; selected 8. Reusing a saved source adds no new evidence.",
+              "sourceIds": [
+                "26:a3062d769f21be4f283001e0bb07a8883f6bd9a458a3683644b99220bfe5fa52",
+                "26:00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+                "26:4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+                "26:7f2498a7ad9bce51a8c2200ce5328b8ce20c3a97f54e27b2ffa0066f0ead2b6a",
+                "26:0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+                "26:10298c78e1018789871debadd7d224bbdd3abdc0f95202b3f45d55c7ca0332e2",
+                "26:644e13f289ab5aea7916c89cd09909c76a8d62de42c9a60f61e5e7afc9f02ff8",
+                "26:d628fd55b53af4f77ed93c7ff8f91c13fb18f3d4cebda082db417f99e0cff5c5"
+              ]
+            }
+          ],
+          "selectedSourceIds": [
+            "26:a3062d769f21be4f283001e0bb07a8883f6bd9a458a3683644b99220bfe5fa52",
+            "26:00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+            "26:4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+            "26:7f2498a7ad9bce51a8c2200ce5328b8ce20c3a97f54e27b2ffa0066f0ead2b6a",
+            "26:0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+            "26:10298c78e1018789871debadd7d224bbdd3abdc0f95202b3f45d55c7ca0332e2",
+            "26:644e13f289ab5aea7916c89cd09909c76a8d62de42c9a60f61e5e7afc9f02ff8",
+            "26:d628fd55b53af4f77ed93c7ff8f91c13fb18f3d4cebda082db417f99e0cff5c5"
+          ],
+          "addedSourceIds": [],
+          "newEvidence": false,
+          "externalCalls": 0,
+          "stopReason": "The revision can address the critique using saved source candidates; factual support still needs review."
+        }
+      },
+      {
+        "qid": "63",
+        "inputSha256": "ffe1d16d78b4d4dd6b5ed34cad6d4d06fdcc20a2fc9e74a700b625cc378efcc5",
+        "trace": {
+          "protocol": "revision-investigation-v1",
+          "planner": "rules",
+          "issue": "missed_source",
+          "status": "ready_to_revise",
+          "query": "can fit slim quarter kegs capacity dimensions edgestar full size stainless steel dual",
+          "requestedIdentifiers": [],
+          "steps": [
+            {
+              "kind": "diagnosis",
+              "status": "completed",
+              "detail": "Rule-based routing selected missed source. This is a search plan, not a correctness judgment."
+            },
+            {
+              "kind": "local_search",
+              "status": "completed",
+              "detail": "Ranked 8 saved sources using the current question and critique; selected 8. Reusing a saved source adds no new evidence.",
+              "sourceIds": [
+                "63:24a1549982a91a70a9c213ed6531185b14ba26754426f503ae465e52e2cf4d73",
+                "63:1162814d3f71aeb0668a89286ead579c4369358ff7da69e8ac66f707baefeca6",
+                "63:0ceb8d3e3b36f5d6c5a6e803b525792a2e0834471e184723a17eb4448d3022b9",
+                "63:203a5136634941fc624a1ded36be8716b05f8f7c09c3c2569e1f1614754ec332",
+                "63:877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+                "63:33dabbb17e14762fd93486372972513cc1c0e8227cf5a39f948a2bf32c99b6ea",
+                "63:3e5206a3557c68afe5c95bb54e03e69c708cf642df9c07c97a6584eb0b1f3617",
+                "63:c9673407444f1c2d41f20a7c23f5f25968e7a1ed77226d51cdcbcbbd061b0884"
+              ]
+            },
+            {
+              "kind": "candidate_found",
+              "status": "completed",
+              "detail": "Saved source candidates address the search terms and were not cited by the rejected answer. Identifier or word matches do not prove the claim.",
+              "sourceIds": [
+                "63:24a1549982a91a70a9c213ed6531185b14ba26754426f503ae465e52e2cf4d73",
+                "63:0ceb8d3e3b36f5d6c5a6e803b525792a2e0834471e184723a17eb4448d3022b9",
+                "63:203a5136634941fc624a1ded36be8716b05f8f7c09c3c2569e1f1614754ec332"
+              ]
+            }
+          ],
+          "selectedSourceIds": [
+            "63:24a1549982a91a70a9c213ed6531185b14ba26754426f503ae465e52e2cf4d73",
+            "63:0ceb8d3e3b36f5d6c5a6e803b525792a2e0834471e184723a17eb4448d3022b9",
+            "63:203a5136634941fc624a1ded36be8716b05f8f7c09c3c2569e1f1614754ec332",
+            "63:1162814d3f71aeb0668a89286ead579c4369358ff7da69e8ac66f707baefeca6",
+            "63:877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+            "63:33dabbb17e14762fd93486372972513cc1c0e8227cf5a39f948a2bf32c99b6ea",
+            "63:3e5206a3557c68afe5c95bb54e03e69c708cf642df9c07c97a6584eb0b1f3617",
+            "63:c9673407444f1c2d41f20a7c23f5f25968e7a1ed77226d51cdcbcbbd061b0884"
+          ],
+          "addedSourceIds": [],
+          "newEvidence": false,
+          "externalCalls": 0,
+          "stopReason": "An uncited saved source candidate is available for the revision to assess."
+        }
+      },
+      {
+        "qid": "47",
+        "inputSha256": "7836ef3919a09d1cc0f0c8e78ffdac854583425fc46826f5c07cec4a2315ef82",
+        "trace": {
+          "protocol": "revision-investigation-v1",
+          "planner": "rules",
+          "issue": "missing_evidence",
+          "status": "needs_information",
+          "query": "WMR200 work station compatibility replacement oregon scientific water resistant remote sensor",
+          "requestedIdentifiers": [
+            "WMR200"
+          ],
+          "steps": [
+            {
+              "kind": "diagnosis",
+              "status": "completed",
+              "detail": "Rule-based routing selected missing evidence. This is a search plan, not a correctness judgment."
+            },
+            {
+              "kind": "scope_check",
+              "status": "skipped",
+              "detail": "This customer answer refers to a different or unspecified target model in its original question.",
+              "sourceIds": [
+                "47:aad239bcef66db8ee691c9a74f448de56741148ae61be241a494912723bcd3fe"
+              ]
+            },
+            {
+              "kind": "scope_check",
+              "status": "skipped",
+              "detail": "This customer answer refers to a different or unspecified target model in its original question.",
+              "sourceIds": [
+                "47:6d005631a0dbe8eff8e24be725408bd0fc35ca5219d1a1a0ae2be6c6063f15a3"
+              ]
+            },
+            {
+              "kind": "local_search",
+              "status": "completed",
+              "detail": "Ranked 6 saved sources using the current question and critique; selected 6. Reusing a saved source adds no new evidence.",
+              "sourceIds": [
+                "47:39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+                "47:15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+                "47:c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+                "47:805f717c8b2076d682132fee6f2a4e348fa198fd44eb33b7d086328852834a76",
+                "47:a740b6175bb1530f49cf52daa8a5b99e447f4b0080790868fdab80c1481ecc04",
+                "47:03df9962f2d62e0fe1cfef684695e055c24cac0aa6f7732fbc2cdc4fb970999e"
+              ]
+            },
+            {
+              "kind": "web_search",
+              "status": "skipped",
+              "detail": "External source discovery is not configured; only saved sources were examined."
+            }
+          ],
+          "selectedSourceIds": [
+            "47:39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+            "47:15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+            "47:c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+            "47:805f717c8b2076d682132fee6f2a4e348fa198fd44eb33b7d086328852834a76",
+            "47:a740b6175bb1530f49cf52daa8a5b99e447f4b0080790868fdab80c1481ecc04",
+            "47:03df9962f2d62e0fe1cfef684695e055c24cac0aa6f7732fbc2cdc4fb970999e"
+          ],
+          "addedSourceIds": [],
+          "newEvidence": false,
+          "externalCalls": 0,
+          "stopReason": "Saved sources did not yield a new applicable candidate for the missing claim.",
+          "clarificationQuestion": "What is the full device model number, or can you supply documentation confirming the requested compatibility (WMR200)?"
+        }
+      }
+    ]
+  }
+}
