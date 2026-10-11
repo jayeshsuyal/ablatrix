@@ -1,0 +1,26 @@
+{
+  "format": "ablatrix-source-id-preparation-coverage-audit-v1",
+  "kind": "ai_source_only_pre_dispatch_audit",
+  "passed": false,
+  "cohortFileSha256": "3dc0f1902b56db41e1db991c3ca63cf99d7befda08b78fd20d4e44c7d44b492c",
+  "cohortSha256": "5c0bbdab4f916f0304f24da232f3bf0a63ef37bb51f9edcc1778bc9e096fddf7",
+  "newProviderCalls": 0,
+  "generationPerformed": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false,
+  "failure": "The first prospective repair remained too permissive for material-question grammar and manufacturer family identity.",
+  "cases": [
+    {
+      "id": "source-id-train-2679",
+      "passed": false,
+      "finding": "The question asks whether a white metal dispenser is rust-resistant. A material/color adjective does not make its primary intent direct composition or appearance."
+    },
+    {
+      "id": "source-id-train-3199",
+      "passed": false,
+      "finding": "GENUINE is a generic title prefix. The actual Frigidaire refrigerator replacement family overlaps protected Frigidaire crisper sources and manufacturer metadata."
+    }
+  ],
+  "prospectiveAmendment": "A separately authorized source-only amendment retains seed/counts/budget, excludes material-performance predicates, and uses source-provided manufacturer/brand plus generic-prefix-normalized title family identity. No model outputs existed or were inspected; this is not a model failure."
+}

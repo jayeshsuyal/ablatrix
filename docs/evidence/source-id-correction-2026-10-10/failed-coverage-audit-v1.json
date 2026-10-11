@@ -1,0 +1,37 @@
+{
+  "format": "ablatrix-source-id-preparation-coverage-audit-v1",
+  "kind": "ai_source_only_pre_dispatch_audit",
+  "passed": false,
+  "cohortFileSha256": "0a157f4e33e2c143debd39376fae7ba786f9b347c198533fe906c3f29622f84f",
+  "cohortSha256": "1b90a2c06b33eae338145191d808d06666eea3c7922478f6fe159fdc5a4fb4ef",
+  "newProviderCalls": 0,
+  "generationPerformed": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false,
+  "failure": "Legacy lexical strata did not enforce the intended question coverage. No model outcomes were inspected.",
+  "cases": [
+    {
+      "id": "source-id-train-12685",
+      "passed": false,
+      "finding": "Black stock availability is not a direct color/finish/material composition question; its undated restock CQA cannot establish current availability."
+    },
+    {
+      "id": "source-id-train-9019",
+      "passed": false,
+      "finding": "Dye transfer is material performance, not direct color/finish/material composition."
+    },
+    {
+      "id": "source-id-train-10724",
+      "passed": false,
+      "finding": "29gal is a measurement token, not an explicit model identifier. Sources do contain variant-scope conflicts, but the question does not meet the planned explicit model relation stratum."
+    }
+  ],
+  "otherChecks": {
+    "fullPoolsMatchPinnedTrain": true,
+    "sourceIdsAndOriginalQuestionHashesMatch": true,
+    "exactAsinConflict": false,
+    "fullSourceIdentifierFamilyConflictDetected": false
+  },
+  "prospectiveAmendment": "Keep seed, strata counts, provider call budget, and source-only selection. Tighten appearance/material intent, reject availability, and exclude measurement tokens from genuine model identifiers. Preserve this rejected preparation packet unchanged; it is not a failed model run."
+}

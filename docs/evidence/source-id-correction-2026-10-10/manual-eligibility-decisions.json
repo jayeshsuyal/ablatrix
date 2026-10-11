@@ -1,0 +1,24 @@
+{
+  "format": "ablatrix-source-id-manual-eligibility-v1",
+  "kind": "ai_source_only_pre_dispatch_eligibility",
+  "seed": "ablatrix-source-id-correction-2026-10-10-v1",
+  "newProviderCalls": 0,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false,
+  "rule": "The public consumer-QA demo excludes weapon/firearm/ammunition product compatibility or optimization. Apply the same title-domain rule to every candidate before ranking; do not inspect model outcomes.",
+  "decisions": [
+    {
+      "id": "source-id-train-10926",
+      "productId": "B00B8Q31UQ",
+      "stratum": "model_scope",
+      "selectionRankSha256": "01cb327ce08eb58579d9ba4eec69042a08bb2e3f1216efd01f35859fb4035eb7",
+      "sourcePoolSha256": "c1450c9f7a7ed6572582c82e9c415ec4b54404a0ae995927d3c5f1e5345d0601",
+      "eligible": false,
+      "reason": "Title explicitly identifies a tactical weapon-mount light and the question requests fit on a specific firearm. Outside consumer demo scope."
+    }
+  ],
+  "privateDraftFileSha256": "e175a75cdf150b52af8e27546f48ccaf2b151ad0b19f7fd7e211975dec720f2c",
+  "coverageAndFamilyAmendmentUnchanged": true,
+  "selectionChange": "Advance to next eligible candidate under the same seed and counts; no paid calls, failed generations, or quality outcomes exist."
+}
