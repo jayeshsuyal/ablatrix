@@ -7,7 +7,7 @@ import { join } from 'node:path';
 import { createApp } from './app.ts';
 import { RunStore } from './store.ts';
 import { PilotRunner, PilotStore } from './pilot.ts';
-import { ContextComparisonStore, createContextComparisonFixture, createCorrectionComparisonFixture } from './context-comparison.ts';
+import { ContextComparisonStore, createContextComparisonFixture, createCorrectionComparisonFixture, correctionComparisonProtocol, correctionComparisonInput, correctionComparisonRequestHash, contextComparisonHash } from './context-comparison.ts';
 
 test('comparison HTTP boundary preserves blind review and only permits the no-call fixture setup', async () => {
   const runs = new RunStore(':memory:');
@@ -52,9 +52,14 @@ test('comparison HTTP boundary preserves blind review and only permits the no-ca
   }
 });
 
-test('tagged correction packets reuse blind HTTP review without exposing AI critique or prompt identities', async () => {
+for (const citationInterface of ['passage_quotes', 'source_ids_v1'] as const) test(`tagged ${citationInterface} correction packets reuse blind HTTP review without exposing AI critique or prompt identities`, async () => {
   const directory = mkdtempSync(join(tmpdir(), 'correction-comparison-api-')), path = join(directory, 'comparisons.sqlite');
   const packet = createCorrectionComparisonFixture(), imported = new ContextComparisonStore(path);
+  packet.protocol = correctionComparisonProtocol('synthetic-model', null, citationInterface);
+  for (const item of packet.cases) for (const arm of ['baseline', 'candidate'] as const) {
+    item.arms[arm].inputSha256 = contextComparisonHash(correctionComparisonInput(packet.protocol, item, arm));
+    item.arms[arm].requestSha256 = correctionComparisonRequestHash(packet.protocol, item, arm, item.arms[arm].id);
+  }
   imported.importPacket(packet); imported.close();
   const runs = new RunStore(':memory:');
   const server = createApp(runs, 'fixture', undefined, new PilotRunner(new PilotStore(':memory:')), undefined, undefined, undefined, undefined, false, { comparisonDbPath: path });
@@ -65,7 +70,7 @@ test('tagged correction packets reuse blind HTTP review without exposing AI crit
     const detail = await (await fetch(base + route)).json();
     assert.equal(detail.format, 'ablatrix-correction-comparison-v1');
     assert.equal(detail.hypothesis, 'compare_correction_policy');
-    assert.doesNotMatch(JSON.stringify(detail), /"(?:original|critique|protocol|policies|requestSha256|inputSha256|providerCallId|generationSourceIds|investigation)"/);
+    assert.doesNotMatch(JSON.stringify(detail), /"(?:original|critique|protocol|policies|requestSha256|inputSha256|providerCallId|generationSourceIds|investigation|quoteOptions|citationInterface)"/);
     assert.equal((await fetch(base + route + '/export')).status, 409);
     for (const answer of detail.cases[0].answers) {
       const response = await fetch(base + route + '/reviews', { method: 'POST', headers: { origin: base, 'content-type': 'application/json' }, body: JSON.stringify({ manifestSha256: detail.manifestSha256, caseId: detail.cases[0].id, versionId: answer.versionId, reviewer: 'Synthetic API reviewer', correctness: 'correct', support: 'supported', adequacy: 'adequate', checkedSourceShas: detail.cases[0].sources.map((source: { sha256: string }) => source.sha256), referenceChecked: true, note: '' }) });
@@ -77,5 +82,6 @@ test('tagged correction packets reuse blind HTTP review without exposing AI crit
     assert.deepEqual(exported.packet, packet);
     assert.equal(exported.report.cases[0].critique.kind, 'ai_assisted');
     assert.equal(exported.report.protocol.policies.candidate.policy, 'candidate_v4');
+    assert.equal(exported.report.protocol.citationInterface, citationInterface);
   } finally { await server.shutdown(); runs.close(); rmSync(directory, { recursive: true, force: true }); }
 });

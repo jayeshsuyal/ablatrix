@@ -3,9 +3,10 @@ import { readFileSync, mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { z } from 'zod';
-import { answerSchema, quoteOptions, revisionRequestBody, type RevisionInput } from './feedback-provider.ts';
+import { answerSchema, quoteOptions, revisionRequestBody, sourceIdRevisionPromptIdentity, sourceIdRevisionRequestBody, type RevisionInput } from './feedback-provider.ts';
 import { revisionPromptIdentity } from './revision-policy.ts';
 import { workspaceReviewSourceHash } from './answer-review-source.ts';
+import { sourceCitationOptions, stripSourceIdMarkers, type SourceCitationOption } from './citation-options.ts';
 
 const fail = (message: string): never => { throw new Error(`Context comparison: ${message}`); };
 const id = z.string().regex(/^[A-Za-z0-9_-]{1,120}$/);
@@ -26,7 +27,7 @@ const caseSchema = z.object({ id, product: z.object({ id, title: z.string().trim
 const packetSchema = z.object({ format: z.literal('ablatrix-context-comparison-v1'), id, title: z.string().trim().min(3).max(120), mode: z.enum(['fixture', 'live']), createdAt: z.iso.datetime(), hypothesis: z.literal('preserve_original_customer_question'), protocol: protocolSchema, provenance: z.object({ kind: z.enum(['synthetic_fixture', 'imported_live']), note: z.string().trim().min(10).max(1000), sourcePacketSha256: digest.nullable() }).strict(), cases: z.array(caseSchema).min(1).max(20) }).strict();
 export type ContextComparisonPacket = z.infer<typeof packetSchema>;
 const correctionPolicySchema = z.object({ policy: z.enum(['baseline', 'candidate_v4']), promptVersion: z.string().min(1).max(100), systemInstructions: z.string().min(40).max(6000), systemInstructionsSha256: digest, configurationSha256: digest }).strict();
-const correctionProtocolSchema = z.object({ modelAlias: z.enum(['gpt-luna', 'synthetic-model']), citationInterface: z.literal('passage_quotes'), codeCommit: z.string().regex(/^[a-f0-9]{7,40}$/).nullable(), policies: z.object({ baseline: correctionPolicySchema, candidate: correctionPolicySchema }).strict() }).strict();
+const correctionProtocolSchema = z.object({ modelAlias: z.enum(['gpt-luna', 'synthetic-model']), citationInterface: z.enum(['passage_quotes', 'source_ids_v1']), codeCommit: z.string().regex(/^[a-f0-9]{7,40}$/).nullable(), policies: z.object({ baseline: correctionPolicySchema, candidate: correctionPolicySchema }).strict() }).strict();
 const correctionAttemptSchema = attemptSchema.extend({ status: z.enum(['completed', 'failed', 'uncertain', 'not_attempted']), requestSha256: digest }).strict();
 const correctionCaseSchema = z.object({ id, product: caseSchema.shape.product, question: caseSchema.shape.question, sources: z.array(sourceSchema).min(1).max(128), generationSourceIds: z.array(id).min(1).max(8),
   original: z.object({ id, answer: answerSchema, model: z.string().min(1).max(100), providerCallId: z.string().min(1).max(200).nullable(), inputSha256: digest, requestSha256: digest }).strict(),
@@ -58,25 +59,31 @@ export function contextComparisonInput(protocol: z.infer<typeof protocolSchema>,
 }
 /** Exact common revision inputs. Both arms revise this same original, never one another. */
 export function correctionComparisonInput(protocol: CorrectionComparisonPacket['protocol'], item: Omit<CorrectionCase, 'arms'>, arm: PairedArm) {
+  const evidence = item.generationSourceIds.map(sourceId => { const source = item.sources.find(source => source.id === sourceId) ?? fail('generation source does not belong to its case.'); return { id: source.id, source: source.label, text: source.text, ...(source.originalQuestion ? { originalQuestion: source.originalQuestion } : {}), ...(protocol.citationInterface === 'source_ids_v1' ? { reference: source.reference } : {}) }; });
   return { modelAlias: protocol.modelAlias, question: item.question, product: item.product, rejectedAnswer: item.original.answer.answer, critique: item.critique.text,
-    evidence: item.generationSourceIds.map(sourceId => { const source = item.sources.find(source => source.id === sourceId) ?? fail('generation source does not belong to its case.'); return { id: source.id, source: source.label, text: source.text, ...(source.originalQuestion ? { originalQuestion: source.originalQuestion } : {}) }; }),
-    clarifications: item.clarifications, investigation: item.investigation, revisionPolicy: protocol.policies[arm].policy };
+    evidence, clarifications: item.clarifications, investigation: item.investigation, revisionPolicy: protocol.policies[arm].policy,
+    ...(protocol.citationInterface === 'source_ids_v1' ? { citationInterface: protocol.citationInterface, quoteOptions: correctionSourceOptions(item, evidence) } : {}) };
+}
+function correctionSourceOptions(item: Pick<CorrectionCase, 'product' | 'question'>, evidence: RevisionInput['evidence']): SourceCitationOption[] {
+  try { return sourceCitationOptions({ productId: item.product.id, question: item.question, evidence }); }
+  catch { return fail('source-ID quote options exceed or conflict with the bounded request context.'); }
 }
 export function correctionComparisonRequest(protocol: CorrectionComparisonPacket['protocol'], item: Omit<CorrectionCase, 'arms'>, arm: PairedArm, runId: string) {
   const { modelAlias, ...input } = correctionComparisonInput(protocol, item, arm);
-  return { ...revisionRequestBody({ ...input, runId }), model: modelAlias };
+  const body = protocol.citationInterface === 'source_ids_v1' ? sourceIdRevisionRequestBody({ ...input, runId }) : revisionRequestBody({ ...input, runId });
+  return { ...body, model: modelAlias };
 }
 export const correctionComparisonRequestHash = (protocol: CorrectionComparisonPacket['protocol'], item: Omit<CorrectionCase, 'arms'>, arm: PairedArm, runId: string) => createHash('sha256').update(JSON.stringify(correctionComparisonRequest(protocol, item, arm, runId))).digest('hex');
-export function correctionComparisonProtocol(modelAlias: 'gpt-luna' | 'synthetic-model' = 'gpt-luna', codeCommit: string | null = null): CorrectionComparisonPacket['protocol'] {
+export function correctionComparisonProtocol(modelAlias: 'gpt-luna' | 'synthetic-model' = 'gpt-luna', codeCommit: string | null = null, citationInterface: CorrectionComparisonPacket['protocol']['citationInterface'] = 'passage_quotes'): CorrectionComparisonPacket['protocol'] {
   const policy = (name: 'baseline' | 'candidate_v4') => {
-    const identity = revisionPromptIdentity(name, true);
+    const identity = citationInterface === 'source_ids_v1' ? sourceIdRevisionPromptIdentity(name, true) : revisionPromptIdentity(name, true);
     const input: RevisionInput = { runId: 'configuration', question: '', product: { id: '', title: '' }, rejectedAnswer: '', critique: '', evidence: [], clarifications: [], investigation: { issue: 'answer_quality', query: '', selectedSourceIds: [], addedSourceIds: [] }, revisionPolicy: name };
-    const body = revisionRequestBody(input);
+    const body = citationInterface === 'source_ids_v1' ? sourceIdRevisionRequestBody({ ...input, question: 'Configuration binding only?', product: { id: 'configuration', title: 'Configuration binding' }, evidence: [{ id: 'configuration-source', source: 'Synthetic configuration', text: 'Synthetic configuration body.' }] }) : revisionRequestBody(input);
     // Bind all generation settings, system instructions, tool schema and tool
     // choice; case-specific user content is bound by each actual request hash.
     return { ...identity, configurationSha256: contextComparisonHash({ ...body, model: modelAlias, messages: body.messages.filter(message => message.role === 'system') }) };
   };
-  return { modelAlias, citationInterface: 'passage_quotes', codeCommit, policies: { baseline: policy('baseline'), candidate: policy('candidate_v4') } };
+  return { modelAlias, citationInterface, codeCommit, policies: { baseline: policy('baseline'), candidate: policy('candidate_v4') } };
 }
 function validateContextPacket(raw: unknown): ContextComparisonPacket {
   const packet = parse(packetSchema, raw);
@@ -115,7 +122,7 @@ function validateContextPacket(raw: unknown): ContextComparisonPacket {
 function validateCorrectionPacket(raw: unknown): CorrectionComparisonPacket {
   const packet = parse(correctionPacketSchema, raw);
   if (packet.mode === 'fixture' ? packet.provenance.kind !== 'synthetic_fixture' || packet.protocol.modelAlias !== 'synthetic-model' || packet.provenance.sourcePacketSha256 !== null : packet.provenance.kind !== 'imported_live' || packet.protocol.modelAlias !== 'gpt-luna' || !packet.provenance.sourcePacketSha256) fail('mode and provenance must agree; live packets are explicitly imported, unverified records.');
-  if (canonical(packet.protocol) !== canonical(correctionComparisonProtocol(packet.protocol.modelAlias, packet.protocol.codeCommit))) fail('correction prompt configuration does not match the frozen baseline and candidate policies.');
+  if (canonical(packet.protocol) !== canonical(correctionComparisonProtocol(packet.protocol.modelAlias, packet.protocol.codeCommit, packet.protocol.citationInterface))) fail('correction prompt configuration does not match the frozen baseline and candidate policies.');
   const seenCases = new Set<string>(), seenProducts = new Set<string>(), seenSnapshots = new Set<string>(), seenAttempts = new Set<string>(), seenReceipts = new Set<string>();
   const recordIdentity = (attemptId: string, receipt: string | null) => {
     if (seenAttempts.has(attemptId)) fail('duplicate attempt identity.');
@@ -136,6 +143,15 @@ function validateCorrectionPacket(raw: unknown): CorrectionComparisonPacket {
     recordIdentity(item.original.id, item.original.providerCallId);
     if (packet.mode === 'fixture' ? item.original.model !== 'synthetic-model' || item.original.providerCallId !== null || !item.original.answer.answer.startsWith('SYNTHETIC') : !['gpt-luna', 'gpt-5.6-luna'].includes(item.original.model) || !item.original.providerCallId) fail('shared original identity does not match the recorded protocol.');
     if (item.original.answer.status === 'answered' && !item.original.answer.citations.length || item.original.answer.citations.some(citation => !item.generationSourceIds.includes(citation.passageId) || !item.sources.some(source => source.id === citation.passageId && source.text.includes(citation.quote)))) fail('shared original citations must match its frozen generation sources.');
+    const offered = packet.protocol.citationInterface === 'source_ids_v1' ? correctionComparisonInput(packet.protocol, item, 'baseline').quoteOptions : undefined;
+    const validateOffered = (answer: z.infer<typeof answerSchema>) => {
+      if (!offered) return;
+      try { if (stripSourceIdMarkers(answer.answer, []) !== answer.answer) fail('source-ID answer text must already be resolved.'); }
+      catch { return fail('source-ID answer text must not contain unresolved option IDs.'); }
+      const selected = answer.citations.map(citation => offered.find(option => option.passageId === citation.passageId && option.quote === citation.quote)?.id);
+      if ((answer.status === 'answered' && !selected.length) || selected.some(optionId => !optionId) || new Set(selected).size !== selected.length) fail('source-ID citations must resolve to distinct options actually offered in the frozen generation request.');
+    };
+    validateOffered(item.original.answer);
     for (const arm of pairedArms) {
       const attempt = item.arms[arm], input = correctionComparisonInput(packet.protocol, item, arm);
       if (attempt.inputSha256 !== contextComparisonHash(input)) fail('correction arm input does not match the shared original, critique and context.');
@@ -146,6 +162,7 @@ function validateCorrectionPacket(raw: unknown): CorrectionComparisonPacket {
         if (!attempt.answer || !attempt.model || attempt.latencyMs === null || attempt.error !== null) fail('completed attempts require an answer, model and latency.');
         if (packet.mode === 'live' ? !['gpt-luna', 'gpt-5.6-luna'].includes(attempt.model!) || !attempt.providerCallId : attempt.model !== 'synthetic-model' || attempt.providerCallId !== null) fail('attempt identity does not match the recorded protocol.');
         if (packet.mode === 'fixture' && !attempt.answer!.answer.startsWith('SYNTHETIC')) fail('fixture answer text must be explicitly synthetic.');
+        validateOffered(attempt.answer!);
       } else {
         if (attempt.answer !== null || !attempt.error) fail('incomplete attempts cannot supply an accepted answer.');
         if (attempt.status === 'not_attempted' && [attempt.model, attempt.latencyMs, attempt.usage, attempt.providerCallId].some(value => value !== null)) fail('not-attempted arms cannot contain provider outcomes.');
