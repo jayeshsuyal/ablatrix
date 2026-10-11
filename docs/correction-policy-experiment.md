@@ -1,5 +1,7 @@
 # Correction-policy experiment
 
+**Outcome:** development passed, then fresh execution stopped on its fourth attempt after a non-verbatim citation in an original answer. Three fresh outputs were accepted, 20 planned calls were not attempted, and only one of eight revision pairs completed. No human quality gain or policy promotion is established. See the [execution report](evidence/correction-policy-2026-10-10/report.md).
+
 Approved scope, October 10, 2026: up to **six development attempts**, then **24 conditional fresh-product attempts** (eight products × one shared original and two sibling revisions). The total maximum is **30 new attempts / $3 local planning allowance**. The starting shared ledger contains 63 attempts; the temporary absolute limit is 93, within the existing $10 local plan including its $0.200281 prior-spend input. Actual provider charges are unavailable. Web discovery and automatic retries remain disabled.
 
 ## Hypothesis and implementation
