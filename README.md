@@ -60,7 +60,7 @@ Open [Compare answers](http://127.0.0.1:4173/compare) and load the **synthetic e
 
 The workbench also imports experiment packets through `npm run compare -- import --db .data/context-comparisons.sqlite --packet /absolute/path/packet.json`. Separate formats compare original-question metadata or revision policies. The latter holds the original answer, critique and sources constant while changing the revision instructions. A saved packet protects review integrity; it does not prove that an experiment was planned before generation or authenticate provider records. See the [comparison protocol](docs/context-comparison-protocol.md) and [packet format](docs/context-comparison-contract.md).
 
-The next comparison uses [server-resolved citation IDs](docs/source-id-citations.md): the model selects a source and the server returns its exact text. Offline regression checks pass; the separate live comparison is prepared but has not run. This establishes citation plumbing, not an answer-quality gain.
+The [server-resolved citation comparison](docs/evidence/source-id-correction-2026-10-10/live-report.md) stopped after eight of 24 planned calls: seven accepted outputs with 22 exact source-body citations, then a rejected malformed citation ID. Two of eight revision pairs completed; the remaining calls were not attempted. No human quality result or measured improvement was established.
 
 ## Private demo package
 
