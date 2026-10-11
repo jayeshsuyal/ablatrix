@@ -1,0 +1,120 @@
+{
+  "format": "ablatrix-flat-source-id-offline-qualification-v1",
+  "createdAt": "2026-10-11T20:55:03.565989Z",
+  "passed": true,
+  "sourceIdInterface": "source_ids_v3",
+  "newProviderCalls": 0,
+  "implementationSha256": {
+    "server/feedback-provider.ts": "d7aad93c4ca82790f98228d8e15d17c1a0f6ca97aa0b7a42bc5faaf41146cb32",
+    "server/flat-source-ids.test.ts": "146c6286085eac343e48958e13616087bcb2a56cb43e0be8c0e042a9b8178ec0",
+    "server/citation-options.ts": "0845b2922b7880de4f641453c307d042a31211948514dc4e57e4f9ad4cb1d93d",
+    "server/revision-policy.ts": "718c3718e384d83751035e503da874cb72041a6c4a84b65cd3cc482e39d92fb2",
+    "server/context-comparison.ts": "01872a4043fbbd414705318cb8df7f67146aa3896f5f31b1949f678d49e17930",
+    "server/context-comparison.test.ts": "bbe1453d3892818926cf3fc3a8745406bb6fe02c8cc40e1479c8782ccfc4f154",
+    "server/context-comparison-api.test.ts": "395520da7e5761f01460eb8fa213d8c8a3fc72abf613a0390f0e0674d53cf448",
+    "web/ContextComparison.tsx": "050c905aacd740fd8d6bb427bcbaa342ed600468257f1e3b8354ea18dbbf7148",
+    "e2e/context-comparison.spec.ts": "f9d41cdef55dcf4c8fcf9de2bd5a34e04a97c82ff4422b9f9897701c7d91da6b"
+  },
+  "promptIdentities": [
+    {
+      "promptVersion": "product-answer-source-ids-v3",
+      "systemInstructionsSha256": "b3ef8a781d283b9f75f03e66bb25f48ab0da0b13bd97b093afcf7f4766042e65"
+    },
+    {
+      "promptVersion": "answer-revision-v3-investigation-source-ids-v3",
+      "systemInstructionsSha256": "189347009c45ca60315cdaaee4867a561fdfbc9335a859fc700618120bedca77"
+    },
+    {
+      "promptVersion": "answer-revision-v4-attributed-listing-source-ids-v3",
+      "systemInstructionsSha256": "c592e8cc9725edf87af35ad8598eb2d7adf76fec685f4ab5e0ee16d40e443d36"
+    }
+  ],
+  "verification": {
+    "focused": {
+      "command": "node --import tsx --test server/citation-options.test.ts server/feedback-provider.test.ts server/constrained-source-ids.test.ts server/flat-source-ids.test.ts server/context-comparison.test.ts server/context-comparison-api.test.ts",
+      "exitCode": 0,
+      "outputSha256": "e88e1bdc8dc68dd81c39b5d4a44fb490e0af7493b781071eed0b3e32052b651a",
+      "passed": 69,
+      "failed": 0,
+      "skipped": 0
+    },
+    "fullSuite": {
+      "command": "npm test",
+      "exitCode": 0,
+      "outputSha256": "d48f87ae527799cd9e5fd1c6cf822aa0cbc2f7c4c822db9b8d55312639529007",
+      "passed": 294,
+      "failed": 0,
+      "skipped": 1,
+      "skipReason": "Linux-only external process smoke test."
+    },
+    "build": {
+      "command": "npm run build",
+      "exitCode": 0,
+      "outputSha256": "e7b8c9825f86a599ea27545631fcda4d55e7e98000ccead1ea51a9474015a485"
+    },
+    "browser": {
+      "command": "npx playwright test e2e/context-comparison.spec.ts",
+      "exitCode": 0,
+      "outputSha256": "8173739092c14a2f495272cfeacb313a9ee72a8e2ef017f6a19436aa2cf16354",
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "checks": [
+    "Q8746 published string-array IDs resolve to complete bodies under v3 using a synthetic placeholder; the same shape is still rejected by v2.",
+    "Original/baseline/candidate exact-body helpers match captured synthetic transports, schemas and saved receipt identities.",
+    "Wrong shapes, unknown/shortened/foreign/duplicate IDs, uncited answered outputs and unresolved markers fail without coercion or retry.",
+    "Whole source bodies and original-question context remain separate; scoped catalogs, source/context bounds and schema isolation stay enforced.",
+    "V3 correction imports bind exact flat enums, reject interface/schema substitutions and preserve blind source-review/export gates.",
+    "Frozen public v1 original and v2 original/revision-template requests and prompt hashes reproduce unchanged."
+  ],
+  "transport": "Injected synthetic provider responses with in-memory/temporary ledgers; isolated browser fixture server, live dispatch disabled.",
+  "integrity": {
+    "historicalEvidenceFilesChecked": 47,
+    "historicalEvidenceUnchanged": true,
+    "privateStoppedResults": {
+      ".data/source-id-diagnostic-2026-10-11-results.json": "72aa6bb01db59fc3a744aac9e3251b91d178e016ce68320673ecd8f9fa015386",
+      ".data/source-id-correction-2026-10-10-results.json": "b7dfbb0ac2d3b32b3051482a1a472d3022902ff73166fe32aec1afcd225f9475"
+    },
+    "privateStoppedResultsUnchanged": true,
+    "sharedLedgerAttempts": 86,
+    "pendingReservations": 0,
+    "newProviderCalls": 0,
+    "legacyComparisonBaseCommit": "01da727aa481990e26a8ae5299134dd45be82eae",
+    "legacyComparisonProtocolsAndRequests": [
+      {
+        "citationInterface": "passage_quotes",
+        "protocolSha256": "b6e502741e7606bbb0db2b9bdd58a1c6dfb70aabe5b04959f09a98c373e23090",
+        "baselineRequestSha256": "6b04e88bf8d096bc0295547776ef47cd481c032f04e8df9045180c6c28da8a69",
+        "candidateRequestSha256": "b3faccfc4e504dc0ba421a3091b434104c34ed97c40eb1ba555f68877272d478"
+      },
+      {
+        "citationInterface": "source_ids_v1",
+        "protocolSha256": "40f18aea3a46ede2a9d1787bb14744686a9064d0da6f84267696342f01b4c221",
+        "baselineRequestSha256": "177ed08d3d7e2592defe2af54114c6bb0ce66b8e354b2b2ada5ecd441bda0aa0",
+        "candidateRequestSha256": "dd0978e13de30aede8e737dd5f8235ab5473bc762c15f8f543e0bd83b2355d2d"
+      },
+      {
+        "citationInterface": "source_ids_v2",
+        "protocolSha256": "29821e461afdef3bea63bdaaede98d36b38537a47e6248a34f1db93b828db4b0",
+        "baselineRequestSha256": "fd71ee975592e22059ba27b7809bf6ea47bf7eda873cb9ac8c40d8bff598d836",
+        "candidateRequestSha256": "cba6dec083ad0055c4b0cae8e133d09b368c25d44a3c73febfbc3b7f96ea5767"
+      }
+    ]
+  },
+  "paidExecutionAuthorized": false,
+  "newLiveCohortPrepared": false,
+  "newLiveExecutionPlanPrepared": false,
+  "liveModelBehaviorQualified": false,
+  "routerConstrainedDecodingVerified": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "limitations": [
+    "This local contract and synthetic failure regression do not establish live response reliability.",
+    "V3 changes wire shape and prompt guidance together; it does not isolate one causal mechanism.",
+    "Exact source-ID resolution establishes literal membership, not claim support, correctness or human-reviewed improvement.",
+    "The proposed fresh quality design is not a frozen cohort, approved budget or execution manifest.",
+    "Earlier stopped runs, historical interfaces and product defaults remain preserved."
+  ]
+}
