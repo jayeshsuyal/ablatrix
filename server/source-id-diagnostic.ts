@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { createHash, randomUUID } from 'node:crypto';
 import { DatabaseSync } from 'node:sqlite';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, renameSync, writeFileSync, lstatSync } from 'node:fs';
 import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -100,6 +100,42 @@ export function prepareSourceIdDiagnostic(input: DiagnosticPreparation) {
 }
 export type DiagnosticManifest = ReturnType<typeof prepareSourceIdDiagnostic>;
 export type DiagnosticState = { ledgerAttempts: number; pendingReservations: number; activeOwners: number; activeReviewJobs: number; historicalReceiptsSha256: string; reviewStateSha256: string; newRunIds: string[] };
+export type DiagnosticAppState = { configuredPort: number; checkedPorts: number[]; listenerPids: number[]; sharedFileOwnerPids: number[]; activeLockPids: number[]; stopped: boolean };
+/** Same port contract as server/index.ts; a missing PORT means 4173. */
+export function diagnosticAppPort(value?: string): number {
+  const port = Number(value ?? '4173');
+  assert.ok(Number.isSafeInteger(port) && port >= 1 && port <= 65535, 'PORT must be an integer between 1 and 65535.');
+  return port;
+}
+function lsofPids(args: string[]): number[] {
+  const result = spawnSync('lsof', ['-nP', '-F', 'p', ...args], { encoding: 'utf8' });
+  if (result.error) throw result.error;
+  // An absent owner/listener returns 1 with empty output. Permission/tool errors
+  // must never be interpreted as proof that the application is stopped.
+  assert.ok(!result.stderr.trim() && (result.status === 0 || (result.status === 1 && !result.stdout.trim())), 'Cannot verify local process ownership with lsof.');
+  return [...new Set(result.stdout.split('\n').filter(line => /^p\d+$/.test(line)).map(line => Number(line.slice(1))))];
+}
+/** Read-only OS checks: ports alone cannot detect an idle worker on another port. */
+export function inspectDiagnosticApp(input: { port?: string; budgetPath: string; reviewPath: string; appDbPath: string; loopDbPath: string }): DiagnosticAppState {
+  const configuredPort = diagnosticAppPort(input.port), checkedPorts = [...new Set([4173, configuredPort])];
+  assert.ok([input.budgetPath, input.reviewPath].every(path => isAbsolute(path) && existsSync(path)), 'Shared database files must exist before checking process ownership.');
+  const listenerPids = [...new Set(checkedPorts.flatMap(port => lsofPids([`-iTCP:${port}`, '-sTCP:LISTEN'])))];
+  // index.ts opens these stores when it initializes its worker, even with no
+  // queued jobs or paid-provider lease. Checking their file owners catches the
+  // same application on any port or under a different ABLATRIX_DB setting.
+  const sharedFileOwnerPids = lsofPids(['--', input.budgetPath, input.reviewPath]).filter(pid => pid !== process.pid);
+  const activeLockPids: number[] = [];
+  for (const database of [input.appDbPath, input.loopDbPath]) {
+    assert.notEqual(database, ':memory:', 'Diagnostic application database paths must be explicit files.');
+    const path = `${resolve(database)}.lock`;
+    let raw: string;
+    try { raw = readFileSync(path, 'utf8'); } catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') continue; throw error; }
+    const pid = Number(raw); assert.ok(Number.isSafeInteger(pid) && pid > 0, 'An application ownership lock is malformed; inspect it before execution.');
+    try { process.kill(pid, 0); activeLockPids.push(pid); } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ESRCH') activeLockPids.push(pid); }
+  }
+  return { configuredPort, checkedPorts, listenerPids, sharedFileOwnerPids, activeLockPids: [...new Set(activeLockPids)], stopped: !listenerPids.length && !sharedFileOwnerPids.length && !activeLockPids.length };
+}
+
 type Provider = Pick<SapiomFeedbackProvider, 'answerWithConstrainedSourceIds' | 'reviseWithConstrainedSourceIds' | 'receipt' | 'capacity' | 'close'>;
 export type DiagnosticStep = { caseId: string; arm: 'original' | 'baseline'; runId: string; status: 'not_attempted' | 'dispatching' | 'completed' | 'failed_or_uncertain'; dispatched?: boolean; input?: OriginalInput | RevisionInput; requestBody?: Body; requestSha256?: string; inputSha256?: string; dispatchIntentAt?: string; dispatchedAt?: string; httpStatus?: number; durationMs?: number; result?: Output; receipt?: Receipt | null; citationSelection?: 'observed' | 'unexercised'; quoteChecks?: { passageId: string; matched: boolean }[] };
 export type DiagnosticResult = {
@@ -107,13 +143,13 @@ export type DiagnosticResult = {
   steps: DiagnosticStep[]; networkDispatches: number; newProviderAttempts: number; acceptedOutputs: number; citationSelectionRequests: number;
   deliveryOutcome: 'incomplete' | 'completed_with_observed_selection' | 'completed_with_unexercised_selection';
   targetCoverage: { caseId: string; selectedTargetSourceIds: string[]; status: 'observed' | 'inconclusive' }[];
-  before: DiagnosticState; after?: DiagnosticState; existingReceiptsUnchanged?: boolean; existingReviewStateUnchanged?: boolean;
+  appState: DiagnosticAppState; before: DiagnosticState; after?: DiagnosticState; existingReceiptsUnchanged?: boolean; existingReviewStateUnchanged?: boolean;
   qualityClaimEligible: false; routerConstrainedDecodingVerified: false; humanJudgments: 0; actualProviderCharges: 'unavailable';
 };
 export type DiagnosticExecution = {
   approvedPlanSha256: string; preparation: DiagnosticPreparation;
-  env: { ABLATRIX_LOOP_LIVE?: string; ABLATRIX_REVISION_WEB?: string; ABLATRIX_LOOP_CALL_LIMIT?: string };
-  implementationMerged: boolean; appStopped: boolean; readState(): DiagnosticState;
+  env: { PORT?: string; ABLATRIX_LOOP_LIVE?: string; ABLATRIX_REVISION_WEB?: string; ABLATRIX_LOOP_CALL_LIMIT?: string };
+  implementationMerged: boolean; inspectApp(): DiagnosticAppState; readState(): DiagnosticState;
   createProvider(fetchImpl: typeof fetch): Provider; transport: typeof fetch;
   output: { create(result: DiagnosticResult): void; save(result: DiagnosticResult): void };
 };
@@ -121,12 +157,16 @@ export type DiagnosticExecution = {
 export async function executeSourceIdDiagnostic(manifest: DiagnosticManifest, deps: DiagnosticExecution): Promise<DiagnosticResult> {
   assert.equal(manifest.planSha256, contextComparisonHash(manifest.plan)); assert.equal(deps.approvedPlanSha256, manifest.planSha256, 'Approval must name this exact diagnostic plan.');
   assert.deepEqual(manifest, prepareSourceIdDiagnostic(deps.preparation), 'Source, qualified code or frozen diagnostic plan changed.');
-  assert.equal(deps.implementationMerged, true, 'Implementation must be merged and unchanged.'); assert.equal(deps.appStopped, true, 'Stop the local application before executing.');
+  assert.equal(deps.implementationMerged, true, 'Implementation must be merged and unchanged.');
   assert.equal(deps.env.ABLATRIX_LOOP_LIVE, '1'); assert.equal(deps.env.ABLATRIX_REVISION_WEB, '0'); assert.equal(deps.env.ABLATRIX_LOOP_CALL_LIMIT, '87');
+  const appState = deps.inspectApp();
+  assert.equal(appState.configuredPort, diagnosticAppPort(deps.env.PORT)); assert.deepEqual(appState.checkedPorts, [...new Set([4173, appState.configuredPort])]);
+  assert.equal(appState.stopped, true, 'Stop the local application and shared database owners before executing.');
+  assert.deepEqual(appState.listenerPids, []); assert.deepEqual(appState.sharedFileOwnerPids, []); assert.deepEqual(appState.activeLockPids, []);
   const before = deps.readState(); assert.equal(before.ledgerAttempts, 81); assert.equal(before.pendingReservations, 0); assert.equal(before.activeOwners, 0); assert.equal(before.activeReviewJobs, 0); assert.deepEqual(before.newRunIds, []);
   const result: DiagnosticResult = { format: 'ablatrix-source-id-diagnostic-results-v1', mode: 'live', planSha256: manifest.planSha256, operatorApprovalPlanSha256: deps.approvedPlanSha256, startedAt: new Date().toISOString(), status: 'running',
     steps: manifest.plan.order.map(s => ({ ...s, runId: `source-id-diagnostic-${manifest.planSha256.slice(0, 14)}-${s.caseId}-${s.arm}`, status: 'not_attempted' })),
-    networkDispatches: 0, newProviderAttempts: 0, acceptedOutputs: 0, citationSelectionRequests: 0, deliveryOutcome: 'incomplete', targetCoverage: [], before, qualityClaimEligible: false, routerConstrainedDecodingVerified: false, humanJudgments: 0, actualProviderCharges: 'unavailable' };
+    networkDispatches: 0, newProviderAttempts: 0, acceptedOutputs: 0, citationSelectionRequests: 0, deliveryOutcome: 'incomplete', targetCoverage: [], appState, before, qualityClaimEligible: false, routerConstrainedDecodingVerified: false, humanJudgments: 0, actualProviderCharges: 'unavailable' };
   deps.output.create(clone(result));
   let provider: Provider | undefined, active: DiagnosticStep | undefined;
   const checkpoint = () => deps.output.save(clone(result));
@@ -228,7 +268,6 @@ export async function sourceIdDiagnosticCli(argv: string[]) {
   const preparation = { source, qualification, caseAudit, implementationCommit: commit, implementationSha256: codeFingerprints(qualification, commit), createdAt: manifest.createdAt };
   assert.deepEqual(manifest, prepareSourceIdDiagnostic(preparation));
   for (const ref of ['HEAD', 'github/main']) execFileSync('git', ['merge-base', '--is-ancestor', commit, ref], { cwd: repository });
-  try { assert.equal(execFileSync('lsof', ['-nP', '-iTCP:4194', '-sTCP:LISTEN'], { encoding: 'utf8' }).trim(), ''); } catch (error) { if ((error as { status?: number }).status !== 1) throw error; }
   const budgetPath = env.ABLATRIX_LOOP_BUDGET_DB, reviewPath = env.ABLATRIX_PAID_REVIEW_DB;
   assert.ok(budgetPath && reviewPath && isAbsolute(budgetPath) && isAbsolute(reviewPath) && existsSync(budgetPath) && existsSync(reviewPath), 'Explicit existing absolute shared ledger and review database paths required.');
   const output = privateDiagnosticOutput(flag('--out')); assert.ok(!existsSync(resolve(flag('--out'))), 'Never overwrite or resume an output.');
@@ -242,7 +281,7 @@ export async function sourceIdDiagnosticCli(argv: string[]) {
         historicalReceiptsSha256: contextComparisonHash(rows.slice(0, 81)), newRunIds: rows.slice(81).map(r => String(r.run_id)),
         reviewStateSha256: contextComparisonHash(Object.fromEntries(reviewTables.map(t => [t, contextComparisonHash(review.prepare(`SELECT * FROM ${t} ORDER BY rowid`).all())]))) };
     };
-    const result = await executeSourceIdDiagnostic(manifest, { approvedPlanSha256: approved, preparation, env: { ABLATRIX_LOOP_LIVE: env.ABLATRIX_LOOP_LIVE, ABLATRIX_REVISION_WEB: env.ABLATRIX_REVISION_WEB, ABLATRIX_LOOP_CALL_LIMIT: env.ABLATRIX_LOOP_CALL_LIMIT }, implementationMerged: true, appStopped: true, readState, output, transport: fetch,
+    const result = await executeSourceIdDiagnostic(manifest, { approvedPlanSha256: approved, preparation, env: { PORT: env.PORT, ABLATRIX_LOOP_LIVE: env.ABLATRIX_LOOP_LIVE, ABLATRIX_REVISION_WEB: env.ABLATRIX_REVISION_WEB, ABLATRIX_LOOP_CALL_LIMIT: env.ABLATRIX_LOOP_CALL_LIMIT }, implementationMerged: true, inspectApp: () => inspectDiagnosticApp({ port: env.PORT, budgetPath, reviewPath, appDbPath: env.ABLATRIX_DB ?? '.data/ablatrix.sqlite', loopDbPath: env.ABLATRIX_LOOP_DB ?? '.data/feedback-loop.sqlite' }), readState, output, transport: fetch,
       createProvider: fetchImpl => new SapiomFeedbackProvider({ enabled: true, dbPath: budgetPath, capUsd: 10, priorSpendUsd: .200281, allowancePerCallUsd: .1, callLimit: 87, fetchImpl }) });
     if (result.status !== 'completed') process.exitCode = 1;
     return { out: flag('--out'), status: result.status, newProviderAttempts: result.newProviderAttempts, acceptedOutputs: result.acceptedOutputs, citationSelectionRequests: result.citationSelectionRequests, deliveryOutcome: result.deliveryOutcome, targetCoverage: result.targetCoverage, qualityClaimEligible: false, routerConstrainedDecodingVerified: false };

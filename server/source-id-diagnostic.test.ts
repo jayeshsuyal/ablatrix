@@ -1,11 +1,14 @@
 import { test } from 'node:test';
+import { createServer } from 'node:http';
+import { spawn } from 'node:child_process';
+import { once } from 'node:events';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, rmSync, statSync, symlinkSync, mkdirSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, statSync, symlinkSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { contextComparisonHash } from './context-comparison.ts';
 import { SapiomFeedbackProvider, constrainedSourceIdAnswerRequestBody, constrainedSourceIdRevisionRequestBody } from './feedback-provider.ts';
-import { DIAGNOSTIC_CASE_IDS, DIAGNOSTIC_CODE_FILES, diagnosticSha256, diagnosticRevisionInput, prepareSourceIdDiagnostic, executeSourceIdDiagnostic, privateDiagnosticOutput, sourceIdDiagnosticCli, type DiagnosticArtifact, type DiagnosticExecution, type DiagnosticPreparation, type DiagnosticResult, type DiagnosticState } from './source-id-diagnostic.ts';
+import { DIAGNOSTIC_CASE_IDS, DIAGNOSTIC_CODE_FILES, diagnosticSha256, diagnosticRevisionInput, prepareSourceIdDiagnostic, executeSourceIdDiagnostic, privateDiagnosticOutput, sourceIdDiagnosticCli, inspectDiagnosticApp, diagnosticAppPort, type DiagnosticArtifact, type DiagnosticExecution, type DiagnosticPreparation, type DiagnosticResult, type DiagnosticState } from './source-id-diagnostic.ts';
 
 const clone = <T>(v: T): T => JSON.parse(JSON.stringify(v));
 function artifact(path: string): DiagnosticArtifact { const raw = readFileSync(new URL(`../${path}`, import.meta.url)); return { path, fileSha256: diagnosticSha256(raw), document: JSON.parse(raw.toString()) }; }
@@ -25,7 +28,7 @@ function harness(response: (body: Body, index: number) => unknown, model = 'gpt-
   const receipts = new Map<string, NonNullable<ReturnType<SapiomFeedbackProvider['receipt']>>>();
   let providerCreations = 0, outputCreations = 0, closed = false;
   const deps: DiagnosticExecution = {
-    preparation: prep, approvedPlanSha256: manifest.planSha256, env: { ABLATRIX_LOOP_LIVE: '1', ABLATRIX_REVISION_WEB: '0', ABLATRIX_LOOP_CALL_LIMIT: '87' }, implementationMerged: true, appStopped: true,
+    preparation: prep, approvedPlanSha256: manifest.planSha256, env: { ABLATRIX_LOOP_LIVE: '1', ABLATRIX_REVISION_WEB: '0', ABLATRIX_LOOP_CALL_LIMIT: '87' }, implementationMerged: true, inspectApp: () => ({ configuredPort: 4173, checkedPorts: [4173], listenerPids: [], sharedFileOwnerPids: [], activeLockPids: [], stopped: true }),
     readState: () => ({ ...before, ledgerAttempts: 81 + receipts.size, newRunIds: [...receipts.keys()] }),
     output: { create: result => { outputCreations++; checkpoints.push(result); }, save: result => checkpoints.push(result) },
     createProvider: fetchImpl => {
@@ -74,7 +77,7 @@ test('approval, frozen source/code, merged state, live/web limits and ledger gat
     h => { h.deps.approvedPlanSha256 = '0'.repeat(64); },
     h => { (h.manifest.plan.limits as { maximumNewAttempts: number }).maximumNewAttempts = 7; h.manifest.planSha256 = contextComparisonHash(h.manifest.plan); h.deps.approvedPlanSha256 = h.manifest.planSha256; },
     h => { h.deps.preparation.implementationSha256[DIAGNOSTIC_CODE_FILES[0]] = 'b'.repeat(64); },
-    h => { h.deps.implementationMerged = false; }, h => { h.deps.appStopped = false; },
+    h => { h.deps.implementationMerged = false; }, h => { h.deps.inspectApp = () => ({ configuredPort: 4173, checkedPorts: [4173], listenerPids: [123], sharedFileOwnerPids: [], activeLockPids: [], stopped: false }); },
     h => { h.deps.env.ABLATRIX_LOOP_LIVE = '0'; }, h => { h.deps.env.ABLATRIX_REVISION_WEB = '1'; }, h => { h.deps.env.ABLATRIX_LOOP_CALL_LIMIT = '88'; },
     ...(['ledgerAttempts', 'pendingReservations', 'activeOwners', 'activeReviewJobs'] as const).map(field => (h: ReturnType<typeof harness>) => { h.deps.readState = () => ({ ...before, [field]: field === 'ledgerAttempts' ? 80 : 1 }); }),
   ];
@@ -160,4 +163,59 @@ test('existing private output refuses a new execution before constructing its pr
     await assert.rejects(executeSourceIdDiagnostic(h.manifest, h.deps), { code: 'EEXIST' });
     assert.equal(h.counts().providerCreations, 0); assert.equal(h.bodies.length, 0); assert.equal(JSON.parse(readFileSync(path, 'utf8')).format, 'synthetic-existing-output');
   } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+
+function temporaryAppPaths() {
+  const directory = mkdtempSync(join(tmpdir(), 'ablatrix-diagnostic-app-'));
+  const paths = { budgetPath: join(directory, 'budget.sqlite'), reviewPath: join(directory, 'review.sqlite'), appDbPath: join(directory, 'app.sqlite'), loopDbPath: join(directory, 'loop.sqlite') };
+  writeFileSync(paths.budgetPath, ''); writeFileSync(paths.reviewPath, '');
+  return { directory, paths };
+}
+
+test('stopped-app check follows default/configured PORT and blocks real listeners before output/provider creation', async () => {
+  const { directory, paths } = temporaryAppPaths();
+  const defaultServer = createServer((_req, res) => res.end('SYNTHETIC default app'));
+  const alternateServer = createServer((_req, res) => res.end('SYNTHETIC alternate app'));
+  try {
+    assert.equal(diagnosticAppPort(), 4173); assert.equal(diagnosticAppPort('4194'), 4194);
+    for (const value of ['0', '-1', '65536', 'foo', '1.5', '']) assert.throws(() => diagnosticAppPort(value));
+    await new Promise<void>((resolve, reject) => { defaultServer.once('error', reject); defaultServer.listen(4173, '127.0.0.1', resolve); });
+    const defaultState = inspectDiagnosticApp(paths); assert.equal(defaultState.stopped, false); assert.deepEqual(defaultState.checkedPorts, [4173]); assert.ok(defaultState.listenerPids.includes(process.pid));
+    const blockedDefault = harness(valid); blockedDefault.deps.inspectApp = () => inspectDiagnosticApp(paths);
+    await assert.rejects(executeSourceIdDiagnostic(blockedDefault.manifest, blockedDefault.deps), /Stop the local application/); assert.equal(blockedDefault.counts().providerCreations, 0); assert.equal(blockedDefault.counts().outputCreations, 0);
+    await new Promise<void>((resolve, reject) => defaultServer.close(error => error ? reject(error) : resolve()));
+    await new Promise<void>((resolve, reject) => { alternateServer.once('error', reject); alternateServer.listen(0, '127.0.0.1', resolve); });
+    const address = alternateServer.address(); assert.ok(address && typeof address === 'object'); const port = String(address.port);
+    const alternateState = inspectDiagnosticApp({ ...paths, port }); assert.equal(alternateState.stopped, false); assert.deepEqual(alternateState.checkedPorts, [4173, address.port]);
+    const blockedAlternate = harness(valid); blockedAlternate.deps.env.PORT = port; blockedAlternate.deps.inspectApp = () => inspectDiagnosticApp({ ...paths, port });
+    await assert.rejects(executeSourceIdDiagnostic(blockedAlternate.manifest, blockedAlternate.deps), /Stop the local application/); assert.equal(blockedAlternate.counts().providerCreations, 0); assert.equal(blockedAlternate.counts().outputCreations, 0);
+    await new Promise<void>((resolve, reject) => alternateServer.close(error => error ? reject(error) : resolve()));
+    const stopped = inspectDiagnosticApp({ ...paths, port }); assert.equal(stopped.stopped, true); assert.deepEqual(stopped.listenerPids, []);
+  } finally { defaultServer.close(); alternateServer.close(); rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('a worker holding the shared SQLite files on an unconfigured port blocks execution without a provider lease', async () => {
+  const { directory, paths } = temporaryAppPaths();
+  const script = `import {DatabaseSync} from 'node:sqlite'; import {createServer} from 'node:http';
+    const budget = new DatabaseSync(process.argv[1]), review = new DatabaseSync(process.argv[2]);
+    budget.exec('CREATE TABLE synthetic_fixture(id INTEGER)'); review.exec('CREATE TABLE synthetic_fixture(id INTEGER)');
+    const server = createServer((_req,res) => res.end('SYNTHETIC worker')); server.listen(0,'127.0.0.1',()=>process.send({port:server.address().port}));
+    process.on('SIGTERM',()=>server.close(()=>{budget.close();review.close();process.exit(0);}));`;
+  const child = spawn(process.execPath, ['--input-type=module', '-e', script, paths.budgetPath, paths.reviewPath], { stdio: ['ignore', 'ignore', 'pipe', 'ipc'] });
+  try {
+    const [message] = await once(child, 'message', { signal: AbortSignal.timeout(10_000) }); assert.ok(message.port !== 4173);
+    const state = inspectDiagnosticApp(paths); assert.equal(state.stopped, false); assert.deepEqual(state.listenerPids, []); assert.ok(state.sharedFileOwnerPids.includes(child.pid!));
+    const h = harness(valid); h.deps.inspectApp = () => inspectDiagnosticApp(paths);
+    await assert.rejects(executeSourceIdDiagnostic(h.manifest, h.deps), /Stop the local application/); assert.equal(h.counts().providerCreations, 0); assert.equal(h.counts().outputCreations, 0); assert.equal(h.bodies.length, 0);
+  } finally { if (child.exitCode === null && child.signalCode === null) { const exited = once(child, 'exit'); child.kill('SIGTERM'); await exited; } rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('live application ownership locks fail closed independently of ports, and malformed locks are not deleted', () => {
+  const { directory, paths } = temporaryAppPaths();
+  try {
+    writeFileSync(paths.appDbPath + '.lock', String(process.pid));
+    const state = inspectDiagnosticApp(paths); assert.equal(state.stopped, false); assert.deepEqual(state.activeLockPids, [process.pid]);
+    writeFileSync(paths.appDbPath + '.lock', 'not-a-pid'); assert.throws(() => inspectDiagnosticApp(paths), /lock is malformed/); assert.equal(readFileSync(paths.appDbPath + '.lock', 'utf8'), 'not-a-pid');
+  } finally { rmSync(directory, { recursive: true, force: true }); }
 });
