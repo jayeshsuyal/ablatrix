@@ -12,7 +12,7 @@ Both comparison arms receive the same initial answer, critique, ordered selected
 
 ## Development gate
 
-Use previously inspected cases Q26, Q63, Q19, Q47, Q75, and Q4. The [development plan](evidence/correction-policy-2026-10-10/development-plan.json) will bind exact inputs, criteria, prompt identities, code hashes, and limits before execution. Q26/Q63 reuse the exact model inputs of the October 10 baseline attempts, apart from the run ID and selected revision instructions. Other cases are candidate qualification probes, not matched quality comparisons. The Q19/Q47 probes deliberately test the generator against missing or wrong-model evidence; they do not override production investigation stops.
+The [development plan](evidence/correction-policy-2026-10-10/development-plan.json), frozen in commit `54e1982` before dispatch, binds exact inputs, criteria, prompt identities, code hashes, and limits for previously inspected cases Q26, Q63, Q19, Q47, Q75, and Q4. Q26/Q63 reuse the exact model inputs of the October 10 baseline attempts, apart from the run ID and selected revision instructions. Other cases are candidate qualification probes, not matched quality comparisons. The Q19/Q47 probes deliberately test the generator against missing or wrong-model evidence; they do not override production investigation stops.
 
 Required gate:
 
@@ -22,6 +22,8 @@ Required gate:
 - Any provider uncertainty, invalid response, failed criterion, or unresolved AI assessment stops this experiment before fresh-product generation. Preserve all outcomes; do not retune and rerun within the same frozen round.
 
 The AI gate decides whether to spend the already-approved conditional validation allowance. It is not a human quality result or a promotion gate.
+
+**Recorded outcome:** all six calls completed; all 18 returned citation quotes matched the supplied source bodies. The [AI source check](evidence/correction-policy-2026-10-10/development-ai-review.md) passed the frozen criteria, while noting remaining verbosity. [Raw outputs](evidence/correction-policy-2026-10-10/development-results.json) and the [machine-readable gate](evidence/correction-policy-2026-10-10/development-gate.json) are preserved. No human judgment or policy promotion followed this gate.
 
 ## Conditional fresh comparison
 

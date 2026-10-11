@@ -1,10 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { createApp } from './app.ts';
 import { RunStore } from './store.ts';
 import { PilotRunner, PilotStore } from './pilot.ts';
-import { createContextComparisonFixture } from './context-comparison.ts';
+import { ContextComparisonStore, createContextComparisonFixture, createCorrectionComparisonFixture } from './context-comparison.ts';
 
 test('comparison HTTP boundary preserves blind review and only permits the no-call fixture setup', async () => {
   const runs = new RunStore(':memory:');
@@ -47,4 +50,32 @@ test('comparison HTTP boundary preserves blind review and only permits the no-ca
   } finally {
     server.closeAllConnections(); server.close(); await once(server, 'close'); runs.close();
   }
+});
+
+test('tagged correction packets reuse blind HTTP review without exposing AI critique or prompt identities', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'correction-comparison-api-')), path = join(directory, 'comparisons.sqlite');
+  const packet = createCorrectionComparisonFixture(), imported = new ContextComparisonStore(path);
+  imported.importPacket(packet); imported.close();
+  const runs = new RunStore(':memory:');
+  const server = createApp(runs, 'fixture', undefined, new PilotRunner(new PilotStore(':memory:')), undefined, undefined, undefined, undefined, false, { comparisonDbPath: path });
+  server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  const address = server.address(); assert.ok(address && typeof address !== 'string');
+  const base = `http://127.0.0.1:${address.port}`, route = `/api/context-comparisons/${packet.id}`;
+  try {
+    const detail = await (await fetch(base + route)).json();
+    assert.equal(detail.format, 'ablatrix-correction-comparison-v1');
+    assert.equal(detail.hypothesis, 'compare_correction_policy');
+    assert.doesNotMatch(JSON.stringify(detail), /"(?:original|critique|protocol|policies|requestSha256|inputSha256|providerCallId|generationSourceIds|investigation)"/);
+    assert.equal((await fetch(base + route + '/export')).status, 409);
+    for (const answer of detail.cases[0].answers) {
+      const response = await fetch(base + route + '/reviews', { method: 'POST', headers: { origin: base, 'content-type': 'application/json' }, body: JSON.stringify({ manifestSha256: detail.manifestSha256, caseId: detail.cases[0].id, versionId: answer.versionId, reviewer: 'Synthetic API reviewer', correctness: 'correct', support: 'supported', adequacy: 'adequate', checkedSourceShas: detail.cases[0].sources.map((source: { sha256: string }) => source.sha256), referenceChecked: true, note: '' }) });
+      assert.equal(response.status, 201); assert.equal((await response.json()).kind, 'synthetic');
+    }
+    const exported = await (await fetch(base + route + '/export')).json();
+    assert.equal(exported.format, 'ablatrix-correction-comparison-evidence-v1');
+    assert.equal(exported.report.qualityClaimEligible, false); assert.equal(exported.report.quality, null);
+    assert.deepEqual(exported.packet, packet);
+    assert.equal(exported.report.cases[0].critique.kind, 'ai_assisted');
+    assert.equal(exported.report.protocol.policies.candidate.policy, 'candidate_v4');
+  } finally { await server.shutdown(); runs.close(); rmSync(directory, { recursive: true, force: true }); }
 });

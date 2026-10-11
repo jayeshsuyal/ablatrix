@@ -1,6 +1,13 @@
 # Context comparison import and review contract
 
-This workbench imports completed experiment records. It has no provider, background generation worker or paid execution route. Imported live packets are **retrospective, unverified records**: hashes establish internal consistency, not provider authenticity, preregistration, an exact historical system prompt, or representative fresh-product selection.
+This workbench imports experiment records for review. It has no provider, background generation worker or paid execution route. Imported live packets are **unverified records**: hashes establish internal consistency, not provider authenticity, preregistration, or representative fresh-product selection. Two explicitly tagged experiments share the workbench:
+
+| Packet format | Controlled change |
+| --- | --- |
+| `ablatrix-context-comparison-v1` | Original customer-question metadata omitted versus retained; existing protocol unchanged. |
+| `ablatrix-correction-comparison-v1` | Baseline versus candidate revision instructions; both receive identical original answers, critiques and source context. |
+
+See the [original-question protocol](context-comparison-protocol.md) and [correction-policy experiment](correction-policy-experiment.md). Importing either format grants no authority to generate answers or promote a policy.
 
 ## Service and routes
 
@@ -34,7 +41,7 @@ npm run compare -- export --db .data/context-comparisons.sqlite --id synthetic-c
 
 The output path must be new; the CLI never overwrites an existing export. Every CLI command requires `--db`. The app uses `ABLATRIX_COMPARISON_DB`, defaulting to `.data/context-comparisons.sqlite`. To import an external completed packet, use `npm run compare -- import --db .data/context-comparisons.sqlite --packet /absolute/path/packet.json`; this does not run or retry any model call.
 
-## Frozen packet
+## Original-question packet (unchanged)
 
 Format is `ablatrix-context-comparison-v1`. A packet contains `id`, `title`, `mode` (`fixture` or `live`), `createdAt`, fixed hypothesis `preserve_original_customer_question`, `protocol`, `provenance` and 1–20 cases. See the exported `ContextComparisonPacket` type for exact fields.
 
@@ -44,9 +51,28 @@ Each attempt has an ID, input hash, status (`completed`, `failed`, `uncertain`),
 
 Import rejects the 56 products in the existing development/validation corpus, final corpus and pinned paid batch for live packets. A caller may supply additional `excludedProductIds`, such as prior workspace exposures. The comparison database also reserves product IDs and normalized complete-source fingerprints across imports. Fixture exposure uses a separate namespace. These checks cannot establish real-world product-family independence or authenticate caller-supplied identities; they do not certify freshness.
 
+## Correction-policy packet
+
+`CorrectionComparisonPacket` uses `ablatrix-correction-comparison-v1`, hypothesis `compare_correction_policy`, and 1–20 distinct product cases. Each case binds:
+
+- A completed shared `original` answer and its recorded identity and receipt fingerprints; an explicitly `ai_assisted` critique.
+- A full reviewer source pool of at most 128 chunks, retaining separate `originalQuestion` fields, and at most eight ordered `generationSourceIds`.
+- One shared investigation whose ordered `selectedSourceIds` equal those generation IDs. This format permits no added sources or clarifications.
+- Sibling `baseline` and `candidate` revision attempts, each starting from that same original. The candidate never receives the baseline revision as its original.
+
+Both arms retain original customer questions. Only the selected revision instructions and prompt-version label differ: `baseline` uses the existing revision policy; `candidate` selects `candidate_v4`. The protocol binds both full system instructions, their hashes, the full generation-configuration hashes, model alias and citation interface. Import checks these against the versioned implementation. Model route, settings, response schema and output handling are shared.
+
+`correctionComparisonInput()` defines each controlled input. Its `inputSha256` uses `contextComparisonHash()`; `correctionComparisonRequestHash()` computes SHA-256 of the serialized request body constructed by `revisionRequestBody()` with the protocol's model alias. For live packets this is the exact transport-body projection; fixtures use a synthetic model and never dispatch it. Completed live arms retain separate provider-call IDs. These checks reconstruct declared revision requests; they cannot authenticate dispatch or provider responses. The original-generation input/request fingerprints are recorded declarations, not a reconstruction of its transport body.
+
+Correction arms additionally support `not_attempted`: answer, model, latency, usage and provider-call ID must be null, with an explanation. Its request hash describes the planned request only. It is neither a failed provider call nor a completed answer. If original generation fails, retain that execution record outside this import format, which requires a completed shared original; do not silently shrink the planned cohort.
+
+The same CLI `import` command and product-exposure checks accept this tag. `createCorrectionComparisonFixture()` supplies an explicitly synthetic, no-call test packet; the browser's existing sample button still loads the original-question example. Reviewed exports use `ablatrix-correction-comparison-evidence-v1`; the original format retains its existing export tag.
+
 ## Blind review
 
 Public cards contain `label` (`A` or `B`), an opaque `versionId`, attempt status, answer, mechanical `citationCheck`, and saved review. A private persisted key determines A/B assignment. Public cards and lists omit model, timing, arm identity, attempt IDs and input hashes. Full context is available to check both answers.
+
+Correction cards additionally hide the shared original answer, AI-authored critique, investigation, selected generation IDs, policy/configuration metadata and request hashes until every completed answer has a locked judgment. The reviewer sees both final answers and the full source pool. The revealed critique remains an AI-authored generation input, never a human judgment.
 
 Review payload:
 
@@ -70,6 +96,8 @@ Correctness accepts `correct`, `incorrect`, `uncertain`; support accepts `suppor
 
 ## Results
 
-While completed answers remain unreviewed, report/export are locked. If an attempt failed or is uncertain, the unlocked report is `incomplete` and quality is null. Fixture reports are `synthetic_only` with quality null.
+While completed answers remain unreviewed, report/export are locked. If an attempt failed, is uncertain, or was `not_attempted`, the unlocked report is `incomplete` and quality is null. Fully completed fixture reports are `synthetic_only` with quality null. Missing attempts never become ties.
 
 Fully completed imported records show separate correctness, support and adequacy counts. The descriptive composite requires all three positive judgments. An uncertain judgment excludes that pair from wins/losses/ties and makes the verdict `inconclusive`. Otherwise the verdict is `exploratory_only`. `qualityClaimEligible` is always false and `interval95` is null: imported packets do not establish a prospective quality gain. Mechanical citation counts remain separate. Billed cost is unknown; recorded answer-stage latency excludes shared retrieval and is not independently verified.
+
+Correction reports instead label recorded **revision-stage** latency, excluding both shared original-answer generation and retrieval. Even with a separate pre-generation manifest, the importer does not independently verify prospectivity or provider authenticity. Neither format produces an automatic quality-gain claim, accepts a product answer, or promotes a policy.

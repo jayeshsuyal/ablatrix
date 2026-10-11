@@ -1,0 +1,301 @@
+{
+  "format": "ablatrix-correction-development-gate-v1",
+  "createdAt": "2026-10-11T02:08:58.519643Z",
+  "kind": "independent_ai_development_assessment",
+  "reviewer": "Codex source-checking agent (AI)",
+  "blinding": "nonblind",
+  "sourceCheckScope": "Frozen supplied source text and original customer-question metadata only; no independent product verification.",
+  "planSha256": "db8e89481279c8d2410461153486bd54a4e4a4dc1856796e3b004f5108399e68",
+  "files": {
+    "development-plan.json": "2909e2b8cebb64c83dc8a1613b1f2f9ea6ae108b381ce0ea25543e4365a6a02c",
+    "development-results.json": "bf0cd0313a278feccc151fbd929cf16c4dbb5fa66114cb936db42aeddc34e3e0"
+  },
+  "candidateIdentity": {
+    "policy": "candidate_v4",
+    "promptVersion": "answer-revision-v4-attributed-listing",
+    "systemInstructionsSha256": "bec2907dbc9b9165900cac3d084336e514eab3682eaafdc84822e8805e126c30"
+  },
+  "gate": "pass",
+  "allCriteriaRequired": true,
+  "allCriteriaMet": true,
+  "freshComparisonMayBePrepared": true,
+  "freshComparisonDispatched": false,
+  "qualityClaimEligible": false,
+  "humanJudgments": 0,
+  "policyPromotionApproved": false,
+  "mechanicalCitations": {
+    "matching": 18,
+    "total": 18
+  },
+  "integrityChecks": {
+    "frozenPlanHashMatches": true,
+    "allSixInputSnapshotsUnchanged": true,
+    "allSixRequestBodyHashesMatch": true,
+    "allSixRecordedCandidateIdentitiesMatch": true,
+    "allSixRequestsCompleted": true
+  },
+  "cases": [
+    {
+      "qid": "26",
+      "criterion": "Attribute white/off-white/light-gray reports and lighter-than-pewter comparison to customers; no manufacturer-color certainty or speculation about an unseen image. Avoid repeated evidence framing.",
+      "status": "pass",
+      "allFrozenCriteriaMet": true,
+      "criteria": [
+        {
+          "id": "customer_attribution",
+          "status": "pass",
+          "rationale": "Review220 says white; CQA222 says off-white/light gray; review223 says lighter than the customer's pewter washer. The answer attributes all three descriptions to customers."
+        },
+        {
+          "id": "manufacturer_and_image_uncertainty",
+          "status": "pass",
+          "rationale": "The answer does not assert an exact manufacturer color or describe an unseen photograph. It says the discrepancy cannot be resolved more precisely."
+        },
+        {
+          "id": "avoid_repeated_evidence_framing",
+          "status": "pass",
+          "rationale": "No repeated evidence phrase; customer quotations make the answer longer than necessary, but the frozen criterion is satisfied."
+        }
+      ],
+      "mechanicalCitationMatches": 3,
+      "mechanicalCitationCount": 3,
+      "citationChecks": [
+        {
+          "sourceId": "26:0aa18f2fd184e15bbb46003d7162ba0044c79bb3993efe5c9467f94343d09308",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "26:00406d85ed1b13fe1b94e8b442d8fa233b34d42321e884f84f143eaba9760528",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "26:4e3c209cfd86c75b8f44aa4316db9e5f09a6c6b6be86f8b753a3a9e826eb835e",
+          "exactBodyMatch": true
+        }
+      ],
+      "unsupportedMaterialClaimsFound": false,
+      "redundantKnownModelRequestFound": false,
+      "internalStatusTokenInProseFound": false,
+      "unseenImageSpeculationFound": false,
+      "completedProviderAttemptId": "4fd9a24e-bdf0-4b6b-bec6-fb630da12a54"
+    },
+    {
+      "qid": "63",
+      "criterion": "Directly explain that one slim-quarter keg is a listed configuration while up to two sixth-barrel kegs are listed. Two slim-quarter kegs are not a listed supported configuration. Do not assert independently tested impossibility or ask for the supplied model again.",
+      "status": "pass",
+      "allFrozenCriteriaMet": true,
+      "criteria": [
+        {
+          "id": "listing_capacity",
+          "status": "pass",
+          "rationale": "Description595 expressly lists one slim-pony quarter barrel and up to two sixth barrels. The answer accurately states both configurations."
+        },
+        {
+          "id": "unlisted_configuration_not_physical_impossibility",
+          "status": "pass",
+          "rationale": "Two slim-quarter kegs are identified as undocumented. The answer does not infer that they are physically impossible or independently tested."
+        },
+        {
+          "id": "no_redundant_model_request_or_status_leak",
+          "status": "pass",
+          "rationale": "No request for the model already present in the product title and no insufficient_evidence token in prose. The structured insufficient_evidence status preserves the unresolved physical-fit question."
+        }
+      ],
+      "mechanicalCitationMatches": 3,
+      "mechanicalCitationCount": 3,
+      "citationChecks": [
+        {
+          "sourceId": "63:0ceb8d3e3b36f5d6c5a6e803b525792a2e0834471e184723a17eb4448d3022b9",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "63:203a5136634941fc624a1ded36be8716b05f8f7c09c3c2569e1f1614754ec332",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "63:877b2d9f282a2ff830e4ccb8d2efd334cb6b1fba316c8e519722fa32eab63031",
+          "exactBodyMatch": true
+        }
+      ],
+      "unsupportedMaterialClaimsFound": false,
+      "redundantKnownModelRequestFound": false,
+      "internalStatusTokenInProseFound": false,
+      "unseenImageSpeculationFound": false,
+      "completedProviderAttemptId": "2a957dc1-899f-4d12-9b8d-d56d1370be38"
+    },
+    {
+      "qid": "19",
+      "criterion": "Remove the claim that the source matches this questioner's model. Preserve uncertainty about interchangeability between 241543917 and 240337103. Historical CQA refers to a different refrigerator; do not transfer it.",
+      "status": "pass",
+      "allFrozenCriteriaMet": true,
+      "criteria": [
+        {
+          "id": "part_relationship_uncertain",
+          "status": "pass",
+          "rationale": "Description157 and attribute150 identify240337103; no supplied source establishes replacement of241543917. The answer preserves that gap."
+        },
+        {
+          "id": "original_question_scope",
+          "status": "pass",
+          "rationale": "CQA154 concerns Kenmore25367889506 and CQA152 concerns FRT18IL6JW1. The answer no longer treats those customer responses as confirmation for the present questioner."
+        },
+        {
+          "id": "supported_added_dimensions",
+          "status": "pass",
+          "rationale": "The11.6×17×8.25-inch dimensions exactly match attribute155. They are supported, although unnecessary to resolving the replacement question."
+        }
+      ],
+      "mechanicalCitationMatches": 5,
+      "mechanicalCitationCount": 5,
+      "citationChecks": [
+        {
+          "sourceId": "19:2d5f13fbecef583a8a48d501e45f6b3cefe2c31ac96f303e35da6c654ffb9d51",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "19:a5e496377ffae77f8032184d258fcbf02d3f70f3f87ba40ec3b701fca7602c8b",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "19:b256102581f9e08c0e1e4e6fcece89c23cb5863683cbb814e9ba4ef9b350a7cf",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "19:d96fb7dc8f5fa40986bbfd63ff3acc4507618e4cf2e2682b0dce77a795753c1f",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "19:b5f7f04b3746b43c8c3394837824ca56f3dcaa677e0b2ed7b49f0c052963b9e3",
+          "exactBodyMatch": true
+        }
+      ],
+      "unsupportedMaterialClaimsFound": false,
+      "redundantKnownModelRequestFound": false,
+      "internalStatusTokenInProseFound": false,
+      "unseenImageSpeculationFound": false,
+      "completedProviderAttemptId": "972ccc55-b0c2-4f2d-8511-67cad42be1bc"
+    },
+    {
+      "qid": "47",
+      "criterion": "Do not establish WMR200 compatibility from other models' customer questions or a generic compatibility statement. Request documentation of WMR200 compatibility without asking for the already supplied station identifier.",
+      "status": "pass",
+      "allFrozenCriteriaMet": true,
+      "criteria": [
+        {
+          "id": "no_cross_model_inference",
+          "status": "pass",
+          "rationale": "Description433 has only generic Oregon Scientific compatibility. CQA431 concerns WS-1171A and CQA434 concerns BAA968HG/THGR228N; neither is used to assert WMR200 compatibility."
+        },
+        {
+          "id": "specific_missing_documentation",
+          "status": "pass",
+          "rationale": "The answer identifies the missing THGR122NX–WMR200 pairing and recommends checking the compatibility list or manufacturer. Review430 supports the list's existence within this historical snapshot."
+        },
+        {
+          "id": "no_redundant_identifier_request",
+          "status": "pass",
+          "rationale": "It does not ask for the WMR200 identifier already supplied. The generic negative customer experience in review432 is attributed and explicitly not treated as WMR200-specific."
+        }
+      ],
+      "mechanicalCitationMatches": 3,
+      "mechanicalCitationCount": 3,
+      "citationChecks": [
+        {
+          "sourceId": "47:c9bc704e75985374c8a1f949f8be0e05f4dc11eb8270189937b228dbe041b12a",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "47:39c4e6d178fac644a6e15d8dad0a786748cef3839f5ea8e688cbd9bbc2649eee",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "47:15da1e0009a268c1a29a4fbe6c8879f109ba9611a6a0c03ae1a3304912bcf931",
+          "exactBodyMatch": true
+        }
+      ],
+      "unsupportedMaterialClaimsFound": false,
+      "redundantKnownModelRequestFound": false,
+      "internalStatusTokenInProseFound": false,
+      "unseenImageSpeculationFound": false,
+      "completedProviderAttemptId": "a7083a0a-dc60-4ead-b65b-debbbdb796df"
+    },
+    {
+      "qid": "75",
+      "criterion": "Retain the supported customer reports of use with stacked washers/dryers, with attribution. Do not turn customer experience into a universal compatibility guarantee or an unnecessary refusal.",
+      "status": "pass",
+      "allFrozenCriteriaMet": true,
+      "criteria": [
+        {
+          "id": "preserve_supported_customer_use",
+          "status": "pass",
+          "rationale": "CQA710 and review711 report stacked washer/dryer use. The answer retains this supported positive information and returns answered."
+        },
+        {
+          "id": "no_universal_guarantee",
+          "status": "pass",
+          "rationale": "The answer attributes reports and distinguishes them from a manufacturer guarantee for every installation. It does not unnecessarily refuse the general use question."
+        }
+      ],
+      "mechanicalCitationMatches": 2,
+      "mechanicalCitationCount": 2,
+      "citationChecks": [
+        {
+          "sourceId": "75:9e6111445cdc3bac944d64a7107f2b74df7efd968eea1f0ee52c457fa044dedc",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "75:a43d474af666f63013dca433fdc69f9004ed9b4dae17771a80a60730ff0f7149",
+          "exactBodyMatch": true
+        }
+      ],
+      "unsupportedMaterialClaimsFound": false,
+      "redundantKnownModelRequestFound": false,
+      "internalStatusTokenInProseFound": false,
+      "unseenImageSpeculationFound": false,
+      "completedProviderAttemptId": "f32cdf91-7c9d-433c-adf1-efdc2b5f8fb1"
+    },
+    {
+      "qid": "4",
+      "criterion": "Preserve the distinction between reported use on well water and suitability of a city-water test kit. Do not resolve the conflicting sources into an unsupported guarantee that the kit is appropriate for well-water testing.",
+      "status": "pass",
+      "allFrozenCriteriaMet": true,
+      "criteria": [
+        {
+          "id": "use_versus_suitability",
+          "status": "pass",
+          "rationale": "Review11 reports well-water use, while review14 says the city-water kit is not the right test for well water. The answer preserves both observations instead of making a suitability guarantee."
+        },
+        {
+          "id": "uncertainty_and_attribution",
+          "status": "pass",
+          "rationale": "The answer leaves suitability unconfirmed, attributes the conflicting material to customers, and returns insufficient_evidence. Reported use is not treated as validated effectiveness."
+        }
+      ],
+      "mechanicalCitationMatches": 2,
+      "mechanicalCitationCount": 2,
+      "citationChecks": [
+        {
+          "sourceId": "4:4d643ddf9d3d00188504a6ffb5f1de92fb0ebe45cbe78e66274951bd94ec6d1c",
+          "exactBodyMatch": true
+        },
+        {
+          "sourceId": "4:5f254c226ed5ab053a6ff90c3c6592629f7c03c37282ca0d288b5ccbaf20086f",
+          "exactBodyMatch": true
+        }
+      ],
+      "unsupportedMaterialClaimsFound": false,
+      "redundantKnownModelRequestFound": false,
+      "internalStatusTokenInProseFound": false,
+      "unseenImageSpeculationFound": false,
+      "completedProviderAttemptId": "b4e8fd10-2d02-4355-ae75-64154394d862"
+    }
+  ],
+  "limitations": [
+    "These six products were deliberately selected from previously exposed development cases.",
+    "Only Q26 and Q63 have prior baseline revisions in this packet, executed earlier; the other four are candidate qualification probes, not paired gains.",
+    "The reviewer is AI, knew the variant, and helped audit the implementation; this is not independent human review.",
+    "Q26 and Q63 remain verbose; Q19 adds supported but nonessential dimensions. These are possible style improvements, not violations of the frozen criteria.",
+    "Q63 still returns structured insufficient_evidence for the unverified two-slim-quarter configuration. Documented configuration reporting improved; actual physical fit has not been verified.",
+    "Passing this gate permits preparation of the separately frozen fresh comparison only. It does not establish generalization, human preference, or a production policy promotion."
+  ]
+}

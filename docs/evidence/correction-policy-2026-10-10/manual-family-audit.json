@@ -1,0 +1,130 @@
+{
+  "format": "ablatrix-correction-cohort-audit-v1",
+  "createdAt": "2026-10-11T02:11:38.765720Z",
+  "kind": "ai_pre_dispatch_family_source_audit",
+  "passed": false,
+  "cohortFileSha256": "93071d4759b8ebbd3880b802f8437ac0a5f49b47292e4a25606a7782f12cad1b",
+  "cohortSha256": "ad4d7ec6056b5ce7eb2ea7386901ba4d90747a8443e601ae0db2342617e64de2",
+  "generationPerformed": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "cases": [
+    {
+      "id": "correction-train-6559",
+      "passed": true,
+      "status": "pass",
+      "productId": "B000BSMKPY",
+      "sourceCount": 27,
+      "sourceRowCount": 30,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "Azden lavalier microphone; no protected/selected brand, model, or close title family. Cable-length question fits the intended documented-measurement group."
+      ]
+    },
+    {
+      "id": "correction-train-7794",
+      "passed": true,
+      "status": "pass",
+      "productId": "B000UZI26E",
+      "sourceCount": 19,
+      "sourceRowCount": 20,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "TOMY/John Deere toy dump truck; distinct product family. Length-versus-height question is a documented-dimensions probe."
+      ]
+    },
+    {
+      "id": "correction-train-7525",
+      "passed": true,
+      "status": "pass",
+      "productId": "B002BH4U56",
+      "sourceCount": 28,
+      "sourceRowCount": 30,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "Diamond Select Star Trek Enterprise model; NCC-1701 does not occur in protected product titles. Material question is explicit."
+      ]
+    },
+    {
+      "id": "correction-train-3629",
+      "passed": true,
+      "status": "pass",
+      "productId": "B00F9L8DHC",
+      "sourceCount": 17,
+      "sourceRowCount": 20,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "Siser heat-transfer vinyl for textiles; distinct from the protected decorative stainless appliance film and paper roll. Printing capability is a material-use question, not a pre-established supported outcome."
+      ]
+    },
+    {
+      "id": "correction-train-10053",
+      "passed": false,
+      "status": "fail",
+      "productId": "B00B7M7BKW",
+      "sourceCount": 29,
+      "sourceRowCount": 30,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "Munchkin/Brica seat protector is a different product, but its FordF150 target overlaps the protected UnderCover FordF-150 tonneau-cover target. The title-only model guard missed this relationship; treat as ineligible conservatively."
+      ]
+    },
+    {
+      "id": "correction-train-7615",
+      "passed": false,
+      "status": "fail",
+      "productId": "B002IPGW4S",
+      "sourceCount": 10,
+      "sourceRowCount": 10,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "Power Wheels battery asks about an integrated thermal fuse, not an explicit model-to-product relationship. The heuristic mistook descriptive replacement and6-volt for model compatibility. This fails the frozen sampling stratum."
+      ]
+    },
+    {
+      "id": "correction-train-3039",
+      "passed": true,
+      "status": "pass",
+      "productId": "B00943C890",
+      "sourceCount": 25,
+      "sourceRowCount": 30,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "GE/Hotpoint/Kenmore oven rack; neither rack part WB48K5019/WB48T10095 nor requested RB747P matches protected exact identifiers. Different part family from historical refrigerator/dishwasher parts; no stated compatibility conclusion."
+      ]
+    },
+    {
+      "id": "correction-train-11262",
+      "passed": true,
+      "status": "pass",
+      "productId": "B00BEYDFA8",
+      "sourceCount": 20,
+      "sourceRowCount": 20,
+      "fullSourcePoolMatchesPinnedTrain": true,
+      "allOriginsBelongToProduct": true,
+      "cqaContextAndBodyHashesPreserved": true,
+      "notes": [
+        "Gretsch Jim Dandy acoustic guitar; distinct from protected Meinl cajon. Included-pickup question is a preservation probe, not a declaration that its original will be correct."
+      ]
+    }
+  ],
+  "blockingFindings": [
+    "Model-scope eligibility admitted a6-volt thermal-fuse question because it treated descriptive replacement as a relationship and a measurement as an identifier.",
+    "Target-model overlap with a protected FordF-150 question was not included in the title-only family guard."
+  ],
+  "action": "Preserve this cohort and failed audit. Do not generate answers for v1. A separately documented prospective preparation amendment may correct eligibility before any execution manifest is frozen; no model outcomes exist."
+}
