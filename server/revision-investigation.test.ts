@@ -134,6 +134,51 @@ test('physical capacity requires the requested model in ordinary listing text', 
   assert.equal(result.investigation.newEvidence, false);
 });
 
+test('length measurements route to physical fit without becoming required model identifiers', async () => {
+  for (const question of ['Will a 12-inch pan fit inside a 10-inch oven?', 'Will a 12-inch pan fit a 10-inch oven?', 'Will a 12.5-inch pan fit a 10.5-inch oven?', 'Will a 30cm pan fit a 25cm oven?']) {
+    const dimensions = source('dimensions', 'The pan measures 12 inches across and the oven cavity measures 10 inches across. Other sizes include a pan of 12.5 inches or 30 cm, and an oven cavity of 10.5 inches or 25 cm.');
+    const result = await investigateRevision({ context: { question, product: { id: 'oven', title: 'Countertop oven' }, sources: [dimensions], clarifications: [] }, critique: 'The saved dimensions were missed.', issue: 'missed_source', runId: 'measurements' });
+    assert.equal(result.investigation.status, 'ready_to_revise', question);
+    assert.deepEqual(result.investigation.requestedIdentifiers, [], question);
+    assert.equal(result.investigation.clarificationQuestion, undefined, question);
+    assert.match(result.investigation.query, /capacity dimensions/, question);
+    assert.doesNotMatch(result.investigation.query, /compatibility|replacement/, question);
+    assert.deepEqual(result.investigation.steps.find(item => item.kind === 'candidate_found')!.sourceIds, [dimensions.id], question);
+    assert.equal(result.investigation.newEvidence, false, question);
+    assert.equal(result.investigation.externalCalls, 0, question);
+  }
+});
+
+test('measurements do not weaken exact model admission for physical fit', async () => {
+  for (const model of ['RF-98765', 'RF-12345']) {
+    const dimensions = source('model-dimensions', `Oven model ${model} has a cavity 10 inches across; a pan 12 inches across exceeds that space.`);
+    const result = await investigateRevision({ context: { question: 'Will a 12-inch pan fit inside oven model RF-12345?', product: { id: 'oven', title: 'Countertop oven RF-12345' }, sources: [dimensions], clarifications: [] }, critique: 'The saved dimensions were missed.', issue: 'missed_source', runId: `measurement-${model}` });
+    assert.deepEqual(result.investigation.requestedIdentifiers, ['RF-12345']);
+    assert.equal(result.investigation.status, model === 'RF-12345' ? 'ready_to_revise' : 'needs_information');
+    assert.equal(result.investigation.steps.some(item => item.kind === 'candidate_found'), model === 'RF-12345');
+    assert.match(result.investigation.query, /capacity dimensions/);
+  }
+});
+
+test('explicit dimension-shaped model and part identifiers retain strict matching', async () => {
+  for (const question of ['Does model 12-INCH fit model 10-INCH?', 'Does part 12-INCH replace part 10-INCH?']) {
+    for (const text of ['Model 12-INCH fits model 10-INCH; part 12-INCH replaces part 10-INCH.', 'The 12-inch product fits a 10-inch space.']) {
+      const exact = text.startsWith('Model');
+      const result = await investigateRevision({ context: { question, product: { id: 'unusual-model', title: 'Fixture product' }, sources: [source('unusual', text)], clarifications: [] }, critique: 'The saved source was missed.', issue: 'missed_source', runId: 'unusual-identifiers' });
+      assert.deepEqual(result.investigation.requestedIdentifiers, ['12-INCH', '10-INCH'], question);
+      assert.equal(result.investigation.status, exact ? 'ready_to_revise' : 'needs_information', `${question}: ${text}`);
+      assert.match(result.investigation.query, /compatibility replacement/, question);
+    }
+  }
+  const question = 'Does model 12-INCH fit?';
+  const wrong = source('wrong-dimension-model', 'Model 12-INCH fits according to this customer.', 'Does model 10-INCH fit?');
+  const result = await investigateRevision({ context: { question, product: { id: 'unusual-model', title: 'Fixture product' }, sources: [wrong], clarifications: [] }, critique: 'The saved source was missed.', issue: 'missed_source', runId: 'wrong-dimension-model' });
+  assert.deepEqual(result.investigation.requestedIdentifiers, ['12-INCH']);
+  assert.equal(result.investigation.status, 'needs_information');
+  assert.equal(result.investigation.selectedSourceIds.includes(wrong.id), false);
+  assert.match(result.investigation.query, /compatibility replacement/);
+});
+
 test('inside cannot bypass identifier and relationship requirements for named parts and devices', async () => {
   for (const text of ['Cartridge PART123 fits inside printer HP99999.', 'Cartridge PART123 and printer HP12345 have the following dimensions.']) {
     const input: RevisionContext = { question: 'Will cartridge PART123 fit inside printer HP12345?', product: { id: 'cartridge', title: 'Cartridge PART123' }, sources: [source('device-fit', text)], clarifications: [] };

@@ -26,7 +26,21 @@ const stopWords = new Set('about after again also answer available because befor
 const tokens = (text: string) => unique(text.toLowerCase().replace(/\.{2,}/g, ' ').match(/\b[a-z0-9]+(?:[-.][a-z0-9]+)*\b/g) ?? []).filter(word => word.length >= 3 && !stopWords.has(word));
 // Customer identifiers come only from their question and clarification. Digits
 // from a source's historical question must never become the current model.
-const identifiers = (text: string) => unique((text.match(/\b[a-z0-9]+(?:-[a-z0-9]+|\.[0-9]+)*\b/gi) ?? []).map(value => value.toUpperCase())).filter(value => value.length >= 5 && /\d/.test(value));
+const rawIdentifiers = (text: string) => unique((text.match(/\b[a-z0-9]+(?:-[a-z0-9]+|\.[0-9]+)*\b/gi) ?? []).map(value => value.toUpperCase())).filter(value => value.length >= 5 && /\d/.test(value));
+const partLabels = 'part|product|sku';
+const modelLabels = 'model|refrigerator|fridge|washer|dryer|dishwasher|freezer|printer';
+const identityLabels = `${partLabels}|${modelLabels}`;
+const lengthUnits = '(?:inches|inch|in|feet|foot|ft|cm|mm)';
+const measurementToken = new RegExp(`^\\d+(?:\\.\\d+)?-?${lengthUnits}$`, 'i');
+const measurements = new RegExp(`(?<![a-z0-9.-])\\d+(?:\\.\\d+)?(?:\\s*-\\s*|\\s*)${lengthUnits}(?![a-z0-9.-])`, 'gi');
+const identifiers = (text: string) => {
+  const explicit = new Set(labeledIdentifiers(text, identityLabels));
+  return rawIdentifiers(text).filter(value => !measurementToken.test(value) || explicit.has(value));
+};
+const hasPhysicalMeasurement = (text: string) => {
+  const explicit = new Set(labeledIdentifiers(text, identityLabels));
+  return [...text.matchAll(measurements)].some(match => !explicit.has(match[0].replace(/\s/g, '').toUpperCase()));
+};
 const mentions = (text: string, identifier: string) => identifiers(text).includes(identifier);
 const fitWords = /\b(fit|fits|fitting)\b/i;
 const explicitCompatibilityWords = /\b(compatible|compatibility|interchangeable|interchangeability|replace|replaces|replacement|replacing|cross.reference)\b|\b(?:work|works|working)\s+with\b/i;
@@ -44,7 +58,7 @@ function fitIntent(text: string): 'compatibility' | 'physical' | null {
   const objects = `${amount}\\s+(?:[a-z]+(?:-[a-z]+)?\\s+){0,3}[a-z]+s`;
   const countedFit = new RegExp(`\\b(?:fit|fits|fitting)\\s+(?:up to\\s+)?${objects}\\b|\\b${objects}\\s+(?:all\\s+)?fit\\b`, 'gi');
   const physicalCount = [...text.matchAll(countedFit)].some(match => !/\b(models|parts|replacements)\b/i.test(match[0]));
-  return dimensionWords.test(text) || /\b(capacity|space|room|inside|within)\b/i.test(text) || physicalCount ? 'physical' : 'compatibility';
+  return dimensionWords.test(text) || hasPhysicalMeasurement(text) || /\b(capacity|space|room|inside|within)\b/i.test(text) || physicalCount ? 'physical' : 'compatibility';
 }
 // Component matching lets a physical description such as "slim-pony" address
 // "slim" without changing model identifiers or interpreting it as proof of fit.
@@ -87,15 +101,15 @@ function resolvedIssue(input: Input): Exclude<InvestigationIssue, 'auto'> {
 }
 function labeledIdentifiers(text: string, labels: string) {
   const pattern = new RegExp(`\\b(?:${labels})(?:\\s+model)?(?:\\s+(?:number|no\\.?))?\\s*(?:is\\s+)?[:#]?\\s*([a-z0-9]+(?:-[a-z0-9]+|\\.[0-9]+)*)\\b`, 'gi');
-  return unique([...text.matchAll(pattern)].flatMap(match => identifiers(match[1])));
+  // Explicit labels retain unusual identifiers such as model "12-INCH";
+  // inferred measurements are filtered only when reading the full text.
+  return unique([...text.matchAll(pattern)].flatMap(match => rawIdentifiers(match[1])));
 }
 function wrongQuestionScope(source: RevisionSource, requested: string[], scopedFit: boolean, requestText: string, productTitle: string) {
   if (!source.originalQuestion || !scopedFit) return false;
   const scoped = identifiers(source.originalQuestion);
   if (!scoped.length) return false;
   if (!requested.length) return true;
-  const partLabels = 'part|product|sku';
-  const modelLabels = 'model|refrigerator|fridge|washer|dryer|dishwasher|freezer|printer';
   const explicitTargets = labeledIdentifiers(requestText, modelLabels);
   const requestedParts = labeledIdentifiers(requestText, partLabels);
   const targets = explicitTargets.length ? explicitTargets : requested.filter(id => !requestedParts.includes(id));
