@@ -76,6 +76,30 @@ test('full final comparison preflight refuses forty calls when local allowance o
   } finally { provider.close(); }
 });
 
+test('an explicitly raised cumulative limit preserves all prior allowances and stops at its exact ceiling', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'feedback-provider-cumulative-')), dbPath = join(dir, 'budget.sqlite');
+  let calls = 0;
+  const provider = new SapiomFeedbackProvider({ ...options, dbPath, callLimit: 110, capUsd: 12, priorSpendUsd: .200281, fetchImpl: async () => { calls++; return reply(valid); } });
+  const db = new DatabaseSync(dbPath);
+  try {
+    const insert = db.prepare('INSERT INTO loop_provider_calls(id,created_at,kind,allowance_usd,status,run_id) VALUES(?,?,?,?,?,?)');
+    for (let i = 0; i < 86; i++) insert.run(`historical-${i}`, '2026-10-11T00:00:00.000Z', 'synthetic-history', .1, 'completed', `historical-run-${i}`);
+    assert.equal(provider.capacity(24).ready, true);
+    assert.equal(provider.capacity(25).ready, false);
+    assert.equal(provider.capacity(101).ready, false, 'the individual batch bound remains 100');
+    const oldCap = new SapiomFeedbackProvider({ ...options, dbPath, callLimit: 110, capUsd: 10, priorSpendUsd: .200281 });
+    try { assert.equal(oldCap.capacity(24).ready, false, 'a higher call ceiling does not raise the spending plan'); } finally { oldCap.close(); }
+    for (let i = 0; i < 24; i++) await provider.answer({ ...input, runId: `new-${i}` });
+    await assert.rejects(provider.answer({ ...input, runId: 'past-limit' }), /allowance/);
+    assert.equal(calls, 24); assert.equal(db.prepare('SELECT COUNT(*) n FROM loop_provider_calls').get()!.n, 110);
+    assert.equal(db.prepare("SELECT COUNT(*) n FROM loop_provider_calls WHERE kind='synthetic-history' AND allowance_usd=0.1 AND status='completed'").get()!.n, 86);
+  } finally { db.close(); provider.close(); rmSync(dir, { recursive: true, force: true }); }
+  for (const callLimit of [201, Infinity, 110.5]) {
+    const invalid = new SapiomFeedbackProvider({ ...options, callLimit, capUsd: 100 });
+    try { assert.equal(invalid.capacity(24).ready, false); } finally { invalid.close(); }
+  }
+});
+
 test('opening another provider preserves pending calls until explicit owned recovery', async () => {
   const dir = mkdtempSync(join(tmpdir(), 'feedback-provider-recovery-'));
   const dbPath = join(dir, 'budget.sqlite');

@@ -1,6 +1,6 @@
 # Prospective quality comparison with flat source IDs
 
-**Status: reviewable design only.** No new cohort, execution manifest, paid authorization or quality result is established by this document. Qualify the additive `source_ids_v3` interface offline before selecting and freezing fresh cases. The [stopped citation diagnostic](evidence/source-id-diagnostic-2026-10-11/live-report.md) remains a stopped, exposed-case diagnostic with zero human quality judgments.
+**Status: design implemented in the [prepared comparison](flat-source-quality-comparison.md).** This document describes the protocol; its linked evidence supplies the audited source snapshot and execution manifest. Paid authorization and quality results remain pending. Qualify the additive `source_ids_v3` interface offline before selecting and freezing fresh cases. The [stopped citation diagnostic](evidence/source-id-diagnostic-2026-10-11/live-report.md) remains a stopped, exposed-case diagnostic with zero human quality judgments.
 
 ## Question and controlled change
 
@@ -38,7 +38,7 @@ Missing support and conflicts remain valid probes. For example, the exposed Q128
 The proposed maximum is **24 attempts**: eight shared originals plus sixteen sibling revisions. Freeze code, source/audit hashes, model route and settings, original policy, both revision policies, critique, source catalogs, flat schemas and request-construction rules before dispatch.
 
 - Generate each original through v3; retain its complete answer and receipt. Both revision arms receive that same actual original, question, source context and AI critique. The candidate never revises the baseline revision.
-- Alternate which revision arm runs first. Keep the model, citation interface, selected sources, clarifications and investigation descriptor equal; only the revision policy bundle and its version label differ.
+- Generate all eight originals first, stopping on the first failure. Then alternate which revision arm runs first within each product pair. Keep the model, citation interface, selected sources, clarifications and investigation descriptor equal; only the revision policy bundle and its version label differ.
 - Stop on the first invalid/uncertain output, dispatch, receipt, identity, persistence or execution-safety failure. No web calls, retries, coercion, replacement cases or extra attempts.
 - Preserve all eight cases and 24 planned steps in the execution record. Failed or unattempted arms never become ties. The existing importer requires a completed shared original; if an original fails, retain the full execution record externally and do not import a reduced cohort as the planned comparison.
 
@@ -46,7 +46,7 @@ The proposed maximum is **24 attempts**: eight shared originals plus sixteen sib
 
 Reviewers use `/compare` to inspect the full source pool and **16 anonymous revised answers**, independently checking correctness, source support and adequacy. The workbench hides arm identities, the shared original, AI critique and generation metadata until judgments are saved. AI critique is a generation input, never a human judgment. Reviewers must make their own source checks without AI-suggested verdicts.
 
-Report separate per-axis counts and the number of answers positive on **all three** axes. Show paired wins, losses, ties, unsupported/incorrect regressions, uncertain pairs and pending judgments. Derive correctness and support regressions from the saved per-axis paired reviews: the current report’s `regressions` field counts all-three-positive losses and cannot substitute for those checks. A favorable descriptive signal requires more all-three-positive candidate answers and no new incorrect or unsupported regressions in this sample. Unresolved judgments remain inconclusive; missing attempts leave the comparison incomplete.
+Report separate per-axis counts and the number of answers positive on **all three** axes. Show paired wins, losses, ties, unsupported/incorrect regressions, uncertain pairs and pending judgments. Use the report’s separate `pairedAxisRegressions` counts for correctness and support, including resolved, uncertain and pending denominators. The aggregate `quality.regressions` counts all-three-positive losses and cannot substitute for those checks. Uncertainty on another axis does not hide an observed correctness or support regression. A favorable descriptive signal requires more all-three-positive candidate answers and no new incorrect or unsupported regressions in this sample. Unresolved judgments remain inconclusive; missing attempts leave the comparison incomplete.
 
 Exact citation membership, model status and human-reviewed quality remain distinct. Eight products provide an exploratory signal, not broad generalization or automatic policy promotion. Keep the existing imported-live provenance, `qualityClaimEligible: false` and absent confidence interval: the importer does not authenticate provider responses or independently prove prospectivity, even when a public pre-generation manifest accompanies it.
 
@@ -60,6 +60,6 @@ The [latest public ledger record](evidence/source-id-diagnostic-2026-10-11/live-
 
 `86 + 24 = 110 attempts; 110 × $0.10 + $0.200281 = $11.200281`
 
-That proposes **$2.40 additional allowance** and exceeds the existing $10 planning cap and last approved 87-attempt ceiling. Recheck ledger state before a future freeze and obtain explicit approval for the new bounded round and revised limits. Unused authority from a stopped run does not authorize this comparison. Allowances are local reservations; settled provider charges remain unavailable.
+That proposes **$2.40 additional allowance** and exceeds the existing $10 planning cap and last approved 87-attempt ceiling. Recheck ledger state before a future freeze and obtain explicit approval for the new bounded round, proposed $12 local planning cap and 110-attempt ceiling. Unused authority from a stopped run does not authorize this comparison. Allowances are local reservations; settled provider charges remain unavailable.
 
-**This slice is ready when** v3 passes offline qualification and this design is reviewable. Fresh source selection, family/sufficiency audits, execution-manifest publication and paid execution are subsequent gates. No new experiment framework, production-policy change or quality claim is required to complete the offline slice.
+**Preparation is recorded separately** in the [comparison record](flat-source-quality-comparison.md), including source-only draft repairs and qualification. Paid execution and independent human review remain subsequent gates. No new experiment framework, production-policy change or quality claim is required to complete the offline slice.

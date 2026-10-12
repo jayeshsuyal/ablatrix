@@ -134,6 +134,7 @@ test('blind reads omit arm metadata and reports stay locked until every answer h
     reviewAll(store, packet.id);
     const report = store.report(packet.id);
     assert.equal(report.status, 'synthetic_only'); assert.equal(report.quality, null); assert.equal(report.qualityClaimEligible, false);
+    assert.equal(report.pairedAxisRegressions, null, 'synthetic reviews never become human regression counts');
     assert.equal(report.citationMatching.baseline.matching, 2); assert.equal(report.citationMatching.candidate.matching, 2);
     assert.equal(report.billedCostUsd, null);
     assert.equal(JSON.stringify(store.exportPacket(packet.id)), JSON.stringify(store.exportPacket(packet.id)), 'export adds no current timestamp or randomness');
@@ -209,6 +210,71 @@ function correctionImportedShape(citationInterface: CorrectionComparisonPacket['
   }
   return rehashCorrection(packet);
 }
+
+test('per-axis regressions expose support and correctness losses hidden by all-three-positive ties', () => {
+  const packet = importedShape(), store = new ContextComparisonStore(':memory:');
+  const verdicts = [
+    { baseline: { correctness: 'incorrect', support: 'supported', adequacy: 'adequate' }, candidate: { correctness: 'incorrect', support: 'unsupported', adequacy: 'adequate' } },
+    { baseline: { correctness: 'correct', support: 'supported', adequacy: 'inadequate' }, candidate: { correctness: 'incorrect', support: 'supported', adequacy: 'adequate' } }
+  ] as const;
+  try {
+    for (const item of packet.cases) for (const arm of arms) item.arms[arm].answer!.answer += ` Synthetic test arm ${arm}.`;
+    store.importPacket(packet); const detail = store.get(packet.id);
+    for (const [caseIndex, pair] of verdicts.entries()) for (const arm of ['baseline', 'candidate'] as const) {
+      const attempt = packet.cases[caseIndex].arms[arm === 'baseline' ? 'without_context' : 'with_context'];
+      const answerIndex = detail.cases[caseIndex].answers.findIndex(answer => answer.answer?.answer === attempt.answer!.answer);
+      store.review(packet.id, { ...judgment(detail, caseIndex, answerIndex), ...pair[arm], note: 'Synthetic test: source-checked axis transition.' });
+    }
+    const report = store.report(packet.id);
+    assert.equal(report.quality?.regressions, 0); assert.equal(report.quality?.ties, 2);
+    const expected = { totalPairs: 2, resolvedPairs: 2, pendingPairs: 0, uncertainPairs: 0, regressions: 1 };
+    assert.deepEqual(report.pairedAxisRegressions, { correctness: expected, support: expected });
+    assert.equal(report.qualityClaimEligible, false); assert.equal(report.quality?.verdict, 'exploratory_only');
+    assert.deepEqual(store.exportPacket(packet.id).report.pairedAxisRegressions, report.pairedAxisRegressions);
+    assert.deepEqual(store.exportPacket(packet.id).packet, packet, 'report additions do not rewrite the frozen packet');
+  } finally { store.close(); }
+});
+
+test('v3 per-axis counts retain observed regressions despite uncertainty elsewhere and never turn uncertain judgments into negatives', () => {
+  const scenarios = [
+    { baseline: { correctness: 'uncertain', support: 'supported', adequacy: 'adequate' }, candidate: { correctness: 'incorrect', support: 'unsupported', adequacy: 'adequate' }, correctness: [0, 1, 0], support: [1, 0, 1] },
+    { baseline: { correctness: 'correct', support: 'supported', adequacy: 'adequate' }, candidate: { correctness: 'incorrect', support: 'uncertain', adequacy: 'adequate' }, correctness: [1, 0, 1], support: [0, 1, 0] },
+    { baseline: { correctness: 'correct', support: 'supported', adequacy: 'uncertain' }, candidate: { correctness: 'incorrect', support: 'unsupported', adequacy: 'adequate' }, correctness: [1, 0, 1], support: [1, 0, 1] }
+  ] as const;
+  for (const scenario of scenarios) {
+    const packet = correctionImportedShape('source_ids_v3'), store = new ContextComparisonStore(':memory:');
+    try {
+      store.importPacket(packet); const detail = store.get(packet.id);
+      assert.equal('pairedAxisRegressions' in detail, false, 'regression outcomes stay hidden during blind review');
+      for (const arm of ['baseline', 'candidate'] as const) {
+        const attempt = packet.cases[0].arms[arm], answerIndex = detail.cases[0].answers.findIndex(answer => answer.answer?.answer === attempt.answer!.answer);
+        store.review(packet.id, { ...judgment(detail, 0, answerIndex), ...scenario[arm], note: 'Synthetic test: uncertainty is local to its own axis.' });
+        if (arm === 'baseline') assert.throws(() => store.report(packet.id), /all completed answers/);
+      }
+      const report = store.report(packet.id);
+      for (const axis of ['correctness', 'support'] as const) {
+        const [resolvedPairs, uncertainPairs, regressions] = scenario[axis];
+        assert.deepEqual(report.pairedAxisRegressions![axis], { totalPairs: 1, resolvedPairs, uncertainPairs, pendingPairs: 0, regressions });
+      }
+      assert.equal(report.quality?.eligiblePairs, 0); assert.equal(report.quality?.regressions, 0);
+      assert.equal(report.quality?.verdict, 'inconclusive'); assert.equal(report.qualityClaimEligible, false);
+    } finally { store.close(); }
+  }
+});
+
+test('missing correction arms remain pending per-axis even when completed-answer reviews unlock an incomplete report', () => {
+  for (const status of ['failed', 'uncertain', 'not_attempted'] as const) {
+    const packet = correctionImportedShape('source_ids_v3'), store = new ContextComparisonStore(':memory:');
+    try {
+      Object.assign(packet.cases[0].arms.candidate, { status, answer: null, model: null, latencyMs: null, usage: null, providerCallId: null, error: 'Synthetic incomplete attempt; no answer available for review.' });
+      store.importPacket(packet); reviewAll(store, packet.id);
+      const report = store.report(packet.id), expected = { totalPairs: 1, resolvedPairs: 0, pendingPairs: 1, uncertainPairs: 0, regressions: 0 };
+      assert.equal(report.status, 'incomplete'); assert.equal(report.quality, null);
+      assert.deepEqual(report.pairedAxisRegressions, { correctness: expected, support: expected });
+      assert.equal(report.qualityClaimEligible, false);
+    } finally { store.close(); }
+  }
+});
 
 test('correction policies use the same original, critique and ordered context with exact transport hashes', () => {
   assert.equal(contextComparisonHash(createContextComparisonFixture()), '80d0d3a500d2e921ca8779f73d51d979da73806902589556311409b87409495b', 'the original context experiment fixture remains byte-compatible');

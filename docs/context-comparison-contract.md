@@ -25,6 +25,10 @@ See the [original-question protocol](context-comparison-protocol.md) and [correc
 
 IDs match `[A-Za-z0-9_-]{1,120}`. Service errors start with `Context comparison:`. HTTP base: `/api/context-comparisons`; detail `GET /:id`, review `POST /:id/reviews`, report `GET /:id/report`, export `GET /:id/export`. Packet import belongs to the CLI. The browser's explicit `POST /fixture` action imports `createContextComparisonFixture()`; it accepts only an empty JSON object and makes no provider call.
 
+Reports additionally expose `pairedAxisRegressions.correctness` and `.support`, each with `totalPairs`, `resolvedPairs`, `pendingPairs`, `uncertainPairs` and `regressions`. Regressions mean **correct → incorrect** or **supported → unsupported**, respectively. A pair is resolved when both judgments on that axis are definitive; uncertainty on another axis does not exclude it. Missing judgments, including failed or unattempted arms, count as pending. Otherwise, any uncertain judgment on that axis makes the pair uncertain. These three denominators sum to `totalPairs`.
+
+The fields remain behind the existing completed-answer review gate, can describe observed transitions in an incomplete execution, and are `null` for fixtures. They do not change the existing all-three-positive `quality.regressions`, verdict, `qualityClaimEligible: false`, frozen packets or review identities.
+
 ## Reproduce without provider calls
 
 ```sh
