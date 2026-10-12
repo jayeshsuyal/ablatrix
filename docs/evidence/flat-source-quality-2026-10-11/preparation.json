@@ -1,0 +1,61 @@
+{
+  "format": "ablatrix-flat-source-quality-preparation-v1",
+  "createdAt": "2026-10-12T05:35:35.741974Z",
+  "status": "frozen_unexecuted_awaiting_explicit_budget_approval",
+  "implementationCommit": "cd2f59624559ae93cb94e2007bf2d9bc4677bf39",
+  "planSha256": "bff98521e828e283f9eee862a4f48d082ee7450e060442f51019d866341eb744",
+  "artifactFileSha256": {
+    "cohort.json": "6609ed1a766d1b6c1006f33293c18be6e6451cfce1e32264b4d3bd6989fabbbf",
+    "execution-plan.json": "5ae330d0127f5f4ec2b6f8ceb932fdb3a451b24a2dfa12bc24fb9f7b72694cee",
+    "exposure-audit.json": "5f3e989d9aae58a68c934262c197947b6b5f30499cdad3647d0f6d64454fa22b",
+    "manual-family-audit.json": "6188629b8acb4a0bcfd3c43195dd0158c44fe1fc0780d3d028ba254fcf934804",
+    "offline-qualification.json": "28f436c4640e5834f930fd362b307d71db5e7208e0d375bed4089e329cfce77f",
+    "preparation-amendment-v3.json": "25544101daca96ec4dcfe4e44cb75f387d8dc65e2c0d5226aeed075fbcb1e675",
+    "retrieval.json": "3ba392f04fe5eb8c7a0d84c0044292f5189ef0606b3d0f9a8b87bffae5d713bb",
+    "selection-summary.json": "2691dc422d7f785f20a89bc30e76aa3f20d5d6c1e3ca99facc2db4aeae1ae549",
+    "source-sufficiency-audit.json": "52dc07115b58e55becdd7ec40ebaa50ff07416e593077170c3322ec0e2efd94b"
+  },
+  "cases": 8,
+  "reviewerSourceChunks": 203,
+  "generationSourceChunks": 40,
+  "priorProtectedProducts": 82,
+  "currentMetadataMatchesExposureAudit": true,
+  "orderedCaseIds": [
+    "flat-source-train-5841",
+    "flat-source-train-11514",
+    "flat-source-train-9568",
+    "flat-source-train-9611",
+    "flat-source-train-11368",
+    "flat-source-train-391",
+    "flat-source-train-1404",
+    "flat-source-train-11509"
+  ],
+  "plannedOrder": "Eight originals, followed by sibling revisions with alternating arm order.",
+  "maximumNewAttempts": 24,
+  "initialLedgerAttempts": 86,
+  "proposedAbsoluteCallLimit": 110,
+  "planningAllowancePerAttemptUsd": 0.1,
+  "maximumAdditionalAllowanceUsd": 2.4,
+  "proposedCumulativePlanningTotalUsd": 11.200281,
+  "proposedCapUsd": 12,
+  "actualProviderCharges": "unavailable",
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false,
+  "newProviderCalls": 0,
+  "verification": {
+    "offlineManifestReconstruction": true,
+    "fullNodeTestsPassed": 312,
+    "pythonTestsPassed": 7,
+    "browserTestsPassed": 4,
+    "buildPassed": true,
+    "cliTypecheckPassed": true
+  },
+  "notes": [
+    "Cohort candidate-status fields are preserved snapshots; the execution manifest is frozen but not authorized or executed.",
+    "Preparation and family/sufficiency assessments are AI source-only audits, not human answer judgments.",
+    "Source-only changes preserved earlier drafts; no candidate was selected or replaced based on generated model outcomes.",
+    "Real retrieval used cached local pinned CPU embeddings with network transport disabled.",
+    "Sixteen independent blind judgments are required after live revisions. Missing attempts/judgments remain incomplete."
+  ]
+}

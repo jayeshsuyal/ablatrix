@@ -47,7 +47,7 @@ The [qualification](evidence/flat-source-quality-2026-10-11/offline-qualificatio
 
 Generate all eight originals first. Then generate sixteen revisions, alternating baseline/candidate order within each pair. Both arms receive the same actual original, fixed AI-authored rubric, ordered sources, model route, flat-ID schema and generation settings. Only the existing revision-policy bundle differs. Revision bodies are derived and hashed from the actual accepted original before dispatch; preparation placeholders are never dispatched.
 
-The maximum is **24 new attempts**, with **$2.40 additional planning allowance**. Ledger 86→110 proposes **$11.200281 cumulative allowance plus prior-spend adjustment**, under a new **$12 local planning cap**. This exceeds the previous authority and needs explicit approval for the exact frozen manifest. These reservations are not settled charges or a provider-enforced cap.
+The maximum is **24 new attempts**, with **$2.40 additional planning allowance**. Ledger 86→110 proposes **$11.200281 total: $11 in reservations plus the $0.200281 prior-spend adjustment**, under a new **$12 local planning cap**. This exceeds the previous authority and needs explicit approval for the exact frozen manifest. These reservations are not settled charges or a provider-enforced cap.
 
 Execution requires live opt-in, exact plan-hash approval, verified merged code and the audited database paths. It repeatedly checks application ownership, ledger/review history, source-only exposure metadata and public product disclosures before reservations/transport and after responses. New disclosures or changed bound artifacts stop execution. Checks detect activity; they cannot undo a request already in flight.
 
