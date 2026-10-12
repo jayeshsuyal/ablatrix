@@ -1,0 +1,572 @@
+{
+  "format": "ablatrix-flat-source-retrieval-v1",
+  "cohortFileSha256": "6609ed1a766d1b6c1006f33293c18be6e6451cfce1e32264b4d3bd6989fabbbf",
+  "corpusSha256": "9933a624ad312503be6c1b7e298fbd9200f33bea7f4bc12ec7b3941905b6fbc2",
+  "orderedCaseIds": [
+    "flat-source-train-5841",
+    "flat-source-train-11514",
+    "flat-source-train-9568",
+    "flat-source-train-9611",
+    "flat-source-train-11368",
+    "flat-source-train-391",
+    "flat-source-train-1404",
+    "flat-source-train-11509"
+  ],
+  "createdAt": "2026-10-12T05:12:48.795Z",
+  "implementationSha256": {
+    "server/product-retrieval.ts": "7df0766840c52a068891db9da82e620d280f7632db84574e0e3d276bfb310d1d",
+    "server/product-corpus.ts": "27fbc86475c95a33367c459a96bdb345e1249842ba6ea28be5cba3f97ad2d478",
+    "server/loop-types.ts": "0425b27e2d361a74e5aee6d6ab1452f9a0557fb3befb0a0d57c5945b54bb41bf",
+    "package-lock.json": "d9e11ec921fa80c8177ff295a2a19f326ea3b47f33651315434149edbe532204"
+  },
+  "retrievals": [
+    {
+      "caseId": "flat-source-train-5841",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B004PU7SBU-cqa-3a96182dc94f32c9",
+            "productId": "B004PU7SBU",
+            "source": "cqa",
+            "text": "10-1/2\" x 19-1/2\" x 23\" h",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=37425&qa_pair_id=57223&chars=0-25",
+            "sha256": "b59e801ad34fe514e81ac8ae7dc082ad23518df3377f3b945f75421a3a86aea0",
+            "originalQuestion": "are measurements available for the medium size bin and for the large bin?  height, length, width.  thank you.",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B004PU7SBU-cqa-bbb176665c70e2f6",
+            "productId": "B004PU7SBU",
+            "source": "cqa",
+            "text": "the dimensions of the three models are: x-large 10.4\" width x 18.1\" depth x 27.4\" heightlarge 10.4\" width x 18.1\" depth x 23.2\" heightmedium 10.4\" width x 18.1\" depth x 19.4\" height",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=37424&qa_pair_id=57222&chars=0-181",
+            "sha256": "03a6431fd5602849558ff997f54504a33fe953bca8d8e19823f199369564fdeb",
+            "originalQuestion": "how deep is the unit with the handle in the open position?  we want to put this in a pull out base cabinet that is 23.5 inches deep.",
+            "lexicalRank": 3,
+            "semanticRank": 1,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B004PU7SBU-cqa-20f35ffd39f4d6b6",
+            "productId": "B004PU7SBU",
+            "source": "cqa",
+            "text": "the dimensions are 19.4\" height x 18.1\" depth x 10.4\" width",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=37423&qa_pair_id=57221&chars=0-59",
+            "sha256": "5569c83c97e227901d6a564ff866f1a7c61d325cbf7041c16e5a3e893a2ff0d3",
+            "originalQuestion": "what are the dimensions?",
+            "lexicalRank": 2,
+            "semanticRank": 4,
+            "score": 0.031754032258064516
+          },
+          {
+            "id": "epqa-B004PU7SBU-attribute-0f1288e89c2a98d5",
+            "productId": "B004PU7SBU",
+            "source": "attribute",
+            "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:10.4 }, value:10.4 }, length:{ unit:inches, normalized_value:{ unit:inches, value:18.1 }, value:18.1 }, height:{ unit:inches, normalized_value:{ unit:inches, value:23.2 }, value:23.2 } }",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=37422&qa_pair_id=57220&chars=0-265",
+            "sha256": "2d89ad0b49335748af4ca995f1c74bf6f07fb89360b9b9d80d0f1414e4222ab9",
+            "lexicalRank": 7,
+            "semanticRank": 2,
+            "score": 0.031054405392392875
+          },
+          {
+            "id": "epqa-B004PU7SBU-cqa-fafaedf7e8972904",
+            "productId": "B004PU7SBU",
+            "source": "cqa",
+            "text": "our medium pet food can features the following dimensions: 10.4\" wide x 18.1\" deep x 19.4\" tall.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=37426&qa_pair_id=57224&chars=0-96",
+            "sha256": "51ebdbb4af0334dd27b72b05e01242355cf485dfb923389bbb1bebadde3ff577",
+            "originalQuestion": "what are the dimensions of the 25l container? - looking to put dog treats in it",
+            "lexicalRank": 4,
+            "semanticRank": 7,
+            "score": 0.03055037313432836
+          }
+        ],
+        "durationMs": 1007.497666,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "flat-comparison-6609ed1a766d1b6c1006"
+      }
+    },
+    {
+      "caseId": "flat-source-train-11514",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B000R4HRGO-cqa-e4ad3508fed9b812",
+            "productId": "B000R4HRGO",
+            "source": "cqa",
+            "text": "platform is 11\" x 12\" and only 1-1/4\" high...as long as you can set the luggage on the platform and not have it touching the floor or bench....soft sided luggage may not work for weighing but hard sided may be ok..",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=83445&qa_pair_id=112913&chars=0-214",
+            "sha256": "0f5e994b3d084122bc23c5e98b4faaacb2f7ebf1a19ec881c156a749dff3e23c",
+            "originalQuestion": "is the platform wide enough to weigh luggage",
+            "lexicalRank": 3,
+            "semanticRank": 3,
+            "score": 0.031746031746031744
+          },
+          {
+            "id": "epqa-B000R4HRGO-review-021722f8981a87a0",
+            "productId": "B000R4HRGO",
+            "source": "review",
+            "text": "this 330 lb digital scale is great for weighing luggages/bags to avoid the outrageous overweight fees imposed by greedy airlines.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=83442&qa_pair_id=112910&chars=0-129",
+            "sha256": "569b38b88693ae09a7709ae93b99069b94a56f7654fcc726d6b10d5a942eafb9",
+            "lexicalRank": 6,
+            "semanticRank": 1,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B000R4HRGO-review-360df31333b0380b",
+            "productId": "B000R4HRGO",
+            "source": "review",
+            "text": "you can weight anything on it though.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=83443&qa_pair_id=112911&chars=0-37",
+            "sha256": "0363ecd9441d1007526e8543e644cadad5299f6719fedde2f6f829142375cfa1",
+            "lexicalRank": 1,
+            "semanticRank": 7,
+            "score": 0.03131881575727918
+          },
+          {
+            "id": "epqa-B000R4HRGO-review-fcfe9a813074ca96",
+            "productId": "B000R4HRGO",
+            "source": "review",
+            "text": "worked very well for weighing out airport luggage to make sure we weren't overweight .",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=83446&qa_pair_id=112914&chars=0-86",
+            "sha256": "8377ca17feb082f9f464efb75de160013348f660d7b96a8a09be35820adba8f1",
+            "lexicalRank": 7,
+            "semanticRank": 2,
+            "score": 0.031054405392392875
+          },
+          {
+            "id": "epqa-B000R4HRGO-review-6155d1e298c26225",
+            "productId": "B000R4HRGO",
+            "source": "review",
+            "text": "if you weigh anything lighter weight, the scale doesn't register at all for weights below about 12 ounces.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=83454&qa_pair_id=112922&chars=0-106",
+            "sha256": "950c3507da29a846c8aa24b4bdb3c8c2b8cbf57f95a5f82161edabe2dd6b3aff",
+            "lexicalRank": 2,
+            "semanticRank": 13,
+            "score": 0.029827662395050816
+          }
+        ],
+        "durationMs": 132.8187499999999,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "flat-comparison-6609ed1a766d1b6c1006"
+      }
+    },
+    {
+      "caseId": "flat-source-train-9568",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B00AM18UOA-cqa-84a2b9a87ac1f9c7",
+            "productId": "B00AM18UOA",
+            "source": "cqa",
+            "text": "they are a thinner pant but not fully lined for cold weather",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=64344&qa_pair_id=93812&chars=0-60",
+            "sha256": "e86e99bd34c4f124b6b2bcedd735372d4d37fe68545162fc8029b368506e4f7c",
+            "originalQuestion": "are these lined?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B00AM18UOA-cqa-378a70b063ae746a",
+            "productId": "B00AM18UOA",
+            "source": "cqa",
+            "text": "the pants are made from a closed hole mesh fabric and are a general comfortable, loose fit pant!",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=64354&qa_pair_id=93822&chars=0-96",
+            "sha256": "97e15f3615220d1d40f0de21f588b82c35150c9dce9817f1368a87a21889780a",
+            "originalQuestion": "is this more of a wind pant material?",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B00AM18UOA-review-b74806af3ad70b93",
+            "productId": "B00AM18UOA",
+            "source": "review",
+            "text": "the outside of these are made of mesh-like material.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=64356&qa_pair_id=93824&chars=0-52",
+            "sha256": "d1c913deba1cc6ad99844c53940f66dd5fafbd43ec92bd09c6b510750b0cb340",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B00AM18UOA-cqa-12a556794d9517de",
+            "productId": "B00AM18UOA",
+            "source": "cqa",
+            "text": "not at all, very porous material similar to a sneaker toe",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=64353&qa_pair_id=93821&chars=0-57",
+            "sha256": "fa70a28f709c009a8ac2e41a77670d05344741534b4debe6f9977410747a7ea7",
+            "originalQuestion": "are they rain proof?",
+            "lexicalRank": 4,
+            "semanticRank": 6,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B00AM18UOA-review-e7b6f48b30a326f0",
+            "productId": "B00AM18UOA",
+            "source": "review",
+            "text": "this may sound crazy, but some of these pants have extra lining inside that renders them way too warm for indoor wear.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=64352&qa_pair_id=93820&chars=0-118",
+            "sha256": "e9144e341964bd1d2278644c561b4bfbc7d57f980e70e82c28e965cf490407b5",
+            "lexicalRank": 11,
+            "semanticRank": 4,
+            "score": 0.029709507042253523
+          }
+        ],
+        "durationMs": 167.53487500000006,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "flat-comparison-6609ed1a766d1b6c1006"
+      }
+    },
+    {
+      "caseId": "flat-source-train-9611",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B008S012X8-review-6774343353d45b1b",
+            "productId": "B008S012X8",
+            "source": "review",
+            "text": "i like these socks.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=64740&qa_pair_id=94208&chars=0-19",
+            "sha256": "4134ca500e783b4726039d959d359b4fdeb8ab29427acd0b2c696843314e853a",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B008S012X8-review-27976f50fdde62db",
+            "productId": "B008S012X8",
+            "source": "review",
+            "text": "they are ok, and at least they are white.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=64744&qa_pair_id=94212&chars=0-41",
+            "sha256": "061a989f2faea0a24e9fb20d6e6a1bb8a225d4b142a65810dd94936e7431d342",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B008S012X8-review-f5ac040ffe1e74b5",
+            "productId": "B008S012X8",
+            "source": "review",
+            "text": "i love these socks.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=64750&qa_pair_id=94218&chars=0-19",
+            "sha256": "dc4267d8a72c6c1e05287ba96e0ed0cf18276f541d3ac2e7e5e5b88cabf66117",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B008S012X8-cqa-c1ca0e54511ce233",
+            "productId": "B008S012X8",
+            "source": "cqa",
+            "text": "small is for 6-7.5 and xs for 4-5.5. these socks are great.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=64734&qa_pair_id=94202&chars=0-59",
+            "sha256": "a9f0f30fc53d0ae6bd7d182be0b67e716942993003249a27e2d10fb356a6601d",
+            "originalQuestion": "i have a size 6 foot, will the small be small enough.  i am finding that a lot of the smalls are still too big.",
+            "lexicalRank": 4,
+            "semanticRank": 5,
+            "score": 0.031009615384615385
+          },
+          {
+            "id": "epqa-B008S012X8-review-0b6835d9d21f6b05",
+            "productId": "B008S012X8",
+            "source": "review",
+            "text": "the colors are bright and attractive, and around the ankle at the top of the sock, there is additional padding which is nice to feel and will provide additional support.quality:although the fabric is thin, this is intentional, and it feels like good quality.fit:they're tighter around the arch of your foot with additional support to keep the socks from slipping or sliding too much while you run.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=64726&qa_pair_id=94194&chars=0-397",
+            "sha256": "4b9d262cb54d0d05774d54f08a8f26513d2f3171fec0b7905963dd71557e31b7",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          }
+        ],
+        "durationMs": 163.23325,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "flat-comparison-6609ed1a766d1b6c1006"
+      }
+    },
+    {
+      "caseId": "flat-source-train-11368",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B004PKCH0M-review-368c2d59d9914169",
+            "productId": "B004PKCH0M",
+            "source": "review",
+            "text": "i bought this for my casio wk-110 keyboard and it's perfect and does exactly what it should.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=82005&qa_pair_id=111473&chars=0-92",
+            "sha256": "2b103c088dcf49fdc7c2735034327c188345e2c702a1ce8faf6f11ac75ac29d9",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B004PKCH0M-cqa-74d54d1cc84b90cf",
+            "productId": "B004PKCH0M",
+            "source": "cqa",
+            "text": "according to the information that accompanied the pedal, it will work with all casio keyboards.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=81984&qa_pair_id=111452&chars=0-95",
+            "sha256": "ea3cd587db75793a794bd2fd4966564aed185887ced87e931ba74755ea24e2a0",
+            "originalQuestion": "will the casio sp20 pedal work with the casio wk - 500 keyboard?",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B004PKCH0M-review-0f42f6f6f3267c01",
+            "productId": "B004PKCH0M",
+            "source": "review",
+            "text": "it is universal and will work with most keyboards.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=81986&qa_pair_id=111454&chars=0-50",
+            "sha256": "963b22332d5fc7f137d7bc8e382a93e480a7c85030807a906f3ae59945d231dd",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B004PKCH0M-cqa-9a1357e355e4a8df",
+            "productId": "B004PKCH0M",
+            "source": "cqa",
+            "text": "i looked on the casio website, looked up the model # and found that this particular pedal was listed.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=82011&qa_pair_id=111479&chars=0-101",
+            "sha256": "7ca3a1534fd32a9aa1cf6b68dbb32798aca080ad8af8f00a75dec14d15d16860",
+            "originalQuestion": "will this work wth a wk-240?",
+            "lexicalRank": 7,
+            "semanticRank": 4,
+            "score": 0.03055037313432836
+          },
+          {
+            "id": "epqa-B004PKCH0M-cqa-43509b0b672c7908",
+            "productId": "B004PKCH0M",
+            "source": "cqa",
+            "text": "the pedal is said to work with all casio keyboards.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=82004&qa_pair_id=111472&chars=0-51",
+            "sha256": "944988f462f65f83087e3d575af01d164fe7b61e75299c0961515f6ac109030f",
+            "originalQuestion": "this pedal work with a casio ctk-3400sk?",
+            "lexicalRank": 5,
+            "semanticRank": 7,
+            "score": 0.030309988518943745
+          }
+        ],
+        "durationMs": 169.88650000000007,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "flat-comparison-6609ed1a766d1b6c1006"
+      }
+    },
+    {
+      "caseId": "flat-source-train-391",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B0042BUQIY-review-54ea68cd0735eed0",
+            "productId": "B0042BUQIY",
+            "source": "review",
+            "text": "perfect fit for my brother 3034d serger",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2455&qa_pair_id=3813&chars=0-39",
+            "sha256": "862758fb612296ced3cc5a4df561192cb91a97f44035155f8ecba87756ff140c",
+            "lexicalRank": 2,
+            "semanticRank": 1,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B0042BUQIY-cqa-ece5765deb815726",
+            "productId": "B0042BUQIY",
+            "source": "cqa",
+            "text": "organ home sewing machine needles fit many machines, including bernina, brother, elna, husqvarna, janome, juki, melco, baby lock, new home, poem, riccar, simplicity, singer, viking, white, and more.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2444&qa_pair_id=3802&chars=0-198",
+            "sha256": "7f510e937d4b2f5884ac7bec715793b9dc7ac7b101c7da8a0a5b5b3d8903eae8",
+            "originalQuestion": "will they fit a brother pacesetter nx400",
+            "lexicalRank": 1,
+            "semanticRank": 6,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B0042BUQIY-review-729e849e345401b1",
+            "productId": "B0042BUQIY",
+            "source": "review",
+            "text": "these needles work very well in all of my sewing machines, and if you keep your eye on the price you can get them for as little as 7 or 8 cents each!for lighter weight fabrics i use and would recommend size 11 or 12 needles.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2464&qa_pair_id=3822&chars=0-224",
+            "sha256": "fd73fd162f89fec97cd834850359e43866d0a0e836864489554c55cab137b48d",
+            "lexicalRank": 5,
+            "semanticRank": 2,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B0042BUQIY-cqa-fc862da28de93f38",
+            "productId": "B0042BUQIY",
+            "source": "cqa",
+            "text": "they are universal sewing needles so they work with most machines.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2442&qa_pair_id=3800&chars=0-66",
+            "sha256": "cfd3cfec8a28e1b91b9f44443d8d5fbdfeba570e8ba10c4514764b01a59058d2",
+            "originalQuestion": "will these needles work with pfaff machine?",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          },
+          {
+            "id": "epqa-B0042BUQIY-cqa-0fa3af2b649969d2",
+            "productId": "B0042BUQIY",
+            "source": "cqa",
+            "text": "these are sewing needles and can be used in any sewing machine.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=2456&qa_pair_id=3814&chars=0-63",
+            "sha256": "feed3f4355bbe790a759676bc8553a211d970208a4d945cf7b91e061e30a969f",
+            "originalQuestion": "can i use this for my babylock diana serger? or are they only for regular sewing machines? my serger says it uses hax1 130/705h #14 needles",
+            "lexicalRank": 8,
+            "semanticRank": 3,
+            "score": 0.03057889822595705
+          }
+        ],
+        "durationMs": 190.34329100000014,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "flat-comparison-6609ed1a766d1b6c1006"
+      }
+    },
+    {
+      "caseId": "flat-source-train-1404",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B000P56HWU-cqa-451d2b15b1a7999e",
+            "productId": "B000P56HWU",
+            "source": "cqa",
+            "text": "the hayward progrid model # de4820 has several options for external valve control, but sand filter control valves will probably not fit this tank.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=8962&qa_pair_id=13730&chars=0-146",
+            "sha256": "4e362dd7d347d1e23e5e2b3072af567e8fb6e2588e6c5847f56814ac79a35336",
+            "originalQuestion": "i am switching from a sand filter to this filter. i have an existing pump and backflow. do you know what model backflow this hooks to?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B000P56HWU-cqa-56e7502005d6260a",
+            "productId": "B000P56HWU",
+            "source": "cqa",
+            "text": "i bought the hayward de6020 pro grid 60 square foot vertical de pool filter and i bought the hayward sp0715xr50 pro series vari-flo control valve for it, everything works great had it 3 months and all is good",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=8963&qa_pair_id=13731&chars=0-208",
+            "sha256": "6fcaf94804b489743caad5eea0f9593eeecbde9af7e34d80e717898e8eea8f6e",
+            "originalQuestion": "i am replacing a purex filter which i back flush to clean.  which flow control value should i buy?",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B000P56HWU-cqa-5c1e3a3f7621fc1a",
+            "productId": "B000P56HWU",
+            "source": "cqa",
+            "text": "if you go to the hayward website and look up the specific it will describe which filter cartridge will fit.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=8965&qa_pair_id=13733&chars=0-107",
+            "sha256": "f603f4e16dbabafe22531c850a5656bac467a5b4e974f83571894172945511c2",
+            "originalQuestion": "what filter cartridge fits a c150s filter?",
+            "lexicalRank": 3,
+            "semanticRank": 3,
+            "score": 0.031746031746031744
+          },
+          {
+            "id": "epqa-B000P56HWU-review-6fbce5ba39cae0f4",
+            "productId": "B000P56HWU",
+            "source": "review",
+            "text": "replaced on older hayward de 36 filter.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=8960&qa_pair_id=13728&chars=0-39",
+            "sha256": "0c8608379f548e8a22127160acdf11a2ff28c87bedbc426e5b2422e015e59f4b",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          },
+          {
+            "id": "epqa-B000P56HWU-cqa-2b62802c0cf82ab5",
+            "productId": "B000P56HWU",
+            "source": "cqa",
+            "text": "use a hayward to ensure compatibility.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=8964&qa_pair_id=13732&chars=0-38",
+            "sha256": "7a1b1afdc9a4ae5348507bfa47b2a2046e05ce7aa073f48d06a2f3c29361a161",
+            "originalQuestion": "will this work with a pentair multi port valve 261152?",
+            "lexicalRank": 6,
+            "semanticRank": 5,
+            "score": 0.030536130536130537
+          }
+        ],
+        "durationMs": 101.454792,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "flat-comparison-6609ed1a766d1b6c1006"
+      }
+    },
+    {
+      "caseId": "flat-source-train-11509",
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B001PMG7UE-review-8be3bad948e87cfa",
+            "productId": "B001PMG7UE",
+            "source": "review",
+            "text": "it does not come with the pen!",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=83392&qa_pair_id=112860&chars=0-30",
+            "sha256": "6403a0ca0a13f9a7671f57145ee5fcbd5319db233a91e024d90ea4c93fbfc703",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B001PMG7UE-review-6bd18d9abf1368f7",
+            "productId": "B001PMG7UE",
+            "source": "review",
+            "text": "it does not come with a pen or paper as it appears.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=83393&qa_pair_id=112861&chars=0-51",
+            "sha256": "be4dd982b9f5428a88dfcd132d2fd40dc198854ff86611093b1aa106fdf6e4f9",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B001PMG7UE-review-83df68eb799f14ab",
+            "productId": "B001PMG7UE",
+            "source": "review",
+            "text": "the photo shows a notepad and pen, however the book does not come with them, which was a disappointment for me.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=83395&qa_pair_id=112863&chars=0-111",
+            "sha256": "f6640a134c3ffe574bb063d42d0e30bf7ffde7f5a0a14b4ae308884c4d582bee",
+            "lexicalRank": 3,
+            "semanticRank": 5,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B001PMG7UE-review-e4af6c67ad257e8e",
+            "productId": "B001PMG7UE",
+            "source": "review",
+            "text": "i like that it has a loop for a pen, although the pen is not included.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=83396&qa_pair_id=112864&chars=0-70",
+            "sha256": "9dfd672c3da6a76a845c7b22ceced5d8567b8a89628f49558605b24abda63e60",
+            "lexicalRank": 5,
+            "semanticRank": 3,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B001PMG7UE-bullet-758967a9b547845e",
+            "productId": "B001PMG7UE",
+            "source": "bullet",
+            "text": "includes elastic pen loop, does not include note cards.",
+            "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=83389&qa_pair_id=112857&chars=0-55",
+            "sha256": "4363ba65a4bb1da133b71ff856fb29380c394e4f0357b9e91199b226e88f438a",
+            "lexicalRank": 4,
+            "semanticRank": 6,
+            "score": 0.030776515151515152
+          }
+        ],
+        "durationMs": 169.7822500000002,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "flat-comparison-6609ed1a766d1b6c1006"
+      }
+    }
+  ],
+  "retrievalSha256": "1f9629a9d5c5f7b32276a4cbddf14d52a3b17d9f22b42c999121bb68aff2deb6"
+}

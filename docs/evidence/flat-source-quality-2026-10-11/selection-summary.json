@@ -1,0 +1,99 @@
+{
+  "format": "ablatrix-flat-source-selection-summary-v1",
+  "cohortFileSha256": "6609ed1a766d1b6c1006f33293c18be6e6451cfce1e32264b4d3bd6989fabbbf",
+  "selectionAuditFileSha256": "6de7255c52edb20800e59f3a2928d1c66934b1b4d7a2094815f09f19bfc091c0",
+  "selectionAuditSha256": "812243f9e7d0aa9d2d25b5857726e2b533b45526f38355e02dcbbd5d75a50e99",
+  "inventory": {
+    "passed": true,
+    "trainProducts": 5393,
+    "trainQuestions": 12175,
+    "eligibleFullPools": 4075,
+    "eligibleQuestionCounts": {
+      "capacity_dimensions": 258,
+      "appearance_material": 110,
+      "model_scope": 150,
+      "missing_information": 164,
+      "preservation_control": 582
+    }
+  },
+  "selection": {
+    "method": "First SHA256-ranked eligible question per fixed stratum, with full-source family and exposure exclusions before any generation.",
+    "strata": [
+      {
+        "name": "capacity_dimensions",
+        "count": 2
+      },
+      {
+        "name": "appearance_material",
+        "count": 2
+      },
+      {
+        "name": "model_scope",
+        "count": 2
+      },
+      {
+        "name": "missing_information",
+        "count": 1
+      },
+      {
+        "name": "preservation_control",
+        "count": 1
+      }
+    ],
+    "selectionCodeSha256": "3e8d627d143900e661c17c53c67bf65743f8587afef695a9c517e0032f7eb4d9",
+    "helperCodeSha256": {
+      "scripts/prepare-correction-cohort.py": "b4518d71c302090358c6523b89c7774ad7ca1a7e13d44addd766c21ad35a93d1",
+      "scripts/prepare-source-id-cohort.py": "67d34d46373a16d3af7b80655f7702ebf68c7afc6c193b4a0de43a1824c3c67a"
+    },
+    "labelOrAnswerColumnsUsed": false,
+    "modelOutputsUsed": false,
+    "prospectiveAmendment": "Revision3: require explicit physical size, dimension, volume or storage/load-capacity intent; generic how-many language alone and electrical draw are excluded. Earlier private source-only drafts remain eligible in this preparation because no model output existed; seed, strata and limits are unchanged.",
+    "sourcePool": "All candidate bodies and separate original CQA questions for a product; exact deduplication and <=850-character overlapping chunks; no silent clipping."
+  },
+  "caseCounts": [
+    {
+      "id": "flat-source-train-5841",
+      "stratum": "capacity_dimensions",
+      "sourceChunks": 19
+    },
+    {
+      "id": "flat-source-train-11514",
+      "stratum": "capacity_dimensions",
+      "sourceChunks": 28
+    },
+    {
+      "id": "flat-source-train-9568",
+      "stratum": "appearance_material",
+      "sourceChunks": 28
+    },
+    {
+      "id": "flat-source-train-9611",
+      "stratum": "appearance_material",
+      "sourceChunks": 27
+    },
+    {
+      "id": "flat-source-train-11368",
+      "stratum": "model_scope",
+      "sourceChunks": 26
+    },
+    {
+      "id": "flat-source-train-391",
+      "stratum": "model_scope",
+      "sourceChunks": 26
+    },
+    {
+      "id": "flat-source-train-1404",
+      "stratum": "missing_information",
+      "sourceChunks": 19
+    },
+    {
+      "id": "flat-source-train-11509",
+      "stratum": "preservation_control",
+      "sourceChunks": 30
+    }
+  ],
+  "fullSelectionAudit": "Reproduce privately with pinned train.csv and the public exposure-audit.json; the complete deterministic rejection log is retained locally.",
+  "generatedOutputsRead": false,
+  "newProviderCalls": 0,
+  "paidExecutionAuthorized": false
+}

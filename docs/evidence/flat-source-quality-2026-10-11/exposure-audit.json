@@ -1,0 +1,2226 @@
+{
+  "format": "ablatrix-flat-source-exposure-audit-v1",
+  "inputFiles": [
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/exposure-audit.json",
+      "sha256": "0864e77020a381960f4f46cfcef6a3eec31fb4e471fa73028f5c2c48b91266b5"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/cohort-preparation-v1.json",
+      "sha256": "0a157f4e33e2c143debd39376fae7ba786f9b347c198533fe906c3f29622f84f"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/cohort-preparation-v2.json",
+      "sha256": "3dc0f1902b56db41e1db991c3ca63cf99d7befda08b78fd20d4e44c7d44b492c"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/cohort.json",
+      "sha256": "9cc29d9987f8e76245d7ac89d32db13fa998d0e6ff9357eab88bda8889785fba"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/manual-eligibility-decisions.json",
+      "sha256": "2896138227048714e08f5833bf75a2bf5b727af6b93fb38d6b6ca91a8218dbd5"
+    }
+  ],
+  "publicIdentifierProjections": [
+    {
+      "path": "docs/evidence/answer-calibration-astra-review-2026-09-25.md",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/answer-calibration-development-2026-09-25.json",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/answer-calibration-development-restart-2026-09-25.json",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/answer-calibration-development-restart-blind-review-2026-09-25.md",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/answer-calibration-revision2-astra-review-2026-09-25.md",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/answer-calibration-revision2-development-2026-09-25.json",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/answer-calibration-revision2-development-blind-review-2026-09-25.md",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/answer-calibration-revision2-validation-2026-09-25.json",
+      "productIds": [
+        "B005SWX65G",
+        "B009XGZGZG"
+      ],
+      "identifierProjectionSha256": "bab6c1ccd993ab51e8d249b789de07b418833d395f00f4f53185ffe41f9aafb2"
+    },
+    {
+      "path": "docs/evidence/answer-calibration-revision2-validation-astra-review-2026-09-25.md",
+      "productIds": [
+        "B005SWX65G",
+        "B009XGZGZG"
+      ],
+      "identifierProjectionSha256": "bab6c1ccd993ab51e8d249b789de07b418833d395f00f4f53185ffe41f9aafb2"
+    },
+    {
+      "path": "docs/evidence/answer-calibration-revision2-validation-blind-review-2026-09-25.md",
+      "productIds": [
+        "B005SWX65G",
+        "B009XGZGZG"
+      ],
+      "identifierProjectionSha256": "bab6c1ccd993ab51e8d249b789de07b418833d395f00f4f53185ffe41f9aafb2"
+    },
+    {
+      "path": "docs/evidence/citation-snippet-astra-review-2026-09-25.md",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/citation-snippet-blind-review-2026-09-25.md",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/citation-snippet-diagnostic-2026-09-25.json",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/correction-policy-2026-10-10/cohort-v2.json",
+      "productIds": [
+        "B00002ND4G",
+        "B00005AUHX",
+        "B000063082",
+        "B00006IE1F",
+        "B000233WJ6",
+        "B00074TB9U",
+        "B00074TBCW",
+        "B000A7W4Z2",
+        "B000B6FADU",
+        "B000BSMKPY",
+        "B000DZFTC6",
+        "B000ET9SB4",
+        "B000PC4JL4",
+        "B000PD0HQE",
+        "B000UVWGGK",
+        "B000UZI26E",
+        "B000WOG90E",
+        "B000XXQULC",
+        "B0014LP19E",
+        "B00161ZI4A",
+        "B00251EVPW",
+        "B00266BXV6",
+        "B002BH4U56",
+        "B002V92YMA",
+        "B002ZG7RGM",
+        "B00347AJAC",
+        "B003DKL4JA",
+        "B003IVGJBC",
+        "B003U1Q47E",
+        "B003U6A3C6",
+        "B003ZSD5EC",
+        "B004N4MSPO",
+        "B004RPQ4MM",
+        "B004T36GCU",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B0054HSVGE",
+        "B0058YR0XS",
+        "B005AR75A6",
+        "B005NY0TEK",
+        "B005SWX65G",
+        "B00655HJJE",
+        "B007PBHZK0",
+        "B008402S3K",
+        "B008UV6YRO",
+        "B00943C890",
+        "B009LRNT1A",
+        "B009W9APU0",
+        "B009XGZGZG",
+        "B00AHVR5U0",
+        "B00BAUPS9M",
+        "B00BEYDFA8",
+        "B00DM8K1NS",
+        "B00E37TR5U",
+        "B00EAI9ICE",
+        "B00EZFPDO4",
+        "B00F9L8DHC",
+        "B00FH9B8RI",
+        "B00IY7B5CS",
+        "B01LWIPTAJ",
+        "B0789HCT6J",
+        "B07CGPZD27",
+        "B07Q6B5YL5"
+      ],
+      "identifierProjectionSha256": "a552e3c70348b3967506a350b4ab598fbeae2aeb7ce39212717c29614a450baf"
+    },
+    {
+      "path": "docs/evidence/correction-policy-2026-10-10/cohort-v3.json",
+      "productIds": [
+        "B00002ND4G",
+        "B00005AUHX",
+        "B000063082",
+        "B00006IE1F",
+        "B000233WJ6",
+        "B00074TB9U",
+        "B00074TBCW",
+        "B000A7W4Z2",
+        "B000B6FADU",
+        "B000BSMKPY",
+        "B000DZFTC6",
+        "B000ET9SB4",
+        "B000HB2TJ2",
+        "B000PC4JL4",
+        "B000PD0HQE",
+        "B000UVWGGK",
+        "B000UZI26E",
+        "B000WOG90E",
+        "B000XXQULC",
+        "B0014LP19E",
+        "B00161ZI4A",
+        "B00251EVPW",
+        "B00266BXV6",
+        "B002BH4U56",
+        "B002V92YMA",
+        "B002ZG7RGM",
+        "B00347AJAC",
+        "B003DKL4JA",
+        "B003U1Q47E",
+        "B003U6A3C6",
+        "B003ZSD5EC",
+        "B004N4MSPO",
+        "B004RPQ4MM",
+        "B004T36GCU",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B0054HSVGE",
+        "B0058YR0XS",
+        "B005AR75A6",
+        "B005NY0TEK",
+        "B005SWX65G",
+        "B00655HJJE",
+        "B007PBHZK0",
+        "B008402S3K",
+        "B008UV6YRO",
+        "B00943C890",
+        "B009LRNT1A",
+        "B009W9APU0",
+        "B009XGZGZG",
+        "B00AHVR5U0",
+        "B00BAUPS9M",
+        "B00BEYDFA8",
+        "B00DM8K1NS",
+        "B00E37TR5U",
+        "B00EAI9ICE",
+        "B00EZFPDO4",
+        "B00F9L8DHC",
+        "B00FH9B8RI",
+        "B00IY7B5CS",
+        "B01LWIPTAJ",
+        "B0789HCT6J",
+        "B07CGPZD27",
+        "B07Q6B5YL5"
+      ],
+      "identifierProjectionSha256": "fc24cca00dbf25f5df6b63b633ae7c4467ab9f85fc103317af4e3255cc8eb0ec"
+    },
+    {
+      "path": "docs/evidence/correction-policy-2026-10-10/cohort.json",
+      "productIds": [
+        "B00002ND4G",
+        "B00005AUHX",
+        "B000063082",
+        "B00006IE1F",
+        "B000233WJ6",
+        "B00074TB9U",
+        "B00074TBCW",
+        "B000A7W4Z2",
+        "B000B6FADU",
+        "B000BSMKPY",
+        "B000DZFTC6",
+        "B000ET9SB4",
+        "B000PC4JL4",
+        "B000PD0HQE",
+        "B000UVWGGK",
+        "B000UZI26E",
+        "B000WOG90E",
+        "B000XXQULC",
+        "B0014LP19E",
+        "B00161ZI4A",
+        "B00251EVPW",
+        "B00266BXV6",
+        "B002BH4U56",
+        "B002IPGW4S",
+        "B002V92YMA",
+        "B002ZG7RGM",
+        "B003DKL4JA",
+        "B003U1Q47E",
+        "B003U6A3C6",
+        "B003ZSD5EC",
+        "B004N4MSPO",
+        "B004RPQ4MM",
+        "B004T36GCU",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B0054HSVGE",
+        "B0058YR0XS",
+        "B005AR75A6",
+        "B005NY0TEK",
+        "B005SWX65G",
+        "B00655HJJE",
+        "B007PBHZK0",
+        "B008402S3K",
+        "B008UV6YRO",
+        "B00943C890",
+        "B009LRNT1A",
+        "B009W9APU0",
+        "B009XGZGZG",
+        "B00AHVR5U0",
+        "B00B7M7BKW",
+        "B00BAUPS9M",
+        "B00BEYDFA8",
+        "B00DM8K1NS",
+        "B00E37TR5U",
+        "B00EAI9ICE",
+        "B00EZFPDO4",
+        "B00F9L8DHC",
+        "B00FH9B8RI",
+        "B00IY7B5CS",
+        "B01LWIPTAJ",
+        "B0789HCT6J",
+        "B07CGPZD27",
+        "B07Q6B5YL5"
+      ],
+      "identifierProjectionSha256": "c35c93a296e297276e1c1c06812183faa27aed1ad30729e94e69d4240ae1dd0e"
+    },
+    {
+      "path": "docs/evidence/correction-policy-2026-10-10/development-plan.json",
+      "productIds": [
+        "B00005AUHX",
+        "B000WOG90E",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B00655HJJE"
+      ],
+      "identifierProjectionSha256": "d524b639d83cba807a95cd93074dbda82392db0a3daa720e6877d01b60d6e265"
+    },
+    {
+      "path": "docs/evidence/correction-policy-2026-10-10/development-results.json",
+      "productIds": [
+        "B00005AUHX",
+        "B000WOG90E",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B00655HJJE"
+      ],
+      "identifierProjectionSha256": "d524b639d83cba807a95cd93074dbda82392db0a3daa720e6877d01b60d6e265"
+    },
+    {
+      "path": "docs/evidence/correction-policy-2026-10-10/manual-family-audit-v2.json",
+      "productIds": [
+        "B000BSMKPY",
+        "B000UZI26E",
+        "B002BH4U56",
+        "B00347AJAC",
+        "B003IVGJBC",
+        "B00943C890",
+        "B00BEYDFA8",
+        "B00F9L8DHC"
+      ],
+      "identifierProjectionSha256": "03014c6df2cf55db5803009f904e745f4c218ef14fc017104c06bc3c5d49ebff"
+    },
+    {
+      "path": "docs/evidence/correction-policy-2026-10-10/manual-family-audit-v3.json",
+      "productIds": [
+        "B00002ND4G",
+        "B00006IE1F",
+        "B000BSMKPY",
+        "B000HB2TJ2",
+        "B000UZI26E",
+        "B002BH4U56",
+        "B00347AJAC",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B005SWX65G",
+        "B00943C890",
+        "B009W9APU0",
+        "B00BEYDFA8",
+        "B00F9L8DHC",
+        "B0789HCT6J"
+      ],
+      "identifierProjectionSha256": "3ef3e3ca6bb38c28a2b86171f1eb7f38b7f0c8faeaec2e1c3c901ca89ec79bab"
+    },
+    {
+      "path": "docs/evidence/correction-policy-2026-10-10/manual-family-audit.json",
+      "productIds": [
+        "B000BSMKPY",
+        "B000UZI26E",
+        "B002BH4U56",
+        "B002IPGW4S",
+        "B00943C890",
+        "B00B7M7BKW",
+        "B00BEYDFA8",
+        "B00F9L8DHC"
+      ],
+      "identifierProjectionSha256": "7082a9eb79cb2910b34ce1cf48fddace1dc42aadf6502eb0f11f32709e04294b"
+    },
+    {
+      "path": "docs/evidence/correction-policy-2026-10-10/validation-plan.json",
+      "productIds": [
+        "B000BSMKPY",
+        "B000HB2TJ2",
+        "B000UZI26E",
+        "B002BH4U56",
+        "B00347AJAC",
+        "B00943C890",
+        "B00BEYDFA8",
+        "B00F9L8DHC"
+      ],
+      "identifierProjectionSha256": "856e3602100ab03b17b9f53501c07414169f97028871c884e9cc2609548e92e6"
+    },
+    {
+      "path": "docs/evidence/feedback-v02-ai-development-review.json",
+      "productIds": [
+        "B00006IE1F",
+        "B00251EVPW",
+        "B002V92YMA",
+        "B002ZG7RGM",
+        "B003DKL4JA",
+        "B003ZSD5EC",
+        "B0058YR0XS",
+        "B008402S3K",
+        "B008UV6YRO",
+        "B00FH9B8RI"
+      ],
+      "identifierProjectionSha256": "937a54d373957a817802e6ab9f0fb1b7a05714a76fd1a2f61094b4ae24aa0e15"
+    },
+    {
+      "path": "docs/evidence/feedback-v02-shadow-policy-2026-09-25.json",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/feedback-v02-shadow-policy-revision2-2026-09-25.json",
+      "productIds": [
+        "B003DKL4JA",
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "c92c2d39c87f3dc315a2c315dd9a2c31e445dfca1d3c803815d49e99c909de3e"
+    },
+    {
+      "path": "docs/evidence/local-correction-live-2026-10-10.json",
+      "productIds": [
+        "B0053F8W2K",
+        "B00655HJJE"
+      ],
+      "identifierProjectionSha256": "0cc401b4e104c19f61f4e92734b387d8b02e0fea6c5ee218c3471375fd501c31"
+    },
+    {
+      "path": "docs/evidence/local-correction-stop-2026-10-09.json",
+      "productIds": [
+        "B000WOG90E"
+      ],
+      "identifierProjectionSha256": "acecad0f4cf123d288fd7f3cd979743c6acbd71ed6badd6ed09f2a8721e03b27"
+    },
+    {
+      "path": "docs/evidence/local-correction-walkthrough-2026-10-09.json",
+      "productIds": [
+        "B000WOG90E",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B00655HJJE"
+      ],
+      "identifierProjectionSha256": "f472d89fc02710dcf44cc37be9cae748df217f5dce5283c99aca7bed4d6ec18b"
+    },
+    {
+      "path": "docs/evidence/local-correction-walkthrough-2026-10-10.json",
+      "productIds": [
+        "B000WOG90E",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B00655HJJE"
+      ],
+      "identifierProjectionSha256": "f472d89fc02710dcf44cc37be9cae748df217f5dce5283c99aca7bed4d6ec18b"
+    },
+    {
+      "path": "docs/evidence/paid-qa-batch-2026-09-28/ai-review-drafts.json",
+      "productIds": [
+        "B00005AUHX",
+        "B00074TB9U",
+        "B00074TBCW",
+        "B000DZFTC6",
+        "B000PC4JL4",
+        "B000UVWGGK",
+        "B000WOG90E",
+        "B00266BXV6",
+        "B004N4MSPO",
+        "B004RPQ4MM",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B005AR75A6",
+        "B00655HJJE",
+        "B00BAUPS9M",
+        "B00DM8K1NS",
+        "B00E37TR5U",
+        "B00EZFPDO4",
+        "B00IY7B5CS"
+      ],
+      "identifierProjectionSha256": "5f49f9771eba111e4812954bcc2825fc27701d96d7b522efcf91f034e5238df9"
+    },
+    {
+      "path": "docs/evidence/paid-qa-batch-2026-09-28/manifest.json",
+      "productIds": [
+        "B00005AUHX",
+        "B00074TB9U",
+        "B00074TBCW",
+        "B000DZFTC6",
+        "B000PC4JL4",
+        "B000UVWGGK",
+        "B000WOG90E",
+        "B00266BXV6",
+        "B004N4MSPO",
+        "B004RPQ4MM",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B005AR75A6",
+        "B00655HJJE",
+        "B00BAUPS9M",
+        "B00DM8K1NS",
+        "B00E37TR5U",
+        "B00EZFPDO4",
+        "B00IY7B5CS"
+      ],
+      "identifierProjectionSha256": "5f49f9771eba111e4812954bcc2825fc27701d96d7b522efcf91f034e5238df9"
+    },
+    {
+      "path": "docs/evidence/paid-qa-batch-2026-09-28/results.json",
+      "productIds": [
+        "B00005AUHX",
+        "B00074TB9U",
+        "B00074TBCW",
+        "B000DZFTC6",
+        "B000PC4JL4",
+        "B000UVWGGK",
+        "B000WOG90E",
+        "B00266BXV6",
+        "B004N4MSPO",
+        "B004RPQ4MM",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B005AR75A6",
+        "B00655HJJE",
+        "B00BAUPS9M",
+        "B00DM8K1NS",
+        "B00E37TR5U",
+        "B00EZFPDO4",
+        "B00IY7B5CS"
+      ],
+      "identifierProjectionSha256": "5f49f9771eba111e4812954bcc2825fc27701d96d7b522efcf91f034e5238df9"
+    },
+    {
+      "path": "docs/evidence/retrieval-audit-2026-09-26.json",
+      "productIds": [
+        "B00006IE1F",
+        "B00251EVPW",
+        "B002V92YMA",
+        "B002ZG7RGM",
+        "B003DKL4JA",
+        "B003ZSD5EC",
+        "B0058YR0XS",
+        "B008402S3K",
+        "B008UV6YRO",
+        "B00FH9B8RI"
+      ],
+      "identifierProjectionSha256": "937a54d373957a817802e6ab9f0fb1b7a05714a76fd1a2f61094b4ae24aa0e15"
+    },
+    {
+      "path": "docs/evidence/retrieval-audit-before-cqa-2026-09-26.json",
+      "productIds": [
+        "B00006IE1F",
+        "B00251EVPW",
+        "B002V92YMA",
+        "B002ZG7RGM",
+        "B003DKL4JA",
+        "B003ZSD5EC",
+        "B0058YR0XS",
+        "B008402S3K",
+        "B008UV6YRO",
+        "B00FH9B8RI"
+      ],
+      "identifierProjectionSha256": "937a54d373957a817802e6ab9f0fb1b7a05714a76fd1a2f61094b4ae24aa0e15"
+    },
+    {
+      "path": "docs/evidence/retrieval-cqa-comparison-2026-09-26.json",
+      "productIds": [
+        "B00006IE1F",
+        "B00251EVPW",
+        "B002V92YMA",
+        "B002ZG7RGM",
+        "B003DKL4JA",
+        "B003ZSD5EC",
+        "B0058YR0XS",
+        "B008402S3K",
+        "B008UV6YRO",
+        "B00FH9B8RI"
+      ],
+      "identifierProjectionSha256": "937a54d373957a817802e6ab9f0fb1b7a05714a76fd1a2f61094b4ae24aa0e15"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/cohort-preparation-v1.json",
+      "productIds": [
+        "B00002ND4G",
+        "B00005AUHX",
+        "B000063082",
+        "B00006IE1F",
+        "B000233WJ6",
+        "B00074TB9U",
+        "B00074TBCW",
+        "B000A7W4Z2",
+        "B000B6FADU",
+        "B000BSMKPY",
+        "B000DZFTC6",
+        "B000ET9SB4",
+        "B000HB2TJ2",
+        "B000PC4JL4",
+        "B000PD0HQE",
+        "B000UVWGGK",
+        "B000UZI26E",
+        "B000WOG90E",
+        "B000XXQULC",
+        "B0014LP19E",
+        "B00161ZI4A",
+        "B00251EVPW",
+        "B00266BXV6",
+        "B002BH4U56",
+        "B002IPGW4S",
+        "B002V92YMA",
+        "B002ZG7RGM",
+        "B00347AJAC",
+        "B003DKL4JA",
+        "B003IVGJBC",
+        "B003M01720",
+        "B003U1Q47E",
+        "B003U6A3C6",
+        "B003ZSD5EC",
+        "B00474BN1K",
+        "B004N4MSPO",
+        "B004RPQ4MM",
+        "B004T36GCU",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B0054HSVGE",
+        "B0058YR0XS",
+        "B005AR75A6",
+        "B005NY0TEK",
+        "B005SWX65G",
+        "B00655HJJE",
+        "B007PBHZK0",
+        "B008402S3K",
+        "B008UV6YRO",
+        "B008VLVDII",
+        "B00943C890",
+        "B009LRNT1A",
+        "B009W9APU0",
+        "B009XGZGZG",
+        "B00AHVR5U0",
+        "B00B7M7BKW",
+        "B00BAUPS9M",
+        "B00BEYDFA8",
+        "B00DM8K1NS",
+        "B00E37TR5U",
+        "B00EAI9ICE",
+        "B00EZFPDO4",
+        "B00F9L8DHC",
+        "B00FH9B8RI",
+        "B00ISKS416",
+        "B00IY7B5CS",
+        "B00O4HP9JW",
+        "B01IB8QBQY",
+        "B01LWIPTAJ",
+        "B0789HCT6J",
+        "B07CGPZD27",
+        "B07Q6B5YL5",
+        "B085WSCTS4",
+        "B089NXYL3W"
+      ],
+      "identifierProjectionSha256": "d252b89a7a86d4a5f62a3cea3599e178aebffa8c34c9145b879f06b226731258"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/cohort-preparation-v2.json",
+      "productIds": [
+        "B00002ND4G",
+        "B00005AUHX",
+        "B000063082",
+        "B00006IE1F",
+        "B000233WJ6",
+        "B00074TB9U",
+        "B00074TBCW",
+        "B000A7W4Z2",
+        "B000B6FADU",
+        "B000BSMKPY",
+        "B000DZFTC6",
+        "B000ET9SB4",
+        "B000HB2TJ2",
+        "B000PC4JL4",
+        "B000PD0HQE",
+        "B000UVWGGK",
+        "B000UZI26E",
+        "B000WOG90E",
+        "B000XXQULC",
+        "B0013CCCAK",
+        "B0014LP19E",
+        "B00161ZI4A",
+        "B00251EVPW",
+        "B00266BXV6",
+        "B002BH4U56",
+        "B002IPGW4S",
+        "B002V92YMA",
+        "B002ZG7RGM",
+        "B00347AJAC",
+        "B003DKL4JA",
+        "B003IVGJBC",
+        "B003M01720",
+        "B003U1Q47E",
+        "B003U6A3C6",
+        "B003ZSD5EC",
+        "B004N4MSPO",
+        "B004RPQ4MM",
+        "B004T36GCU",
+        "B0051POK1E",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ANEY",
+        "B00545ATZW",
+        "B0054HSVGE",
+        "B0058YR0XS",
+        "B005AR75A6",
+        "B005NY0TEK",
+        "B005SWX65G",
+        "B00655HJJE",
+        "B007PBHZK0",
+        "B008402S3K",
+        "B008UV6YRO",
+        "B00943C890",
+        "B009LRNT1A",
+        "B009W9APU0",
+        "B009XGZGZG",
+        "B00AHVR5U0",
+        "B00B7M7BKW",
+        "B00BAUPS9M",
+        "B00BEYDFA8",
+        "B00DM8K1NS",
+        "B00E37TR5U",
+        "B00EAI9ICE",
+        "B00EZFPDO4",
+        "B00F9L8DHC",
+        "B00FH9B8RI",
+        "B00ISKS416",
+        "B00IY7B5CS",
+        "B00O4HP9JW",
+        "B01LWIPTAJ",
+        "B0789HCT6J",
+        "B07CGPZD27",
+        "B07Q6B5YL5",
+        "B085WSCTS4",
+        "B089NXYL3W"
+      ],
+      "identifierProjectionSha256": "0e7d89aa222f4bff4e3f9c9b10868019ecf815c140d91770c207fa9ba274c7ff"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/cohort.json",
+      "productIds": [
+        "B00002ND4G",
+        "B00004SU18",
+        "B00005AUHX",
+        "B000063082",
+        "B00006IE1F",
+        "B000233WJ6",
+        "B00074TB9U",
+        "B00074TBCW",
+        "B000A7W4Z2",
+        "B000B6FADU",
+        "B000BSMKPY",
+        "B000DZFTC6",
+        "B000ET9SB4",
+        "B000HB2TJ2",
+        "B000PC4JL4",
+        "B000PD0HQE",
+        "B000UVWGGK",
+        "B000UZI26E",
+        "B000WOG90E",
+        "B000XXQULC",
+        "B0014LP19E",
+        "B00161ZI4A",
+        "B00251EVPW",
+        "B00266BXV6",
+        "B002BH4U56",
+        "B002IPGW4S",
+        "B002V92YMA",
+        "B002ZG7RGM",
+        "B00347AJAC",
+        "B003DKL4JA",
+        "B003IVGJBC",
+        "B003M01720",
+        "B003U1Q47E",
+        "B003U6A3C6",
+        "B003ZSD5EC",
+        "B004N4MSPO",
+        "B004RPQ4MM",
+        "B004T36GCU",
+        "B0051POK1E",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B0054HSVGE",
+        "B0058YR0XS",
+        "B005AR75A6",
+        "B005NY0TEK",
+        "B005SWX65G",
+        "B00655HJJE",
+        "B006ZPAYPU",
+        "B007PBHZK0",
+        "B008402S3K",
+        "B008UV6YRO",
+        "B00943C890",
+        "B009LRNT1A",
+        "B009W9APU0",
+        "B009XGZGZG",
+        "B00AHVR5U0",
+        "B00B7M7BKW",
+        "B00BAUPS9M",
+        "B00BEYDFA8",
+        "B00DM8K1NS",
+        "B00E37TR5U",
+        "B00EAI9ICE",
+        "B00EZFPDO4",
+        "B00F9L8DHC",
+        "B00FH9B8RI",
+        "B00ISKS416",
+        "B00IY7B5CS",
+        "B00O4HP9JW",
+        "B01LWIPTAJ",
+        "B0789HCT6J",
+        "B07CGPZD27",
+        "B07DDMRXYV",
+        "B07Q6B5YL5",
+        "B089NXYL3W"
+      ],
+      "identifierProjectionSha256": "fe315f237e72f7e8db09bc5a823b595d26a8136fba07539cd5e7119e764abb9c"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/execution-plan-v2.json",
+      "productIds": [
+        "B00004SU18",
+        "B003M01720",
+        "B0051POK1E",
+        "B006ZPAYPU",
+        "B00ISKS416",
+        "B00O4HP9JW",
+        "B07DDMRXYV",
+        "B089NXYL3W"
+      ],
+      "identifierProjectionSha256": "89b5642c9f5c3f718b75d4d6e72a23df536f799b3a4563af1d061d3fc61b68e0"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/execution-plan.json",
+      "productIds": [
+        "B00004SU18",
+        "B003M01720",
+        "B0051POK1E",
+        "B006ZPAYPU",
+        "B00ISKS416",
+        "B00O4HP9JW",
+        "B07DDMRXYV",
+        "B089NXYL3W"
+      ],
+      "identifierProjectionSha256": "89b5642c9f5c3f718b75d4d6e72a23df536f799b3a4563af1d061d3fc61b68e0"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/exposure-audit.json",
+      "productIds": [
+        "B00002ND4G",
+        "B00005AUHX",
+        "B000063082",
+        "B00006IE1F",
+        "B000233WJ6",
+        "B00074TB9U",
+        "B00074TBCW",
+        "B000A7W4Z2",
+        "B000B6FADU",
+        "B000BSMKPY",
+        "B000DZFTC6",
+        "B000ET9SB4",
+        "B000HB2TJ2",
+        "B000PC4JL4",
+        "B000PD0HQE",
+        "B000UVWGGK",
+        "B000UZI26E",
+        "B000WOG90E",
+        "B000XXQULC",
+        "B0014LP19E",
+        "B00161ZI4A",
+        "B00251EVPW",
+        "B00266BXV6",
+        "B002BH4U56",
+        "B002IPGW4S",
+        "B002V92YMA",
+        "B002ZG7RGM",
+        "B00347AJAC",
+        "B003DKL4JA",
+        "B003IVGJBC",
+        "B003U1Q47E",
+        "B003U6A3C6",
+        "B003ZSD5EC",
+        "B004N4MSPO",
+        "B004RPQ4MM",
+        "B004T36GCU",
+        "B0051S4ZZM",
+        "B0053F8W2K",
+        "B00545ATZW",
+        "B0054HSVGE",
+        "B0058YR0XS",
+        "B005AR75A6",
+        "B005NY0TEK",
+        "B005SWX65G",
+        "B00655HJJE",
+        "B007PBHZK0",
+        "B008402S3K",
+        "B008UV6YRO",
+        "B00943C890",
+        "B009LRNT1A",
+        "B009W9APU0",
+        "B009XGZGZG",
+        "B00AHVR5U0",
+        "B00B7M7BKW",
+        "B00BAUPS9M",
+        "B00BEYDFA8",
+        "B00DM8K1NS",
+        "B00E37TR5U",
+        "B00EAI9ICE",
+        "B00EZFPDO4",
+        "B00F9L8DHC",
+        "B00FH9B8RI",
+        "B00IY7B5CS",
+        "B01LWIPTAJ",
+        "B0789HCT6J",
+        "B07CGPZD27",
+        "B07Q6B5YL5"
+      ],
+      "identifierProjectionSha256": "58bf53aa924a05a54b6f94887da3730d99ea3df4d3a94696be561535672c57c7"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/manual-eligibility-decisions.json",
+      "productIds": [
+        "B00B8Q31UQ"
+      ],
+      "identifierProjectionSha256": "68e96291087a3b48e9a630ee332f2f904bc6d52ce97b2eca806c74f93a1083f5"
+    },
+    {
+      "path": "docs/evidence/source-id-correction-2026-10-10/manual-family-audit.json",
+      "productIds": [
+        "B00004SU18",
+        "B000PD0HQE",
+        "B003M01720",
+        "B004RPQ4MM",
+        "B0051POK1E",
+        "B006ZPAYPU",
+        "B009W9APU0",
+        "B009XGZGZG",
+        "B00AHVR5U0",
+        "B00E37TR5U",
+        "B00EZFPDO4",
+        "B00ISKS416",
+        "B00IY7B5CS",
+        "B00O4HP9JW",
+        "B07DDMRXYV",
+        "B089NXYL3W"
+      ],
+      "identifierProjectionSha256": "54c4382f9d28d10136e9c940aaceb9cd2ea7a431b84e40c187e4c281338b66ae"
+    },
+    {
+      "path": "docs/evidence/source-id-diagnostic-2026-10-11/case-audit.json",
+      "productIds": [
+        "B0051POK1E",
+        "B00ISKS416",
+        "B00O4HP9JW"
+      ],
+      "identifierProjectionSha256": "9daac267b348a5985e9db266a616931e173db29a98a8ca3487e7b489800aed9a"
+    },
+    {
+      "path": "docs/evidence/source-id-diagnostic-2026-10-11/execution-plan-v2.json",
+      "productIds": [
+        "B0051POK1E",
+        "B00ISKS416",
+        "B00O4HP9JW"
+      ],
+      "identifierProjectionSha256": "9daac267b348a5985e9db266a616931e173db29a98a8ca3487e7b489800aed9a"
+    },
+    {
+      "path": "docs/evidence/source-id-diagnostic-2026-10-11/execution-plan-v3.json",
+      "productIds": [
+        "B0051POK1E",
+        "B00ISKS416",
+        "B00O4HP9JW"
+      ],
+      "identifierProjectionSha256": "9daac267b348a5985e9db266a616931e173db29a98a8ca3487e7b489800aed9a"
+    },
+    {
+      "path": "docs/evidence/source-id-diagnostic-2026-10-11/execution-plan.json",
+      "productIds": [
+        "B0051POK1E",
+        "B00ISKS416",
+        "B00O4HP9JW"
+      ],
+      "identifierProjectionSha256": "9daac267b348a5985e9db266a616931e173db29a98a8ca3487e7b489800aed9a"
+    },
+    {
+      "path": "docs/evidence/source-id-diagnostic-2026-10-11/live-summary.json",
+      "productIds": [
+        "B0051POK1E",
+        "B00O4HP9JW"
+      ],
+      "identifierProjectionSha256": "e7e0bbac3ddb45544c6cea5b1f0d9caa87be20c445b19de8c5c16e3c65a49cdc"
+    },
+    {
+      "path": "docs/feedback-loop-v0.1-evidence.md",
+      "productIds": [
+        "B00251EVPW"
+      ],
+      "identifierProjectionSha256": "ac63d2f77807bbe760ed52b27314b3cb5e17a4605be9138c85849015ba3244c1"
+    },
+    {
+      "path": "docs/feedback-loop-v0.2-astra-review.md",
+      "productIds": [
+        "B008402S3K"
+      ],
+      "identifierProjectionSha256": "111c7721315626ae92a0ddb0b05031facac3db362406adcfc1feab427aa5f6e1"
+    },
+    {
+      "path": "docs/flat-source-quality-plan.md",
+      "productIds": [
+        "B00B8Q31UQ"
+      ],
+      "identifierProjectionSha256": "68e96291087a3b48e9a630ee332f2f904bc6d52ce97b2eca806c74f93a1083f5"
+    }
+  ],
+  "metadata": {
+    "workspaces": [
+      {
+        "inventory": "workspace-1",
+        "products": [
+          {
+            "id": "9f96ab23-e289-46eb-aea8-b6550f77c32e",
+            "title": "Columbia Men's Silver Ridge Cargo Short, Tusk, 40x10",
+            "sources": [
+              {
+                "id": "fcf1291d-12e1-4a51-a068-e5c822bb4b9f",
+                "label": "ePQA product attribute",
+                "text": "inseam:  { length:[ { unit:inches, value:10 } ] }",
+                "originalQuestion": null,
+                "reference": null
+              },
+              {
+                "id": "d8898642-01c7-4ee5-bcd5-b766a6fb9598",
+                "label": "ePQA customer review",
+                "text": "leg length is 10 inches (from crotch to hem) so they sit just above the knee hence the sizing guide of 34/10 (in case you were wondering).",
+                "originalQuestion": null,
+                "reference": null
+              }
+            ]
+          }
+        ],
+        "runs": [
+          {
+            "productId": "9f96ab23-e289-46eb-aea8-b6550f77c32e",
+            "question": "For this selected 40x10 size, what is the inseam, and can you tell where the hem would fall on me?",
+            "title": "",
+            "sources": [
+              {
+                "id": "d8898642-01c7-4ee5-bcd5-b766a6fb9598",
+                "label": "ePQA customer review",
+                "text": "leg length is 10 inches (from crotch to hem) so they sit just above the knee hence the sizing guide of 34/10 (in case you were wondering).",
+                "originalQuestion": null,
+                "reference": "ePQA customer review"
+              },
+              {
+                "id": "fcf1291d-12e1-4a51-a068-e5c822bb4b9f",
+                "label": "ePQA product attribute",
+                "text": "inseam:  { length:[ { unit:inches, value:10 } ] }",
+                "originalQuestion": null,
+                "reference": "ePQA product attribute"
+              }
+            ]
+          },
+          {
+            "productId": "9f96ab23-e289-46eb-aea8-b6550f77c32e",
+            "question": "For this selected 40x10 size, what is the inseam, and can you tell where the hem would fall on me?",
+            "title": "Columbia Men's Silver Ridge Cargo Short, Tusk, 40x10",
+            "sources": [
+              {
+                "id": "fcf1291d-12e1-4a51-a068-e5c822bb4b9f",
+                "label": "ePQA product attribute",
+                "text": "inseam:  { length:[ { unit:inches, value:10 } ] }",
+                "originalQuestion": null,
+                "reference": "ePQA product attribute"
+              },
+              {
+                "id": "d8898642-01c7-4ee5-bcd5-b766a6fb9598",
+                "label": "ePQA customer review",
+                "text": "leg length is 10 inches (from crotch to hem) so they sit just above the knee hence the sizing guide of 34/10 (in case you were wondering).",
+                "originalQuestion": null,
+                "reference": "ePQA customer review"
+              }
+            ]
+          },
+          {
+            "productId": "9f96ab23-e289-46eb-aea8-b6550f77c32e",
+            "question": "What is the inseam length of these shorts?",
+            "title": "",
+            "sources": [
+              {
+                "id": "d8898642-01c7-4ee5-bcd5-b766a6fb9598",
+                "label": "ePQA customer review",
+                "text": "leg length is 10 inches (from crotch to hem) so they sit just above the knee hence the sizing guide of 34/10 (in case you were wondering).",
+                "originalQuestion": null,
+                "reference": "ePQA customer review"
+              },
+              {
+                "id": "fcf1291d-12e1-4a51-a068-e5c822bb4b9f",
+                "label": "ePQA product attribute",
+                "text": "inseam:  { length:[ { unit:inches, value:10 } ] }",
+                "originalQuestion": null,
+                "reference": "ePQA product attribute"
+              }
+            ]
+          },
+          {
+            "productId": "9f96ab23-e289-46eb-aea8-b6550f77c32e",
+            "question": "What is the inseam length of these shorts?",
+            "title": "",
+            "sources": [
+              {
+                "id": "d8898642-01c7-4ee5-bcd5-b766a6fb9598",
+                "label": "ePQA customer review",
+                "text": "leg length is 10 inches (from crotch to hem) so they sit just above the knee hence the sizing guide of 34/10 (in case you were wondering).",
+                "originalQuestion": null,
+                "reference": "ePQA customer review"
+              },
+              {
+                "id": "fcf1291d-12e1-4a51-a068-e5c822bb4b9f",
+                "label": "ePQA product attribute",
+                "text": "inseam:  { length:[ { unit:inches, value:10 } ] }",
+                "originalQuestion": null,
+                "reference": "ePQA product attribute"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "comparisons": [
+      {
+        "inventory": "comparison-1",
+        "cases": [],
+        "reservedProducts": []
+      }
+    ]
+  },
+  "metadataSha256": "83eb9995d8c54b6f6a4719e6cb29376330843aea8818496e49840e162c620270",
+  "metadataInventorySha256": {
+    "workspace-1": "2d2a3dc13d6e5f3106055aee665a77f89f8f4a8c0caf18e92eb69231bf6b7951",
+    "comparison-1": "4f31a4caa31797842b2b7b8fcbb223bf4fb1f17f54957f43c408c24363ae076b"
+  },
+  "protectedProducts": [
+    {
+      "id": "B00002ND4G",
+      "title": "Shop Vac Micro-cleaning 80189 (1-1/4\\\" / 3,2 cm)",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00004SU18",
+      "title": "Brita Standard Water Filter, Standard Replacement Filters for Pitchers and Dispensers, BPA Free, 3 Count",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B00005AUHX",
+      "title": "Watersafe City Water Test Kit, 1 EA",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000063082",
+      "title": "Suncast 20 Cubic ft. Vertical Resin Tool Storage Shed, Taupe/Mocha",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00006IE1F",
+      "title": "ArtKraft Duo-Finish Paper Roll P67134, 4-feet by 200-feet, Brite Green, 1 Roll",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000233WJ6",
+      "title": "C2G Power Cord, Short Extension Cord, Power Extension Cord, 18 AWG, Black, 1 Foot (0.30 Meters), Cables to Go 03137",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00074TB9U",
+      "title": "Broan QS130BC 220 CFM Under Cabinet Hood, 30-Inches, Bisque",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00074TBCW",
+      "title": "Broan QS130WW 220 CFM Under Cabinet Hood, 30-Inches, White",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000A7W4Z2",
+      "title": "George Foreman GRP90WGR Next Grilleration Electric Nonstick Grill with 5 Removable Plates, Red",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000B6FADU",
+      "title": "Meinl Cajon Box Drum, Full Size with Internal Metal Strings for Adjustable Snare Effect, Birch Wood, HCAJ1NT",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000BSMKPY",
+      "title": "Azden EX-503 Omni-Directional Lavalier Microphone with 3.5 mm TS Connector",
+      "reason": "previous_eight_product_execution_plan",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000DZFTC6",
+      "title": "Dundas Jafine TDIDVKZW Indoor Dryer Vent Kit with 4-Inch by 5-Foot Proflex Duct, 4 Inch, White",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000ET9SB4",
+      "title": "Slime 40001 Motorcycle Tire Inflator",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000HB2TJ2",
+      "title": "Delkin Devices DU3.0-M BLK Universal Pop-Up Shade for 3.0-Inch LCDs (Black)",
+      "reason": "previous_eight_product_execution_plan",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000PC4JL4",
+      "title": "VCT VT-500J - Japanese Step Up/Down Voltage Transformer Converts Japan 100 Volts To 110V OR Vice Versa - 500 Watt",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000PD0HQE",
+      "title": "Microsoft Xbox 360 Elite 120GB Console Bundle",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000UVWGGK",
+      "title": "Broan-NuTone 403004 Range Hood Insert with Light Exhaust Fan for Under Cabinet, 30\\\", Stainless Steel, 6.5 Sones, 160 CFM",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000UZI26E",
+      "title": "TOMY John Deere Durable Construction Vehicles Toy for Kids, Big Scoop Dump Truck, 21 Inch",
+      "reason": "previous_eight_product_execution_plan",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000WOG90E",
+      "title": "Oregon Scientific THGR122NX Water Resistant Remote Sensor W/ LCD Display. Measures and Displays Humidity & Temperature from -22F to 140F",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B000XXQULC",
+      "title": "Shepherd Hardware 9078 Shepherd Smooth Caster Cup, 3 in L X 3 in W, Square, 3-Inch, Brown",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B0013CCCAK",
+      "title": "C-Fold/Multi-Fold Paper Towel Dispenser by GP PRO (Georgia-Pacific), Translucent Smoke, 56650/01, 11.00\\\" W x 5.25\\\" D x 15.40\\\" H, Black",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B0014LP19E",
+      "title": "US ARMY Alpha Black Tactical Tippmann Paintball Mega Gun Set",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00161ZI4A",
+      "title": "Vortex Optics Solo Monocular 10x36",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00251EVPW",
+      "title": "Canvas Panel 8X10 Pack of 12",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00266BXV6",
+      "title": "ERP 4389102 Refrigerator Ice Maker Control Board",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B002BH4U56",
+      "title": "DIAMOND SELECT TOYS Star Trek: U.S.S. Enterprise NCC-1701 High Definition Ship",
+      "reason": "previous_eight_product_execution_plan",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B002IPGW4S",
+      "title": "Power Wheels Toddler 6-volt Rechargeable Replacement Battery for ride-on vehicles",
+      "reason": "previous_preparation_only_exposure",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B002V92YMA",
+      "title": "TIMBUK2 Classic Messenger Bag, Blue/Black/Blue, Small",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B002ZG7RGM",
+      "title": "Chaos -CTR Howler Multi Tasker Pro Windproof Balaclava, Black, Large/X-Large",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00347AJAC",
+      "title": "Poulan Pro PP6000H 15-Inch Dual-Action Hedge Trimmer Attachment",
+      "reason": "previous_eight_product_execution_plan",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B003DKL4JA",
+      "title": "Native Union Pop Phone Retro Handset - MM01H-B-1 - Black",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B003IVGJBC",
+      "title": "Supco 8 Cube Ice Maker Replacement Kit for Whirlpool, Kenmore, KitchenAid, Part No. RIM597",
+      "reason": "previous_preparation_only_exposure",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B003M01720",
+      "title": "Super Ultra Wide Wheel Buggy Wonder Wheeler Beach Cart with Big Wheels for Sand",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B003U1Q47E",
+      "title": "Oem Mopar Part 5Hz71xdvad 'Bezel'",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B003U6A3C6",
+      "title": "Ziploc Storage Bags, Double Zipper Seal & Expandable Bottom, Large, 5 Count, Big Bag",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B003ZSD5EC",
+      "title": "Mega Kit 260 Spools Polyester Embroidery Machine Thread",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00474BN1K",
+      "title": "Marineland LED Light Hood for Aquariums, Day & Night Light, 20- by 10-Inch (16341)",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B004N4MSPO",
+      "title": "SPT Countertop Dishwasher, Silver",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B004RPQ4MM",
+      "title": "Kitchen Bath Collection 30-inch Wall-mounted Stainless Steel Range Hood with Arched Tempered Glass & Touch Screen Control Panel, Carbon filters included.",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B004T36GCU",
+      "title": "HTC Inspire 4G Unlocked Phone A9192, Black",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B0051POK1E",
+      "title": "Baby Einstein Caterpillar & Friends Play Gym with Lights and Melodies, Ages Newborn +",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B0051S4ZZM",
+      "title": "Washer anti vibration anti walking pads",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B0053F8W2K",
+      "title": "Whirlpool 8181846 Handle for Washing Machine",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00545ANEY",
+      "title": "GENUINE Frigidaire 218428101 Door Handle for Refrigerator, White",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B00545ATZW",
+      "title": "Frigidaire 240337103 Crisper Pan for Refrigerator",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B0054HSVGE",
+      "title": "Safety 1st Transitions Baby Crib and Toddler Mattress with High-Density Thermo-Bonded Core, Water Resistant, Greenguard Gold Certified, White",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B0058YR0XS",
+      "title": "Columbia Men's Silver Ridge Cargo Short, Tusk, 40x10",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B005AR75A6",
+      "title": "Whirlpool W10130695 Latch Assembly for Dishwasher, White",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B005NY0TEK",
+      "title": "AzureGreen - Small 1842 Poetry Leather Blank Book",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B005SWX65G",
+      "title": "OtterBox Commuter Series Case for iPhone 4/4S - Retail Packaging - Black (Discontinued by Manufacturer)",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00655HJJE",
+      "title": "EdgeStar KC2000SSTWIN Full Size Stainless Steel Dual Tap Kegerator & Draft Beer Dispenser - Stainless Steel",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B006ZPAYPU",
+      "title": "LEGO Batman 2: DC Super Heroes - Nintendo DS",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B007PBHZK0",
+      "title": "Dritz Sew You Adjustable Dress Form, Small, Opal Green",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B008402S3K",
+      "title": "Plaza Astoria Wall/Door-Mount Jewelry Armoire, Black",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B008UV6YRO",
+      "title": "Incredisonic IFM-500 Bluetooth FM Transmitter Car Kit With Goosneck GPS Vehicle Mount Combo, for iPhone 6 5s, 4, 4S, Ipod Touch All Versions, Samsung Galaxy S5, S3, & S4, & All other PDA Phones",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B008VLVDII",
+      "title": "Dickies Heavy Duty Rear Bench Seat Protector, Black",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B00943C890",
+      "title": "WB48K5019 WB48T10095 GE Hotpoint Kenmore Oven Rack",
+      "reason": "previous_eight_product_execution_plan",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B009LRNT1A",
+      "title": "LG 440G Prepaid Phone With Double Minutes (Tracfone)",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B009W9APU0",
+      "title": "Apple iPad with Retina Display MD512LL/A (64GB, Wi-Fi, Black) 4th Generation",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B009XGZGZG",
+      "title": "Tune Belt Armband for iPhone SE (2016) 5 5s 5c & iPod touch 5th 6th Generation - For Running & Working Out - Sweat-Resistant AB87 [Black]",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00AHVR5U0",
+      "title": "Graco Day2Night Sleep System, Ardmore",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00B7M7BKW",
+      "title": "Munchkin Brica Elite Seat Guardian Car Seat Protector, Crash Test Approved, Dark Grey, 1 Pack",
+      "reason": "previous_preparation_only_exposure",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00B8Q31UQ",
+      "title": "Streamlight 69260 TLR-1 HL 1000-Lumen Tactical Weapon Mount Light With Rail Locating Keys & Lithium Batteries, Black – Box Packaged",
+      "reasons": [
+        "previous_manual_source_review"
+      ]
+    },
+    {
+      "id": "B00BAUPS9M",
+      "title": "EZ FAUX DECOR Stainless Steel Paint? NO! Appliance Door Panel Peel and Stick Stainless Steel Self Adhesive Nickel Film Overlay 36\\\" X 144",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00BEYDFA8",
+      "title": "Gretsch Guitars Jim Dandy Flat Top Acoustic Guitar 2-Color Sunburst",
+      "reason": "previous_eight_product_execution_plan",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00DM8K1NS",
+      "title": "LIFTREN 2198597 Icemaker, White",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00E37TR5U",
+      "title": "EcoAqua EFF-6027A Replacement Filter, Compatible with Samsung DA29-00020B, DA29-00020A, HAF-CIN/EXP, 46-9101 Refrigerator Water Filter",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00EAI9ICE",
+      "title": "UTG 3-9X40 1\\\" Hunter Scope, AO, 36-color Mil-dot, w/ Rings",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00EZFPDO4",
+      "title": "NuWave PIC Pro Highest Powered Induction Cooktop 1800W",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00F9L8DHC",
+      "title": "Siser Easyweed Heat Transfer Vinyl HTV 4 Yards Roll for T-Shirts/Textile (Choose from Available Colors) up to 4 colors",
+      "reason": "previous_eight_product_execution_plan",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00FH9B8RI",
+      "title": "OtterBox Defender Series Case for LG G2 - Retail Packaging - White/Pink (Verizon Only)",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00ISKS416",
+      "title": "Seagate Laptop Thin 500 GB 7200RPM SATA 6 GB/s 32 MB Cache 2.5 Inch Hard Disk Drive (ST500LM021)",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B00IY7B5CS",
+      "title": "Avalon Bay AB-ICE26B Ice Maker, Black",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B00O4HP9JW",
+      "title": "Woodford Reserve Bourbon Ball Gift Box, 16 Candies per box, delicious and perfect for holiday gifts",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B01IB8QBQY",
+      "title": "BAGAIL 6 Set Packing Cubes,3 Various Sizes Travel Luggage Packing Organizers(Black)",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B01LWIPTAJ",
+      "title": "UnderCover Ultra Flex Hard Folding Truck Bed Tonneau Cover | UX22004 | Fits 2004 - 2014 Ford F-150 6' 7\\\" Bed (78.8\\\")",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B0789HCT6J",
+      "title": "Opps Mini Artificial Plants Plastic Green Grass Cactus with Special Golden Can Pot Design for Home Décor – Set of 3",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B07CGPZD27",
+      "title": "Citizen Eco-Drive Brycen Chronograph Mens Watch, Stainless Steel with Leather strap, Weekender, Brown (Model: CA0648-09L)",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B07DDMRXYV",
+      "title": "Amazon Basics Glass Board, Non-Magnetic Dry Erase White Board, Frameless, Infinity, 4 x 3 Foot",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B07Q6B5YL5",
+      "title": "Norton 360 Premium 2021 – Antivirus software for 10 Devices with Auto Renewal - Includes VPN, PC Cloud Backup & Dark Web Monitoring powered by LifeLock [Download]",
+      "reason": "historical_or_reserved_product",
+      "reasons": [
+        "previous_protected_inventory"
+      ]
+    },
+    {
+      "id": "B085WSCTS4",
+      "title": "Amazon eero 6 dual-band mesh Wi-Fi 6 system with built-in Zigbee smart home hub (3-pack, one eero 6 router + two eero 6 extenders)",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    },
+    {
+      "id": "B089NXYL3W",
+      "title": "LASHSCOOP Soft Glam Lash Subscription Box: 5 Pairs of Lashes Monthly",
+      "reasons": [
+        "previous_source_preparation_or_planned_case"
+      ]
+    }
+  ],
+  "protectedTargetIdentifiers": [
+    "008031253",
+    "03137",
+    "04609101000",
+    "04743",
+    "060258355031",
+    "09101",
+    "0calorie",
+    "1000lumen",
+    "100120110",
+    "100degrees",
+    "10153491015610",
+    "10190961",
+    "10651552104",
+    "10653652300",
+    "106w10122507",
+    "106w10300022",
+    "10degree",
+    "10wks",
+    "10x36mm",
+    "10yr",
+    "110120",
+    "120vac",
+    "1224hour",
+    "128ld",
+    "128ldx",
+    "140f",
+    "140rd",
+    "1412372754",
+    "148degree",
+    "14f002la",
+    "150f",
+    "15second",
+    "16341",
+    "18003480751",
+    "18007278790",
+    "18650",
+    "18th",
+    "1930s",
+    "1griddlebake",
+    "1hour",
+    "1year",
+    "20022014",
+    "20042014",
+    "200rd",
+    "20110707t00",
+    "20120619t00",
+    "20120809t00",
+    "2013i",
+    "20151202t00",
+    "20152017",
+    "20152018",
+    "20201102t00",
+    "20992",
+    "20cubic",
+    "21004",
+    "215f",
+    "218428101",
+    "2198585",
+    "2198586",
+    "2198597",
+    "220cfm",
+    "2220398",
+    "2220402",
+    "222222",
+    "2255114",
+    "240337",
+    "2403371",
+    "240337103",
+    "240337107",
+    "240337108",
+    "240337109",
+    "240337901",
+    "240351061",
+    "240599801",
+    "240f",
+    "241543917",
+    "25367889506",
+    "253series",
+    "2can",
+    "2grill",
+    "2waffle",
+    "2year",
+    "3000721",
+    "30153",
+    "30lx",
+    "30th",
+    "34x24x10",
+    "375degrees",
+    "3days",
+    "3pin",
+    "40000series",
+    "40001",
+    "403004",
+    "425degrees",
+    "4388635",
+    "4389102",
+    "4389102r",
+    "450cfm",
+    "469101",
+    "48db",
+    "49022",
+    "4cycle",
+    "4runner",
+    "4t1000",
+    "505c",
+    "5060hz",
+    "506hz",
+    "50hz",
+    "50th",
+    "51103111",
+    "515r",
+    "52604100",
+    "54606300",
+    "55603400",
+    "55sse",
+    "56369400",
+    "56533400",
+    "5665001",
+    "56703500",
+    "57073600",
+    "575degrees",
+    "58146801",
+    "58db",
+    "5986000",
+    "59976801",
+    "5count",
+    "5degree",
+    "5hz71xdvad",
+    "5sones",
+    "5year",
+    "600d",
+    "60441",
+    "60hz",
+    "60in58",
+    "62014",
+    "62663",
+    "6440b",
+    "6920117",
+    "69260",
+    "700d",
+    "711970",
+    "71202703",
+    "72013",
+    "72252201",
+    "80189",
+    "811489460",
+    "8181839",
+    "8181846",
+    "8183048",
+    "9100lw1",
+    "9200lw",
+    "92a1",
+    "95630",
+    "965aww",
+    "99002577",
+    "99002578",
+    "99002579",
+    "a157",
+    "a42f",
+    "a5100",
+    "a9192",
+    "ab87",
+    "abice26b",
+    "abice26s",
+    "ac100v",
+    "adb1500aww0",
+    "azn098745",
+    "baa968hg",
+    "bag003black",
+    "bar388hga",
+    "bar608ha",
+    "bar608hga",
+    "blrt86teb9",
+    "blrt86teba",
+    "ca064809l",
+    "cer3520aal",
+    "code24055",
+    "comboschgardenwatering7fhs7fgtdoubledpb000bqt6xaref",
+    "comgpproductb000a7qjkiref",
+    "comlgke970shine2416howsetspeeddialinglgshine",
+    "connect1116",
+    "connect116",
+    "corners2",
+    "cr123a",
+    "cr2032",
+    "d3200",
+    "d531",
+    "da2900019a",
+    "da2900020a",
+    "da2900020b",
+    "da2900020b1",
+    "da9708006a",
+    "da9708006ab",
+    "da9708006b",
+    "day2night",
+    "dmcsz7",
+    "dmczs20",
+    "dr05",
+    "du3m",
+    "dv72273cl",
+    "e1505",
+    "e545",
+    "ed2fhexvs03",
+    "ed2khaxvs01",
+    "ed2khaxvt01",
+    "ed5fhaxvs00",
+    "ed5ghexno",
+    "ed5kvexvq00",
+    "ed5kvexvq07",
+    "ed5lvaxb02",
+    "ed5lvaxwq00",
+    "ed5pvexws08",
+    "ed5shaxmq00",
+    "eff6027a",
+    "ex503",
+    "f003",
+    "f150",
+    "f403004",
+    "fafw3511kwo",
+    "ffhs2622msu",
+    "ffht1814qw3",
+    "fftr1514qw6",
+    "fftr1814lwl",
+    "fftr1814qwo",
+    "fftr1821qw0",
+    "fght2134kb7",
+    "frs26zsh",
+    "frt18drh",
+    "frt18il6jw1",
+    "frt21p6csk3",
+    "fx21002",
+    "fx21019",
+    "fx31004",
+    "g9500",
+    "gc3shexns03",
+    "gd5phaxms10",
+    "gen4",
+    "generation2016",
+    "ghw9100",
+    "ghw9100lw2",
+    "ghw9200lw",
+    "ghw9250ml0",
+    "ghw925ml2",
+    "ghw9300pw4",
+    "ghw9400pl1",
+    "ghw9400pw0",
+    "ghw9400su0",
+    "ghw9400suo",
+    "gi5fsaxvy02",
+    "grp90wgr",
+    "grp99",
+    "gs2shexnq00",
+    "gs6nbexrsoo",
+    "gs6shaxlq01",
+    "gs6shexnboo",
+    "gu10",
+    "ha75led",
+    "hcaj1nt",
+    "hck44",
+    "hose2",
+    "hr106",
+    "hr22001941this",
+    "ifm500",
+    "im597",
+    "ipad4",
+    "j5c09",
+    "j5cpd",
+    "kbcha75led",
+    "kbfc42fss00",
+    "kbrc36fms02",
+    "kc2000",
+    "kc2000ssa",
+    "kc2000sstwin",
+    "kc2000twin",
+    "ke260asst",
+    "kscs23inss00",
+    "kscs25inss02one",
+    "ksrb25fkss02",
+    "ksrb25fksso3",
+    "ksrg25fkss02",
+    "ksrg25fkss04",
+    "ksrg25fkwh03",
+    "ksrg25fkwh05",
+    "ksrj25cnst00",
+    "ksrj25fxms02",
+    "ksrp25fnbl00",
+    "ksrs24ikbt03",
+    "ksrs25ftss00",
+    "ksrs25rsmk01",
+    "ksrs27ikwh",
+    "lemon1225",
+    "lftr1814lw1",
+    "lg440g",
+    "lght2137lp7",
+    "m9a1",
+    "m9a3",
+    "md512lla",
+    "md944lla",
+    "mdb4000awx",
+    "mdb5651aww",
+    "mdb7601aww",
+    "mdbh945awb",
+    "mdbh955aws",
+    "mdbh955aww",
+    "mdc4650",
+    "measuring5",
+    "mfi2568aeb",
+    "mg7540",
+    "mm01hb1",
+    "msd2272veb00",
+    "n4110",
+    "ncc1701",
+    "net10",
+    "nex5",
+    "nifs540pn",
+    "oboobo3",
+    "p67134",
+    "pink1221",
+    "polyester43",
+    "poppy1222",
+    "pp330",
+    "pp338pt",
+    "pp6000h",
+    "pspds3ds",
+    "px333",
+    "qs130bc",
+    "qs130bl",
+    "qs130ss",
+    "qs130ww",
+    "qsi3033",
+    "rb747p",
+    "rcr123a",
+    "rh22h9010sr",
+    "rh29h9000sr",
+    "rim597",
+    "rj45",
+    "s136",
+    "scpu394aoied",
+    "scpu394aoiew",
+    "scpu394old",
+    "sd2201",
+    "sd2201s",
+    "sep088080",
+    "sm5shaxlt",
+    "st500lm021",
+    "sx260",
+    "tg1672",
+    "thgr122nx",
+    "thgr228n",
+    "timbuk2",
+    "tlr1",
+    "to100",
+    "ul30aa2",
+    "usd11",
+    "usg001",
+    "utf8",
+    "ux22004",
+    "vf4000",
+    "vs980",
+    "vt1000j",
+    "vt2000j",
+    "vt500j",
+    "w100300022",
+    "w10130694",
+    "w10130695",
+    "w10130696",
+    "w10193666",
+    "w10193840",
+    "w10290817",
+    "w10300022",
+    "w10757851",
+    "wb48k5019",
+    "wb48t10076",
+    "wb48t10095",
+    "wmr200",
+    "wmr809a",
+    "wpw10130694",
+    "wpw10130695",
+    "wpw10130696",
+    "ws1171a",
+    "x202e",
+    "x300u",
+    "xrgb3",
+    "yellow1223",
+    "yellow1224"
+  ],
+  "extraTitles": [
+    "Columbia Men's Silver Ridge Cargo Short, Tusk, 40x10"
+  ],
+  "metadataOnly": true,
+  "generatedAnswersOrJudgmentsRead": false,
+  "newProviderCalls": 0,
+  "paidExecutionAuthorized": false,
+  "auditSha256": "e54498c735fb4afa004ecd36fe77d3ad59d2f6f928e862f9281552284a29f3b7"
+}

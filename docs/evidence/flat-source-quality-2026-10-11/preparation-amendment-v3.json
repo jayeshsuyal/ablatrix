@@ -1,0 +1,50 @@
+{
+  "format": "ablatrix-flat-source-preparation-amendment-v1",
+  "revision": 3,
+  "kind": "ai_source_only_eligibility_audit",
+  "passed": false,
+  "failedCase": {
+    "id": "flat-source-train-11671",
+    "productId": "B00BKW444A",
+    "stratum": "capacity_dimensions",
+    "reason": "Electrical full-load amp draw entered through generic how-many plus unrelated listing measurements; it is outside physical capacity/dimensions."
+  },
+  "preservedDrafts": [
+    {
+      "path": ".data/flat-source-quality-2026-10-11-candidate/cohort.json",
+      "fileSha256": "43f6d74f7ecd24bc9bffede71c411449eb9adee004660e1db408aa2dc065778b"
+    },
+    {
+      "path": ".data/flat-source-quality-2026-10-11-candidate/exposure-audit.json",
+      "fileSha256": "5f3e989d9aae58a68c934262c197947b6b5f30499cdad3647d0f6d64454fa22b"
+    },
+    {
+      "path": ".data/flat-source-quality-2026-10-11-candidate/selection-audit.json",
+      "fileSha256": "5aec794dba48eec1027d6a1a8159ca2650edffaa197d2ef35acd297863046265"
+    },
+    {
+      "path": ".data/flat-source-quality-2026-10-11-candidate-v2/cohort.json",
+      "fileSha256": "92b5228749167c6e8f7f133c00fe6df46ebba5f1dfb1032d5e8cf899f4aff686"
+    },
+    {
+      "path": ".data/flat-source-quality-2026-10-11-candidate-v2/exposure-audit.json",
+      "fileSha256": "5f3e989d9aae58a68c934262c197947b6b5f30499cdad3647d0f6d64454fa22b"
+    },
+    {
+      "path": ".data/flat-source-quality-2026-10-11-candidate-v2/selection-audit.json",
+      "fileSha256": "5aec794dba48eec1027d6a1a8159ca2650edffaa197d2ef35acd297863046265"
+    }
+  ],
+  "earlierCritiqueRepair": "The first draft incorrectly named quoteIds; draft2 restores the previous shared field-neutral AI critique verbatim. Neither draft was dispatched.",
+  "genericRule": "Require explicit physical size, dimension, volume or storage/load-capacity question intent; exclude electrical draw and volume flow rates. Generic how-many language alone is insufficient.",
+  "selectionSeed": "ablatrix-flat-source-quality-2026-10-11-v1",
+  "seedStrataBudgetUnchanged": true,
+  "fullDeterministicSelectionRerun": true,
+  "sameRoundSourceOnlyDraftsRemainEligible": true,
+  "rationale": "No model output exists for this preparation. These are prospective source-only rule repairs, not outcome-driven replacement; all previous candidates remain recorded as exposures for future rounds.",
+  "newProviderCalls": 0,
+  "generatedOutputsRead": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false
+}

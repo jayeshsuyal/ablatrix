@@ -1,0 +1,331 @@
+{
+  "format": "ablatrix-flat-source-manual-family-audit-v1",
+  "kind": "ai_source_only_manual_family_review",
+  "passed": true,
+  "cohortFileSha256": "6609ed1a766d1b6c1006f33293c18be6e6451cfce1e32264b4d3bd6989fabbbf",
+  "cohortSha256": "c8387a0f1ea3966a5c77a74af57dbba050cc51a99571cab2bfaf91c3d6a68298",
+  "exposureFileSha256": "5f3e989d9aae58a68c934262c197947b6b5f30499cdad3647d0f6d64454fa22b",
+  "exposureAuditSha256": "e54498c735fb4afa004ecd36fe77d3ad59d2f6f928e862f9281552284a29f3b7",
+  "selectionAuditFileSha256": "6de7255c52edb20800e59f3a2928d1c66934b1b4d7a2094815f09f19bfc091c0",
+  "orderedCaseIds": [
+    "flat-source-train-5841",
+    "flat-source-train-11514",
+    "flat-source-train-9568",
+    "flat-source-train-9611",
+    "flat-source-train-11368",
+    "flat-source-train-391",
+    "flat-source-train-1404",
+    "flat-source-train-11509"
+  ],
+  "protectedProductCount": 82,
+  "sourceCount": 203,
+  "protectedSourcePoolsCompared": 79,
+  "protectedSourcePoolsUnavailable": [
+    {
+      "id": "B00002ND4G",
+      "reason": "empty_source"
+    },
+    {
+      "id": "B000B6FADU",
+      "reason": "not_in_pinned_train"
+    },
+    {
+      "id": "B009LRNT1A",
+      "reason": "unsupported_source_context"
+    }
+  ],
+  "method": [
+    "Read every selected full source body and original CQA question, all82 protected product titles and current source-only workspace/comparison metadata.",
+    "Compare complete protected pinned-train source/question/title identifiers and candidate peers; inspect brand/target/component-family references, including the nontrivial Brother sewing-category overlap.",
+    "Compare normalized full source-pool content independent of ASIN, source IDs and references; retain scope conflicts and unrelated distractors."
+  ],
+  "cases": [
+    {
+      "id": "flat-source-train-5841",
+      "passed": true,
+      "productId": "B004PU7SBU",
+      "productFamily": "simplehuman pet-food storage container, CW1886 / 30-liter variant",
+      "sourceCount": 19,
+      "sourcePoolSha256": "c1d24d926de14f2bad6bc0ba52d5304054c96e03f11b6a9efd638edcc03ba353",
+      "sourceQuestionModelChecks": {
+        "sourceBodiesRead": 19,
+        "cqaOriginalQuestionsRead": 6,
+        "manuallyConsideredIdentifiers": [
+          "cw1886"
+        ],
+        "protectedExactIdentifierMatches": [],
+        "selectedPeerIdentifierConflicts": []
+      },
+      "familyNotes": [
+        "No simplehuman product or CW1886-related identifier appears in the protected product/source metadata.",
+        "Sources mention the medium, large and extra-large variants within this same selected family. These variant distinctions must remain visible to generation/review; they are not cross-cohort reuse.",
+        "Item dimensions and customer reports distinguish the large 23.2-inch height from the medium 19.4-inch height; package-dimension normalization is inconsistent. This is a source-calibration caveat, not a family exclusion."
+      ],
+      "nearDuplicatePoolCheck": {
+        "identicalProtectedPools": [],
+        "largestNormalizedChunkSetJaccard": 0.02702702702702703,
+        "closestOverlappingProtectedProduct": "B00347AJAC",
+        "sharedNormalizedChunksAtLargestOverlap": 1,
+        "interpretation": "Generic shared attributes or short boilerplate are not treated as an entire shared product/source pool."
+      },
+      "notes": [
+        "Source-only family eligibility, not an answer-quality verdict or a completed retrieval-sufficiency audit."
+      ]
+    },
+    {
+      "id": "flat-source-train-11514",
+      "passed": true,
+      "productId": "B000R4HRGO",
+      "productFamily": "WeighMax W-4830 shipping scale",
+      "sourceCount": 28,
+      "sourcePoolSha256": "7ccaa3aabab77bbfff728b78c244c4f6be3d5f44a254b78f309f931f453855de",
+      "sourceQuestionModelChecks": {
+        "sourceBodiesRead": 28,
+        "cqaOriginalQuestionsRead": 2,
+        "manuallyConsideredIdentifiers": [
+          "w4830"
+        ],
+        "protectedExactIdentifierMatches": [],
+        "selectedPeerIdentifierConflicts": []
+      },
+      "familyNotes": [
+        "WeighMax is explicitly named as manufacturer; no protected scale or W-4830 family was found.",
+        "A 330-pound listing and direct luggage customer reports make this an explicit physical weighing/load-use probe. Do not infer fit for every luggage shape or ignore conflicting low-weight/metric statements."
+      ],
+      "nearDuplicatePoolCheck": {
+        "identicalProtectedPools": [],
+        "largestNormalizedChunkSetJaccard": 0,
+        "closestOverlappingProtectedProduct": null,
+        "sharedNormalizedChunksAtLargestOverlap": 0,
+        "interpretation": "Generic shared attributes or short boilerplate are not treated as an entire shared product/source pool."
+      },
+      "notes": [
+        "Source-only family eligibility, not an answer-quality verdict or a completed retrieval-sufficiency audit."
+      ]
+    },
+    {
+      "id": "flat-source-train-9568",
+      "passed": true,
+      "productId": "B00AM18UOA",
+      "productFamily": "Under Armour Reflex warm-up pants",
+      "sourceCount": 28,
+      "sourcePoolSha256": "73e1a193afa1b7975e1fe85189c370c2b1083a0a38d81e519de2ef612592ab2c",
+      "sourceQuestionModelChecks": {
+        "sourceBodiesRead": 28,
+        "cqaOriginalQuestionsRead": 3,
+        "manuallyConsideredIdentifiers": [
+          "under armour reflex"
+        ],
+        "protectedExactIdentifierMatches": [],
+        "selectedPeerIdentifierConflicts": []
+      },
+      "familyNotes": [
+        "Under Armour does not appear as a protected manufacturer/product line. Protected Columbia Silver Ridge shorts and their workspace copy are a different brand and product family, although both are apparel.",
+        "The exact question has a corresponding CQA body about closed-hole mesh, plus polyester attributes. Lining and rainproof comments have their own original-question scope. No weatherproof claim is established merely by the word wind."
+      ],
+      "nearDuplicatePoolCheck": {
+        "identicalProtectedPools": [],
+        "largestNormalizedChunkSetJaccard": 0.021739130434782608,
+        "closestOverlappingProtectedProduct": "B007PBHZK0",
+        "sharedNormalizedChunksAtLargestOverlap": 1,
+        "interpretation": "Generic shared attributes or short boilerplate are not treated as an entire shared product/source pool."
+      },
+      "notes": [
+        "Source-only family eligibility, not an answer-quality verdict or a completed retrieval-sufficiency audit."
+      ]
+    },
+    {
+      "id": "flat-source-train-9611",
+      "passed": true,
+      "productId": "B008S012X8",
+      "productFamily": "ASICS Intensity low-cut socks, Flare/Aqua/Iron small",
+      "sourceCount": 27,
+      "sourcePoolSha256": "1214288486d02355fbb005f817aee0cdf1930b0693c3d781ae913ec4f45455a3",
+      "sourceQuestionModelChecks": {
+        "sourceBodiesRead": 27,
+        "cqaOriginalQuestionsRead": 2,
+        "manuallyConsideredIdentifiers": [
+          "asics intensity"
+        ],
+        "protectedExactIdentifierMatches": [],
+        "selectedPeerIdentifierConflicts": []
+      },
+      "familyNotes": [
+        "No protected ASICS sock family was found. Shared apparel categories or generic material words with other products are not common product identity.",
+        "The multi-color variant, a white customer report and differing fabric descriptions remain in the full pool. They are within-product scope/conflict probes, not evidence of a protected-family duplicate."
+      ],
+      "nearDuplicatePoolCheck": {
+        "identicalProtectedPools": [],
+        "largestNormalizedChunkSetJaccard": 0.022222222222222223,
+        "closestOverlappingProtectedProduct": "B007PBHZK0",
+        "sharedNormalizedChunksAtLargestOverlap": 1,
+        "interpretation": "Generic shared attributes or short boilerplate are not treated as an entire shared product/source pool."
+      },
+      "notes": [
+        "Source-only family eligibility, not an answer-quality verdict or a completed retrieval-sufficiency audit."
+      ]
+    },
+    {
+      "id": "flat-source-train-11368",
+      "passed": true,
+      "productId": "B004PKCH0M",
+      "productFamily": "Casio SP-20 sustain pedal with WK-110 target",
+      "sourceCount": 26,
+      "sourcePoolSha256": "21bd1331f6a2a6feb7715913916cd72a3ac6a324f432a6c5b6732edfee23f1b9",
+      "sourceQuestionModelChecks": {
+        "sourceBodiesRead": 26,
+        "cqaOriginalQuestionsRead": 5,
+        "manuallyConsideredIdentifiers": [
+          "sp20",
+          "wk110",
+          "px200",
+          "wk500",
+          "ctk2300",
+          "ctk3400sk",
+          "wk240",
+          "sp3r"
+        ],
+        "protectedExactIdentifierMatches": [],
+        "selectedPeerIdentifierConflicts": []
+      },
+      "familyNotes": [
+        "No protected Casio keyboard/pedal family or matching model identifier was found. Protected Gretsch guitar/Meinl percussion products are different families.",
+        "Sources include sibling Casio pedals SP3/SP-3R and accessories ARST/ARBENCH; these are preserved distractors, not interchangeable specifications. A direct WK-110 customer report also exists; wrong-model CQA alone must not be treated as the only available support."
+      ],
+      "nearDuplicatePoolCheck": {
+        "identicalProtectedPools": [],
+        "largestNormalizedChunkSetJaccard": 0.02857142857142857,
+        "closestOverlappingProtectedProduct": "B00251EVPW",
+        "sharedNormalizedChunksAtLargestOverlap": 1,
+        "interpretation": "Generic shared attributes or short boilerplate are not treated as an entire shared product/source pool."
+      },
+      "notes": [
+        "Source-only family eligibility, not an answer-quality verdict or a completed retrieval-sufficiency audit."
+      ]
+    },
+    {
+      "id": "flat-source-train-391",
+      "passed": true,
+      "productId": "B0042BUQIY",
+      "productFamily": "Organ size-14 household sewing needles with Brother 634D serger target",
+      "sourceCount": 26,
+      "sourcePoolSha256": "ee85aa6e78b5fa4375a1b5d0e58d07d5dc243ac1588f1b9f0732e9c2650038df",
+      "sourceQuestionModelChecks": {
+        "sourceBodiesRead": 26,
+        "cqaOriginalQuestionsRead": 9,
+        "manuallyConsideredIdentifiers": [
+          "634d",
+          "3034d",
+          "xm3700",
+          "nx400",
+          "hax1",
+          "130705h",
+          "hgx4br"
+        ],
+        "protectedExactIdentifierMatches": [],
+        "selectedPeerIdentifierConflicts": []
+      },
+      "familyNotes": [
+        "Shared target-brand/category flag retained: protected B003ZSD5EC is Kolors/Mega Kit KE260ASST embroidery thread and asks about Brother color-chart numbering; one source mentions an Innovis 5000 machine.",
+        "Organ needles and Kolors thread are different manufacturers/component families. The requested 634D serger and selected source models/needle systems do not match protected model/part identifiers; no alternate part cross-reference joins the products. This audit does not require all products mentioning the Brother brand to be excluded.",
+        "Protected Dritz dress form is a different tool family. Conflicting Singer/Janome compatibility reports and broad universal-needle claims remain scoped source material, not proof for the requested serger."
+      ],
+      "nearDuplicatePoolCheck": {
+        "identicalProtectedPools": [],
+        "largestNormalizedChunkSetJaccard": 0.022222222222222223,
+        "closestOverlappingProtectedProduct": "B003M01720",
+        "sharedNormalizedChunksAtLargestOverlap": 1,
+        "interpretation": "Generic shared attributes or short boilerplate are not treated as an entire shared product/source pool."
+      },
+      "notes": [
+        "Source-only family eligibility, not an answer-quality verdict or a completed retrieval-sufficiency audit."
+      ]
+    },
+    {
+      "id": "flat-source-train-1404",
+      "passed": true,
+      "productId": "B000P56HWU",
+      "productFamily": "Hayward ProGrid DE4820 filter with S190TSCP Vari-Flo control-head target",
+      "sourceCount": 19,
+      "sourcePoolSha256": "ee82797cbac3b73587ba5a604dda1a51191316494de83fcf8ca2d9f139065ee3",
+      "sourceQuestionModelChecks": {
+        "sourceBodiesRead": 19,
+        "cqaOriginalQuestionsRead": 9,
+        "manuallyConsideredIdentifiers": [
+          "de4820",
+          "s190tscp",
+          "ec65a",
+          "w34820",
+          "sp0715",
+          "sp0410x502s",
+          "de6020",
+          "sp0715xr50",
+          "261152",
+          "c150s"
+        ],
+        "protectedExactIdentifierMatches": [],
+        "selectedPeerIdentifierConflicts": []
+      },
+      "familyNotes": [
+        "No protected Hayward/Pentair/Purex pool-filter model family or alternate control-valve part was found. Brita/EcoAqua household water filters share a broad filtration category but not this assembly/model family.",
+        "Sources mention multiple pool-filter and valve models; all original questions are retained. General advice to use Hayward does not establish S190TSCP replacement compatibility."
+      ],
+      "nearDuplicatePoolCheck": {
+        "identicalProtectedPools": [],
+        "largestNormalizedChunkSetJaccard": 0.02702702702702703,
+        "closestOverlappingProtectedProduct": "B00347AJAC",
+        "sharedNormalizedChunksAtLargestOverlap": 1,
+        "interpretation": "Generic shared attributes or short boilerplate are not treated as an entire shared product/source pool."
+      },
+      "notes": [
+        "Source-only family eligibility, not an answer-quality verdict or a completed retrieval-sufficiency audit."
+      ]
+    },
+    {
+      "id": "flat-source-train-11509",
+      "passed": true,
+      "productId": "B001PMG7UE",
+      "productFamily": "Rolodex 76659 low-profile business-card book",
+      "sourceCount": 30,
+      "sourcePoolSha256": "9b3bc831c88cbf3ebf45461b83b4efb04deeb0dd21a2bd5ed5e22a9ce562c35a",
+      "sourceQuestionModelChecks": {
+        "sourceBodiesRead": 30,
+        "cqaOriginalQuestionsRead": 2,
+        "manuallyConsideredIdentifiers": [
+          "76659"
+        ],
+        "protectedExactIdentifierMatches": [],
+        "selectedPeerIdentifierConflicts": []
+      },
+      "familyNotes": [
+        "No protected Rolodex/card-book family or 76659 part was found. Protected AzureGreen blank book and unrelated storage items are different products/families.",
+        "Multiple customer reports explicitly address pen exclusion; preserve attribution. The pen loop does not itself imply an included pen. Distracting battery and capacity fields remain in the full source pool."
+      ],
+      "nearDuplicatePoolCheck": {
+        "identicalProtectedPools": [],
+        "largestNormalizedChunkSetJaccard": 0.020833333333333332,
+        "closestOverlappingProtectedProduct": "B00347AJAC",
+        "sharedNormalizedChunksAtLargestOverlap": 1,
+        "interpretation": "Generic shared attributes or short boilerplate are not treated as an entire shared product/source pool."
+      },
+      "notes": [
+        "Source-only family eligibility, not an answer-quality verdict or a completed retrieval-sufficiency audit."
+      ]
+    }
+  ],
+  "sourceSufficiencyAuditComplete": false,
+  "generationPerformed": false,
+  "generatedOutputsRead": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "newProviderCalls": 0,
+  "paidExecutionAuthorized": false,
+  "limitations": [
+    "This is an AI source-only preparation audit, not a human review or proof of complete commercial-family independence.",
+    "One common target brand or broad product category is not by itself an identical product family; the Organ/Brother versus Kolors-thread distinction is explicitly recorded.",
+    "Protected products unavailable as a complete pinned source pool remain excluded by ASIN/title/identifier inventory.",
+    "The two earlier private drafts and their failed coverage/amendment record remain preserved. Same-round source-only candidates were eligible under the repaired rule before any model output existed.",
+    "The final retrieved subset still requires a separate source-sufficiency audit; this family pass does not authorize execution."
+  ],
+  "auditSha256": "ca79dbc5611ccb761af791058464a589e5155f1e91186885514cf18e4930de5f"
+}

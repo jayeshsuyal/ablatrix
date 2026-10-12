@@ -283,11 +283,23 @@ export class ContextComparisonStore {
     const good = (review: ContextComparisonReview) => review.correctness === 'correct' && review.support === 'supported' && review.adequacy === 'adequate';
     const differences = eligible.map(item => Number(good(item.arms.candidate.review!)) - Number(good(item.arms.baseline.review!)));
     const wins = differences.filter(value => value > 0).length, losses = differences.filter(value => value < 0).length;
+    const axisRegressions = (axis: 'correctness' | 'support') => cases.reduce((sum, item) => {
+      const baseline = item.arms.baseline.review?.[axis], candidate = item.arms.candidate.review?.[axis];
+      if (!baseline || !candidate) sum.pendingPairs++;
+      else if (baseline === 'uncertain' || candidate === 'uncertain') sum.uncertainPairs++;
+      else {
+        sum.resolvedPairs++;
+        const positive = axis === 'correctness' ? 'correct' : 'supported', negative = axis === 'correctness' ? 'incorrect' : 'unsupported';
+        sum.regressions += Number(baseline === positive && candidate === negative);
+      }
+      return sum;
+    }, { totalPairs: cases.length, resolvedPairs: 0, pendingPairs: 0, uncertainPairs: 0, regressions: 0 });
     const complete = summary.attempts.completed === stored.packet.cases.length * 2;
     const verdict: 'exploratory_only' | 'inconclusive' = eligible.length !== cases.length ? 'inconclusive' : 'exploratory_only';
     const median = (arm: 'baseline' | 'candidate') => { const values = cases.map(item => item.arms[arm].latencyMs); if (cases.some(item => item.arms[arm].status !== 'completed') || values.some(value => value === null)) return null; const sorted = (values as number[]).sort((a, b) => a - b); return (sorted[(sorted.length - 1) >> 1] + sorted[sorted.length >> 1]) / 2; };
     return { ...summary, status: (!complete ? 'incomplete' : stored.packet.mode === 'fixture' ? 'synthetic_only' : 'complete') as 'incomplete' | 'synthetic_only' | 'complete', provenance: publicProvenance(stored.packet),
       ...(stored.packet.format === 'ablatrix-correction-comparison-v1' ? { protocol: stored.packet.protocol } : {}), qualityClaimEligible: false as const, quality: !complete || stored.packet.mode === 'fixture' ? null : { totalPairs: cases.length, eligiblePairs: eligible.length, uncertainPairs: cases.length - eligible.length, baseline: counts('baseline'), candidate: counts('candidate'), wins, losses, ties: differences.filter(value => value === 0).length, regressions: losses, interval95: null, verdict },
+      pairedAxisRegressions: stored.packet.mode === 'fixture' ? null : { correctness: axisRegressions('correctness'), support: axisRegressions('support') },
       citationMatching: { baseline: metric('baseline'), candidate: metric('candidate') }, timing: { definition: stored.packet.format === 'ablatrix-correction-comparison-v1' ? 'Imported revision-stage latency; shared original-answer generation and retrieval are excluded. Values are recorded, not independently verified.' : 'Imported answer-stage latency; shared retrieval is excluded. Values are recorded, not independently verified.', baselineMedianMs: median('baseline'), candidateMedianMs: median('candidate') }, billedCostUsd: null,
       limitations: ['Exact quote membership does not establish claim support or answer correctness.', 'Imported live records do not prove a freeze before generation, provider authenticity or unbiased product selection.', 'Human is locally attributed without authentication; fixture judgments are synthetic.', 'Small historical product samples do not establish a general quality gain; uncertain judgments are excluded from pair outcomes.'], cases };
   }

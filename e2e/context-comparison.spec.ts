@@ -94,7 +94,7 @@ test('live review requires explicit independent source checks before revealing p
       reports++;
       const counts = { correct: 1, supported: 1, adequate: 1, good: 1 };
       const citations = { matching: 1, total: 1, completed: 1, answeredWithCitation: 1 };
-      return route.fulfill({ json: { ...detail, status: 'complete', quality: { totalPairs: 1, eligiblePairs: 1, uncertainPairs: 0, baseline: counts, candidate: counts, wins: 0, losses: 0, ties: 1, regressions: 0, interval95: [0, 0], verdict: 'inconclusive' }, citationMatching: { baseline: citations, candidate: citations }, timing: { definition: 'Synthetic browser timing; no provider calls.', baselineMedianMs: 1, candidateMedianMs: 1 }, billedCostUsd: null, limitations: ['Synthetic browser simulation; not a measured quality result.'], cases: [{ id: detail.cases[0].id, product: detail.cases[0].product, question: detail.cases[0].question, arms: { baseline: detail.cases[0].answers[0], candidate: detail.cases[0].answers[1] } }] } });
+      return route.fulfill({ json: { ...detail, status: 'complete', quality: { totalPairs: 1, eligiblePairs: 1, uncertainPairs: 0, baseline: counts, candidate: counts, wins: 0, losses: 0, ties: 1, regressions: 0, interval95: [0, 0], verdict: 'inconclusive' }, pairedAxisRegressions: { correctness: { totalPairs: 1, resolvedPairs: 1, pendingPairs: 0, uncertainPairs: 0, regressions: 0 }, support: { totalPairs: 1, resolvedPairs: 1, pendingPairs: 0, uncertainPairs: 0, regressions: 0 } }, citationMatching: { baseline: citations, candidate: citations }, timing: { definition: 'Synthetic browser timing; no provider calls.', baselineMedianMs: 1, candidateMedianMs: 1 }, billedCostUsd: null, limitations: ['Synthetic browser simulation; not a measured quality result.'], cases: [{ id: detail.cases[0].id, product: detail.cases[0].product, question: detail.cases[0].question, arms: { baseline: detail.cases[0].answers[0], candidate: detail.cases[0].answers[1] } }] } });
     }
     return route.fulfill({ json: path === '/api/context-comparisons' ? { comparisons: [detail] } : detail });
   });
@@ -113,9 +113,12 @@ test('live review requires explicit independent source checks before revealing p
     await save.click();
     await expect(page.getByRole('region', { name: `Saved answer ${label} review` })).toContainText('Human review saved');
     expect(posts.at(-1)).toMatchObject({ manifestSha256: detail.manifestSha256, caseId: 'browser-case', versionId: detail.cases[0].answers.find(answer => answer.label === label)!.versionId, referenceChecked: true, independentReview: true });
-    if (label === 'A') { expect(reports).toBe(0); await expect(page.getByLabel('Paired quality outcomes')).toHaveCount(0); }
+    if (label === 'A') { expect(reports).toBe(0); await expect(page.getByLabel('Paired quality outcomes')).toHaveCount(0); await expect(page.getByRole('region', { name: 'Paired regressions by dimension', exact: true })).toHaveCount(0); }
   }
   await expect(page.getByLabel('Paired quality outcomes')).toContainText('Candidate wins');
+  const axes = page.getByRole('region', { name: 'Paired regressions by dimension', exact: true });
+  await expect(axes.getByRole('row', { name: 'Correct → incorrect 0 1 / 1 0 0', exact: true })).toBeVisible();
+  await expect(axes.getByRole('row', { name: 'Supported → unsupported 0 1 / 1 0 0', exact: true })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Comparison results' })).toContainText('Verdict: inconclusive');
   expect(reports).toBe(1);
   await page.setViewportSize({ width: 360, height: 760 });
