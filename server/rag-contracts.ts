@@ -27,8 +27,8 @@ function fixtures(): Fixture[] {
       passage('boundary-05', body, 'Does this work with model OTHER901?'),
       passage('boundary-06', body, 'Does this work with model WK110?')
     ], requiredIds: ['boundary-06'], firstId: 'boundary-06' },
-    { id: 'physical-units-do-not-create-model-scope', question: 'Will a 12-inch, 30L, 10x20 bag fit?', passages: [
-      ...crowded(7), passage('scope-07', body, 'Will a 12-inch, 30L, 10x20 bag fit?')
+    { id: 'physical-units-do-not-create-model-scope', question: 'Will a 12-inch, 30L, 10x20 bag fit on the 3rd or 4th shelf?', passages: [
+      ...crowded(7), passage('scope-07', body, 'Will a 12-inch, 30L, 10x20 bag fit on the 3rd or 4th shelf?')
     ], requiredIds: [], orderedIds: ['scope-00', 'scope-01', 'scope-02', 'scope-03', 'scope-04'] },
     { id: 'variant-conflict-is-retained', question: 'Does this work with model DEV7001?', passages: [
       ...crowded(6),
@@ -41,7 +41,17 @@ function fixtures(): Fixture[] {
       passage('other-product-dimensions', 'Item and package dimensions: width 999 inches; length 999 inches.', undefined, 'other-product')
     ], requiredIds: ['item-dimensions', 'package-dimensions'] },
     { id: 'context-budget-includes-parent-question', question: 'storage', passages: Array.from({ length: 7 }, (_, i) => passage(`budget-${i}`, `${'storage '.repeat(145)}record ${i}`, `${'context '.repeat(55)}source ${i}?`)), requiredIds: [], maxSelected: 3 },
-    { id: 'explicit-short-model-beyond-five', question: 'Does it work with model H5?', passages: ['H50', 'G2', 'M50', 'XH5', 'H5-PLUS', 'G20', 'H5A', 'H5'].map((model, i) => passage(`short-${String(i).padStart(2, '0')}`, body, `Does it work with model ${model}?`)), requiredIds: ['short-07'], firstId: 'short-07' }
+    { id: 'explicit-short-model-beyond-five', question: 'Does it work with model H5?', passages: ['H50', 'G2', 'M50', 'XH5', 'H5-PLUS', 'G20', 'H5A', 'H5'].map((model, i) => passage(`short-${String(i).padStart(2, '0')}`, body, `Does it work with model ${model}?`)), requiredIds: ['short-07'], firstId: 'short-07' },
+    { id: 'bare-numeric-target-with-part-anchor', question: 'Will part PART123 fit 241543917?', passages: [
+      'Will part PART123 fit?', 'Will part PART123 fit 241543918?', 'Will part PART123 fit 241543919?',
+      'Will part PART123 fit 241543920?', 'Will part PART123 fit 241543921?', 'Will part PART123 fit 241543922?',
+      'Will 241543917 fit?', 'Will part PART123 fit 241543917?'
+    ].map((originalQuestion, i) => passage(`numeric-${String(i).padStart(2, '0')}`, body, originalQuestion)), requiredIds: ['numeric-07'], firstId: 'numeric-07' },
+    { id: 'plural-model-list-requires-all-anchors', question: 'Does it work with models [H5, 12 and 30L]?', passages: [
+      'Does it work with model H5?', 'Does it work with model 12?', 'Does it work with model 30L?',
+      'Does it work with models H5 and 12?', 'Does it work with models H5 and 30L?', 'Does it work with models 12 and 30L?',
+      'Does it work with models H5, 12, 30L and G2?', 'Does it work with models [H5, 12 and 30L]?'
+    ].map((originalQuestion, i) => passage(`plural-${String(i).padStart(2, '0')}`, body, originalQuestion)), requiredIds: ['plural-07'], firstId: 'plural-07' }
   ];
 }
 

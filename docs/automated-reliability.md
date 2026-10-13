@@ -14,7 +14,7 @@ The output must be a new file. The command exits nonzero for a failed or inconcl
 | Layer | Observable contract |
 | --- | --- |
 | RAG scope | The explicitly named model's source survives crowded, identically worded customer answers, including a target beyond the first 20 candidates. |
-| RAG boundaries | Different model identifiers cannot win scope priority through a partial identifier match. Explicit short IDs such as H5 survive the same crowding. Unscoped questions retain their prior ordering. |
+| RAG boundaries | Scope priority requires the full extracted identifier set to agree. Short, numeric and explicitly listed IDs use the same rules in queries and parent questions; partial lists receive no boost. Unscoped questions retain their prior ordering. |
 | Source context | Product isolation, full source text, separate parent questions, conflicting variants and numeric records survive retrieval and citation resolution. |
 | Context budget | Selection remains within five sources and 6,000 characters, counting parent-question metadata. |
 | Invalid output | An out-of-context citation produces no accepted revision or extra generation. |
@@ -41,7 +41,7 @@ The check itself denies network access. Missing cached assets produce `inconclus
 
 Before this repair, the retriever indexed customer-answer bodies and preserved their parent questions, but did not use those questions to select sources. With eight or 25 identical answers, the requested model's source fell outside the selected top five. Both failures were reproduced using constant injected embeddings.
 
-Selection now gives exact parent-question identifier agreement a scoped ranking priority before candidate truncation. It preserves answer-only lexical and embedding input, source bytes, variant conflicts and the existing context limits. Identifier agreement admits a candidate; it establishes no fit relationship or factual support. Unsupported or ambiguous situations retain explicit stopping behavior.
+Selection now gives complete identifier-set agreement between the query and parent question a ranking priority before candidate truncation. Both sides use the same extraction rules, including bounded labeled lists; ordinary measurements and ordinals remain excluded. Missing or extra identifiers receive no priority. This preserves answer-only lexical and embedding input, source bytes, variant conflicts and the existing context limits. Priority does not remove every mismatched source or establish a fit relationship or factual support.
 
 Report fields named `bm25`, `dense` and `hybrid` describe scope-aware rankings. They include the identifier priority and must not be compared as pure, unchanged method baselines against older audits.
 
@@ -49,15 +49,17 @@ Report fields named `bm25`, `dense` and `hybrid` describe scope-aware rankings. 
 
 | Run | Retrieval contracts | Harness contracts |
 | --- | --- | --- |
-| [Prior retriever, injected vectors](evidence/automated-contracts-2026-10-12/before-injected-v2.json) | 3/8 required fixture sources retrieved; five scenarios fail. | Not run in this baseline replay. |
-| [Current retriever, injected vectors](evidence/automated-contracts-2026-10-12/injected-v2.json) | 8/8 required fixture sources; 9/9 scenarios and 69/69 checkpoints pass. | 4/4 scenarios and 64/64 checkpoints pass. |
-| [Current retriever, cached pinned BGE](evidence/automated-contracts-2026-10-12/pinned-bge-v2.json) | 8/8 required fixture sources; 9/9 scenarios and 60/60 checkpoints pass. | 4/4 scenarios and 64/64 checkpoints pass. |
+| [Prior retriever, injected vectors](evidence/automated-contracts-2026-10-12/before-injected-v3.json) | 3/10 required fixture sources retrieved; seven scenarios fail. | Not run in this baseline replay. |
+| [Current retriever, injected vectors](evidence/automated-contracts-2026-10-12/injected-v3.json) | 10/10 required fixture sources; 11/11 scenarios and 85/85 checkpoints pass. | 4/4 scenarios and 64/64 checkpoints pass. |
+| [Current retriever, cached pinned BGE](evidence/automated-contracts-2026-10-12/pinned-bge-v3.json) | 10/10 required fixture sources; 11/11 scenarios and 74/74 checkpoints pass. | 4/4 scenarios and 64/64 checkpoints pass. |
 
 The prior replay used the same fictional fixtures, required IDs, constant vectors and citation resolver with the exact committed retriever from `8f0938cb77cac7e356fa66d82b23ac63ab6f732b`, loaded in an isolated temporary module tree. It checks the discovered failure and its repair; it is not a fresh model-quality experiment. The BGE run has fewer checkpoints because the injected-embedding input spy is unavailable in real-model mode. Both current harness runs observe two scripted transport attempts and zero paid calls.
 
-The [initial eight-case qualification](evidence/automated-contracts-2026-10-12/injected.json), its [BGE run](evidence/automated-contracts-2026-10-12/pinned-bge.json) and [prior replay](evidence/automated-contracts-2026-10-12/before-injected.json) remain unchanged. Bot review found that the four-character heuristic incorrectly excluded explicitly labeled short models. The repair applies that heuristic only to unlabeled tokens, adds the H5 adversarial case and preserves exact matching and measurement guards. Version 2 qualifies the repaired implementation; its baseline uses the same nine cases.
+The [initial eight-case qualification](evidence/automated-contracts-2026-10-12/injected.json), its [BGE run](evidence/automated-contracts-2026-10-12/pinned-bge.json) and [prior replay](evidence/automated-contracts-2026-10-12/before-injected.json) remain unchanged. The first bot review found that the four-character heuristic excluded explicitly labeled short models. Version 2 exempted labeled IDs and added the H5 case; its [nine-case injected report](evidence/automated-contracts-2026-10-12/injected-v2.json), [BGE report](evidence/automated-contracts-2026-10-12/pinned-bge-v2.json) and [prior replay](evidence/automated-contracts-2026-10-12/before-injected-v2.json) are also preserved.
 
-Verification: 318 server tests pass, one Linux-only test is skipped locally, the production build and strict CLI typecheck pass, and all 98 historical and initial-qualification evidence-file hashes remain unchanged. The shared live ledger remains at 86 attempts with no pending reservation. CI also runs the existing Python selector and browser suites.
+The next review exposed two gaps: a long numeric target was recognized in a parent question but omitted from the query, and plural model labels could lose short identifiers. Independent review also checked numeric and measurement-shaped IDs inside explicit lists. Version 3 uses symmetric extraction and bounded label propagation, and requires the complete identifier sets to agree. Two added scenarios stress partial part/model matches and mixed explicit lists. Its baseline uses the same 11 fictional cases; these are component regression checks, not a whole-product quality evaluation.
+
+Verification: 318 server tests pass, one Linux-only test is skipped locally, the production build and strict CLI typecheck pass, and all 101 protected historical and version 1/2 evidence-file hashes remain unchanged. The shared live ledger remains at 86 attempts with no pending reservation. CI also runs the existing Python selector and browser suites.
 
 ## What a pass means
 

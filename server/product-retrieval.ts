@@ -28,16 +28,38 @@ export function cqaAnswerText(passage: Passage): string {
 // A small exact-token rule avoids making ordinary wording a relevance boost.
 const identityToken = /[a-z0-9]+(?:[-.][a-z0-9]+)*/gi;
 const physicalUnit = /^(?:in|inch|inches|ft|foot|feet|cm|mm|m|yd|yards?|ml|cl|dl|l|liters?|litres?|gal|gallons?|oz|ounces?|lb|lbs|pounds?|kg|g|grams?|mg|v|volts?|w|watts?|a|amps?|mah|ah|hz|mhz|ghz|gb|tb|mb|percent|pack|packs|count|ct)$/i;
-function scopeIdentifiers(text: string, kind: 'query' | 'parent' | 'explicit-model' = 'query'): Set<string> {
+const identityLabel = String.raw`(?:models?|devices?|refrigerators?|fridges?|washers?|dryers?|dishwashers?|freezers?|printers?|parts?|skus?)\b(?:\s+models?\b)?(?:\s+(?:numbers?\b|no\.?))?\s*[:#]?\s*`;
+/** Label propagation is limited to explicit identifier lists, never sentence meaning. */
+function labeledIdentifierPositions(text: string): Set<number> | null {
+  const positions = new Set<number>();
+  for (const label of text.matchAll(new RegExp(`\\b${identityLabel}`, 'gi'))) {
+    let cursor = label.index! + label[0].length, count = 0;
+    while (true) {
+      const item = text.slice(cursor).match(/^[\s[(]*([a-z0-9]+(?:[-.][a-z0-9]+)*)/i);
+      if (!item || !/\d/.test(item[1])) { if (count) return null; break; }
+      if (++count > 16) return null;
+      positions.add(cursor + item[0].length - item[1].length);
+      cursor += item[0].length;
+      cursor += text.slice(cursor).match(/^[\s)\]]*/)![0].length;
+      const separator = text.slice(cursor).match(/^(?:,\s*(?:(?:and|or)\b\s*)?|[\/&]\s*|(?:and|or)\b\s*)/i);
+      if (!separator) break;
+      cursor += separator[0].length;
+      // A repeated label starts its own list on the outer scan.
+      if (new RegExp(`^${identityLabel}`, 'i').test(text.slice(cursor))) break;
+    }
+  }
+  return positions;
+}
+function scopeIdentifiers(text: string): Set<string> | null {
+  const labeledPositions = labeledIdentifierPositions(text);
+  if (!labeledPositions) return null;
   const result = new Set<string>();
   for (const match of text.matchAll(identityToken)) {
-    const token = match[0], before = text.slice(0, match.index), after = text.slice(match.index! + token.length);
-    const modelLabel = /\b(?:model|device|refrigerator|fridge|washer|dryer|dishwasher|freezer|printer)(?:\s+model)?(?:\s+(?:number|no\.?))?\s*[:#]?\s*\(?\s*$/i.test(before);
-    const labeled = modelLabel || /\b(?:part|sku)(?:\s+(?:number|no\.?))?\s*[:#]?\s*\(?\s*$/i.test(before);
-    if (kind === 'explicit-model' && !modelLabel) continue;
+    const token = match[0], after = text.slice(match.index! + token.length);
+    const labeled = labeledPositions.has(match.index!);
     const measurement = token.match(/^(\d+(?:\.\d+)?)-?([a-z]+)$/i);
-    if (!labeled && ((measurement && physicalUnit.test(measurement[2])) || /^\d+(?:\.\d+)?(?:x\d+(?:\.\d+)?)+(?:[a-z]+)?$/i.test(token) || (/^\d+(?:\.\d+)?$/.test(token) && physicalUnit.test(after.trimStart().match(/^[a-z]+/i)?.[0] ?? '')))) continue;
-    if ((!labeled && token.length < 4) || !/\d/.test(token) || (!/[a-z]/i.test(token) && !labeled && !(kind === 'parent' && /^\d{5,}$/.test(token)))) continue;
+    if (!labeled && ((measurement && physicalUnit.test(measurement[2])) || /^\d+(?:st|nd|rd|th)$/i.test(token) || /^\d+(?:\.\d+)?(?:x\d+(?:\.\d+)?)+(?:[a-z]+)?$/i.test(token) || (/^\d+(?:\.\d+)?$/.test(token) && physicalUnit.test(after.trimStart().match(/^[a-z]+/i)?.[0] ?? '')))) continue;
+    if (!/\d/.test(token) || (!/[a-z]/i.test(token) && !labeled && !/^\d{5,}$/.test(token))) continue;
     result.add(token.toUpperCase());
   }
   return result;
@@ -50,15 +72,14 @@ function parentQuestion(passage: Passage): string | undefined {
 }
 function scopedPassageIds(pool: Passage[], question: string): Set<string> {
   const requested = scopeIdentifiers(question);
-  const models = scopeIdentifiers(question, 'explicit-model');
-  if (!requested.size) return new Set();
+  if (!requested?.size) return new Set();
   return new Set(pool.filter(passage => {
     const parent = parentQuestion(passage);
     if (!parent) return false;
-    const scope = scopeIdentifiers(parent, 'parent');
-    // Additional mismatching identifiers make scope ambiguous. Agreement is
-    // only a ranking hint: retain other sources and both sides of conflicts.
-    return scope.size > 0 && [...scope].every(id => requested.has(id)) && [...models].every(id => scope.has(id));
+    const scope = scopeIdentifiers(parent);
+    // Missing or additional anchors make scope ambiguous. Complete agreement
+    // only affects ranking; it does not establish fit or discard conflicts.
+    return scope !== null && scope.size === requested.size && [...scope].every(id => requested.has(id));
   }).map(passage => passage.id));
 }
 
