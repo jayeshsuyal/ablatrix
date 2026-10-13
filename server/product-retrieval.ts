@@ -24,6 +24,44 @@ export function cqaAnswerText(passage: Passage): string {
   return marker > 0 ? passage.text.slice(0, marker).trim() : passage.text;
 }
 
+// Parent questions identify scope; they are never appended to searchable proof.
+// A small exact-token rule avoids making ordinary wording a relevance boost.
+const identityToken = /[a-z0-9]+(?:[-.][a-z0-9]+)*/gi;
+const physicalUnit = /^(?:in|inch|inches|ft|foot|feet|cm|mm|m|yd|yards?|ml|cl|dl|l|liters?|litres?|gal|gallons?|oz|ounces?|lb|lbs|pounds?|kg|g|grams?|mg|v|volts?|w|watts?|a|amps?|mah|ah|hz|mhz|ghz|gb|tb|mb|percent|pack|packs|count|ct)$/i;
+function scopeIdentifiers(text: string, kind: 'query' | 'parent' | 'explicit-model' = 'query'): Set<string> {
+  const result = new Set<string>();
+  for (const match of text.matchAll(identityToken)) {
+    const token = match[0], before = text.slice(0, match.index), after = text.slice(match.index! + token.length);
+    const modelLabel = /\b(?:model|device|refrigerator|fridge|washer|dryer|dishwasher|freezer|printer)(?:\s+model)?(?:\s+(?:number|no\.?))?\s*[:#]?\s*\(?\s*$/i.test(before);
+    const labeled = modelLabel || /\b(?:part|sku)(?:\s+(?:number|no\.?))?\s*[:#]?\s*\(?\s*$/i.test(before);
+    if (kind === 'explicit-model' && !modelLabel) continue;
+    const measurement = token.match(/^(\d+(?:\.\d+)?)-?([a-z]+)$/i);
+    if (!labeled && ((measurement && physicalUnit.test(measurement[2])) || /^\d+(?:\.\d+)?(?:x\d+(?:\.\d+)?)+(?:[a-z]+)?$/i.test(token) || (/^\d+(?:\.\d+)?$/.test(token) && physicalUnit.test(after.trimStart().match(/^[a-z]+/i)?.[0] ?? '')))) continue;
+    if (token.length < 4 || !/\d/.test(token) || (!/[a-z]/i.test(token) && !labeled && !(kind === 'parent' && /^\d{5,}$/.test(token)))) continue;
+    result.add(token.toUpperCase());
+  }
+  return result;
+}
+function parentQuestion(passage: Passage): string | undefined {
+  if (passage.originalQuestion !== undefined) return passage.originalQuestion;
+  if (passage.source !== 'cqa') return undefined;
+  const parts = passage.text.split(' Question: ');
+  return parts.length === 2 ? parts[1] : undefined;
+}
+function scopedPassageIds(pool: Passage[], question: string): Set<string> {
+  const requested = scopeIdentifiers(question);
+  const models = scopeIdentifiers(question, 'explicit-model');
+  if (!requested.size) return new Set();
+  return new Set(pool.filter(passage => {
+    const parent = parentQuestion(passage);
+    if (!parent) return false;
+    const scope = scopeIdentifiers(parent, 'parent');
+    // Additional mismatching identifiers make scope ambiguous. Agreement is
+    // only a ranking hint: retain other sources and both sides of conflicts.
+    return scope.size > 0 && [...scope].every(id => requested.has(id)) && [...models].every(id => scope.has(id));
+  }).map(passage => passage.id));
+}
+
 /** Each list is ranked best-first; duplicates in a method only vote once. */
 export function reciprocalRankFusion(lexical: string[], semantic: string[]): { id: string; lexicalRank: number | null; semanticRank: number | null; score: number }[] {
   const scores = new Map<string, { id: string; lexicalRank: number | null; semanticRank: number | null; score: number }>();
@@ -187,9 +225,17 @@ export class ProductRetriever implements LoopRetriever {
     const pool = this.byProduct.get(productId);
     if (!pool) throw new Error(`Unknown product: ${productId}.`);
     const start = performance.now();
+    const scoped = scopedPassageIds(pool, question);
+    const scopeOrder = (a: string, b: string) => Number(scoped.has(b)) - Number(scoped.has(a));
     const terms = [...new Set(question.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [])].slice(0, 80);
     const match = terms.map(term => `"${term.replaceAll('"', '""')}"`).join(' OR ');
-    const lexical = match ? (this.db.prepare(`SELECT passage_id FROM product_passages_fts WHERE product_passages_fts MATCH ? AND corpus=? AND product_id=? ORDER BY bm25(product_passages_fts), passage_id LIMIT ?`).all(match, this.corpus.version, productId, CANDIDATES_PER_METHOD) as { passage_id: string }[]).map(row => row.passage_id) : [];
+    const lexicalQuery = 'SELECT passage_id FROM product_passages_fts WHERE product_passages_fts MATCH ? AND corpus=? AND product_id=?';
+    const lexicalOrder = ' ORDER BY bm25(product_passages_fts), passage_id LIMIT ?';
+    const lexicalRows = match ? (this.db.prepare(lexicalQuery + lexicalOrder).all(match, this.corpus.version, productId, CANDIDATES_PER_METHOD) as { passage_id: string }[]) : [];
+    // Rescue matching scope before truncation without returning every FTS row.
+    // json_each avoids one SQL bind per source; each query returns at most 20.
+    const scopedRows = match && scoped.size ? (this.db.prepare(lexicalQuery + ' AND passage_id IN (SELECT value FROM json_each(?))' + lexicalOrder).all(match, this.corpus.version, productId, JSON.stringify([...scoped]), CANDIDATES_PER_METHOD) as { passage_id: string }[]) : [];
+    const lexical = [...new Set([...scopedRows, ...lexicalRows].map(row => row.passage_id))].slice(0, CANDIDATES_PER_METHOD);
     const vectors = await this.vectors(productId);
     const queries = await this.embed([question], 'query');
     if (queries.length !== 1) throw new Error('Query embedding length mismatch.');
@@ -198,9 +244,9 @@ export class ProductRetriever implements LoopRetriever {
       const vector = vectors.get(passage.id)!;
       if (vector.length !== query.length) throw new Error('Embedding dimensions differ; invalidate the model cache.');
       return { id: passage.id, score: vector.reduce((sum, value, index) => sum + value * query[index], 0) };
-    }).sort((a, b) => b.score - a.score || a.id.localeCompare(b.id)).slice(0, CANDIDATES_PER_METHOD).map(entry => entry.id);
+    }).sort((a, b) => scopeOrder(a.id, b.id) || b.score - a.score || a.id.localeCompare(b.id)).slice(0, CANDIDATES_PER_METHOD).map(entry => entry.id);
     const byId = new Map(pool.map(passage => [passage.id, passage]));
-    const fused = reciprocalRankFusion(lexical, semantic);
+    const fused = reciprocalRankFusion(lexical, semantic).sort((a, b) => scopeOrder(a.id, b.id));
     const select = (ids: string[]) => {
       const chosen: string[] = [], seenText = new Set<string>(); let chars = 0;
       for (const id of ids) {
@@ -217,7 +263,7 @@ export class ProductRetriever implements LoopRetriever {
     const hybrid = select(fused.map(item => item.id));
     const byRank = new Map(fused.map(item => [item.id, item]));
     const passages: RetrievedPassage[] = hybrid.map(id => ({ ...byId.get(id)!, ...byRank.get(id)! }));
-    const result = { passages, durationMs: performance.now() - start, method: `hybrid:fts5-bm25+bge-cosine+rrf(k=60)${this.indexText === cqaAnswerText ? '+cqa-answer-index' : ''}`, embeddingModel: `${this.modelId}@${this.revision}`, corpusVersion: this.corpus.version };
+    const result = { passages, durationMs: performance.now() - start, method: `hybrid:fts5-bm25+bge-cosine+rrf(k=60)${this.indexText === cqaAnswerText ? '+cqa-answer-index' : ''}+parent-id-scope`, embeddingModel: `${this.modelId}@${this.revision}`, corpusVersion: this.corpus.version };
     return compare ? { ...result, rankings: { bm25: select(lexical), dense: select(semantic), hybrid } } : result;
   }
 

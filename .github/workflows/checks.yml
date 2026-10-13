@@ -14,6 +14,14 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - name: Offline RAG and harness contracts
+        run: npm run check:reliability -- --out /tmp/ablatrix-reliability.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: offline-reliability
+          path: /tmp/ablatrix-reliability.json
+          if-no-files-found: error
       - run: python3 -m unittest scripts/test_prepare_flat_source_cohort.py
       - run: npm run build
       - run: npx playwright install --with-deps chromium
