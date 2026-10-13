@@ -27,6 +27,9 @@ export function cqaAnswerText(passage: Passage): string {
 // Parent questions identify scope; they are never appended to searchable proof.
 // A small exact-token rule avoids making ordinary wording a relevance boost.
 const identityToken = /[a-z0-9]+(?:[-.][a-z0-9]+)*/gi;
+// Bare IDs have a letter prefix followed by digits, a numeric prefix with a
+// short letter suffix such as 4S, or a long numeric code. Other compounds need a label.
+const bareIdentifier = /^(?:[a-z]+-?\d[a-z0-9]*(?:[-.][a-z0-9]+)*|\d+[a-z]{1,2}|\d{5,})$/i;
 const physicalUnit = /^(?:in|inch|inches|ft|foot|feet|cm|mm|m|yd|yards?|ml|cl|dl|l|liters?|litres?|gal|gallons?|oz|ounces?|lb|lbs|pounds?|kg|g|grams?|mg|v|volts?|w|watts?|a|amps?|mah|ah|hz|mhz|ghz|gb|tb|mb|percent|pack|packs|count|ct)$/i;
 const identityLabel = String.raw`(?:models?|devices?|refrigerators?|fridges?|washers?|dryers?|dishwashers?|freezers?|printers?|parts?|skus?)\b(?:\s+models?\b)?(?:\s+(?:numbers?\b|no\.?))?\s*[:#]?\s*`;
 /** Label propagation is limited to explicit identifier lists, never sentence meaning. */
@@ -59,7 +62,7 @@ function scopeIdentifiers(text: string): Set<string> | null {
     const labeled = labeledPositions.has(match.index!);
     const measurement = token.match(/^(\d+(?:\.\d+)?)-?([a-z]+)$/i);
     if (!labeled && ((measurement && physicalUnit.test(measurement[2])) || /^\d+(?:st|nd|rd|th)$/i.test(token) || /^\d+(?:\.\d+)?(?:x\d+(?:\.\d+)?)+(?:[a-z]+)?$/i.test(token) || (/^\d+(?:\.\d+)?$/.test(token) && physicalUnit.test(after.trimStart().match(/^[a-z]+/i)?.[0] ?? '')))) continue;
-    if (!/\d/.test(token) || (!/[a-z]/i.test(token) && !labeled && !/^\d{5,}$/.test(token))) continue;
+    if (!/\d/.test(token) || (!labeled && !bareIdentifier.test(token))) continue;
     result.add(token.toUpperCase());
   }
   return result;

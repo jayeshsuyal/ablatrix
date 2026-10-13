@@ -27,8 +27,9 @@ function fixtures(): Fixture[] {
       passage('boundary-05', body, 'Does this work with model OTHER901?'),
       passage('boundary-06', body, 'Does this work with model WK110?')
     ], requiredIds: ['boundary-06'], firstId: 'boundary-06' },
-    { id: 'physical-units-do-not-create-model-scope', question: 'Will a 12-inch, 30L, 10x20 bag fit on the 3rd or 4th shelf?', passages: [
-      ...crowded(7), passage('scope-07', body, 'Will a 12-inch, 30L, 10x20 bag fit on the 3rd or 4th shelf?')
+    { id: 'physical-units-do-not-create-model-scope', question: 'Will a 2-in-1, 5-star, up-to-5, 12-inch, 30L, 10x20 bag fit on the 3rd or 4th shelf?', passages: [
+      ...crowded(6), passage('scope-06', body, 'Will a 2-in-1, 12-inch, 30L bag fit?'),
+      passage('scope-07', body, 'Will a 2-in-1, 5-star, up-to-5, 12-inch, 30L, 10x20 bag fit on the 3rd or 4th shelf?')
     ], requiredIds: [], orderedIds: ['scope-00', 'scope-01', 'scope-02', 'scope-03', 'scope-04'] },
     { id: 'variant-conflict-is-retained', question: 'Does this work with model DEV7001?', passages: [
       ...crowded(6),

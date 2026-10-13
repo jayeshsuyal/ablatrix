@@ -1,0 +1,1612 @@
+{
+  "format": "ablatrix-prior-retrieval-contracts-v1",
+  "retrieverCommit": "8f0938cb77cac7e356fa66d82b23ac63ab6f732b",
+  "retrieverSha256": "7df0766840c52a068891db9da82e620d280f7632db84574e0e3d276bfb310d1d",
+  "contractRunnerSha256": "fa5db1b241d7f11efd0b2461fb4e9fb49915d5bb15afdbaecacf9988b633b096",
+  "citationResolverSha256": "0845b2922b7880de4f641453c307d042a31211948514dc4e57e4f9ad4cb1d93d",
+  "comparisonMethod": "The current synthetic contract runner was executed against the exact prior committed retriever in an isolated temporary module tree. Fixtures, required source IDs, injected constant vectors and citation resolver were unchanged.",
+  "provenance": "synthetic_contracts",
+  "semanticAssessment": "not_run",
+  "qualityClaimEligible": false,
+  "paidProviderCalls": 0,
+  "report": {
+    "format": "ablatrix-rag-contracts-v1",
+    "synthetic": true,
+    "fixtureSha256": "c5815043988f60c9cce63bc1cb98305b34bb1258f36d75bbeac78b0aaf89d7ae",
+    "mode": "injected_contract",
+    "engine": {
+      "model": "injected-contract-constant",
+      "revision": "synthetic-contract-v1"
+    },
+    "rankingPolicy": "Prior retriever: BM25/dense/RRF ranks without parent-question identifier priority.",
+    "mechanical": "fail",
+    "cases": [
+      {
+        "id": "scope-beyond-five",
+        "requiredIds": [
+          "scope-07"
+        ],
+        "rankings": {
+          "bm25": [
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03",
+            "scope-04"
+          ],
+          "dense": [
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03",
+            "scope-04"
+          ],
+          "hybrid": [
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03",
+            "scope-04"
+          ]
+        },
+        "checkpoints": [
+          {
+            "id": "required-source-coverage",
+            "expected": [
+              "scope-07"
+            ],
+            "observed": [],
+            "status": "fail"
+          },
+          {
+            "id": "scoped-source-priority",
+            "expected": "scope-07",
+            "observed": "scope-00",
+            "status": "fail"
+          },
+          {
+            "id": "product-isolation",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "source-bytes-and-scope-preserved",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "bounded-context",
+            "expected": {
+              "maxSources": 5,
+              "maxCharacters": 6000,
+              "nonempty": true
+            },
+            "observed": {
+              "sources": 5,
+              "characters": 240
+            },
+            "status": "pass"
+          },
+          {
+            "id": "literal-citation-body-preserved",
+            "expected": [
+              {
+                "passageId": "scope-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "observed": [
+              {
+                "passageId": "scope-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "answer-only-embedding-input",
+            "expected": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "observed": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "method-provenance",
+            "expected": "injected-contract-constant@synthetic-contract-v1",
+            "observed": "injected-contract-constant@synthetic-contract-v1",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "id": "scope-beyond-twenty",
+        "requiredIds": [
+          "scope-24"
+        ],
+        "rankings": {
+          "bm25": [
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03",
+            "scope-04"
+          ],
+          "dense": [
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03",
+            "scope-04"
+          ],
+          "hybrid": [
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03",
+            "scope-04"
+          ]
+        },
+        "checkpoints": [
+          {
+            "id": "required-source-coverage",
+            "expected": [
+              "scope-24"
+            ],
+            "observed": [],
+            "status": "fail"
+          },
+          {
+            "id": "scoped-source-priority",
+            "expected": "scope-24",
+            "observed": "scope-00",
+            "status": "fail"
+          },
+          {
+            "id": "product-isolation",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "source-bytes-and-scope-preserved",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "bounded-context",
+            "expected": {
+              "maxSources": 5,
+              "maxCharacters": 6000,
+              "nonempty": true
+            },
+            "observed": {
+              "sources": 5,
+              "characters": 240
+            },
+            "status": "pass"
+          },
+          {
+            "id": "literal-citation-body-preserved",
+            "expected": [
+              {
+                "passageId": "scope-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "observed": [
+              {
+                "passageId": "scope-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "answer-only-embedding-input",
+            "expected": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "observed": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "method-provenance",
+            "expected": "injected-contract-constant@synthetic-contract-v1",
+            "observed": "injected-contract-constant@synthetic-contract-v1",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "id": "unscoped-order-unchanged",
+        "requiredIds": [],
+        "rankings": {
+          "bm25": [],
+          "dense": [
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03",
+            "scope-04"
+          ],
+          "hybrid": [
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03",
+            "scope-04"
+          ]
+        },
+        "checkpoints": [
+          {
+            "id": "required-source-coverage",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "baseline-order-preserved",
+            "expected": [
+              "scope-00",
+              "scope-01",
+              "scope-02",
+              "scope-03",
+              "scope-04"
+            ],
+            "observed": [
+              "scope-00",
+              "scope-01",
+              "scope-02",
+              "scope-03",
+              "scope-04"
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "product-isolation",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "source-bytes-and-scope-preserved",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "bounded-context",
+            "expected": {
+              "maxSources": 5,
+              "maxCharacters": 6000,
+              "nonempty": true
+            },
+            "observed": {
+              "sources": 5,
+              "characters": 240
+            },
+            "status": "pass"
+          },
+          {
+            "id": "literal-citation-body-preserved",
+            "expected": [
+              {
+                "passageId": "scope-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "observed": [
+              {
+                "passageId": "scope-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "answer-only-embedding-input",
+            "expected": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "observed": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "method-provenance",
+            "expected": "injected-contract-constant@synthetic-contract-v1",
+            "observed": "injected-contract-constant@synthetic-contract-v1",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "id": "exact-model-boundaries",
+        "requiredIds": [
+          "boundary-06"
+        ],
+        "rankings": {
+          "bm25": [],
+          "dense": [
+            "boundary-00",
+            "boundary-01",
+            "boundary-02",
+            "boundary-03",
+            "boundary-04"
+          ],
+          "hybrid": [
+            "boundary-00",
+            "boundary-01",
+            "boundary-02",
+            "boundary-03",
+            "boundary-04"
+          ]
+        },
+        "checkpoints": [
+          {
+            "id": "required-source-coverage",
+            "expected": [
+              "boundary-06"
+            ],
+            "observed": [],
+            "status": "fail"
+          },
+          {
+            "id": "scoped-source-priority",
+            "expected": "boundary-06",
+            "observed": "boundary-00",
+            "status": "fail"
+          },
+          {
+            "id": "product-isolation",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "source-bytes-and-scope-preserved",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "bounded-context",
+            "expected": {
+              "maxSources": 5,
+              "maxCharacters": 6000,
+              "nonempty": true
+            },
+            "observed": {
+              "sources": 5,
+              "characters": 251
+            },
+            "status": "pass"
+          },
+          {
+            "id": "literal-citation-body-preserved",
+            "expected": [
+              {
+                "passageId": "boundary-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "boundary-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "boundary-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "boundary-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "boundary-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "observed": [
+              {
+                "passageId": "boundary-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "boundary-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "boundary-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "boundary-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "boundary-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "answer-only-embedding-input",
+            "expected": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "observed": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "method-provenance",
+            "expected": "injected-contract-constant@synthetic-contract-v1",
+            "observed": "injected-contract-constant@synthetic-contract-v1",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "id": "physical-units-do-not-create-model-scope",
+        "requiredIds": [],
+        "rankings": {
+          "bm25": [],
+          "dense": [
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03",
+            "scope-04"
+          ],
+          "hybrid": [
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03",
+            "scope-04"
+          ]
+        },
+        "checkpoints": [
+          {
+            "id": "required-source-coverage",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "baseline-order-preserved",
+            "expected": [
+              "scope-00",
+              "scope-01",
+              "scope-02",
+              "scope-03",
+              "scope-04"
+            ],
+            "observed": [
+              "scope-00",
+              "scope-01",
+              "scope-02",
+              "scope-03",
+              "scope-04"
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "product-isolation",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "source-bytes-and-scope-preserved",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "bounded-context",
+            "expected": {
+              "maxSources": 5,
+              "maxCharacters": 6000,
+              "nonempty": true
+            },
+            "observed": {
+              "sources": 5,
+              "characters": 240
+            },
+            "status": "pass"
+          },
+          {
+            "id": "literal-citation-body-preserved",
+            "expected": [
+              {
+                "passageId": "scope-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "observed": [
+              {
+                "passageId": "scope-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "answer-only-embedding-input",
+            "expected": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "observed": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "method-provenance",
+            "expected": "injected-contract-constant@synthetic-contract-v1",
+            "observed": "injected-contract-constant@synthetic-contract-v1",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "id": "variant-conflict-is-retained",
+        "requiredIds": [
+          "variant-blue",
+          "variant-red"
+        ],
+        "rankings": {
+          "bm25": [
+            "variant-blue"
+          ],
+          "dense": [
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03",
+            "scope-04"
+          ],
+          "hybrid": [
+            "variant-blue",
+            "scope-00",
+            "scope-01",
+            "scope-02",
+            "scope-03"
+          ]
+        },
+        "checkpoints": [
+          {
+            "id": "required-source-coverage",
+            "expected": [
+              "variant-blue",
+              "variant-red"
+            ],
+            "observed": [
+              "variant-blue"
+            ],
+            "status": "fail"
+          },
+          {
+            "id": "product-isolation",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "source-bytes-and-scope-preserved",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "bounded-context",
+            "expected": {
+              "maxSources": 5,
+              "maxCharacters": 6000,
+              "nonempty": true
+            },
+            "observed": {
+              "sources": 5,
+              "characters": 273
+            },
+            "status": "pass"
+          },
+          {
+            "id": "literal-citation-body-preserved",
+            "expected": [
+              {
+                "passageId": "variant-blue",
+                "quote": "No, the blue variant does not work."
+              },
+              {
+                "passageId": "scope-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-03",
+                "quote": "Yes, it works."
+              }
+            ],
+            "observed": [
+              {
+                "passageId": "variant-blue",
+                "quote": "No, the blue variant does not work."
+              },
+              {
+                "passageId": "scope-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "scope-03",
+                "quote": "Yes, it works."
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "answer-only-embedding-input",
+            "expected": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "No, the blue variant does not work.",
+              "Yes, the red variant works."
+            ],
+            "observed": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "No, the blue variant does not work.",
+              "Yes, the red variant works."
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "method-provenance",
+            "expected": "injected-contract-constant@synthetic-contract-v1",
+            "observed": "injected-contract-constant@synthetic-contract-v1",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "id": "numeric-records-and-product-isolation",
+        "requiredIds": [
+          "item-dimensions",
+          "package-dimensions"
+        ],
+        "rankings": {
+          "bm25": [
+            "package-dimensions",
+            "item-dimensions"
+          ],
+          "dense": [
+            "item-dimensions",
+            "package-dimensions"
+          ],
+          "hybrid": [
+            "item-dimensions",
+            "package-dimensions"
+          ]
+        },
+        "checkpoints": [
+          {
+            "id": "required-source-coverage",
+            "expected": [
+              "item-dimensions",
+              "package-dimensions"
+            ],
+            "observed": [
+              "item-dimensions",
+              "package-dimensions"
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "product-isolation",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "source-bytes-and-scope-preserved",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "bounded-context",
+            "expected": {
+              "maxSources": 5,
+              "maxCharacters": 6000,
+              "nonempty": true
+            },
+            "observed": {
+              "sources": 2,
+              "characters": 236
+            },
+            "status": "pass"
+          },
+          {
+            "id": "literal-citation-body-preserved",
+            "expected": [
+              {
+                "passageId": "item-dimensions",
+                "quote": "item_dimensions: { width: { unit: inches, normalized_value: { unit: inches, value: 11.5 }, value: 115 }, length: { unit: inches, value: 21.0 } }"
+              },
+              {
+                "passageId": "package-dimensions",
+                "quote": "package_dimensions: { width: { unit: cm, value: 31.75 }, length: { unit: cm, value: 55.0 } }"
+              }
+            ],
+            "observed": [
+              {
+                "passageId": "item-dimensions",
+                "quote": "item_dimensions: { width: { unit: inches, normalized_value: { unit: inches, value: 11.5 }, value: 115 }, length: { unit: inches, value: 21.0 } }"
+              },
+              {
+                "passageId": "package-dimensions",
+                "quote": "package_dimensions: { width: { unit: cm, value: 31.75 }, length: { unit: cm, value: 55.0 } }"
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "answer-only-embedding-input",
+            "expected": [
+              "item_dimensions: { width: { unit: inches, normalized_value: { unit: inches, value: 11.5 }, value: 115 }, length: { unit: inches, value: 21.0 } }",
+              "package_dimensions: { width: { unit: cm, value: 31.75 }, length: { unit: cm, value: 55.0 } }"
+            ],
+            "observed": [
+              "item_dimensions: { width: { unit: inches, normalized_value: { unit: inches, value: 11.5 }, value: 115 }, length: { unit: inches, value: 21.0 } }",
+              "package_dimensions: { width: { unit: cm, value: 31.75 }, length: { unit: cm, value: 55.0 } }"
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "method-provenance",
+            "expected": "injected-contract-constant@synthetic-contract-v1",
+            "observed": "injected-contract-constant@synthetic-contract-v1",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "id": "context-budget-includes-parent-question",
+        "requiredIds": [],
+        "rankings": {
+          "bm25": [
+            "budget-0",
+            "budget-1",
+            "budget-2"
+          ],
+          "dense": [
+            "budget-0",
+            "budget-1",
+            "budget-2"
+          ],
+          "hybrid": [
+            "budget-0",
+            "budget-1",
+            "budget-2"
+          ]
+        },
+        "checkpoints": [
+          {
+            "id": "required-source-coverage",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "product-isolation",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "source-bytes-and-scope-preserved",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "bounded-context",
+            "expected": {
+              "maxSources": 3,
+              "maxCharacters": 6000,
+              "nonempty": true
+            },
+            "observed": {
+              "sources": 3,
+              "characters": 4851
+            },
+            "status": "pass"
+          },
+          {
+            "id": "literal-citation-body-preserved",
+            "expected": [
+              {
+                "passageId": "budget-0",
+                "quote": "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 0"
+              },
+              {
+                "passageId": "budget-1",
+                "quote": "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 1"
+              },
+              {
+                "passageId": "budget-2",
+                "quote": "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 2"
+              }
+            ],
+            "observed": [
+              {
+                "passageId": "budget-0",
+                "quote": "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 0"
+              },
+              {
+                "passageId": "budget-1",
+                "quote": "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 1"
+              },
+              {
+                "passageId": "budget-2",
+                "quote": "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 2"
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "answer-only-embedding-input",
+            "expected": [
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 0",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 1",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 2",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 3",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 4",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 5",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 6"
+            ],
+            "observed": [
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 0",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 1",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 2",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 3",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 4",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 5",
+              "storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage storage record 6"
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "method-provenance",
+            "expected": "injected-contract-constant@synthetic-contract-v1",
+            "observed": "injected-contract-constant@synthetic-contract-v1",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "id": "explicit-short-model-beyond-five",
+        "requiredIds": [
+          "short-07"
+        ],
+        "rankings": {
+          "bm25": [
+            "short-00",
+            "short-01",
+            "short-02",
+            "short-03",
+            "short-04"
+          ],
+          "dense": [
+            "short-00",
+            "short-01",
+            "short-02",
+            "short-03",
+            "short-04"
+          ],
+          "hybrid": [
+            "short-00",
+            "short-01",
+            "short-02",
+            "short-03",
+            "short-04"
+          ]
+        },
+        "checkpoints": [
+          {
+            "id": "required-source-coverage",
+            "expected": [
+              "short-07"
+            ],
+            "observed": [],
+            "status": "fail"
+          },
+          {
+            "id": "scoped-source-priority",
+            "expected": "short-07",
+            "observed": "short-00",
+            "status": "fail"
+          },
+          {
+            "id": "product-isolation",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "source-bytes-and-scope-preserved",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "bounded-context",
+            "expected": {
+              "maxSources": 5,
+              "maxCharacters": 6000,
+              "nonempty": true
+            },
+            "observed": {
+              "sources": 5,
+              "characters": 213
+            },
+            "status": "pass"
+          },
+          {
+            "id": "literal-citation-body-preserved",
+            "expected": [
+              {
+                "passageId": "short-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "short-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "short-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "short-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "short-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "observed": [
+              {
+                "passageId": "short-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "short-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "short-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "short-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "short-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "answer-only-embedding-input",
+            "expected": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "observed": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "method-provenance",
+            "expected": "injected-contract-constant@synthetic-contract-v1",
+            "observed": "injected-contract-constant@synthetic-contract-v1",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "id": "bare-numeric-target-with-part-anchor",
+        "requiredIds": [
+          "numeric-07"
+        ],
+        "rankings": {
+          "bm25": [],
+          "dense": [
+            "numeric-00",
+            "numeric-01",
+            "numeric-02",
+            "numeric-03",
+            "numeric-04"
+          ],
+          "hybrid": [
+            "numeric-00",
+            "numeric-01",
+            "numeric-02",
+            "numeric-03",
+            "numeric-04"
+          ]
+        },
+        "checkpoints": [
+          {
+            "id": "required-source-coverage",
+            "expected": [
+              "numeric-07"
+            ],
+            "observed": [],
+            "status": "fail"
+          },
+          {
+            "id": "scoped-source-priority",
+            "expected": "numeric-07",
+            "observed": "numeric-00",
+            "status": "fail"
+          },
+          {
+            "id": "product-isolation",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "source-bytes-and-scope-preserved",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "bounded-context",
+            "expected": {
+              "maxSources": 5,
+              "maxCharacters": 6000,
+              "nonempty": true
+            },
+            "observed": {
+              "sources": 5,
+              "characters": 220
+            },
+            "status": "pass"
+          },
+          {
+            "id": "literal-citation-body-preserved",
+            "expected": [
+              {
+                "passageId": "numeric-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "numeric-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "numeric-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "numeric-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "numeric-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "observed": [
+              {
+                "passageId": "numeric-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "numeric-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "numeric-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "numeric-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "numeric-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "answer-only-embedding-input",
+            "expected": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "observed": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "method-provenance",
+            "expected": "injected-contract-constant@synthetic-contract-v1",
+            "observed": "injected-contract-constant@synthetic-contract-v1",
+            "status": "pass"
+          }
+        ]
+      },
+      {
+        "id": "plural-model-list-requires-all-anchors",
+        "requiredIds": [
+          "plural-07"
+        ],
+        "rankings": {
+          "bm25": [
+            "plural-00",
+            "plural-01",
+            "plural-02",
+            "plural-03",
+            "plural-04"
+          ],
+          "dense": [
+            "plural-00",
+            "plural-01",
+            "plural-02",
+            "plural-03",
+            "plural-04"
+          ],
+          "hybrid": [
+            "plural-00",
+            "plural-01",
+            "plural-02",
+            "plural-03",
+            "plural-04"
+          ]
+        },
+        "checkpoints": [
+          {
+            "id": "required-source-coverage",
+            "expected": [
+              "plural-07"
+            ],
+            "observed": [],
+            "status": "fail"
+          },
+          {
+            "id": "scoped-source-priority",
+            "expected": "plural-07",
+            "observed": "plural-00",
+            "status": "fail"
+          },
+          {
+            "id": "product-isolation",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "source-bytes-and-scope-preserved",
+            "expected": [],
+            "observed": [],
+            "status": "pass"
+          },
+          {
+            "id": "bounded-context",
+            "expected": {
+              "maxSources": 5,
+              "maxCharacters": 6000,
+              "nonempty": true
+            },
+            "observed": {
+              "sources": 5,
+              "characters": 223
+            },
+            "status": "pass"
+          },
+          {
+            "id": "literal-citation-body-preserved",
+            "expected": [
+              {
+                "passageId": "plural-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "plural-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "plural-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "plural-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "plural-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "observed": [
+              {
+                "passageId": "plural-00",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "plural-01",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "plural-02",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "plural-03",
+                "quote": "Yes, it works."
+              },
+              {
+                "passageId": "plural-04",
+                "quote": "Yes, it works."
+              }
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "answer-only-embedding-input",
+            "expected": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "observed": [
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works.",
+              "Yes, it works."
+            ],
+            "status": "pass"
+          },
+          {
+            "id": "method-provenance",
+            "expected": "injected-contract-constant@synthetic-contract-v1",
+            "observed": "injected-contract-constant@synthetic-contract-v1",
+            "status": "pass"
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "cases": 11,
+      "completedCases": 11,
+      "checkpoints": 85,
+      "passed": 72,
+      "failed": 13,
+      "requiredSourceCases": 8,
+      "casesWithAllRequiredAt5": 1,
+      "requiredSources": 10,
+      "retrievedRequiredSources": 3
+    },
+    "answerQualityMeasured": false,
+    "semanticQuality": "not_measured",
+    "newProviderCalls": 0,
+    "limitations": [
+      "Fictional source contracts measure only the stated retrieval and provenance behavior.",
+      "Injected constant vectors test selection mechanics, not semantic embedding quality.",
+      "Matching parent identifiers rank source candidates; they do not prove compatibility or resolve variant/numeric conflicts.",
+      "These cases do not cover every candidate-crowding or source-scope pattern. No held-out product answers are used."
+    ]
+  }
+}
