@@ -59,6 +59,17 @@ test('uncertainty and abstention cannot become an answered pass', () => {
   assert.equal(validateClaimSupportOutput(fixture, noFacts).disposition, 'uncertain');
 });
 
+test('unanswerable source packets abstain before repairing failed claims', () => {
+  const unsupported = output(); unsupported.units[0] = { ...unsupported.units[0], verdict: 'unsupported', evidence: [] }; unsupported.answerability = 'insufficient';
+  assert.equal(validateClaimSupportOutput(fixture, unsupported).disposition, 'abstain');
+  unsupported.answerability = 'answerable';
+  assert.equal(validateClaimSupportOutput(fixture, unsupported).disposition, 'repair');
+  const contradicted = output(); contradicted.units[0].verdict = 'contradicted'; contradicted.units[0].evidence[0].relation = 'contradicts'; contradicted.answerability = 'conflicting'; contradicted.correctness = 'contradicted_by_sources';
+  assert.equal(validateClaimSupportOutput(fixture, contradicted).disposition, 'abstain');
+  contradicted.answerability = 'answerable';
+  assert.equal(validateClaimSupportOutput(fixture, contradicted).disposition, 'repair');
+});
+
 test('source questions are context only and legacy multiple quotes per passage remain valid input', () => {
   const input: ClaimSupportInput = { ...fixture, evidence: [{ id: 'listing', source: 'cqa', text: 'Yes. Question: Does BOT123 hold 600 ml?' }], answer: { answer: 'The customer reports yes for BOT123.', status: 'answered', citations: [{ passageId: 'listing', quote: 'Yes.' }] } };
   const parts = claimSupportRequestParts(input);

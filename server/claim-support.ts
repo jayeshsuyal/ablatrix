@@ -91,10 +91,10 @@ export function claimSupportRequestBody(input: ClaimSupportInput) { return claim
 
 export function deriveClaimSupportDisposition(input: Pick<ClaimSupportInput, 'answer'>, grade: ClaimSupportWireOutput): ClaimSupportDisposition {
   if (grade.units.some(unit => unit.verdict === 'uncertain') || [grade.questionCoverage, grade.answerability, grade.correctness, grade.uncertaintyHandling].includes('uncertain')) return 'uncertain';
+  if (grade.answerability === 'insufficient' || grade.answerability === 'conflicting') return 'abstain';
   const failures = grade.units.some(unit => ['unsupported', 'contradicted'].includes(unit.verdict)) || grade.correctness === 'contradicted_by_sources' || grade.uncertaintyHandling === 'overconfident' || grade.uncertaintyHandling === 'unnecessary_abstention';
   if (failures) return 'repair';
   if (input.answer.status === 'insufficient_evidence') return grade.answerability === 'answerable' ? 'repair' : grade.uncertaintyHandling === 'appropriate' ? 'abstain' : 'uncertain';
-  if (grade.answerability === 'insufficient' || grade.answerability === 'conflicting') return 'abstain';
   if (grade.questionCoverage === 'incomplete') return 'repair';
   const factual = grade.units.filter(unit => unit.verdict !== 'non_factual');
   if (!factual.length) return 'uncertain';
