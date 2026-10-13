@@ -18,7 +18,7 @@ function snapshot(mode: 'live' | 'synthetic' = 'live'): ReviewAnswerSnapshot {
     model: mode === 'synthetic' ? 'synthetic-fixture' : 'gpt-5.6-luna', promptVersion: 'fixture-original', createdAt: '2026-10-12T00:00:00.000Z', contextProvenance: 'workspace_source_snapshot', generationSourceIds: [source.id] };
 }
 type Verdict = 'pass' | 'repair' | 'uncertain' | 'abstain' | 'invalid';
-function harness(grades: Verdict[], repairInvalid = false, unanswerable?: { answerability: 'insufficient' | 'conflicting'; verdict: 'unsupported' | 'contradicted' }) {
+function harness(grades: Verdict[], repairInvalid = false, unanswerable?: { answerability: 'insufficient' | 'conflicting'; verdict: 'unsupported' | 'contradicted' }, contradictorySupport = false) {
   const directory = mkdtempSync(join(tmpdir(), 'automatic-support-')), path = join(directory, 'review.sqlite'), ledger = join(directory, 'budget.sqlite');
   const calls: { kind: string; payload: any }[] = [];
   let gradeIndex = 0;
@@ -31,7 +31,7 @@ function harness(grades: Verdict[], repairInvalid = false, unanswerable?: { answ
         const verdict = grades[gradeIndex++] ?? 'pass';
         if (verdict === 'invalid') output = { invalid: true };
         else output = { units: payload.answerUnits.map((unit: { id: string }) => ({ unitId: unit.id, verdict: unanswerable?.verdict ?? (verdict === 'pass' || verdict === 'abstain' ? 'supported' : verdict === 'repair' ? 'unsupported' : 'uncertain'),
-          evidence: unanswerable?.verdict === 'contradicted' ? [{ sourceId: payload.evidence[0].id, quote: payload.evidence[0].text, relation: 'contradicts' }] : verdict === 'pass' || verdict === 'abstain' ? [{ sourceId: payload.evidence[0].id, quote: payload.evidence[0].text, relation: 'supports' }] : [], reason: 'Synthetic fixture judgment only.' })),
+          evidence: contradictorySupport ? ['supports', 'contradicts'].map(relation => ({ sourceId: payload.evidence[0].id, quote: payload.evidence[0].text, relation })) : unanswerable?.verdict === 'contradicted' ? [{ sourceId: payload.evidence[0].id, quote: payload.evidence[0].text, relation: 'contradicts' }] : verdict === 'pass' || verdict === 'abstain' ? [{ sourceId: payload.evidence[0].id, quote: payload.evidence[0].text, relation: 'supports' }] : [], reason: 'Synthetic fixture judgment only.' })),
           questionCoverage: 'complete', answerability: unanswerable?.answerability ?? (verdict === 'uncertain' ? 'uncertain' : verdict === 'abstain' ? 'insufficient' : 'answerable'), correctness: unanswerable?.verdict === 'contradicted' ? 'contradicted_by_sources' : 'consistent_with_sources', uncertaintyHandling: 'appropriate', reason: 'Synthetic fixture support check; no measured model quality.' };
       } else {
         assert.equal(kind, 'answer_revision_v1');
@@ -142,6 +142,21 @@ test('unanswerable original checks abstain after one grade even when individual 
       assert.equal(checked.repaired, undefined); assert.deepEqual(h.calls.map(call => call.kind), ['claim_support_v1']);
     } finally { flow.close(); h.cleanup(); }
   }
+});
+
+test('contradictory proofs cannot deliver a supported original or trigger another operation', async () => {
+  const h = harness(['pass', 'pass'], false, undefined, true), flow = new AutomaticSupport(h.provider, h.path, { liveEnabled: true });
+  try {
+    const original = snapshot(); flow.enqueue(original);
+    await flow.tick(); await flow.tick(); await flow.tick();
+    const checked = flow.get(original.id)!;
+    assert.equal(checked.status, 'inconclusive'); assert.equal(checked.delivery?.origin, 'safe_abstention');
+    assert.equal(checked.delivery?.versionId, null); assert.equal(checked.assessments.length, 0);
+    assert.equal(checked.operations.length, 1); assert.equal(checked.repaired, undefined);
+    assert.deepEqual(h.calls.map(call => call.kind), ['claim_support_v1']);
+    assert.equal(h.provider.receipt(checked.operations[0].runId)?.error_code, 'output_validation');
+    assert.deepEqual(checked.original, original);
+  } finally { flow.close(); h.cleanup(); }
 });
 
 test('completed grade receipt replays after persistence interruption without another model call', async () => {

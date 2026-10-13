@@ -47,6 +47,13 @@ test('wire validator rejects omitted/duplicate units and foreign/nonliteral/unsu
   assert.equal(validateClaimSupportOutput(input, mixed).disposition, 'repair');
 });
 
+test('supported units reject contradictory proofs even when every quote is literal', () => {
+  const sameQuote = output(); sameQuote.units[0].evidence.push({ ...sameQuote.units[0].evidence[0], relation: 'contradicts' });
+  assert.throws(() => validateClaimSupportOutput(fixture, sameQuote), /cannot include a contradictory proof/);
+  const differentQuote = output(); differentQuote.units[0].evidence.push({ sourceId: 'listing', quote: 'It has a twist cap.', relation: 'contradicts' });
+  assert.throws(() => validateClaimSupportOutput(fixture, differentQuote), /cannot include a contradictory proof/);
+});
+
 test('uncertainty and abstention cannot become an answered pass', () => {
   const grade = output(); grade.units[0].verdict = 'uncertain'; grade.units[0].evidence = [];
   assert.equal(validateClaimSupportOutput(fixture, grade).disposition, 'uncertain');

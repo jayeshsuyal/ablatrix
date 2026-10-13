@@ -113,6 +113,7 @@ export function validateClaimSupportOutput(input: ClaimSupportInput, output: unk
       proofs.add(identity);
     }
     if (unit.verdict === 'supported' && !unit.evidence.some(proof => proof.relation === 'supports')) throw new Error('Supported claim unit requires a supporting body proof.');
+    if (unit.verdict === 'supported' && unit.evidence.some(proof => proof.relation === 'contradicts')) throw new Error('Supported claim unit cannot include a contradictory proof.');
     if (unit.verdict === 'contradicted' && !unit.evidence.some(proof => proof.relation === 'contradicts')) throw new Error('Contradicted claim unit requires a contradictory body proof.');
     if (unit.verdict === 'non_factual' && unit.evidence.length) throw new Error('Non-factual units cannot contain proof assertions.');
   }
