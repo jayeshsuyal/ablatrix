@@ -14,7 +14,7 @@ The output must be a new file. The command exits nonzero for a failed or inconcl
 | Layer | Observable contract |
 | --- | --- |
 | RAG scope | The explicitly named model's source survives crowded, identically worded customer answers, including a target beyond the first 20 candidates. |
-| RAG boundaries | Different model identifiers cannot win scope priority through a partial identifier match. Unscoped questions retain their prior ordering. |
+| RAG boundaries | Different model identifiers cannot win scope priority through a partial identifier match. Explicit short IDs such as H5 survive the same crowding. Unscoped questions retain their prior ordering. |
 | Source context | Product isolation, full source text, separate parent questions, conflicting variants and numeric records survive retrieval and citation resolution. |
 | Context budget | Selection remains within five sources and 6,000 characters, counting parent-question metadata. |
 | Invalid output | An out-of-context citation produces no accepted revision or extra generation. |
@@ -49,13 +49,15 @@ Report fields named `bm25`, `dense` and `hybrid` describe scope-aware rankings. 
 
 | Run | Retrieval contracts | Harness contracts |
 | --- | --- | --- |
-| [Prior retriever, injected vectors](evidence/automated-contracts-2026-10-12/before-injected.json) | 3/7 required fixture sources retrieved; four scenarios fail. | Not run in this baseline replay. |
-| [Current retriever, injected vectors](evidence/automated-contracts-2026-10-12/injected.json) | 7/7 required fixture sources; 8/8 scenarios and 61/61 checkpoints pass. | 4/4 scenarios and 64/64 checkpoints pass. |
-| [Current retriever, cached pinned BGE](evidence/automated-contracts-2026-10-12/pinned-bge.json) | 7/7 required fixture sources; 8/8 scenarios and 53/53 checkpoints pass. | 4/4 scenarios and 64/64 checkpoints pass. |
+| [Prior retriever, injected vectors](evidence/automated-contracts-2026-10-12/before-injected-v2.json) | 3/8 required fixture sources retrieved; five scenarios fail. | Not run in this baseline replay. |
+| [Current retriever, injected vectors](evidence/automated-contracts-2026-10-12/injected-v2.json) | 8/8 required fixture sources; 9/9 scenarios and 69/69 checkpoints pass. | 4/4 scenarios and 64/64 checkpoints pass. |
+| [Current retriever, cached pinned BGE](evidence/automated-contracts-2026-10-12/pinned-bge-v2.json) | 8/8 required fixture sources; 9/9 scenarios and 60/60 checkpoints pass. | 4/4 scenarios and 64/64 checkpoints pass. |
 
 The prior replay used the same fictional fixtures, required IDs, constant vectors and citation resolver with the exact committed retriever from `8f0938cb77cac7e356fa66d82b23ac63ab6f732b`, loaded in an isolated temporary module tree. It checks the discovered failure and its repair; it is not a fresh model-quality experiment. The BGE run has fewer checkpoints because the injected-embedding input spy is unavailable in real-model mode. Both current harness runs observe two scripted transport attempts and zero paid calls.
 
-Verification: 318 server tests pass, one Linux-only test is skipped locally, the production build and strict CLI typecheck pass, and all 95 existing evidence-file hashes remain unchanged. The shared live ledger remains at 86 attempts with no pending reservation. CI also runs the existing Python selector and browser suites.
+The [initial eight-case qualification](evidence/automated-contracts-2026-10-12/injected.json), its [BGE run](evidence/automated-contracts-2026-10-12/pinned-bge.json) and [prior replay](evidence/automated-contracts-2026-10-12/before-injected.json) remain unchanged. Bot review found that the four-character heuristic incorrectly excluded explicitly labeled short models. The repair applies that heuristic only to unlabeled tokens, adds the H5 adversarial case and preserves exact matching and measurement guards. Version 2 qualifies the repaired implementation; its baseline uses the same nine cases.
+
+Verification: 318 server tests pass, one Linux-only test is skipped locally, the production build and strict CLI typecheck pass, and all 98 historical and initial-qualification evidence-file hashes remain unchanged. The shared live ledger remains at 86 attempts with no pending reservation. CI also runs the existing Python selector and browser suites.
 
 ## What a pass means
 

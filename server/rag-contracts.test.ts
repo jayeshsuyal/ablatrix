@@ -13,9 +13,10 @@ test('synthetic report covers scope truncation, conflicts, literal numbers and b
   assert.equal(report.mode, 'injected_contract');
   assert.equal(report.answerQualityMeasured, false);
   assert.equal(report.newProviderCalls, 0);
-  assert.equal(report.summary.cases, 8);
-  assert.equal(report.summary.requiredSources, 7);
-  assert.equal(report.summary.retrievedRequiredSources, 7);
+  assert.equal(report.summary.cases, 9);
+  assert.equal(report.summary.requiredSources, 8);
+  assert.equal(report.summary.retrievedRequiredSources, 8);
+  assert.equal(report.cases.find(row => row.id === 'explicit-short-model-beyond-five')!.rankings!.hybrid[0], 'short-07');
   assert.equal(report.cases.find(row => row.id === 'scope-beyond-twenty')!.rankings!.hybrid[0], 'scope-24');
   assert.equal(report.cases.find(row => row.id === 'scope-beyond-twenty')!.rankings!.bm25[0], 'scope-24', 'scope rescue occurs before the lexical candidate limit too');
   assert.deepEqual(report.cases.find(row => row.id === 'unscoped-order-unchanged')!.rankings!.hybrid, ['scope-00', 'scope-01', 'scope-02', 'scope-03', 'scope-04']);
@@ -42,7 +43,7 @@ test('contract report fails a lost required source instead of counting available
   });
   const report = await runRagContracts();
   assert.equal(report.mechanical, 'fail');
-  assert.equal(report.summary.retrievedRequiredSources, 6);
+  assert.equal(report.summary.retrievedRequiredSources, 7);
   assert.equal(report.cases.find(row => row.id === 'scope-beyond-twenty')!.checkpoints.find(check => check.id === 'required-source-coverage')!.status, 'fail');
 });
 
@@ -50,6 +51,9 @@ test('explicit numeric and dimension-shaped model labels rank exact scope while 
   for (const [question, parent] of [
     ['Does model 123456 fit?', 'Does model 123456 fit?'],
     ['Does model 12-INCH fit?', 'Does model 12-INCH fit?'],
+    ['Does model H5 fit?', 'Does model H5 fit?'],
+    ['Does model G2 fit?', 'Does model G2 fit?'],
+    ['Does model M50 fit?', 'Does model M50 fit?'],
     ['Does (WK110) fit?', 'Does model wk110 fit?']
   ]) {
     const text = 'Yes, it works.';

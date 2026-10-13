@@ -37,7 +37,7 @@ function scopeIdentifiers(text: string, kind: 'query' | 'parent' | 'explicit-mod
     if (kind === 'explicit-model' && !modelLabel) continue;
     const measurement = token.match(/^(\d+(?:\.\d+)?)-?([a-z]+)$/i);
     if (!labeled && ((measurement && physicalUnit.test(measurement[2])) || /^\d+(?:\.\d+)?(?:x\d+(?:\.\d+)?)+(?:[a-z]+)?$/i.test(token) || (/^\d+(?:\.\d+)?$/.test(token) && physicalUnit.test(after.trimStart().match(/^[a-z]+/i)?.[0] ?? '')))) continue;
-    if (token.length < 4 || !/\d/.test(token) || (!/[a-z]/i.test(token) && !labeled && !(kind === 'parent' && /^\d{5,}$/.test(token)))) continue;
+    if ((!labeled && token.length < 4) || !/\d/.test(token) || (!/[a-z]/i.test(token) && !labeled && !(kind === 'parent' && /^\d{5,}$/.test(token)))) continue;
     result.add(token.toUpperCase());
   }
   return result;

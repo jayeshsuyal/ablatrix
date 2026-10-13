@@ -40,7 +40,8 @@ function fixtures(): Fixture[] {
       passage('package-dimensions', 'package_dimensions: { width: { unit: cm, value: 31.75 }, length: { unit: cm, value: 55.0 } }'),
       passage('other-product-dimensions', 'Item and package dimensions: width 999 inches; length 999 inches.', undefined, 'other-product')
     ], requiredIds: ['item-dimensions', 'package-dimensions'] },
-    { id: 'context-budget-includes-parent-question', question: 'storage', passages: Array.from({ length: 7 }, (_, i) => passage(`budget-${i}`, `${'storage '.repeat(145)}record ${i}`, `${'context '.repeat(55)}source ${i}?`)), requiredIds: [], maxSelected: 3 }
+    { id: 'context-budget-includes-parent-question', question: 'storage', passages: Array.from({ length: 7 }, (_, i) => passage(`budget-${i}`, `${'storage '.repeat(145)}record ${i}`, `${'context '.repeat(55)}source ${i}?`)), requiredIds: [], maxSelected: 3 },
+    { id: 'explicit-short-model-beyond-five', question: 'Does it work with model H5?', passages: ['H50', 'G2', 'M50', 'XH5', 'H5-PLUS', 'G20', 'H5A', 'H5'].map((model, i) => passage(`short-${String(i).padStart(2, '0')}`, body, `Does it work with model ${model}?`)), requiredIds: ['short-07'], firstId: 'short-07' }
   ];
 }
 
