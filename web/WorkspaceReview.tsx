@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { RevisionPanel, type RevisionCase, type RevisionOverview } from './PaidReview';
 import './paid-review.css';
 import { useDemoSession } from './DemoSession';
+import { AutomaticCheck, useAutomaticCheck } from './AutomaticCheck';
 
 type WorkspaceReviewOverview = RevisionOverview & { pagination?: { page: number; pageSize: number; total: number; hasMore: boolean } };
 const describe = (value: string) => value.replaceAll('_', ' ');
@@ -85,6 +86,7 @@ export default function WorkspaceReview() {
   }
   const pagination = data?.pagination ?? { page: 1, pageSize: 20, total: data?.cases.length ?? 0, hasMore: false };
   const selected = data?.cases.find(item => item.qid === qid);
+  const automaticCheck = useAutomaticCheck(selected?.qid);
   const latest = selected?.versions.at(-1);
   const context = latest?.context;
   const synthetic = selected?.mode === 'synthetic' || selected?.versions[0]?.mode === 'synthetic';
@@ -104,6 +106,7 @@ export default function WorkspaceReview() {
           <nav className="pr-ai-status" aria-label="Review queue pages"><button type="button" disabled={changingPage || pagination.page <= 1} onClick={() => changePage(pagination.page - 1)}>Previous page</button> <span>Page {pagination.page} of {Math.max(1, Math.ceil(pagination.total / pagination.pageSize))} · {pagination.total} saved answers</span> <button type="button" disabled={changingPage || !pagination.hasMore} onClick={() => changePage(pagination.page + 1)}>Next page</button>{changingPage && <span role="status"> Loading page…</span>}</nav>
           <div className="pr-layout"><aside className="pr-queue" aria-label="Workspace answer review queue"><div className="pr-queue-head"><strong>Answer queue</strong><span>{data.cases.length} saved</span></div>{data.cases.map((item, index) => { const saved = item.versions.at(-1)?.context; return <button key={item.qid} disabled={changingPage} className={item.qid === qid ? 'active' : ''} aria-current={item.qid === qid ? 'true' : undefined} onClick={() => selectAnswer(item.qid)}><span>{String((pagination.page - 1) * pagination.pageSize + index + 1).padStart(2, '0')} · {reviewStatus(item).toUpperCase()}</span><strong>{saved?.question ?? 'Saved answer'}</strong><small>{saved?.product.title}</small></button>; })}</aside>
             {selected && latest && context ? <div className="pr-detail"><div className="pr-detail-head"><span>{synthetic ? 'SYNTHETIC · ' : ''}{reviewStatus(selected).toUpperCase()} · {selected.versions.length} SAVED {selected.versions.length === 1 ? 'VERSION' : 'VERSIONS'}</span><h2>{context.question}</h2><p>{context.product.title}</p></div>
+              <AutomaticCheck state={automaticCheck} sourceAnchor="sha256" />
               {hasRevision ? panel : <section className="pr-answer"><span>{synthetic ? 'ORIGINAL SYNTHETIC ANSWER' : 'ORIGINAL ANSWER'} · {describe(latest.answer.status)}</span><p>{latest.answer.answer}</p><small>{latest.model} · saved {new Date(latest.createdAt).toLocaleString()}</small></section>}
               {sourceProvenance === 'saved_retrieval_only' && <p className="pr-caveat">This older answer retains its retrieved passages. Its full product source snapshot was not saved at generation time.</p>}
               <section className="pr-sources"><h3>Saved source text <small>Check applicability and claim support before deciding.</small></h3>{context.sources.map((source, index) => { const citations = latest.answer.citations.filter(citation => citation.passageId === source.id); return <article id={`source-${source.sha256}`} key={source.id}><div className="pr-source-head"><strong>{index + 1}. {source.label}</strong><span>{citations.length ? 'CITED' : latest.investigation && !latest.investigation.selectedSourceIds.includes(source.id) ? 'EXCLUDED FROM REVISION' : latest.generationSourceIds?.includes(source.id) ? synthetic ? 'SUPPLIED TO TEMPLATE' : 'SUPPLIED TO MODEL' : 'AVAILABLE SOURCE'}</span></div>

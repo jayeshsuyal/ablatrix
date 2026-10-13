@@ -24,6 +24,7 @@ import { AnswerRevisions } from './answer-revisions.ts';
 import { ContextComparisonStore, createContextComparisonFixture } from './context-comparison.ts';
 import { DemoAccess, DemoAccessError, type DemoActor } from './demo-access.ts';
 import { SyntheticAnswerProvider } from './synthetic-answer-provider.ts';
+import { AutomaticSupport } from './automatic-support.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -63,9 +64,15 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   let comparisons: ContextComparisonStore | undefined;
   const contextComparisons = () => comparisons ??= new ContextComparisonStore(localOptions.comparisonDbPath ?? process.env.ABLATRIX_COMPARISON_DB);
   let revisions: AnswerRevisions | undefined;
+  let supportChecks: AutomaticSupport | undefined;
+  const automaticSupport = () => supportChecks ??= new AutomaticSupport(localAnswerProvider(), reviewDbPath, {
+    automatic: false,
+    liveEnabled: !localOptions.demoAccess && process.env.ABLATRIX_AUTOMATIC_CHECK_LIVE === '1',
+    canDispatch: () => !feedback?.publicOverview().busy && !workspace?.hasActive() && !revisions?.hasActive()
+  });
   let importedWorkspaceVersion: string | undefined;
   const answerRevisions = () => {
-    revisions ??= new AnswerRevisions(paidAnswerReview(), localAnswerProvider(), reviewDbPath, true, () => !feedback?.publicOverview().busy && !workspace?.hasActive());
+    revisions ??= new AnswerRevisions(paidAnswerReview(), localAnswerProvider(), reviewDbPath, true, () => !feedback?.publicOverview().busy && !workspace?.hasActive() && !supportChecks?.hasActive());
     const version = productWorkspace().reviewImportVersion();
     // Recover all historical handoffs at startup or after workspace writes, not
     // on every poll. A failed import leaves the old token so the next read retries.
@@ -75,10 +82,23 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
     }
     return revisions;
   };
+  const recoverAutomaticChecks = () => {
+    // Only saved intent from an explicit new-answer request is recoverable.
+    // Unflagged history and GET handlers never create automatic work.
+    for (const snapshot of productWorkspace().automaticCheckSnapshots()) {
+      try {
+        automaticSupport().enqueue(snapshot);
+        productWorkspace().markAutomaticCheckHandoff(snapshot.runId, 'enqueued');
+      } catch {
+        if (!automaticSupport().readiness().ready) continue;
+        productWorkspace().markAutomaticCheckHandoff(snapshot.runId, 'unavailable', 'Automatic checking is unavailable for this saved answer. Its original was preserved.');
+      }
+    }
+  };
   const loopTelemetry = () => telemetry ??= new LoopTelemetry();
   const feedbackLoop = () => {
     if (localOptions.demoAccess) throw new DemoAccessError(403, 'The hosted demo does not run legacy experiments.');
-    if (revisions?.hasActive()) throw new Error('Feedback revision is using the shared provider.');
+    if (revisions?.hasActive() || supportChecks?.hasActive()) throw new Error('Feedback revision or automatic check is using the shared provider.');
     if (!feedback) {
       const corpus = loadProductCorpus();
       const finalCorpus = loadFinalProductCorpus();
@@ -146,7 +166,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
         if (req.method === 'GET' && action === 'report') return json(res, 200, contextComparisons().report(id));
         if (req.method === 'GET' && action === 'export') return download(res, `ablatrix-context-comparison-${id}.json`, `${JSON.stringify(contextComparisons().exportPacket(id), null, 2)}\n`, 'application/json');
       }
-      if (req.method === 'POST' && path.startsWith('/api/loop/') && revisions?.hasActive()) return json(res, 409, { error: 'A revision is using the shared live provider.' });
+      if (req.method === 'POST' && path.startsWith('/api/loop/') && (revisions?.hasActive() || supportChecks?.hasActive())) return json(res, 409, { error: 'A revision or automatic check is using the shared live provider.' });
       if (req.method === 'GET' && path === '/api/paid-review') return json(res, 200, paidAnswerReview().overview());
       if (req.method === 'GET' && path === '/api/paid-review/revisions') return json(res, 200, answerRevisions().overview('pinned'));
       if (req.method === 'GET' && /^\/api\/paid-review\/revisions\/[a-f0-9-]{36}$/.test(path)) {
@@ -157,12 +177,18 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}\/decisions$/.test(path)) return json(res, 201, answerRevisions().decide(path.split('/')[3], await authenticatedBody()));
       if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}$/.test(path)) return json(res, 201, paidAnswerReview().review(path.split('/')[3], await authenticatedBody()));
       if (req.method === 'GET' && path === '/api/paid-review/export') return download(res, 'ablatrix-paid-answer-reviews.json', `${JSON.stringify(paidAnswerReview().overview(), null, 2)}\n`, 'application/json');
-      if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, productWorkspace().overview());
+      if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, { ...productWorkspace().overview(), automaticCheckReadiness: automaticSupport().readiness() });
+      if (req.method === 'GET' && path === '/api/workspace/automatic-checks') {
+        const answer = url.searchParams.get('answer');
+        if (!answer || !/^workspace-[a-f0-9-]{36}$/.test(answer)) return json(res, 400, { error: 'A valid workspace answer ID is required.' });
+        const check = automaticSupport().get(answer);
+        return json(res, 200, { checks: check ? [check] : [], readiness: automaticSupport().readiness() });
+      }
       if (req.method === 'GET' && path === '/api/workspace/reviews/export') {
         const first = answerRevisions().overview('workspace');
         const cases = [...first.cases];
         for (let page = 2; (page - 1) * 20 < (first.pagination?.total ?? 0); page++) cases.push(...answerRevisions().overview('workspace', { page }).cases);
-        return download(res, 'ablatrix-workspace-reviews.json', JSON.stringify({ scope: 'workspace', providerMode: localOptions.demoAccess ? 'synthetic' : 'local', note: 'Versioned workflow records. Synthetic answers do not measure model quality; source matching does not establish correctness.', cases }, null, 2) + '\n', 'application/json');
+        return download(res, 'ablatrix-workspace-reviews.json', JSON.stringify({ scope: 'workspace', providerMode: localOptions.demoAccess ? 'synthetic' : 'local', note: 'Versioned workflow records. Synthetic answers do not measure model quality; automatic checks are uncalibrated AI estimates, and source matching does not establish correctness.', cases, automaticChecks: automaticSupport().overview() }, null, 2) + '\n', 'application/json');
       }
       if (req.method === 'GET' && path === '/api/workspace/reviews') {
         const rawPage = url.searchParams.get('page') ?? '1';
@@ -176,23 +202,48 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (req.method === 'POST' && /^\/api\/workspace\/reviews\/workspace-[a-f0-9-]{36}\/decisions$/.test(path)) return json(res, 201, answerRevisions().decide(path.split('/')[4], await authenticatedBody()));
       if (req.method === 'POST' && path === '/api/workspace/products') return json(res, 201, productWorkspace().createProduct(await body(req, 110_000)));
       if (req.method === 'POST' && path === '/api/workspace/questions') {
-        const input = await body(req);
+        const rawInput = await body(req);
+        if (!rawInput || typeof rawInput !== 'object' || Array.isArray(rawInput)) return json(res, 400, { error: 'A workspace question object is required.' });
+        const { automaticCheck = false, ...input } = rawInput as Record<string, unknown>;
+        if (typeof automaticCheck !== 'boolean' || (automaticCheck && input.mode === 'preview')) return json(res, 400, { error: 'Automatic checking requires a generated answer and a boolean opt-in.' });
         if (localOptions.demoAccess && (!input || typeof input !== 'object' || !('mode' in input) || !['preview', 'synthetic'].includes(String(input.mode)))) return json(res, 403, { error: 'The hosted demo accepts preview or synthetic generation only.' });
+        if (automaticCheck) {
+          const checkReadiness = automaticSupport().readiness();
+          if (!checkReadiness.ready) return json(res, 409, { error: checkReadiness.reason });
+          const batchReadiness = localAnswerProvider().capacity(4);
+          if (!batchReadiness.ready) return json(res, 409, { error: batchReadiness.reason });
+        }
         const loop = input && typeof input === 'object' && 'mode' in input && input.mode === 'live' ? feedbackLoop() : undefined;
-        if (loop?.publicOverview().busy || revisions?.hasActive()) return json(res, 409, { error: 'Finish the active live dispatch before a workspace answer.' });
-        const run = await productWorkspace().ask(input, () => {
-          if (loop?.publicOverview().busy || revisions?.hasActive()) throw new Error('Feedback experiment or revision started during retrieval; no workspace live call was made.');
-        });
+        if (loop?.publicOverview().busy || revisions?.hasActive() || supportChecks?.hasActive()) return json(res, 409, { error: 'Finish the active dispatch before a workspace answer.' });
+        let run = await productWorkspace().ask(input, () => {
+          if (loop?.publicOverview().busy || revisions?.hasActive() || supportChecks?.hasActive()) throw new Error('Feedback experiment, revision or automatic check started during retrieval; no workspace live call was made.');
+        }, { automaticCheck });
+        let reviewHandoff: 'pending' | undefined;
         if (run.status === 'completed') {
           try { answerRevisions(); }
           catch {
             // Generation and its receipt are already durable. Review import is
             // replayable, so its failure must not invite another paid answer.
             console.warn('Review handoff deferred for saved workspace answer:', run.id);
-            return json(res, 201, { ...run, reviewHandoff: 'pending' });
+            reviewHandoff = 'pending';
+          }
+          if (automaticCheck) {
+            try {
+              const snapshot = productWorkspace().reviewSnapshots(run.id)[0];
+              if (!snapshot) throw new Error('Automatic check: source snapshot is unavailable.');
+              const check = automaticSupport().enqueue(snapshot);
+              run = productWorkspace().markAutomaticCheckHandoff(run.id, 'enqueued');
+              automaticSupport().start();
+              return json(res, 201, { ...run, ...(reviewHandoff ? { reviewHandoff } : {}), automaticCheck: check });
+            } catch {
+              // The original and receipt remain saved even if the check cannot start.
+              const automaticCheckError = 'Automatic checking is unavailable for this saved answer. Its original was preserved.';
+              try { run = productWorkspace().markAutomaticCheckHandoff(run.id, 'unavailable', automaticCheckError); } catch { /* Pending intent is retained if storage remains unavailable. */ }
+              return json(res, 201, { ...run, ...(reviewHandoff ? { reviewHandoff } : {}), automaticCheckError });
+            }
           }
         }
-        return json(res, run.status === 'failed' ? 502 : 201, run);
+        return json(res, run.status === 'failed' ? 502 : 201, { ...run, ...(reviewHandoff ? { reviewHandoff } : {}) });
       }
       if (req.method === 'GET' && path === '/api/loop/telemetry') return json(res, 200, loopTelemetry().status());
       if (req.method === 'POST' && path === '/api/loop/telemetry/sync') {
@@ -312,6 +363,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (error instanceof Error && error.message.startsWith('Paid review:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Context comparison:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Revision:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
+      if (error instanceof Error && error.message.startsWith('Automatic check:')) return json(res, 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Pilot')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted|Live optimization|holdout|frozen completed/.test(error.message)) {
         return json(res, 400, { error: error.message });
@@ -323,13 +375,15 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   let disposal: Promise<void> | undefined;
   const dispose = () => disposal ??= (async () => {
     await revisions?.pauseAndDrain();
+    await supportChecks?.pauseAndDrain();
     await pilot.close();
-    revisions?.close(); feedback?.close(); workspace?.close(); paidReview?.close(); feedbackProvider?.close(); telemetry?.close(); comparisons?.close();
+    revisions?.close(); supportChecks?.close(); feedback?.close(); workspace?.close(); paidReview?.close(); feedbackProvider?.close(); telemetry?.close(); comparisons?.close();
   })();
   const closeHttp = server.close.bind(server);
   server.close = (callback?: (error?: Error) => void) => {
     stopping = true;
     void revisions?.pauseAndDrain();
+    void supportChecks?.pauseAndDrain();
     closeHttp(error => {
       if (error) { callback?.(error); return; }
       void dispose().then(() => callback?.()).catch(reason => {
@@ -344,9 +398,10 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   const result = Object.assign(server, { shutdown: () => shutdown ??= (async () => {
     stopping = true;
     const worker = revisions?.pauseAndDrain();
+    const checkWorker = supportChecks?.pauseAndDrain();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
-    await worker; await dispose();
+    await worker; await checkWorker; await dispose();
   })() });
-  if (startRevisionWorker) answerRevisions();
+  if (startRevisionWorker) { answerRevisions(); recoverAutomaticChecks(); automaticSupport().start(); }
   return result;
 }

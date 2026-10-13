@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import type { WorkspaceProduct, WorkspaceRun } from '../server/product-workspace.ts';
+import type { AutomaticSupportJob } from '../server/automatic-support.ts';
+import { AutomaticCheck, useAutomaticCheck } from './AutomaticCheck';
 import './ask.css';
 import { useDemoSession } from './DemoSession';
 
-type WorkspaceOverview = { products: WorkspaceProduct[]; runs: WorkspaceRun[]; readiness: { ready: boolean; reason: string }; busy: boolean };
+type WorkspaceOverview = { products: WorkspaceProduct[]; runs: QuestionResponse[]; readiness: { ready: boolean; reason: string }; automaticCheckReadiness?: { ready: boolean; reason: string }; busy: boolean };
 type SourceDraft = { label: string; text: string; originalQuestion: string };
-type QuestionResponse = WorkspaceRun & { reviewHandoff?: 'pending' };
-const withSavedRun = (overview: WorkspaceOverview, run: WorkspaceRun): WorkspaceOverview => ({ ...overview, runs: [run, ...overview.runs.filter(item => item.id !== run.id)].slice(0, 100) });
+type QuestionResponse = WorkspaceRun & { reviewHandoff?: 'pending'; automaticCheck?: AutomaticSupportJob; automaticCheckRequested?: true; automaticCheckHandoff?: 'pending' | 'enqueued' | 'unavailable'; automaticCheckError?: string };
+const withSavedRun = (overview: WorkspaceOverview, run: QuestionResponse): WorkspaceOverview => ({ ...overview, runs: [run, ...overview.runs.filter(item => item.id !== run.id)].slice(0, 100) });
 
 async function request<T>(path: string, body?: unknown): Promise<T> {
   const response = await fetch(path, body === undefined ? undefined : { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
@@ -25,12 +27,20 @@ export default function Ask() {
   const [productId, setProductId] = useState('');
   const [question, setQuestion] = useState('');
   const [selectedRunId, setSelectedRunId] = useState('');
+  const [automatic, setAutomatic] = useState(false);
+  const [automaticChecks, setAutomaticChecks] = useState<Record<string, AutomaticSupportJob>>({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   useEffect(() => { request<WorkspaceOverview>('/api/workspace').then(value => { setOverview(value); setProductId(value.products[0]?.id ?? ''); setSelectedRunId(value.runs[0]?.id ?? ''); }).catch(reason => setError(reason instanceof Error ? reason.message : 'Could not load workspace.')); }, []);
   const selectedProduct = overview?.products.find(item => item.id === productId);
   const selectedRun = overview?.runs.find(item => item.id === selectedRunId);
+  const checkQid = selectedRun?.status === 'completed' && selectedRun.mode !== 'preview' ? `workspace-${selectedRun.id}` : undefined;
+  const check = useAutomaticCheck(checkQid, checkQid ? automaticChecks[checkQid] : undefined);
+  const checkForDisplay = !check.job && selectedRun?.automaticCheckError ? { ...check, error: selectedRun.automaticCheckError } : check;
+  const unconfirmedCheck = Boolean(selectedRun?.automaticCheckRequested && !check.job);
+  const displayedCitations = (!check.error ? check.job?.delivery?.answer.citations : undefined) ?? selectedRun?.answer?.citations ?? [];
+  const displayedSources = check.job?.original.context.sources.map(source => ({ id: source.id, reference: source.label, text: source.text, originalQuestion: source.originalQuestion })) ?? selectedRun?.retrieval?.passages;
   const liveReason = overview?.readiness.reason === 'Live mode is not configured. The synthetic demo is available locally.' ? 'Live answers need explicit local Sapiom configuration. Evidence preview remains available without a model call.' : overview?.readiness.reason;
   async function refresh() { const value = await request<WorkspaceOverview>('/api/workspace'); setOverview(value); return value; }
   async function addProduct(event: React.FormEvent) {
@@ -46,7 +56,7 @@ export default function Ask() {
     setBusy(true); setError(''); setNotice('');
     let run: QuestionResponse;
     try {
-      run = await request<QuestionResponse>('/api/workspace/questions', { productId, question, mode });
+      run = await request<QuestionResponse>('/api/workspace/questions', { productId, question, mode, ...(mode !== 'preview' ? { automaticCheck: automatic } : {}) });
     } catch (reason) {
       const value = await refresh().catch(() => null);
       if (value?.runs[0]?.status === 'failed') setSelectedRunId(value.runs[0].id);
@@ -56,10 +66,12 @@ export default function Ask() {
     }
     // The POST already saved this result. A later review or history failure must not suggest regenerating it.
     setOverview(current => current ? withSavedRun(current, run) : current);
+    if (run.automaticCheck) setAutomaticChecks(current => ({ ...current, [run.automaticCheck!.qid]: run.automaticCheck! }));
     setSelectedRunId(run.id);
-    const savedNotice = run.reviewHandoff === 'pending'
+    const savedNotice = run.automaticCheckError
+      ? `Answer saved. ${run.automaticCheckError}${run.reviewHandoff === 'pending' ? ' Review is temporarily unavailable.' : ''}` : run.reviewHandoff === 'pending'
       ? 'Answer saved. Review is temporarily unavailable; try opening its review again later.'
-      : mode === 'preview' ? 'Evidence retrieved. No model call was made.' : mode === 'synthetic' ? 'Synthetic answer saved. Review its source excerpts or request a scripted background correction.' : 'Answer saved. Open its review to accept it or request a background revision.';
+      : run.automaticCheck ? 'Answer saved. Its sources will be checked automatically, with at most one repair.' : mode === 'preview' ? 'Evidence retrieved. No model call was made.' : mode === 'synthetic' ? 'Synthetic answer saved. Review its source excerpts or request a scripted background correction.' : 'Answer saved. Open its review to accept it or request a background revision.';
     setNotice(savedNotice);
     try {
       const value = await request<WorkspaceOverview>('/api/workspace');
@@ -85,16 +97,19 @@ export default function Ask() {
           <label>Product<select value={productId} onChange={event => setProductId(event.target.value)} disabled={!overview?.products.length || busy}><option value="">Choose a saved product</option>{overview?.products.map(product => <option value={product.id} key={product.id}>{product.title}</option>)}</select></label>
           {selectedProduct && <div className="ask-source-count">{selectedProduct.sources.length} saved {selectedProduct.sources.length === 1 ? 'source' : 'sources'} · added {new Date(selectedProduct.createdAt).toLocaleDateString()}</div>}
           <label>Question<textarea value={question} onChange={event => setQuestion(event.target.value)} placeholder="What does the evidence say about…?" minLength={5} maxLength={500} rows={4} /></label>
-          <div className="ask-form-actions"><button className="ask-secondary" disabled={!canWrite || busy || !productId || question.trim().length < 5} onClick={() => ask('preview')}>{busy ? 'Working…' : 'Preview evidence'}</button><button className="ask-primary" disabled={!canWrite || busy || !productId || question.trim().length < 5 || !overview?.readiness.ready} onClick={() => ask(synthetic ? 'synthetic' : 'live')}>{synthetic ? 'Generate synthetic answer' : 'Generate cited answer ↗'}</button></div>
+          <label className="ask-check-option"><input type="checkbox" checked={automatic} disabled={!canWrite || busy || (!automatic && !overview?.automaticCheckReadiness?.ready)} onChange={event => setAutomatic(event.target.checked)} /> Automatically check sources and repair once</label>
+          <p className="ask-check-help">{synthetic ? 'Scripted source checks and one repair use no model calls or billing.' : 'Uses at most 3 additional model calls to check, repair once, and recheck. AI estimates can miss errors.'} {!overview?.automaticCheckReadiness?.ready && (overview?.automaticCheckReadiness?.reason ?? 'Automatic checks are unavailable.')}</p>
+          <div className="ask-form-actions"><button className="ask-secondary" disabled={!canWrite || busy || !productId || question.trim().length < 5} onClick={() => ask('preview')}>{busy ? 'Working…' : 'Preview evidence'}</button><button className="ask-primary" disabled={!canWrite || busy || !productId || question.trim().length < 5 || !overview?.readiness.ready || (automatic && !overview?.automaticCheckReadiness?.ready)} onClick={() => ask(synthetic ? 'synthetic' : 'live')}>{synthetic ? 'Generate synthetic answer' : 'Generate cited answer ↗'}</button></div>
           <p className="ask-readiness">{synthetic ? 'Offline scripted output only. No model tokens, provider charges, or planning reservations.' : overview?.readiness.ready ? 'Live answer ready. A model call uses the shared local planning allowance; actual billed charges are unavailable.' : liveReason ?? 'Checking model readiness…'}</p>
           <div className="ask-history"><h3>Saved questions</h3>{overview?.runs.length ? overview.runs.map(run => <button key={run.id} aria-pressed={selectedRunId === run.id} onClick={() => setSelectedRunId(run.id)}><strong>{run.question}</strong><span>{run.mode === 'synthetic' ? 'Synthetic answer' : run.mode === 'live' ? 'Model answer' : 'Evidence preview'} · {run.status.replaceAll('_', ' ')}</span></button>) : <p>No questions yet. Start with an evidence preview.</p>}</div>
         </section>
       </div>
       <section className="ask-panel ask-result" aria-labelledby="ask-result-title"><div className="ask-panel-heading"><span>03 / RESULT</span><h2 id="ask-result-title">{selectedRun ? selectedRun.question : 'Evidence and answer'}</h2><p>{selectedRun?.mode === 'synthetic' ? 'Synthetic saved output. This example and its review do not enter live quality results.' : selectedRun?.mode === 'preview' ? 'Retrieval preview · no model call or quality score.' : selectedRun ? 'Saved local model attempt. Citations verify quote membership, not full semantic correctness.' : 'Select a saved question to inspect its answer and source passages.'}</p></div>
-        {selectedRun?.answer && <div className="ask-answer"><span>{selectedRun.mode === 'synthetic' ? 'SYNTHETIC ANSWER' : selectedRun.answer.status === 'answered' ? 'ANSWERED FROM EVIDENCE' : 'INSUFFICIENT EVIDENCE'}</span><p>{selectedRun.answer.answer}</p><small>{selectedRun.model} · {selectedRun.mode === 'synthetic' ? 'no model tokens or charges' : selectedRun.usage ? `${selectedRun.usage.inputTokens + selectedRun.usage.outputTokens} tokens` : 'token usage unavailable'}</small></div>}
+        {selectedRun?.answer && !check.job && <div className="ask-answer"><span>{selectedRun.automaticCheckError ? 'ORIGINAL ANSWER · AUTOMATIC CHECK UNAVAILABLE' : unconfirmedCheck ? 'ORIGINAL ANSWER · SOURCE CHECK NOT CONFIRMED' : selectedRun.mode === 'synthetic' ? 'SYNTHETIC ANSWER' : selectedRun.answer.status === 'answered' ? 'ANSWERED FROM EVIDENCE' : 'INSUFFICIENT EVIDENCE'}</span><p>{selectedRun.answer.answer}</p><small>{selectedRun.model} · {selectedRun.mode === 'synthetic' ? 'no model tokens or charges' : selectedRun.usage ? `${selectedRun.usage.inputTokens + selectedRun.usage.outputTokens} tokens` : 'token usage unavailable'}</small></div>}
+        {selectedRun && <AutomaticCheck state={checkForDisplay} pending={unconfirmedCheck} mode={selectedRun.mode === 'synthetic' ? 'synthetic' : 'live'} />}
         {selectedRun?.status === 'completed' && selectedRun.mode !== 'preview' && selectedRun.answer && <p className="ask-review-link"><a className="ask-primary" href={`/review?answer=${encodeURIComponent(`workspace-${selectedRun.id}`)}`}>Review this answer ↗</a><span>Check its sources, record a decision, or request a background revision.</span></p>}
         {selectedRun?.error && <p className="ask-alert">{selectedRun.error}</p>}
-        {selectedRun?.retrieval && <div className="ask-evidence"><h3>Retrieved product evidence</h3>{selectedRun.retrieval.passages.map((passage, index) => { const citations = selectedRun.answer?.citations.filter(item => item.passageId === passage.id) ?? []; return <article key={passage.id} id={`source-${passage.id}`}><div><span>#{index + 1} · {passage.reference}</span>{citations.length > 0 && <strong>CITED</strong>}</div>{passage.originalQuestion && <p className="ask-original-question"><strong>Original customer question:</strong> {passage.originalQuestion}<small>Context for this answer; the question is not a confirmed product fact.</small></p>}<p>{passage.text}</p>{citations.map((citation, i) => <blockquote key={i}>“{citation.quote}”</blockquote>)}</article>; })}</div>}
+        {displayedSources && <div className="ask-evidence"><h3>{check.job ? 'Saved sources used for checking' : 'Retrieved product evidence'}</h3>{displayedSources.map((passage, index) => { const citations = displayedCitations.filter(item => item.passageId === passage.id); return <article key={passage.id} id={`source-${passage.id}`}><div><span>#{index + 1} · {passage.reference}</span>{citations.length > 0 && <strong>{check.job && !check.job.delivery ? 'CITED BY ORIGINAL' : 'CITED'}</strong>}</div>{passage.originalQuestion && <p className="ask-original-question"><strong>Original customer question:</strong> {passage.originalQuestion}<small>Context for this answer; the question is not a confirmed product fact.</small></p>}<p>{passage.text}</p>{citations.map((citation, i) => <blockquote key={i}>“{citation.quote}”</blockquote>)}</article>; })}</div>}
       </section>
     </main>
   </div>;

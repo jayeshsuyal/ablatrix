@@ -5,6 +5,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { z } from 'zod';
 import type { LoopProvider, LoopUsage, RetrievedPassage } from './loop-types.ts';
 import { revisionPromptIdentity, type RevisionPolicySelector, type RevisionPromptIdentity } from './revision-policy.ts';
+import { CLAIM_SUPPORT_TOOL, claimSupportRequestParts, validateClaimSupportOutput, replayClaimSupportReceipt, type ClaimSupportInput } from './claim-support.ts';
 import { SOURCE_ID_CITATION_INTERFACE, sourceCitationEvidence, sourceCitationOptions, resolveSourceCitationIds, stripSourceIdMarkers, type SourceCitationScope } from './citation-options.ts';
 export { SOURCE_ID_CITATION_INTERFACE, SOURCE_ID_LIMITS, sourceCitationEvidence, sourceCitationOptions, resolveSourceCitationIds, stripSourceIdMarkers, type SourceCitationScope, type SourceCitationOption, type CitationEvidence } from './citation-options.ts';
 
@@ -394,7 +395,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
       throw new FeedbackExternalError('unverified_outcome', `Investigation Sapiom operation has an unverified outcome (${errorCode}; attempt ${id}). The allowance remains recorded and the operation was not retried.`);
     }
   }
-  private async request(kind: string, system: string, input: unknown, parameters: object, runId?: string, revisionIdentity?: { revisionPolicy?: RevisionPolicySelector; systemInstructionsSha256: string; citationInterface?: typeof SOURCE_ID_CITATION_INTERFACE | typeof CONSTRAINED_SOURCE_ID_CITATION_INTERFACE | typeof FLAT_SOURCE_ID_CITATION_INTERFACE; optionSetSha256?: string; responseSchemaSha256?: string }): Promise<{ id: string; output: unknown; model: string; usage: LoopUsage }> {
+  private async request(kind: string, system: string, input: unknown, parameters: object, runId?: string, revisionIdentity?: { revisionPolicy?: RevisionPolicySelector; systemInstructionsSha256: string; citationInterface?: typeof SOURCE_ID_CITATION_INTERFACE | typeof CONSTRAINED_SOURCE_ID_CITATION_INTERFACE | typeof FLAT_SOURCE_ID_CITATION_INTERFACE; optionSetSha256?: string; responseSchemaSha256?: string; requestSha256?: string; answerSha256?: string; sourceContextSha256?: string; assessmentKind?: 'ai_claim_support_estimate' }): Promise<{ id: string; output: unknown; model: string; usage: LoopUsage }> {
     const body = completionBody(kind, system, input, parameters);
     const id = this.reserve(kind, runId);
     let errorCode = 'network';
@@ -441,6 +442,43 @@ export class SapiomFeedbackProvider implements LoopProvider {
   }
   private markOutputInvalid(id: string): void {
     this.db.prepare("UPDATE loop_provider_calls SET error_code='output_validation' WHERE id=?").run(id);
+  }
+  /** One additive AI assessment operation. A recorded phase can replay its exact
+   * valid receipt, but can never reserve or dispatch another attempt. */
+  async gradeClaimSupport(input: ClaimSupportInput) {
+    const parts = claimSupportRequestParts(input), previous = this.receipt(input.runId);
+    if (previous) return replayClaimSupportReceipt(input, previous);
+    const frozenInput: ClaimSupportInput = { runId: input.runId, ...parts.normalized };
+    const identity = { ...parts.bindings, assessmentKind: 'ai_claim_support_estimate' as const };
+    const result = await this.request(CLAIM_SUPPORT_TOOL, parts.prompt.systemInstructions, parts.payload, parts.parameters, input.runId, identity);
+    try {
+      const assessment = validateClaimSupportOutput(frozenInput, result.output);
+      return { assessment, attemptId: result.id, model: result.model, usage: result.usage, promptVersion: parts.prompt.promptVersion, ...parts.bindings };
+    } catch {
+      this.markOutputInvalid(result.id);
+      throw new Error(`Claim support output failed validation (attempt ${result.id}); it was not retried.`);
+    }
+  }
+  /** Automatic repair keeps the historical revision wire body intact, adding
+   * request-bound receipts and strict replay solely for the new worker. */
+  async reviseAutomatic(input: RevisionInput) {
+    const frozen = structuredClone(input), prompt = revisionPromptIdentity(frozen.revisionPolicy, Boolean(frozen.investigation));
+    const requestSha256 = instructionHash(JSON.stringify(revisionRequestBody(frozen))), previous = this.receipt(frozen.runId);
+    if (previous) {
+      try {
+        if (previous.kind !== 'answer_revision_v1' || previous.status !== 'completed' || previous.error_code || !previous.receipt_json) throw new Error('receipt_state');
+        const document = JSON.parse(previous.receipt_json);
+        if (document.requestSha256 !== requestSha256 || document.promptVersion !== prompt.promptVersion || document.systemInstructionsSha256 !== prompt.systemInstructionsSha256 || document.revisionPolicy !== prompt.policy || document.model !== previous.model || !aliases.has(document.model)) throw new Error('receipt_identity');
+        const answer = validateSourceQuotes(answerSchema.parse(document.output), frozen.evidence);
+        const usage = document.usage === null ? null : z.object({ inputTokens: z.number().int().nonnegative(), outputTokens: z.number().int().nonnegative() }).strict().parse(document.usage);
+        return { attemptId: previous.id, answer, model: document.model as string, usage, promptVersion: prompt.promptVersion, systemInstructionsSha256: prompt.systemInstructionsSha256, requestSha256 };
+      } catch { throw new Error('Automatic repair has a recorded attempt requiring reconciliation; it was not redispatched.'); }
+    }
+    const result = await this.request('answer_revision_v1', prompt.systemInstructions, revisionPayload(frozen, prompt), answerParameters, frozen.runId,
+      { revisionPolicy: prompt.policy, systemInstructionsSha256: prompt.systemInstructionsSha256, requestSha256 });
+    try {
+      return { attemptId: result.id, answer: validateSourceQuotes(answerSchema.parse(result.output), frozen.evidence), model: result.model, usage: result.usage, promptVersion: prompt.promptVersion, systemInstructionsSha256: prompt.systemInstructionsSha256, requestSha256 };
+    } catch { this.markOutputInvalid(result.id); throw new Error(`Automatic repair failed output validation (attempt ${result.id}); it was not retried.`); }
   }
   async revise(input: RevisionInput) {
     const prompt = revisionPromptIdentity(input.revisionPolicy, Boolean(input.investigation));
