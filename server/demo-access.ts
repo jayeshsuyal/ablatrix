@@ -67,7 +67,7 @@ function singleHeader(req: IncomingMessage, name: string): string | undefined {
 
 const workspaceId = 'workspace-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}';
 const comparisonId = '[A-Za-z0-9_-]{1,120}';
-const reads = new Set(['/api/session', '/api/health', '/api/workspace', '/api/workspace/reviews', '/api/workspace/reviews/export', '/api/context-comparisons', '/', '/ask', '/review', '/compare']);
+const reads = new Set(['/api/session', '/api/health', '/api/workspace', '/api/workspace/automatic-checks', '/api/workspace/reviews', '/api/workspace/reviews/export', '/api/context-comparisons', '/', '/ask', '/review', '/compare']);
 const comparisonRead = new RegExp(`^/api/context-comparisons/${comparisonId}(?:/(?:report|export))?$`);
 const reviewerWrite = new RegExp(`^(?:/api/workspace/reviews/${workspaceId}/decisions|/api/context-comparisons/${comparisonId}/reviews)$`);
 const operatorWrite = new RegExp(`^(?:/api/workspace/(?:products|questions)|/api/workspace/reviews/${workspaceId}/revisions|/api/context-comparisons/fixture)$`);

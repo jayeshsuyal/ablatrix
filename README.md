@@ -2,7 +2,7 @@
 
 **Product QA with scoped retrieval, cited answers and a bounded correction harness.**
 
-Ablatrix is a local product QA prototype. It retrieves product-specific passages, generates cited answers through Sapiom when explicitly enabled, and saves source snapshots and revision receipts. Automatic regression contracts check retrieval and execution reliability in CI; a separate feedback lab tests answer-policy changes against fresh products before promotion.
+Ablatrix is a local product QA prototype. It retrieves product-specific passages, generates cited answers through Sapiom when explicitly enabled, and saves source snapshots and revision receipts. Optional automatic source checks can request one repair, then pass an AI check or abstain. Regression contracts check retrieval and execution reliability in CI; a separate feedback lab tests answer-policy changes against fresh products before promotion.
 
 ## See it
 
@@ -20,6 +20,10 @@ Ablatrix is a local product QA prototype. It retrieves product-specific passages
 flowchart LR
   subgraph Ask["/ask · Product QA"]
     A[Product sources] --> B[BM25 + BGE retrieval] --> C[Cited answer]
+    C -->|Optional| V[AI source-support check]
+    V -->|Repairable flaw| R[One repair + recheck]
+    V --> O[AI estimate or abstention]
+    R --> O
   end
   subgraph Review["/review · Answer review"]
     C --> D[Saved answer + source snapshot] --> E[Human source check]
@@ -53,6 +57,8 @@ For your own products, open [Product QA](http://127.0.0.1:4173/ask), save source
 To reproduce that answer-to-review workflow without paid calls, run `node --import tsx --test server/workspace-review-api.test.ts`. It exercises the HTTP API and real background worker with an injected synthetic transport, including duplicate rejection requests, stale decisions, and restart recovery. See [workflow and limits](docs/workspace-answer-review.md).
 
 ### Automatic reliability gate
+
+For new `/ask` answers, **Automatically check sources and repair once** starts a background check against the frozen source packet. Every server-defined answer unit must be assessed; literal citations and known source IDs are checked separately. A definite repairable flaw permits one revision and an independent recheck. Missing support, uncertainty or an unverified receipt stops the sequence. Original answers remain accessible, and no human acceptance is recorded. This is an **uncalibrated AI estimate**, not measured correctness. The live option is disabled by default and needs a separate approved plan for up to three extra calls per answer. See [workflow, offline example and limits](docs/automatic-source-checks.md).
 
 ```sh
 npm run check:reliability -- --out /tmp/ablatrix-reliability.json

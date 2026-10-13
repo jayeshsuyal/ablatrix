@@ -108,7 +108,7 @@ test('the public Host and modifying Origin are exact, with no forwarded-header a
 
 test('every role can inspect the narrow demo surface; legacy APIs and path tricks stay blocked', async () => {
   const boundary = await access();
-  const readPaths = ['/api/session', '/api/health', '/api/workspace', '/api/workspace/reviews', '/api/workspace/reviews/export', '/api/context-comparisons', '/api/context-comparisons/example_1', '/api/context-comparisons/example_1/report', '/api/context-comparisons/example_1/export', '/', '/ask', '/review', '/compare', '/assets/index-abc123.js', '/assets/index-abc123.css', '/favicon.ico'];
+  const readPaths = ['/api/session', '/api/health', '/api/workspace', '/api/workspace/automatic-checks', '/api/workspace/reviews', '/api/workspace/reviews/export', '/api/context-comparisons', '/api/context-comparisons/example_1', '/api/context-comparisons/example_1/report', '/api/context-comparisons/example_1/export', '/', '/ask', '/review', '/compare', '/assets/index-abc123.js', '/assets/index-abc123.css', '/favicon.ico'];
   const forbidden = ['/api/loop', '/api/paid-review', '/api/pilot', '/api/runs', '/api/experiments', '/api/optimizations', '/api/live-readiness', '/api/context-comparisons/example/reviews', '/api/context-comparisons/example/export/extra', '/assets/../server/index.ts', '/assets/index.js.map', '/.env', '/review/extra', '//ask', '/api/workspace?mode=live'];
   for (const member of config.members) {
     const actor = await boundary.authenticate(request(await token({ sub: member.subject })));

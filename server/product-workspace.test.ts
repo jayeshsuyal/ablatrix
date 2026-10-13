@@ -145,3 +145,54 @@ test('a feedback batch starting during retrieval prevents workspace live dispatc
     assert.equal(run.status, 'failed'); assert.match(run.error ?? '', /no workspace live call/); assert.equal(calls, 0);
   } finally { workspace.close(); }
 });
+
+test('automatic-check intent is durable before generation and handoff metadata preserves exact snapshots', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'workspace-automatic-intent-')), path = join(directory, 'workspace.sqlite');
+  let calls = 0, expectedIntent = true;
+  const provider: LoopProvider = { readiness: () => ({ ready: true, reason: 'Synthetic test transport.' }), async answer(input) {
+    calls++;
+    const db = new DatabaseSync(path), row = db.prepare('SELECT document FROM workspace_runs WHERE id=?').get(input.runId!) as { document: string };
+    const persisted = JSON.parse(row.document); db.close();
+    assert.equal(persisted.status, 'retrieving');
+    assert.equal(persisted.automaticCheckRequested, expectedIntent ? true : undefined);
+    assert.equal(persisted.automaticCheckHandoff, expectedIntent ? 'pending' : undefined);
+    return { answer: { answer: 'The listing says the shell is nylon.', status: 'answered', citations: [{ passageId: input.passages[0].id, quote: 'waterproof nylon shell' }] }, model: 'test-model', usage: null };
+  }, async propose() { throw new Error('Unexpected proposal.'); } };
+  let workspace = new ProductWorkspace(path, provider, retrieverFor);
+  try {
+    const product = workspace.createProduct({ title: 'Trail jacket', sources: [{ label: 'Listing', text: 'The jacket has a waterproof nylon shell with a detachable hood.' }] });
+    const requested = await workspace.ask({ productId: product.id, question: 'What is the shell made of?', mode: 'live' }, undefined, { automaticCheck: true });
+    assert.equal(requested.status, 'completed'); assert.equal(requested.automaticCheckHandoff, 'pending');
+    expectedIntent = false;
+    const ordinary = await workspace.ask({ productId: product.id, question: 'What is the shell made of?', mode: 'live' });
+    assert.equal(ordinary.status, 'completed'); assert.equal(ordinary.automaticCheckRequested, undefined);
+    const originalSnapshot = JSON.stringify(workspace.reviewSnapshots(requested.id));
+    assert.equal(workspace.automaticCheckSnapshots().length, 1);
+    assert.equal(workspace.automaticCheckSnapshots()[0].runId, requested.id);
+    assert.equal(workspace.reviewSnapshots('unknown-run').length, 0);
+    workspace.close(); workspace = new ProductWorkspace(path, provider, retrieverFor);
+    assert.equal(workspace.automaticCheckSnapshots()[0].runId, requested.id, 'Completed generation retains pending check after restart.');
+    assert.equal(calls, 2, 'Recovery reads never regenerate an answer.');
+    const marked = workspace.markAutomaticCheckHandoff(requested.id, 'enqueued');
+    assert.equal(marked.automaticCheckHandoff, 'enqueued'); assert.equal(workspace.automaticCheckSnapshots().length, 0);
+    assert.equal(JSON.stringify(workspace.reviewSnapshots(requested.id)), originalSnapshot, 'Handoff flags do not change immutable review snapshot bytes.');
+    assert.equal(workspace.markAutomaticCheckHandoff(requested.id, 'enqueued').automaticCheckHandoff, 'enqueued');
+    assert.throws(() => workspace.markAutomaticCheckHandoff(requested.id, 'unavailable', 'Changed decision'), /terminal state/);
+    assert.throws(() => workspace.markAutomaticCheckHandoff(ordinary.id, 'enqueued'), /did not request/);
+    await assert.rejects(workspace.ask({ productId: product.id, question: 'What is the shell made of?', mode: 'preview' }, undefined, { automaticCheck: true }), /generated answer/);
+    assert.equal(calls, 2);
+  } finally { workspace.close(); rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('oversized full automatic-check context fails before any original model call', async () => {
+  let calls = 0;
+  const provider: LoopProvider = { readiness: () => ({ ready: true, reason: 'Synthetic test transport.' }), async answer() { calls++; throw new Error('Preflight must prevent original generation.'); }, async propose() { throw new Error('Unexpected proposal.'); } };
+  const workspace = new ProductWorkspace(':memory:', provider, retrieverFor);
+  try {
+    const product = workspace.createProduct({ title: 'Synthetic long parent questions', sources: Array.from({ length: 8 }, (_, index) => ({ label: `Fixture source ${index + 1}`, text: 'Synthetic listing detail. '.repeat(60).slice(0, 1490), originalQuestion: 'Q'.repeat(500) })) });
+    const run = await workspace.ask({ productId: product.id, question: 'What does the listing state?', mode: 'live' }, undefined, { automaticCheck: true });
+    assert.equal(run.status, 'failed'); assert.equal(run.answer, null); assert.equal(calls, 0);
+    assert.equal(run.automaticCheckRequested, true); assert.equal(run.automaticCheckHandoff, 'unavailable');
+    assert.match(run.automaticCheckError ?? '', /No answer call/); assert.equal(workspace.automaticCheckSnapshots().length, 0);
+  } finally { workspace.close(); }
+});
