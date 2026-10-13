@@ -147,3 +147,42 @@ test('startup recovers saved check intent only, and a failed enqueue remains vis
     assert.equal((db.prepare('SELECT COUNT(*) AS n FROM answer_review_events').get() as {n:number}).n, 0);
   } finally { db.close(); await server.shutdown(); store.close(); rmSync(directory, { recursive: true, force: true }); }
 });
+
+test('a successful enqueue is returned even when its workspace handoff marker cannot be saved', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'ablatrix-auto-marker-'));
+  const reviews = join(directory, 'reviews.sqlite');
+  const provider = new SyntheticAnswerProvider(join(directory, 'synthetic.sqlite'));
+  const workspace = new ProductWorkspace(join(directory, 'workspace.sqlite'), provider, retriever);
+  const store = new RunStore(join(directory, 'store.sqlite'));
+  const server = createApp(store, 'fixture', undefined, new PilotRunner(new PilotStore()), undefined, undefined, workspace, new PaidAnswerReview(reviews), true, { answerProvider: provider, reviewDbPath: reviews });
+  server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  const address = server.address(); assert.ok(address && typeof address !== 'string');
+  const base = `http://127.0.0.1:${address.port}`;
+  const mark = workspace.markAutomaticCheckHandoff.bind(workspace);
+  let unavailableWrites = 0;
+  workspace.markAutomaticCheckHandoff = (id, state, error) => {
+    if (state === 'enqueued') throw new Error('SYNTHETIC workspace storage lock');
+    unavailableWrites++; return mark(id, state, error);
+  };
+  try {
+    const product = workspace.createProduct({ title: 'SYNTHETIC marker bottle', sources: [{ label: 'SYNTHETIC manual', text: 'SYNTHETIC fixture: This bottle holds 600 ml and has a twist cap.' }] });
+    const response = await fetch(base + '/api/workspace/questions', { method: 'POST', headers: { 'content-type': 'application/json', origin: base }, body: JSON.stringify({ productId: product.id, question: 'How much does this bottle hold?', mode: 'synthetic', automaticCheck: true }) });
+    const run = await response.json();
+    assert.equal(response.status, 201, JSON.stringify(run));
+    assert.equal(run.automaticCheck.status, 'queued');
+    assert.equal(run.automaticCheckHandoff, 'pending');
+    assert.equal(run.automaticCheckError, undefined);
+    assert.equal(unavailableWrites, 0, 'a successful job cannot be marked unavailable');
+    const path = `/api/workspace/automatic-checks?answer=workspace-${run.id}`;
+    const read = async () => (await (await fetch(base + path)).json()).checks[0];
+    assert.equal((await read()).id, run.automaticCheck.id);
+    const deadline = Date.now() + 12_000;
+    while ((await read()).status !== 'repaired' && Date.now() < deadline) await delay(100);
+    const checked = await read();
+    assert.equal(checked.status, 'repaired');
+    assert.equal(checked.operations.length, 3);
+    assert.deepEqual(checked.original.answer, run.answer);
+    assert.equal(unavailableWrites, 0);
+    assert.equal(workspace.automaticCheckSnapshots()[0].runId, run.id, 'pending marker can later replay the existing job');
+  } finally { workspace.markAutomaticCheckHandoff = mark; await server.shutdown(); store.close(); rmSync(directory, { recursive: true, force: true }); }
+});

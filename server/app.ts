@@ -88,11 +88,15 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
     for (const snapshot of productWorkspace().automaticCheckSnapshots()) {
       try {
         automaticSupport().enqueue(snapshot);
-        productWorkspace().markAutomaticCheckHandoff(snapshot.runId, 'enqueued');
       } catch {
         if (!automaticSupport().readiness().ready) continue;
-        productWorkspace().markAutomaticCheckHandoff(snapshot.runId, 'unavailable', 'Automatic checking is unavailable for this saved answer. Its original was preserved.');
+        try { productWorkspace().markAutomaticCheckHandoff(snapshot.runId, 'unavailable', 'Automatic checking is unavailable for this saved answer. Its original was preserved.'); }
+        catch { console.warn('Automatic-check handoff marker deferred:', snapshot.runId); }
+        continue;
       }
+      // The durable job is authoritative even if its workspace marker cannot be saved.
+      try { productWorkspace().markAutomaticCheckHandoff(snapshot.runId, 'enqueued'); }
+      catch { console.warn('Queued automatic-check marker deferred:', snapshot.runId); }
     }
   };
   const loopTelemetry = () => telemetry ??= new LoopTelemetry();
@@ -228,19 +232,23 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
             reviewHandoff = 'pending';
           }
           if (automaticCheck) {
+            let check: ReturnType<AutomaticSupport['enqueue']>;
             try {
               const snapshot = productWorkspace().reviewSnapshots(run.id)[0];
               if (!snapshot) throw new Error('Automatic check: source snapshot is unavailable.');
-              const check = automaticSupport().enqueue(snapshot);
-              run = productWorkspace().markAutomaticCheckHandoff(run.id, 'enqueued');
-              automaticSupport().start();
-              return json(res, 201, { ...run, ...(reviewHandoff ? { reviewHandoff } : {}), automaticCheck: check });
+              check = automaticSupport().enqueue(snapshot);
             } catch {
               // The original and receipt remain saved even if the check cannot start.
               const automaticCheckError = 'Automatic checking is unavailable for this saved answer. Its original was preserved.';
               try { run = productWorkspace().markAutomaticCheckHandoff(run.id, 'unavailable', automaticCheckError); } catch { /* Pending intent is retained if storage remains unavailable. */ }
               return json(res, 201, { ...run, ...(reviewHandoff ? { reviewHandoff } : {}), automaticCheckError });
             }
+            // Once enqueue succeeds, return that saved job regardless of marker
+            // persistence. A failed marker must not hide already authorized work.
+            try { run = productWorkspace().markAutomaticCheckHandoff(run.id, 'enqueued'); }
+            catch { console.warn('Queued automatic-check marker deferred:', run.id); }
+            automaticSupport().start();
+            return json(res, 201, { ...run, ...(reviewHandoff ? { reviewHandoff } : {}), automaticCheck: check });
           }
         }
         return json(res, run.status === 'failed' ? 502 : 201, { ...run, ...(reviewHandoff ? { reviewHandoff } : {}) });
