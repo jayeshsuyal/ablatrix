@@ -8,7 +8,7 @@ The `/loop` workspace implements the proposed flow in [feedback-loop-roadmap.md]
 npm ci
 npm run feedback:prepare
 npm run feedback:prepare -- --final
-npm run feedback:retrieval-audit
+npm run feedback:retrieval-audit -- --out /tmp/ablatrix-development-retrieval.json
 npm run local
 ```
 
@@ -35,7 +35,7 @@ Set `ABLATRIX_LOOP_LIVE=1`, the approved `ABLATRIX_SPEND_CAP_USD`, and an accura
 Live answers and proposals use the named Sapiom `gpt-luna` Router alias, `run_now`, a 4,096-token output bound, and no reasoning effort. The live app uses preselected snippet IDs for answer citations and maps them to exact saved quotes. Returned model identity must match the known alias family. Calls are not automatically retried, and failed live answers stop further batch or validation dispatch. Both policies in a validation are evaluated under the same model constraints. Review each live validation answer against its evidence before deciding; an optimizer never supplies its own human correctness label.
 
 The saved standalone revision 2 validation packet is imported into the app's reservation ledger at startup. The app and standalone runner share consumed validation products. Four of six validation products have been used across the first official and standalone rounds. The two remaining products are reserved for a frozen future comparison. The offline retrieval audit uses development cases only and reports passage coverage, with the annotation limits described in [the backend audit](backend-consolidation-2026-09-26.md).
-Current retrieval indexes the answer portion of customer Q&A while preserving the full passage for citations. Earlier saved live comparisons used the prior index; compare future policy arms only under one frozen retrieval method.
+Current retrieval indexes the answer portion of customer Q&A while preserving the full passage for citations. Exact model identifiers in separate source-question metadata also influence source selection. Earlier saved live comparisons used prior retrieval versions; compare future policy arms only under one frozen retrieval method. Retrieval audits require a new output file and use a temporary index so historical records and application caches remain intact. The [automatic contract gate](automated-reliability.md) uses synthetic sources and needs no manual judgments.
 
 ## What gets saved
 

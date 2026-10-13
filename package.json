@@ -8,6 +8,7 @@
     "build": "tsc --noEmit && vite build",
     "start": "node --env-file-if-exists=.env --import tsx server/index.ts",
     "test": "node --import tsx --test server/*.test.ts",
+    "check:reliability": "node --import tsx scripts/reliability-check.ts",
     "test:e2e": "npm run build && playwright test",
     "local": "npm run build && npm start",
     "replay": "node --import tsx server/replay.ts",

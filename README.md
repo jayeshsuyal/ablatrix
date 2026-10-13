@@ -1,8 +1,8 @@
 # Ablatrix
 
-**Product answers grounded in evidence, with a review loop for the answers that miss.**
+**Product QA with scoped retrieval, cited answers and a bounded correction harness.**
 
-Ablatrix is a local product QA prototype. It retrieves product-specific passages, generates cited answers through Sapiom when explicitly enabled, and gives reviewers a way to investigate and revise weak answers. A separate feedback lab tests answer-policy changes against fresh products before promotion.
+Ablatrix is a local product QA prototype. It retrieves product-specific passages, generates cited answers through Sapiom when explicitly enabled, and saves source snapshots and revision receipts. Automatic regression contracts check retrieval and execution reliability in CI; a separate feedback lab tests answer-policy changes against fresh products before promotion.
 
 ## See it
 
@@ -52,6 +52,14 @@ For your own products, open [Product QA](http://127.0.0.1:4173/ask), save source
 
 To reproduce that answer-to-review workflow without paid calls, run `node --import tsx --test server/workspace-review-api.test.ts`. It exercises the HTTP API and real background worker with an injected synthetic transport, including duplicate rejection requests, stale decisions, and restart recovery. See [workflow and limits](docs/workspace-answer-review.md).
 
+### Automatic reliability gate
+
+```sh
+npm run check:reliability -- --out /tmp/ablatrix-reliability.json
+```
+
+This offline command checks adversarial source retrieval and the revision worker, including crowded model scopes, rejected citations, restart recovery and zero-dispatch stops. CI runs it and uploads a report with expected and observed values for each checkpoint. It needs no manual judgments or paid calls. The default embeddings and provider responses are synthetic; a separate cached BGE mode exercises the real local embedding runtime. See [contracts, results and limits](docs/automated-reliability.md). Passing these contracts establishes regression coverage, not arbitrary answer correctness.
+
 ### Compare saved answers
 
 For a focused local correction demonstration, follow the [five-case walkthrough](docs/local-correction-walkthrough.md): a supported control, clearer wording, a missed source, a saved wrong-context correction, and a missing-information stop. `npm run walkthrough -- --out /tmp/ablatrix-walkthrough.json` freezes its inputs and checks source-routing without paid calls. The [two-call live follow-through](docs/evidence/local-correction-live-2026-10-10.md) produced mixed results: clearer color wording, but excessive abstention despite a stronger capacity source. Human decisions remain pending.
@@ -62,7 +70,7 @@ The workbench also imports experiment packets through `npm run compare -- import
 
 The [server-resolved citation comparison](docs/evidence/source-id-correction-2026-10-10/live-report.md) stopped after eight of 24 planned calls: seven accepted outputs with 22 exact source-body citations, then a rejected malformed citation ID. Two of eight revision pairs completed; the remaining calls were not attempted. No human quality result or measured improvement was established.
 
-The subsequent [citation-schema fix](docs/constrained-source-ids.md) declares only the IDs offered in each request. The [six-call diagnostic](docs/evidence/source-id-diagnostic-2026-10-11/live-report.md) stopped after five attempts: four accepted outputs with 12 exact source-body citations, then a citation-container shape error; one revision stayed unattempted. Declaring the schema did not prevent that invalid shape. Router-enforced decoding and answer-quality improvement remain unverified. The additive [flat-ID interface](docs/flat-source-ids.md) reproduces that failure with synthetic responses and preserves the earlier contracts. It is qualified offline; the [fresh quality comparison](docs/flat-source-quality-comparison.md) has audited source snapshots and an offline execution harness; paid execution and human review are pending.
+The subsequent [citation-schema fix](docs/constrained-source-ids.md) declares only the IDs offered in each request. The [six-call diagnostic](docs/evidence/source-id-diagnostic-2026-10-11/live-report.md) stopped after five attempts: four accepted outputs with 12 exact source-body citations, then a citation-container shape error; one revision stayed unattempted. Declaring the schema did not prevent that invalid shape. Router-enforced decoding and answer-quality improvement remain unverified. The additive [flat-ID interface](docs/flat-source-ids.md) reproduces that failure with synthetic responses and preserves the earlier contracts. It is qualified offline. The unexecuted [fresh quality comparison](docs/flat-source-quality-comparison.md) preserves its audited source snapshots; its frozen execution plan needs new qualification after the retrieval change.
 
 ## Private demo package
 

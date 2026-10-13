@@ -1,6 +1,6 @@
 # Fresh flat-ID correction comparison
 
-**Status: prepared offline; paid execution and human review pending.** This is the next concrete check of the [quality design](flat-source-quality-plan.md). It uses eight products excluded from the prior inspected set, one common original per product and two sibling revisions. There is no quality result yet.
+**Status: unexecuted historical preparation; new execution qualification required.** The October 12 [retrieval contract fix](automated-reliability.md) changes a code hash bound by this plan. Its existing verification must reject the changed implementation. Every preparation artifact below is preserved; no calls or judgments were made for this cohort. The user has redirected current work toward automated RAG and harness gates. Any future paid comparison needs a newly qualified plan and explicit budget approval. This preparation uses eight products excluded from the prior inspected set, one common original per product and two sibling revisions. There is no quality result yet.
 
 ## Frozen inputs
 
@@ -40,6 +40,8 @@ node --import tsx --test server/flat-source-comparison.test.ts
 node --import tsx scripts/flat-source-comparison.ts --verify \
   --plan docs/evidence/flat-source-quality-2026-10-11/execution-plan.json
 ```
+
+The last command now intentionally fails the implementation binding on the current retriever. The published qualification records the earlier code and remains inspectable in repository history.
 
 The [qualification](evidence/flat-source-quality-2026-10-11/offline-qualification.json) binds tested code and historical records. Verification reconstructs the [manifest](evidence/flat-source-quality-2026-10-11/execution-plan.json) and its request templates without credentials, a paid provider or on-disk review/ledger access. The real retrieval used cached pinned CPU embeddings with network requests disabled.
 

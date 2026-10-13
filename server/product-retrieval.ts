@@ -24,6 +24,68 @@ export function cqaAnswerText(passage: Passage): string {
   return marker > 0 ? passage.text.slice(0, marker).trim() : passage.text;
 }
 
+// Parent questions identify scope; they are never appended to searchable proof.
+// A small exact-token rule avoids making ordinary wording a relevance boost.
+const identityToken = /[a-z0-9]+(?:[-.][a-z0-9]+)*/gi;
+// Bare IDs have a letter prefix followed by digits, a numeric prefix with a
+// short letter suffix such as 4S, or a long numeric code. Other compounds need a label.
+const bareIdentifier = /^(?:[a-z]+-?\d[a-z0-9]*(?:[-.][a-z0-9]+)*|\d+[a-z]{1,2}|\d{5,})$/i;
+const physicalUnit = /^(?:in|inch|inches|ft|foot|feet|cm|mm|m|yd|yards?|ml|cl|dl|l|liters?|litres?|gal|gallons?|oz|ounces?|lb|lbs|pounds?|kg|g|grams?|mg|v|volts?|w|watts?|a|amps?|mah|ah|hz|mhz|ghz|gb|tb|mb|percent|pack|packs|count|ct)$/i;
+const identityLabel = String.raw`(?:models?|devices?|refrigerators?|fridges?|washers?|dryers?|dishwashers?|freezers?|printers?|parts?|skus?)\b(?:\s+models?\b)?(?:\s+(?:numbers?\b|no\.?))?\s*[:#]?\s*`;
+/** Label propagation is limited to explicit identifier lists, never sentence meaning. */
+function labeledIdentifierPositions(text: string): Set<number> | null {
+  const positions = new Set<number>();
+  for (const label of text.matchAll(new RegExp(`\\b${identityLabel}`, 'gi'))) {
+    let cursor = label.index! + label[0].length, count = 0;
+    while (true) {
+      const item = text.slice(cursor).match(/^[\s[(]*([a-z0-9]+(?:[-.][a-z0-9]+)*)/i);
+      if (!item || !/\d/.test(item[1])) { if (count) return null; break; }
+      if (++count > 16) return null;
+      positions.add(cursor + item[0].length - item[1].length);
+      cursor += item[0].length;
+      cursor += text.slice(cursor).match(/^[\s)\]]*/)![0].length;
+      const separator = text.slice(cursor).match(/^(?:,\s*(?:(?:and|or)\b\s*)?|[\/&]\s*|(?:and|or)\b\s*)/i);
+      if (!separator) break;
+      cursor += separator[0].length;
+      // A repeated label starts its own list on the outer scan.
+      if (new RegExp(`^${identityLabel}`, 'i').test(text.slice(cursor))) break;
+    }
+  }
+  return positions;
+}
+function scopeIdentifiers(text: string): Set<string> | null {
+  const labeledPositions = labeledIdentifierPositions(text);
+  if (!labeledPositions) return null;
+  const result = new Set<string>();
+  for (const match of text.matchAll(identityToken)) {
+    const token = match[0], after = text.slice(match.index! + token.length);
+    const labeled = labeledPositions.has(match.index!);
+    const measurement = token.match(/^(\d+(?:\.\d+)?)-?([a-z]+)$/i);
+    if (!labeled && ((measurement && physicalUnit.test(measurement[2])) || /^\d+(?:st|nd|rd|th)$/i.test(token) || /^\d+(?:\.\d+)?(?:x\d+(?:\.\d+)?)+(?:[a-z]+)?$/i.test(token) || (/^\d+(?:\.\d+)?$/.test(token) && physicalUnit.test(after.trimStart().match(/^[a-z]+/i)?.[0] ?? '')))) continue;
+    if (!/\d/.test(token) || (!labeled && !bareIdentifier.test(token))) continue;
+    result.add(token.toUpperCase());
+  }
+  return result;
+}
+function parentQuestion(passage: Passage): string | undefined {
+  if (passage.originalQuestion !== undefined) return passage.originalQuestion;
+  if (passage.source !== 'cqa') return undefined;
+  const parts = passage.text.split(' Question: ');
+  return parts.length === 2 ? parts[1] : undefined;
+}
+function scopedPassageIds(pool: Passage[], question: string): Set<string> {
+  const requested = scopeIdentifiers(question);
+  if (!requested?.size) return new Set();
+  return new Set(pool.filter(passage => {
+    const parent = parentQuestion(passage);
+    if (!parent) return false;
+    const scope = scopeIdentifiers(parent);
+    // Missing or additional anchors make scope ambiguous. Complete agreement
+    // only affects ranking; it does not establish fit or discard conflicts.
+    return scope !== null && scope.size === requested.size && [...scope].every(id => requested.has(id));
+  }).map(passage => passage.id));
+}
+
 /** Each list is ranked best-first; duplicates in a method only vote once. */
 export function reciprocalRankFusion(lexical: string[], semantic: string[]): { id: string; lexicalRank: number | null; semanticRank: number | null; score: number }[] {
   const scores = new Map<string, { id: string; lexicalRank: number | null; semanticRank: number | null; score: number }>();
@@ -187,9 +249,17 @@ export class ProductRetriever implements LoopRetriever {
     const pool = this.byProduct.get(productId);
     if (!pool) throw new Error(`Unknown product: ${productId}.`);
     const start = performance.now();
+    const scoped = scopedPassageIds(pool, question);
+    const scopeOrder = (a: string, b: string) => Number(scoped.has(b)) - Number(scoped.has(a));
     const terms = [...new Set(question.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [])].slice(0, 80);
     const match = terms.map(term => `"${term.replaceAll('"', '""')}"`).join(' OR ');
-    const lexical = match ? (this.db.prepare(`SELECT passage_id FROM product_passages_fts WHERE product_passages_fts MATCH ? AND corpus=? AND product_id=? ORDER BY bm25(product_passages_fts), passage_id LIMIT ?`).all(match, this.corpus.version, productId, CANDIDATES_PER_METHOD) as { passage_id: string }[]).map(row => row.passage_id) : [];
+    const lexicalQuery = 'SELECT passage_id FROM product_passages_fts WHERE product_passages_fts MATCH ? AND corpus=? AND product_id=?';
+    const lexicalOrder = ' ORDER BY bm25(product_passages_fts), passage_id LIMIT ?';
+    const lexicalRows = match ? (this.db.prepare(lexicalQuery + lexicalOrder).all(match, this.corpus.version, productId, CANDIDATES_PER_METHOD) as { passage_id: string }[]) : [];
+    // Rescue matching scope before truncation without returning every FTS row.
+    // json_each avoids one SQL bind per source; each query returns at most 20.
+    const scopedRows = match && scoped.size ? (this.db.prepare(lexicalQuery + ' AND passage_id IN (SELECT value FROM json_each(?))' + lexicalOrder).all(match, this.corpus.version, productId, JSON.stringify([...scoped]), CANDIDATES_PER_METHOD) as { passage_id: string }[]) : [];
+    const lexical = [...new Set([...scopedRows, ...lexicalRows].map(row => row.passage_id))].slice(0, CANDIDATES_PER_METHOD);
     const vectors = await this.vectors(productId);
     const queries = await this.embed([question], 'query');
     if (queries.length !== 1) throw new Error('Query embedding length mismatch.');
@@ -198,9 +268,9 @@ export class ProductRetriever implements LoopRetriever {
       const vector = vectors.get(passage.id)!;
       if (vector.length !== query.length) throw new Error('Embedding dimensions differ; invalidate the model cache.');
       return { id: passage.id, score: vector.reduce((sum, value, index) => sum + value * query[index], 0) };
-    }).sort((a, b) => b.score - a.score || a.id.localeCompare(b.id)).slice(0, CANDIDATES_PER_METHOD).map(entry => entry.id);
+    }).sort((a, b) => scopeOrder(a.id, b.id) || b.score - a.score || a.id.localeCompare(b.id)).slice(0, CANDIDATES_PER_METHOD).map(entry => entry.id);
     const byId = new Map(pool.map(passage => [passage.id, passage]));
-    const fused = reciprocalRankFusion(lexical, semantic);
+    const fused = reciprocalRankFusion(lexical, semantic).sort((a, b) => scopeOrder(a.id, b.id));
     const select = (ids: string[]) => {
       const chosen: string[] = [], seenText = new Set<string>(); let chars = 0;
       for (const id of ids) {
@@ -217,7 +287,7 @@ export class ProductRetriever implements LoopRetriever {
     const hybrid = select(fused.map(item => item.id));
     const byRank = new Map(fused.map(item => [item.id, item]));
     const passages: RetrievedPassage[] = hybrid.map(id => ({ ...byId.get(id)!, ...byRank.get(id)! }));
-    const result = { passages, durationMs: performance.now() - start, method: `hybrid:fts5-bm25+bge-cosine+rrf(k=60)${this.indexText === cqaAnswerText ? '+cqa-answer-index' : ''}`, embeddingModel: `${this.modelId}@${this.revision}`, corpusVersion: this.corpus.version };
+    const result = { passages, durationMs: performance.now() - start, method: `hybrid:fts5-bm25+bge-cosine+rrf(k=60)${this.indexText === cqaAnswerText ? '+cqa-answer-index' : ''}+parent-id-scope`, embeddingModel: `${this.modelId}@${this.revision}`, corpusVersion: this.corpus.version };
     return compare ? { ...result, rankings: { bm25: select(lexical), dense: select(semantic), hybrid } } : result;
   }
 
