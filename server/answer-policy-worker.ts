@@ -146,6 +146,10 @@ export class AnswerPolicyWorker {
       if (!failure) continue;
       this.db.exec('BEGIN IMMEDIATE');
       try {
+        // Verified groups retain consumed identities even if the lookup cache
+        // is lost. Cache deletion cannot authorize a second proposal.
+        const consumed = this.overview().groups.some(group => group.bindings.some(binding => binding.jobId === failure!.binding.jobId || binding.runId === failure!.binding.runId || binding.assessmentReceiptId === failure!.binding.assessmentReceiptId));
+        if (consumed) { this.db.exec('COMMIT'); continue; }
         const prior = this.db.prepare("SELECT binding FROM runtime_policy_observed_checks WHERE job_id=? OR run_id=? OR json_extract(binding,'$.assessmentReceiptId')=?").get(job.id, job.original.runId, failure.binding.assessmentReceiptId) as { binding: string } | undefined;
         if (prior) { this.db.exec('COMMIT'); continue; }
         const row = this.db.prepare("SELECT * FROM runtime_policy_failure_groups WHERE status='collecting' AND mode=? AND parent_id=? AND category=? ORDER BY rowid LIMIT 1").get(job.mode, failure.parent.id, failure.category) as StoredGroup | undefined;

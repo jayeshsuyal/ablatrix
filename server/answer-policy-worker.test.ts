@@ -73,6 +73,20 @@ test('corrupt queued group data cannot be inspected or dispatched', async () => 
   } finally { h.cleanup(); }
 });
 
+test('lost observation lookup cache cannot reconsume identities retained in verified groups', async () => {
+  const h = harness();
+  try {
+    const failures = await h.failures(); h.worker.observeCompleted(failures);
+    const db = new DatabaseSync(h.policyPath);
+    try { db.prepare('DELETE FROM runtime_policy_observed_checks').run(); } finally { db.close(); }
+    assert.deepEqual(h.worker.observeCompleted(failures), { observed: 0, eligible: 0 });
+    assert.equal(h.worker.overview().groups.length, 1);
+    const group = await evaluate(h.worker); assert.equal(group.operations.length, 13);
+    assert.deepEqual(h.worker.observeCompleted(failures), { observed: 0, eligible: 0 });
+    assert.equal(h.worker.overview().groups.length, 1);
+  } finally { h.cleanup(); }
+});
+
 test('each indexed group identity and routing field must match the hashed document before reuse', async () => {
   const h = harness();
   try {
@@ -175,12 +189,41 @@ test('active pointer corruption cannot bypass closed live capture or unqualified
       const baseline = h.store.capture(mode), candidate = h.store.createCandidate(baseline, 'SYNTHETIC unqualified pointer fixture: no accepted trial or activation authority.', `synthetic-unqualified-pointer-${mode}`);
       db.prepare('UPDATE runtime_answer_policy_active SET policy_id=? WHERE mode=?').run(candidate.id, mode);
       assert.throws(() => h.store.capture(mode), /pointer has no matching stored hash/);
-      db.prepare('UPDATE runtime_answer_policy_active SET binding_sha256=? WHERE mode=?').run(runtimePolicyHash({ mode, policyId: candidate.id }), mode);
+      db.prepare('UPDATE runtime_answer_policy_active SET binding_sha256=? WHERE mode=?').run(runtimePolicyHash({ mode, policyId: candidate.id, eventId: null, sequence: 0 }), mode);
       assert.throws(() => h.store.capture(mode), mode === 'live' ? /Live runtime policy capture is closed/ : /verified transition history/);
-      db.prepare('UPDATE runtime_answer_policy_active SET policy_id=?,binding_sha256=? WHERE mode=?').run(baseline.id, runtimePolicyHash({ mode, policyId: baseline.id }), mode);
+      db.prepare('UPDATE runtime_answer_policy_active SET policy_id=?,binding_sha256=? WHERE mode=?').run(baseline.id, runtimePolicyHash({ mode, policyId: baseline.id, eventId: null, sequence: 0 }), mode);
       assert.equal(h.store.capture(mode).id, baseline.id);
     }
   } finally { db.close(); h.cleanup(); }
+});
+
+test('deleted activation evidence, missing policy targets and broken transition chains cannot authorize capture', async () => {
+  const h = harness();
+  try {
+    h.worker.observeCompleted(await h.failures()); const group = await evaluate(h.worker), active = h.worker.activateTrial(group.id), db = new DatabaseSync(h.policyPath);
+    try {
+      const decision = db.prepare('SELECT mode,document,sha256 FROM runtime_answer_policy_decisions WHERE id=?').get(group.decisionId!) as { mode: string; document: string; sha256: string };
+      db.prepare('DELETE FROM runtime_answer_policy_decisions WHERE id=?').run(group.decisionId!);
+      assert.throws(() => h.store.capture('synthetic'), /missing or ineligible activation evidence/);
+      db.prepare('INSERT INTO runtime_answer_policy_decisions(id,mode,document,sha256) VALUES(?,?,?,?)').run(group.decisionId!, decision.mode, decision.document, decision.sha256);
+      h.store.rollback('synthetic', active.id);
+      const policy = db.prepare('SELECT mode,document,document_sha256 FROM runtime_answer_policies WHERE id=?').get(active.id) as { mode: string; document: string; document_sha256: string };
+      db.prepare('DELETE FROM runtime_answer_policies WHERE id=?').run(active.id);
+      assert.throws(() => h.store.capture('synthetic'), /history references a missing or mismatched policy/);
+      db.prepare('INSERT INTO runtime_answer_policies(id,mode,document,document_sha256) VALUES(?,?,?,?)').run(active.id, policy.mode, policy.document, policy.document_sha256);
+      const event = db.prepare("SELECT rowid AS event_rowid,id,mode,document,document_sha256 FROM runtime_answer_policy_events WHERE json_extract(document,'$.action')='synthetic_trial_activation'").get() as { event_rowid: number; id: string; mode: string; document: string; document_sha256: string };
+      db.prepare('DELETE FROM runtime_answer_policy_events WHERE id=?').run(event.id);
+      assert.throws(() => h.store.capture('synthetic'), /complete transition chain/);
+      db.prepare('INSERT INTO runtime_answer_policy_events(rowid,id,mode,document,document_sha256) VALUES(?,?,?,?,?)').run(event.event_rowid, event.id, event.mode, event.document, event.document_sha256);
+      assert.equal(h.store.capture('synthetic').status, 'baseline');
+      assert.equal(h.store.overview('synthetic').events.length, 2);
+      const allEvents = db.prepare('SELECT rowid AS event_rowid,id,mode,document,document_sha256 FROM runtime_answer_policy_events ORDER BY rowid').all() as { event_rowid: number; id: string; mode: string; document: string; document_sha256: string }[];
+      db.prepare('DELETE FROM runtime_answer_policy_events').run();
+      assert.throws(() => h.store.capture('synthetic'), /verified transition history/);
+      for (const row of allEvents) db.prepare('INSERT INTO runtime_answer_policy_events(rowid,id,mode,document,document_sha256) VALUES(?,?,?,?,?)').run(row.event_rowid, row.id, row.mode, row.document, row.document_sha256);
+      assert.equal(h.store.capture('synthetic').status, 'baseline');
+    } finally { db.close(); }
+  } finally { h.cleanup(); }
 });
 
 test('schema upgrade leaves old unhashed group records unverified instead of blessing or redispatching them', async () => {

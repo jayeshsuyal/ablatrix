@@ -79,6 +79,12 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
     const reviews = await (await fetch(base + '/api/workspace/reviews/export')).json();
     assert.equal(reviews.cases.flatMap((item: {events: unknown[]}) => item.events).length, 0);
     assert.equal(policies.overview('synthetic').events.length, 2);
+    const missingDecision = new DatabaseSync(join(dir, 'policies.sqlite'));
+    const savedDecision = missingDecision.prepare('SELECT mode,document,sha256 FROM runtime_answer_policy_decisions WHERE id=?').get(decision.id) as { mode: string; document: string; sha256: string };
+    try {
+      missingDecision.prepare('DELETE FROM runtime_answer_policy_decisions WHERE id=?').run(decision.id);
+      await readsFail(['/api/workspace/answer-policy', '/api/workspace/answer-policy/export'], 'Runtime policy history references missing or ineligible activation evidence.');
+    } finally { missingDecision.prepare('INSERT INTO runtime_answer_policy_decisions(id,mode,document,sha256) VALUES(?,?,?,?)').run(decision.id, savedDecision.mode, savedDecision.document, savedDecision.sha256); missingDecision.close(); }
     const changedReceipt = new DatabaseSync(join(dir, 'receipts.sqlite'));
     const receiptRow = changedReceipt.prepare('SELECT document FROM synthetic_answer_receipts WHERE run_id=?').get(group.operations[1].runId) as { document: string };
     try {
