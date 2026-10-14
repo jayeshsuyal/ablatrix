@@ -4,6 +4,7 @@ import { once } from 'node:events';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { DatabaseSync } from 'node:sqlite';
 import { createApp } from './app.ts';
 import { RunStore } from './store.ts';
 import { PilotRunner, PilotStore } from './pilot.ts';
@@ -69,5 +70,30 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
     const reviews = await (await fetch(base + '/api/workspace/reviews/export')).json();
     assert.equal(reviews.cases.flatMap((item: {events: unknown[]}) => item.events).length, 0);
     assert.equal(policies.overview('synthetic').events.length, 2);
+    const corrupt = new DatabaseSync(join(dir, 'policies.sqlite'));
+    try {
+      corrupt.prepare('UPDATE runtime_answer_policy_decisions SET document=? WHERE id=?').run(JSON.stringify({ ...decision, candidateMetrics: { ...decision.candidateMetrics, usefulSupportedAnswers: 999 } }), decision.id);
+    } finally { corrupt.close(); }
+    assert.throws(() => policies.getDecision(decision.id), /immutable hash/);
+    assert.throws(() => policies.overview('synthetic'), /immutable hash/);
+    const inspectionFails = async (error: string) => {
+      for (const path of ['/api/workspace/answer-policy', '/api/workspace/answer-policy/export']) {
+        const response = await fetch(base + path);
+        assert.equal(response.status, 409);
+        assert.equal(response.headers.get('content-disposition'), null, 'Corrupt evidence is never offered as a download.');
+        assert.deepEqual(await response.json(), { error });
+      }
+    };
+    await inspectionFails('Trial evidence no longer matches its immutable hash.');
+    const candidateVersion = policies.get(group.candidate!.id)!;
+    const corruptVersion = new DatabaseSync(join(dir, 'policies.sqlite'));
+    try {
+      corruptVersion.prepare('UPDATE runtime_answer_policy_decisions SET document=? WHERE id=?').run(JSON.stringify(decision), decision.id);
+      corruptVersion.prepare('UPDATE runtime_answer_policies SET document=? WHERE id=?').run(JSON.stringify({ ...candidateVersion, instructions: 'SYNTHETIC corrupted inactive instructions' }), candidateVersion.id);
+    } finally { corruptVersion.close(); }
+    assert.throws(() => policies.get(candidateVersion.id), /invalid immutable identity/);
+    await inspectionFails('Runtime policy has an invalid immutable identity.');
+    assert.equal(policies.capture('synthetic').id, baseline.id);
+    assert.equal(worker.get(group.id)?.operations.length, 13, 'Failed inspection dispatches no new phase.');
   } finally { await checks.pauseAndDrain(); checks.close(); await server.shutdown(); store.close(); rmSync(dir, { recursive: true, force: true }); }
 });

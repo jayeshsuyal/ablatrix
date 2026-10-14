@@ -126,7 +126,9 @@ export class RuntimeAnswerPolicyStore {
   }
   overview(mode: RuntimePolicyMode) {
     const documents = (table: string) => (this.db.prepare(`SELECT document FROM ${table} WHERE mode=? ORDER BY rowid DESC`).all(mode) as { document: string }[]).map(row => JSON.parse(row.document));
-    return { active: this.capture(mode), versions: documents('runtime_answer_policies') as RuntimeAnswerPolicy[], decisions: documents('runtime_answer_policy_decisions') as RuntimeTrialDecision[], events: documents('runtime_answer_policy_events') as PolicyEvent[], liveActivation: 'closed_missing_qualified_calibration' as const, qualityClaimEligible: false as const };
+    const versions = (this.db.prepare('SELECT id FROM runtime_answer_policies WHERE mode=? ORDER BY rowid DESC').all(mode) as { id: string }[]).map(row => this.get(row.id)!);
+    const decisions = (this.db.prepare('SELECT id FROM runtime_answer_policy_decisions WHERE mode=? ORDER BY rowid DESC').all(mode) as { id: string }[]).map(row => this.getDecision(row.id)!);
+    return { active: this.capture(mode), versions, decisions, events: documents('runtime_answer_policy_events') as PolicyEvent[], liveActivation: 'closed_missing_qualified_calibration' as const, qualityClaimEligible: false as const };
   }
   close() { this.db.close(); }
 }

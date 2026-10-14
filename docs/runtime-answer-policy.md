@@ -44,6 +44,8 @@ POST /api/workspace/answer-policy/rollback  {"expectedActiveId":"<active-id>"}
 
 GET requests never aggregate failures, propose candidates or dispatch evaluation. Only worker ticks discover new bound automatic checks. The runtime SQLite path is `ABLATRIX_RUNTIME_POLICY_DB`, or a companion to the configured review database, or `.data/runtime-answer-policy.sqlite`. Hosted mode derives the path from its dedicated review directory and ignores inherited local policy paths. The runtime policy, group, decision and event tables are separate from human review, lab promotion and final benchmark tables.
 
+Status and export check every saved policy version and trial decision against their stored immutable identities before returning evidence. A corrupted record produces an inspection error rather than presenting changed instructions or metrics as exact results.
+
 Run the fictional rehearsal without credentials, existing application databases, saved answers, fresh evaluation contexts or holdouts:
 
 ```sh
