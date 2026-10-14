@@ -108,8 +108,8 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
       corruptVersion.prepare('UPDATE runtime_answer_policy_decisions SET document=? WHERE id=?').run(JSON.stringify(decision), decision.id);
       corruptVersion.prepare('UPDATE runtime_answer_policies SET document=? WHERE id=?').run(JSON.stringify({ ...candidateVersion, instructions: 'SYNTHETIC corrupted inactive instructions' }), candidateVersion.id);
     } finally { corruptVersion.close(); }
-    assert.throws(() => policies.get(candidateVersion.id), /invalid immutable identity/);
-    await inspectionFails('Runtime policy has an invalid immutable identity.');
+    assert.throws(() => policies.get(candidateVersion.id), /matching stored hash/);
+    await inspectionFails('Runtime policy document has no matching stored hash; reconciliation is required.');
     const corruptGroup = new DatabaseSync(join(dir, 'policies.sqlite'));
     try {
       corruptGroup.prepare('UPDATE runtime_answer_policies SET document=? WHERE id=?').run(JSON.stringify(candidateVersion), candidateVersion.id);

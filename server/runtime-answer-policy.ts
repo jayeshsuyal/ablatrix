@@ -35,27 +35,41 @@ export class RuntimeAnswerPolicyStore {
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`PRAGMA busy_timeout=5000;
-      CREATE TABLE IF NOT EXISTS runtime_answer_policies(id TEXT PRIMARY KEY,mode TEXT NOT NULL,document TEXT NOT NULL);
-      CREATE TABLE IF NOT EXISTS runtime_answer_policy_active(mode TEXT PRIMARY KEY,policy_id TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS runtime_answer_policies(id TEXT PRIMARY KEY,mode TEXT NOT NULL,document TEXT NOT NULL,document_sha256 TEXT NOT NULL);
+      CREATE TABLE IF NOT EXISTS runtime_answer_policy_active(mode TEXT PRIMARY KEY,policy_id TEXT NOT NULL,binding_sha256 TEXT NOT NULL);
       CREATE TABLE IF NOT EXISTS runtime_answer_policy_decisions(id TEXT PRIMARY KEY,mode TEXT NOT NULL,document TEXT NOT NULL,sha256 TEXT NOT NULL);
-      CREATE TABLE IF NOT EXISTS runtime_answer_policy_events(id TEXT PRIMARY KEY,mode TEXT NOT NULL,document TEXT NOT NULL);`);
+      CREATE TABLE IF NOT EXISTS runtime_answer_policy_events(id TEXT PRIMARY KEY,mode TEXT NOT NULL,document TEXT NOT NULL,document_sha256 TEXT NOT NULL);`);
+    for (const table of ['runtime_answer_policies', 'runtime_answer_policy_events']) {
+      if (!(this.db.prepare(`PRAGMA table_info(${table})`).all() as { name: string }[]).some(column => column.name === 'document_sha256')) this.db.exec(`ALTER TABLE ${table} ADD COLUMN document_sha256 TEXT`);
+    }
+    if (!(this.db.prepare('PRAGMA table_info(runtime_answer_policy_active)').all() as { name: string }[]).some(column => column.name === 'binding_sha256')) this.db.exec('ALTER TABLE runtime_answer_policy_active ADD COLUMN binding_sha256 TEXT');
     for (const mode of ['live', 'synthetic'] as const) {
-      const baseline = runtimeBaselinePolicy(mode);
-      this.db.prepare('INSERT OR IGNORE INTO runtime_answer_policies(id,mode,document) VALUES(?,?,?)').run(baseline.id, mode, JSON.stringify(baseline));
-      this.db.prepare('INSERT OR IGNORE INTO runtime_answer_policy_active(mode,policy_id) VALUES(?,?)').run(mode, baseline.id);
+      const baseline = runtimeBaselinePolicy(mode), document = JSON.stringify(baseline);
+      this.db.prepare('INSERT OR IGNORE INTO runtime_answer_policies(id,mode,document,document_sha256) VALUES(?,?,?,?)').run(baseline.id, mode, document, runtimePolicyHash(document));
+      // Only the exact independently defined baseline can be verified during
+      // upgrade. Old candidates and events remain untrusted without a hash.
+      this.db.prepare('UPDATE runtime_answer_policies SET document_sha256=? WHERE id=? AND mode=? AND document=? AND document_sha256 IS NULL').run(runtimePolicyHash(document), baseline.id, mode, document);
+      const pointerHash = runtimePolicyHash({ mode, policyId: baseline.id });
+      this.db.prepare('INSERT OR IGNORE INTO runtime_answer_policy_active(mode,policy_id,binding_sha256) VALUES(?,?,?)').run(mode, baseline.id, pointerHash);
+      this.db.prepare('UPDATE runtime_answer_policy_active SET binding_sha256=? WHERE mode=? AND policy_id=? AND binding_sha256 IS NULL').run(pointerHash, mode, baseline.id);
     }
   }
   get(id: string): RuntimeAnswerPolicy | null {
-    const row = this.db.prepare('SELECT mode,document FROM runtime_answer_policies WHERE id=?').get(id) as { mode: string; document: string } | undefined;
+    const row = this.db.prepare('SELECT mode,document,document_sha256 FROM runtime_answer_policies WHERE id=?').get(id) as { mode: string; document: string; document_sha256: string | null } | undefined;
     if (!row) return null;
+    if (!row.document_sha256 || runtimePolicyHash(row.document) !== row.document_sha256) throw new Error('Runtime policy document has no matching stored hash; reconciliation is required.');
     const policy = JSON.parse(row.document) as RuntimeAnswerPolicy;
     if (policy.id !== id || policy.mode !== row.mode || runtimePolicyHash(policy.instructions) !== policy.instructionSha256 || !['live', 'synthetic'].includes(policy.mode)) throw new Error('Runtime policy has an invalid immutable identity.');
     return policy;
   }
   capture(mode: RuntimePolicyMode): RuntimeAnswerPolicy {
-    const row = this.db.prepare('SELECT policy_id FROM runtime_answer_policy_active WHERE mode=?').get(mode) as { policy_id: string } | undefined;
+    const row = this.db.prepare('SELECT policy_id,binding_sha256 FROM runtime_answer_policy_active WHERE mode=?').get(mode) as { policy_id: string; binding_sha256: string | null } | undefined;
+    if (!row?.binding_sha256 || row.binding_sha256 !== runtimePolicyHash({ mode, policyId: row.policy_id })) throw new Error('Runtime active policy pointer has no matching stored hash; reconciliation is required.');
     const policy = row && this.get(row.policy_id);
     if (!policy || policy.mode !== mode) throw new Error('Runtime active policy has inconsistent mode provenance.');
+    if (mode === 'live' && policy.id !== runtimeBaselinePolicy(mode).id) throw new Error('Live runtime policy capture is closed until a separately qualified activation gate exists.');
+    const expectedId = this.events(mode)[0]?.toId ?? runtimeBaselinePolicy(mode).id;
+    if (policy.id !== expectedId) throw new Error('Runtime active policy pointer does not match its verified transition history.');
     return policy;
   }
   validateBinding(binding: RuntimePolicyBinding): RuntimeAnswerPolicy {
@@ -73,7 +87,8 @@ export class RuntimeAnswerPolicyStore {
     if (prior) { if (prior.instructions !== instructions || prior.parentId !== original.id) throw new Error('A consumed group already has a different immutable candidate.'); return prior; }
     const candidate: RuntimeAnswerPolicy = { id, mode: original.mode, instructions, instructionSha256: runtimePolicyHash(instructions), parentId: original.id,
       createdAt: new Date().toISOString(), status: 'candidate', provenance: original.mode === 'synthetic' ? 'synthetic_instruction_proposal' : 'automated_instruction_proposal', groupId };
-    this.db.prepare('INSERT INTO runtime_answer_policies(id,mode,document) VALUES(?,?,?)').run(id, candidate.mode, JSON.stringify(candidate));
+    const document = JSON.stringify(candidate);
+    this.db.prepare('INSERT INTO runtime_answer_policies(id,mode,document,document_sha256) VALUES(?,?,?,?)').run(id, candidate.mode, document, runtimePolicyHash(document));
     return candidate;
   }
   recordDecision(decision: RuntimeTrialDecision) {
@@ -102,8 +117,9 @@ export class RuntimeAnswerPolicyStore {
       const current = this.capture(mode);
       if (current.id !== expectedActiveId || target.mode !== mode) throw new Error('Runtime activation has a stale parent or mismatched mode.');
       const event: PolicyEvent = { id: randomUUID(), mode, action, fromId: current.id, toId: target.id, decisionId, createdAt: new Date().toISOString() };
-      this.db.prepare('UPDATE runtime_answer_policy_active SET policy_id=? WHERE mode=? AND policy_id=?').run(target.id, mode, expectedActiveId);
-      this.db.prepare('INSERT INTO runtime_answer_policy_events(id,mode,document) VALUES(?,?,?)').run(event.id, mode, JSON.stringify(event));
+      this.db.prepare('UPDATE runtime_answer_policy_active SET policy_id=?,binding_sha256=? WHERE mode=? AND policy_id=?').run(target.id, runtimePolicyHash({ mode, policyId: target.id }), mode, expectedActiveId);
+      const document = JSON.stringify(event);
+      this.db.prepare('INSERT INTO runtime_answer_policy_events(id,mode,document,document_sha256) VALUES(?,?,?,?)').run(event.id, mode, document, runtimePolicyHash(document));
       this.db.exec('COMMIT'); return target;
     } catch (error) { this.db.exec('ROLLBACK'); throw error; }
   }
@@ -126,11 +142,18 @@ export class RuntimeAnswerPolicyStore {
     if (!parent || parent.mode !== mode) throw new Error('Rollback parent mode is invalid.');
     return this.move(mode, expectedActiveId, parent, 'rollback', null);
   }
+  private events(mode: RuntimePolicyMode): PolicyEvent[] {
+    return (this.db.prepare('SELECT id,mode,document,document_sha256 FROM runtime_answer_policy_events WHERE mode=? ORDER BY rowid DESC').all(mode) as { id: string; mode: string; document: string; document_sha256: string | null }[]).map(row => {
+      if (!row.document_sha256 || runtimePolicyHash(row.document) !== row.document_sha256) throw new Error('Runtime policy event has no matching stored hash; reconciliation is required.');
+      const event = JSON.parse(row.document) as PolicyEvent;
+      if (event.id !== row.id || event.mode !== row.mode) throw new Error('Runtime policy event indexed identity no longer matches its verified document.');
+      return event;
+    });
+  }
   overview(mode: RuntimePolicyMode) {
-    const documents = (table: string) => (this.db.prepare(`SELECT document FROM ${table} WHERE mode=? ORDER BY rowid DESC`).all(mode) as { document: string }[]).map(row => JSON.parse(row.document));
     const versions = (this.db.prepare('SELECT id FROM runtime_answer_policies WHERE mode=? ORDER BY rowid DESC').all(mode) as { id: string }[]).map(row => this.get(row.id)!);
     const decisions = (this.db.prepare('SELECT id FROM runtime_answer_policy_decisions WHERE mode=? ORDER BY rowid DESC').all(mode) as { id: string }[]).map(row => this.getDecision(row.id)!);
-    return { active: this.capture(mode), versions, decisions, events: documents('runtime_answer_policy_events') as PolicyEvent[], liveActivation: 'closed_missing_qualified_calibration' as const, qualityClaimEligible: false as const };
+    return { active: this.capture(mode), versions, decisions, events: this.events(mode), liveActivation: 'closed_missing_qualified_calibration' as const, qualityClaimEligible: false as const };
   }
   close() { this.db.close(); }
 }

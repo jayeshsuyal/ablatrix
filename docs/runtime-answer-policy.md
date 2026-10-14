@@ -50,6 +50,8 @@ Exports also revalidate originating automatic checks against their consumed bind
 
 The checked group loader also matches indexed ID, status, mode, parent and category to the verified document. A changed index cannot route failures into another group or make a completed group dispatch again.
 
+Policy hashes cover the complete document, including immutable rollback lineage. Event hashes and indexed identity/mode checks protect the pointer history. Active pointers have binding hashes and must match verified transition history; live capture additionally requires the fixed baseline while activation remains closed. Schema upgrades can independently verify only the exact code-defined baseline and its pointer; old unhashed candidates, events and candidate pointers remain untrusted until explicit reconciliation or restore.
+
 Run the fictional rehearsal without credentials, existing application databases, saved answers, fresh evaluation contexts or holdouts:
 
 ```sh

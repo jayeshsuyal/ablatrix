@@ -9,7 +9,7 @@ import { SyntheticAnswerProvider } from './synthetic-answer-provider.ts';
 import { ProductWorkspace } from './product-workspace.ts';
 import type { ProductCorpus, LoopRetriever } from './loop-types.ts';
 import { AnswerPolicyWorker, SYNTHETIC_RUNTIME_VALIDATION_PACKET, type AnswerPolicyProvider, type AnswerPolicyGroup, type RuntimeValidationCase } from './answer-policy-worker.ts';
-import { RuntimeAnswerPolicyStore, runtimePolicyHash, type RuntimeTrialDecision } from './runtime-answer-policy.ts';
+import { RuntimeAnswerPolicyStore, runtimeBaselinePolicy, runtimePolicyHash, type RuntimeTrialDecision } from './runtime-answer-policy.ts';
 import type { RuntimeAnswerInput } from './answer-policy-protocol.ts';
 
 const retriever = (corpus: ProductCorpus): LoopRetriever => ({ close() {}, async retrieve() { return { passages: corpus.passages.map(passage => ({ ...passage, lexicalRank: 1, semanticRank: 1, score: 1 })), durationMs: 1, method: 'synthetic-test', embeddingModel: 'no-model', corpusVersion: corpus.version }; } });
@@ -118,6 +118,69 @@ test('policy and decision indexed modes and decision IDs cannot cross verified h
       assert.equal(h.store.capture('synthetic').status, 'baseline');
     } finally { db.close(); }
   } finally { h.cleanup(); }
+});
+
+test('complete policy hashes protect rollback lineage and event hashes protect both modes of history', async () => {
+  const h = harness();
+  try {
+    h.worker.observeCompleted(await h.failures());
+    const group = await evaluate(h.worker), baseline = h.store.capture('synthetic'), active = h.worker.activateTrial(group.id);
+    const unrelated = h.store.createCandidate(baseline, 'SYNTHETIC unqualified candidate fixture: use no release or quality authority.', 'synthetic-unqualified-lineage');
+    const db = new DatabaseSync(h.policyPath);
+    try {
+      const policyRow = db.prepare('SELECT document FROM runtime_answer_policies WHERE id=?').get(active.id) as { document: string };
+      db.prepare('UPDATE runtime_answer_policies SET document=? WHERE id=?').run(JSON.stringify({ ...active, parentId: unrelated.id }), active.id);
+      assert.throws(() => h.store.rollback('synthetic', active.id), /matching stored hash/);
+      assert.equal((db.prepare("SELECT policy_id FROM runtime_answer_policy_active WHERE mode='synthetic'").get() as { policy_id: string }).policy_id, active.id);
+      db.prepare('UPDATE runtime_answer_policies SET document=? WHERE id=?').run(policyRow.document, active.id);
+      const event = h.store.overview('synthetic').events[0], eventRow = db.prepare('SELECT document FROM runtime_answer_policy_events WHERE id=?').get(event.id) as { document: string };
+      db.prepare('UPDATE runtime_answer_policy_events SET document=? WHERE id=?').run(JSON.stringify({ ...event, toId: unrelated.id }), event.id);
+      assert.throws(() => h.store.overview('synthetic'), /event has no matching stored hash/);
+      db.prepare('UPDATE runtime_answer_policy_events SET document=? WHERE id=?').run(eventRow.document, event.id);
+      db.prepare("UPDATE runtime_answer_policy_events SET mode='live' WHERE id=?").run(event.id);
+      assert.throws(() => h.store.overview('live'), /event indexed identity/);
+      db.prepare("UPDATE runtime_answer_policy_events SET mode='synthetic' WHERE id=?").run(event.id);
+      db.prepare("UPDATE runtime_answer_policy_events SET id='synthetic-other-event' WHERE id=?").run(event.id);
+      assert.throws(() => h.store.overview('synthetic'), /event indexed identity/);
+      db.prepare("UPDATE runtime_answer_policy_events SET id=? WHERE id='synthetic-other-event'").run(event.id);
+      assert.equal(h.store.rollback('synthetic', active.id).id, baseline.id);
+      assert.equal(h.store.overview('synthetic').events.length, 2);
+      assert.equal(h.store.overview('live').events.length, 0);
+    } finally { db.close(); }
+  } finally { h.cleanup(); }
+});
+
+test('policy/event schema upgrade verifies only the independently defined baseline and leaves other old records untrusted', () => {
+  const directory = mkdtempSync(join(tmpdir(), 'runtime-policy-legacy-')), path = join(directory, 'legacy.sqlite'), legacy = new DatabaseSync(path);
+  const baseline = runtimeBaselinePolicy('synthetic'); let store: RuntimeAnswerPolicyStore | undefined;
+  try {
+    legacy.exec('CREATE TABLE runtime_answer_policies(id TEXT PRIMARY KEY,mode TEXT NOT NULL,document TEXT NOT NULL); CREATE TABLE runtime_answer_policy_events(id TEXT PRIMARY KEY,mode TEXT NOT NULL,document TEXT NOT NULL)');
+    legacy.prepare('INSERT INTO runtime_answer_policies VALUES(?,?,?)').run(baseline.id, 'synthetic', JSON.stringify(baseline));
+    legacy.prepare('INSERT INTO runtime_answer_policies VALUES(?,?,?)').run('synthetic-unhashed-candidate', 'synthetic', JSON.stringify({ ...baseline, id: 'synthetic-unhashed-candidate', parentId: baseline.id, status: 'candidate' }));
+    legacy.prepare('INSERT INTO runtime_answer_policy_events VALUES(?,?,?)').run('synthetic-unhashed-event', 'synthetic', JSON.stringify({ id: 'synthetic-unhashed-event', mode: 'synthetic', action: 'rollback' }));
+    store = new RuntimeAnswerPolicyStore(path);
+    assert.deepEqual(store.get(baseline.id), baseline);
+    assert.throws(() => store!.get('synthetic-unhashed-candidate'), /matching stored hash/);
+    assert.equal((legacy.prepare("SELECT document_sha256 FROM runtime_answer_policies WHERE id='synthetic-unhashed-candidate'").get() as { document_sha256: unknown }).document_sha256, null);
+    legacy.prepare("DELETE FROM runtime_answer_policies WHERE id='synthetic-unhashed-candidate'").run();
+    assert.throws(() => store!.overview('synthetic'), /event has no matching stored hash/);
+    assert.equal((legacy.prepare("SELECT document_sha256 FROM runtime_answer_policy_events WHERE id='synthetic-unhashed-event'").get() as { document_sha256: unknown }).document_sha256, null);
+  } finally { store?.close(); legacy.close(); rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('active pointer corruption cannot bypass closed live capture or unqualified synthetic history', () => {
+  const h = harness(), db = new DatabaseSync(h.policyPath);
+  try {
+    for (const mode of ['live', 'synthetic'] as const) {
+      const baseline = h.store.capture(mode), candidate = h.store.createCandidate(baseline, 'SYNTHETIC unqualified pointer fixture: no accepted trial or activation authority.', `synthetic-unqualified-pointer-${mode}`);
+      db.prepare('UPDATE runtime_answer_policy_active SET policy_id=? WHERE mode=?').run(candidate.id, mode);
+      assert.throws(() => h.store.capture(mode), /pointer has no matching stored hash/);
+      db.prepare('UPDATE runtime_answer_policy_active SET binding_sha256=? WHERE mode=?').run(runtimePolicyHash({ mode, policyId: candidate.id }), mode);
+      assert.throws(() => h.store.capture(mode), mode === 'live' ? /Live runtime policy capture is closed/ : /verified transition history/);
+      db.prepare('UPDATE runtime_answer_policy_active SET policy_id=?,binding_sha256=? WHERE mode=?').run(baseline.id, runtimePolicyHash({ mode, policyId: baseline.id }), mode);
+      assert.equal(h.store.capture(mode).id, baseline.id);
+    }
+  } finally { db.close(); h.cleanup(); }
 });
 
 test('schema upgrade leaves old unhashed group records unverified instead of blessing or redispatching them', async () => {
