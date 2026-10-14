@@ -8,7 +8,7 @@ import { AutomaticSupport, type AutomaticSupportJob } from './automatic-support.
 import { SyntheticAnswerProvider } from './synthetic-answer-provider.ts';
 import { ProductWorkspace } from './product-workspace.ts';
 import type { ProductCorpus, LoopRetriever } from './loop-types.ts';
-import { AnswerPolicyWorker, type AnswerPolicyProvider, type AnswerPolicyGroup } from './answer-policy-worker.ts';
+import { AnswerPolicyWorker, SYNTHETIC_RUNTIME_VALIDATION_PACKET, type AnswerPolicyProvider, type AnswerPolicyGroup, type RuntimeValidationCase } from './answer-policy-worker.ts';
 import { RuntimeAnswerPolicyStore, runtimePolicyHash, type RuntimeTrialDecision } from './runtime-answer-policy.ts';
 import type { RuntimeAnswerInput } from './answer-policy-protocol.ts';
 
@@ -42,6 +42,22 @@ function changeReceipt(path: string, runId: string, change: (document: any) => v
   const body = JSON.parse(receipt.receipt_json); change(body); receipt.receipt_json = JSON.stringify(body);
   db.prepare('UPDATE synthetic_answer_receipts SET document=? WHERE run_id=?').run(JSON.stringify(receipt), runId); db.close();
 }
+
+test('frozen packet rejects missing mandatory controls and empty reference quotes before opening its database', () => {
+  const h = harness();
+  try {
+    const missingControl = structuredClone(SYNTHETIC_RUNTIME_VALIDATION_PACKET);
+    missingControl.cases[2] = { ...structuredClone(missingControl.cases[0]), id: 'other-control', role: 'other_control' as RuntimeValidationCase['role'] };
+    assert.throws(() => new AnswerPolicyWorker(h.provider, h.store, ':memory:', { validationPacket: missingControl }), /three distinct/);
+    for (const quote of ['', '   ']) {
+      const emptyReference = structuredClone(SYNTHETIC_RUNTIME_VALIDATION_PACKET);
+      emptyReference.cases[0].requiredFacts[0].quote = quote;
+      assert.throws(() => new AnswerPolicyWorker(h.provider, h.store, ':memory:', { validationPacket: emptyReference }), /literal independent source text/);
+    }
+    assert.equal(h.worker.overview().groups.length, 0);
+    assert.equal(h.store.capture('synthetic').status, 'baseline');
+  } finally { h.cleanup(); }
+});
 
 test('scripted durable failures produce one finite trial, later asks capture candidate, and rollback restores baseline', async () => {
   const h = harness();

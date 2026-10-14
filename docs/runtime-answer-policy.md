@@ -23,6 +23,8 @@ The validation packet, ordered cases, reference facts, expected answerability an
 
 ## Activation boundary
 
+Packet preflight requires exactly the three mandatory case roles and nonblank literal reference quotes; malformed configured packets are rejected before opening the worker database.
+
 Evaluation writes an immutable, explicitly labeled automated **trial** decision. It does not activate itself. Activation replays all 13 distinct bound receipts and checks the exact policy lineage, packet, grader, references, saved outputs, metrics and current parent. Incomplete, invalid, uncertain, regressing or stale-parent trials cannot activate.
 
 **Live activation is closed.** The current grader records `calibration=not_measured`; this build provides no separately qualified calibration/fresh-evaluation gate. An eligible live shadow is only an uncalibrated AI estimate, never a verified quality gain or a human promotion. A synthetic scripted decision may be released only into the synthetic pointer, with a distinct fixture-only gate and event label. Synthetic policies/decisions cannot enter the live pointer. Rollback requires the expected current active version and restores its parent for future requests.
@@ -31,7 +33,7 @@ Live shadow dispatch also defaults closed. Its future execution needs independen
 
 ## Inspection and offline reproduction
 
-`/ask` has a collapsed **Answer policy** panel showing the active version/hash/instructions, candidate, latest trial decision and rollback. Hosted policy mutations remain operator-only. These endpoints provide inspection and exact evidence:
+`/ask` has a collapsed **Answer policy** panel showing the active version/hash/instructions, candidate, latest trial decision and rollback. Unavailable or malformed inspection responses show a panel error while the question form remains usable. Hosted policy mutations remain operator-only. These endpoints provide inspection and exact evidence:
 
 ```text
 GET  /api/workspace/answer-policy
@@ -49,7 +51,7 @@ npm run answer-policy:rehearse -- --output /tmp/my-new-policy-rehearsal.json
 node --import tsx --test server/answer-policy-worker.test.ts server/answer-policy-provider.test.ts
 npm test
 npm run build
-npx playwright test e2e/answer-policy.spec.ts e2e/automatic-check.spec.ts e2e/feedback-workspace.spec.ts e2e/feedback-review-draft.spec.ts
+npx playwright test
 ```
 
 The CLI uses newly constructed fictional sources, isolated temporary SQLite databases, scripted transports and a global network prohibition. It asserts three completed bound failures → one candidate → all 13 paired phases → synthetic release during an in-flight ask → a later ask actually receiving candidate instructions → rollback restoring baseline. It preserves original snapshot/receipt bytes and repeats ingestion/ticks to check that no second proposal appears. Output creation is exclusive: use a new filename each time.

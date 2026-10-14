@@ -46,11 +46,11 @@ const TERMINAL_CHECKS = new Set(['supported', 'repaired', 'abstained']);
 function metrics(): RuntimeTrialMetrics { return { usefulSupportedAnswers: 0, unsupportedClaims: 0, unnecessaryAbstentions: 0, completeAnswers: 0, regressions: 0, uncertainAssessments: 0, latencyMs: 0, planningAllowanceUsd: null }; }
 function packetCopy(packet: RuntimeValidationPacket): RuntimeValidationPacket {
   const copy = structuredClone(packet);
-  if (copy.cases.length !== 3 || new Set(copy.cases.map(item => item.id)).size !== 3 || new Set(copy.cases.map(item => item.role)).size !== 3 ||
+  if (copy.cases.length !== 3 || new Set(copy.cases.map(item => item.id)).size !== 3 || !['targeted', 'correct_control', 'unanswerable_control'].every(role => copy.cases.some(item => item.role === role)) ||
     copy.mode === 'synthetic' && copy.provenance !== 'synthetic_fictional_fixture' || copy.mode === 'live' && copy.provenance !== 'fresh_product_disjoint_validation' || JSON.stringify(copy).length > 30_000) throw new Error('Runtime validation requires three distinct bounded frozen cases and matching provenance.');
   for (const item of copy.cases) {
     if (item.role === 'unanswerable_control' ? item.expectedStatus !== 'insufficient_evidence' || item.requiredFacts.length : item.expectedStatus !== 'answered' || !item.requiredFacts.length) throw new Error('Frozen validation controls require independently labeled answerability and facts.');
-    if (item.requiredFacts.length > 5 || item.requiredFacts.some(fact => !fact.answerIncludes.trim() || !item.evidence.some(source => source.id === fact.sourceId && source.text.includes(fact.quote)))) throw new Error('Frozen reference facts must bind to literal independent source text.');
+    if (item.requiredFacts.length > 5 || item.requiredFacts.some(fact => !fact.answerIncludes.trim() || !fact.quote.trim() || !item.evidence.some(source => source.id === fact.sourceId && source.text.includes(fact.quote)))) throw new Error('Frozen reference facts must bind to literal independent source text.');
   }
   return copy;
 }
@@ -67,12 +67,12 @@ export class AnswerPolicyWorker {
   private readonly packet: RuntimeValidationPacket | null;
   constructor(private readonly provider: AnswerPolicyProvider, private readonly store: RuntimeAnswerPolicyStore, dbPath = '.data/runtime-answer-policy.sqlite',
     private readonly options: { automatic?: boolean; canDispatch?: () => boolean; liveEnabled?: boolean; completedJobs?: () => AutomaticSupportJob[]; validationPacket?: RuntimeValidationPacket } = {}) {
+    this.packet = options.validationPacket ? packetCopy(options.validationPacket) : (provider.executionMode === 'synthetic' ? packetCopy(SYNTHETIC_RUNTIME_VALIDATION_PACKET) : null);
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`PRAGMA busy_timeout=5000;
       CREATE TABLE IF NOT EXISTS runtime_policy_failure_groups(id TEXT PRIMARY KEY,status TEXT NOT NULL,mode TEXT NOT NULL,parent_id TEXT NOT NULL,category TEXT NOT NULL,document TEXT NOT NULL,lease_expires INTEGER);
       CREATE TABLE IF NOT EXISTS runtime_policy_observed_checks(job_id TEXT PRIMARY KEY,run_id TEXT NOT NULL UNIQUE,binding TEXT NOT NULL);`);
-    this.packet = options.validationPacket ? packetCopy(options.validationPacket) : (provider.executionMode === 'synthetic' ? packetCopy(SYNTHETIC_RUNTIME_VALIDATION_PACKET) : null);
     this.reconcile(); this.syncDecisions(); if (options.automatic) this.start();
   }
   start() { if (this.timer || this.paused || this.closed) return; this.timer = setInterval(() => { void this.tick().catch(error => console.error('Runtime answer-policy worker failed:', error)); }, 1500); this.timer.unref(); }
@@ -310,7 +310,6 @@ export class AnswerPolicyWorker {
     const group = this.get(id) ?? this.overview().groups.find(item => item.decisionId === id);
     if (!group?.decisionId || group.status !== 'completed' || !group.decision || !group.candidate) throw new Error('A complete persisted trial decision is required.');
     if (group.mode !== (this.provider.executionMode ?? 'live')) throw new Error('Runtime trial activation mode differs from the configured provider.');
-    if (group.mode !== (this.provider.executionMode ?? 'live')) throw new Error('Trial activation provenance differs from this provider mode.');
     this.validate(group);
     if (this.store.capture(group.mode).id !== group.parent.id) throw new Error('Runtime activation has a stale parent.');
     if (group.operations.length !== CALL_CEILING || new Set(group.operations.map(operation => operation.phase)).size !== CALL_CEILING || new Set(group.operations.map(operation => operation.receiptId)).size !== CALL_CEILING) throw new Error('Trial operation evidence is incomplete or duplicated.');

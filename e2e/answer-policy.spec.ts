@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-const baseline = { id: 'workspace-baseline-v2-context-synthetic', instructionSha256: 'a'.repeat(64), mode: 'synthetic', parentId: null, instructions: 'SYNTHETIC baseline instructions', provenance: 'workspace_baseline' };
-const candidate = { ...baseline, id: 'runtime-policy-fictional', parentId: baseline.id, instructionSha256: 'b'.repeat(64), instructions: 'SYNTHETIC candidate instructions', provenance: 'synthetic_instruction_proposal' };
+const baseline = { id: 'workspace-baseline-v2-context-synthetic', instructionSha256: 'a'.repeat(64), mode: 'synthetic', parentId: null, status: 'baseline', instructions: 'SYNTHETIC baseline instructions', provenance: 'workspace_baseline' };
+const candidate = { ...baseline, id: 'runtime-policy-fictional', parentId: baseline.id, status: 'candidate', instructionSha256: 'b'.repeat(64), instructions: 'SYNTHETIC candidate instructions', provenance: 'synthetic_instruction_proposal' };
 const decision = { id: 'runtime-trial-10000000-0000-4000-8000-000000000036', mode: 'synthetic', parent: baseline, candidate, complete: true, verdict: 'eligible_synthetic_trial', callCeiling: 13, operations: Array.from({ length: 13 }, (_, phase) => ({ phase, status: 'completed' })), reasons: ['Synthetic fixture mechanics only.'], baseline: { usefulSupportedAnswers: 1 }, candidateMetrics: { usefulSupportedAnswers: 2, regressions: 0 } };
 
 test('synthetic policy status shows exact evidence, activates a trial and rolls back at mobile width', async ({ page }) => {
@@ -58,4 +58,23 @@ test('a hosted viewer can inspect the policy but cannot activate or roll back', 
   });
   await page.goto('/ask'); const panel = page.getByLabel('Runtime answer policy'); await panel.locator('> summary').click();
   await expect(panel.getByRole('button', { name: 'Roll back to parent policy' })).toBeDisabled();
+});
+
+test('malformed policy inspection remains a panel error and leaves the question form usable', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', error => errors.push(error.message));
+  await page.route('**/api/**', route => {
+    const path = new URL(route.request().url()).pathname;
+    if (path === '/api/session') return route.fulfill({ json: { hosted: false, providerMode: 'local', actor: null } });
+    // Deliberately return the wrong successful payload for policy inspection.
+    return route.fulfill({ json: { products: [], runs: [], readiness: { ready: false, reason: 'Synthetic only.' }, busy: false } });
+  });
+  await page.goto('/ask');
+  const panel = page.getByLabel('Runtime answer policy'); await panel.locator('> summary').click();
+  await expect(panel.getByRole('alert')).toHaveText('Policy status is unavailable: invalid response.');
+  const productName = page.getByRole('textbox', { name: 'Product name', exact: true });
+  await productName.fill('Fictional usable product');
+  await expect(productName).toHaveValue('Fictional usable product');
+  await expect(panel.getByRole('button', { name: /Activate|Roll back/ })).toHaveCount(0);
+  expect(errors).toEqual([]);
 });
