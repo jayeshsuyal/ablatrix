@@ -86,11 +86,11 @@ test('hosted HTTP rejects unauthorized and forbidden work before initializing re
     app = await boot(directory);
     const paths = ['runs.sqlite', 'workspace.sqlite', 'reviews.sqlite', 'receipts.sqlite'].map(name => join(directory, name));
     const before = paths.map(databaseSnapshot);
-    for (const path of ['/api/workspace', '/api/workspace/reviews', '/api/session', '/api/health']) assert.equal((await app.send('GET', path, null)).status, 401);
+    for (const path of ['/api/workspace', '/api/workspace/reviews', '/api/workspace/answer-policy', '/api/workspace/answer-policy/export', '/api/session', '/api/health']) assert.equal((await app.send('GET', path, null)).status, 401);
     assert.equal((await app.send('GET', '/api/workspace/reviews', null, undefined, { 'cf-access-jwt-assertion': 'forged.assertion.signature', 'x-user': 'test-operator' })).status, 401);
     assert.equal((await app.send('POST', '/api/workspace/products', 'operator', {}, { origin: 'https://untrusted.example.test' })).status, 403);
     for (const role of ['viewer', 'reviewer'] as const) {
-      for (const path of ['/api/workspace/products', '/api/workspace/questions', '/api/workspace/reviews/workspace-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/revisions', '/api/context-comparisons/fixture']) assert.equal((await app.send('POST', path, role, {})).status, 403);
+      for (const path of ['/api/workspace/products', '/api/workspace/questions', '/api/workspace/reviews/workspace-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/revisions', '/api/workspace/answer-policy/rollback', '/api/workspace/answer-policy/trials/runtime-trial-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/activate', '/api/context-comparisons/fixture']) assert.equal((await app.send('POST', path, role, {})).status, 403);
     }
     assert.equal((await app.send('POST', '/api/workspace/reviews/workspace-aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/decisions', 'viewer', {})).status, 403);
     assert.equal((await app.send('POST', '/api/workspace/questions', 'operator', { mode: 'live' })).status, 403, 'inherited live environment flags cannot enable hosted execution');

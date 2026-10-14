@@ -4,6 +4,7 @@ import type { AutomaticSupportJob } from '../server/automatic-support.ts';
 import { AutomaticCheck, useAutomaticCheck } from './AutomaticCheck';
 import './ask.css';
 import { useDemoSession } from './DemoSession';
+import { AnswerPolicy } from './AnswerPolicy';
 
 type WorkspaceOverview = { products: WorkspaceProduct[]; runs: QuestionResponse[]; readiness: { ready: boolean; reason: string }; automaticCheckReadiness?: { ready: boolean; reason: string }; busy: boolean };
 type SourceDraft = { label: string; text: string; originalQuestion: string };
@@ -86,6 +87,7 @@ export default function Ask() {
       <header className="ask-hero"><span className="ask-kicker">PRODUCT EVIDENCE → GROUNDED ANSWER</span><h1>Ask your product evidence.</h1><p>Add a product’s source text, find the relevant passages, and inspect an answer with citations. Workspace sources stay separate from Ablatrix’s frozen evaluation sets.</p></header>
       {synthetic && <p className="ask-notice"><strong>Synthetic demonstration.</strong> Answers are deterministic source-excerpt templates. No model calls, billing, or measured quality gain.</p>}{!canWrite && <p className="ask-notice">Operators can add products and generate answers. Your role can inspect the saved workspace.</p>}
       {error && <p className="ask-alert" role="alert">{error}</p>}{notice && <p className="ask-notice" role="status">{notice}</p>}
+      <AnswerPolicy canWrite={canWrite} refreshKey={selectedRunId} />
       <div className="ask-grid">
         <section className="ask-panel" aria-labelledby="ask-import-title"><div className="ask-panel-heading"><span>01 / EVIDENCE</span><h2 id="ask-import-title">Add a product</h2><p>Paste source text you have permission to use. Each source stays attached to this product and is kept out of the evaluation corpus.</p></div>
           <form onSubmit={addProduct}><label>Product name<input value={title} onChange={event => setTitle(event.target.value)} placeholder="e.g. Trail running jacket" minLength={3} maxLength={160} required /></label>
@@ -105,6 +107,7 @@ export default function Ask() {
         </section>
       </div>
       <section className="ask-panel ask-result" aria-labelledby="ask-result-title"><div className="ask-panel-heading"><span>03 / RESULT</span><h2 id="ask-result-title">{selectedRun ? selectedRun.question : 'Evidence and answer'}</h2><p>{selectedRun?.mode === 'synthetic' ? 'Synthetic saved output. This example and its review do not enter live quality results.' : selectedRun?.mode === 'preview' ? 'Retrieval preview · no model call or quality score.' : selectedRun ? 'Saved local model attempt. Citations verify quote membership, not full semantic correctness.' : 'Select a saved question to inspect its answer and source passages.'}</p></div>
+        {selectedRun?.runtimePolicy && <p className="ask-policy-binding">Captured policy: {selectedRun.runtimePolicy.id} · {selectedRun.runtimePolicy.instructionSha256}</p>}
         {selectedRun?.answer && !check.job && <div className="ask-answer"><span>{selectedRun.automaticCheckError ? 'ORIGINAL ANSWER · AUTOMATIC CHECK UNAVAILABLE' : unconfirmedCheck ? 'ORIGINAL ANSWER · SOURCE CHECK NOT CONFIRMED' : selectedRun.mode === 'synthetic' ? 'SYNTHETIC ANSWER' : selectedRun.answer.status === 'answered' ? 'ANSWERED FROM EVIDENCE' : 'INSUFFICIENT EVIDENCE'}</span><p>{selectedRun.answer.answer}</p><small>{selectedRun.model} · {selectedRun.mode === 'synthetic' ? 'no model tokens or charges' : selectedRun.usage ? `${selectedRun.usage.inputTokens + selectedRun.usage.outputTokens} tokens` : 'token usage unavailable'}</small></div>}
         {selectedRun && <AutomaticCheck state={checkForDisplay} pending={unconfirmedCheck} mode={selectedRun.mode === 'synthetic' ? 'synthetic' : 'live'} />}
         {selectedRun?.status === 'completed' && selectedRun.mode !== 'preview' && selectedRun.answer && <p className="ask-review-link"><a className="ask-primary" href={`/review?answer=${encodeURIComponent(`workspace-${selectedRun.id}`)}`}>Review this answer ↗</a><span>Check its sources, record a decision, or request a background revision.</span></p>}

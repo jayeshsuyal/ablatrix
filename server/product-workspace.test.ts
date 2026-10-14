@@ -8,6 +8,8 @@ import { ProductWorkspace } from './product-workspace.ts';
 import { ProductRetriever } from './product-retrieval.ts';
 import { quoteOptions } from './feedback-provider.ts';
 import { textHash } from './product-corpus.ts';
+import { parseReviewAnswerSnapshot } from './answer-review-source.ts';
+import { RUNTIME_BASELINE_INSTRUCTIONS, runtimeBaselinePolicy, type RuntimeAnswerPolicyStore } from './runtime-answer-policy.ts';
 import type { LoopProvider, LoopRetriever, ProductCorpus } from './loop-types.ts';
 
 function retrieverFor(corpus: ProductCorpus): LoopRetriever {
@@ -33,6 +35,7 @@ test('product evidence and question previews persist without model calls or eval
     assert.equal(preview.status, 'evidence_ready');
     assert.equal(preview.answer, null);
     assert.equal(preview.generationProtocol, undefined, 'preview does not claim a generation protocol');
+    assert.equal(preview.runtimePolicy, undefined, 'a retrieval preview does not consume an answer policy');
     assert.equal(preview.retrieval?.passages.length, 1);
     assert.equal(preview.retrieval?.passages[0].productId, first.id);
     assert.equal(calls, 0);
@@ -61,6 +64,8 @@ test('live workspace answers require exact citations and retain failed attempts'
     const good = await workspace.ask({ productId: product.id, question: 'What material is the shell?', mode: 'live' });
     assert.equal(good.status, 'completed');
     assert.equal(good.answer?.citations[0].quote, 'waterproof nylon shell');
+    assert.deepEqual(good.runtimePolicy, { id: 'workspace-baseline-v2-context', instructionSha256: textHash(RUNTIME_BASELINE_INSTRUCTIONS), mode: 'live' });
+    assert.equal(good.runtimePolicyInstructions, RUNTIME_BASELINE_INSTRUCTIONS);
     fabricated = true;
     const bad = await workspace.ask({ productId: product.id, question: 'What material is the shell?', mode: 'live' });
     assert.equal(bad.status, 'failed'); assert.equal(bad.answer, null);
@@ -195,4 +200,125 @@ test('oversized full automatic-check context fails before any original model cal
     assert.equal(run.automaticCheckRequested, true); assert.equal(run.automaticCheckHandoff, 'unavailable');
     assert.match(run.automaticCheckError ?? '', /No answer call/); assert.equal(workspace.automaticCheckSnapshots().length, 0);
   } finally { workspace.close(); }
+});
+
+test('runtime policy capture precedes retrieval and pointer changes affect only later questions', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'workspace-policy-capture-')), path = join(directory, 'workspace.sqlite');
+  const baseline = runtimeBaselinePolicy('synthetic');
+  const instructions = `${baseline.instructions} Answer the requested material first when the source provides it.`;
+  const candidate = { ...baseline, id: 'runtime-policy-synthetic-test-candidate', parentId: baseline.id, instructions, instructionSha256: textHash(instructions), status: 'candidate' as const };
+  let current: ReturnType<RuntimeAnswerPolicyStore['capture']> = baseline;
+  const store: Pick<RuntimeAnswerPolicyStore, 'capture'> = { capture(mode) { assert.equal(mode, 'synthetic'); return current; } };
+  let releaseRetrieval!: () => void;
+  let enteredRetrieval!: () => void;
+  const retrievalEntered = new Promise<void>(resolve => { enteredRetrieval = resolve; });
+  const retrievalRelease = new Promise<void>(resolve => { releaseRetrieval = resolve; });
+  let retrievals = 0;
+  const received: { id: string; instructions: string }[] = [];
+  const provider: LoopProvider & { executionMode: 'synthetic' } = { executionMode: 'synthetic', readiness: () => ({ ready: true, reason: 'Offline scripted provider.' }), async answer(input) {
+    received.push({ id: input.policy.id, instructions: input.policy.instructions });
+    return { answer: { answer: 'SYNTHETIC fixture: the shell is nylon.', status: 'answered', citations: [{ passageId: input.passages[0].id, quote: 'nylon shell' }] }, model: 'synthetic-fixture', usage: null };
+  }, async propose() { throw new Error('No proposal in policy capture test.'); } };
+  let workspace = new ProductWorkspace(path, provider, corpus => {
+    const retriever = retrieverFor(corpus);
+    return { close() {}, async retrieve(productId, question) {
+      if (++retrievals === 1) {
+        const db = new DatabaseSync(path);
+        const saved = JSON.parse((db.prepare('SELECT document FROM workspace_runs').get() as { document: string }).document); db.close();
+        assert.deepEqual(saved.runtimePolicy, { id: baseline.id, instructionSha256: baseline.instructionSha256, mode: 'synthetic' });
+        assert.equal(saved.runtimePolicyInstructions, baseline.instructions, 'exact policy bytes are durable before retrieval starts');
+        enteredRetrieval(); await retrievalRelease;
+      }
+      return retriever.retrieve(productId, question);
+    } };
+  }, store);
+  try {
+    const product = workspace.createProduct({ title: 'Synthetic trail jacket', sources: [{ label: 'Synthetic listing', text: 'The synthetic jacket has a nylon shell and a detachable hood.' }] });
+    const input = { productId: product.id, question: 'What material is the synthetic shell?', mode: 'synthetic' };
+    const pending = workspace.ask(input, undefined, { automaticCheck: true });
+    await retrievalEntered;
+    current = candidate;
+    workspace.attachRuntimePolicyStore(store);
+    assert.throws(() => workspace.attachRuntimePolicyStore({ capture: () => baseline }), /already attached/);
+    releaseRetrieval();
+    const inFlight = await pending;
+    assert.equal(inFlight.status, 'completed');
+    assert.deepEqual(received[0], { id: baseline.id, instructions: baseline.instructions });
+    const originalRunBytes = JSON.stringify(inFlight), originalSnapshotBytes = JSON.stringify(workspace.reviewSnapshots(inFlight.id));
+    const later = await workspace.ask(input);
+    assert.equal(later.status, 'completed');
+    assert.deepEqual(received[1], { id: candidate.id, instructions: candidate.instructions });
+    assert.deepEqual(later.runtimePolicy, { id: candidate.id, instructionSha256: candidate.instructionSha256, mode: 'synthetic' });
+    const candidateSnapshot = parseReviewAnswerSnapshot(workspace.reviewSnapshots(later.id)[0]);
+    assert.deepEqual(candidateSnapshot.runtimePolicy, later.runtimePolicy, 'policy lineage reaches the immutable automatic-check snapshot');
+    assert.throws(() => parseReviewAnswerSnapshot({ ...candidateSnapshot, runtimePolicy: { ...candidateSnapshot.runtimePolicy!, mode: 'live' } }), /policy mode/);
+    assert.throws(() => parseReviewAnswerSnapshot({ ...candidateSnapshot, runtimePolicy: { ...candidateSnapshot.runtimePolicy!, instructionSha256: 'bad' } }));
+    current = baseline;
+    const rolledBack = await workspace.ask(input);
+    assert.deepEqual(received[2], { id: baseline.id, instructions: baseline.instructions });
+    assert.deepEqual(rolledBack.runtimePolicy, inFlight.runtimePolicy);
+    assert.equal(JSON.stringify(workspace.overview().runs.find(run => run.id === inFlight.id)), originalRunBytes, 'pointer changes preserve original saved answer bytes');
+    assert.equal(JSON.stringify(workspace.reviewSnapshots(inFlight.id)), originalSnapshotBytes);
+    workspace.close(); workspace = new ProductWorkspace(path, provider, retrieverFor, store);
+    assert.equal(JSON.stringify(workspace.reviewSnapshots(inFlight.id)), originalSnapshotBytes, 'policy capture persists through restart');
+  } finally { releaseRetrieval(); workspace.close(); rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('cross-mode or mismatched runtime policy snapshots fail before retrieval and generation', async () => {
+  let retrievals = 0, calls = 0;
+  const provider: LoopProvider = { readiness: () => ({ ready: true, reason: 'Offline scripted transport.' }), async answer() { calls++; throw new Error('No dispatch expected.'); }, async propose() { throw new Error('No proposal expected.'); } };
+  const baseline = runtimeBaselinePolicy('live');
+  let captured = { ...baseline, mode: 'synthetic' as 'live' | 'synthetic' };
+  const store: Pick<RuntimeAnswerPolicyStore, 'capture'> = { capture: () => captured };
+  const workspace = new ProductWorkspace(':memory:', provider, corpus => { retrievals++; return retrieverFor(corpus); }, store);
+  try {
+    const product = workspace.createProduct({ title: 'Synthetic trail jacket', sources: [{ label: 'Synthetic listing', text: 'The synthetic jacket has a nylon shell and a detachable hood.' }] });
+    const input = { productId: product.id, question: 'What material is the shell?', mode: 'live' };
+    await assert.rejects(workspace.ask(input), /policy has invalid identity or mode/);
+    captured = { ...baseline, instructionSha256: 'a'.repeat(64) };
+    await assert.rejects(workspace.ask(input), /policy has invalid identity or mode/);
+    assert.equal(retrievals, 0); assert.equal(calls, 0); assert.equal(workspace.overview().runs.length, 0);
+  } finally { workspace.close(); }
+});
+
+test('attaching a runtime policy store requires an idle workspace and cannot replace its store', async () => {
+  const baseline = runtimeBaselinePolicy('live'), store: Pick<RuntimeAnswerPolicyStore, 'capture'> = { capture: () => baseline };
+  let release!: () => void, entered!: () => void;
+  const retrievalStarted = new Promise<void>(resolve => { entered = resolve; }), gate = new Promise<void>(resolve => { release = resolve; });
+  const provider: LoopProvider = { readiness: () => ({ ready: false, reason: 'Only preview expected.' }), async answer() { throw new Error('No dispatch expected.'); }, async propose() { throw new Error('No proposal expected.'); } };
+  const workspace = new ProductWorkspace(':memory:', provider, corpus => { const retriever = retrieverFor(corpus); return { close() {}, async retrieve(productId, question) { entered(); await gate; return retriever.retrieve(productId, question); } }; });
+  try {
+    const product = workspace.createProduct({ title: 'Synthetic trail jacket', sources: [{ label: 'Synthetic listing', text: 'The synthetic jacket has a nylon shell and a detachable hood.' }] });
+    const pending = workspace.ask({ productId: product.id, question: 'What material is the shell?', mode: 'preview' });
+    await retrievalStarted;
+    assert.throws(() => workspace.attachRuntimePolicyStore(store), /during a question/);
+    release(); await pending;
+    workspace.attachRuntimePolicyStore(store); workspace.attachRuntimePolicyStore(store);
+    assert.throws(() => workspace.attachRuntimePolicyStore({ capture: () => baseline }), /already attached/);
+  } finally { release(); workspace.close(); }
+});
+
+test('reopening historical workspace runs does not invent or backfill runtime policy bindings', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'workspace-policy-legacy-')), path = join(directory, 'workspace.sqlite');
+  const provider: LoopProvider = { readiness: () => ({ ready: true, reason: 'Offline scripted transport.' }), async answer(input) {
+    return { answer: { answer: 'The fixture shell is nylon.', status: 'answered', citations: [{ passageId: input.passages[0].id, quote: 'nylon shell' }] }, model: 'test-model', usage: null };
+  }, async propose() { throw new Error('No proposal expected.'); } };
+  let workspace = new ProductWorkspace(path, provider, retrieverFor);
+  try {
+    const product = workspace.createProduct({ title: 'Synthetic trail jacket', sources: [{ label: 'Synthetic listing', text: 'The synthetic jacket has a nylon shell and a detachable hood.' }] });
+    const run = await workspace.ask({ productId: product.id, question: 'What material is the shell?', mode: 'live' });
+    const legacyRun = { ...run }, legacySnapshot = { ...workspace.reviewSnapshots(run.id)[0] };
+    delete legacyRun.runtimePolicy; delete legacyRun.runtimePolicyInstructions; delete legacySnapshot.runtimePolicy;
+    const runBytes = JSON.stringify(legacyRun), snapshotBytes = JSON.stringify(legacySnapshot);
+    workspace.close();
+    const db = new DatabaseSync(path);
+    db.prepare('UPDATE workspace_runs SET document=? WHERE id=?').run(runBytes, run.id); db.close();
+    workspace = new ProductWorkspace(path, provider, retrieverFor, { capture: () => runtimeBaselinePolicy('live') });
+    const historical = workspace.reviewSnapshots(run.id)[0];
+    assert.equal(JSON.stringify(historical), snapshotBytes);
+    assert.equal(parseReviewAnswerSnapshot(historical).runtimePolicy, undefined);
+    const reopened = new DatabaseSync(path);
+    try { assert.equal((reopened.prepare('SELECT document FROM workspace_runs WHERE id=?').get(run.id) as { document: string }).document, runBytes); }
+    finally { reopened.close(); }
+  } finally { workspace.close(); rmSync(directory, { recursive: true, force: true }); }
 });

@@ -8,12 +8,12 @@ import { ProductRetriever } from './product-retrieval.ts';
 import { quoteOptions } from './feedback-provider.ts';
 import { workspaceReviewSourceHash, type ReviewAnswerSnapshot, type RevisionContext } from './answer-review-source.ts';
 import { claimSupportRequestParts } from './claim-support.ts';
-import type { LoopAnswer, LoopProvider, LoopRetriever, LoopUsage, ProductCorpus, RetrievalResult } from './loop-types.ts';
+import { RUNTIME_BASELINE_INSTRUCTIONS, type RuntimeAnswerPolicyStore, type RuntimePolicyBinding } from './runtime-answer-policy.ts';
+import type { LoopAnswer, LoopPolicy, LoopProvider, LoopRetriever, LoopUsage, ProductCorpus, RetrievalResult } from './loop-types.ts';
 
 const sourceInput = z.object({ label: z.string().trim().min(2).max(80), text: z.string().trim().min(30).max(1500), originalQuestion: z.string().trim().min(1).max(500).optional() }).strict();
 const productInput = z.object({ title: z.string().trim().min(3).max(160), sources: z.array(sourceInput).min(1).max(8) }).strict();
 const questionInput = z.object({ productId: z.uuid(), question: z.string().trim().min(5).max(500), mode: z.enum(['preview', 'live', 'synthetic']) }).strict();
-const baselineInstructions = 'Answer the product question using only the supplied product evidence. State supported facts directly, attribute claims to their source, and qualify missing or conflicting details. Never invent a specification. Cite an exact supporting quote for each material claim.';
 
 // A byte is an upper bound on byte-level BPE tokens. Keep each passage below
 // the retriever's 350-token limit, including tokenizer special tokens.
@@ -37,6 +37,7 @@ function sourceChunks(text: string): string[] {
 
 export type WorkspaceProduct = { id: string; title: string; sources: { id: string; label: string; text: string; originalQuestion?: string }[]; createdAt: string };
 export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live' | 'synthetic'; generationProtocol?: 'product-answer-v2-context' | 'synthetic-product-answer-v1'; reviewContext?: RevisionContext;
+  runtimePolicy?: RuntimePolicyBinding; runtimePolicyInstructions?: string;
   automaticCheckRequested?: true; automaticCheckHandoff?: 'pending' | 'enqueued' | 'unavailable'; automaticCheckError?: string;
   status: 'retrieving' | 'evidence_ready' | 'completed' | 'failed'; retrieval: RetrievalResult | null; answer: LoopAnswer | null; model: string | null; usage: LoopUsage; error: string | null; createdAt: string };
 
@@ -45,7 +46,7 @@ export class ProductWorkspace {
   private db: DatabaseSync;
   private retrievers = new Map<string, LoopRetriever>();
   private busy = false;
-  constructor(dbPath = '.data/product-workspace.sqlite', private provider: LoopProvider & { executionMode?: 'live' | 'synthetic' }, private retrieverFactory: (corpus: ProductCorpus) => LoopRetriever = corpus => new ProductRetriever(corpus, dbPath === ':memory:' ? ':memory:' : `${dbPath}.retrieval.sqlite`)) {
+  constructor(dbPath = '.data/product-workspace.sqlite', private provider: LoopProvider & { executionMode?: 'live' | 'synthetic' }, private retrieverFactory: (corpus: ProductCorpus) => LoopRetriever = corpus => new ProductRetriever(corpus, dbPath === ':memory:' ? ':memory:' : `${dbPath}.retrieval.sqlite`), private policyStore?: Pick<RuntimeAnswerPolicyStore, 'capture'>) {
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`CREATE TABLE IF NOT EXISTS workspace_products (id TEXT PRIMARY KEY, created_at TEXT NOT NULL, document TEXT NOT NULL);
@@ -65,6 +66,12 @@ export class ProductWorkspace {
   }
   overview() { return { products: this.products(), runs: this.runs(100), readiness: this.provider.readiness(), busy: this.busy }; }
   hasActive() { return this.busy; }
+  attachRuntimePolicyStore(store: Pick<RuntimeAnswerPolicyStore, 'capture'>) {
+    if (this.policyStore === store) return;
+    if (this.policyStore) throw new Error('Workspace: runtime answer policy store is already attached.');
+    if (this.busy) throw new Error('Workspace: cannot attach runtime answer policies during a question.');
+    this.policyStore = store;
+  }
   /** Detect both this connection's writes and commits from another connection. */
   reviewImportVersion() {
     const external = this.db.prepare('PRAGMA data_version').get() as { data_version: number };
@@ -78,6 +85,7 @@ export class ProductWorkspace {
   private snapshots(runs: WorkspaceRun[]): ReviewAnswerSnapshot[] {
     return runs.filter(run => (run.mode === 'live' || run.mode === 'synthetic') && run.status === 'completed' && run.answer && run.model && run.retrieval?.passages.length).map(run => ({
       id: `workspace-${run.id}`, runId: run.id, ...(run.mode === 'synthetic' ? { mode: 'synthetic' as const } : {}),
+      ...(run.runtimePolicy ? { runtimePolicy: { ...run.runtimePolicy } } : {}),
       // Older runs did not freeze the full source set or original product title.
       // Their retrieved passages are the only historical context we can assert.
       context: run.reviewContext ?? { question: run.question, product: { id: run.productId, title: `Saved product ${run.productId} (original title unavailable)` },
@@ -136,6 +144,19 @@ export class ProductWorkspace {
     this.retrievers.set(product.id, retriever);
     return retriever;
   }
+  private capturePolicy(mode: 'live' | 'synthetic'): { policy: LoopPolicy; binding: RuntimePolicyBinding } {
+    // Copy the policy before retrieval can yield. Later pointer changes apply only
+    // to later questions; the saved run and dispatched instructions share bytes.
+    const captured = this.policyStore?.capture(mode);
+    if (this.policyStore && !captured) throw new Error('Workspace: runtime answer policy store did not capture a policy.');
+    const instructions = captured ? captured.instructions : RUNTIME_BASELINE_INSTRUCTIONS;
+    const binding: RuntimePolicyBinding = captured ? { id: captured.id, instructionSha256: captured.instructionSha256, mode: captured.mode }
+      : { id: 'workspace-baseline-v2-context', instructionSha256: textHash(instructions), mode };
+    if (typeof instructions !== 'string' || !instructions.trim() || binding.mode !== mode || binding.instructionSha256 !== textHash(instructions) || typeof binding.id !== 'string' || !binding.id || binding.id.length > 160) throw new Error('Workspace: captured runtime answer policy has invalid identity or mode.');
+    return { binding, policy: { id: binding.id, parentId: captured?.parentId ?? null, instructions,
+      rationale: 'Local product workspace baseline with separate original customer question context.', feedbackRunIds: [],
+      status: captured && captured.status !== 'baseline' ? 'candidate' : 'baseline', mode: mode === 'synthetic' ? 'fixture' : 'live', createdAt: captured?.createdAt ?? '2026-09-29T00:00:00.000Z' } };
+  }
   async ask(raw: unknown, beforeLiveDispatch?: () => void, options: { automaticCheck?: boolean } = {}): Promise<WorkspaceRun> {
     const input = questionInput.parse(raw);
     if (options.automaticCheck && input.mode === 'preview') throw new Error('Workspace: automatic checking requires a generated answer.');
@@ -144,8 +165,10 @@ export class ProductWorkspace {
     if (!product) throw new Error('Workspace: product not found.');
     if (input.mode !== 'preview' && (input.mode === 'synthetic') !== (this.provider.executionMode === 'synthetic')) throw new Error('Workspace: requested answer mode does not match the configured provider.');
     if (input.mode !== 'preview' && !this.provider.readiness().ready) throw new Error(`Workspace: ${this.provider.readiness().reason}`);
+    const capturedPolicy = input.mode === 'preview' ? undefined : this.capturePolicy(input.mode);
     this.busy = true;
     const run: WorkspaceRun = { id: randomUUID(), productId: product.id, question: input.question, mode: input.mode, ...(input.mode !== 'preview' ? { generationProtocol: input.mode === 'synthetic' ? 'synthetic-product-answer-v1' as const : 'product-answer-v2-context' as const,
+      runtimePolicy: capturedPolicy!.binding, runtimePolicyInstructions: capturedPolicy!.policy.instructions,
       reviewContext: { question: input.question, product: { id: product.id, title: product.title }, sources: this.corpus(product).passages.map(passage => {
         const source = { id: passage.id, label: passage.reference, text: passage.text, originalQuestion: passage.originalQuestion ?? null, origin: 'workspace' as const, reference: passage.reference };
         return { ...source, sha256: workspaceReviewSourceHash(source) };
@@ -176,10 +199,9 @@ export class ProductWorkspace {
         if (passages.some(passage => passage.productId !== product.id || passage.sha256 !== textHash(passage.text) || !run.reviewContext!.sources.some(source => source.id === passage.id && source.text === passage.text && source.originalQuestion === (passage.originalQuestion ?? null)))) throw new Error('Retrieved evidence does not match the saved product snapshot.');
         this.saveRun(run);
         if (input.mode === 'live') beforeLiveDispatch?.();
-        const policy = { id: 'workspace-baseline-v2-context', parentId: null, instructions: baselineInstructions, rationale: 'Local product workspace baseline with separate original customer question context.', feedbackRunIds: [], status: 'baseline' as const, mode: input.mode === 'synthetic' ? 'fixture' as const : 'live' as const, createdAt: '2026-09-29T00:00:00.000Z' };
         const quoteCount = this.provider.answerWithSnippetIds ? quoteOptions(passages).length : 0;
         const answerMethod = quoteCount >= 1 && quoteCount <= 60 ? this.provider.answerWithSnippetIds! : this.provider.answer;
-        const answer = await answerMethod.call(this.provider, { question: input.question, product: { id: product.id, title: product.title, split: 'development' }, policy, passages, runId: run.id });
+        const answer = await answerMethod.call(this.provider, { question: input.question, product: { id: product.id, title: product.title, split: 'development' }, policy: capturedPolicy!.policy, passages, runId: run.id });
         if (input.mode === 'synthetic' && (answer.model !== 'synthetic-fixture' || !answer.answer.answer.startsWith('SYNTHETIC'))) throw new Error('Synthetic answer provenance is missing.');
         if (answer.answer.status === 'answered' && !answer.answer.citations.length || answer.answer.citations.some(citation => !passages.some(passage => passage.id === citation.passageId && passage.text.includes(citation.quote)))) throw new Error('Answer citation did not match supplied product evidence.');
         run.answer = answer.answer; run.model = answer.model; run.usage = answer.usage; run.status = 'completed';

@@ -67,10 +67,11 @@ function singleHeader(req: IncomingMessage, name: string): string | undefined {
 
 const workspaceId = 'workspace-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}';
 const comparisonId = '[A-Za-z0-9_-]{1,120}';
-const reads = new Set(['/api/session', '/api/health', '/api/workspace', '/api/workspace/automatic-checks', '/api/workspace/reviews', '/api/workspace/reviews/export', '/api/context-comparisons', '/', '/ask', '/review', '/compare']);
+const reads = new Set(['/api/session', '/api/health', '/api/workspace', '/api/workspace/automatic-checks', '/api/workspace/answer-policy', '/api/workspace/answer-policy/export', '/api/workspace/reviews', '/api/workspace/reviews/export', '/api/context-comparisons', '/', '/ask', '/review', '/compare']);
 const comparisonRead = new RegExp(`^/api/context-comparisons/${comparisonId}(?:/(?:report|export))?$`);
 const reviewerWrite = new RegExp(`^(?:/api/workspace/reviews/${workspaceId}/decisions|/api/context-comparisons/${comparisonId}/reviews)$`);
 const operatorWrite = new RegExp(`^(?:/api/workspace/(?:products|questions)|/api/workspace/reviews/${workspaceId}/revisions|/api/context-comparisons/fixture)$`);
+const policyOperatorWrite = /^\/api\/workspace\/answer-policy\/(?:rollback|trials\/(?:runtime-trial-)?[a-f0-9-]{36}\/activate)$/;
 const assetRead = /^\/assets\/[A-Za-z0-9][A-Za-z0-9._-]*\.(?:js|css|svg|png|jpe?g|webp|ico|woff2?)$/;
 const rank: Record<DemoRole, number> = { viewer: 0, reviewer: 1, operator: 2 };
 
@@ -109,7 +110,7 @@ export class DemoAccess {
     const configured = this.members.get(actor.subject);
     if (!configured || actor.reviewer !== configured.reviewer || actor.role !== configured.role) throw new DemoAccessError(403, 'Configured demo member required.');
     if (method === 'GET' && (reads.has(path) || comparisonRead.test(path) || assetRead.test(path) || path === '/favicon.ico')) return;
-    if (method === 'POST' && ((reviewerWrite.test(path) && rank[configured.role] >= rank.reviewer) || (operatorWrite.test(path) && configured.role === 'operator'))) return;
+    if (method === 'POST' && ((reviewerWrite.test(path) && rank[configured.role] >= rank.reviewer) || ((operatorWrite.test(path) || policyOperatorWrite.test(path)) && configured.role === 'operator'))) return;
     throw new DemoAccessError(403, 'This action is unavailable for your role in the hosted demo.');
   }
 }

@@ -1,0 +1,73 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { once } from 'node:events';
+import { mkdtempSync, rmSync } from 'node:fs';
+import { join } from 'node:path';
+import { tmpdir } from 'node:os';
+import { createApp } from './app.ts';
+import { RunStore } from './store.ts';
+import { PilotRunner, PilotStore } from './pilot.ts';
+import { ProductWorkspace } from './product-workspace.ts';
+import { SyntheticAnswerProvider } from './synthetic-answer-provider.ts';
+import { AutomaticSupport } from './automatic-support.ts';
+import { RuntimeAnswerPolicyStore } from './runtime-answer-policy.ts';
+import { AnswerPolicyWorker } from './answer-policy-worker.ts';
+import { syntheticRetriever } from './hosted-demo.ts';
+
+test('HTTP exact policy evidence and synthetic release/rollback affect future answers without human decisions', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'ablatrix-policy-api-'));
+  const provider = new SyntheticAnswerProvider(join(dir, 'receipts.sqlite'));
+  const policies = new RuntimeAnswerPolicyStore(join(dir, 'policies.sqlite'));
+  const workspace = new ProductWorkspace(join(dir, 'workspace.sqlite'), provider, syntheticRetriever, policies);
+  const checks = new AutomaticSupport(provider, join(dir, 'reviews.sqlite'));
+  const worker = new AnswerPolicyWorker(provider, policies, join(dir, 'policies.sqlite'), { completedJobs: () => checks.overview() });
+  const store = new RunStore(join(dir, 'runs.sqlite'));
+  const baseline = policies.capture('synthetic');
+  const originals: string[] = [];
+  const products = Array.from({ length: 3 }, (_, i) => workspace.createProduct({ title: `SYNTHETIC fictional bottle ${i}`, sources: [{ label: 'SYNTHETIC fixture manual', text: 'SYNTHETIC fixture: This fictional bottle holds 600 ml and has a twist cap.' }] }));
+  for (const product of products) {
+    const run = await workspace.ask({ productId: product.id, question: 'How much does this bottle hold?', mode: 'synthetic' });
+    checks.enqueue(workspace.reviewSnapshots(run.id)[0]);
+    for (let phase = 0; phase < 3; phase++) await checks.tick();
+    originals.push(JSON.stringify(workspace.reviewSnapshots(run.id)[0]));
+  }
+  for (let phase = 0; phase < 13; phase++) await worker.tick();
+  const group = worker.overview().groups[0];
+  assert.equal(group.status, 'completed'); assert.ok(group.decisionId);
+  const decision = policies.getDecision(group.decisionId); assert.ok(decision);
+  assert.equal(decision.verdict, 'eligible_synthetic_trial');
+  const server = createApp(store, 'fixture', undefined, new PilotRunner(new PilotStore(':memory:')), undefined, undefined, workspace, undefined, false, { answerProvider: provider, reviewDbPath: join(dir, 'reviews.sqlite'), runtimePolicyStore: policies, answerPolicyWorker: worker });
+  server.listen(0, '127.0.0.1'); await once(server, 'listening');
+  const address = server.address(); assert.ok(address && typeof address !== 'string'); const base = `http://127.0.0.1:${address.port}`;
+  const post = async (path: string, input: unknown, expected = 200) => {
+    const response = await fetch(base + path, { method: 'POST', headers: { 'content-type': 'application/json', origin: base }, body: JSON.stringify(input) });
+    const value = await response.json(); assert.equal(response.status, expected, JSON.stringify(value)); return value;
+  };
+  try {
+    const before = JSON.stringify(worker.overview());
+    const exported = await (await fetch(base + '/api/workspace/answer-policy/export')).json();
+    assert.equal(exported.policies.active.id, baseline.id);
+    assert.deepEqual(exported.policies.decisions[0], decision);
+    assert.deepEqual(exported.improvement.groups[0].packet, group.packet);
+    assert.equal(exported.improvement.phaseReceipts.length, 13);
+    assert.equal(exported.improvement.originalChecks.length, 3);
+    assert.deepEqual(exported.improvement.phaseReceipts[0].receipt, provider.receipt(group.operations[0].runId));
+    assert.equal(exported.policies.decisions[0].qualityClaimEligible, false);
+    await fetch(base + '/api/workspace/answer-policy');
+    assert.equal(JSON.stringify(worker.overview()), before, 'inspection never aggregates or dispatches');
+    await post('/api/workspace/answer-policy/rollback', { expectedActiveId: baseline.id, humanApproved: true }, 400);
+    const activated = await post(`/api/workspace/answer-policy/trials/${group.decisionId}/activate`, {});
+    assert.equal(activated.id, group.candidate!.id, 'prefixed persisted decision ID is routable');
+    await post(`/api/workspace/answer-policy/trials/${group.decisionId}/activate`, {}, 409);
+    const input = { productId: products[0].id, question: 'How much does this bottle hold?', mode: 'synthetic' };
+    const after = await post('/api/workspace/questions', input, 201);
+    assert.equal(after.runtimePolicy.id, activated.id); assert.equal(after.runtimePolicyInstructions, activated.instructions);
+    await post('/api/workspace/answer-policy/rollback', { expectedActiveId: baseline.id }, 409);
+    const rolledBack = await post('/api/workspace/answer-policy/rollback', { expectedActiveId: activated.id }); assert.equal(rolledBack.id, baseline.id);
+    const later = await post('/api/workspace/questions', input, 201); assert.equal(later.runtimePolicy.id, baseline.id);
+    for (const original of originals) assert.equal(JSON.stringify(workspace.reviewSnapshots(JSON.parse(original).runId)[0]), original);
+    const reviews = await (await fetch(base + '/api/workspace/reviews/export')).json();
+    assert.equal(reviews.cases.flatMap((item: {events: unknown[]}) => item.events).length, 0);
+    assert.equal(policies.overview('synthetic').events.length, 2);
+  } finally { await checks.pauseAndDrain(); checks.close(); await server.shutdown(); store.close(); rmSync(dir, { recursive: true, force: true }); }
+});
