@@ -2,7 +2,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from 'node:ht
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { extname, join, resolve } from 'node:path';
-import { ZodError } from 'zod';
+import { ZodError, z } from 'zod';
 import { researchInput } from './contracts.ts';
 import { RunStore } from './store.ts';
 import { publicTasks, taskForRun, report } from './evaluation.ts';
@@ -25,6 +25,8 @@ import { ContextComparisonStore, createContextComparisonFixture } from './contex
 import { DemoAccess, DemoAccessError, type DemoActor } from './demo-access.ts';
 import { SyntheticAnswerProvider } from './synthetic-answer-provider.ts';
 import { AutomaticSupport } from './automatic-support.ts';
+import { RuntimeAnswerPolicyStore } from './runtime-answer-policy.ts';
+import { AnswerPolicyWorker } from './answer-policy-worker.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
   res.writeHead(status, { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
@@ -47,7 +49,7 @@ async function body(req: IncomingMessage, maxLength = 16_384): Promise<unknown> 
   return JSON.parse(text || '{}') as unknown;
 }
 
-export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview, startRevisionWorker = false, localOptions: { answerProvider?: SapiomFeedbackProvider | SyntheticAnswerProvider; reviewDbPath?: string; comparisonDbPath?: string; demoAccess?: DemoAccess } = {}) {
+export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview, startRevisionWorker = false, localOptions: { answerProvider?: SapiomFeedbackProvider | SyntheticAnswerProvider; reviewDbPath?: string; comparisonDbPath?: string; demoAccess?: DemoAccess; runtimePolicyDbPath?: string; runtimePolicyStore?: RuntimeAnswerPolicyStore; answerPolicyWorker?: AnswerPolicyWorker } = {}) {
   const runner = new ExperimentRunner(store, mode, provider);
   const optimizer = new OptimizationRunner(store, runner, mode, provider);
   let feedbackProvider: SapiomFeedbackProvider | SyntheticAnswerProvider | undefined = localOptions.answerProvider;
@@ -58,21 +60,40 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
     }
     return feedbackProvider;
   };
-  const productWorkspace = () => workspace ??= new ProductWorkspace(process.env.ABLATRIX_WORKSPACE_DB, localAnswerProvider());
   const reviewDbPath = localOptions.reviewDbPath ?? process.env.ABLATRIX_PAID_REVIEW_DB;
+  // Hosted instances derive this path solely from their dedicated review path.
+  const policyDbPath = localOptions.runtimePolicyDbPath ?? (!localOptions.demoAccess ? process.env.ABLATRIX_RUNTIME_POLICY_DB : undefined) ?? (reviewDbPath === ':memory:' ? ':memory:' : reviewDbPath ? `${reviewDbPath}.runtime-policy.sqlite` : '.data/runtime-answer-policy.sqlite');
+  let runtimePolicies = localOptions.runtimePolicyStore;
+  const answerPolicies = () => runtimePolicies ??= new RuntimeAnswerPolicyStore(policyDbPath);
+  const policyAction = <T,>(action: () => T): T => {
+    try { return action(); }
+    catch (error) { throw new Error(`Runtime policy: ${error instanceof Error ? error.message : 'Action could not complete.'}`); }
+  };
+  const productWorkspace = () => {
+    workspace ??= new ProductWorkspace(process.env.ABLATRIX_WORKSPACE_DB, localAnswerProvider(), undefined, answerPolicies());
+    workspace.attachRuntimePolicyStore(answerPolicies());
+    return workspace;
+  };
   const paidAnswerReview = () => paidReview ??= new PaidAnswerReview(reviewDbPath);
   let comparisons: ContextComparisonStore | undefined;
   const contextComparisons = () => comparisons ??= new ContextComparisonStore(localOptions.comparisonDbPath ?? process.env.ABLATRIX_COMPARISON_DB);
   let revisions: AnswerRevisions | undefined;
   let supportChecks: AutomaticSupport | undefined;
+  let policyWorker = localOptions.answerPolicyWorker;
+  const answerPolicyWorker = () => policyWorker ??= new AnswerPolicyWorker(localAnswerProvider(), answerPolicies(), policyDbPath, {
+    automatic: false,
+    liveEnabled: !localOptions.demoAccess && process.env.ABLATRIX_ANSWER_POLICY_SHADOW_LIVE === '1',
+    completedJobs: () => supportChecks?.overview() ?? [],
+    canDispatch: () => !feedback?.publicOverview().busy && !workspace?.hasActive() && !revisions?.hasActive() && !supportChecks?.hasActive()
+  });
   const automaticSupport = () => supportChecks ??= new AutomaticSupport(localAnswerProvider(), reviewDbPath, {
     automatic: false,
     liveEnabled: !localOptions.demoAccess && process.env.ABLATRIX_AUTOMATIC_CHECK_LIVE === '1',
-    canDispatch: () => !feedback?.publicOverview().busy && !workspace?.hasActive() && !revisions?.hasActive()
+    canDispatch: () => !feedback?.publicOverview().busy && !workspace?.hasActive() && !revisions?.hasActive() && !policyWorker?.hasActive()
   });
   let importedWorkspaceVersion: string | undefined;
   const answerRevisions = () => {
-    revisions ??= new AnswerRevisions(paidAnswerReview(), localAnswerProvider(), reviewDbPath, true, () => !feedback?.publicOverview().busy && !workspace?.hasActive() && !supportChecks?.hasActive());
+    revisions ??= new AnswerRevisions(paidAnswerReview(), localAnswerProvider(), reviewDbPath, true, () => !feedback?.publicOverview().busy && !workspace?.hasActive() && !supportChecks?.hasActive() && !policyWorker?.hasActive());
     const version = productWorkspace().reviewImportVersion();
     // Recover all historical handoffs at startup or after workspace writes, not
     // on every poll. A failed import leaves the old token so the next read retries.
@@ -102,7 +123,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   const loopTelemetry = () => telemetry ??= new LoopTelemetry();
   const feedbackLoop = () => {
     if (localOptions.demoAccess) throw new DemoAccessError(403, 'The hosted demo does not run legacy experiments.');
-    if (revisions?.hasActive() || supportChecks?.hasActive()) throw new Error('Feedback revision or automatic check is using the shared provider.');
+    if (revisions?.hasActive() || supportChecks?.hasActive() || policyWorker?.hasActive()) throw new Error('Feedback revision, automatic check or policy trial is using the shared provider.');
     if (!feedback) {
       const corpus = loadProductCorpus();
       const finalCorpus = loadFinalProductCorpus();
@@ -170,7 +191,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
         if (req.method === 'GET' && action === 'report') return json(res, 200, contextComparisons().report(id));
         if (req.method === 'GET' && action === 'export') return download(res, `ablatrix-context-comparison-${id}.json`, `${JSON.stringify(contextComparisons().exportPacket(id), null, 2)}\n`, 'application/json');
       }
-      if (req.method === 'POST' && path.startsWith('/api/loop/') && (revisions?.hasActive() || supportChecks?.hasActive())) return json(res, 409, { error: 'A revision or automatic check is using the shared live provider.' });
+      if (req.method === 'POST' && path.startsWith('/api/loop/') && (revisions?.hasActive() || supportChecks?.hasActive() || policyWorker?.hasActive())) return json(res, 409, { error: 'A revision, automatic check or policy trial is using the shared live provider.' });
       if (req.method === 'GET' && path === '/api/paid-review') return json(res, 200, paidAnswerReview().overview());
       if (req.method === 'GET' && path === '/api/paid-review/revisions') return json(res, 200, answerRevisions().overview('pinned'));
       if (req.method === 'GET' && /^\/api\/paid-review\/revisions\/[a-f0-9-]{36}$/.test(path)) {
@@ -182,6 +203,24 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (req.method === 'POST' && /^\/api\/paid-review\/[0-9]{1,10}$/.test(path)) return json(res, 201, paidAnswerReview().review(path.split('/')[3], await authenticatedBody()));
       if (req.method === 'GET' && path === '/api/paid-review/export') return download(res, 'ablatrix-paid-answer-reviews.json', `${JSON.stringify(paidAnswerReview().overview(), null, 2)}\n`, 'application/json');
       if (req.method === 'GET' && path === '/api/workspace') return json(res, 200, { ...productWorkspace().overview(), automaticCheckReadiness: automaticSupport().readiness() });
+      if (req.method === 'GET' && ['/api/workspace/answer-policy', '/api/workspace/answer-policy/export'].includes(path)) {
+        const policyMode = localAnswerProvider().executionMode === 'synthetic' ? 'synthetic' : 'live';
+        const worker = answerPolicyWorker(), overview = worker.overview();
+        const policies = answerPolicies().overview(policyMode);
+        if (!path.endsWith('/export')) worker.verifyActivatedHistory(policies);
+        const packet = { mode: policyMode, policies, improvement: path.endsWith('/export') ? worker.exportEvidence() : { ...overview, groups: overview.groups.filter(group => group.mode === policyMode) }, readiness: worker.readiness(), note: 'Automated trial evidence only. AI calibration is not measured; live activation is closed. Synthetic results demonstrate mechanics, not answer quality. Historical human promotion and final benchmarks remain separate.' };
+        if (path.endsWith('/export')) return download(res, 'ablatrix-runtime-answer-policy.json', `${JSON.stringify(packet, null, 2)}\n`, 'application/json');
+        return json(res, 200, packet);
+      }
+      if (req.method === 'POST' && path === '/api/workspace/answer-policy/rollback') {
+        const input = z.object({ expectedActiveId: z.string().min(1).max(200) }).strict().parse(await body(req));
+        const policyMode = localAnswerProvider().executionMode === 'synthetic' ? 'synthetic' : 'live';
+        return json(res, 200, policyAction(() => answerPolicies().rollback(policyMode, input.expectedActiveId)));
+      }
+      if (req.method === 'POST' && /^\/api\/workspace\/answer-policy\/trials\/(?:runtime-trial-)?[a-f0-9-]{36}\/activate$/.test(path)) {
+        z.object({}).strict().parse(await body(req));
+        return json(res, 200, policyAction(() => answerPolicyWorker().activateTrial(path.split('/')[5])));
+      }
       if (req.method === 'GET' && path === '/api/workspace/automatic-checks') {
         const answer = url.searchParams.get('answer');
         if (!answer || !/^workspace-[a-f0-9-]{36}$/.test(answer)) return json(res, 400, { error: 'A valid workspace answer ID is required.' });
@@ -218,9 +257,9 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
           if (!batchReadiness.ready) return json(res, 409, { error: batchReadiness.reason });
         }
         const loop = input && typeof input === 'object' && 'mode' in input && input.mode === 'live' ? feedbackLoop() : undefined;
-        if (loop?.publicOverview().busy || revisions?.hasActive() || supportChecks?.hasActive()) return json(res, 409, { error: 'Finish the active dispatch before a workspace answer.' });
+        if (loop?.publicOverview().busy || revisions?.hasActive() || supportChecks?.hasActive() || policyWorker?.hasActive()) return json(res, 409, { error: 'Finish the active dispatch before a workspace answer.' });
         let run = await productWorkspace().ask(input, () => {
-          if (loop?.publicOverview().busy || revisions?.hasActive() || supportChecks?.hasActive()) throw new Error('Feedback experiment, revision or automatic check started during retrieval; no workspace live call was made.');
+          if (loop?.publicOverview().busy || revisions?.hasActive() || supportChecks?.hasActive() || policyWorker?.hasActive()) throw new Error('Feedback experiment, revision, automatic check or policy trial started during retrieval; no workspace live call was made.');
         }, { automaticCheck });
         let reviewHandoff: 'pending' | undefined;
         if (run.status === 'completed') {
@@ -248,6 +287,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
             try { run = productWorkspace().markAutomaticCheckHandoff(run.id, 'enqueued'); }
             catch { console.warn('Queued automatic-check marker deferred:', run.id); }
             automaticSupport().start();
+            answerPolicyWorker().start();
             return json(res, 201, { ...run, ...(reviewHandoff ? { reviewHandoff } : {}), automaticCheck: check });
           }
         }
@@ -372,6 +412,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (error instanceof Error && error.message.startsWith('Context comparison:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Revision:')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Automatic check:')) return json(res, 409, { error: error.message });
+      if (error instanceof Error && /^(Runtime |Trial |Synthetic trial |Live trial |Answer policy)/.test(error.message)) return json(res, 409, { error: error.message });
       if (error instanceof Error && error.message.startsWith('Pilot')) return json(res, error.message.includes('not found') ? 404 : 409, { error: error.message });
       if (error instanceof Error && /task|budget|Duplicate|queue is halted|baseline experiment|allowlisted|Live optimization|holdout|frozen completed/.test(error.message)) {
         return json(res, 400, { error: error.message });
@@ -384,14 +425,16 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   const dispose = () => disposal ??= (async () => {
     await revisions?.pauseAndDrain();
     await supportChecks?.pauseAndDrain();
+    await policyWorker?.pauseAndDrain();
     await pilot.close();
-    revisions?.close(); supportChecks?.close(); feedback?.close(); workspace?.close(); paidReview?.close(); feedbackProvider?.close(); telemetry?.close(); comparisons?.close();
+    revisions?.close(); supportChecks?.close(); policyWorker?.close(); feedback?.close(); workspace?.close(); paidReview?.close(); feedbackProvider?.close(); telemetry?.close(); comparisons?.close(); runtimePolicies?.close();
   })();
   const closeHttp = server.close.bind(server);
   server.close = (callback?: (error?: Error) => void) => {
     stopping = true;
     void revisions?.pauseAndDrain();
     void supportChecks?.pauseAndDrain();
+    void policyWorker?.pauseAndDrain();
     closeHttp(error => {
       if (error) { callback?.(error); return; }
       void dispose().then(() => callback?.()).catch(reason => {
@@ -407,9 +450,10 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
     stopping = true;
     const worker = revisions?.pauseAndDrain();
     const checkWorker = supportChecks?.pauseAndDrain();
+    const improvementWorker = policyWorker?.pauseAndDrain();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
-    await worker; await checkWorker; await dispose();
+    await worker; await checkWorker; await improvementWorker; await dispose();
   })() });
-  if (startRevisionWorker) { answerRevisions(); recoverAutomaticChecks(); automaticSupport().start(); }
+  if (startRevisionWorker) { answerRevisions(); recoverAutomaticChecks(); automaticSupport().start(); answerPolicyWorker().start(); }
   return result;
 }

@@ -21,7 +21,8 @@ test('workspace import keeps a customer question separate and displays it beside
       runs = [run];
       return route.fulfill({ status: 201, json: run });
     }
-    return route.fulfill({ json: { products, runs, readiness: { ready: false, reason: 'Synthetic browser test; no provider calls.' }, busy: false } });
+    if (path === '/api/workspace') return route.fulfill({ json: { products, runs, readiness: { ready: false, reason: 'Synthetic browser test; no provider calls.' }, busy: false } });
+    return route.fulfill({ status: 503, json: { error: 'Inspection unavailable in this synthetic test.' } });
   });
   await page.goto('/ask');
   await page.getByRole('textbox', { name: 'Product name', exact: true }).fill('Synthetic replacement drawer');

@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { answerSchema } from './feedback-provider.ts';
+import type { RuntimePolicyBinding } from './runtime-answer-policy.ts';
 
 export type RevisionSource = { id: string; label: string; text: string; sha256: string; originalQuestion: string | null; origin: 'pinned' | 'workspace' | 'reviewer_added' | 'agent_retrieved'; reference?: string; addedBy?: string; retrievedAt?: string };
 export type RevisionContext = { question: string; product: { id: string; title: string }; sources: RevisionSource[]; clarifications: { text: string; reviewer: string }[] };
@@ -9,6 +10,7 @@ export type ReviewAnswerSnapshot = {
   id: string;
   runId: string;
   mode?: 'live' | 'synthetic';
+  runtimePolicy?: RuntimePolicyBinding;
   context: RevisionContext;
   answer: z.infer<typeof answerSchema>;
   model: string;
@@ -27,6 +29,7 @@ const snapshotSchema = z.object({
   id: z.string().regex(/^workspace-[a-f0-9-]{36}$/),
   runId: z.uuid(),
   mode: z.enum(['live', 'synthetic']).optional(),
+  runtimePolicy: z.object({ id: z.string().min(1).max(160), instructionSha256: z.string().regex(/^[a-f0-9]{64}$/), mode: z.enum(['live', 'synthetic']) }).strict().optional(),
   context: z.object({
     question: z.string().min(1).max(500),
     product: z.object({ id: z.string().min(1).max(160), title: z.string().min(1).max(200) }).strict(),
@@ -49,6 +52,7 @@ const snapshotSchema = z.object({
 export function parseReviewAnswerSnapshot(raw: ReviewAnswerSnapshot): ReviewAnswerSnapshot {
   const snapshot = snapshotSchema.parse(raw);
   const sources = snapshot.context.sources;
+  if (snapshot.runtimePolicy && snapshot.runtimePolicy.mode !== (snapshot.mode ?? 'live')) throw new Error('Revision: runtime answer policy mode does not match the saved answer.');
   if (snapshot.mode === 'synthetic' && (snapshot.model !== 'synthetic-fixture' || !snapshot.answer.answer.startsWith('SYNTHETIC'))) throw new Error('Revision: synthetic snapshots require explicit synthetic output provenance.');
   if (snapshot.id !== `workspace-${snapshot.runId}` || new Set(sources.map(source => source.id)).size !== sources.length ||
     new Set(snapshot.generationSourceIds).size !== snapshot.generationSourceIds.length ||

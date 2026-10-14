@@ -7,6 +7,7 @@ import type { LoopProvider, LoopUsage, RetrievedPassage } from './loop-types.ts'
 import { revisionPromptIdentity, type RevisionPolicySelector, type RevisionPromptIdentity } from './revision-policy.ts';
 import { CLAIM_SUPPORT_TOOL, claimSupportRequestParts, validateClaimSupportOutput, replayClaimSupportReceipt, type ClaimSupportInput } from './claim-support.ts';
 import { SOURCE_ID_CITATION_INTERFACE, sourceCitationEvidence, sourceCitationOptions, resolveSourceCitationIds, stripSourceIdMarkers, type SourceCitationScope } from './citation-options.ts';
+import { RUNTIME_POLICY_PROPOSAL_TOOL, RUNTIME_POLICY_ANSWER_TOOL, runtimeProposalRequestParts, runtimeAnswerRequestParts, validateRuntimeProposalOutput, validateRuntimeAnswerOutput, replayRuntimeProposalReceipt, replayRuntimeAnswerReceipt, type RuntimeProposalInput, type RuntimeAnswerInput, type RuntimeProtocolBindings } from './answer-policy-protocol.ts';
 export { SOURCE_ID_CITATION_INTERFACE, SOURCE_ID_LIMITS, sourceCitationEvidence, sourceCitationOptions, resolveSourceCitationIds, stripSourceIdMarkers, type SourceCitationScope, type SourceCitationOption, type CitationEvidence } from './citation-options.ts';
 
 const MODEL = 'gpt-luna';
@@ -236,6 +237,7 @@ export class FeedbackExternalError extends Error {
 
 /** This is a local planning ledger, not a provider billing or hard-ceiling claim. */
 export class SapiomFeedbackProvider implements LoopProvider {
+  readonly executionMode = 'live' as const;
   private static owners = new Set<string>();
   private readonly ownerKey: string | null;
   private readonly ownerToken = randomUUID();
@@ -395,9 +397,15 @@ export class SapiomFeedbackProvider implements LoopProvider {
       throw new FeedbackExternalError('unverified_outcome', `Investigation Sapiom operation has an unverified outcome (${errorCode}; attempt ${id}). The allowance remains recorded and the operation was not retried.`);
     }
   }
-  private async request(kind: string, system: string, input: unknown, parameters: object, runId?: string, revisionIdentity?: { revisionPolicy?: RevisionPolicySelector; systemInstructionsSha256: string; citationInterface?: typeof SOURCE_ID_CITATION_INTERFACE | typeof CONSTRAINED_SOURCE_ID_CITATION_INTERFACE | typeof FLAT_SOURCE_ID_CITATION_INTERFACE; optionSetSha256?: string; responseSchemaSha256?: string; requestSha256?: string; answerSha256?: string; sourceContextSha256?: string; assessmentKind?: 'ai_claim_support_estimate' }): Promise<{ id: string; output: unknown; model: string; usage: LoopUsage }> {
+  private async request(kind: string, system: string, input: unknown, parameters: object, runId?: string, revisionIdentity?: { revisionPolicy?: RevisionPolicySelector; systemInstructionsSha256: string; citationInterface?: typeof SOURCE_ID_CITATION_INTERFACE | typeof CONSTRAINED_SOURCE_ID_CITATION_INTERFACE | typeof FLAT_SOURCE_ID_CITATION_INTERFACE; optionSetSha256?: string; responseSchemaSha256?: string; requestSha256?: string; answerSha256?: string; sourceContextSha256?: string; assessmentKind?: 'ai_claim_support_estimate' } | (RuntimeProtocolBindings & Record<string, unknown>)): Promise<{ id: string; output: unknown; model: string; usage: LoopUsage }> {
     const body = completionBody(kind, system, input, parameters);
     const id = this.reserve(kind, runId);
+    if (revisionIdentity && 'operationRunId' in revisionIdentity) {
+      // Bind the pending runtime phase before transport. Interrupted and unknown
+      // results retain this identity and can never be hidden redispatches.
+      const promptVersion = typeof input === 'object' && input !== null && 'promptVersion' in input ? input.promptVersion : undefined;
+      this.db.prepare('UPDATE loop_provider_calls SET receipt_json=? WHERE id=?').run(JSON.stringify({ promptVersion, ...revisionIdentity }), id);
+    }
     let errorCode = 'network';
     try {
       const response = await this.fetchImpl('https://router.sapiom.ai/v1/chat/completions', {
@@ -442,6 +450,28 @@ export class SapiomFeedbackProvider implements LoopProvider {
   }
   private markOutputInvalid(id: string): void {
     this.db.prepare("UPDATE loop_provider_calls SET error_code='output_validation' WHERE id=?").run(id);
+  }
+  /** One generic addition, using the same durable Router planning ledger as
+   * answers, repairs and checks. No validation cases or labels reach proposer. */
+  async suggestRuntimePolicy(input: RuntimeProposalInput) {
+    const parts = runtimeProposalRequestParts(input);
+    if (parts.normalized.parent.mode !== this.executionMode) throw new Error('Runtime policy proposal mode does not match this provider.');
+    const previous = this.receipt(parts.normalized.runId);
+    if (previous) return replayRuntimeProposalReceipt(parts.normalized, previous, this.executionMode);
+    const result = await this.request(RUNTIME_POLICY_PROPOSAL_TOOL, parts.prompt.systemInstructions, parts.payload, parts.parameters, parts.normalized.runId, { ...parts.bindings, mode: this.executionMode, accounting: 'local_planning_allowance' });
+    try { return { ...validateRuntimeProposalOutput(result.output), attemptId: result.id, model: result.model, usage: result.usage, promptVersion: parts.prompt.promptVersion, ...parts.bindings }; }
+    catch { this.markOutputInvalid(result.id); throw new Error(`Runtime policy proposal failed output validation (attempt ${result.id}); it was not retried.`); }
+  }
+  /** A separately bound validation operation; it does not alter the legacy
+   * product_answer body or let a candidate choose checks/reference labels. */
+  async answerRuntimePolicy(input: RuntimeAnswerInput) {
+    const parts = runtimeAnswerRequestParts(input);
+    if (parts.normalized.policy.mode !== this.executionMode) throw new Error('Runtime policy evaluation mode does not match this provider.');
+    const previous = this.receipt(parts.normalized.runId);
+    if (previous) return replayRuntimeAnswerReceipt(parts.normalized, previous, this.executionMode);
+    const result = await this.request(RUNTIME_POLICY_ANSWER_TOOL, parts.prompt.systemInstructions, parts.payload, parts.parameters, parts.normalized.runId, { ...parts.bindings, mode: this.executionMode, accounting: 'local_planning_allowance' });
+    try { return { answer: validateRuntimeAnswerOutput(parts.normalized, result.output), attemptId: result.id, model: result.model, usage: result.usage, promptVersion: parts.prompt.promptVersion, ...parts.bindings }; }
+    catch { this.markOutputInvalid(result.id); throw new Error(`Runtime policy evaluation answer failed output validation (attempt ${result.id}); it was not retried.`); }
   }
   /** One additive AI assessment operation. A recorded phase can replay its exact
    * valid receipt, but can never reserve or dispatch another attempt. */

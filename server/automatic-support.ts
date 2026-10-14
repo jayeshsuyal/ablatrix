@@ -21,7 +21,7 @@ type Operation = { phase: Phase; runId: string; status: 'started' | 'completed' 
   providerCallStatus?: string; planningAllowanceUsd?: number | null; usage?: LoopUsage; accounting?: 'planning_allowance' | 'no_provider_call' };
 export type AutomaticSupportJob = {
   id: string; qid: string; originalId: string; mode: 'live' | 'synthetic'; status: Status; phase: Phase;
-  original: ReviewAnswerSnapshot; sourceContextSha256: string; originalAnswerSha256: string;
+  original: ReviewAnswerSnapshot; sourceContextSha256: string; originalAnswerSha256: string; originalSnapshotSha256?: string;
   assessments: { phase: 'original' | 'repair'; assessment: ValidatedClaimSupportAssessment; model: string; promptVersion: string; receiptId: string; usage: LoopUsage }[];
   operations: Operation[];
   repaired?: { id: string; answer: LoopAnswer; model: string; promptVersion: string; answerSha256: string; sourceContextSha256: string; createdAt: string };
@@ -88,7 +88,7 @@ export class AutomaticSupport {
       const ready = this.readiness();
       if (!ready.ready) throw new Error(`Automatic check: ${ready.reason}`);
       const job: AutomaticSupportJob = { id: randomUUID(), qid: snapshot.id, originalId, mode, status: 'queued', phase: 'grade_original', original: snapshot,
-        sourceContextSha256: sha(snapshot.context), originalAnswerSha256: sha(snapshot.answer), assessments: [], operations: [],
+        sourceContextSha256: sha(snapshot.context), originalAnswerSha256: sha(snapshot.answer), originalSnapshotSha256: sha(snapshot), assessments: [], operations: [],
         assessmentKind: mode === 'synthetic' ? 'synthetic_scripted_claim_support' : 'ai_claim_support_estimate', qualityClaimEligible: false, createdAt: new Date().toISOString() };
       // Validate the bounded grader input before reserving any provider operation.
       claimSupportRequestParts(this.gradeInput(job));
@@ -121,7 +121,7 @@ export class AutomaticSupport {
   private requestHash(job: AutomaticSupportJob) { return job.phase === 'repair' ? sha(revisionRequestBody(this.repairInput(job))) : claimSupportRequestParts(this.gradeInput(job)).bindings.requestSha256; }
   private validateSavedContext(job: AutomaticSupportJob) {
     parseReviewAnswerSnapshot(job.original);
-    if (job.original.contextProvenance !== 'workspace_source_snapshot' || sha(job.original.context) !== job.sourceContextSha256 || sha(job.original.answer) !== job.originalAnswerSha256 ||
+    if (job.original.contextProvenance !== 'workspace_source_snapshot' || (job.originalSnapshotSha256 !== undefined && sha(job.original) !== job.originalSnapshotSha256) || sha(job.original.context) !== job.sourceContextSha256 || sha(job.original.answer) !== job.originalAnswerSha256 ||
       (job.repaired && (sha(job.repaired.answer) !== job.repaired.answerSha256 || job.repaired.sourceContextSha256 !== job.sourceContextSha256))) throw new Error('Automatic check context no longer matches its immutable hashes.');
   }
   private finish(job: AutomaticSupportJob, status: 'abstained' | 'inconclusive' | 'reconciliation', error?: string) {
