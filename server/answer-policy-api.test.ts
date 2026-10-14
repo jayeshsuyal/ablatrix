@@ -44,6 +44,14 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
     const response = await fetch(base + path, { method: 'POST', headers: { 'content-type': 'application/json', origin: base }, body: JSON.stringify(input) });
     const value = await response.json(); assert.equal(response.status, expected, JSON.stringify(value)); return value;
   };
+  const readsFail = async (paths: string[], error: string) => {
+    for (const path of paths) {
+      const response = await fetch(base + path);
+      assert.equal(response.status, 409);
+      assert.equal(response.headers.get('content-disposition'), null, 'Corrupt evidence is never offered as a download.');
+      assert.deepEqual(await response.json(), { error });
+    }
+  };
   try {
     const before = JSON.stringify(worker.overview());
     const exported = await (await fetch(base + '/api/workspace/answer-policy/export')).json();
@@ -51,6 +59,7 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
     assert.deepEqual(exported.policies.decisions[0], decision);
     assert.deepEqual(exported.improvement.groups[0].packet, group.packet);
     assert.equal(exported.improvement.phaseReceipts.length, 13);
+    assert.ok(exported.improvement.phaseReceipts.every((item: { verification: string }) => item.verification === 'replayed_completed_phase'));
     assert.equal(exported.improvement.originalChecks.length, 3);
     assert.deepEqual(exported.improvement.phaseReceipts[0].receipt, provider.receipt(group.operations[0].runId));
     assert.equal(exported.policies.decisions[0].qualityClaimEligible, false);
@@ -70,20 +79,28 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
     const reviews = await (await fetch(base + '/api/workspace/reviews/export')).json();
     assert.equal(reviews.cases.flatMap((item: {events: unknown[]}) => item.events).length, 0);
     assert.equal(policies.overview('synthetic').events.length, 2);
+    const changedReceipt = new DatabaseSync(join(dir, 'receipts.sqlite'));
+    const receiptRow = changedReceipt.prepare('SELECT document FROM synthetic_answer_receipts WHERE run_id=?').get(group.operations[1].runId) as { document: string };
+    try {
+      const receipt = JSON.parse(receiptRow.document), wire = JSON.parse(receipt.receipt_json);
+      wire.output.answer = 'SYNTHETIC changed completed answer text'; receipt.receipt_json = JSON.stringify(wire);
+      changedReceipt.prepare('UPDATE synthetic_answer_receipts SET document=? WHERE run_id=?').run(JSON.stringify(receipt), group.operations[1].runId);
+      await readsFail(['/api/workspace/answer-policy/export'], 'Runtime policy export: A completed phase no longer matches its frozen request and saved result.');
+    } finally { changedReceipt.prepare('UPDATE synthetic_answer_receipts SET document=? WHERE run_id=?').run(receiptRow.document, group.operations[1].runId); changedReceipt.close(); }
+    const changedCheck = new DatabaseSync(join(dir, 'reviews.sqlite'));
+    const checkRow = changedCheck.prepare('SELECT document FROM automatic_support_jobs WHERE id=?').get(group.bindings[0].jobId) as { document: string };
+    try {
+      const job = JSON.parse(checkRow.document); job.original.answer.answer = 'SYNTHETIC changed originating answer text';
+      changedCheck.prepare('UPDATE automatic_support_jobs SET document=? WHERE id=?').run(JSON.stringify(job), group.bindings[0].jobId);
+      await readsFail(['/api/workspace/answer-policy/export'], 'Runtime policy export: An originating automatic check no longer matches its consumed failure binding.');
+    } finally { changedCheck.prepare('UPDATE automatic_support_jobs SET document=? WHERE id=?').run(checkRow.document, group.bindings[0].jobId); changedCheck.close(); }
     const corrupt = new DatabaseSync(join(dir, 'policies.sqlite'));
     try {
       corrupt.prepare('UPDATE runtime_answer_policy_decisions SET document=? WHERE id=?').run(JSON.stringify({ ...decision, candidateMetrics: { ...decision.candidateMetrics, usefulSupportedAnswers: 999 } }), decision.id);
     } finally { corrupt.close(); }
     assert.throws(() => policies.getDecision(decision.id), /immutable hash/);
     assert.throws(() => policies.overview('synthetic'), /immutable hash/);
-    const inspectionFails = async (error: string) => {
-      for (const path of ['/api/workspace/answer-policy', '/api/workspace/answer-policy/export']) {
-        const response = await fetch(base + path);
-        assert.equal(response.status, 409);
-        assert.equal(response.headers.get('content-disposition'), null, 'Corrupt evidence is never offered as a download.');
-        assert.deepEqual(await response.json(), { error });
-      }
-    };
+    const inspectionFails = (error: string) => readsFail(['/api/workspace/answer-policy', '/api/workspace/answer-policy/export'], error);
     await inspectionFails('Trial evidence no longer matches its immutable hash.');
     const candidateVersion = policies.get(group.candidate!.id)!;
     const corruptVersion = new DatabaseSync(join(dir, 'policies.sqlite'));
@@ -93,7 +110,20 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
     } finally { corruptVersion.close(); }
     assert.throws(() => policies.get(candidateVersion.id), /invalid immutable identity/);
     await inspectionFails('Runtime policy has an invalid immutable identity.');
+    const corruptGroup = new DatabaseSync(join(dir, 'policies.sqlite'));
+    try {
+      corruptGroup.prepare('UPDATE runtime_answer_policies SET document=? WHERE id=?').run(JSON.stringify(candidateVersion), candidateVersion.id);
+      corruptGroup.prepare('UPDATE runtime_policy_failure_groups SET document=? WHERE id=?').run(JSON.stringify({ ...group, decision: { ...decision, candidateMetrics: { ...decision.candidateMetrics, usefulSupportedAnswers: 999 } } }), group.id);
+    } finally { corruptGroup.close(); }
+    assert.deepEqual(policies.getDecision(decision.id), decision, 'Authentic policy decision remains independent of corrupt group data.');
+    assert.throws(() => worker.get(group.id), /matching stored hash/);
+    assert.throws(() => worker.overview(), /matching stored hash/);
+    assert.throws(() => worker.exportEvidence(), /matching stored hash/);
+    assert.throws(() => worker.activateTrial(group.decisionId!), /matching stored hash/);
+    await inspectionFails('Runtime policy group evidence has no matching stored hash; reconciliation is required.');
     assert.equal(policies.capture('synthetic').id, baseline.id);
-    assert.equal(worker.get(group.id)?.operations.length, 13, 'Failed inspection dispatches no new phase.');
+    const unchanged = new DatabaseSync(join(dir, 'policies.sqlite'), { readOnly: true });
+    try { assert.equal((JSON.parse((unchanged.prepare('SELECT document FROM runtime_policy_failure_groups WHERE id=?').get(group.id) as { document: string }).document)).operations.length, 13, 'Failed inspection dispatches no new phase.'); }
+    finally { unchanged.close(); }
   } finally { await checks.pauseAndDrain(); checks.close(); await server.shutdown(); store.close(); rmSync(dir, { recursive: true, force: true }); }
 });

@@ -40,6 +40,7 @@ export type AnswerPolicyGroup = { id: string; mode: RuntimePolicyMode; category:
   groupSha256: string; status: 'collecting' | 'queued' | 'running' | 'completed' | 'failed' | 'reconciliation'; phase: number; callCeiling: 13;
   packet: RuntimeValidationPacket | null; packetSha256: string; graderSha256: string; operations: RuntimeTrialOperation[];
   candidate?: RuntimeAnswerPolicy; results: CaseResult[]; decisionId?: string; decision?: RuntimeTrialDecision; createdAt: string; finishedAt?: string; error?: string };
+type StoredGroup = { document: string; document_sha256: string | null };
 const CALL_CEILING = 13;
 const MAX_GROUPS = 32;
 const TERMINAL_CHECKS = new Set(['supported', 'repaired', 'abstained']);
@@ -71,9 +72,16 @@ export class AnswerPolicyWorker {
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`PRAGMA busy_timeout=5000;
-      CREATE TABLE IF NOT EXISTS runtime_policy_failure_groups(id TEXT PRIMARY KEY,status TEXT NOT NULL,mode TEXT NOT NULL,parent_id TEXT NOT NULL,category TEXT NOT NULL,document TEXT NOT NULL,lease_expires INTEGER);
+      CREATE TABLE IF NOT EXISTS runtime_policy_failure_groups(id TEXT PRIMARY KEY,status TEXT NOT NULL,mode TEXT NOT NULL,parent_id TEXT NOT NULL,category TEXT NOT NULL,document TEXT NOT NULL,document_sha256 TEXT NOT NULL,lease_expires INTEGER);
       CREATE TABLE IF NOT EXISTS runtime_policy_observed_checks(job_id TEXT PRIMARY KEY,run_id TEXT NOT NULL UNIQUE,binding TEXT NOT NULL);`);
-    this.reconcile(); this.syncDecisions(); if (options.automatic) this.start();
+    if (!(this.db.prepare('PRAGMA table_info(runtime_policy_failure_groups)').all() as { name: string }[]).some(column => column.name === 'document_sha256')) {
+      // Do not manufacture integrity evidence for records written before this
+      // contract. Unhashed rows require explicit reconciliation or restore.
+      this.db.exec('ALTER TABLE runtime_policy_failure_groups ADD COLUMN document_sha256 TEXT');
+    }
+    try { this.reconcile(); this.syncDecisions(); }
+    catch (error) { this.db.close(); throw error; }
+    if (options.automatic) this.start();
   }
   start() { if (this.timer || this.paused || this.closed) return; this.timer = setInterval(() => { void this.tick().catch(error => console.error('Runtime answer-policy worker failed:', error)); }, 1500); this.timer.unref(); }
   readiness() {
@@ -140,16 +148,17 @@ export class AnswerPolicyWorker {
       try {
         const prior = this.db.prepare("SELECT binding FROM runtime_policy_observed_checks WHERE job_id=? OR run_id=? OR json_extract(binding,'$.assessmentReceiptId')=?").get(job.id, job.original.runId, failure.binding.assessmentReceiptId) as { binding: string } | undefined;
         if (prior) { this.db.exec('COMMIT'); continue; }
-        const row = this.db.prepare("SELECT document FROM runtime_policy_failure_groups WHERE status='collecting' AND mode=? AND parent_id=? AND category=? ORDER BY rowid LIMIT 1").get(job.mode, failure.parent.id, failure.category) as { document: string } | undefined;
+        const row = this.db.prepare("SELECT document,document_sha256 FROM runtime_policy_failure_groups WHERE status='collecting' AND mode=? AND parent_id=? AND category=? ORDER BY rowid LIMIT 1").get(job.mode, failure.parent.id, failure.category) as StoredGroup | undefined;
         let group: AnswerPolicyGroup;
-        if (row) group = JSON.parse(row.document);
+        if (row) group = this.readStoredGroup(row);
         else {
           const count = this.db.prepare('SELECT count(*) AS count FROM runtime_policy_failure_groups').get() as { count: number };
           if (count.count >= MAX_GROUPS) { this.db.exec('COMMIT'); continue; }
           group = { id: randomUUID(), mode: job.mode, category: failure.category, parent: failure.parent, bindings: [], groupSha256: '', status: 'collecting', phase: 0, callCeiling: CALL_CEILING,
             packet: this.packet && this.packet.mode === job.mode ? structuredClone(this.packet) : null, packetSha256: this.packet && this.packet.mode === job.mode ? sha(this.packet) : '', graderSha256: claimSupportPromptIdentity().systemInstructionsSha256,
             operations: [], results: [], createdAt: new Date().toISOString() };
-          this.db.prepare('INSERT INTO runtime_policy_failure_groups(id,status,mode,parent_id,category,document) VALUES(?,?,?,?,?,?)').run(group.id, group.status, group.mode, group.parent.id, group.category, JSON.stringify(group));
+          const document = JSON.stringify(group);
+          this.db.prepare('INSERT INTO runtime_policy_failure_groups(id,status,mode,parent_id,category,document,document_sha256) VALUES(?,?,?,?,?,?,?)').run(group.id, group.status, group.mode, group.parent.id, group.category, document, sha(document));
         }
         if (group.bindings.length >= 5) { this.db.exec('COMMIT'); continue; }
         group.bindings.push(failure.binding); group.groupSha256 = sha({ parent: group.parent, category: group.category, bindings: group.bindings });
@@ -160,17 +169,39 @@ export class AnswerPolicyWorker {
     }
     return { observed, eligible };
   }
-  get(id: string): AnswerPolicyGroup | null { const row = this.db.prepare('SELECT document FROM runtime_policy_failure_groups WHERE id=?').get(id) as { document: string } | undefined; return row ? JSON.parse(row.document) : null; }
-  overview() { return { groups: (this.db.prepare('SELECT document FROM runtime_policy_failure_groups ORDER BY rowid DESC').all() as { document: string }[]).map(row => JSON.parse(row.document) as AnswerPolicyGroup), callCeiling: CALL_CEILING, maxGroups: MAX_GROUPS, minimumFailures: 3, qualityClaimEligible: false as const }; }
+  private readStoredGroup(row: StoredGroup): AnswerPolicyGroup {
+    if (!row.document_sha256 || sha(row.document) !== row.document_sha256) throw new Error('Runtime policy group evidence has no matching stored hash; reconciliation is required.');
+    return JSON.parse(row.document) as AnswerPolicyGroup;
+  }
+  get(id: string): AnswerPolicyGroup | null { const row = this.db.prepare('SELECT document,document_sha256 FROM runtime_policy_failure_groups WHERE id=?').get(id) as StoredGroup | undefined; return row ? this.readStoredGroup(row) : null; }
+  overview() { return { groups: (this.db.prepare('SELECT document,document_sha256 FROM runtime_policy_failure_groups ORDER BY rowid DESC').all() as StoredGroup[]).map(row => this.readStoredGroup(row)), callCeiling: CALL_CEILING, maxGroups: MAX_GROUPS, minimumFailures: 3, qualityClaimEligible: false as const }; }
   exportEvidence() {
     const mode = this.provider.executionMode ?? 'live';
     const overview = this.overview(), groups = overview.groups.filter(group => group.mode === mode);
-    const jobIds = new Set(groups.flatMap(group => group.bindings.map(binding => binding.jobId)));
-    return { ...overview, groups, originalChecks: (this.options.completedJobs?.() ?? []).filter(job => job.mode === mode && jobIds.has(job.id)),
-      phaseReceipts: groups.flatMap(group => group.operations.map(operation => ({ groupId: group.id, runId: operation.runId, requestSha256: operation.requestSha256, receipt: this.provider.receipt(operation.runId) ?? null }))) };
+    const checks = this.options.completedJobs?.() ?? [];
+    const originalChecks = groups.flatMap(group => group.bindings.map(binding => {
+      const job = checks.find(item => item.id === binding.jobId && item.mode === mode);
+      let failure: ReturnType<AnswerPolicyWorker['failure']> = null;
+      try { if (job) failure = this.failure(job); } catch { /* Unverifiable supporting records cannot enter an evidence bundle. */ }
+      if (!job || !failure || failure.category !== group.category || JSON.stringify(failure.binding) !== JSON.stringify(binding)) throw new Error('Runtime policy export: An originating automatic check no longer matches its consumed failure binding.');
+      return job;
+    }));
+    const phaseReceipts = groups.flatMap(group => {
+      try { if (group.operations.some(operation => operation.status === 'completed')) this.validate(group); }
+      catch { throw new Error('Runtime policy export: A completed phase no longer matches its frozen request and saved result.'); }
+      return group.operations.map(operation => {
+        let receipt = this.provider.receipt(operation.runId) ?? null;
+        if (operation.status === 'completed') {
+          try { receipt = this.replayCompletedOperation(group, operation); }
+          catch { throw new Error('Runtime policy export: A completed phase no longer matches its frozen request and saved result.'); }
+        }
+        return { groupId: group.id, runId: operation.runId, requestSha256: operation.requestSha256, verification: operation.status === 'completed' ? 'replayed_completed_phase' as const : 'unaccepted_diagnostic' as const, receipt };
+      });
+    });
+    return { ...overview, groups, originalChecks, phaseReceipts };
   }
   hasActive() { return this.busy; }
-  private save(group: AnswerPolicyGroup, lease: number | null = null) { this.db.prepare('UPDATE runtime_policy_failure_groups SET status=?,document=?,lease_expires=? WHERE id=?').run(group.status, JSON.stringify(group), lease, group.id); }
+  private save(group: AnswerPolicyGroup, lease: number | null = null) { const document = JSON.stringify(group); this.db.prepare('UPDATE runtime_policy_failure_groups SET status=?,document=?,document_sha256=?,lease_expires=? WHERE id=?').run(group.status, document, sha(document), lease, group.id); }
   private runId(group: AnswerPolicyGroup) { return `runtime-policy:${group.id}:${group.phase}`; }
   private snapshot(policy: RuntimeAnswerPolicy) { return { ...this.binding(policy), instructions: policy.instructions }; }
   private proposalInput(group: AnswerPolicyGroup): RuntimeProposalInput { return { runId: this.runId(group), parent: this.snapshot(group.parent), groupId: group.id, groupSha256: group.groupSha256, failure: { category: group.category, bindings: group.bindings } }; }
@@ -237,8 +268,8 @@ export class AnswerPolicyWorker {
     // The store may share this SQLite file through another connection. Record
     // evidence only after our lease transaction commits, and recover this
     // publication step from the immutable decision saved with the group.
-    const rows = this.db.prepare("SELECT document FROM runtime_policy_failure_groups WHERE status IN ('completed','failed','reconciliation')").all() as { document: string }[];
-    for (const row of rows) { const group = JSON.parse(row.document) as AnswerPolicyGroup; if (group.decision) this.store.recordDecision(group.decision); }
+    const rows = this.db.prepare("SELECT document,document_sha256 FROM runtime_policy_failure_groups WHERE status IN ('completed','failed','reconciliation')").all() as StoredGroup[];
+    for (const row of rows) { const group = this.readStoredGroup(row); if (group.decision) this.store.recordDecision(group.decision); }
   }
   private binding(policy: RuntimeAnswerPolicy): RuntimePolicyBinding { return { id: policy.id, instructionSha256: policy.instructionSha256, mode: policy.mode }; }
   private consume(group: AnswerPolicyGroup, receipt: AnswerRevisionReceipt) {
@@ -270,8 +301,8 @@ export class AnswerPolicyWorker {
     } catch { operation.status = 'invalid'; this.finish(group, 'failed', 'Recorded trial output failed its frozen request, provenance, citation or grading contract.'); }
   }
   private reconcile() {
-    const rows = this.db.prepare("SELECT document FROM runtime_policy_failure_groups WHERE status='running' AND (lease_expires IS NULL OR lease_expires<?)").all(Date.now()) as { document: string }[];
-    for (const row of rows) { const group = JSON.parse(row.document) as AnswerPolicyGroup, receipt = this.provider.receipt(this.runId(group)); if (receipt) this.consume(group, receipt); else this.finish(group, 'reconciliation', 'Started operation has no durable receipt; it will not be retried.'); }
+    const rows = this.db.prepare("SELECT document,document_sha256 FROM runtime_policy_failure_groups WHERE status='running' AND (lease_expires IS NULL OR lease_expires<?)").all(Date.now()) as StoredGroup[];
+    for (const row of rows) { const group = this.readStoredGroup(row), receipt = this.provider.receipt(this.runId(group)); if (receipt) this.consume(group, receipt); else this.finish(group, 'reconciliation', 'Started operation has no durable receipt; it will not be retried.'); }
   }
   tick(): Promise<void> {
     if (this.paused || this.closed) return Promise.resolve(); if (this.inFlight) return this.inFlight;
@@ -284,8 +315,8 @@ export class AnswerPolicyWorker {
       if (this.options.canDispatch && !this.options.canDispatch()) return;
       this.db.exec('BEGIN IMMEDIATE'); let group: AnswerPolicyGroup;
       try {
-        const row = this.db.prepare("SELECT document FROM runtime_policy_failure_groups WHERE status='queued' ORDER BY rowid LIMIT 1").get() as { document: string } | undefined;
-        if (!row) { this.db.exec('COMMIT'); return; } group = JSON.parse(row.document);
+        const row = this.db.prepare("SELECT document,document_sha256 FROM runtime_policy_failure_groups WHERE status='queued' ORDER BY rowid LIMIT 1").get() as StoredGroup | undefined;
+        if (!row) { this.db.exec('COMMIT'); return; } group = this.readStoredGroup(row);
         if (group.mode !== (this.provider.executionMode ?? 'live')) { this.finish(group, 'failed', 'Saved trial provenance differs from this provider.'); this.db.exec('COMMIT'); return; }
         const receipt = this.provider.receipt(this.runId(group)); if (receipt) { this.db.exec('COMMIT'); this.consume(group, receipt); return; }
         if (group.operations.some(item => item.phase === group.phase)) { this.finish(group, 'reconciliation', 'Started trial phase cannot be dispatched twice.'); this.db.exec('COMMIT'); return; }
@@ -314,20 +345,27 @@ export class AnswerPolicyWorker {
     if (this.store.capture(group.mode).id !== group.parent.id) throw new Error('Runtime activation has a stale parent.');
     if (group.operations.length !== CALL_CEILING || new Set(group.operations.map(operation => operation.phase)).size !== CALL_CEILING || new Set(group.operations.map(operation => operation.receiptId)).size !== CALL_CEILING) throw new Error('Trial operation evidence is incomplete or duplicated.');
     for (let phase = 0; phase < CALL_CEILING; phase++) {
-      const replayGroup = { ...group, phase }, operation = group.operations.find(item => item.phase === phase), receipt = this.provider.receipt(this.runId(replayGroup));
-      if (!operation || operation.status !== 'completed' || operation.runId !== this.runId(replayGroup) || operation.requestSha256 !== this.requestHash(replayGroup) || !receipt || operation.receiptId !== receipt.id) throw new Error('Trial activation has missing or mismatched durable receipts.');
-      if (phase === 0) {
-        const proposal = replayRuntimeProposalReceipt(this.proposalInput(replayGroup), receipt, group.mode);
-        if (group.candidate.instructions !== `${group.parent.instructions}\n\nRuntime answer-policy addition:\n${proposal.instructions.trim()}`) throw new Error('Trial candidate differs from its bound proposal.');
-      } else {
-        const part = this.phaseParts(replayGroup), result = group.results[part.caseIndex]?.[part.side];
-        if (part.step % 2 === 0) { if (JSON.stringify(replayRuntimeAnswerReceipt(this.answerInput(replayGroup), receipt, group.mode).answer) !== JSON.stringify(result?.answer)) throw new Error('Frozen trial answer differs from its receipt.'); }
-        else if (JSON.stringify(replayClaimSupportReceipt(this.checkInput(replayGroup), receipt, group.mode).assessment) !== JSON.stringify(result?.assessment)) throw new Error('Frozen trial assessment differs from its receipt.');
-      }
+      const operation = group.operations.find(item => item.phase === phase);
+      if (!operation) throw new Error('Trial activation has missing or mismatched durable receipts.');
+      this.replayCompletedOperation(group, operation);
     }
     const totals = this.summarize(group), persisted = this.store.getDecision(group.decisionId);
     if (!persisted || JSON.stringify(persisted) !== JSON.stringify(group.decision) || JSON.stringify(totals.baseline) !== JSON.stringify(persisted.baseline) || JSON.stringify(totals.candidate) !== JSON.stringify(persisted.candidateMetrics) || JSON.stringify(group.results) !== JSON.stringify(persisted.caseResults)) throw new Error('Trial decision differs from its exact replayed evidence.');
     return this.store.activateTrial(group.mode, group.parent.id, group.decisionId);
+  }
+  /** Pure receipt verification shared by activation and evidence export. */
+  private replayCompletedOperation(group: AnswerPolicyGroup, operation: RuntimeTrialOperation): AnswerRevisionReceipt {
+    const replayGroup = { ...group, phase: operation.phase }, receipt = this.provider.receipt(this.runId(replayGroup));
+    if (operation.status !== 'completed' || operation.runId !== this.runId(replayGroup) || operation.requestSha256 !== this.requestHash(replayGroup) || !receipt || operation.receiptId !== receipt.id) throw new Error('Trial activation has missing or mismatched durable receipts.');
+    if (operation.phase === 0) {
+      const proposal = replayRuntimeProposalReceipt(this.proposalInput(replayGroup), receipt, group.mode);
+      if (group.candidate?.instructions !== `${group.parent.instructions}\n\nRuntime answer-policy addition:\n${proposal.instructions.trim()}`) throw new Error('Trial candidate differs from its bound proposal.');
+    } else {
+      const part = this.phaseParts(replayGroup), result = group.results[part.caseIndex]?.[part.side];
+      if (part.step % 2 === 0) { if (JSON.stringify(replayRuntimeAnswerReceipt(this.answerInput(replayGroup), receipt, group.mode).answer) !== JSON.stringify(result?.answer)) throw new Error('Frozen trial answer differs from its receipt.'); }
+      else if (JSON.stringify(replayClaimSupportReceipt(this.checkInput(replayGroup), receipt, group.mode).assessment) !== JSON.stringify(result?.assessment)) throw new Error('Frozen trial assessment differs from its receipt.');
+    }
+    return receipt;
   }
   async pauseAndDrain() { this.paused = true; if (this.timer) { clearInterval(this.timer); this.timer = null; } await this.inFlight; }
   close() { this.paused = true; if (this.timer) { clearInterval(this.timer); this.timer = null; } if (this.busy) throw new Error('Runtime policy: await pauseAndDrain before closing an active worker.'); if (!this.closed) { this.closed = true; this.db.close(); } }

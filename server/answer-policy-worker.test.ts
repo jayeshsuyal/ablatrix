@@ -35,7 +35,7 @@ function harness() {
 }
 async function evaluate(worker: AnswerPolicyWorker) { for (let phase = 0; phase < 13; phase++) await worker.tick(); return worker.overview().groups[0]; }
 function writeGroup(path: string, group: AnswerPolicyGroup, lease = 0) {
-  const db = new DatabaseSync(path); db.prepare('UPDATE runtime_policy_failure_groups SET status=?,document=?,lease_expires=? WHERE id=?').run(group.status, JSON.stringify(group), lease, group.id); db.close();
+  const document = JSON.stringify(group), db = new DatabaseSync(path); db.prepare('UPDATE runtime_policy_failure_groups SET status=?,document=?,document_sha256=?,lease_expires=? WHERE id=?').run(group.status, document, runtimePolicyHash(document), lease, group.id); db.close();
 }
 function changeReceipt(path: string, runId: string, change: (document: any) => void) {
   const db = new DatabaseSync(path), row = db.prepare('SELECT document FROM synthetic_answer_receipts WHERE run_id=?').get(runId) as { document: string }, receipt = JSON.parse(row.document);
@@ -57,6 +57,40 @@ test('frozen packet rejects missing mandatory controls and empty reference quote
     assert.equal(h.worker.overview().groups.length, 0);
     assert.equal(h.store.capture('synthetic').status, 'baseline');
   } finally { h.cleanup(); }
+});
+
+test('corrupt queued group data cannot be inspected or dispatched', async () => {
+  const h = harness();
+  try {
+    h.worker.observeCompleted(await h.failures());
+    const group = h.worker.overview().groups[0], db = new DatabaseSync(h.policyPath);
+    try { db.prepare('UPDATE runtime_policy_failure_groups SET document=? WHERE id=?').run(JSON.stringify({ ...group, error: 'SYNTHETIC corrupted stored state' }), group.id); }
+    finally { db.close(); }
+    assert.throws(() => h.worker.get(group.id), /matching stored hash/);
+    await assert.rejects(h.worker.tick(), /matching stored hash/);
+    assert.equal(h.provider.receipt(`runtime-policy:${group.id}:0`), undefined);
+    assert.equal(h.store.capture('synthetic').status, 'baseline');
+  } finally { h.cleanup(); }
+});
+
+test('schema upgrade leaves old unhashed group records unverified instead of blessing or redispatching them', async () => {
+  const h = harness(); let upgraded: AnswerPolicyWorker | undefined;
+  try {
+    h.worker.observeCompleted(await h.failures());
+    const group = h.worker.overview().groups[0], path = join(h.directory, 'legacy-policy.sqlite'), legacy = new DatabaseSync(path);
+    try {
+      legacy.exec('CREATE TABLE runtime_policy_failure_groups(id TEXT PRIMARY KEY,status TEXT NOT NULL,mode TEXT NOT NULL,parent_id TEXT NOT NULL,category TEXT NOT NULL,document TEXT NOT NULL,lease_expires INTEGER)');
+      legacy.prepare('INSERT INTO runtime_policy_failure_groups(id,status,mode,parent_id,category,document) VALUES(?,?,?,?,?,?)').run(group.id, group.status, group.mode, group.parent.id, group.category, JSON.stringify(group));
+    } finally { legacy.close(); }
+    upgraded = new AnswerPolicyWorker(h.provider, h.store, path);
+    assert.throws(() => upgraded!.overview(), /matching stored hash/);
+    await assert.rejects(upgraded.tick(), /matching stored hash/);
+    assert.equal(h.provider.receipt(`runtime-policy:${group.id}:0`), undefined);
+    const saved = new DatabaseSync(path, { readOnly: true });
+    try {
+      assert.deepEqual({ ...saved.prepare('SELECT document,document_sha256 FROM runtime_policy_failure_groups WHERE id=?').get(group.id) }, { document: JSON.stringify(group), document_sha256: null });
+    } finally { saved.close(); }
+  } finally { upgraded?.close(); h.cleanup(); }
 });
 
 test('scripted durable failures produce one finite trial, later asks capture candidate, and rollback restores baseline', async () => {
@@ -213,8 +247,12 @@ test('unknown proposal and malformed paired answers/checks consume the attempt a
         suggestRuntimePolicy: h.provider.suggestRuntimePolicy.bind(h.provider),
         async answerRuntimePolicy(input) { const result = await h.provider.answerRuntimePolicy(input); if (behavior === 'invalid_answer' && input.runId.endsWith(':1')) changeReceipt(h.receiptsPath, input.runId, document => { document.requestSha256 = '0'.repeat(64); }); return result; },
         async gradeClaimSupport(input) { const result = await h.provider.gradeClaimSupport(input); if (behavior === 'invalid_grade' && input.runId.endsWith(':2')) changeReceipt(h.receiptsPath, input.runId, document => { document.output.units = []; }); return result; } };
-      h.worker = new AnswerPolicyWorker(wrapped, h.store, h.policyPath); const group = await evaluate(h.worker), operationCount = group.operations.length;
+      h.worker = new AnswerPolicyWorker(wrapped, h.store, h.policyPath, { completedJobs: () => h.support.overview() }); const group = await evaluate(h.worker), operationCount = group.operations.length;
       assert.equal(group.status, behavior === 'unknown_proposal' ? 'reconciliation' : 'failed'); assert.equal(operationCount, behavior === 'unknown_proposal' ? 1 : behavior === 'invalid_answer' ? 2 : 3);
+      const exported = h.worker.exportEvidence();
+      assert.equal(exported.originalChecks.length, 3);
+      assert.equal(exported.phaseReceipts.at(-1)?.verification, 'unaccepted_diagnostic');
+      assert.ok(exported.phaseReceipts.slice(0, -1).every(item => item.verification === 'replayed_completed_phase'));
       h.worker.close(); h.worker = new AnswerPolicyWorker(h.provider, h.store, h.policyPath); for (let i = 0; i < 5; i++) await h.worker.tick();
       assert.equal(h.worker.get(group.id)?.operations.length, operationCount); assert.throws(() => h.worker.activateTrial(group.id), /complete/); assert.equal(h.store.capture('synthetic').status, 'baseline');
     } finally { h.cleanup(); }
