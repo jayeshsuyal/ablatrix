@@ -206,7 +206,9 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (req.method === 'GET' && ['/api/workspace/answer-policy', '/api/workspace/answer-policy/export'].includes(path)) {
         const policyMode = localAnswerProvider().executionMode === 'synthetic' ? 'synthetic' : 'live';
         const worker = answerPolicyWorker(), overview = worker.overview();
-        const packet = { mode: policyMode, policies: answerPolicies().overview(policyMode), improvement: path.endsWith('/export') ? worker.exportEvidence() : { ...overview, groups: overview.groups.filter(group => group.mode === policyMode) }, readiness: worker.readiness(), note: 'Automated trial evidence only. AI calibration is not measured; live activation is closed. Synthetic results demonstrate mechanics, not answer quality. Historical human promotion and final benchmarks remain separate.' };
+        const policies = answerPolicies().overview(policyMode);
+        if (!path.endsWith('/export')) worker.verifyActivatedHistory(policies);
+        const packet = { mode: policyMode, policies, improvement: path.endsWith('/export') ? worker.exportEvidence() : { ...overview, groups: overview.groups.filter(group => group.mode === policyMode) }, readiness: worker.readiness(), note: 'Automated trial evidence only. AI calibration is not measured; live activation is closed. Synthetic results demonstrate mechanics, not answer quality. Historical human promotion and final benchmarks remain separate.' };
         if (path.endsWith('/export')) return download(res, 'ablatrix-runtime-answer-policy.json', `${JSON.stringify(packet, null, 2)}\n`, 'application/json');
         return json(res, 200, packet);
       }

@@ -181,17 +181,36 @@ export class AnswerPolicyWorker {
   }
   get(id: string): AnswerPolicyGroup | null { const row = this.db.prepare('SELECT * FROM runtime_policy_failure_groups WHERE id=?').get(id) as StoredGroup | undefined; return row ? this.readStoredGroup(row) : null; }
   overview() { return { groups: (this.db.prepare('SELECT * FROM runtime_policy_failure_groups ORDER BY rowid DESC').all() as StoredGroup[]).map(row => this.readStoredGroup(row)), callCeiling: CALL_CEILING, maxGroups: MAX_GROUPS, minimumFailures: 3, qualityClaimEligible: false as const }; }
-  exportEvidence() {
-    const mode = this.provider.executionMode ?? 'live';
-    const overview = this.overview(), groups = overview.groups.filter(group => group.mode === mode);
+  /** Inspection of a released policy requires its supporting records even after
+   * rollback. This verifies evidence without requiring its parent to be active. */
+  verifyActivatedHistory(policies = this.store.overview(this.provider.executionMode ?? 'live')) {
+    const groups: AnswerPolicyGroup[] = [], verified = new Set<string>();
+    for (const event of policies.events) {
+      if (event.action !== 'synthetic_trial_activation') continue;
+      try {
+        const decision = policies.decisions.find(item => item.id === event.decisionId);
+        if (!decision) throw new Error('Missing activation decision.');
+        const group = this.get(decision.groupId);
+        if (!group || group.mode !== policies.active.mode || group.decisionId !== decision.id || group.parent.id !== event.fromId || group.candidate?.id !== event.toId) throw new Error('Missing activation group.');
+        if (!verified.has(group.id)) { this.verifyCompletedTrial(group); groups.push(group); verified.add(group.id); }
+      } catch { throw new Error('Runtime policy history references a missing or unverifiable activated trial group.'); }
+    }
+    this.verifiedOriginalChecks(groups);
+  }
+  private verifiedOriginalChecks(groups: AnswerPolicyGroup[]) {
     const checks = this.options.completedJobs?.() ?? [];
-    const originalChecks = groups.flatMap(group => group.bindings.map(binding => {
-      const job = checks.find(item => item.id === binding.jobId && item.mode === mode);
+    return groups.flatMap(group => group.bindings.map(binding => {
+      const job = checks.find(item => item.id === binding.jobId && item.mode === group.mode);
       let failure: ReturnType<AnswerPolicyWorker['failure']> = null;
       try { if (job) failure = this.failure(job); } catch { /* Unverifiable supporting records cannot enter an evidence bundle. */ }
       if (!job || !failure || failure.category !== group.category || JSON.stringify(failure.binding) !== JSON.stringify(binding)) throw new Error('Runtime policy export: An originating automatic check no longer matches its consumed failure binding.');
       return job;
     }));
+  }
+  exportEvidence() {
+    const mode = this.provider.executionMode ?? 'live';
+    const overview = this.overview(), groups = overview.groups.filter(group => group.mode === mode);
+    const originalChecks = this.verifiedOriginalChecks(groups);
     const phaseReceipts = groups.flatMap(group => {
       try { if (group.operations.some(operation => operation.status === 'completed')) this.validate(group); }
       catch { throw new Error('Runtime policy export: A completed phase no longer matches its frozen request and saved result.'); }
@@ -204,6 +223,7 @@ export class AnswerPolicyWorker {
         return { groupId: group.id, runId: operation.runId, requestSha256: operation.requestSha256, verification: operation.status === 'completed' ? 'replayed_completed_phase' as const : 'unaccepted_diagnostic' as const, receipt };
       });
     });
+    this.verifyActivatedHistory();
     return { ...overview, groups, originalChecks, phaseReceipts };
   }
   hasActive() { return this.busy; }
@@ -347,8 +367,13 @@ export class AnswerPolicyWorker {
     const group = this.get(id) ?? this.overview().groups.find(item => item.decisionId === id);
     if (!group?.decisionId || group.status !== 'completed' || !group.decision || !group.candidate) throw new Error('A complete persisted trial decision is required.');
     if (group.mode !== (this.provider.executionMode ?? 'live')) throw new Error('Runtime trial activation mode differs from the configured provider.');
-    this.validate(group);
     if (this.store.capture(group.mode).id !== group.parent.id) throw new Error('Runtime activation has a stale parent.');
+    this.verifyCompletedTrial(group);
+    return this.store.activateTrial(group.mode, group.parent.id, group.decisionId);
+  }
+  private verifyCompletedTrial(group: AnswerPolicyGroup) {
+    if (!group.decisionId || group.status !== 'completed' || !group.decision || !group.candidate) throw new Error('A complete persisted trial decision is required.');
+    this.validate(group);
     if (group.operations.length !== CALL_CEILING || new Set(group.operations.map(operation => operation.phase)).size !== CALL_CEILING || new Set(group.operations.map(operation => operation.receiptId)).size !== CALL_CEILING) throw new Error('Trial operation evidence is incomplete or duplicated.');
     for (let phase = 0; phase < CALL_CEILING; phase++) {
       const operation = group.operations.find(item => item.phase === phase);
@@ -356,8 +381,7 @@ export class AnswerPolicyWorker {
       this.replayCompletedOperation(group, operation);
     }
     const totals = this.summarize(group), persisted = this.store.getDecision(group.decisionId);
-    if (!persisted || JSON.stringify(persisted) !== JSON.stringify(group.decision) || JSON.stringify(totals.baseline) !== JSON.stringify(persisted.baseline) || JSON.stringify(totals.candidate) !== JSON.stringify(persisted.candidateMetrics) || JSON.stringify(group.results) !== JSON.stringify(persisted.caseResults)) throw new Error('Trial decision differs from its exact replayed evidence.');
-    return this.store.activateTrial(group.mode, group.parent.id, group.decisionId);
+    if (!persisted || persisted.groupId !== group.id || persisted.mode !== group.mode || JSON.stringify(persisted) !== JSON.stringify(group.decision) || JSON.stringify(group.operations) !== JSON.stringify(persisted.operations) || JSON.stringify(totals.baseline) !== JSON.stringify(persisted.baseline) || JSON.stringify(totals.candidate) !== JSON.stringify(persisted.candidateMetrics) || JSON.stringify(group.results) !== JSON.stringify(persisted.caseResults)) throw new Error('Trial decision differs from its exact replayed evidence.');
   }
   /** Pure receipt verification shared by activation and evidence export. */
   private replayCompletedOperation(group: AnswerPolicyGroup, operation: RuntimeTrialOperation): AnswerRevisionReceipt {

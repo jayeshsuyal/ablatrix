@@ -52,6 +52,20 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
       assert.deepEqual(await response.json(), { error });
     }
   };
+  const missingGroupFails = async () => {
+    const db = new DatabaseSync(join(dir, 'policies.sqlite'));
+    const saved = db.prepare('SELECT rowid,* FROM runtime_policy_failure_groups WHERE id=?').get(group.id) as { rowid: number; id: string; status: string; mode: string; parent_id: string; category: string; document: string; document_sha256: string; lease_expires: number | null };
+    try {
+      db.prepare('DELETE FROM runtime_policy_failure_groups WHERE id=?').run(group.id);
+      assert.deepEqual(policies.getDecision(decision.id), decision, 'Activation decision remains authentic while its supporting group is absent.');
+      await readsFail(['/api/workspace/answer-policy', '/api/workspace/answer-policy/export'], 'Runtime policy history references a missing or unverifiable activated trial group.');
+      assert.throws(() => worker.exportEvidence(), /missing or unverifiable activated trial group/);
+    } finally {
+      db.prepare('INSERT INTO runtime_policy_failure_groups(rowid,id,status,mode,parent_id,category,document,document_sha256,lease_expires) VALUES(?,?,?,?,?,?,?,?,?)').run(saved.rowid, saved.id, saved.status, saved.mode, saved.parent_id, saved.category, saved.document, saved.document_sha256, saved.lease_expires);
+      db.close();
+    }
+    for (const path of ['/api/workspace/answer-policy', '/api/workspace/answer-policy/export']) assert.equal((await fetch(base + path)).status, 200, 'Restored exact support is inspectable without changing the active pointer.');
+  };
   try {
     const before = JSON.stringify(worker.overview());
     const exported = await (await fetch(base + '/api/workspace/answer-policy/export')).json();
@@ -68,6 +82,7 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
     await post('/api/workspace/answer-policy/rollback', { expectedActiveId: baseline.id, humanApproved: true }, 400);
     const activated = await post(`/api/workspace/answer-policy/trials/${group.decisionId}/activate`, {});
     assert.equal(activated.id, group.candidate!.id, 'prefixed persisted decision ID is routable');
+    await missingGroupFails();
     await post(`/api/workspace/answer-policy/trials/${group.decisionId}/activate`, {}, 409);
     const input = { productId: products[0].id, question: 'How much does this bottle hold?', mode: 'synthetic' };
     const after = await post('/api/workspace/questions', input, 201);
@@ -79,18 +94,27 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
     const reviews = await (await fetch(base + '/api/workspace/reviews/export')).json();
     assert.equal(reviews.cases.flatMap((item: {events: unknown[]}) => item.events).length, 0);
     assert.equal(policies.overview('synthetic').events.length, 2);
+    await missingGroupFails();
     const missingDecision = new DatabaseSync(join(dir, 'policies.sqlite'));
     const savedDecision = missingDecision.prepare('SELECT mode,document,sha256 FROM runtime_answer_policy_decisions WHERE id=?').get(decision.id) as { mode: string; document: string; sha256: string };
     try {
       missingDecision.prepare('DELETE FROM runtime_answer_policy_decisions WHERE id=?').run(decision.id);
       await readsFail(['/api/workspace/answer-policy', '/api/workspace/answer-policy/export'], 'Runtime policy history references missing or ineligible activation evidence.');
     } finally { missingDecision.prepare('INSERT INTO runtime_answer_policy_decisions(id,mode,document,sha256) VALUES(?,?,?,?)').run(decision.id, savedDecision.mode, savedDecision.document, savedDecision.sha256); missingDecision.close(); }
+    const missingReceipt = new DatabaseSync(join(dir, 'receipts.sqlite'));
+    const savedReceipt = missingReceipt.prepare('SELECT rowid,* FROM synthetic_answer_receipts WHERE run_id=?').get(group.operations[1].runId) as { rowid: number; run_id: string; input_sha256: string; document: string };
+    try {
+      missingReceipt.prepare('DELETE FROM synthetic_answer_receipts WHERE run_id=?').run(savedReceipt.run_id);
+      await readsFail(['/api/workspace/answer-policy'], 'Runtime policy history references a missing or unverifiable activated trial group.');
+      await readsFail(['/api/workspace/answer-policy/export'], 'Runtime policy export: A completed phase no longer matches its frozen request and saved result.');
+    } finally { missingReceipt.prepare('INSERT INTO synthetic_answer_receipts(rowid,run_id,input_sha256,document) VALUES(?,?,?,?)').run(savedReceipt.rowid, savedReceipt.run_id, savedReceipt.input_sha256, savedReceipt.document); missingReceipt.close(); }
     const changedReceipt = new DatabaseSync(join(dir, 'receipts.sqlite'));
     const receiptRow = changedReceipt.prepare('SELECT document FROM synthetic_answer_receipts WHERE run_id=?').get(group.operations[1].runId) as { document: string };
     try {
       const receipt = JSON.parse(receiptRow.document), wire = JSON.parse(receipt.receipt_json);
       wire.output.answer = 'SYNTHETIC changed completed answer text'; receipt.receipt_json = JSON.stringify(wire);
       changedReceipt.prepare('UPDATE synthetic_answer_receipts SET document=? WHERE run_id=?').run(JSON.stringify(receipt), group.operations[1].runId);
+      await readsFail(['/api/workspace/answer-policy'], 'Runtime policy history references a missing or unverifiable activated trial group.');
       await readsFail(['/api/workspace/answer-policy/export'], 'Runtime policy export: A completed phase no longer matches its frozen request and saved result.');
     } finally { changedReceipt.prepare('UPDATE synthetic_answer_receipts SET document=? WHERE run_id=?').run(receiptRow.document, group.operations[1].runId); changedReceipt.close(); }
     const changedCheck = new DatabaseSync(join(dir, 'reviews.sqlite'));
@@ -98,7 +122,7 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
     try {
       const job = JSON.parse(checkRow.document); job.original.answer.answer = 'SYNTHETIC changed originating answer text';
       changedCheck.prepare('UPDATE automatic_support_jobs SET document=? WHERE id=?').run(JSON.stringify(job), group.bindings[0].jobId);
-      await readsFail(['/api/workspace/answer-policy/export'], 'Runtime policy export: An originating automatic check no longer matches its consumed failure binding.');
+      await readsFail(['/api/workspace/answer-policy', '/api/workspace/answer-policy/export'], 'Runtime policy export: An originating automatic check no longer matches its consumed failure binding.');
     } finally { changedCheck.prepare('UPDATE automatic_support_jobs SET document=? WHERE id=?').run(checkRow.document, group.bindings[0].jobId); changedCheck.close(); }
     const corrupt = new DatabaseSync(join(dir, 'policies.sqlite'));
     try {
