@@ -46,10 +46,10 @@ export class RuntimeAnswerPolicyStore {
     }
   }
   get(id: string): RuntimeAnswerPolicy | null {
-    const row = this.db.prepare('SELECT document FROM runtime_answer_policies WHERE id=?').get(id) as { document: string } | undefined;
+    const row = this.db.prepare('SELECT mode,document FROM runtime_answer_policies WHERE id=?').get(id) as { mode: string; document: string } | undefined;
     if (!row) return null;
     const policy = JSON.parse(row.document) as RuntimeAnswerPolicy;
-    if (policy.id !== id || runtimePolicyHash(policy.instructions) !== policy.instructionSha256 || !['live', 'synthetic'].includes(policy.mode)) throw new Error('Runtime policy has an invalid immutable identity.');
+    if (policy.id !== id || policy.mode !== row.mode || runtimePolicyHash(policy.instructions) !== policy.instructionSha256 || !['live', 'synthetic'].includes(policy.mode)) throw new Error('Runtime policy has an invalid immutable identity.');
     return policy;
   }
   capture(mode: RuntimePolicyMode): RuntimeAnswerPolicy {
@@ -89,10 +89,12 @@ export class RuntimeAnswerPolicyStore {
     this.db.prepare('INSERT INTO runtime_answer_policy_decisions(id,mode,document,sha256) VALUES(?,?,?,?)').run(decision.id, decision.mode, document, runtimePolicyHash(document));
   }
   getDecision(id: string): RuntimeTrialDecision | null {
-    const row = this.db.prepare('SELECT document,sha256 FROM runtime_answer_policy_decisions WHERE id=?').get(id) as { document: string; sha256: string } | undefined;
+    const row = this.db.prepare('SELECT mode,document,sha256 FROM runtime_answer_policy_decisions WHERE id=?').get(id) as { mode: string; document: string; sha256: string } | undefined;
     if (!row) return null;
     if (runtimePolicyHash(row.document) !== row.sha256) throw new Error('Trial evidence no longer matches its immutable hash.');
-    return JSON.parse(row.document) as RuntimeTrialDecision;
+    const decision = JSON.parse(row.document) as RuntimeTrialDecision;
+    if (decision.id !== id || decision.mode !== row.mode) throw new Error('Trial decision indexed identity no longer matches its immutable document.');
+    return decision;
   }
   private move(mode: RuntimePolicyMode, expectedActiveId: string, target: RuntimeAnswerPolicy, action: PolicyEvent['action'], decisionId: string | null) {
     this.db.exec('BEGIN IMMEDIATE');

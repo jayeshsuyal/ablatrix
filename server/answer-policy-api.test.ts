@@ -121,6 +121,10 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
     assert.throws(() => worker.exportEvidence(), /matching stored hash/);
     assert.throws(() => worker.activateTrial(group.decisionId!), /matching stored hash/);
     await inspectionFails('Runtime policy group evidence has no matching stored hash; reconciliation is required.');
+    const corruptIndex = new DatabaseSync(join(dir, 'policies.sqlite'));
+    try { corruptIndex.prepare('UPDATE runtime_policy_failure_groups SET document=?,category=? WHERE id=?').run(JSON.stringify(group), group.category === 'source_conflict' ? 'incomplete_answer' : 'source_conflict', group.id); }
+    finally { corruptIndex.close(); }
+    await inspectionFails('Runtime policy group indexed metadata no longer matches its verified document; reconciliation is required.');
     assert.equal(policies.capture('synthetic').id, baseline.id);
     const unchanged = new DatabaseSync(join(dir, 'policies.sqlite'), { readOnly: true });
     try { assert.equal((JSON.parse((unchanged.prepare('SELECT document FROM runtime_policy_failure_groups WHERE id=?').get(group.id) as { document: string }).document)).operations.length, 13, 'Failed inspection dispatches no new phase.'); }

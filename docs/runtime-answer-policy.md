@@ -48,6 +48,8 @@ Status and export check every saved policy version, trial decision and failure-g
 
 Exports also revalidate originating automatic checks against their consumed bindings and replay completed phase receipts against the saved proposal, answers and assessments. Changed supporting records block the bundle. Receipts for invalid, interrupted or missing outcomes remain explicitly labeled `unaccepted_diagnostic`; they cannot establish an accepted phase or trial.
 
+The checked group loader also matches indexed ID, status, mode, parent and category to the verified document. A changed index cannot route failures into another group or make a completed group dispatch again.
+
 Run the fictional rehearsal without credentials, existing application databases, saved answers, fresh evaluation contexts or holdouts:
 
 ```sh

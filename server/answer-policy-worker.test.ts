@@ -73,6 +73,53 @@ test('corrupt queued group data cannot be inspected or dispatched', async () => 
   } finally { h.cleanup(); }
 });
 
+test('each indexed group identity and routing field must match the hashed document before reuse', async () => {
+  const h = harness();
+  try {
+    h.worker.observeCompleted(await h.failures());
+    const group = h.worker.overview().groups[0];
+    const originals = { id: group.id, status: group.status, mode: group.mode, parent_id: group.parent.id, category: group.category };
+    const corrupted = { id: 'synthetic-corrupt-group-index', status: 'completed', mode: 'live', parent_id: 'synthetic-other-parent', category: group.category === 'source_conflict' ? 'incomplete_answer' : 'source_conflict' };
+    for (const column of Object.keys(corrupted) as (keyof typeof corrupted)[]) {
+      const db = new DatabaseSync(h.policyPath), rowId = column === 'id' ? corrupted.id : group.id;
+      try {
+        db.prepare(`UPDATE runtime_policy_failure_groups SET ${column}=? WHERE id=?`).run(corrupted[column], group.id);
+        assert.throws(() => h.worker.get(rowId), /indexed metadata/);
+        assert.throws(() => h.worker.overview(), /indexed metadata/);
+        await assert.rejects(h.worker.tick(), /indexed metadata/);
+        assert.equal(h.provider.receipt(`runtime-policy:${group.id}:0`), undefined);
+        assert.equal(h.store.capture('synthetic').status, 'baseline');
+      } finally { db.prepare(`UPDATE runtime_policy_failure_groups SET ${column}=? WHERE id=?`).run(originals[column], rowId); db.close(); }
+    }
+    assert.equal(h.worker.get(group.id)?.operations.length, 0);
+  } finally { h.cleanup(); }
+});
+
+test('policy and decision indexed modes and decision IDs cannot cross verified history boundaries', async () => {
+  const h = harness();
+  try {
+    h.worker.observeCompleted(await h.failures());
+    const group = await evaluate(h.worker), db = new DatabaseSync(h.policyPath);
+    try {
+      db.prepare("UPDATE runtime_answer_policies SET mode='live' WHERE id=?").run(group.candidate!.id);
+      assert.throws(() => h.store.get(group.candidate!.id), /invalid immutable identity/);
+      assert.throws(() => h.store.overview('live'), /invalid immutable identity/);
+      db.prepare("UPDATE runtime_answer_policies SET mode='synthetic' WHERE id=?").run(group.candidate!.id);
+      db.prepare("UPDATE runtime_answer_policy_decisions SET mode='live' WHERE id=?").run(group.decisionId!);
+      assert.throws(() => h.store.getDecision(group.decisionId!), /indexed identity/);
+      assert.throws(() => h.store.overview('live'), /indexed identity/);
+      db.prepare("UPDATE runtime_answer_policy_decisions SET mode='synthetic' WHERE id=?").run(group.decisionId!);
+      db.prepare("UPDATE runtime_answer_policy_decisions SET id='synthetic-other-decision' WHERE id=?").run(group.decisionId!);
+      assert.throws(() => h.store.getDecision('synthetic-other-decision'), /indexed identity/);
+      assert.throws(() => h.store.overview('synthetic'), /indexed identity/);
+      db.prepare("UPDATE runtime_answer_policy_decisions SET id=? WHERE id='synthetic-other-decision'").run(group.decisionId!);
+      assert.equal(h.store.getDecision(group.decisionId!)?.id, group.decisionId);
+      assert.equal(h.store.capture('live').status, 'baseline');
+      assert.equal(h.store.capture('synthetic').status, 'baseline');
+    } finally { db.close(); }
+  } finally { h.cleanup(); }
+});
+
 test('schema upgrade leaves old unhashed group records unverified instead of blessing or redispatching them', async () => {
   const h = harness(); let upgraded: AnswerPolicyWorker | undefined;
   try {

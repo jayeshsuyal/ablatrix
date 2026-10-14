@@ -40,7 +40,7 @@ export type AnswerPolicyGroup = { id: string; mode: RuntimePolicyMode; category:
   groupSha256: string; status: 'collecting' | 'queued' | 'running' | 'completed' | 'failed' | 'reconciliation'; phase: number; callCeiling: 13;
   packet: RuntimeValidationPacket | null; packetSha256: string; graderSha256: string; operations: RuntimeTrialOperation[];
   candidate?: RuntimeAnswerPolicy; results: CaseResult[]; decisionId?: string; decision?: RuntimeTrialDecision; createdAt: string; finishedAt?: string; error?: string };
-type StoredGroup = { document: string; document_sha256: string | null };
+type StoredGroup = { id: string; status: string; mode: string; parent_id: string; category: string; document: string; document_sha256: string | null };
 const CALL_CEILING = 13;
 const MAX_GROUPS = 32;
 const TERMINAL_CHECKS = new Set(['supported', 'repaired', 'abstained']);
@@ -148,7 +148,7 @@ export class AnswerPolicyWorker {
       try {
         const prior = this.db.prepare("SELECT binding FROM runtime_policy_observed_checks WHERE job_id=? OR run_id=? OR json_extract(binding,'$.assessmentReceiptId')=?").get(job.id, job.original.runId, failure.binding.assessmentReceiptId) as { binding: string } | undefined;
         if (prior) { this.db.exec('COMMIT'); continue; }
-        const row = this.db.prepare("SELECT document,document_sha256 FROM runtime_policy_failure_groups WHERE status='collecting' AND mode=? AND parent_id=? AND category=? ORDER BY rowid LIMIT 1").get(job.mode, failure.parent.id, failure.category) as StoredGroup | undefined;
+        const row = this.db.prepare("SELECT * FROM runtime_policy_failure_groups WHERE status='collecting' AND mode=? AND parent_id=? AND category=? ORDER BY rowid LIMIT 1").get(job.mode, failure.parent.id, failure.category) as StoredGroup | undefined;
         let group: AnswerPolicyGroup;
         if (row) group = this.readStoredGroup(row);
         else {
@@ -171,10 +171,12 @@ export class AnswerPolicyWorker {
   }
   private readStoredGroup(row: StoredGroup): AnswerPolicyGroup {
     if (!row.document_sha256 || sha(row.document) !== row.document_sha256) throw new Error('Runtime policy group evidence has no matching stored hash; reconciliation is required.');
-    return JSON.parse(row.document) as AnswerPolicyGroup;
+    const group = JSON.parse(row.document) as AnswerPolicyGroup;
+    if (row.id !== group.id || row.status !== group.status || row.mode !== group.mode || row.parent_id !== group.parent.id || row.category !== group.category) throw new Error('Runtime policy group indexed metadata no longer matches its verified document; reconciliation is required.');
+    return group;
   }
-  get(id: string): AnswerPolicyGroup | null { const row = this.db.prepare('SELECT document,document_sha256 FROM runtime_policy_failure_groups WHERE id=?').get(id) as StoredGroup | undefined; return row ? this.readStoredGroup(row) : null; }
-  overview() { return { groups: (this.db.prepare('SELECT document,document_sha256 FROM runtime_policy_failure_groups ORDER BY rowid DESC').all() as StoredGroup[]).map(row => this.readStoredGroup(row)), callCeiling: CALL_CEILING, maxGroups: MAX_GROUPS, minimumFailures: 3, qualityClaimEligible: false as const }; }
+  get(id: string): AnswerPolicyGroup | null { const row = this.db.prepare('SELECT * FROM runtime_policy_failure_groups WHERE id=?').get(id) as StoredGroup | undefined; return row ? this.readStoredGroup(row) : null; }
+  overview() { return { groups: (this.db.prepare('SELECT * FROM runtime_policy_failure_groups ORDER BY rowid DESC').all() as StoredGroup[]).map(row => this.readStoredGroup(row)), callCeiling: CALL_CEILING, maxGroups: MAX_GROUPS, minimumFailures: 3, qualityClaimEligible: false as const }; }
   exportEvidence() {
     const mode = this.provider.executionMode ?? 'live';
     const overview = this.overview(), groups = overview.groups.filter(group => group.mode === mode);
@@ -268,7 +270,7 @@ export class AnswerPolicyWorker {
     // The store may share this SQLite file through another connection. Record
     // evidence only after our lease transaction commits, and recover this
     // publication step from the immutable decision saved with the group.
-    const rows = this.db.prepare("SELECT document,document_sha256 FROM runtime_policy_failure_groups WHERE status IN ('completed','failed','reconciliation')").all() as StoredGroup[];
+    const rows = this.db.prepare("SELECT * FROM runtime_policy_failure_groups WHERE status IN ('completed','failed','reconciliation')").all() as StoredGroup[];
     for (const row of rows) { const group = this.readStoredGroup(row); if (group.decision) this.store.recordDecision(group.decision); }
   }
   private binding(policy: RuntimeAnswerPolicy): RuntimePolicyBinding { return { id: policy.id, instructionSha256: policy.instructionSha256, mode: policy.mode }; }
@@ -301,7 +303,7 @@ export class AnswerPolicyWorker {
     } catch { operation.status = 'invalid'; this.finish(group, 'failed', 'Recorded trial output failed its frozen request, provenance, citation or grading contract.'); }
   }
   private reconcile() {
-    const rows = this.db.prepare("SELECT document,document_sha256 FROM runtime_policy_failure_groups WHERE status='running' AND (lease_expires IS NULL OR lease_expires<?)").all(Date.now()) as StoredGroup[];
+    const rows = this.db.prepare("SELECT * FROM runtime_policy_failure_groups WHERE status='running' AND (lease_expires IS NULL OR lease_expires<?)").all(Date.now()) as StoredGroup[];
     for (const row of rows) { const group = this.readStoredGroup(row), receipt = this.provider.receipt(this.runId(group)); if (receipt) this.consume(group, receipt); else this.finish(group, 'reconciliation', 'Started operation has no durable receipt; it will not be retried.'); }
   }
   tick(): Promise<void> {
@@ -315,7 +317,7 @@ export class AnswerPolicyWorker {
       if (this.options.canDispatch && !this.options.canDispatch()) return;
       this.db.exec('BEGIN IMMEDIATE'); let group: AnswerPolicyGroup;
       try {
-        const row = this.db.prepare("SELECT document,document_sha256 FROM runtime_policy_failure_groups WHERE status='queued' ORDER BY rowid LIMIT 1").get() as StoredGroup | undefined;
+        const row = this.db.prepare("SELECT * FROM runtime_policy_failure_groups WHERE status='queued' ORDER BY rowid LIMIT 1").get() as StoredGroup | undefined;
         if (!row) { this.db.exec('COMMIT'); return; } group = this.readStoredGroup(row);
         if (group.mode !== (this.provider.executionMode ?? 'live')) { this.finish(group, 'failed', 'Saved trial provenance differs from this provider.'); this.db.exec('COMMIT'); return; }
         const receipt = this.provider.receipt(this.runId(group)); if (receipt) { this.db.exec('COMMIT'); this.consume(group, receipt); return; }
