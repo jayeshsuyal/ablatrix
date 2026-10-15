@@ -16,6 +16,10 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - name: Qualification live CLI offline guards
+        run: |
+          node --import tsx --test scripts/grader-qualification-live.test.ts
+          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/grader-qualification-live.ts
       - name: Verify sealed grader qualification reproduction
         run: |
           qualification_seal="$PWD/docs/evidence/grader-qualification-2026-10-15/seal-v1"

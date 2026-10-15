@@ -68,6 +68,8 @@ This offline command checks adversarial source retrieval and the revision worker
 
 The [sealed v3 qualification benchmark](docs/grader-qualification.md) prepares 80 fresh constructed packets and 12 separate consistency checks with frozen requests, references and thresholds. Its offline rehearsal is scripted, its qualification record remains pending, and it provides no live dispatch or activation capability.
 
+The separate [bounded execution/verifier adapter](docs/grader-qualification-live.md) adds exact-request dispatch, dataset-wide consumption and independent receipt replay. Its proposed 92-call / $9.20 added planning allowance requires a reviewed frozen plan and explicit financial approval; no qualification run or activation is implied by the implementation.
+
 ### Compare saved answers
 
 For a focused local correction demonstration, follow the [five-case walkthrough](docs/local-correction-walkthrough.md): a supported control, clearer wording, a missed source, a saved wrong-context correction, and a missing-information stop. `npm run walkthrough -- --out /tmp/ablatrix-walkthrough.json` freezes its inputs and checks source-routing without paid calls. The [two-call live follow-through](docs/evidence/local-correction-live-2026-10-10.md) produced mixed results: clearer color wording, but excessive abstention despite a stronger capacity source. Human decisions remain pending.
