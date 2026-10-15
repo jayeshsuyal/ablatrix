@@ -1,6 +1,8 @@
 # Constructed grader-discrimination pilot
 
-This pilot asks whether the **existing live claim-support grader** distinguishes source-grounded answers from small, inspectable flaws. It measures ten constructed answers in **five paired fictional product families**, not ten independent products. It does not measure external truth, human quality, general production calibration, model training or an answer-policy gain. Runtime assessments retain `calibration=not_measured` and `qualityClaimEligible=false`; no result unlocks live learned-policy activation.
+This pilot asks whether the **existing live claim-support grader** distinguishes source-grounded answers from small, inspectable flaws. The frozen dataset contains ten constructed answers in **five paired fictional product families**, not ten independent products. It does not measure external truth, human quality, general production calibration, model training or an answer-policy gain. Runtime assessments retain `calibration=not_measured` and `qualityClaimEligible=false`; no result unlocks live learned-policy activation.
+
+**Latest live result:** [v3 stopped after five of ten planned calls](evidence/grader-calibration-2026-10-14/live-results.md): four valid grades, one invalid proof-free `supported` output, five unattempted cases. Two of four valid grades matched every frozen reference axis. Exact read-only replay passed; the shared ledger is now 91 attempts with zero pending. Grader qualification and live activation remain closed. The bounds and starting count below describe the preserved pre-run protocol, not remaining dispatch authority.
 
 ## Frozen examples and reference review
 

@@ -1,0 +1,138 @@
+{
+  "format": "grader-calibration-post-run-audit-v1",
+  "createdAt": "2026-10-15T05:20:10.707Z",
+  "planSha256": "ef4fb5c809675d075469f8bbe21503b16058160b93c693f3151ce513bb55ef1e",
+  "implementationCommit": "f5eb55327c93f0c1e57b168f7493b8ac4420db8f",
+  "reportSha256": "e6e81ef59d57a024163fc91c5f7ebfd82ec4249f6b7402fc648abff1e4083cdc",
+  "artifactFileSha256": {
+    "frozen-plan-v3.json": "fb0c85f547f1788c0bf1a128fbc4348ea535be5213b2dd7314dc19ac3656cd72",
+    "source-review-v3.json": "fcaab048e7025a68d3546696a51f4c0a2eaef00de916bd0f02b1a8fb524d7341",
+    "offline-qualification-v3.json": "b9edaf023fbbe270591d7304fdfb42c496ec8f3315f170785f18214bc8ef33f2",
+    "live-report-v3.json": "4bcfd874f9a60bf04b74cd04617b1273d1065318ebe0be16b1d2eab90f20bdaf"
+  },
+  "replay": {
+    "mode": "read_only_exact_current_code_plan_ledger_and_checkpoint",
+    "passed": true,
+    "newProviderCalls": 0,
+    "reportMutated": false
+  },
+  "ledger": {
+    "startingAttempts": 86,
+    "endingAttempts": 91,
+    "newAttempts": 5,
+    "pending": 0,
+    "activeOwners": 0,
+    "historicalReceiptsUnchanged": true,
+    "historicalSha256": "9e7a8895e0b4a9a6300a19b2957369b5ab9f72c622f86dd5933f4158de4228fa",
+    "newAttemptAllowanceUsd": 0.5,
+    "totalReservedAllowanceUsd": 9.1,
+    "priorSpendAdjustmentUsd": 0.200281,
+    "combinedLocalPlanningUsageUsd": 9.300281,
+    "accounting": "local_planning_allowances_not_settled_charges"
+  },
+  "execution": {
+    "plannedSlots": 10,
+    "exactTransportCount": 5,
+    "observedHttp200": 5,
+    "validGrades": 4,
+    "invalidGrades": 1,
+    "unattemptedSlots": 5,
+    "automaticRetries": 0
+  },
+  "providerReportedUsage": {
+    "allFiveRecordedResponses": {
+      "inputTokens": 5169,
+      "outputTokens": 926,
+      "receiptsWithUsage": 5
+    },
+    "validGradeOnlyReportAggregate": {
+      "inputTokens": 4241,
+      "outputTokens": 799,
+      "receiptsWithUsage": 4
+    },
+    "explanation": "The immutable report usage aggregate includes four successfully validated grades. The rejected fifth response also has provider-reported token usage, retained in its raw receipt and included in the all-five total here. Neither token count establishes a settled bill."
+  },
+  "receipts": [
+    {
+      "index": 0,
+      "status": "completed",
+      "errorCode": null,
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1095,
+        "outputTokens": 206
+      }
+    },
+    {
+      "index": 1,
+      "status": "completed",
+      "errorCode": null,
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1035,
+        "outputTokens": 227
+      }
+    },
+    {
+      "index": 2,
+      "status": "completed",
+      "errorCode": null,
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 1118,
+        "outputTokens": 191
+      }
+    },
+    {
+      "index": 3,
+      "status": "completed",
+      "errorCode": null,
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 993,
+        "outputTokens": 175
+      }
+    },
+    {
+      "index": 4,
+      "status": "completed",
+      "errorCode": "output_validation",
+      "model": "gpt-5.6-luna",
+      "usage": {
+        "inputTokens": 928,
+        "outputTokens": 127
+      }
+    }
+  ],
+  "referenceComparisons": {
+    "validGradeDispositionMatches": 4,
+    "validGradeDispositionDenominator": 4,
+    "fullAxisReferenceMatches": 2,
+    "fullAxisReferenceDenominator": 4,
+    "observedGoodFactualPasses": 2,
+    "observedGoodFactualDenominator": 2,
+    "observedFlawedRawPasses": 0,
+    "observedFlawedDenominator": 2,
+    "frozenFlawedDenominator": 5,
+    "unattemptedFlawed": 3,
+    "completeFamilyPairs": 1,
+    "plannedFamilyPairs": 5,
+    "appropriateAbstentionGradeValidated": false
+  },
+  "protectedArtifacts": {
+    "checked": 116,
+    "changed": 0
+  },
+  "humanGold": false,
+  "productionCalibrationQualified": false,
+  "qualityClaimEligible": false,
+  "livePolicyActivation": "closed",
+  "limitations": [
+    "Constructed fictional source packets and AI-authored references; no human gold or external truth measurement.",
+    "Five of ten planned calls executed; five cases remained unattempted after an invalid output.",
+    "The four valid dispositions fall within frozen acceptable sets, but two disagree on one or more frozen axes.",
+    "Zero observed flawed passes on two assessed flawed answers does not measure the remaining three flawed answers or establish a false-approval rate for production.",
+    "No answer generation, repair, training, policy activation, or measured answer-quality gain occurred."
+  ],
+  "auditSha256": "18a4ff1083c4e2862a1fb0662ed4b20394b3a09e3cc7614a55fddf893a27974f"
+}
