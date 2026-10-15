@@ -8,12 +8,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '24.10.0'
           cache: npm
       - run: npm ci
       - run: npm test
+      - name: Verify sealed grader qualification reproduction
+        run: |
+          qualification_seal="$PWD/docs/evidence/grader-qualification-2026-10-15/seal-v1"
+          qualification_expected="$PWD/docs/evidence/grader-qualification-2026-10-15/offline-rehearsal-v1.json"
+          qualification_commit="$(node --input-type=module -e 'import fs from "node:fs"; const c=JSON.parse(fs.readFileSync(process.argv[1],"utf8")).implementationCommit; if(!/^[a-f0-9]{40}$/.test(c))throw Error("Invalid implementation commit"); process.stdout.write(c);' "$qualification_seal/plan.json")"
+          qualification_checkout="$(mktemp -d /tmp/ablatrix-qualification-code.XXXXXX)"
+          qualification_report="${qualification_checkout}-rehearsal.json"
+          git clone --no-checkout --shared "$PWD" "$qualification_checkout"
+          git -C "$qualification_checkout" checkout --detach "$qualification_commit"
+          (
+            cd "$qualification_checkout"
+            npm ci
+            npm run grader:qualification -- --verify --dir "$qualification_seal"
+            npm run grader:qualification -- --rehearse --dir "$qualification_seal" --out "$qualification_report"
+          )
+          cmp "$qualification_expected" "$qualification_report"
       - name: Offline RAG and harness contracts
         run: npm run check:reliability -- --out /tmp/ablatrix-reliability.json
       - uses: actions/upload-artifact@v4

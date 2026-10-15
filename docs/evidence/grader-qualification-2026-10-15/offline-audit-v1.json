@@ -1,0 +1,52 @@
+{
+  "format": "sealed-qualification-offline-audit-v1",
+  "createdAt": "2026-10-15T19:21:01.067Z",
+  "planSha256": "bfd2f570499c83abd198b3347acb7b4ea36ea76728db4c5646abb7b67e5e7505",
+  "implementationCommit": "0f65fc2945e0bb1bcb8da32a780e0f4d17c6aedc",
+  "datasetSha256": "b13b68f1da6facbf85c1cf35a8504b355db707d02697c4297c5a46f03c1df917",
+  "artifactFileSha256": {
+    "seal-v1/plan.json": "2269174e8213bf1313eb5c1c5fee7a34268a8310b801b548cdb262cc1735e5ce",
+    "seal-v1/requests.json": "52e60afac31274efc8b31556d088b335bc40f0a045284fcde53990d39be078ec",
+    "seal-v1/references.json": "cd12a1ea95e70a4b497b285fe41d726549923fd6c98d852fac3702b81c1217d3",
+    "seal-v1/record.json": "2a7aea6402883dd5af4880948a766622408b9701e2191df3e8539bb2a2a925c6",
+    "offline-rehearsal-v1.json": "d1be261d73e288d06c775a850f42c3e02e94c06b7d10a89432e8e87a90e14b81"
+  },
+  "verification": {
+    "focusedTestsPassed": 16,
+    "serverTestsPassed": 449,
+    "serverPlatformSkipped": 1,
+    "build": "passed",
+    "standaloneCliTypecheck": "passed",
+    "sealPrepare": "passed",
+    "sealVerify": "passed",
+    "cliRehearsal": "passed",
+    "independentCodeReview": "completed_no_findings",
+    "independentSourceReview": "completed_no_findings"
+  },
+  "historicalProtection": {
+    "artifactsChecked": 135,
+    "changed": 0
+  },
+  "sharedLedger": {
+    "startingAttempts": 102,
+    "endingAttempts": 102,
+    "pending": 0,
+    "activeOwners": 0,
+    "newReservations": 0
+  },
+  "rehearsal": {
+    "provenance": "offline_reference_scripted_mechanics_only",
+    "primaryPlanned": 80,
+    "repeatPlanned": 12,
+    "engineeringGateMechanics": "passed",
+    "liveProviderCalls": 0,
+    "qualified": false
+  },
+  "humanGold": false,
+  "externalTruthVerified": false,
+  "productionActivationQualified": false,
+  "qualityClaimEligible": false,
+  "financialApproval": false,
+  "futureBoundary": "Separately reviewed trusted live execution/verifier adapter, cohort-consumption check and approved financial scope required. This PR has no execute capability.",
+  "auditSha256": "3dc820b5bf9d6858558f1679292afbe33f7dfb723b9db7c10d96d73e03ed82a6"
+}

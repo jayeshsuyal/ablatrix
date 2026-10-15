@@ -66,6 +66,8 @@ npm run check:reliability -- --out /tmp/ablatrix-reliability.json
 
 This offline command checks adversarial source retrieval and the revision worker, including crowded model scopes, rejected citations, restart recovery and zero-dispatch stops. CI runs it and uploads a report with expected and observed values for each checkpoint. It needs no manual judgments or paid calls. The default embeddings and provider responses are synthetic; a separate cached BGE mode exercises the real local embedding runtime. See [contracts, results and limits](docs/automated-reliability.md). Passing these contracts establishes regression coverage, not arbitrary answer correctness.
 
+The [sealed v3 qualification benchmark](docs/grader-qualification.md) prepares 80 fresh constructed packets and 12 separate consistency checks with frozen requests, references and thresholds. Its offline rehearsal is scripted, its qualification record remains pending, and it provides no live dispatch or activation capability.
+
 ### Compare saved answers
 
 For a focused local correction demonstration, follow the [five-case walkthrough](docs/local-correction-walkthrough.md): a supported control, clearer wording, a missed source, a saved wrong-context correction, and a missing-information stop. `npm run walkthrough -- --out /tmp/ablatrix-walkthrough.json` freezes its inputs and checks source-routing without paid calls. The [two-call live follow-through](docs/evidence/local-correction-live-2026-10-10.md) produced mixed results: clearer color wording, but excessive abstention despite a stronger capacity source. Human decisions remain pending.

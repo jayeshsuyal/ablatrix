@@ -18,6 +18,7 @@
     "walkthrough": "node --import tsx scripts/correction-walkthrough.ts",
     "answer-policy:rehearse": "node --import tsx scripts/runtime-answer-policy-rehearsal.ts",
     "grader:calibration": "node --import tsx scripts/grader-calibration.ts",
+    "grader:qualification": "node --import tsx scripts/grader-qualification.ts",
     "feedback:prepare": "node --env-file-if-exists=.env --import tsx server/feedback-prepare.ts",
     "feedback:retrieval-audit": "node --import tsx scripts/evaluate_product_retrieval.ts",
     "feedback:import-validation": "node --import tsx scripts/import_validation_packet.ts",
