@@ -76,9 +76,9 @@ async function runCalibrationCli(argv: string[]) {
   const env = process.env;
   assert.equal(env.ABLATRIX_LOOP_LIVE, '1'); assert.equal(env.ABLATRIX_REVISION_WEB, '0');
   assert.equal(env.ABLATRIX_AUTOMATIC_CHECK_LIVE, '0'); assert.equal(env.ABLATRIX_ANSWER_POLICY_SHADOW_LIVE, '0'); assert.equal(env.ABLATRIX_LANGFUSE_ENABLED, '0');
-  assert.equal(env.ABLATRIX_LOOP_CALL_LIMIT, '96');
+  assert.equal(env.ABLATRIX_LOOP_CALL_LIMIT, String(plan.budget.absoluteCallLimit));
   assert.equal(env.ABLATRIX_LOOP_BUDGET_DB, scope.budgetPath, 'Explicit shared ledger path must match the frozen caller.');
-  assert.equal(Number(env.ABLATRIX_SPEND_CAP_USD), 10); assert.equal(Number(env.ABLATRIX_LOOP_PRIOR_SPEND_USD), .200281); assert.equal(Number(env.ABLATRIX_LOOP_ALLOWANCE_USD), .1);
+  assert.equal(Number(env.ABLATRIX_SPEND_CAP_USD), plan.budget.spendingCapUsd); assert.equal(Number(env.ABLATRIX_LOOP_PRIOR_SPEND_USD), plan.budget.priorSpendUsd); assert.equal(Number(env.ABLATRIX_LOOP_ALLOWANCE_USD), plan.budget.allowancePerCallUsd);
   const result = await executeGraderCalibration(options, {
     verification,
     preflight() {
@@ -101,7 +101,7 @@ async function runCalibrationCli(argv: string[]) {
       assert.equal(state.initialSha256, scope.ledgerInitialSha256); assert.equal(state.activeOwners, 0);
       inspectCalibrationWorkers(scope); calibrationCodeHashes(plan.implementationCommit);
       const { apiKey, credentialsFile } = calibrationCredentialOptions(env);
-      return new SapiomFeedbackProvider({ enabled: true, apiKey, credentialsFile, dbPath: scope.budgetPath, callLimit: 96, capUsd: 10, priorSpendUsd: .200281, allowancePerCallUsd: .1, fetchImpl, operationGuard });
+      return new SapiomFeedbackProvider({ enabled: true, apiKey, credentialsFile, dbPath: scope.budgetPath, callLimit: plan.budget.absoluteCallLimit, capUsd: plan.budget.spendingCapUsd, priorSpendUsd: plan.budget.priorSpendUsd, allowancePerCallUsd: plan.budget.allowancePerCallUsd, fetchImpl, operationGuard });
     },
     transport: globalThis.fetch, readLedgerReceipts: readCalibrationReceipts
   });

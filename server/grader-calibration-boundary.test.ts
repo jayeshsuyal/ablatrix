@@ -91,6 +91,20 @@ test('five-case protocol fingerprints all 91 historical attempts and cannot borr
   } finally { db.close(); rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('v3 fingerprints all 96 prior rows and retains the new six-operation budget identity', () => {
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'ablatrix-coverage-confidence-budget-'))), path = join(dir, 'ledger.sqlite');
+  const provider = new SapiomFeedbackProvider({ enabled: false, apiKey: '', credentialsFile: '', dbPath: path }); provider.close();
+  const db = new DatabaseSync(path);
+  try {
+    const insert = db.prepare('INSERT INTO loop_provider_calls(id,created_at,kind,allowance_usd,status,run_id) VALUES(?,?,?,?,?,?)');
+    for (let i = 0; i < 96; i++) insert.run(`prior-${i}`, '2026-10-15T00:00:00.000Z', 'synthetic metadata', .1, 'completed', `prior-run-${i}`);
+    const initial = readCalibrationLedgerState(path, 'coverage-confidence-v3-six'); assertCalibrationStartingLedger(initial, 'coverage-confidence-v3-six');
+    assert.equal(initial.reservedUsd, 9.6); assert.equal(initial.rows.length, 0); assert.throws(() => assertCalibrationStartingLedger(initial, 'abstention-v2-five'), /Shared ledger differs/);
+    db.prepare('UPDATE loop_provider_calls SET kind=? WHERE id=?').run('changed prior row', 'prior-95');
+    assert.notEqual(readCalibrationLedgerState(path, 'coverage-confidence-v3-six').initialSha256, initial.initialSha256);
+  } finally { db.close(); rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('caller scope fixes the existing ledger and authority instead of accepting an alternate budget', () => {
   const dir = realpathSync(mkdtempSync(join(tmpdir(), 'ablatrix-calibration-scope-')));
   const budgetPath = join(dir, 'budget.sqlite'), reviewPath = join(dir, 'reviews.sqlite');
