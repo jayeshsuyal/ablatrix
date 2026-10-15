@@ -1,0 +1,43 @@
+{
+  "format": "grader-calibration-offline-qualification-v2",
+  "createdAt": "2026-10-15T05:10:01.494Z",
+  "planSha256": "84a8dc07c278a64468dad009b248327358cafe93f9dc05235bc648de2c79e4e7",
+  "implementationCommit": "26f808d877e5984483e4ae41c8240443138a8623",
+  "codeFileSha256": {
+    "scripts/grader-calibration.ts": "1c4fbf96583bbab55687cd8280048bb5bf6176f39eb3071186f9ccbb51ba328c",
+    "server/citation-options.ts": "0845b2922b7880de4f641453c307d042a31211948514dc4e57e4f9ad4cb1d93d",
+    "server/claim-support.ts": "b0ce4c8b9bc7041512bffd93bdbd3df0e8e9b4ac4758d9a9a1db62c295616224",
+    "server/feedback-provider.ts": "4022a4b51cec10cf583757bce9c8e6ae26f897a02f3f90598dfb1413d8535495",
+    "server/grader-calibration-boundary.ts": "d366eb427f6bee1da26877e1d609db5f5889076c4109de491f520df196764ef0",
+    "server/grader-calibration-fixtures.ts": "2c394658adfe8bd7583aa6a315b5700fcd4d2d7b578d22d8af0a4569daaac9f3",
+    "server/grader-calibration-runner.ts": "0da9ce0a24828d2b0286e1b259155dc7dd824383e5342e877bb975875d1e0090",
+    "server/grader-calibration.ts": "6f631b5b2c0b1a2cd7001836efb07e3b3c184b843146c1be790a4c9c9dd38525",
+    "server/source-id-diagnostic.ts": "ac8d1434e79aa147fd5d15da43ab81ab94b5e65d4798966d548a9c09e775793e"
+  },
+  "sourceReviewSha256": "41f1d8a824c0186ca70b7e0b65804af3e0c4479529d69732a31e89ffb174ecec",
+  "verification": {
+    "focusedPassed": 35,
+    "localServerPassed": 420,
+    "localServerPlatformSkipped": 1,
+    "ciServerPassed": 421,
+    "ciChromiumPassed": 41,
+    "ciPythonPassed": 7,
+    "auditVulnerabilities": 0,
+    "build": "passed",
+    "cliTypecheck": "passed",
+    "exactHeadCi": "https://github.com/jayeshsuyal/ablatrix/actions/runs/38684896627",
+    "implementationPr": "https://github.com/jayeshsuyal/ablatrix/pull/37",
+    "independentReview": "completed_no_remaining_findings",
+    "botReview": "completed_no_remaining_findings",
+    "protectedArtifacts": 111,
+    "protectedArtifactsChanged": 0
+  },
+  "newProviderCallsAtPreparation": 0,
+  "startingAttempts": 86,
+  "startingPending": 0,
+  "maximumAdditionalCalls": 10,
+  "additionalPlanningAllowanceUsd": 1,
+  "qualityClaimEligible": false,
+  "productionActivationQualified": false,
+  "humanGold": false
+}
