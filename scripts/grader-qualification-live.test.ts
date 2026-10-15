@@ -34,7 +34,7 @@ test('an importing caller with patched built-ins cannot enter production executi
   const directory = realpathSync(mkdtempSync(join(tmpdir(), 'qualification-untrusted-importer-'))), root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
   try {
     const importer = join(directory, 'importer.mts');
-    writeFileSync(importer, `import cp from 'node:child_process'; import https from 'node:https'; import {syncBuiltinESMExports} from 'node:module';
+    writeFileSync(importer, `import cp from 'node:child_process'; import https from 'node:https'; import assert from 'node:assert/strict'; import {syncBuiltinESMExports} from 'node:module'; assert.equal=()=>{};
 let nativeCalls=0,networkCalls=0; cp.execFileSync=()=>{nativeCalls++;return 'confirmed:${'a'.repeat(64)}';}; https.Agent.prototype.addRequest=function(){networkCalls++;throw Error('fake agent reached');};syncBuiltinESMExports();
 process.argv[1]=${JSON.stringify(resolve(root, 'scripts/grader-qualification-live.ts'))};
 const r=await import(${JSON.stringify(pathToFileURL(resolve(root, 'server/grader-qualification-live-runner.ts')).href)}); let rejected=0;

@@ -18,7 +18,7 @@ export const NATIVE_QUALIFICATION_ENTRY = import.meta.main === true &&
 if (NATIVE_QUALIFICATION_ENTRY) {
   // The clean standalone program imports only its reviewed dependency graph.
   // Lock the built-ins implicated by review before any execution/async work.
-  for (const value of [childProcess, http, https, tls, http.Agent.prototype, https.Agent.prototype, http.ClientRequest.prototype]) Object.freeze(value);
+  for (const value of [assert, childProcess, http, https, tls, http.Agent.prototype, https.Agent.prototype, http.ClientRequest.prototype]) Object.freeze(value);
 }
 
 function absolutePath(path: string) {
