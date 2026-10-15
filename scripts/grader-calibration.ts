@@ -6,7 +6,7 @@ import { prepareCalibrationPlan, verifyCalibrationPlan, type CalibrationPlan } f
 import { SapiomFeedbackProvider } from '../server/feedback-provider.ts';
 import { executeGraderCalibration, verifyGraderCalibrationCheckpoint, type CalibrationExecutionOptions } from '../server/grader-calibration-runner.ts';
 import { assertCalibrationMerged, assertCalibrationStartingLedger, calibrationCodeHashes, defaultCalibrationScope, inspectCalibrationExecutionBoundary,
-  inspectCalibrationWorkers, readCalibrationLedgerState, readCalibrationReceipts, validateCalibrationScope, type CalibrationScope } from '../server/grader-calibration-boundary.ts';
+  inspectCalibrationWorkers, readCalibrationLedgerState, readCalibrationReceipts, validateCalibrationScope, calibrationCredentialOptions, type CalibrationScope } from '../server/grader-calibration-boundary.ts';
 
 function exclusiveJson(path: string, value: unknown, mode = 0o444) {
   mkdirSync(dirname(resolve(path)), { recursive: true });
@@ -85,6 +85,7 @@ async function runCalibrationCli(argv: string[]) {
       validateCalibrationScope(scope); calibrationCodeHashes(plan.implementationCommit);
       assertCalibrationStartingLedger(readCalibrationLedgerState(scope.budgetPath));
       const state = readCalibrationLedgerState(scope.budgetPath); assert.equal(state.initialSha256, scope.ledgerInitialSha256); assert.equal(state.activeOwners, 0, 'Another provider currently owns the shared ledger.');
+      calibrationCredentialOptions(env);
       inspectCalibrationWorkers(scope);
     },
     inspectBoundary: boundary => {
@@ -98,7 +99,8 @@ async function runCalibrationCli(argv: string[]) {
       const state = readCalibrationLedgerState(scope.budgetPath); assertCalibrationStartingLedger(state);
       assert.equal(state.initialSha256, scope.ledgerInitialSha256); assert.equal(state.activeOwners, 0);
       inspectCalibrationWorkers(scope); calibrationCodeHashes(plan.implementationCommit);
-      return new SapiomFeedbackProvider({ enabled: true, dbPath: scope.budgetPath, callLimit: 96, capUsd: 10, priorSpendUsd: .200281, allowancePerCallUsd: .1, fetchImpl, operationGuard });
+      const { apiKey, credentialsFile } = calibrationCredentialOptions(env);
+      return new SapiomFeedbackProvider({ enabled: true, apiKey, credentialsFile, dbPath: scope.budgetPath, callLimit: 96, capUsd: 10, priorSpendUsd: .200281, allowancePerCallUsd: .1, fetchImpl, operationGuard });
     },
     transport: globalThis.fetch, readLedgerReceipts: readCalibrationReceipts
   });

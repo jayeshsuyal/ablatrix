@@ -1,13 +1,29 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, realpathSync, rmSync } from 'node:fs';
+import { mkdtempSync, realpathSync, rmSync, mkdirSync, writeFileSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { SapiomFeedbackProvider } from './feedback-provider.ts';
 import { calibrationFixtureDataset } from './grader-calibration-fixtures.ts';
 import { claimSupportRequestParts } from './claim-support.ts';
-import { assertCalibrationStartingLedger, readCalibrationLedgerState, validateCalibrationScope, defaultCalibrationScope, type CalibrationScope } from './grader-calibration-boundary.ts';
+import { assertCalibrationStartingLedger, readCalibrationLedgerState, validateCalibrationScope, defaultCalibrationScope, calibrationCredentialOptions, type CalibrationScope } from './grader-calibration-boundary.ts';
+
+test('pilot credentials accept explicit project or standard account sources without reading their contents', () => {
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'ablatrix-calibration-credential-')));
+  const root = join(dir, 'project'), account = join(dir, 'home/.sapiom/credentials.json'), owned = join(root, '.private/credentials.json'), unrelated = join(dir, 'other-repository/credentials.json');
+  for (const path of [owned, account, unrelated]) { mkdirSync(join(path, '..'), { recursive: true }); writeFileSync(path, 'NOT JSON: metadata validation must never parse credentials.'); }
+  const choose = (env: NodeJS.ProcessEnv) => calibrationCredentialOptions(env, root, account);
+  try {
+    assert.equal(choose({ SAPIOM_CREDENTIALS_FILE: owned }).source, 'explicit_project_file');
+    assert.equal(choose({ SAPIOM_CREDENTIALS_FILE: account }).source, 'explicit_user_sapiom_account');
+    assert.deepEqual(choose({ SAPIOM_API_KEY: 'SYNTHETIC test placeholder', SAPIOM_CREDENTIALS_FILE: unrelated }), { apiKey: 'SYNTHETIC test placeholder', credentialsFile: '', source: 'explicit_environment' });
+    assert.throws(() => choose({ SAPIOM_CREDENTIALS_FILE: unrelated }), /unrelated repository/);
+    assert.throws(() => choose({}), /explicit canonical/);
+    const link = join(root, '.private/linked.json'); symlinkSync(unrelated, link);
+    assert.throws(() => choose({ SAPIOM_CREDENTIALS_FILE: link }), /symlinks/);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
 
 test('guarded grader reservations bind pending inputs before transport and cannot retry an unknown guard outcome', async () => {
   const input = { runId: 'neutral-guarded-operation', ...calibrationFixtureDataset().cases[0].input };

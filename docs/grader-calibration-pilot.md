@@ -59,6 +59,8 @@ The optional prepare flag `--scope <scope.json>` freezes explicit application da
 
 The live process must explicitly set `ABLATRIX_GRADER_CALIBRATION_LIVE=1`, `ABLATRIX_LOOP_LIVE=1`, `ABLATRIX_LOOP_CALL_LIMIT=96`, the frozen `ABLATRIX_LOOP_BUDGET_DB`, `ABLATRIX_SPEND_CAP_USD=10`, `ABLATRIX_LOOP_PRIOR_SPEND_USD=0.200281` and `ABLATRIX_LOOP_ALLOWANCE_USD=0.10`. It also requires `ABLATRIX_REVISION_WEB=0`, `ABLATRIX_AUTOMATIC_CHECK_LIVE=0`, `ABLATRIX_ANSWER_POLICY_SHADOW_LIVE=0` and `ABLATRIX_LANGFUSE_ENABLED=0`. Use temporary process environment settings; app/live defaults and persisted `.env` remain unchanged.
 
+Credential selection is explicit: an environment API key, a canonical file within the Ablatrix project, or the explicitly configured standard user account file `~/.sapiom/credentials.json`. Metadata checks reject arbitrary unrelated-checkout paths and symlinks before intent creation and again before provider construction. Both credential options are passed explicitly, preventing the provider from falling back to an unchecked ambient file. The standard account file is user-level Sapiom configuration, not another repository's credentials.
+
 ```sh
 npm run grader:calibration -- --execute \
   --plan /absolute/path/to/reviewed-frozen-plan.json \

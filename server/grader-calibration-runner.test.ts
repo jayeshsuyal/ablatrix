@@ -213,6 +213,7 @@ test('a historical change while the final response body streams cannot publish a
     assert.equal(result.report.checkpointProof.records.at(-1)?.kind, 'stopped');
     assert.match(result.report.checkpointProof.records.at(-1)?.reason ?? '', /after_operation_boundary_failed/);
     assert.match(result.report.checkpointProof.records.at(-1)?.reason ?? '', /before_report_publish_boundary_failed/);
+    assert.deepEqual(result.report.terminal.stopReasons, ['after_operation_boundary_failed', 'before_report_publish_boundary_failed']);
   } finally { headersObserved(); fixture.cleanup(); }
 });
 
@@ -230,6 +231,7 @@ test('the final boundary runs after provider close and can stop ten otherwise va
     const result = await executeGraderCalibration(fixture.options, fixture.dependencies);
     assert.equal(result.report.complete, false); assert.equal(result.report.slots.filter(slot => ['accepted', 'rejected', 'uncertain'].includes(slot.status)).length, 10);
     assert.equal(result.report.checkpointProof.records.at(-1)?.kind, 'stopped'); assert.match(result.report.checkpointProof.records.at(-1)?.reason ?? '', /before_report_publish_boundary_failed/);
+    assert.deepEqual(result.report.terminal.stopReasons, ['before_report_publish_boundary_failed']);
     assert.deepEqual(verifyGraderCalibrationCheckpoint(fixture.options, fixture.dependencies).report, result.report);
   } finally { fixture.cleanup(); }
 });

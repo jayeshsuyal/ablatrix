@@ -3,6 +3,7 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { existsSync, lstatSync, readFileSync, realpathSync } from 'node:fs';
 import { isAbsolute, resolve } from 'node:path';
+import { homedir } from 'node:os';
 import { DatabaseSync } from 'node:sqlite';
 import { fileURLToPath } from 'node:url';
 import { inspectDiagnosticApp } from './source-id-diagnostic.ts';
@@ -16,6 +17,17 @@ export const CALIBRATION_CODE_FILES = [
 ] as const;
 export const calibrationRepository = fileURLToPath(new URL('../', import.meta.url));
 export const calibrationSharedBudgetPath = resolve(calibrationRepository, '../repo/.data/feedback-budget.sqlite');
+
+/** Validate metadata only, before the provider reads credential contents. */
+export function calibrationCredentialOptions(env: NodeJS.ProcessEnv,
+  projectRoot = resolve(calibrationRepository, '..'), accountFile = resolve(homedir(), '.sapiom/credentials.json')) {
+  if (env.SAPIOM_API_KEY?.trim()) return { apiKey: env.SAPIOM_API_KEY, credentialsFile: '', source: 'explicit_environment' as const };
+  const configured = env.SAPIOM_CREDENTIALS_FILE;
+  assert.ok(configured && isAbsolute(configured) && configured === resolve(configured), 'An explicit canonical project or Sapiom account credential source is required.');
+  assert.ok(configured.startsWith(`${projectRoot}/`) || configured === accountFile, 'Calibration cannot read a credential file from an unrelated repository.');
+  canonicalPath(configured, true);
+  return { apiKey: '', credentialsFile: configured, source: configured === accountFile ? 'explicit_user_sapiom_account' as const : 'explicit_project_file' as const };
+}
 export type CalibrationScope = Record<string, string>;
 const pathKeys = ['repositoryPath', 'budgetPath', 'reviewPath', 'appDbPath', 'loopDbPath', 'workspaceDbPath', 'runtimePolicyDbPath', 'claimDirectory'] as const;
 

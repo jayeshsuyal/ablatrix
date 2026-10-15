@@ -194,7 +194,8 @@ export async function executeGraderCalibration(options: CalibrationExecutionOpti
   // terminal or immutable report is published until this final scan passes.
   try { await inspect('before_report_publish', active?.slot, active?.attemptId); }
   catch { stopReasons.push('before_report_publish_boundary_failed'); }
-  checkpoint(stopReasons.length ? 'stopped' : 'finished', stopReasons.length ? { reason: [...new Set(stopReasons)].join('; ') } : {});
+  const uniqueStopReasons = [...new Set(stopReasons)];
+  checkpoint(uniqueStopReasons.length ? 'stopped' : 'finished', uniqueStopReasons.length ? { reason: uniqueStopReasons.join('; '), stopReasons: uniqueStopReasons } : {});
   const result = verifyGraderCalibrationCheckpoint(frozen, dependencies);
   exclusive(locations.reportPath, `${JSON.stringify(result.report, null, 2)}\n`, 0o444);
   chmodSync(locations.reportPath, 0o444);
