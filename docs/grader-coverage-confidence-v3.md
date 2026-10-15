@@ -2,7 +2,7 @@
 
 The [v2 live test](evidence/grader-abstention-2026-10-14/live-results.md) returned five valid grades but matched every frozen axis on only three cases. It called an unnecessary refusal complete and missed the overconfidence of an unsupported assertion beside a valid refusal. V3 adds an explicit rubric and worked development examples for those two failures.
 
-**Current status:** implementation and offline verification complete; the fresh live test is unexecuted. The previous 96-call / $10 planning scope is exhausted. The proposed six-call scope below requires fresh budget approval before dispatch.
+**Current status:** implementation merged in [PR #42](https://github.com/jayeshsuyal/ablatrix/pull/42), with successful CI and completed bot review. The [exact six-case plan](evidence/grader-coverage-confidence-2026-10-15/frozen-plan-v1.json), [AI source review](evidence/grader-coverage-confidence-2026-10-15/source-review-v1.json) and [offline verification record](evidence/grader-coverage-confidence-2026-10-15/offline-qualification-v1.json) are frozen; the live test is unexecuted. The previous 96-call / $10 planning scope is exhausted. The proposed six-call scope below requires fresh budget approval before dispatch.
 
 ## Contract
 
@@ -11,7 +11,7 @@ Select `graderVersion: 'claim-support-v3-coverage-confidence'` explicitly. Omitt
 - **Completeness:** supply every requested fact available in the supplied sources. A topical refusal or an omitted second requested detail is incomplete. Appropriately withholding an absent fact can be complete.
 - **Confidence:** assess every original product assertion. A categorical unsupported addition is overconfident even beside an appropriate refusal. An explicit unknown qualifier does not assert that capability.
 - **Independent axes:** a supported partial answer can be incomplete. Unsupported extra content does not erase a supported requested fact. Answerability concerns the original question; source correctness does not establish external physical truth.
-- **Literal proof:** `supported` and `contradicted` still require exact source quotes. No output is silently repaired into a valid grade.
+- **Literal proof:** `supported` and `contradicted` still require exact source quotes. Matching checks quote provenance; semantic support remains an AI estimate. No output is silently repaired into a valid grade.
 
 Worked examples teach these patterns using different fictional products and values from the test. This makes the test a **guided development smoke**, not held-out qualification.
 
@@ -55,7 +55,7 @@ npm run grader:calibration -- --prepare \
 npm run grader:calibration -- --verify --plan /absolute/path/to/a-new-plan.json
 ```
 
-Publish that plan and its source review before requesting approval of the new financial scope. Only `--execute`, with the exact plan acknowledgement, explicit live opt-ins, 102-call limit and $11 planning cap, can dispatch. No elapsed wait or offline preparation counts as approval. After execution, verify saved receipts without new provider calls:
+Publish that plan and its source review before requesting approval of the new financial scope. Only `--execute`, with the exact plan acknowledgement, explicit live opt-ins, `ABLATRIX_LOOP_CALL_LIMIT=102` and `ABLATRIX_SPEND_CAP_USD=11`, can dispatch. These replace the historical guide's 96/$10 settings only for this new protocol. No elapsed wait or offline preparation counts as approval. After execution, verify saved receipts without new provider calls:
 
 ```sh
 npm run grader:calibration -- --replay \

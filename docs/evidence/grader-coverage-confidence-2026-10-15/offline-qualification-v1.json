@@ -1,0 +1,41 @@
+{
+  "format": "coverage-confidence-smoke-offline-qualification-v1",
+  "createdAt": "2026-10-15T17:06:12.558Z",
+  "planSha256": "3eb5ddde12ef4dbdcfa0113c35bd8ac699cb8193d760b9999093246c3aa56e06",
+  "implementationCommit": "77f5532904e1bcf68b9c33abc1063c01334aa78b",
+  "sourceReviewSha256": "bb7c7681c4d9d37f683d0e2c09575fef70fcf063c8c8f10e88c23a0475faef3b",
+  "verification": {
+    "focusedPassed": 59,
+    "localServerPassed": 433,
+    "localServerPlatformSkipped": 1,
+    "ciServerPassed": 434,
+    "ciChromiumPassed": 41,
+    "ciPythonPassed": 7,
+    "auditVulnerabilities": 0,
+    "build": "passed",
+    "cliTypecheck": "passed",
+    "exactHeadCi": "https://github.com/jayeshsuyal/ablatrix/actions/runs/38773966289",
+    "implementationPr": "https://github.com/jayeshsuyal/ablatrix/pull/42",
+    "independentCodeReview": "completed_no_remaining_findings",
+    "botReview": "completed_no_remaining_findings",
+    "protectedArtifacts": 128,
+    "protectedArtifactsChanged": 0
+  },
+  "newProviderCallsAtPreparation": 0,
+  "budget": {
+    "startingAttempts": 96,
+    "startingPending": 0,
+    "startingReservedUsd": 9.6,
+    "priorSpendUsd": 0.200281,
+    "newCalls": 6,
+    "allowancePerCallUsd": 0.1,
+    "absoluteCallLimit": 102,
+    "spendingCapUsd": 11,
+    "maxPlanningExposureUsd": 10.400281
+  },
+  "executionApproval": "pending_new_user_financial_scope_approval",
+  "humanGold": false,
+  "productionCalibrationQualified": false,
+  "qualityClaimEligible": false,
+  "versionPolicy": "Explicit opt-in v3 only. Existing workers and omitted selectors retain v1. V1/v2 wire bytes, receipts and historical outcomes remain unchanged. Earlier v2 all-axis result remains 3/5."
+}
