@@ -43,6 +43,7 @@ These are local planning allowances, **not settled charges or a provider-enforce
 ## Guardrails and evidence
 
 - The production entry point accepts only the frozen plan path and its exact acknowledgement. It owns the actual ledger reader, canonical caller scope and Router transport. No injected provider, transport, receipt JSON or caller-selected `live` flag can certify a result.
+  Production uses a captured Node HTTPS request function with a fixed TLS host/path, certificate validation and no shared global agent. It never reads the caller's mutable global `fetch`; low-level wire mocks are separate mechanics tests.
 - Dispatch obtains approval directly from the system-owned native dialog interpreter, with no stdin, environment, file or caller hook supplying the confirmation result. Saved approval/confirmation fields are audit bindings, not cryptographic authentication of a human identity or standalone dispatch authority. Scope and worker checks repeat after confirmation and before cohort consumption/provider construction.
   The operator must complete the native confirmation; agents must not automate its text entry or approval button.
 - Private exclusive claims use the dataset hash. A new output path, rehashed plan or different run IDs cannot reopen this cohort. An interrupted append fails closed; replay never repairs or resumes it.

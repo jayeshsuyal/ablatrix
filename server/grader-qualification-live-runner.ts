@@ -5,6 +5,7 @@ import { dirname, isAbsolute, resolve } from 'node:path';
 import { CLAIM_SUPPORT_TOOL, type ClaimSupportInput } from './claim-support.ts';
 import { SapiomFeedbackProvider, type FeedbackProviderOptions } from './feedback-provider.ts';
 import { confirmNativeQualification, verifyNativeConfirmationMetadata, type NativeQualificationConfirmation } from './grader-qualification-live-authorization.ts';
+import { qualificationRouterTransport } from './grader-qualification-live-transport.ts';
 import { qualificationHash as sha } from './grader-qualification.ts';
 import { assertLiveQualificationMerged, assertLiveQualificationStartingLedger, calibrationCredentialOptions, defaultLiveQualificationScope, inspectLiveQualificationBoundary, qualificationLiveCodeHashes, readLiveQualificationLedger, readLiveQualificationReceipts, validateLiveScope, type LiveQualificationBoundary, type LiveQualificationReceipt } from './grader-qualification-live-boundary.ts';
 import { appendQualificationJournal, createQualificationJournal, publishQualificationJson, readQualificationJournal, type QualificationJournalBinding } from './grader-qualification-live-journal.ts';
@@ -239,7 +240,7 @@ export async function executeLiveQualification(options: { planPath: string; ackn
       preflight(); inspect({ ledgerInitialSha256: scope.ledgerInitialSha256, allowedRunIds: plan.slots.map(s => s.runId), reservedRunIds: [], transportCount: 0, maxCalls: 92 });
       const { apiKey, credentialsFile } = calibrationCredentialOptions(env);
       return new SapiomFeedbackProvider({ enabled: true, apiKey, credentialsFile, dbPath: scope.budgetPath, callLimit: 194, capUsd: 20, priorSpendUsd: .200281, allowancePerCallUsd: .1, ...hooks });
-    }, transport: globalThis.fetch, receipts: () => readLiveQualificationReceipts(scope, plan.slots.map(s => s.runId))
+    }, transport: qualificationRouterTransport, receipts: () => readLiveQualificationReceipts(scope, plan.slots.map(s => s.runId))
   });
   // Re-read every binding and receipt after provider close. Publication cannot
   // turn a caller-supplied JSON report or synthetic run into certification.
