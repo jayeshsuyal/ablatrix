@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { ABSTENTION_GRADER_VERSION, claimSupportRequestParts, type ClaimSupportDisposition, type ClaimSupportInput, type ClaimSupportUnitGrade, type ClaimSupportWireOutput } from './claim-support.ts';
+import { ABSTENTION_GRADER_VERSION, COVERAGE_CONFIDENCE_GRADER_VERSION, claimSupportRequestParts, type ClaimSupportDisposition, type ClaimSupportInput, type ClaimSupportUnitGrade, type ClaimSupportWireOutput } from './claim-support.ts';
 
 export type CalibrationInputCase = { id: string; familyId: string; input: Omit<ClaimSupportInput, 'runId'> };
 export type CalibrationFixtureCase = CalibrationInputCase;
@@ -27,7 +27,7 @@ export type CalibrationReference = {
   provenance: CalibrationReferenceProvenance;
 };
 export type CalibrationFixtureDataset = {
-  format: 'constructed-grader-pilot-v1' | 'constructed-abstention-smoke-v1';
+  format: 'constructed-grader-pilot-v1' | 'constructed-abstention-smoke-v1' | 'constructed-coverage-confidence-smoke-v1';
   cases: CalibrationInputCase[];
   references: CalibrationReference[];
   families: { id: string; name: string; pattern: string }[];
@@ -142,4 +142,37 @@ export function abstentionCalibrationFixtureDataset(): CalibrationFixtureDataset
     { status: 'answered', answer: 'One level scoop holds 15 milliliters.', citations: [] },
     { answerQuality: 'flawed', acceptableDispositions: ['repair'], support: 'contradicted', questionCoverage: 'complete', uncertaintyHandling: 'overconfident', acceptableAxes: axes('contradicted', 'complete', 'answerable', ['contradicted_by_sources'], 'overconfident'), rationale: 'The asserted 15 milliliters directly conflicts with the same requested unit and relationship stated as exactly 5 milliliters.' });
   return { format: 'constructed-abstention-smoke-v1', cases, references, families, referenceProvenance: provenance() };
+}
+
+/** Six new unpaired cases, including controls against blanket incompleteness
+ * or overconfidence labels. Original pilot inputs/references remain unchanged. */
+export function coverageConfidenceCalibrationFixtureDataset(): CalibrationFixtureDataset {
+  const cases: CalibrationInputCase[] = [], references: CalibrationReference[] = [], families: CalibrationFixtureDataset['families'] = [];
+  function add(seed: string, name: string, text: string, question: string, answer: ClaimSupportInput['answer'], label: Omit<CalibrationReference, 'caseId' | 'familyId' | 'provenance' | 'spans'>) {
+    const familyId = identity(`coverage-confidence-v3:${seed}`), source = { id: sourceId(`coverage-confidence-v3:${seed}`), source: 'Fictional specification', text };
+    const input = { graderVersion: COVERAGE_CONFIDENCE_GRADER_VERSION, question, product: product(`coverage-confidence-v3:${seed}`, `Fictional ${seed}`), evidence: [source], clarifications: [], answer: { ...answer, citations: answer.status === 'answered' ? [{ passageId: source.id, quote: text.split('. ')[0] + (text.includes('. ') ? '.' : '') }] : answer.citations } };
+    const id = digest(JSON.stringify(input)); claimSupportRequestParts({ runId: `coverage-confidence-fixture:${id}`, ...input });
+    cases.push({ id, familyId, input }); families.push({ id: familyId, name, pattern: name });
+    references.push({ caseId: id, familyId, ...label, spans: [{ sourceId: source.id, quote: text, role: label.support === 'supported' ? 'supports' : 'missing_context' }], provenance: provenance() });
+  }
+  const axes = (support: CalibrationReference['support'], questionCoverage: CalibrationReference['questionCoverage'], answerability: ClaimSupportWireOutput['answerability'], correctness: ClaimSupportWireOutput['correctness'][], uncertaintyHandling: CalibrationReference['uncertaintyHandling']) => ({ support: [support], questionCoverage: [questionCoverage], answerability: [answerability], correctness, uncertaintyHandling: [uncertaintyHandling] });
+  add('Zorvik pouch', 'Available requested fact refused', 'The fictional Zorvik pouch has a mass of 180 grams.', 'What mass is specified for the fictional Zorvik pouch?',
+    { status: 'insufficient_evidence', answer: 'I cannot determine its mass from the supplied specification.', citations: [] },
+    { answerQuality: 'flawed', acceptableDispositions: ['repair'], support: 'non_factual', questionCoverage: 'incomplete', uncertaintyHandling: 'unnecessary_abstention', acceptableAxes: axes('non_factual', 'incomplete', 'answerable', ['consistent_with_sources'], 'unnecessary_abstention'), rationale: 'The source directly supplies the requested mass. The pure refusal asserts no product fact, but does not provide an available requested value and is an unnecessary abstention.' });
+  add('Lextar chest', 'One requested dimension omitted', 'The fictional Lextar storage chest is 40 centimeters wide. It is 25 centimeters tall.', 'What width and height are specified for the fictional Lextar storage chest?',
+    { status: 'answered', answer: 'The specified width is 40 centimeters.', citations: [] },
+    { answerQuality: 'flawed', acceptableDispositions: ['repair'], support: 'supported', questionCoverage: 'incomplete', uncertaintyHandling: 'appropriate', acceptableAxes: axes('supported', 'incomplete', 'answerable', ['consistent_with_sources'], 'appropriate'), rationale: 'The stated width has an exact supporting citation and appropriate confidence. The separately requested height is explicitly available but omitted; support does not imply complete coverage.' });
+  add('Berqen tray', 'Cautious refusal plus categorical unsupported claim', 'The fictional Berqen picnic tray is rectangular and has two side handles.', 'What maximum load is specified for the fictional Berqen picnic tray?',
+    { status: 'insufficient_evidence', answer: 'I cannot determine the maximum load from the supplied specification. The tray is dishwasher-safe.', citations: [] },
+    { answerQuality: 'flawed', acceptableDispositions: ['abstain', 'uncertain'], support: 'unsupported', questionCoverage: 'complete', uncertaintyHandling: 'overconfident', acceptableAxes: axes('unsupported', 'complete', 'insufficient', ['consistent_with_sources', 'uncertain'], 'overconfident'), rationale: 'The requested load is absent and properly withheld, but the same unit categorically asserts an unsupported dishwasher capability. The neighboring refusal cannot excuse overconfidence. Absence establishes unsupportedness, not physical falsehood, so the predeclared correctness and routing uncertainty remains acceptable.' });
+  add('Teskir mat', 'Supported answer with explicitly unknown extra capability', 'The fictional Teskir travel mat is 60 centimeters long.', 'What length is specified for the fictional Teskir travel mat?',
+    { status: 'answered', answer: 'The specified length is 60 centimeters. I cannot determine its machine-washability from the supplied specification.', citations: [] },
+    { answerQuality: 'good', acceptableDispositions: ['pass'], support: 'supported', questionCoverage: 'complete', uncertaintyHandling: 'appropriate', acceptableAxes: axes('supported', 'complete', 'answerable', ['consistent_with_sources'], 'appropriate'), rationale: 'The requested length is supplied and cited. The remaining clause explicitly withholds an absent capability rather than asserting a washing property. This checks that v3 does not overcorrect by treating honest qualification as an unsupported product assertion or incomplete answer.' });
+  add('Delsun clip', 'Complete supported factual control', 'The fictional Delsun clip is made of stainless steel.', 'What material is specified for the fictional Delsun clip?',
+    { status: 'answered', answer: 'The specified material is stainless steel.', citations: [] },
+    { answerQuality: 'good', acceptableDispositions: ['pass'], support: 'supported', questionCoverage: 'complete', uncertaintyHandling: 'appropriate', acceptableAxes: axes('supported', 'complete', 'answerable', ['consistent_with_sources'], 'appropriate'), rationale: 'The complete requested material is directly supported by the exact cited source body.' });
+  add('Ubrin sleeve', 'Justified missing-information refusal control', 'The fictional Ubrin storage sleeve is made of cotton and closes with a drawstring.', 'What country of manufacture is specified for the fictional Ubrin storage sleeve?',
+    { status: 'insufficient_evidence', answer: 'I cannot determine its country of manufacture from the supplied specification.', citations: [] },
+    { answerQuality: 'good', acceptableDispositions: ['abstain'], support: 'non_factual', questionCoverage: 'complete', uncertaintyHandling: 'appropriate', acceptableAxes: axes('non_factual', 'complete', 'insufficient', ['consistent_with_sources'], 'appropriate'), rationale: 'The packet contains material and closure information but no country. This pure refusal appropriately covers genuinely missing requested information without inventing proof or making a product-origin assertion.' });
+  return { format: 'constructed-coverage-confidence-smoke-v1', cases, references, families, referenceProvenance: provenance() };
 }

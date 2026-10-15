@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { SapiomFeedbackProvider } from './feedback-provider.ts';
 import { claimSupportAnswerUnits, type ClaimSupportReceipt } from './claim-support.ts';
-import { CALIBRATION_CODE_FILES, calibrationHash, prepareCalibrationPlan, type CalibrationPlan, type CalibrationPlanSlot } from './grader-calibration.ts';
+import { CALIBRATION_CODE_FILES, calibrationBudget, calibrationHash, prepareCalibrationPlan, type CalibrationPlan, type CalibrationPlanSlot, type CalibrationProtocol } from './grader-calibration.ts';
 import { executeGraderCalibration, verifyGraderCalibrationCheckpoint, type CalibrationExecutionDependencies, type CalibrationExecutionOptions } from './grader-calibration-runner.ts';
 
 function seedLedger(path: string, count = 86) {
@@ -24,8 +24,8 @@ function fixtureOutput(slot: CalibrationPlanSlot, wrong = false) {
     questionCoverage: wrong ? 'complete' : reference.questionCoverage, answerability: wrong ? 'answerable' : reference.acceptableAxes.answerability[0], correctness: wrong ? 'consistent_with_sources' : reference.acceptableAxes.correctness[0], uncertaintyHandling: wrong ? 'appropriate' : reference.uncertaintyHandling, reason: 'SYNTHETIC mechanics fixture; no live calibration evidence.' };
 }
 function response(output: unknown) { return new Response(JSON.stringify({ model: 'gpt-luna', usage: { prompt_tokens: 100, completion_tokens: 60 }, choices: [{ finish_reason: 'tool_calls', message: { tool_calls: [{ function: { name: 'claim_support_v1', arguments: JSON.stringify(output) } }] } }] })); }
-function setup(protocol?: 'abstention-v2-five') {
-  const starting = protocol ? 91 : 86;
+function setup(protocol?: CalibrationProtocol) {
+  const budget = calibrationBudget(protocol), starting = budget.startingAttempts;
   const directory = mkdtempSync(join(tmpdir(), 'grader-calibration-runner-')), ledgerPath = join(directory, 'ledger.sqlite'); seedLedger(ledgerPath, starting);
   const historical = calibrationHash(rows(ledgerPath));
   const callerScope = { repositoryPath: directory, budgetPath: ledgerPath, reviewPath: join(directory, 'review.sqlite'), appDbPath: join(directory, 'app.sqlite'), loopDbPath: join(directory, 'loop.sqlite'), workspaceDbPath: join(directory, 'workspace.sqlite'), runtimePolicyDbPath: join(directory, 'runtime.sqlite'), claimDirectory: join(directory, 'claims'), configuredPort: '4194', initiatingThreadId: 'mocked-runner-test', executionAuthority: 'parent_execution_only', ledgerInitialSha256: historical };
@@ -48,9 +48,9 @@ function setup(protocol?: 'abstention-v2-five') {
       boundaries.push(boundary.phase);
       const all = rows(ledgerPath), historicalNow = all.filter(row => String(row.id).startsWith('scripted-historical-metadata-'));
       assert.equal(calibrationHash(historicalNow), historical);
-      assert.equal(all.length, starting + boundary.reservedRunIds.length); assert.ok(all.length <= 96);
+      assert.equal(all.length, starting + boundary.reservedRunIds.length); assert.ok(all.length <= budget.absoluteCallLimit);
       const reservation = all.reduce((sum, row) => sum + Number(row.allowance_usd), 0);
-      assert.ok(reservation <= 9.6 + 1e-9); assert.ok(.200281 + reservation <= 10);
+      assert.ok(reservation <= budget.startingReservedUsd + budget.newCalls * budget.allowancePerCallUsd + 1e-9); assert.ok(budget.priorSpendUsd + reservation <= budget.spendingCapUsd);
       const pending = all.filter(row => row.status === 'pending');
       assert.ok(pending.every(row => row.run_id === boundary.runId));
       if (boundary.phase === 'preflight') { assert.equal(factoryCalls, 0); preflightBoundaryDone = true; }
@@ -61,7 +61,7 @@ function setup(protocol?: 'abstention-v2-five') {
         assert.equal(String(pending[0].id), boundary.attemptId);
       }
     },
-    createProvider(hooks) { factoryCalls++; assert.ok(preflightDone && preflightBoundaryDone); return new SapiomFeedbackProvider({ enabled: true, apiKey: 'synthetic-placeholder', credentialsFile: '', dbPath: ledgerPath, capUsd: 10, priorSpendUsd: .200281, allowancePerCallUsd: .1, callLimit: 96, ...hooks }); },
+    createProvider(hooks) { factoryCalls++; assert.ok(preflightDone && preflightBoundaryDone); return new SapiomFeedbackProvider({ enabled: true, apiKey: 'synthetic-placeholder', credentialsFile: '', dbPath: ledgerPath, capUsd: budget.spendingCapUsd, priorSpendUsd: budget.priorSpendUsd, allowancePerCallUsd: budget.allowancePerCallUsd, callLimit: budget.absoluteCallLimit, ...hooks }); },
     async transport(url, init) {
       networkCalls++; assert.equal(url, 'https://router.sapiom.ai/v1/chat/completions'); assert.equal(init?.redirect, 'error'); assert.ok(init?.signal);
       const slot = plan.slots[networkCalls - 1]; assert.deepEqual(JSON.parse(String(init?.body)), slot.requestBody); return response(fixtureOutput(slot));
@@ -114,6 +114,38 @@ test('fresh five-call smoke stops at the first invalid or unknown result with al
       assert.equal(result.report.metrics.overall.expectedBad, 3); assert.equal(result.report.accounting.reservedSlots, 1); assert.equal(rows(fixture.ledgerPath).length, 92);
       assert.deepEqual(verifyGraderCalibrationCheckpoint(fixture.options, fixture.dependencies).report, result.report);
       await assert.rejects(executeGraderCalibration(fixture.options, fixture.dependencies), /existing durable intent/); assert.equal(calls, 1);
+    } finally { fixture.cleanup(); }
+  }
+});
+
+test('v3 smoke binds its new six-call scope while the older budgets retain their limits', async () => {
+  const fixture = setup('coverage-confidence-v3-six');
+  try {
+    assert.equal(fixture.plan.format, 'grader-coverage-confidence-smoke-plan-v1'); assert.equal(fixture.plan.slots.length, 6); assert.equal(fixture.plan.families.length, 6);
+    assert.equal(fixture.plan.budget.startingAttempts, 96); assert.equal(fixture.plan.budget.absoluteCallLimit, 102); assert.equal(fixture.plan.budget.spendingCapUsd, 11);
+    const result = await executeGraderCalibration(fixture.options, fixture.dependencies);
+    assert.equal(result.report.complete, true); assert.equal(result.report.format, 'grader-coverage-confidence-smoke-report-v1');
+    assert.equal(result.report.accounting.exactTransportCount, 6); assert.equal(result.report.accounting.reservedPlanningAllowanceUsd, .6); assert.equal(result.report.accounting.maxPlanningExposureUsd, 10.400281);
+    assert.equal(result.report.metrics.overall.referenceAgreements, 6); assert.equal(result.report.metrics.overall.expectedBad, 3); assert.equal(result.report.metrics.overall.appropriateAbstentions, 1);
+    assert.equal(rows(fixture.ledgerPath).length, 102); assert.equal(fixture.counts().networkCalls, 6); assert.equal(result.report.productionActivationQualified, false);
+    assert.deepEqual(verifyGraderCalibrationCheckpoint(fixture.options, fixture.dependencies).report, result.report);
+    await assert.rejects(executeGraderCalibration(fixture.options, fixture.dependencies), /existing durable intent/); assert.equal(fixture.counts().networkCalls, 6);
+    assert.equal(calibrationBudget().absoluteCallLimit, 96); assert.equal(calibrationBudget('abstention-v2-five').spendingCapUsd, 10);
+  } finally { fixture.cleanup(); }
+});
+
+test('v3 never dispatches with the old exhausted provider limits and stops after an invalid or unknown result', async () => {
+  for (const outcome of ['old-limits', 'invalid', 'unknown'] as const) {
+    const fixture = setup('coverage-confidence-v3-six'); let calls = 0;
+    if (outcome === 'old-limits') fixture.dependencies.createProvider = hooks => new SapiomFeedbackProvider({ enabled: true, apiKey: 'SYNTHETIC fixture', credentialsFile: '', dbPath: fixture.ledgerPath, capUsd: 10, priorSpendUsd: .200281, allowancePerCallUsd: .1, callLimit: 96, ...hooks });
+    fixture.dependencies.transport = async () => { calls++; if (outcome === 'unknown') throw new Error('Synthetic unknown transport'); return response({ ...fixtureOutput(fixture.plan.slots[0]), units: [] }); };
+    try {
+      const result = await executeGraderCalibration(fixture.options, fixture.dependencies);
+      assert.equal(result.report.complete, false); assert.equal(result.report.metrics.overall.expectedBad, 3);
+      assert.equal(calls, outcome === 'old-limits' ? 0 : 1); assert.equal(rows(fixture.ledgerPath).length, outcome === 'old-limits' ? 96 : 97);
+      assert.equal(result.report.slots.filter(slot => slot.status === 'unattempted').length, outcome === 'old-limits' ? 6 : 5);
+      assert.deepEqual(verifyGraderCalibrationCheckpoint(fixture.options, fixture.dependencies).report, result.report);
+      await assert.rejects(executeGraderCalibration(fixture.options, fixture.dependencies), /existing durable intent/);
     } finally { fixture.cleanup(); }
   }
 });
