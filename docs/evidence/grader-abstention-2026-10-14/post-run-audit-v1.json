@@ -1,0 +1,149 @@
+{
+  "format": "abstention-smoke-post-run-audit-v1",
+  "createdAt": "2026-10-15T05:42:43.423Z",
+  "planSha256": "7d9f87b2587defcc187160cdefaa4c394e60778ef5befd7f75493579123ebfcf",
+  "implementationCommit": "ec81013c79ba7784be84cde9ad07f30f2c33f1d2",
+  "reportSha256": "6c655d56278093c87848c247a57ec09cc844bd792db30168eacc9ec42b27e2d5",
+  "artifactFileSha256": {
+    "frozen-plan-v1.json": "15577abee477649bd6753577f37b8ccc9691cb13c0a69ed302a8ed5fab8f7cda",
+    "source-review-v1.json": "108b17dfc5e5883a17726741a254a443944d5f4f7bae3d08ede292b58a1a5491",
+    "offline-qualification-v1.json": "61cf2943aa3c5d7f193e184f3d0aa31b7fe907eeb12d8e748b87bf816c16ba0e",
+    "live-report-v1.json": "0864cb42e4980e141eb29772befa78b1b274a0d146f2ceb5ab6b12dfbbd23476"
+  },
+  "preDispatchPublicationCommit": "1af3c8e",
+  "smokeGate": {
+    "criteria": {
+      "allFrozenCasesValid": true,
+      "allReferenceAxesMatch": true,
+      "flawedRawPassesAllowed": 0,
+      "scope": "development_smoke_only",
+      "productionCalibrationQualified": false
+    },
+    "status": "failed",
+    "allFrozenCasesValid": true,
+    "allReferenceAxesMatch": false,
+    "flawedRawPasses": 0,
+    "failedCases": [
+      {
+        "index": 2,
+        "caseId": "e60fd1788e1fda19012186b5e5deaed9b62b494eb2cf9b96354ea7dcd4c04f74",
+        "family": "Unnecessary refusal of an available fact",
+        "axes": [
+          "coverage"
+        ]
+      },
+      {
+        "index": 3,
+        "caseId": "72d1dd5b29d707b47d6b78af993e0be1dcca27bbe24d4b8c1d3241ebd82b4248",
+        "family": "Refusal with an unsupported factual addition",
+        "axes": [
+          "uncertainty"
+        ]
+      }
+    ]
+  },
+  "regression": {
+    "pureAppropriateAbstention": {
+      "valid": true,
+      "unitVerdict": "non_factual",
+      "proofCount": 0,
+      "disposition": "abstain",
+      "allReferenceAxesMatch": true
+    },
+    "interpretation": "The abstention proof-contract regression behaved as intended on one fresh constructed example. The broader predeclared smoke gate still failed."
+  },
+  "execution": {
+    "plannedCalls": 5,
+    "exactTransportCount": 5,
+    "validGrades": 5,
+    "invalid": 0,
+    "unknown": 0,
+    "unattempted": 0,
+    "observedHttp200": 5,
+    "automaticRetries": 0
+  },
+  "referenceAgreement": {
+    "routing": {
+      "numerator": 5,
+      "denominator": 5
+    },
+    "fullAxes": {
+      "numerator": 3,
+      "denominator": 5
+    },
+    "axes": {
+      "support": {
+        "numerator": 5,
+        "denominator": 5
+      },
+      "coverage": {
+        "numerator": 4,
+        "denominator": 5
+      },
+      "uncertainty": {
+        "numerator": 4,
+        "denominator": 5
+      },
+      "answerability": {
+        "numerator": 5,
+        "denominator": 5
+      },
+      "correctness": {
+        "numerator": 5,
+        "denominator": 5
+      }
+    },
+    "flawedRawPasses": {
+      "numerator": 0,
+      "denominator": 3
+    },
+    "appropriateAbstentions": {
+      "numerator": 1,
+      "denominator": 1
+    }
+  },
+  "ledger": {
+    "startingAttempts": 91,
+    "endingAttempts": 96,
+    "pending": 0,
+    "activeOwners": 0,
+    "first91HistoricalReceiptsUnchanged": true,
+    "first91Sha256": "5a76ad25a9a3d736b1073eaecfba980fc67b4549064c565055327f82c8837c54",
+    "newReservedAllowanceUsd": 0.5,
+    "totalReservedAllowanceUsd": 9.6,
+    "priorSpendAdjustmentUsd": 0.200281,
+    "combinedLocalPlanningUsageUsd": 9.800281,
+    "accounting": "local_planning_allowances_not_settled_charges"
+  },
+  "providerReportedUsage": {
+    "inputTokens": 6261,
+    "outputTokens": 775,
+    "receiptsWithUsage": 5,
+    "allRecordedResponsesIncluded": true,
+    "settledProviderChargesKnown": false
+  },
+  "replay": {
+    "exactCurrentCodePlanClaimCheckpointAndTrustedLedger": "passed",
+    "newProviderCalls": 0,
+    "reportMutated": false
+  },
+  "protectedArtifacts": {
+    "checked": 122,
+    "changed": 0
+  },
+  "referenceAuthorship": "ai_authored_constructed_reference",
+  "humanGold": false,
+  "externalTruthVerified": false,
+  "productionCalibrationQualified": false,
+  "qualityClaimEligible": false,
+  "existingAutomaticWorkerGrader": "claim-support-v1",
+  "candidateGrader": "claim-support-v2-abstention",
+  "livePolicyActivation": "closed",
+  "limitations": [
+    "Five fresh unpaired fictional examples form a development smoke test, not a general calibration benchmark.",
+    "All five valid dispositions match the predeclared acceptable sets, but coverage and uncertainty each disagree on one case; labels remain unchanged.",
+    "The comparison is not a paired old/new grader experiment and establishes no measured general quality improvement.",
+    "No candidate rollout, learned-policy activation, answer generation or training occurred."
+  ],
+  "auditSha256": "ba1e7fccec2e300cdf8ccc5eb073c684fdc7417c23bdc3611b02399b79ed1ad5"
+}
