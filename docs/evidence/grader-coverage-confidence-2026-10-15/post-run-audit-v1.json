@@ -1,0 +1,210 @@
+{
+  "format": "coverage-confidence-smoke-post-run-audit-v1",
+  "createdAt": "2026-10-15T17:12:20.151Z",
+  "planSha256": "3eb5ddde12ef4dbdcfa0113c35bd8ac699cb8193d760b9999093246c3aa56e06",
+  "implementationCommit": "77f5532904e1bcf68b9c33abc1063c01334aa78b",
+  "reportSha256": "4d06d00dc8c6a50e0f14f86ed9cb44b973def40a61c758a4f746e99e680d24bf",
+  "artifactFileSha256": {
+    "frozen-plan-v1.json": "066247fcf9fd540788907dd6b9d08531265de1d6a518b6696150c926d488a77b",
+    "source-review-v1.json": "80b656c9317a56e103533cd719b2e88b614af18f06afa1ca1dd0996ae94f3bf3",
+    "offline-qualification-v1.json": "311a33fdea07191894c43c830901dd34fdf70aa4a8b96d2ad8459a57526d8b08",
+    "execution-authorization-v1.json": "abd0f0498cdf4717afdb76143a5a04351b3f1f223eab6710f914bf22e457f65f",
+    "live-report-v1.json": "c9025718f8e6ae006b2abdd16b6373bce815c69949763b4382f46d005ba462a9"
+  },
+  "preDispatchPlanPublicationCommit": "36c35046f6cc8dd6c79ef6686267d43347d444ee",
+  "preDispatchApprovalPublicationCommit": "fc8ad291d548523e27fc653f56ed958a326f691a",
+  "smokeGate": {
+    "criteria": {
+      "allFrozenCasesValid": true,
+      "allReferenceAxesMatch": true,
+      "flawedRawPassesAllowed": 0,
+      "scope": "development_smoke_only",
+      "productionCalibrationQualified": false
+    },
+    "status": "passed",
+    "allFrozenCasesValid": true,
+    "allReferenceAxesMatch": true,
+    "flawedRawPasses": 0,
+    "failedCases": []
+  },
+  "execution": {
+    "plannedCalls": 6,
+    "exactTransportCount": 6,
+    "validGrades": 6,
+    "invalid": 0,
+    "unknown": 0,
+    "unattempted": 0,
+    "observedHttp200": 6,
+    "automaticRetries": 0
+  },
+  "referenceAgreement": {
+    "routing": {
+      "numerator": 6,
+      "denominator": 6
+    },
+    "fullAxes": {
+      "numerator": 6,
+      "denominator": 6
+    },
+    "axes": {
+      "support": {
+        "numerator": 6,
+        "denominator": 6
+      },
+      "coverage": {
+        "numerator": 6,
+        "denominator": 6
+      },
+      "uncertainty": {
+        "numerator": 6,
+        "denominator": 6
+      },
+      "answerability": {
+        "numerator": 6,
+        "denominator": 6
+      },
+      "correctness": {
+        "numerator": 6,
+        "denominator": 6
+      }
+    },
+    "flawedRawPasses": {
+      "numerator": 0,
+      "denominator": 3
+    },
+    "appropriateAbstentions": {
+      "numerator": 1,
+      "denominator": 1
+    }
+  },
+  "regressionCases": [
+    {
+      "index": 0,
+      "caseId": "eb9bf9b4e4326eb8f63e233da9631a0f5b9e99c649580863e76397c0bad2ea96",
+      "family": "Justified missing-information refusal control",
+      "support": [
+        "non_factual"
+      ],
+      "coverage": "complete",
+      "uncertainty": "appropriate",
+      "disposition": "abstain",
+      "allReferenceAxesMatch": true
+    },
+    {
+      "index": 1,
+      "caseId": "894c9710ca5fe1eb1add246c8c09695dd349959b76617bc4aab8b2ea7f5b238a",
+      "family": "One requested dimension omitted",
+      "support": [
+        "supported"
+      ],
+      "coverage": "incomplete",
+      "uncertainty": "appropriate",
+      "disposition": "repair",
+      "allReferenceAxesMatch": true
+    },
+    {
+      "index": 2,
+      "caseId": "006ac7cd3a688bfb960575ad37ff1fadb5490e215f5680a45b3a8927ace944a5",
+      "family": "Cautious refusal plus categorical unsupported claim",
+      "support": [
+        "unsupported"
+      ],
+      "coverage": "complete",
+      "uncertainty": "overconfident",
+      "disposition": "abstain",
+      "allReferenceAxesMatch": true
+    },
+    {
+      "index": 3,
+      "caseId": "3294a6b7f077a4332d84cb6d17e74ef7417a7ed018bcba8a52e477077ca551b6",
+      "family": "Supported answer with explicitly unknown extra capability",
+      "support": [
+        "supported"
+      ],
+      "coverage": "complete",
+      "uncertainty": "appropriate",
+      "disposition": "pass",
+      "allReferenceAxesMatch": true
+    },
+    {
+      "index": 4,
+      "caseId": "1b6fd793eea9c2ed269db7401d34db0c4708f94ad1406c4f31aaf3265166b02f",
+      "family": "Available requested fact refused",
+      "support": [
+        "non_factual"
+      ],
+      "coverage": "incomplete",
+      "uncertainty": "unnecessary_abstention",
+      "disposition": "repair",
+      "allReferenceAxesMatch": true
+    },
+    {
+      "index": 5,
+      "caseId": "1ddd8e70440f30285fad15d5f220efdd536b24f021d527d374d03d7d21099275",
+      "family": "Complete supported factual control",
+      "support": [
+        "supported"
+      ],
+      "coverage": "complete",
+      "uncertainty": "appropriate",
+      "disposition": "pass",
+      "allReferenceAxesMatch": true
+    }
+  ],
+  "ledger": {
+    "startingAttempts": 96,
+    "endingAttempts": 102,
+    "pending": 0,
+    "activeOwners": 0,
+    "first96HistoricalReceiptsUnchanged": true,
+    "first96Sha256": "08496d1b536443d476a3918539f3ad61217b73708d16b9d637e820817b3ca7b0",
+    "newReservedAllowanceUsd": 0.6,
+    "totalReservedAllowanceUsd": 10.2,
+    "priorSpendAdjustmentUsd": 0.200281,
+    "combinedLocalPlanningUsageUsd": 10.400281,
+    "approvedCumulativePlanningCapUsd": 11,
+    "accounting": "local_planning_allowances_not_settled_charges"
+  },
+  "providerReportedUsage": {
+    "inputTokens": 10884,
+    "outputTokens": 994,
+    "receiptsWithUsage": 6,
+    "allRecordedResponsesIncluded": true,
+    "settledProviderChargesKnown": false
+  },
+  "timing": {
+    "observedElapsedMs": 33847,
+    "definition": "Sum of six per-slot wall times, including local runner boundary checks; transportDurationMs separately measures each fetch plus complete response body. No paired latency or cost reduction is estimated."
+  },
+  "replay": {
+    "exactCurrentCodePlanClaimCheckpointAndTrustedLedger": "passed",
+    "newProviderCalls": 0,
+    "reportMutated": false
+  },
+  "protectedArtifacts": {
+    "historicalChecked": 128,
+    "historicalChanged": 0,
+    "newFrozenPreDispatchChecked": 4,
+    "newFrozenPreDispatchChanged": 0
+  },
+  "independentAiReview": {
+    "sourceAndFrozenAxes": "completed_no_findings",
+    "reportBindingsAccountingAndHash": "completed_no_findings"
+  },
+  "referenceAuthorship": "ai_authored_constructed_reference",
+  "humanGold": false,
+  "externalTruthVerified": false,
+  "productionCalibrationQualified": false,
+  "qualityClaimEligible": false,
+  "existingAutomaticWorkerGrader": "claim-support-v1",
+  "candidateGrader": "claim-support-v3-coverage-confidence",
+  "livePolicyActivation": "closed",
+  "limitations": [
+    "Six fresh unpaired fictional examples with worked pattern guidance form a development smoke test, not held-out general calibration.",
+    "All frozen axes matched, including the targeted completeness and confidence cases; old failures and reference labels remain unchanged.",
+    "This is not a paired v2/v3 experiment and does not establish a calibrated error rate or answer-quality improvement.",
+    "Quote matching verifies literal provenance; semantic support and correctness remain AI estimates against supplied sources, not external truth.",
+    "No candidate rollout, learned-policy activation, answer generation, repair, search, proposal or training occurred."
+  ],
+  "auditSha256": "407cad95a6aab1752d58959a6d57e12dbae7e09ed2d83de301225b6cc9326ebc"
+}

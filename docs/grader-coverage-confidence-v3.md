@@ -2,7 +2,9 @@
 
 The [v2 live test](evidence/grader-abstention-2026-10-14/live-results.md) returned five valid grades but matched every frozen axis on only three cases. It called an unnecessary refusal complete and missed the overconfidence of an unsupported assertion beside a valid refusal. V3 adds an explicit rubric and worked development examples for those two failures.
 
-**Current status:** implementation merged in [PR #42](https://github.com/jayeshsuyal/ablatrix/pull/42), with successful CI and completed bot review. The [exact six-case plan](evidence/grader-coverage-confidence-2026-10-15/frozen-plan-v1.json), [AI source review](evidence/grader-coverage-confidence-2026-10-15/source-review-v1.json) and [offline verification record](evidence/grader-coverage-confidence-2026-10-15/offline-qualification-v1.json) are frozen; the live test is unexecuted. The previous 96-call / $10 planning scope is exhausted. The proposed six-call scope below requires fresh budget approval before dispatch.
+**Live outcome:** [six real calls returned six valid grades and six complete frozen-axis matches](evidence/grader-coverage-confidence-2026-10-15/live-results.md). The predeclared development smoke gate passed. The previously missed completeness and confidence patterns behaved as expected on fresh constructed cases, alongside positive controls. This does not qualify general calibration or answer-quality gain. V3 stays opt-in, existing workers retain v1 and live policy activation stays closed.
+
+Implementation merged in [PR #42](https://github.com/jayeshsuyal/ablatrix/pull/42), with successful CI and completed bot review. The [exact plan](evidence/grader-coverage-confidence-2026-10-15/frozen-plan-v1.json), [AI source review](evidence/grader-coverage-confidence-2026-10-15/source-review-v1.json) and [offline verification](evidence/grader-coverage-confidence-2026-10-15/offline-qualification-v1.json) were published before execution. After the old 96-call / $10 scope closed, the user [explicitly approved the six-call increase](evidence/grader-coverage-confidence-2026-10-15/execution-authorization-v1.json). This new scope is now exhausted at 102 shared attempts, with zero pending reservations.
 
 ## Contract
 
@@ -32,7 +34,7 @@ Berqen permits source-correctness `consistent_with_sources` or `uncertain`, beca
 
 **Predeclared smoke gate:** all six frozen cases must yield valid grades matching every frozen axis, with zero raw passes for flawed answers. Invalid or unknown outcomes stop later dispatches; reports retain unattempted slots. Even a pass does not establish general calibration, answer-quality improvement or eligibility for live policy activation.
 
-| Proposed local planning bound | Value |
+| Approved local planning bound, now consumed | Value |
 | --- | ---: |
 | Starting shared attempts / pending | 96 / 0 |
 | New grading calls / allowance each | At most 6 / $0.10 |
@@ -41,11 +43,11 @@ Berqen permits source-correctness `consistent_with_sources` or `uncertain`, beca
 | Maximum cumulative reserved allowance | $10.20 |
 | Existing prior-spend adjustment | $0.200281 |
 | Maximum combined local planning usage | **$10.400281** |
-| Proposed cumulative planning cap | **$11** |
+| Approved cumulative planning cap | **$11** |
 
 These are local allowances, not settled charges or a provider-enforced cap. The plan fingerprints all 96 prior rows and uses the [existing exclusive runner](grader-calibration-pilot.md), stopped-worker checks, exact request guards and append-only checkpoints. No retries, generation, repair, search, proposal, rollout or policy activation are included. Production `agents.run` stays closed.
 
-After the reviewed implementation is merged, freeze and verify the exact plan without dispatch:
+The plan was frozen and verified after the reviewed implementation merged. Preparation is read-only with respect to provider calls; its original 96-row starting-state condition is intentionally no longer satisfied after execution:
 
 ```sh
 npm run grader:calibration -- --prepare \
@@ -55,7 +57,7 @@ npm run grader:calibration -- --prepare \
 npm run grader:calibration -- --verify --plan /absolute/path/to/a-new-plan.json
 ```
 
-Publish that plan and its source review before requesting approval of the new financial scope. Only `--execute`, with the exact plan acknowledgement, explicit live opt-ins, `ABLATRIX_LOOP_CALL_LIMIT=102` and `ABLATRIX_SPEND_CAP_USD=11`, can dispatch. These replace the historical guide's 96/$10 settings only for this new protocol. No elapsed wait or offline preparation counts as approval. After execution, verify saved receipts without new provider calls:
+The plan, source review and later explicit financial approval were published before dispatch. Execution required the exact plan acknowledgement, explicit live opt-ins, `ABLATRIX_LOOP_CALL_LIMIT=102` and `ABLATRIX_SPEND_CAP_USD=11`. These replaced the historical guide's 96/$10 settings only for this now-consumed protocol. The runner cannot resume or retry it. Verify saved receipts without new provider calls:
 
 ```sh
 npm run grader:calibration -- --replay \
@@ -64,4 +66,4 @@ npm run grader:calibration -- --replay \
   --report /absolute/path/to/the-saved-report.json
 ```
 
-Offline verification: 59 focused tests; 433 server passes and one platform skip; production build and standalone CLI typecheck pass. Synthetic transports test mechanics, not model grading quality. The old v2 report reconstructs exactly and still records its failed 3/5 all-axis result. No new paid call or answer-quality gain occurred during implementation.
+Offline verification: 59 focused tests; 433 server passes and one platform skip; production build and standalone CLI typecheck pass. Synthetic transports test mechanics, not model grading quality. The old v2 report reconstructs exactly and still records its failed 3/5 all-axis result. Implementation made no paid call; the separately authorized live smoke added exactly six grading calls and $0.60 local planning allowance. Exact receipt replay and independent results audits passed. No answer-quality gain is claimed.
