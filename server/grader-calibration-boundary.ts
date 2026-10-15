@@ -7,7 +7,7 @@ import { homedir } from 'node:os';
 import { DatabaseSync } from 'node:sqlite';
 import { fileURLToPath } from 'node:url';
 import { inspectDiagnosticApp } from './source-id-diagnostic.ts';
-import { CALIBRATION_BUDGET, calibrationHash, type CalibrationPlan } from './grader-calibration.ts';
+import { calibrationBudget, calibrationHash, type CalibrationPlan, type CalibrationProtocol } from './grader-calibration.ts';
 import type { SapiomFeedbackProvider } from './feedback-provider.ts';
 
 export const CALIBRATION_CODE_FILES = [
@@ -73,7 +73,8 @@ export function assertCalibrationMerged(commit: string, root = calibrationReposi
 
 export type CalibrationLedgerState = { attempts: number; pending: number; reservedUsd: number; initialSha256: string; activeOwners: number; ownerPid: number | null; newRunIds: string[]; rows: { id: string; runId: string; status: string; allowanceUsd: number }[] };
 /** Hash historical bytes internally; only aggregate metadata leaves this helper. */
-export function readCalibrationLedgerState(budgetPath: string): CalibrationLedgerState {
+export function readCalibrationLedgerState(budgetPath: string, protocol?: CalibrationProtocol): CalibrationLedgerState {
+  const budget = calibrationBudget(protocol);
   canonicalPath(budgetPath, true);
   const db = new DatabaseSync(budgetPath, { readOnly: true });
   try {
@@ -87,17 +88,18 @@ export function readCalibrationLedgerState(budgetPath: string): CalibrationLedge
     const rows = db.prepare('SELECT * FROM loop_provider_calls ORDER BY rowid').all();
     const owner = db.prepare('SELECT pid,expires_at FROM loop_provider_owner WHERE id=1').get();
     const active = Boolean(owner && Number(owner.expires_at) > Date.now());
-    const fresh = rows.slice(CALIBRATION_BUDGET.startingAttempts);
+    const fresh = rows.slice(budget.startingAttempts);
     return { attempts: rows.length, pending: rows.filter(row => row.status === 'pending').length,
       reservedUsd: Math.round(rows.reduce((sum, row) => sum + Number(row.allowance_usd), 0) * 1_000_000) / 1_000_000,
-      initialSha256: calibrationHash(rows.slice(0, CALIBRATION_BUDGET.startingAttempts)), activeOwners: active ? 1 : 0, ownerPid: active ? Number(owner!.pid) : null,
+      initialSha256: calibrationHash(rows.slice(0, budget.startingAttempts)), activeOwners: active ? 1 : 0, ownerPid: active ? Number(owner!.pid) : null,
       newRunIds: fresh.map(row => String(row.run_id)), rows: fresh.map(row => ({ id: String(row.id), runId: String(row.run_id), status: String(row.status), allowanceUsd: Number(row.allowance_usd) })) };
   } finally { db.close(); }
 }
-export function assertCalibrationStartingLedger(state: CalibrationLedgerState) {
-  assert.equal(state.attempts, CALIBRATION_BUDGET.startingAttempts, 'Shared ledger differs; parent review and a new frozen plan are required.');
+export function assertCalibrationStartingLedger(state: CalibrationLedgerState, protocol?: CalibrationProtocol) {
+  const budget = calibrationBudget(protocol);
+  assert.equal(state.attempts, budget.startingAttempts, 'Shared ledger differs; parent review and a new frozen plan are required.');
   assert.equal(state.pending, 0, 'Pending shared attempts require reconciliation.');
-  assert.equal(state.reservedUsd, CALIBRATION_BUDGET.startingReservedUsd);
+  assert.equal(state.reservedUsd, budget.startingReservedUsd);
   assert.deepEqual(state.newRunIds, []);
 }
 export function readCalibrationReceipts(plan: CalibrationPlan): Record<string, NonNullable<ReturnType<SapiomFeedbackProvider['receipt']>> | null> {
@@ -146,14 +148,14 @@ export function inspectCalibrationWorkers(scope: CalibrationScope) {
 export type CalibrationBoundary = { phase: 'preflight' | 'before_reservation' | 'after_reservation' | 'before_transport' | 'after_transport' | 'after_operation' | 'before_report_publish'; slotIndex: number | null; runId: string | null; attemptId?: string; reservedRunIds: string[]; transportCount: number };
 export function inspectCalibrationExecutionBoundary(plan: CalibrationPlan, boundary: CalibrationBoundary) {
   const scope = validateCalibrationScope(plan.callerScope as CalibrationScope);
-  const workers = inspectCalibrationWorkers(scope), ledger = readCalibrationLedgerState(scope.budgetPath);
+  const workers = inspectCalibrationWorkers(scope), ledger = readCalibrationLedgerState(scope.budgetPath, plan.protocol);
   assert.equal(ledger.initialSha256, scope.ledgerInitialSha256, 'Historical shared receipt bytes changed.');
   assert.deepEqual([...ledger.newRunIds].sort(), [...boundary.reservedRunIds].sort(), 'Another operation changed the shared ledger.');
   assert.equal(new Set(ledger.newRunIds).size, ledger.newRunIds.length);
-  assert.equal(ledger.attempts, 86 + boundary.reservedRunIds.length);
-  assert.ok(ledger.attempts <= 96 && boundary.transportCount <= 10);
-  assert.equal(ledger.reservedUsd, Math.round((8.6 + .1 * boundary.reservedRunIds.length) * 1_000_000) / 1_000_000);
-  assert.ok(ledger.reservedUsd + .200281 <= 10 + 1e-9);
+  assert.equal(ledger.attempts, plan.budget.startingAttempts + boundary.reservedRunIds.length);
+  assert.ok(ledger.attempts <= plan.budget.absoluteCallLimit && boundary.transportCount <= plan.budget.newCalls && boundary.reservedRunIds.length <= plan.budget.newCalls);
+  assert.equal(ledger.reservedUsd, Math.round((plan.budget.startingReservedUsd + plan.budget.allowancePerCallUsd * boundary.reservedRunIds.length) * 1_000_000) / 1_000_000);
+  assert.ok(ledger.reservedUsd + plan.budget.priorSpendUsd <= plan.budget.spendingCapUsd + 1e-9);
   assert.ok(!ledger.activeOwners || ledger.activeOwners === 1 && ledger.ownerPid === process.pid, 'Another process owns the shared provider.');
   const slot = boundary.slotIndex === null ? undefined : plan.slots[boundary.slotIndex];
   const pending = ledger.rows.filter(row => row.status === 'pending');
