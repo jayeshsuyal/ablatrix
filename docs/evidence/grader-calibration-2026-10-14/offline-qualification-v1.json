@@ -1,0 +1,75 @@
+{
+  "format": "constructed-grader-pilot-offline-qualification-v1",
+  "evidenceKind": "offline_implementation_mechanics_only",
+  "implementationCommit": "a6d2a82909537813502e1a7b7b2574c5cf83e331",
+  "planSha256": "48032b20aecb10474e40814bdbd012ed0d326b4987e4712a85fe7c14208f8539",
+  "planFileSha256": "d3481d4ec4a0ac1eab52d964041184fed7178c00fa528d86ffddd2c28000c4ab",
+  "datasetSha256": "83d31f8d792f249c85e4d5792d74588093711d8b432d49d2703ecdea13ddeb39",
+  "codeFileSha256": {
+    "scripts/grader-calibration.ts": "ee4968d0e3c8cf10e37ccb6723dd015d79a94ca5c122a9895636ae29305a19de",
+    "server/citation-options.ts": "0845b2922b7880de4f641453c307d042a31211948514dc4e57e4f9ad4cb1d93d",
+    "server/claim-support.ts": "b0ce4c8b9bc7041512bffd93bdbd3df0e8e9b4ac4758d9a9a1db62c295616224",
+    "server/feedback-provider.ts": "4022a4b51cec10cf583757bce9c8e6ae26f897a02f3f90598dfb1413d8535495",
+    "server/grader-calibration-boundary.ts": "f73d6bce3d01b01438da875e6729f7f372d8574f45fe55d821937933d33b078c",
+    "server/grader-calibration-fixtures.ts": "2c394658adfe8bd7583aa6a315b5700fcd4d2d7b578d22d8af0a4569daaac9f3",
+    "server/grader-calibration-runner.ts": "175178394b5413c712478d7f398b7b9747ea00c1fec7254348baf8b6477eb9d1",
+    "server/grader-calibration.ts": "f07a9132e0bd2d0a0407e18433b7c3c309355af66fef385470e449c82dbd40c1",
+    "server/source-id-diagnostic.ts": "ac8d1434e79aa147fd5d15da43ab81ab94b5e65d4798966d548a9c09e775793e"
+  },
+  "references": {
+    "authorship": "ai_authored_constructed_reference",
+    "reviewStatus": "pending_parent_source_review",
+    "families": 5,
+    "goodAnswers": 5,
+    "flawedAnswers": 5,
+    "expectedRawPassesAmongGood": 4,
+    "expectedAppropriateAbstentionsAmongGood": 1
+  },
+  "verification": {
+    "npmTest": {
+      "passed": 417,
+      "skipped": 1,
+      "failed": 0
+    },
+    "npmBuild": "passed",
+    "standaloneCliTypecheck": "passed",
+    "offlinePrepare": "passed",
+    "offlinePlanVerify": "passed",
+    "independentLocalReview": "performed; planned integrity fixes applied before handoff",
+    "testTransports": "isolated SQLite and scripted fake transport only"
+  },
+  "protectedHistoricalFiles": {
+    "count": 109,
+    "unchanged": true
+  },
+  "sharedLedgerBeforeAndAfterBuild": {
+    "attempts": 86,
+    "pending": 0,
+    "reservedPlanningAllowanceUsd": 8.6
+  },
+  "newPaidProviderCalls": 0,
+  "liveExecutionPerformed": false,
+  "referenceSourceReviewAndExactPlanAcknowledgementRequired": true,
+  "calibration": "not_measured",
+  "qualityClaimEligible": false,
+  "humanGold": false,
+  "newHumanJudgments": 0,
+  "livePolicyActivationQualified": false,
+  "limits": {
+    "startingAttempts": 86,
+    "startingPending": 0,
+    "startingReservedUsd": 8.6,
+    "priorSpendUsd": 0.200281,
+    "newCalls": 10,
+    "allowancePerCallUsd": 0.1,
+    "absoluteCallLimit": 96,
+    "spendingCapUsd": 10,
+    "maxPlanningExposureUsd": 9.800281
+  },
+  "limitations": [
+    "This artifact records offline implementation checks, not a live grader-discrimination result.",
+    "Ten constructed answers form five paired fictional families; no general-population or independence-based quality claim is established.",
+    "The parent owns final source review, all follow-up fixes, merging and any later bounded live execution.",
+    "No credentials were inspected, persisted environment settings changed or local app restarted during this build."
+  ]
+}
