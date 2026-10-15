@@ -1,0 +1,38 @@
+{
+  "format": "grader-qualification-record-v1",
+  "planSha256": "bfd2f570499c83abd198b3347acb7b4ea36ea76728db4c5646abb7b67e5e7505",
+  "datasetSha256": "b13b68f1da6facbf85c1cf35a8504b355db707d02697c4297c5a46f03c1df917",
+  "referencesSha256": "f560d20d277e920709afc9bd0a1ce003a91cafe9545026743542c5b62b1fde87",
+  "implementationCommit": "0f65fc2945e0bb1bcb8da32a780e0f4d17c6aedc",
+  "grader": {
+    "version": "claim-support-v3-coverage-confidence",
+    "systemInstructionsSha256": "ffae52c2c183f909047f1867a73a505440b1ee22fe8b5db2d9e4a591a86e0067",
+    "requestedModel": "gpt-luna",
+    "acceptedResponseModels": [
+      "gpt-luna",
+      "gpt-5.6-luna"
+    ],
+    "maxTokens": 4096,
+    "reasoningEffort": "none"
+  },
+  "status": "pending_live_evidence",
+  "qualified": false,
+  "scope": "none",
+  "liveEvidence": null,
+  "sourceReview": {
+    "status": "pending_independent_source_review",
+    "authorship": "ai_authored_constructed_reference",
+    "humanGold": false,
+    "externalTruthVerified": false,
+    "reviewIdentityVerified": false
+  },
+  "blockers": [
+    "No trusted live execution verifier or real execution evidence is attached.",
+    "Independent source review is pending; review assertions are not authenticated human gold.",
+    "The new paid scope is unapproved; offline preparation grants no dispatch authority.",
+    "Candidate answer-policy validation and activation are separate, unimplemented gates."
+  ],
+  "productionActivationQualified": false,
+  "qualityClaimEligible": false,
+  "recordSha256": "628c36c76c901b2b507a20542e692b99976b5914ef21844ed64574d6f734efa6"
+}

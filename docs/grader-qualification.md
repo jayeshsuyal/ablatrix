@@ -2,6 +2,8 @@
 
 PR 1 builds a reviewable **offline qualification contract** for the frozen v3 grader. The [six-case live smoke](evidence/grader-coverage-confidence-2026-10-15/live-results.md) remains development evidence. This benchmark has made **zero live calls**; its qualification record is **pending**.
 
+Inspect the [frozen seal, pending record and scripted rehearsal](evidence/grader-qualification-2026-10-15/README.md).
+
 ## What is sealed
 
 - **80 unique fictional product/source packets:** 60 flawed answers, 12 correct factual answers, four honest qualified answers and four justified refusals. Two refusal controls have absent facts; two have unresolved source conflicts.
