@@ -1,0 +1,227 @@
+{
+  "format": "coverage-confidence-smoke-source-review-v1",
+  "reviewedAt": "2026-10-15T17:06:12.549Z",
+  "reviewKind": "independent_ai_source_consistency",
+  "status": "completed_ai_source_consistency_review",
+  "planSha256": "3eb5ddde12ef4dbdcfa0113c35bd8ac699cb8193d760b9999093246c3aa56e06",
+  "datasetSha256": "8332d3540624e25224ba4d434d4b5ede42758ac672bd0dad3aaaddb05581eef9",
+  "implementationCommit": "77f5532904e1bcf68b9c33abc1063c01334aa78b",
+  "grader": {
+    "promptVersion": "claim-support-v3-coverage-confidence",
+    "systemInstructionsSha256": "ffae52c2c183f909047f1867a73a505440b1ee22fe8b5db2d9e4a591a86e0067",
+    "model": "gpt-luna",
+    "acceptedModelAliases": [
+      "gpt-luna",
+      "gpt-5.6-luna"
+    ],
+    "maxTokens": 4096,
+    "reasoningEffort": "none"
+  },
+  "reviewers": [
+    "parent",
+    "independent claim-grader-contract reviewer"
+  ],
+  "humanGold": false,
+  "externalTruthVerified": false,
+  "productionCalibrationQualified": false,
+  "qualityClaimEligible": false,
+  "originalReferenceProvenance": {
+    "authorship": "ai_authored_constructed_reference",
+    "reviewStatus": "pending_parent_source_review"
+  },
+  "originalPendingAtConstructionLabelPreserved": true,
+  "acknowledgement": "Parent and independent AI reviewer source-checked the exact fresh constructed inputs and frozen axes. This is source-consistency review, not financial execution approval. The new six-call scope awaits explicit user budget approval.",
+  "cases": [
+    {
+      "index": 0,
+      "caseId": "eb9bf9b4e4326eb8f63e233da9631a0f5b9e99c649580863e76397c0bad2ea96",
+      "familyId": "ddeabbdd752c546e44b872a5eed3db76c1f52e0819466bcc669ac75d7906dd84",
+      "inputSha256": "f90fd28f9d96b5eb74cdc4f1eed57736a1d6bb6d162ae49e2f1255d1d9b3c221",
+      "referenceSha256": "1c6cc3e49e5a6dad4b9c81efc7798f3e72ceca767aec13b0c388dab26efef2e9",
+      "requestSha256": "678a25b94e91bbd68c1334e08f20f32796950e369aa89de0ef3937e93df71454",
+      "expectedDisposition": [
+        "abstain"
+      ],
+      "axes": {
+        "support": [
+          "non_factual"
+        ],
+        "questionCoverage": [
+          "complete"
+        ],
+        "answerability": [
+          "insufficient"
+        ],
+        "correctness": [
+          "consistent_with_sources"
+        ],
+        "uncertaintyHandling": [
+          "appropriate"
+        ]
+      },
+      "sourceConsistency": "reviewed"
+    },
+    {
+      "index": 1,
+      "caseId": "894c9710ca5fe1eb1add246c8c09695dd349959b76617bc4aab8b2ea7f5b238a",
+      "familyId": "3e841de5891b2db8ada37e9711f60dc11ccb74e5e86a794101a526019f8d284f",
+      "inputSha256": "9f85e766eaea9105b156aec10e76ddceacc021613d8dcc32c9410297c2309fa9",
+      "referenceSha256": "3486d6b17853f49df283324f523071ae1aee2a3e5cd37bb072b43831408f40cf",
+      "requestSha256": "b88d0d919cb4b8f52be4b8b9616c3d4cad60cddaa11bd54c6f8682171ee62fbb",
+      "expectedDisposition": [
+        "repair"
+      ],
+      "axes": {
+        "support": [
+          "supported"
+        ],
+        "questionCoverage": [
+          "incomplete"
+        ],
+        "answerability": [
+          "answerable"
+        ],
+        "correctness": [
+          "consistent_with_sources"
+        ],
+        "uncertaintyHandling": [
+          "appropriate"
+        ]
+      },
+      "sourceConsistency": "reviewed"
+    },
+    {
+      "index": 2,
+      "caseId": "006ac7cd3a688bfb960575ad37ff1fadb5490e215f5680a45b3a8927ace944a5",
+      "familyId": "4db5a56816184adc8301f66aa1344c458894f8003c18bab5066b67941d5d801d",
+      "inputSha256": "99c1f6cbc1f76587a7c000fd1cacaacabcee8b9b88667759c8b0c059cc47c4de",
+      "referenceSha256": "6fdaaacf32562eb51b9eab2891d5f533d2b65f53dd3f1d5073bef7b03de42fa1",
+      "requestSha256": "08a17d1b2537d175ec88650f4c5ee94b8bef7c6237b67c5e7ed2d8d138c80627",
+      "expectedDisposition": [
+        "abstain",
+        "uncertain"
+      ],
+      "axes": {
+        "support": [
+          "unsupported"
+        ],
+        "questionCoverage": [
+          "complete"
+        ],
+        "answerability": [
+          "insufficient"
+        ],
+        "correctness": [
+          "consistent_with_sources",
+          "uncertain"
+        ],
+        "uncertaintyHandling": [
+          "overconfident"
+        ]
+      },
+      "sourceConsistency": "reviewed"
+    },
+    {
+      "index": 3,
+      "caseId": "3294a6b7f077a4332d84cb6d17e74ef7417a7ed018bcba8a52e477077ca551b6",
+      "familyId": "124c4017d6dd23c3d9d5af3d5186c33973c4431a017242bfb0ef2e1c9b26ff95",
+      "inputSha256": "d02d1729a1e0cbeb9fd471d3b252cc6fd884bfe2956023cab38e27e98a567400",
+      "referenceSha256": "68fd5d9cdfaa260e25e8af8886ac54e2b9bfe8929b730057c2f6dd93363ee0ac",
+      "requestSha256": "05e4460c8178079eaa78ed82310562b32afea7a6e7a3ebcf5077c6d9e11ce803",
+      "expectedDisposition": [
+        "pass"
+      ],
+      "axes": {
+        "support": [
+          "supported"
+        ],
+        "questionCoverage": [
+          "complete"
+        ],
+        "answerability": [
+          "answerable"
+        ],
+        "correctness": [
+          "consistent_with_sources"
+        ],
+        "uncertaintyHandling": [
+          "appropriate"
+        ]
+      },
+      "sourceConsistency": "reviewed"
+    },
+    {
+      "index": 4,
+      "caseId": "1b6fd793eea9c2ed269db7401d34db0c4708f94ad1406c4f31aaf3265166b02f",
+      "familyId": "43a4ab8b1d9781e7a058ae5a19976441e93be6d682397e41e8bade2f5ca4db41",
+      "inputSha256": "07d63e8510f071742f84d7dcc13906b1304b59c519fe60ce6e854366c4981d2f",
+      "referenceSha256": "b2a6c24e94c42874d21fd873ef05fc33f80871103a19a8e003eb0a223ab17299",
+      "requestSha256": "2693a98b9ac170a18cdc51efc7786a583405a9b699c66550375ac087b4c74e7c",
+      "expectedDisposition": [
+        "repair"
+      ],
+      "axes": {
+        "support": [
+          "non_factual"
+        ],
+        "questionCoverage": [
+          "incomplete"
+        ],
+        "answerability": [
+          "answerable"
+        ],
+        "correctness": [
+          "consistent_with_sources"
+        ],
+        "uncertaintyHandling": [
+          "unnecessary_abstention"
+        ]
+      },
+      "sourceConsistency": "reviewed"
+    },
+    {
+      "index": 5,
+      "caseId": "1ddd8e70440f30285fad15d5f220efdd536b24f021d527d374d03d7d21099275",
+      "familyId": "f11105b618e20c6d3dd7f6d327def5202b075a4c85cca492b4ecfdb498206e3c",
+      "inputSha256": "7d39564d088e9a62b4ba653e8bea31d9192b48785a7bc03bbdf43783ddc23eef",
+      "referenceSha256": "9bccf79a34ecd5b343980ea7452db996447bd82534fe0a81220af10c48e4afb7",
+      "requestSha256": "8da5c909cb8d90ea253d5330006f804a2b1c79eb0f807a73fe6679f523471d1f",
+      "expectedDisposition": [
+        "pass"
+      ],
+      "axes": {
+        "support": [
+          "supported"
+        ],
+        "questionCoverage": [
+          "complete"
+        ],
+        "answerability": [
+          "answerable"
+        ],
+        "correctness": [
+          "consistent_with_sources"
+        ],
+        "uncertaintyHandling": [
+          "appropriate"
+        ]
+      },
+      "sourceConsistency": "reviewed"
+    }
+  ],
+  "smokeCriteria": {
+    "allFrozenCasesValid": true,
+    "allReferenceAxesMatch": true,
+    "flawedRawPassesAllowed": 0,
+    "scope": "development_smoke_only",
+    "productionCalibrationQualified": false
+  },
+  "findings": [
+    "Requested available facts must be supplied; topical refusals and omitted requested facets are incomplete.",
+    "Mixed unsupported categorical assertions require overconfident labels despite adjacent valid refusals.",
+    "Honest qualifiers withholding an unrequested unknown capability do not assert that capability.",
+    "Berqen source-correctness and disposition alternatives were frozen before dispatch; absent evidence does not prove physical falsehood.",
+    "Worked rubric examples teach these patterns using different product names and values; the six new cases are guided development smoke, not held-out qualification."
+  ],
+  "sourceReviewSha256": "bb7c7681c4d9d37f683d0e2c09575fef70fcf063c8c8f10e88c23a0475faef3b"
+}
