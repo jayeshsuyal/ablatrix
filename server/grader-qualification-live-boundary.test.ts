@@ -145,7 +145,7 @@ test('the manifest covers the complete runtime-loaded project import graph', asy
   // Parsing/bundling only: no application module is evaluated, credential or
   // ledger opened, output written, or transport constructed. Vendor versions
   // remain bound by the unchanged package/lock files on the trusted host.
-  const result = await build({ absWorkingDir: resolve(calibrationRepository), entryPoints: ['scripts/grader-qualification-live.ts'], bundle: true, platform: 'node', format: 'esm', packages: 'external', write: false, metafile: true, logLevel: 'silent' });
+  const result = await build({ absWorkingDir: resolve(calibrationRepository), entryPoints: ['scripts/grader-qualification-live.ts'], bundle: true, platform: 'node', format: 'esm', packages: 'external', tsconfigRaw: { compilerOptions: { verbatimModuleSyntax: true } }, write: false, metafile: true, logLevel: 'silent' });
   const loaded = Object.keys(result.metafile!.inputs);
   assert.deepEqual(loaded.filter(file => !QUALIFICATION_LIVE_CODE_FILES.includes(file)), [], 'A runtime-loaded project module is absent from the approved code manifest.');
   for (const required of ['server/revision-policy.ts', 'server/answer-policy-protocol.ts', 'server/answer-review-source.ts', 'server/context-comparison.ts']) assert.ok(loaded.includes(required));
