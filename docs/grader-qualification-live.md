@@ -6,7 +6,7 @@ This adapter executes the already [sealed qualification benchmark](grader-qualif
 
 1. Merge reviewed adapter code. Prepare a separate execution plan against that exact implementation commit and the first 102 unchanged shared ledger rows.
 2. Publish the plan and show its exact budget to the operator. Only after a direct approval of that plan, record that response in the separate authorization file. A plan acknowledgement or source review is not financial approval.
-3. Stop and drain all app/worker processes sharing these stores. Run the independently opted-in CLI with process-scoped limits; leave app settings unchanged.
+3. Stop and drain all app/worker processes sharing these stores. Run the independently opted-in CLI with process-scoped limits; leave app settings unchanged. The production entry point opens a native macOS confirmation showing the full plan hash and exact budget. The operator must type its plan-specific challenge and click **Approve $9.20**; Cancel and timeout make no calls. Other/headless hosts fail closed. Approval JSON is audit metadata and cannot replace this interactive channel.
 4. Execute the 80 primary grading requests and 12 fixed repeats in their original order, stopping as soon as a frozen failure rule fires. Preserve every unattempted slot. There are no retries or resumes.
 5. Independently replay the canonical private checkpoint, dataset claim and actual shared ledger. Publish a new live report and qualification record; retain every historical artifact unchanged.
 
@@ -43,6 +43,8 @@ These are local planning allowances, **not settled charges or a provider-enforce
 ## Guardrails and evidence
 
 - The production entry point accepts only the frozen plan path and its exact acknowledgement. It owns the actual ledger reader, canonical caller scope and Router transport. No injected provider, transport, receipt JSON or caller-selected `live` flag can certify a result.
+- Dispatch obtains approval directly from the system-owned native dialog interpreter, with no stdin, environment, file or caller hook supplying the confirmation result. Saved approval/confirmation fields are audit bindings, not cryptographic authentication of a human identity or standalone dispatch authority. Scope and worker checks repeat after confirmation and before cohort consumption/provider construction.
+  The operator must complete the native confirmation; agents must not automate its text entry or approval button.
 - Private exclusive claims use the dataset hash. A new output path, rehashed plan or different run IDs cannot reopen this cohort. An interrupted append fails closed; replay never repairs or resumes it.
 - Before provider construction and at every reservation/transport/operation/publication boundary, checks bind current code, original source artifacts, approval, all 102 historical rows, sole new reservations, pending identity and stopped workers. Transport permits one exact POST per reservation, redirects disabled, a 45-second signal and a 128 KiB response-body limit.
 - Reports separate the 80-case primary denominators from the 12 repeat checks. Invalid/unknown outcomes retain their consumed allowances. Unknown transports remain unknown; a passing prefix cannot qualify.

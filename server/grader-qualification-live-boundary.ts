@@ -18,6 +18,7 @@ export const QUALIFICATION_LIVE_CODE_FILES = Object.freeze([...new Set([
   ...QUALIFICATION_CODE_FILES,
   'server/grader-qualification-live.ts', 'server/grader-qualification-live-runner.ts',
   'server/grader-qualification-live-boundary.ts', 'server/grader-qualification-live-journal.ts', 'scripts/grader-qualification-live.ts',
+  'server/grader-qualification-live-authorization.ts',
   'server/feedback-provider.ts', 'server/grader-calibration-boundary.ts',
   'server/grader-calibration.ts', 'server/grader-calibration-fixtures.ts'
 ])]);

@@ -61,7 +61,7 @@ export type QualificationLivePlan = {
   paths: { checkpointPath: string; reportPath: string; recordPath: string; approvalPath: string };
   slots: { index: number; slotId: string; caseId: string; runId: string; requestSha256: string; responseSchemaSha256: string }[];
   stopPolicy: { invalidOrUnknown: true; criticalAxisMiss: true; flawedPass: true; acceptableMisrouting: true; repeatInstability: true; exceededFullAxisFailureAllowance: true; retries: 0; resume: false };
-  authority: 'explicit_user_approval_of_this_execution_plan_required'; productionActivationQualified: false; qualityClaimEligible: false; executionPlanSha256: string;
+  authority: 'explicit_user_approval_of_this_execution_plan_required'; approvalChannel: 'interactive_macos_native_dialog_with_plan_challenge'; productionActivationQualified: false; qualityClaimEligible: false; executionPlanSha256: string;
 };
 export type QualificationLivePreparation = { sources: QualificationLiveSources; implementationCommit: string; codeFileSha256: Record<string, string>; callerScope: LiveQualificationScope; artifactDirectory: string; createdAt: string };
 export function prepareQualificationLivePlan(options: QualificationLivePreparation): QualificationLivePlan {
@@ -76,7 +76,7 @@ export function prepareQualificationLivePlan(options: QualificationLivePreparati
   const body: Omit<QualificationLivePlan, 'executionPlanSha256'> = { format: 'grader-qualification-execution-plan-v1', createdAt: options.createdAt, implementationCommit: options.implementationCommit, codeFileSha256: structuredClone(options.codeFileSha256), sealedPlanSha256: sealed.planSha256, datasetSha256: sealed.datasetSha256, sourceReviewSha256: sources.sourceReview.sourceReviewSha256 as string, sourceArtifactSha256: structuredClone(sources.rawFileSha256), callerScope: structuredClone(scope), budget: { ...QUALIFICATION_LIVE_BUDGET },
     paths: { checkpointPath: resolve(scope.repositoryPath, '.data/grader-qualification-live', `${sealed.datasetSha256}.jsonl`), reportPath: resolve(dir, 'live-report-v1.json'), recordPath: resolve(dir, 'live-qualification-record-v1.json'), approvalPath: resolve(dir, 'execution-authorization-v1.json') },
     slots: sources.bundle.requests.map((r, index) => ({ index, slotId: r.slotId, caseId: r.caseId, runId: r.runId, requestSha256: r.requestSha256, responseSchemaSha256: r.responseSchemaSha256 })),
-    stopPolicy: { invalidOrUnknown: true, criticalAxisMiss: true, flawedPass: true, acceptableMisrouting: true, repeatInstability: true, exceededFullAxisFailureAllowance: true, retries: 0, resume: false }, authority: 'explicit_user_approval_of_this_execution_plan_required', productionActivationQualified: false, qualityClaimEligible: false };
+    stopPolicy: { invalidOrUnknown: true, criticalAxisMiss: true, flawedPass: true, acceptableMisrouting: true, repeatInstability: true, exceededFullAxisFailureAllowance: true, retries: 0, resume: false }, authority: 'explicit_user_approval_of_this_execution_plan_required', approvalChannel: 'interactive_macos_native_dialog_with_plan_challenge', productionActivationQualified: false, qualityClaimEligible: false };
   return { ...body, executionPlanSha256: sha(body) };
 }
 export function verifyQualificationLivePlan(plan: QualificationLivePlan, sources: QualificationLiveSources, expected: { implementationCommit: string; codeFileSha256: Record<string, string>; callerScope: LiveQualificationScope }) {
@@ -84,6 +84,9 @@ export function verifyQualificationLivePlan(plan: QualificationLivePlan, sources
   assert.ok(equal(plan, actual), 'Execution plan differs from frozen sources, budget, code, caller, schedule, paths or stop rules.'); return actual;
 }
 export type QualificationLiveApproval = { format: 'grader-qualification-user-approval-v1'; executionPlanSha256: string; budget: typeof QUALIFICATION_LIVE_BUDGET; authorizationSource: 'direct_user_response'; userResponse: string; recordedAt: string; approvalSha256: string };
+/** Validate an operator's audit transcript only. Self-hashed JSON cannot
+ * authenticate a user or authorize dispatch; production also obtains a direct
+ * native confirmation itself before opening credentials or consuming a cohort. */
 export function verifyQualificationLiveApproval(plan: QualificationLivePlan, value: QualificationLiveApproval) {
   const { approvalSha256, ...body } = value;
   assert.equal(value.format, 'grader-qualification-user-approval-v1'); assert.equal(value.executionPlanSha256, plan.executionPlanSha256); assert.ok(equal(value.budget, plan.budget)); assert.equal(value.authorizationSource, 'direct_user_response');

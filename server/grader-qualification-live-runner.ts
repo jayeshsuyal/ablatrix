@@ -4,6 +4,7 @@ import { existsSync, lstatSync, readFileSync, realpathSync } from 'node:fs';
 import { dirname, isAbsolute, resolve } from 'node:path';
 import { CLAIM_SUPPORT_TOOL, type ClaimSupportInput } from './claim-support.ts';
 import { SapiomFeedbackProvider, type FeedbackProviderOptions } from './feedback-provider.ts';
+import { confirmNativeQualification, verifyNativeConfirmationMetadata, type NativeQualificationConfirmation } from './grader-qualification-live-authorization.ts';
 import { qualificationHash as sha } from './grader-qualification.ts';
 import { assertLiveQualificationMerged, assertLiveQualificationStartingLedger, calibrationCredentialOptions, defaultLiveQualificationScope, inspectLiveQualificationBoundary, qualificationLiveCodeHashes, readLiveQualificationLedger, readLiveQualificationReceipts, validateLiveScope, type LiveQualificationBoundary, type LiveQualificationReceipt } from './grader-qualification-live-boundary.ts';
 import { appendQualificationJournal, createQualificationJournal, publishQualificationJson, readQualificationJournal, type QualificationJournalBinding } from './grader-qualification-live-journal.ts';
@@ -12,7 +13,7 @@ import { inspectQualificationObservations, prepareQualificationLivePlan, qualifi
 type Guard = NonNullable<FeedbackProviderOptions['operationGuard']>;
 type Provider = Pick<SapiomFeedbackProvider, 'executionMode' | 'capacity' | 'gradeClaimSupport' | 'receipt' | 'close'>;
 type Receipts = Record<string, LiveQualificationReceipt | null | undefined>;
-type Frozen = { plan: QualificationLivePlan; sources: QualificationLiveSources; planFileSha256: string; approval: QualificationLiveApproval };
+type Frozen = { plan: QualificationLivePlan; sources: QualificationLiveSources; planFileSha256: string; approval: QualificationLiveApproval; nativeConfirmation?: NativeQualificationConfirmation };
 type CoreDependencies = {
   preflight(): void | Promise<void>;
   inspect(boundary: LiveQualificationBoundary): void | Promise<void>;
@@ -72,6 +73,7 @@ function observations(frozen: Frozen, provenance: QualificationJournalBinding['t
   assert.ok(intent && intent.kind === 'intent');
   assert.equal(intent.approvalSha256, frozen.approval.approvalSha256); assert.equal(intent.planFileSha256, frozen.planFileSha256);
   assert.equal(intent.codeManifestSha256, sha(frozen.plan.codeFileSha256)); assert.equal(intent.sourceReviewSha256, frozen.plan.sourceReviewSha256);
+  if (provenance === 'live_router') verifyNativeConfirmationMetadata(frozen.plan, intent.nativeConfirmation as NativeQualificationConfirmation);
   return { journal, result: inspectQualificationObservations(frozen.plan, frozen.sources, journal.records, exactReceipts(frozen.plan, receipts)) };
 }
 
@@ -103,7 +105,8 @@ async function executeCore(frozen: Frozen, provenance: QualificationJournalBindi
   assert.ok(!existsSync(plan.paths.recordPath), 'Qualification record already exists.');
   assert.ok(Object.values(exactReceipts(plan, dependencies.receipts())).every(r => !r), 'Frozen operation IDs were already attempted.');
   const handle = createQualificationJournal(binding(plan, provenance));
-  appendQualificationJournal(handle, { kind: 'intent', approvalSha256: frozen.approval.approvalSha256, planFileSha256: frozen.planFileSha256, codeManifestSha256: sha(plan.codeFileSha256), sourceReviewSha256: plan.sourceReviewSha256 });
+  if (provenance === 'live_router') verifyNativeConfirmationMetadata(plan, frozen.nativeConfirmation!);
+  appendQualificationJournal(handle, { kind: 'intent', approvalSha256: frozen.approval.approvalSha256, planFileSha256: frozen.planFileSha256, codeManifestSha256: sha(plan.codeFileSha256), sourceReviewSha256: plan.sourceReviewSha256, ...(frozen.nativeConfirmation ? { nativeConfirmation: frozen.nativeConfirmation } : {}) });
   let active: { index: number; beforeReservation: boolean; attemptId?: string; transported: boolean; startedAt?: number; httpStatus: number | null } | undefined;
   const guard: Guard = async operation => {
     const slot = active && plan.slots[active.index];
@@ -213,7 +216,7 @@ export function verifyLiveQualification(planPath: string) {
 export async function executeLiveQualification(options: { planPath: string; acknowledgedPlanSha256: string }) {
   const loaded = loadPlan(options.planPath), { plan } = loaded, scope = scopeFor(plan), env = process.env;
   assert.equal(options.acknowledgedPlanSha256, plan.executionPlanSha256, 'Explicit acknowledgement of this exact execution plan is required.');
-  const approval = approvalFor(plan), frozen = { ...loaded, approval };
+  const approval = approvalFor(plan), frozen: Frozen = { ...loaded, approval };
   assert.equal(env.ABLATRIX_GRADER_QUALIFICATION_LIVE, '1'); assert.equal(env.ABLATRIX_LOOP_LIVE, '1');
   for (const key of ['ABLATRIX_GRADER_CALIBRATION_LIVE', 'ABLATRIX_REVISION_WEB', 'ABLATRIX_AUTOMATIC_CHECK_LIVE', 'ABLATRIX_ANSWER_POLICY_SHADOW_LIVE', 'ABLATRIX_LANGFUSE_ENABLED']) assert.equal(env[key], '0', `Disable ${key} during isolated qualification.`);
   assert.equal(env.ABLATRIX_LOOP_BUDGET_DB, scope.budgetPath); assert.equal(env.ABLATRIX_LOOP_CALL_LIMIT, '194'); assert.equal(Number(env.ABLATRIX_SPEND_CAP_USD), 20); assert.equal(Number(env.ABLATRIX_LOOP_PRIOR_SPEND_USD), .200281); assert.equal(Number(env.ABLATRIX_LOOP_ALLOWANCE_USD), .1);
@@ -224,6 +227,12 @@ export async function executeLiveQualification(options: { planPath: string; ackn
     inspectLiveQualificationBoundary(scope, boundary);
   };
   const preflight = () => { assertLiveQualificationStartingLedger(readLiveQualificationLedger(scope.budgetPath)); calibrationCredentialOptions(env); };
+  // Audit JSON is never authority. The production entry point obtains the
+  // confirmation directly from the OS after checking scope and stopped workers.
+  // Recheck everything after the dialog before claiming the cohort or opening
+  // credential contents; Cancel/timeout cannot reserve or construct a provider.
+  preflight(); inspect({ ledgerInitialSha256: scope.ledgerInitialSha256, allowedRunIds: plan.slots.map(s => s.runId), reservedRunIds: [], transportCount: 0, maxCalls: 92 });
+  frozen.nativeConfirmation = confirmNativeQualification(plan);
   await executeCore(frozen, 'live_router', {
     preflight, inspect,
     createProvider: hooks => {
