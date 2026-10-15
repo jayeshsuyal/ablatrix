@@ -48,7 +48,7 @@ export type CalibrationReport = {
   slots: (CalibrationReportSlot & { index: number; caseId: string; familyId: string; runId: string; requestSha256: string; receipt: CalibrationBoundReceipt | null; receiptSha256: string | null; referenceAgreement: CalibrationReferenceAgreement | null })[];
   metrics: { overall: CalibrationOverallMetrics; support: CalibrationAxisMetrics; coverage: CalibrationAxisMetrics; uncertainty: CalibrationAxisMetrics; families: { familyId: string; name: string; caseCount: number; overall: CalibrationOverallMetrics }[] };
   checkpointProof: { planSha256: string; recordCount: number; tailSha256: string; records: CalibrationCheckpointRecord[] };
-  accounting: { plannedCallCeiling: 10; attemptedSlots: number; reservedSlots: number; observedSlots: number; validGrades: number; rawPasses: number; transportCount: number; transportCountKind: 'observed_checkpoints_only'; unknownTransportSlots: number; exactTransportCount: number | null; reservedPlanningAllowanceUsd: number | null; observedPlanningAllowanceUsd: number | null; maxPlanningExposureUsd: 9.800281;
+  accounting: { plannedCallCeiling: 10; attemptedSlots: number; reservedSlots: number; checkpointReservedSlots: number; observedSlots: number; validGrades: number; rawPasses: number; transportCount: number; transportCountKind: 'observed_checkpoints_only'; unknownTransportSlots: number; exactTransportCount: number | null; reservedPlanningAllowanceUsd: number | null; observedPlanningAllowanceUsd: number | null; maxPlanningExposureUsd: 9.800281;
     usage: { inputTokens: number | null; outputTokens: number | null; receiptsWithUsage: number }; latency: { observedElapsedMs: number; slots: { index: number; elapsedMs: number | null; transportDurationMs: number | null }[] }; label: 'local_planning_allowances_not_settled_charges' | 'mocked_mechanics_only' };
   limitations: string[]; reportSha256: string;
 };
@@ -200,6 +200,8 @@ export function deriveCalibrationReport(plan: CalibrationPlan, options: Calibrat
   const records = structuredClone(options.checkpointRecords ?? []), proof = verifyCalibrationCheckpointRecords(plan, records);
   const slots: CalibrationReport['slots'] = plan.slots.map(slot => {
     const receipt = options.receiptsByRunId[slot.input.runId] ?? null, observation = proof.observed.get(slot.index);
+    const reservation = records.find(record => record.kind === 'slot_reserved' && record.slotIndex === slot.index);
+    if (reservation && (!receipt || reservation.receiptId !== receipt.id)) throw new Error('Checkpoint reservation differs from its read-only trusted ledger receipt.');
     if (observation && (!receipt || !equal(receipt, observation.receipt))) throw new Error('Checkpoint receipt differs from the read-only trusted ledger receipt.');
     if (!proof.started.has(slot.index) && receipt) throw new Error('A ledger receipt exists without the frozen checkpoint dispatch intent.');
     let result: CalibrationReportSlot;
@@ -213,16 +215,17 @@ export function deriveCalibrationReport(plan: CalibrationPlan, options: Calibrat
   const last = records.at(-1), terminalKind = last?.kind === 'finished' ? 'finished' : last?.kind === 'stopped' ? 'stopped' : records.length ? 'interrupted' : 'not_started';
   if (terminalKind === 'finished' && failure) throw new Error('Calibration cannot declare a finished terminal checkpoint with invalid or unknown outcomes.');
   const latencySlots = plan.slots.map(slot => { const start = records.find(record => record.kind === 'slot_started' && record.slotIndex === slot.index), observed = proof.observed.get(slot.index); return { index: slot.index, elapsedMs: start && observed ? Math.max(0, Date.parse(observed.createdAt) - Date.parse(start.createdAt)) : null, transportDurationMs: observed?.durationMs ?? null }; });
-  const usageSlots = slots.filter(slot => slot.usage), reservedSlots = records.filter(record => record.kind === 'slot_reserved').length;
+  const usageSlots = slots.filter(slot => slot.usage), reservedSlots = slots.filter(slot => slot.receipt).length;
+  const checkpointReservedSlots = records.filter(record => record.kind === 'slot_reserved').length;
   const observedTransportCount = records.reduce((total, record) => total + (record.kind === 'slot_observed' ? record.transportCount ?? 0 : 0), 0);
-  const unknownTransportSlots = records.filter(record => record.kind === 'slot_reserved' && proof.observed.get(record.slotIndex!)?.transportCount === undefined).length;
+  const unknownTransportSlots = [...proof.started].filter(index => proof.observed.get(index)?.transportCount === undefined).length;
   const body: Omit<CalibrationReport, 'reportSha256'> = { format: 'grader-calibration-report-v1', planSha256, plan: structuredClone(plan), executionMode: options.executionMode, transportProvenance: options.transportProvenance,
     evidenceMode: options.transportProvenance === 'live_router' ? 'live_calibration_pilot' : 'mocked_transport_mechanics_only', calibration: options.transportProvenance === 'live_router' ? 'measured_on_constructed_pilot' : 'not_measured_mocked_transport', referenceProvenance: structuredClone(plan.referenceProvenance),
     complete: terminalKind === 'finished' && slots.every(slot => ['accepted', 'rejected', 'uncertain'].includes(slot.status)), qualityClaimEligible: false, humanGold: false, productionActivationQualified: false,
     terminal: { kind: terminalKind, reason: terminalKind === 'stopped' ? last?.reason ?? 'Execution stopped before its final boundary was confirmed.' : terminalKind === 'interrupted' ? 'No durable terminal checkpoint confirms execution completion.' : terminalKind === 'not_started' ? 'No execution intent has been recorded.' : null, stopReasons: terminalKind === 'stopped' ? structuredClone(last?.stopReasons ?? []) : [] }, slots,
     metrics: { overall: overallMetrics(plan, slots), support: axisMetrics(plan, slots, 'support'), coverage: axisMetrics(plan, slots, 'coverage'), uncertainty: axisMetrics(plan, slots, 'uncertainty'), families: plan.families.map(family => ({ familyId: family.id, name: family.name, caseCount: slots.filter(slot => slot.familyId === family.id).length, overall: overallMetrics(plan, slots.filter(slot => slot.familyId === family.id)) })) },
     checkpointProof: { planSha256, recordCount: records.length, tailSha256: proof.tailSha256, records },
-    accounting: { plannedCallCeiling: 10, attemptedSlots: proof.started.size, reservedSlots, observedSlots: proof.observed.size, validGrades: slots.filter(slot => !!slot.assessment).length, rawPasses: slots.filter(slot => slot.assessment?.disposition === 'pass').length,
+    accounting: { plannedCallCeiling: 10, attemptedSlots: proof.started.size, reservedSlots, checkpointReservedSlots, observedSlots: proof.observed.size, validGrades: slots.filter(slot => !!slot.assessment).length, rawPasses: slots.filter(slot => slot.assessment?.disposition === 'pass').length,
       transportCount: observedTransportCount, transportCountKind: 'observed_checkpoints_only', unknownTransportSlots, exactTransportCount: unknownTransportSlots ? null : observedTransportCount, reservedPlanningAllowanceUsd: options.executionMode === 'live' ? Number((reservedSlots * 0.1).toFixed(6)) : null,
       observedPlanningAllowanceUsd: options.executionMode === 'live' ? Number(slots.reduce((total, slot) => total + (slot.receipt?.allowance_usd ?? 0), 0).toFixed(6)) : null, maxPlanningExposureUsd: 9.800281,
       usage: { inputTokens: usageSlots.length ? usageSlots.reduce((total, slot) => total + slot.usage!.inputTokens, 0) : null, outputTokens: usageSlots.length ? usageSlots.reduce((total, slot) => total + slot.usage!.outputTokens, 0) : null, receiptsWithUsage: usageSlots.length },

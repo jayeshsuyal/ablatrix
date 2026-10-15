@@ -107,7 +107,10 @@ export async function executeGraderCalibration(options: CalibrationExecutionOpti
   if (Object.values(prior).some(Boolean)) throw new Error('Frozen calibration run IDs already have ledger attempts. Execution cannot resume or redispatch.');
   const reservedRunIds: string[] = [];
   let transportCount = 0;
-  const inspect = (phase: CalibrationBoundary['phase'], slot?: CalibrationPlanSlot, attemptId?: string) => dependencies.inspectBoundary({ phase, planSha256: plan.planSha256, slotIndex: slot?.index ?? null, runId: slot?.input.runId ?? null, ...(attemptId ? { attemptId } : {}), reservedRunIds: [...reservedRunIds], transportCount });
+  const inspect = (phase: CalibrationBoundary['phase'], slot?: CalibrationPlanSlot, attemptId?: string) => {
+    verifyCalibrationPlan(plan, dependencies.verification);
+    return dependencies.inspectBoundary({ phase, planSha256: plan.planSha256, slotIndex: slot?.index ?? null, runId: slot?.input.runId ?? null, ...(attemptId ? { attemptId } : {}), reservedRunIds: [...reservedRunIds], transportCount });
+  };
   await dependencies.preflight(plan, frozen); await inspect('preflight');
   // Recheck output exclusivity and approved run IDs after potentially slow OS
   // checks and before the first durable intent. No credential has been opened.

@@ -87,7 +87,7 @@ test('calibration performs exactly ten guarded frozen calls in the existing fini
 });
 
 test('all full preflight gates precede provider creation, credentials, intent and transport', async () => {
-  for (const behavior of ['execute', 'optin', 'ack', 'code', 'preflight', 'boundary', 'ledger', 'scope'] as const) {
+  for (const behavior of ['execute', 'optin', 'ack', 'code', 'code-during-preflight', 'plan-during-preflight', 'preflight', 'boundary', 'ledger', 'scope'] as const) {
     const fixture = setup();
     try {
       const options = { ...fixture.options }, dependencies = { ...fixture.dependencies };
@@ -95,6 +95,8 @@ test('all full preflight gates precede provider creation, credentials, intent an
       if (behavior === 'optin') options.liveOptIn = false;
       if (behavior === 'ack') options.acknowledgedPlanSha256 = '0'.repeat(64);
       if (behavior === 'code') dependencies.verification = { ...dependencies.verification, codeFileSha256: { ...dependencies.verification.codeFileSha256, 'server/claim-support.ts': '0'.repeat(64) } };
+      if (behavior === 'code-during-preflight') dependencies.preflight = async () => { dependencies.verification = { ...dependencies.verification, codeFileSha256: { ...dependencies.verification.codeFileSha256, 'server/claim-support.ts': '0'.repeat(64) } }; };
+      if (behavior === 'plan-during-preflight') dependencies.preflight = async plan => { plan.slots[0].reference.rationale += ' Changed during preflight.'; };
       if (behavior === 'preflight') dependencies.preflight = async () => { throw new Error('SYNTHETIC merged-code/OS preflight rejection'); };
       if (behavior === 'boundary') dependencies.inspectBoundary = async () => { throw new Error('SYNTHETIC changed listener or pending worker'); };
       if (behavior === 'ledger') dependencies.readLedgerReceipts = plan => ({ [plan.slots[0].input.runId]: { id: 'recorded-attempt', kind: 'claim_support_v1', status: 'pending', model: null, error_code: null, receipt_json: null } });

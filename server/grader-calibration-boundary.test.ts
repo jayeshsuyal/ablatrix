@@ -59,11 +59,18 @@ test('read-only ledger metadata confirms exact 86 to 96 accounting and detects a
 });
 
 test('caller scope fixes the existing ledger and authority instead of accepting an alternate budget', () => {
-  const scope: CalibrationScope = { ...defaultCalibrationScope(), ledgerInitialSha256: 'a'.repeat(64) };
-  assert.doesNotThrow(() => validateCalibrationScope(scope));
-  assert.throws(() => validateCalibrationScope({ ...scope, executionAuthority: 'any_caller' }));
-  assert.throws(() => validateCalibrationScope({ ...scope, budgetPath: scope.reviewPath }), /shared planning ledger/);
-  assert.throws(() => validateCalibrationScope({ ...scope, extra: 'widened' }));
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'ablatrix-calibration-scope-')));
+  const budgetPath = join(dir, 'budget.sqlite'), reviewPath = join(dir, 'reviews.sqlite');
+  for (const path of [budgetPath, reviewPath]) new DatabaseSync(path).close();
+  const scope: CalibrationScope = { ...defaultCalibrationScope(), budgetPath, reviewPath, ledgerInitialSha256: 'a'.repeat(64) };
+  try {
+    const expected = { budgetPath };
+    assert.throws(() => validateCalibrationScope(scope), /shared planning ledger/, 'Production defaults cannot accept the test ledger.');
+    assert.doesNotThrow(() => validateCalibrationScope(scope, expected));
+    assert.throws(() => validateCalibrationScope({ ...scope, executionAuthority: 'any_caller' }, expected));
+    assert.throws(() => validateCalibrationScope({ ...scope, budgetPath: reviewPath }, expected), /shared planning ledger/);
+    assert.throws(() => validateCalibrationScope({ ...scope, extra: 'widened' }, expected));
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test('an older ledger schema is rejected read-only before a provider could migrate historical rows', () => {

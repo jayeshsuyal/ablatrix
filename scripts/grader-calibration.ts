@@ -87,7 +87,11 @@ async function runCalibrationCli(argv: string[]) {
       const state = readCalibrationLedgerState(scope.budgetPath); assert.equal(state.initialSha256, scope.ledgerInitialSha256); assert.equal(state.activeOwners, 0, 'Another provider currently owns the shared ledger.');
       inspectCalibrationWorkers(scope);
     },
-    inspectBoundary: boundary => { inspectCalibrationExecutionBoundary(plan, boundary); },
+    inspectBoundary: boundary => {
+      calibrationCodeHashes(plan.implementationCommit);
+      verifyCalibrationPlan(JSON.parse(readFileSync(flag('--plan'), 'utf8')), verification);
+      inspectCalibrationExecutionBoundary(plan, boundary);
+    },
     createProvider: ({ fetchImpl, operationGuard }) => {
       // Recheck the existing schema/history after private intent creation and
       // before a credential-owning constructor can perform any initialization.

@@ -152,3 +152,18 @@ test('interruption after reservation leaves actual transport count unknown despi
   assert.equal(report.accounting.reservedSlots, 10); assert.equal(report.accounting.reservedPlanningAllowanceUsd, 1); assert.equal(report.accounting.validGrades, 9);
   const completeReport = deriveCalibrationReport(h.plan, h.reportOptions); assert.equal(completeReport.accounting.unknownTransportSlots, 0); assert.equal(completeReport.accounting.exactTransportCount, 10);
 });
+
+test('a ledger reservation consumed before its journal append retains allowance and cannot become a zero-call report', () => {
+  const h = complete(), first = h.plan.slots[0];
+  const pending = { ...h.receiptsByRunId[first.input.runId], status: 'pending', model: null, receipt_json: null, input_tokens: null, output_tokens: null };
+  const options = { ...h.reportOptions, checkpointRecords: h.checkpointRecords.slice(0, 2), receiptsByRunId: { [first.input.runId]: pending } };
+  const report = deriveCalibrationReport(h.plan, options);
+  assert.equal(report.complete, false); assert.equal(report.slots[0].status, 'unknown');
+  assert.equal(report.accounting.reservedSlots, 1); assert.equal(report.accounting.checkpointReservedSlots, 0);
+  assert.equal(report.accounting.reservedPlanningAllowanceUsd, .1); assert.equal(report.accounting.observedPlanningAllowanceUsd, .1);
+  assert.equal(report.accounting.unknownTransportSlots, 1); assert.equal(report.accounting.exactTransportCount, null);
+  assert.equal(report.accounting.validGrades, 0); assert.equal(report.metrics.overall.unattempted, 9);
+  const reserved = { ...options, checkpointRecords: h.checkpointRecords.slice(0, 3) };
+  assert.throws(() => deriveCalibrationReport(h.plan, { ...reserved, receiptsByRunId: {} }), /reservation differs/);
+  assert.throws(() => deriveCalibrationReport(h.plan, { ...reserved, receiptsByRunId: { [first.input.runId]: { ...pending, id: 'other-reservation' } } }), /reservation differs/);
+});
