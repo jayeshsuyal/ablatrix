@@ -106,6 +106,8 @@ test('exact ten slots retain invalid, unknown, and unattempted outcomes in parti
   const knownFirst = { [first.input.runId]: h.receiptsByRunId[first.input.runId] }, unknownRecords = checkpoints(h.plan, knownFirst, 2, true), unknown = deriveCalibrationReport(h.plan, { ...h.reportOptions, receiptsByRunId: knownFirst, checkpointRecords: unknownRecords });
   assert.equal(unknown.slots[1].status, 'unknown'); assert.equal(unknown.metrics.overall.unknown, 1); assert.equal(unknown.metrics.overall.unattempted, 8);
   const empty = deriveCalibrationReport(h.plan, { ...h.reportOptions, receiptsByRunId: {}, checkpointRecords: [] }); assert.equal(empty.metrics.overall.unattempted, 10); assert.equal(empty.complete, false);
+  const liveEmpty = deriveCalibrationReport(h.plan, { ...h.reportOptions, transportProvenance: 'live_router', receiptsByRunId: {}, checkpointRecords: [] });
+  assert.equal(liveEmpty.calibration, 'not_measured_no_valid_grades'); assert.equal(liveEmpty.accounting.validGrades, 0);
   assert.throws(() => deriveCalibrationReport(h.plan, { ...h.reportOptions, receiptsByRunId: receipts, checkpointRecords: checkpoints(h.plan, receipts, 2, true) }), /continued after/);
 });
 
