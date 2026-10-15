@@ -20,7 +20,7 @@ export const calibrationSharedBudgetPath = resolve(calibrationRepository, '../re
 
 /** Validate metadata only, before the provider reads credential contents. */
 export function calibrationCredentialOptions(env: NodeJS.ProcessEnv,
-  projectRoot = resolve(calibrationRepository, '..'), accountFile = resolve(homedir(), '.sapiom/credentials.json')) {
+  projectRoot = resolve(calibrationRepository), accountFile = resolve(homedir(), '.sapiom/credentials.json')) {
   if (env.SAPIOM_API_KEY?.trim()) return { apiKey: env.SAPIOM_API_KEY, credentialsFile: '', source: 'explicit_environment' as const };
   const configured = env.SAPIOM_CREDENTIALS_FILE;
   assert.ok(configured && isAbsolute(configured) && configured === resolve(configured), 'An explicit canonical project or Sapiom account credential source is required.');

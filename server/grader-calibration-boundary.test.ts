@@ -2,12 +2,12 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, realpathSync, rmSync, mkdirSync, writeFileSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { SapiomFeedbackProvider } from './feedback-provider.ts';
 import { calibrationFixtureDataset } from './grader-calibration-fixtures.ts';
 import { claimSupportRequestParts } from './claim-support.ts';
-import { assertCalibrationStartingLedger, readCalibrationLedgerState, validateCalibrationScope, defaultCalibrationScope, calibrationCredentialOptions, type CalibrationScope } from './grader-calibration-boundary.ts';
+import { assertCalibrationStartingLedger, readCalibrationLedgerState, validateCalibrationScope, defaultCalibrationScope, calibrationCredentialOptions, calibrationRepository, type CalibrationScope } from './grader-calibration-boundary.ts';
 
 test('pilot credentials accept explicit project or standard account sources without reading their contents', () => {
   const dir = realpathSync(mkdtempSync(join(tmpdir(), 'ablatrix-calibration-credential-')));
@@ -15,6 +15,8 @@ test('pilot credentials accept explicit project or standard account sources with
   for (const path of [owned, account, unrelated]) { mkdirSync(join(path, '..'), { recursive: true }); writeFileSync(path, 'NOT JSON: metadata validation must never parse credentials.'); }
   const choose = (env: NodeJS.ProcessEnv) => calibrationCredentialOptions(env, root, account);
   try {
+    assert.equal(calibrationCredentialOptions({ SAPIOM_CREDENTIALS_FILE: resolve(calibrationRepository, 'package.json') }).source, 'explicit_project_file', 'Production defaults validate only metadata of an in-repository file.');
+    assert.throws(() => calibrationCredentialOptions({ SAPIOM_CREDENTIALS_FILE: resolve(calibrationRepository, '../other-repository/credentials.json') }), /unrelated repository/, 'Production defaults reject sibling checkout paths before inspecting them.');
     assert.equal(choose({ SAPIOM_CREDENTIALS_FILE: owned }).source, 'explicit_project_file');
     assert.equal(choose({ SAPIOM_CREDENTIALS_FILE: account }).source, 'explicit_user_sapiom_account');
     assert.deepEqual(choose({ SAPIOM_API_KEY: 'SYNTHETIC test placeholder', SAPIOM_CREDENTIALS_FILE: unrelated }), { apiKey: 'SYNTHETIC test placeholder', credentialsFile: '', source: 'explicit_environment' });
