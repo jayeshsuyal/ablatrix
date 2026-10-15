@@ -76,6 +76,21 @@ test('read-only ledger metadata confirms exact 86 to 96 accounting and detects a
   } finally { db.close(); rmSync(dir, { recursive: true, force: true }); }
 });
 
+test('five-case protocol fingerprints all 91 historical attempts and cannot borrow the old 86-row scope', () => {
+  const dir = realpathSync(mkdtempSync(join(tmpdir(), 'ablatrix-abstention-budget-'))), path = join(dir, 'ledger.sqlite');
+  const provider = new SapiomFeedbackProvider({ enabled: false, apiKey: '', credentialsFile: '', dbPath: path }); provider.close();
+  const db = new DatabaseSync(path);
+  try {
+    const insert = db.prepare('INSERT INTO loop_provider_calls(id,created_at,kind,allowance_usd,status,run_id) VALUES(?,?,?,?,?,?)');
+    for (let i = 0; i < 91; i++) insert.run(`prior-${i}`, '2026-10-14T00:00:00.000Z', 'synthetic metadata', .1, 'completed', `prior-run-${i}`);
+    const initial = readCalibrationLedgerState(path, 'abstention-v2-five'); assertCalibrationStartingLedger(initial, 'abstention-v2-five');
+    assert.equal(initial.reservedUsd, 9.1); assert.equal(initial.rows.length, 0); assert.throws(() => assertCalibrationStartingLedger(initial), /Shared ledger differs/);
+    db.prepare('UPDATE loop_provider_calls SET kind=? WHERE id=?').run('changed prior v3 row', 'prior-90');
+    assert.notEqual(readCalibrationLedgerState(path, 'abstention-v2-five').initialSha256, initial.initialSha256);
+    assert.throws(() => readCalibrationLedgerState(path, 'unapproved-protocol' as never), /Unknown frozen/);
+  } finally { db.close(); rmSync(dir, { recursive: true, force: true }); }
+});
+
 test('caller scope fixes the existing ledger and authority instead of accepting an alternate budget', () => {
   const dir = realpathSync(mkdtempSync(join(tmpdir(), 'ablatrix-calibration-scope-')));
   const budgetPath = join(dir, 'budget.sqlite'), reviewPath = join(dir, 'reviews.sqlite');

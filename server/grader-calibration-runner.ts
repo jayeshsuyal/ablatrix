@@ -162,7 +162,7 @@ export async function executeGraderCalibration(options: CalibrationExecutionOpti
   };
   const boundedTransport: typeof fetch = async (url, init) => {
     const requested = typeof url === 'string' ? url : url instanceof URL ? url.href : url.url;
-    if (!active || !active.attemptId || !active.beforeReservation || active.transported || transportCount >= 10 || requested !== 'https://router.sapiom.ai/v1/chat/completions' || init?.method !== 'POST' || typeof init.body !== 'string' || init.body !== JSON.stringify(active.slot.requestBody)) throw new Error('Calibration transport differs from its exact frozen single-call slot.');
+    if (!active || !active.attemptId || !active.beforeReservation || active.transported || transportCount >= plan.budget.newCalls || requested !== 'https://router.sapiom.ai/v1/chat/completions' || init?.method !== 'POST' || typeof init.body !== 'string' || init.body !== JSON.stringify(active.slot.requestBody)) throw new Error('Calibration transport differs from its exact frozen single-call slot.');
     const slot = active.slot, attemptId = active.attemptId;
     await inspect('before_transport', slot, attemptId); active.transported = true; active.dispatchedAt = new Date().toISOString(); active.httpStatus = null; transportCount++;
     let response: Response | undefined;
@@ -175,7 +175,7 @@ export async function executeGraderCalibration(options: CalibrationExecutionOpti
   const stopReasons: string[] = [];
   try {
     provider = dependencies.createProvider({ fetchImpl: boundedTransport, operationGuard });
-    if (provider.executionMode !== 'live' || !provider.capacity(10).ready) throw new Error('The existing shared provider cannot reserve this exact ten-call planning allowance.');
+    if (provider.executionMode !== 'live' || !provider.capacity(plan.budget.newCalls).ready) throw new Error('The existing shared provider cannot reserve this exact finite planning allowance.');
     for (const slot of plan.slots) {
       active = { slot, beforeReservation: false, transported: false };
       checkpoint('slot_started', { slotIndex: slot.index, runId: slot.input.runId, requestSha256: slot.requestSha256 });

@@ -484,7 +484,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
   async gradeClaimSupport(input: ClaimSupportInput) {
     const parts = claimSupportRequestParts(input), previous = this.receipt(input.runId);
     if (previous) return replayClaimSupportReceipt(input, previous);
-    const frozenInput: ClaimSupportInput = { runId: input.runId, ...parts.normalized };
+    const frozenInput: ClaimSupportInput = { runId: input.runId, ...parts.normalized, graderVersion: parts.prompt.promptVersion };
     const identity = { ...parts.bindings, assessmentKind: 'ai_claim_support_estimate' as const };
     const result = await this.request(CLAIM_SUPPORT_TOOL, parts.prompt.systemInstructions, parts.payload, parts.parameters, input.runId, identity);
     try {

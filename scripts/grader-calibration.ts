@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { closeSync, existsSync, fsyncSync, lstatSync, mkdirSync, openSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { prepareCalibrationPlan, verifyCalibrationPlan, type CalibrationPlan } from '../server/grader-calibration.ts';
+import { calibrationBudget, prepareCalibrationPlan, verifyCalibrationPlan, type CalibrationPlan, type CalibrationProtocol } from '../server/grader-calibration.ts';
 import { SapiomFeedbackProvider } from '../server/feedback-provider.ts';
 import { executeGraderCalibration, verifyGraderCalibrationCheckpoint, type CalibrationExecutionOptions } from '../server/grader-calibration-runner.ts';
 import { assertCalibrationMerged, assertCalibrationStartingLedger, calibrationCodeHashes, defaultCalibrationScope, inspectCalibrationExecutionBoundary,
@@ -41,13 +41,14 @@ async function runCalibrationCli(argv: string[]) {
   };
   const flag = (name: string) => { const value = flags.get(name); assert.ok(value, `Missing ${name}.`); return value; };
   if (command === '--prepare') {
-    requireFlags(['--implementation-commit', '--out'], ['--scope']);
+    requireFlags(['--implementation-commit', '--out'], ['--scope', '--protocol']);
+    const protocol = flags.get('--protocol') as CalibrationProtocol | undefined; calibrationBudget(protocol);
     const scope = flags.has('--scope') ? JSON.parse(readFileSync(flag('--scope'), 'utf8')) as CalibrationScope : defaultCalibrationScope();
     validateCalibrationScope({ ...scope, ledgerInitialSha256: '0'.repeat(64) });
-    const state = readCalibrationLedgerState(scope.budgetPath); assertCalibrationStartingLedger(state);
+    const state = readCalibrationLedgerState(scope.budgetPath, protocol); assertCalibrationStartingLedger(state, protocol);
     scope.ledgerInitialSha256 = state.initialSha256; validateCalibrationScope(scope);
     const implementationCommit = flag('--implementation-commit');
-    const plan = prepareCalibrationPlan({ implementationCommit, callerScope: scope, codeFileSha256: calibrationCodeHashes(implementationCommit), createdAt: new Date().toISOString() });
+    const plan = prepareCalibrationPlan({ ...(protocol ? { protocol } : {}), implementationCommit, callerScope: scope, codeFileSha256: calibrationCodeHashes(implementationCommit), createdAt: new Date().toISOString() });
     exclusiveJson(flag('--out'), plan);
     return { mode: 'offline_preparation', out: resolve(flag('--out')), planSha256: plan.planSha256, slots: plan.slots.length, families: plan.families.length, newProviderCalls: 0, references: plan.referenceProvenance, budget: plan.budget };
   }
@@ -64,7 +65,7 @@ async function runCalibrationCli(argv: string[]) {
     checkpointPath: flag('--checkpoint'), reportPath: flag('--report'), transportProvenance: 'live_router' };
   privateCheckpoint(options.checkpointPath, scope); reportTarget(options.reportPath);
   if (command === '--replay') {
-    const state = readCalibrationLedgerState(scope.budgetPath); assert.equal(state.initialSha256, scope.ledgerInitialSha256, 'Historical shared receipts changed.');
+    const state = readCalibrationLedgerState(scope.budgetPath, plan.protocol); assert.equal(state.initialSha256, scope.ledgerInitialSha256, 'Historical shared receipts changed.');
     const result = verifyGraderCalibrationCheckpoint(options, { verification, readLedgerReceipts: readCalibrationReceipts });
     return { mode: 'read_only_checkpoint_replay', planSha256: plan.planSha256, savedReportPresent: existsSync(options.reportPath), complete: result.report.complete, terminal: result.report.terminal, checkpointInspection: result.checkpointInspection ?? null, accounting: result.report.accounting, metrics: result.report.metrics, newProviderCalls: 0, qualityClaimEligible: false };
   }
@@ -83,8 +84,8 @@ async function runCalibrationCli(argv: string[]) {
     preflight() {
       assertCalibrationMerged(plan.implementationCommit, scope.repositoryPath);
       validateCalibrationScope(scope); calibrationCodeHashes(plan.implementationCommit);
-      assertCalibrationStartingLedger(readCalibrationLedgerState(scope.budgetPath));
-      const state = readCalibrationLedgerState(scope.budgetPath); assert.equal(state.initialSha256, scope.ledgerInitialSha256); assert.equal(state.activeOwners, 0, 'Another provider currently owns the shared ledger.');
+      assertCalibrationStartingLedger(readCalibrationLedgerState(scope.budgetPath, plan.protocol), plan.protocol);
+      const state = readCalibrationLedgerState(scope.budgetPath, plan.protocol); assert.equal(state.initialSha256, scope.ledgerInitialSha256); assert.equal(state.activeOwners, 0, 'Another provider currently owns the shared ledger.');
       calibrationCredentialOptions(env);
       inspectCalibrationWorkers(scope);
     },
@@ -96,7 +97,7 @@ async function runCalibrationCli(argv: string[]) {
     createProvider: ({ fetchImpl, operationGuard }) => {
       // Recheck the existing schema/history after private intent creation and
       // before a credential-owning constructor can perform any initialization.
-      const state = readCalibrationLedgerState(scope.budgetPath); assertCalibrationStartingLedger(state);
+      const state = readCalibrationLedgerState(scope.budgetPath, plan.protocol); assertCalibrationStartingLedger(state, plan.protocol);
       assert.equal(state.initialSha256, scope.ledgerInitialSha256); assert.equal(state.activeOwners, 0);
       inspectCalibrationWorkers(scope); calibrationCodeHashes(plan.implementationCommit);
       const { apiKey, credentialsFile } = calibrationCredentialOptions(env);

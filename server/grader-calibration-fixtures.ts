@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { claimSupportRequestParts, type ClaimSupportDisposition, type ClaimSupportInput, type ClaimSupportUnitGrade, type ClaimSupportWireOutput } from './claim-support.ts';
+import { ABSTENTION_GRADER_VERSION, claimSupportRequestParts, type ClaimSupportDisposition, type ClaimSupportInput, type ClaimSupportUnitGrade, type ClaimSupportWireOutput } from './claim-support.ts';
 
 export type CalibrationInputCase = { id: string; familyId: string; input: Omit<ClaimSupportInput, 'runId'> };
 export type CalibrationFixtureCase = CalibrationInputCase;
@@ -27,7 +27,7 @@ export type CalibrationReference = {
   provenance: CalibrationReferenceProvenance;
 };
 export type CalibrationFixtureDataset = {
-  format: 'constructed-grader-pilot-v1';
+  format: 'constructed-grader-pilot-v1' | 'constructed-abstention-smoke-v1';
   cases: CalibrationInputCase[];
   references: CalibrationReference[];
   families: { id: string; name: string; pattern: string }[];
@@ -113,4 +113,33 @@ export function calibrationFixtureDataset(): CalibrationFixtureDataset {
   ]);
 
   return { format: 'constructed-grader-pilot-v1', cases, references, families, referenceProvenance: provenance() };
+}
+
+/** New, unpaired development smoke cases. No old case is retried or relabeled. */
+export function abstentionCalibrationFixtureDataset(): CalibrationFixtureDataset {
+  const cases: CalibrationInputCase[] = [], references: CalibrationReference[] = [], families: CalibrationFixtureDataset['families'] = [];
+  function add(seed: string, name: string, text: string, question: string, answer: ClaimSupportInput['answer'], label: Omit<CalibrationReference, 'caseId' | 'familyId' | 'provenance' | 'spans'>) {
+    const familyId = identity(`abstention-v2:${seed}`), source = { id: sourceId(`abstention-v2:${seed}`), source: 'Fictional specification', text };
+    const input = { graderVersion: ABSTENTION_GRADER_VERSION, question, product: product(`abstention-v2:${seed}`, `Fictional ${seed}`), evidence: [source], clarifications: [], answer: { ...answer, citations: answer.status === 'answered' ? [{ passageId: source.id, quote: text.split('. ')[0] + (text.includes('. ') ? '.' : '') }] : answer.citations } };
+    const id = digest(JSON.stringify(input)); claimSupportRequestParts({ runId: `abstention-fixture:${id}`, ...input });
+    cases.push({ id, familyId, input }); families.push({ id: familyId, name, pattern: name });
+    references.push({ caseId: id, familyId, ...label, spans: [{ sourceId: source.id, quote: text, role: label.support === 'contradicted' ? 'conflict' : label.support === 'supported' ? 'supports' : 'missing_context' }], provenance: provenance() });
+  }
+  const axes = (support: CalibrationReference['support'], questionCoverage: CalibrationReference['questionCoverage'], answerability: ClaimSupportWireOutput['answerability'], correctness: ClaimSupportWireOutput['correctness'][], uncertaintyHandling: CalibrationReference['uncertaintyHandling']) => ({ support: [support], questionCoverage: [questionCoverage], answerability: [answerability], correctness, uncertaintyHandling: [uncertaintyHandling] });
+  add('Halven lantern', 'Justified missing-information refusal', 'The fictional Halven lantern weighs 240 grams and has a USB-C charging port.', 'What IP water-resistance rating is specified for the fictional Halven lantern?',
+    { status: 'insufficient_evidence', answer: 'I cannot determine its IP water-resistance rating from the supplied specification.', citations: [] },
+    { answerQuality: 'good', acceptableDispositions: ['abstain'], support: 'non_factual', questionCoverage: 'complete', uncertaintyHandling: 'appropriate', acceptableAxes: axes('non_factual', 'complete', 'insufficient', ['consistent_with_sources'], 'appropriate'), rationale: 'The source states mass and charging port but no IP rating. This pure refusal asserts no product fact and needs no invented absence quote.' });
+  add('Morven board', 'Unnecessary refusal of an available fact', 'The fictional Morven cutting board is 17 millimeters thick.', 'How thick is the fictional Morven cutting board?',
+    { status: 'insufficient_evidence', answer: 'I cannot determine its thickness from the supplied specification.', citations: [] },
+    { answerQuality: 'flawed', acceptableDispositions: ['repair'], support: 'non_factual', questionCoverage: 'incomplete', uncertaintyHandling: 'unnecessary_abstention', acceptableAxes: axes('non_factual', 'incomplete', 'answerable', ['consistent_with_sources'], 'unnecessary_abstention'), rationale: 'The pure refusal asserts no product fact, but the supplied thickness directly answers the question. Non-factual is not a certificate of appropriate refusal; coverage and uncertainty must fail.' });
+  add('Kelmor speaker', 'Refusal with an unsupported factual addition', 'The fictional Kelmor speaker has a USB-C charging port and a cloth carrying strap.', 'What warranty period is specified for the fictional Kelmor speaker?',
+    { status: 'insufficient_evidence', answer: 'I cannot determine the warranty period from the supplied specification. It plays for 24 hours on one charge.', citations: [] },
+    { answerQuality: 'flawed', acceptableDispositions: ['abstain', 'uncertain'], support: 'unsupported', questionCoverage: 'complete', uncertaintyHandling: 'overconfident', acceptableAxes: axes('unsupported', 'complete', 'insufficient', ['consistent_with_sources', 'uncertain'], 'overconfident'), rationale: 'The requested warranty is absent, but the same answer unit adds an unsupported battery-duration assertion. The whole unit cannot be non-factual. Missing evidence does not prove the physical claim false, so source correctness may be consistent or uncertain; existing routing permits abstain or uncertain, never pass.' });
+  add('Peldin notebook', 'Supported factual control', 'The fictional Peldin notebook contains 96 pages. Its spine is stitched.', 'How many pages does the fictional Peldin notebook contain?',
+    { status: 'answered', answer: 'It contains 96 pages.', citations: [] },
+    { answerQuality: 'good', acceptableDispositions: ['pass'], support: 'supported', questionCoverage: 'complete', uncertaintyHandling: 'appropriate', acceptableAxes: axes('supported', 'complete', 'answerable', ['consistent_with_sources'], 'appropriate'), rationale: 'The complete cited first sentence supplies exactly the requested page count.' });
+  add('Varnel spoon', 'Contradicted factual control', 'The fictional Varnel measuring spoon holds exactly 5 milliliters per level scoop.', 'How many milliliters does one level scoop with the fictional Varnel spoon hold?',
+    { status: 'answered', answer: 'One level scoop holds 15 milliliters.', citations: [] },
+    { answerQuality: 'flawed', acceptableDispositions: ['repair'], support: 'contradicted', questionCoverage: 'complete', uncertaintyHandling: 'overconfident', acceptableAxes: axes('contradicted', 'complete', 'answerable', ['contradicted_by_sources'], 'overconfident'), rationale: 'The asserted 15 milliliters directly conflicts with the same requested unit and relationship stated as exactly 5 milliliters.' });
+  return { format: 'constructed-abstention-smoke-v1', cases, references, families, referenceProvenance: provenance() };
 }

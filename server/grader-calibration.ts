@@ -1,7 +1,7 @@
 import { createHash } from 'node:crypto';
 import { isAbsolute, normalize } from 'node:path';
-import { claimSupportPromptIdentity, claimSupportRequestParts, replayClaimSupportReceipt, type ClaimSupportInput, type ClaimSupportReceipt, type ValidatedClaimSupportAssessment } from './claim-support.ts';
-import { calibrationFixtureDataset, type CalibrationReference } from './grader-calibration-fixtures.ts';
+import { ABSTENTION_GRADER_VERSION, claimSupportPromptIdentity, claimSupportRequestParts, replayClaimSupportReceipt, type ClaimSupportInput, type ClaimSupportReceipt, type ValidatedClaimSupportAssessment } from './claim-support.ts';
+import { abstentionCalibrationFixtureDataset, calibrationFixtureDataset, type CalibrationReference } from './grader-calibration-fixtures.ts';
 
 function canonical(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(canonical);
@@ -11,6 +11,12 @@ function canonical(value: unknown): unknown {
 /** Shared hash for frozen plans, receipt snapshots and checkpoint chains. */
 export const calibrationHash = (value: unknown): string => createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(canonical(value))).digest('hex');
 export const CALIBRATION_BUDGET = Object.freeze({ startingAttempts: 86, startingPending: 0, startingReservedUsd: 8.6, priorSpendUsd: 0.200281, newCalls: 10, allowancePerCallUsd: 0.1, absoluteCallLimit: 96, spendingCapUsd: 10, maxPlanningExposureUsd: 9.800281 });
+export const ABSTENTION_CALIBRATION_BUDGET = Object.freeze({ ...CALIBRATION_BUDGET, startingAttempts: 91, startingReservedUsd: 9.1, newCalls: 5 });
+export type CalibrationProtocol = 'abstention-v2-five';
+export function calibrationBudget(protocol?: CalibrationProtocol) {
+  if (protocol !== undefined && protocol !== 'abstention-v2-five') throw new Error('Unknown frozen calibration protocol.');
+  return protocol ? ABSTENTION_CALIBRATION_BUDGET : CALIBRATION_BUDGET;
+}
 export const CALIBRATION_CODE_FILES = Object.freeze(['server/grader-calibration.ts', 'server/grader-calibration-fixtures.ts', 'server/grader-calibration-runner.ts', 'server/grader-calibration-boundary.ts', 'scripts/grader-calibration.ts', 'server/claim-support.ts', 'server/feedback-provider.ts', 'server/citation-options.ts', 'server/source-id-diagnostic.ts']);
 export type CalibrationCallerScope = Readonly<Record<string, string>>;
 export type CalibrationDataset = ReturnType<typeof calibrationFixtureDataset>;
@@ -20,10 +26,11 @@ export type CalibrationPlanSlot = {
   requestSha256: string; responseSchemaSha256: string; systemInstructionsSha256: string; requestBody: ReturnType<typeof claimSupportRequestParts>['body'];
 };
 export type CalibrationPlan = {
-  format: 'grader-calibration-plan-v1'; planSha256: string; createdAt: string; callerScope: CalibrationCallerScope; codeFileSha256: Record<string, string>; implementationCommit: string;
+  format: 'grader-calibration-plan-v1' | 'grader-abstention-smoke-plan-v1'; protocol?: CalibrationProtocol; planSha256: string; createdAt: string; callerScope: CalibrationCallerScope; codeFileSha256: Record<string, string>; implementationCommit: string;
   datasetFormat: string; datasetSha256: string; referenceProvenance: CalibrationDataset['referenceProvenance']; families: CalibrationDataset['families'];
-  budget: typeof CALIBRATION_BUDGET; grader: { promptVersion: string; systemInstructionsSha256: string; model: 'gpt-luna'; acceptedModelAliases: ['gpt-luna', 'gpt-5.6-luna']; maxTokens: 4096; reasoningEffort: 'none' };
+  budget: typeof CALIBRATION_BUDGET | typeof ABSTENTION_CALIBRATION_BUDGET; grader: { promptVersion: string; systemInstructionsSha256: string; model: 'gpt-luna'; acceptedModelAliases: ['gpt-luna', 'gpt-5.6-luna']; maxTokens: 4096; reasoningEffort: 'none' };
   slots: CalibrationPlanSlot[]; authorization: 'parent_execution_acknowledgement_required'; productionActivationQualified: false; qualityClaimEligible: false;
+  smokeCriteria?: { allFrozenCasesValid: true; allReferenceAxesMatch: true; flawedRawPassesAllowed: 0; scope: 'development_smoke_only'; productionCalibrationQualified: false };
 };
 export type CalibrationCheckpointRecord = {
   sequence: number; previousSha256: string; planSha256: string; kind: 'intent' | 'slot_started' | 'slot_reserved' | 'slot_observed' | 'stopped' | 'finished';
@@ -41,18 +48,18 @@ export type CalibrationAxisMetrics = { expectedGood: number; expectedBad: number
 export type CalibrationReferenceAgreement = { disposition: boolean; support: boolean; coverage: boolean; uncertainty: boolean; answerability: boolean; correctness: boolean; all: boolean };
 export type CalibrationOverallMetrics = CalibrationAxisMetrics & { expectedRawPass: number; expectedAppropriateAbstention: number; rawPass: number; rawRepair: number; rawAbstain: number; rawUncertain: number; appropriateAbstentions: number; referenceAgreements: number; referenceDisagreements: number };
 export type CalibrationReport = {
-  format: 'grader-calibration-report-v1'; planSha256: string; plan: CalibrationPlan; executionMode: 'live' | 'synthetic'; transportProvenance: 'live_router' | 'mocked_mechanics_only';
+  format: 'grader-calibration-report-v1' | 'grader-abstention-smoke-report-v1'; planSha256: string; plan: CalibrationPlan; executionMode: 'live' | 'synthetic'; transportProvenance: 'live_router' | 'mocked_mechanics_only';
   evidenceMode: 'live_calibration_pilot' | 'mocked_transport_mechanics_only'; calibration: 'measured_on_constructed_pilot' | 'not_measured_mocked_transport' | 'not_measured_no_valid_grades'; referenceProvenance: CalibrationDataset['referenceProvenance'];
   complete: boolean; qualityClaimEligible: false; humanGold: false; productionActivationQualified: false;
   terminal: { kind: 'finished' | 'stopped' | 'interrupted' | 'not_started'; reason: string | null; stopReasons: string[] };
   slots: (CalibrationReportSlot & { index: number; caseId: string; familyId: string; runId: string; requestSha256: string; receipt: CalibrationBoundReceipt | null; receiptSha256: string | null; referenceAgreement: CalibrationReferenceAgreement | null })[];
   metrics: { overall: CalibrationOverallMetrics; support: CalibrationAxisMetrics; coverage: CalibrationAxisMetrics; uncertainty: CalibrationAxisMetrics; families: { familyId: string; name: string; caseCount: number; overall: CalibrationOverallMetrics }[] };
   checkpointProof: { planSha256: string; recordCount: number; tailSha256: string; records: CalibrationCheckpointRecord[] };
-  accounting: { plannedCallCeiling: 10; attemptedSlots: number; reservedSlots: number; checkpointReservedSlots: number; observedSlots: number; validGrades: number; rawPasses: number; transportCount: number; transportCountKind: 'observed_checkpoints_only'; unknownTransportSlots: number; exactTransportCount: number | null; reservedPlanningAllowanceUsd: number | null; observedPlanningAllowanceUsd: number | null; maxPlanningExposureUsd: 9.800281;
+  accounting: { plannedCallCeiling: number; attemptedSlots: number; reservedSlots: number; checkpointReservedSlots: number; observedSlots: number; validGrades: number; rawPasses: number; transportCount: number; transportCountKind: 'observed_checkpoints_only'; unknownTransportSlots: number; exactTransportCount: number | null; reservedPlanningAllowanceUsd: number | null; observedPlanningAllowanceUsd: number | null; maxPlanningExposureUsd: 9.800281;
     usage: { inputTokens: number | null; outputTokens: number | null; receiptsWithUsage: number }; latency: { observedElapsedMs: number; slots: { index: number; elapsedMs: number | null; transportDurationMs: number | null }[] }; label: 'local_planning_allowances_not_settled_charges' | 'mocked_mechanics_only' };
   limitations: string[]; reportSha256: string;
 };
-export type CalibrationPreparationOptions = { dataset?: CalibrationDataset; codeFileSha256: Record<string, string>; callerScope: CalibrationCallerScope; implementationCommit: string; createdAt?: string };
+export type CalibrationPreparationOptions = { protocol?: CalibrationProtocol; dataset?: CalibrationDataset; codeFileSha256: Record<string, string>; callerScope: CalibrationCallerScope; implementationCommit: string; createdAt?: string };
 export type CalibrationVerificationOptions = Omit<CalibrationPreparationOptions, 'createdAt'>;
 const equal = (left: unknown, right: unknown) => calibrationHash(left) === calibrationHash(right);
 const digest = /^[a-f0-9]{64}$/;
@@ -61,13 +68,15 @@ function codeIdentity(raw: Record<string, string>) {
   if (entries.length !== CALIBRATION_CODE_FILES.length || entries.some(([path, hash]) => !CALIBRATION_CODE_FILES.includes(path) || !digest.test(hash)) || CALIBRATION_CODE_FILES.some(path => !Object.hasOwn(raw, path))) throw new Error('Calibration requires the complete exact pilot code-file hash manifest.');
   return Object.fromEntries(entries.sort(([left], [right]) => left.localeCompare(right)));
 }
-function validateDataset(dataset: CalibrationDataset) {
-  if (dataset.cases.length !== 10 || dataset.references.length !== 10 || dataset.families.length !== 5 || new Set(dataset.cases.map(item => item.id)).size !== 10 || new Set(dataset.references.map(item => item.caseId)).size !== 10 || new Set(dataset.families.map(item => item.id)).size !== 5 ||
-    dataset.references.filter(item => item.answerQuality === 'good').length !== 5 || dataset.references.filter(item => item.answerQuality === 'flawed').length !== 5) throw new Error('Calibration pilot requires ten distinct cases, five paired families and balanced frozen references.');
+function validateDataset(dataset: CalibrationDataset, protocol?: CalibrationProtocol) {
+  const count = calibrationBudget(protocol).newCalls, good = protocol ? 2 : 5;
+  if (dataset.cases.length !== count || dataset.references.length !== count || dataset.families.length !== 5 || new Set(dataset.cases.map(item => item.id)).size !== count || new Set(dataset.references.map(item => item.caseId)).size !== count || new Set(dataset.families.map(item => item.id)).size !== 5 ||
+    dataset.references.filter(item => item.answerQuality === 'good').length !== good || dataset.references.filter(item => item.answerQuality === 'flawed').length !== count - good ||
+    dataset.format !== (protocol ? 'constructed-abstention-smoke-v1' : 'constructed-grader-pilot-v1') || dataset.cases.some(item => protocol ? item.input.graderVersion !== ABSTENTION_GRADER_VERSION : item.input.graderVersion !== undefined && item.input.graderVersion !== 'claim-support-v1')) throw new Error('Calibration cases, references and grader must match the exact finite protocol.');
   if (dataset.referenceProvenance.authorship !== 'ai_authored_constructed_reference' || dataset.referenceProvenance.reviewStatus !== 'pending_parent_source_review') throw new Error('Constructed references must retain pending human source-review provenance.');
   for (const family of dataset.families) {
     const cases = dataset.cases.filter(item => item.familyId === family.id), references = dataset.references.filter(item => item.familyId === family.id);
-    if (cases.length !== 2 || references.length !== 2 || references.filter(item => item.answerQuality === 'good').length !== 1 || references.filter(item => item.answerQuality === 'flawed').length !== 1) throw new Error('Each calibration family requires exactly one good and one flawed answer.');
+    if (protocol ? cases.length !== 1 || references.length !== 1 : cases.length !== 2 || references.length !== 2 || references.filter(item => item.answerQuality === 'good').length !== 1 || references.filter(item => item.answerQuality === 'flawed').length !== 1) throw new Error('Calibration family sizes must match the frozen paired pilot or unpaired smoke protocol.');
   }
   for (const item of dataset.cases) {
     const reference = dataset.references.find(entry => entry.caseId === item.id);
@@ -78,30 +87,31 @@ function validateDataset(dataset: CalibrationDataset) {
 
 /** Pure preparation. No file, credential, transport, ledger or network access. */
 export function prepareCalibrationPlan(options: CalibrationPreparationOptions): CalibrationPlan {
-  const dataset = structuredClone(options.dataset ?? calibrationFixtureDataset()); validateDataset(dataset);
+  const budget = calibrationBudget(options.protocol), dataset = structuredClone(options.dataset ?? (options.protocol ? abstentionCalibrationFixtureDataset() : calibrationFixtureDataset())); validateDataset(dataset, options.protocol);
   const hashes = codeIdentity(options.codeFileSha256), callerScope = options.callerScope;
   const pathKeys = ['repositoryPath', 'budgetPath', 'reviewPath', 'appDbPath', 'loopDbPath', 'workspaceDbPath', 'runtimePolicyDbPath', 'claimDirectory'], scopeKeys = [...pathKeys, 'configuredPort', 'initiatingThreadId', 'executionAuthority', 'ledgerInitialSha256'];
   if (!callerScope || Object.keys(callerScope).length !== scopeKeys.length || scopeKeys.some(key => typeof callerScope[key] !== 'string' || !callerScope[key].trim() || callerScope[key].length > 1000) || pathKeys.some(key => !isAbsolute(callerScope[key]) || normalize(callerScope[key]) !== callerScope[key]) || callerScope.executionAuthority !== 'parent_execution_only' || !digest.test(callerScope.ledgerInitialSha256) || !/^\d+$/.test(callerScope.configuredPort) || +callerScope.configuredPort < 1 || +callerScope.configuredPort > 65535 || !/^[a-f0-9]{40}$/.test(options.implementationCommit)) throw new Error('Calibration caller scope, canonical paths and exact implementation commit must be frozen.');
   const createdAt = options.createdAt ?? '2026-10-14T00:00:00.000Z';
   if (!Number.isFinite(Date.parse(createdAt)) || new Date(createdAt).toISOString() !== createdAt) throw new Error('Calibration plan requires an exact ISO timestamp.');
-  const seed = calibrationHash({ dataset, hashes, callerScope, createdAt, implementationCommit: options.implementationCommit, budget: CALIBRATION_BUDGET });
+  const seed = calibrationHash({ dataset, hashes, callerScope, createdAt, implementationCommit: options.implementationCommit, budget });
   const ordered = [...dataset.cases].sort((left, right) => calibrationHash([seed, left.id]).localeCompare(calibrationHash([seed, right.id])));
   const slots = ordered.map((item, index): CalibrationPlanSlot => {
     const reference = dataset.references.find(entry => entry.caseId === item.id)!, input: ClaimSupportInput = { runId: `grader-pilot-${calibrationHash([seed, item.id]).slice(0, 40)}`, ...structuredClone(item.input) };
     const parts = claimSupportRequestParts(input);
     return { index, caseId: item.id, familyId: item.familyId, input, reference, inputSha256: calibrationHash(input), referenceSha256: calibrationHash(reference), fullCaseSha256: calibrationHash({ case: item, reference }), ...parts.bindings, requestBody: parts.body };
   });
-  const prompt = claimSupportPromptIdentity();
-  const body: Omit<CalibrationPlan, 'planSha256'> = { format: 'grader-calibration-plan-v1', createdAt, callerScope, implementationCommit: options.implementationCommit, codeFileSha256: hashes, datasetFormat: dataset.format, datasetSha256: calibrationHash(dataset), referenceProvenance: dataset.referenceProvenance, families: dataset.families,
-    budget: { ...CALIBRATION_BUDGET }, grader: { promptVersion: prompt.promptVersion, systemInstructionsSha256: prompt.systemInstructionsSha256, model: 'gpt-luna', acceptedModelAliases: ['gpt-luna', 'gpt-5.6-luna'], maxTokens: 4096, reasoningEffort: 'none' }, slots,
-    authorization: 'parent_execution_acknowledgement_required', productionActivationQualified: false, qualityClaimEligible: false };
+  const prompt = claimSupportPromptIdentity(options.protocol ? ABSTENTION_GRADER_VERSION : undefined);
+  const body: Omit<CalibrationPlan, 'planSha256'> = { format: options.protocol ? 'grader-abstention-smoke-plan-v1' : 'grader-calibration-plan-v1', ...(options.protocol ? { protocol: options.protocol } : {}), createdAt, callerScope, implementationCommit: options.implementationCommit, codeFileSha256: hashes, datasetFormat: dataset.format, datasetSha256: calibrationHash(dataset), referenceProvenance: dataset.referenceProvenance, families: dataset.families,
+    budget: { ...budget }, grader: { promptVersion: prompt.promptVersion, systemInstructionsSha256: prompt.systemInstructionsSha256, model: 'gpt-luna', acceptedModelAliases: ['gpt-luna', 'gpt-5.6-luna'], maxTokens: 4096, reasoningEffort: 'none' }, slots,
+    authorization: 'parent_execution_acknowledgement_required', productionActivationQualified: false, qualityClaimEligible: false,
+    ...(options.protocol ? { smokeCriteria: { allFrozenCasesValid: true as const, allReferenceAxesMatch: true as const, flawedRawPassesAllowed: 0 as const, scope: 'development_smoke_only' as const, productionCalibrationQualified: false as const } } : {}) };
   return { ...body, planSha256: calibrationHash(body) };
 }
 
 /** Verify against current source fixtures and caller-supplied current code hashes,
  * not merely a self-consistent edited JSON document. */
 export function verifyCalibrationPlan(plan: CalibrationPlan, options: CalibrationVerificationOptions): CalibrationPlan {
-  const expected = prepareCalibrationPlan({ ...options, createdAt: plan.createdAt });
+  const expected = prepareCalibrationPlan({ ...options, protocol: plan.protocol, createdAt: plan.createdAt });
   if (!equal(plan, expected)) throw new Error('Frozen calibration plan differs from exact cases, references, order, caller, code, budget or grader identity.');
   return structuredClone(expected);
 }
@@ -142,7 +152,7 @@ export function verifyCalibrationCheckpointRecords(plan: CalibrationPlan, record
         observed.set(record.slotIndex!, record); active = null; reservedId = null; nextSlot++;
       }
     } else if (record.kind === 'finished') {
-      if (active !== null || nextSlot !== 10 || observed.size !== 10) throw new Error('Calibration cannot finish before all ten observations.'); terminal = true;
+      if (active !== null || nextSlot !== plan.slots.length || observed.size !== plan.slots.length) throw new Error('Calibration cannot finish before every frozen observation.'); terminal = true;
     } else if (record.kind === 'stopped') terminal = true;
     previousSha256 = sha256;
   }
@@ -195,7 +205,7 @@ export function deriveCalibrationReport(plan: CalibrationPlan, options: Calibrat
   // A self-hash is still checked here; execute/verify must additionally compare
   // current code and source identity through verifyCalibrationPlan.
   const { planSha256, ...planBody } = plan;
-  if (planSha256 !== calibrationHash(planBody) || plan.slots.length !== 10) throw new Error('Calibration report requires its exact frozen ten-slot plan.');
+  if (planSha256 !== calibrationHash(planBody) || !equal(plan.budget, calibrationBudget(plan.protocol)) || plan.slots.length !== plan.budget.newCalls) throw new Error('Calibration report requires its exact finite frozen plan.');
   if (options.executionMode === 'synthetic' && options.transportProvenance === 'live_router') throw new Error('Synthetic receipts cannot establish live Router calibration evidence.');
   const records = structuredClone(options.checkpointRecords ?? []), proof = verifyCalibrationCheckpointRecords(plan, records);
   const slots: CalibrationReport['slots'] = plan.slots.map(slot => {
@@ -219,18 +229,18 @@ export function deriveCalibrationReport(plan: CalibrationPlan, options: Calibrat
   const checkpointReservedSlots = records.filter(record => record.kind === 'slot_reserved').length;
   const observedTransportCount = records.reduce((total, record) => total + (record.kind === 'slot_observed' ? record.transportCount ?? 0 : 0), 0);
   const unknownTransportSlots = [...proof.started].filter(index => proof.observed.get(index)?.transportCount === undefined).length;
-  const body: Omit<CalibrationReport, 'reportSha256'> = { format: 'grader-calibration-report-v1', planSha256, plan: structuredClone(plan), executionMode: options.executionMode, transportProvenance: options.transportProvenance,
+  const body: Omit<CalibrationReport, 'reportSha256'> = { format: plan.protocol ? 'grader-abstention-smoke-report-v1' : 'grader-calibration-report-v1', planSha256, plan: structuredClone(plan), executionMode: options.executionMode, transportProvenance: options.transportProvenance,
     evidenceMode: options.transportProvenance === 'live_router' ? 'live_calibration_pilot' : 'mocked_transport_mechanics_only', calibration: options.transportProvenance === 'mocked_mechanics_only' ? 'not_measured_mocked_transport' : slots.some(slot => slot.assessment) ? 'measured_on_constructed_pilot' : 'not_measured_no_valid_grades', referenceProvenance: structuredClone(plan.referenceProvenance),
     complete: terminalKind === 'finished' && slots.every(slot => ['accepted', 'rejected', 'uncertain'].includes(slot.status)), qualityClaimEligible: false, humanGold: false, productionActivationQualified: false,
     terminal: { kind: terminalKind, reason: terminalKind === 'stopped' ? last?.reason ?? 'Execution stopped before its final boundary was confirmed.' : terminalKind === 'interrupted' ? 'No durable terminal checkpoint confirms execution completion.' : terminalKind === 'not_started' ? 'No execution intent has been recorded.' : null, stopReasons: terminalKind === 'stopped' ? structuredClone(last?.stopReasons ?? []) : [] }, slots,
     metrics: { overall: overallMetrics(plan, slots), support: axisMetrics(plan, slots, 'support'), coverage: axisMetrics(plan, slots, 'coverage'), uncertainty: axisMetrics(plan, slots, 'uncertainty'), families: plan.families.map(family => ({ familyId: family.id, name: family.name, caseCount: slots.filter(slot => slot.familyId === family.id).length, overall: overallMetrics(plan, slots.filter(slot => slot.familyId === family.id)) })) },
     checkpointProof: { planSha256, recordCount: records.length, tailSha256: proof.tailSha256, records },
-    accounting: { plannedCallCeiling: 10, attemptedSlots: proof.started.size, reservedSlots, checkpointReservedSlots, observedSlots: proof.observed.size, validGrades: slots.filter(slot => !!slot.assessment).length, rawPasses: slots.filter(slot => slot.assessment?.disposition === 'pass').length,
+    accounting: { plannedCallCeiling: plan.budget.newCalls, attemptedSlots: proof.started.size, reservedSlots, checkpointReservedSlots, observedSlots: proof.observed.size, validGrades: slots.filter(slot => !!slot.assessment).length, rawPasses: slots.filter(slot => slot.assessment?.disposition === 'pass').length,
       transportCount: observedTransportCount, transportCountKind: 'observed_checkpoints_only', unknownTransportSlots, exactTransportCount: unknownTransportSlots ? null : observedTransportCount, reservedPlanningAllowanceUsd: options.executionMode === 'live' ? Number((reservedSlots * 0.1).toFixed(6)) : null,
       observedPlanningAllowanceUsd: options.executionMode === 'live' ? Number(slots.reduce((total, slot) => total + (slot.receipt?.allowance_usd ?? 0), 0).toFixed(6)) : null, maxPlanningExposureUsd: 9.800281,
       usage: { inputTokens: usageSlots.length ? usageSlots.reduce((total, slot) => total + slot.usage!.inputTokens, 0) : null, outputTokens: usageSlots.length ? usageSlots.reduce((total, slot) => total + slot.usage!.outputTokens, 0) : null, receiptsWithUsage: usageSlots.length },
       latency: { observedElapsedMs: latencySlots.reduce((total, slot) => total + (slot.elapsedMs ?? 0), 0), slots: latencySlots }, label: options.transportProvenance === 'mocked_mechanics_only' ? 'mocked_mechanics_only' : 'local_planning_allowances_not_settled_charges' },
-    limitations: ['Ten constructed cases across five correlated pairs are descriptive only; no confidence interval or generalization claim is established.', 'Reference labels were AI-authored and await parent source review; they are not human gold judgments.', 'Expected-bad denominator includes all frozen expected-bad cases; unknown, invalid and unattempted slots remain explicit, and partial reports must be read with these counts.', 'Individual assessments retain calibration=not_measured. This pilot does not qualify policy activation, final benchmarks, or a model-quality gain.', options.transportProvenance === 'mocked_mechanics_only' ? 'Mocked transport mechanics only; this report is not a measured live-model calibration result.' : 'Live Router grader pilot on constructed fictional cases only; not production calibration.'] };
+    limitations: [plan.protocol ? 'Five fresh unpaired constructed cases are a development smoke test only; no confidence interval, general calibration or quality gain is established.' : 'Ten constructed cases across five correlated pairs are descriptive only; no confidence interval or generalization claim is established.', 'Reference labels were AI-authored and await parent source review; they are not human gold judgments.', 'Expected-bad denominator includes all frozen expected-bad cases; unknown, invalid and unattempted slots remain explicit, and partial reports must be read with these counts.', 'Individual assessments retain calibration=not_measured. This pilot does not qualify policy activation, final benchmarks, or a model-quality gain.', options.transportProvenance === 'mocked_mechanics_only' ? 'Mocked transport mechanics only; this report is not a measured live-model calibration result.' : 'Live Router grader pilot on constructed fictional cases only; not production calibration.'] };
   return { ...body, reportSha256: calibrationHash(body) };
 }
 

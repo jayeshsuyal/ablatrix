@@ -9,11 +9,11 @@ import { claimSupportAnswerUnits, type ClaimSupportReceipt } from './claim-suppo
 import { CALIBRATION_CODE_FILES, calibrationHash, prepareCalibrationPlan, type CalibrationPlan, type CalibrationPlanSlot } from './grader-calibration.ts';
 import { executeGraderCalibration, verifyGraderCalibrationCheckpoint, type CalibrationExecutionDependencies, type CalibrationExecutionOptions } from './grader-calibration-runner.ts';
 
-function seedLedger(path: string) {
+function seedLedger(path: string, count = 86) {
   const db = new DatabaseSync(path);
   db.exec(`CREATE TABLE loop_provider_calls(id TEXT PRIMARY KEY,created_at TEXT NOT NULL,kind TEXT NOT NULL,allowance_usd REAL NOT NULL,status TEXT NOT NULL,model TEXT,input_tokens INTEGER,output_tokens INTEGER,run_id TEXT,error_code TEXT,receipt_json TEXT);`);
   const insert = db.prepare('INSERT INTO loop_provider_calls(id,created_at,kind,allowance_usd,status,run_id) VALUES(?,?,?,?,?,?)');
-  for (let index = 0; index < 86; index++) insert.run(`scripted-historical-metadata-${index}`, '2026-10-14T00:00:00.000Z', 'scripted_metadata_only', .1, 'completed', `scripted-historical-run-${index}`);
+  for (let index = 0; index < count; index++) insert.run(`scripted-historical-metadata-${index}`, '2026-10-14T00:00:00.000Z', 'scripted_metadata_only', .1, 'completed', `scripted-historical-run-${index}`);
   db.close();
 }
 function rows(path: string) { const db = new DatabaseSync(path, { readOnly: true }); try { return db.prepare('SELECT * FROM loop_provider_calls ORDER BY id').all(); } finally { db.close(); } }
@@ -24,13 +24,14 @@ function fixtureOutput(slot: CalibrationPlanSlot, wrong = false) {
     questionCoverage: wrong ? 'complete' : reference.questionCoverage, answerability: wrong ? 'answerable' : reference.acceptableAxes.answerability[0], correctness: wrong ? 'consistent_with_sources' : reference.acceptableAxes.correctness[0], uncertaintyHandling: wrong ? 'appropriate' : reference.uncertaintyHandling, reason: 'SYNTHETIC mechanics fixture; no live calibration evidence.' };
 }
 function response(output: unknown) { return new Response(JSON.stringify({ model: 'gpt-luna', usage: { prompt_tokens: 100, completion_tokens: 60 }, choices: [{ finish_reason: 'tool_calls', message: { tool_calls: [{ function: { name: 'claim_support_v1', arguments: JSON.stringify(output) } }] } }] })); }
-function setup() {
-  const directory = mkdtempSync(join(tmpdir(), 'grader-calibration-runner-')), ledgerPath = join(directory, 'ledger.sqlite'); seedLedger(ledgerPath);
+function setup(protocol?: 'abstention-v2-five') {
+  const starting = protocol ? 91 : 86;
+  const directory = mkdtempSync(join(tmpdir(), 'grader-calibration-runner-')), ledgerPath = join(directory, 'ledger.sqlite'); seedLedger(ledgerPath, starting);
   const historical = calibrationHash(rows(ledgerPath));
   const callerScope = { repositoryPath: directory, budgetPath: ledgerPath, reviewPath: join(directory, 'review.sqlite'), appDbPath: join(directory, 'app.sqlite'), loopDbPath: join(directory, 'loop.sqlite'), workspaceDbPath: join(directory, 'workspace.sqlite'), runtimePolicyDbPath: join(directory, 'runtime.sqlite'), claimDirectory: join(directory, 'claims'), configuredPort: '4194', initiatingThreadId: 'mocked-runner-test', executionAuthority: 'parent_execution_only', ledgerInitialSha256: historical };
   const codeFileSha256 = Object.fromEntries([...new Set([...CALIBRATION_CODE_FILES, 'server/source-id-diagnostic.ts'])].map(path => [path, calibrationHash(`SYNTHETIC mocked code identity: ${path}`)]));
   const verification = { callerScope, codeFileSha256, implementationCommit: '1'.repeat(40) };
-  const plan = prepareCalibrationPlan(verification);
+  const plan = prepareCalibrationPlan({ ...verification, ...(protocol ? { protocol } : {}) });
   const options: CalibrationExecutionOptions = { plan, execute: true, liveOptIn: true, acknowledgedPlanSha256: plan.planSha256, ledgerPath, claimDirectory: callerScope.claimDirectory, checkpointPath: join(directory, 'private-checkpoint.jsonl'), reportPath: join(directory, 'public-report.json'), transportProvenance: 'mocked_mechanics_only' };
   let factoryCalls = 0, networkCalls = 0, preflightDone = false, preflightBoundaryDone = false;
   const boundaries: string[] = [];
@@ -42,12 +43,12 @@ function setup() {
     })); } finally { db.close(); }
   };
   const dependencies: CalibrationExecutionDependencies = { verification, readLedgerReceipts,
-    async preflight() { const initial = rows(ledgerPath); assert.equal(initial.length, 86); assert.equal(calibrationHash(initial), historical); preflightDone = true; },
+    async preflight() { const initial = rows(ledgerPath); assert.equal(initial.length, starting); assert.equal(calibrationHash(initial), historical); preflightDone = true; },
     async inspectBoundary(boundary) {
       boundaries.push(boundary.phase);
       const all = rows(ledgerPath), historicalNow = all.filter(row => String(row.id).startsWith('scripted-historical-metadata-'));
       assert.equal(calibrationHash(historicalNow), historical);
-      assert.equal(all.length, 86 + boundary.reservedRunIds.length); assert.ok(all.length <= 96);
+      assert.equal(all.length, starting + boundary.reservedRunIds.length); assert.ok(all.length <= 96);
       const reservation = all.reduce((sum, row) => sum + Number(row.allowance_usd), 0);
       assert.ok(reservation <= 9.6 + 1e-9); assert.ok(.200281 + reservation <= 10);
       const pending = all.filter(row => row.status === 'pending');
@@ -84,6 +85,37 @@ test('calibration performs exactly ten guarded frozen calls in the existing fini
     await assert.rejects(executeGraderCalibration(fixture.options, fixture.dependencies), /existing durable intent/);
     assert.equal(fixture.counts().networkCalls, 10);
   } finally { fixture.cleanup(); }
+});
+
+test('the separate abstention smoke reserves exactly five new v2 calls from 91 to the unchanged absolute ceiling', async () => {
+  const fixture = setup('abstention-v2-five');
+  try {
+    assert.equal(fixture.plan.format, 'grader-abstention-smoke-plan-v1'); assert.equal(fixture.plan.slots.length, 5);
+    assert.equal(fixture.plan.budget.startingAttempts, 91); assert.equal(fixture.plan.budget.newCalls, 5);
+    assert.equal(fixture.plan.budget.maxPlanningExposureUsd, 9.800281);
+    const result = await executeGraderCalibration(fixture.options, fixture.dependencies);
+    assert.equal(result.report.format, 'grader-abstention-smoke-report-v1'); assert.equal(result.report.complete, true);
+    assert.equal(result.report.accounting.plannedCallCeiling, 5); assert.equal(result.report.accounting.reservedSlots, 5); assert.equal(result.report.accounting.reservedPlanningAllowanceUsd, .5);
+    assert.equal(result.report.metrics.overall.referenceAgreements, 5); assert.equal(result.report.metrics.overall.expectedBad, 3); assert.equal(result.report.metrics.overall.appropriateAbstentions, 1);
+    assert.equal(result.report.qualityClaimEligible, false); assert.equal(result.report.productionActivationQualified, false);
+    assert.equal(rows(fixture.ledgerPath).length, 96); assert.equal(fixture.counts().networkCalls, 5);
+    assert.deepEqual(verifyGraderCalibrationCheckpoint(fixture.options, fixture.dependencies).report, result.report);
+    await assert.rejects(executeGraderCalibration(fixture.options, fixture.dependencies), /existing durable intent/); assert.equal(fixture.counts().networkCalls, 5);
+  } finally { fixture.cleanup(); }
+});
+
+test('fresh five-call smoke stops at the first invalid or unknown result with all remaining slots retained', async () => {
+  for (const kind of ['invalid', 'unknown'] as const) {
+    const fixture = setup('abstention-v2-five'); let calls = 0;
+    fixture.dependencies.transport = async () => { calls++; if (kind === 'unknown') throw new Error('Synthetic network uncertainty'); return response({ ...fixtureOutput(fixture.plan.slots[0]), units: [] }); };
+    try {
+      const result = await executeGraderCalibration(fixture.options, fixture.dependencies);
+      assert.equal(result.report.slots[0].status, kind); assert.equal(result.report.slots.filter(slot => slot.status === 'unattempted').length, 4);
+      assert.equal(result.report.metrics.overall.expectedBad, 3); assert.equal(result.report.accounting.reservedSlots, 1); assert.equal(rows(fixture.ledgerPath).length, 92);
+      assert.deepEqual(verifyGraderCalibrationCheckpoint(fixture.options, fixture.dependencies).report, result.report);
+      await assert.rejects(executeGraderCalibration(fixture.options, fixture.dependencies), /existing durable intent/); assert.equal(calls, 1);
+    } finally { fixture.cleanup(); }
+  }
 });
 
 test('all full preflight gates precede provider creation, credentials, intent and transport', async () => {
