@@ -1,0 +1,31 @@
+{
+  "format": "coverage-confidence-smoke-execution-authorization-v1",
+  "recordedAt": "2026-10-15T17:09:25.854Z",
+  "planSha256": "3eb5ddde12ef4dbdcfa0113c35bd8ac699cb8193d760b9999093246c3aa56e06",
+  "preDispatchPlanPublicationCommit": "36c35046f6cc8dd6c79ef6686267d43347d444ee",
+  "authorizationSource": "direct_user_response_to_exact_financial_scope_question",
+  "userResponse": "Approve six-call plan",
+  "authorizedOperations": "gradeClaimSupport_only",
+  "budget": {
+    "startingAttempts": 96,
+    "startingPending": 0,
+    "startingReservedUsd": 9.6,
+    "priorSpendUsd": 0.200281,
+    "newCalls": 6,
+    "allowancePerCallUsd": 0.1,
+    "absoluteCallLimit": 102,
+    "spendingCapUsd": 11,
+    "maxPlanningExposureUsd": 10.400281
+  },
+  "maxAddedPlanningAllowanceUsd": 0.6,
+  "maxCumulativeReservedPlanningAllowanceUsd": 10.2,
+  "automaticRetries": 0,
+  "generation": false,
+  "repair": false,
+  "search": false,
+  "policyActivation": false,
+  "productionAgentsRun": false,
+  "accounting": "local_planning_allowances_not_settled_charges",
+  "scope": "one_execution_of_the_frozen_six_case_plan_only",
+  "authorizationSha256": "f00ab5e07a2291ff771c8f339cfe6186badc15703053d91165cc15928b194786"
+}
