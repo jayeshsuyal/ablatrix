@@ -4,8 +4,9 @@ import { mkdtempSync, realpathSync, rmSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
+import { build } from 'esbuild';
 import { QUALIFICATION_CODE_FILES } from './grader-qualification.ts';
-import { QUALIFICATION_LIVE_CODE_FILES, assertLiveQualificationStartingLedger, defaultLiveQualificationScope, inspectLiveQualificationBoundary, readLiveQualificationLedger, readLiveQualificationReceipts, validateLiveScope, type LiveQualificationBoundary } from './grader-qualification-live-boundary.ts';
+import { QUALIFICATION_LIVE_CODE_FILES, assertLiveQualificationStartingLedger, calibrationRepository, defaultLiveQualificationScope, inspectLiveQualificationBoundary, readLiveQualificationLedger, readLiveQualificationReceipts, validateLiveScope, type LiveQualificationBoundary } from './grader-qualification-live-boundary.ts';
 
 function isolatedLedger() {
   const directory = realpathSync(mkdtempSync(join(tmpdir(), 'ablatrix-qualification-boundary-'))), path = join(directory, 'ledger.sqlite');
@@ -138,4 +139,14 @@ test('qualification receipt reads return only selected row bytes and accounting 
 test('the live implementation manifest retains all eight sealed PR 1 code files and all runtime guards', () => {
   assert.equal(new Set(QUALIFICATION_LIVE_CODE_FILES).size, QUALIFICATION_LIVE_CODE_FILES.length);
   for (const path of [...QUALIFICATION_CODE_FILES, 'server/grader-qualification-live-journal.ts', 'server/feedback-provider.ts', 'server/grader-calibration-boundary.ts', 'server/grader-calibration.ts', 'server/grader-calibration-fixtures.ts']) assert.ok(QUALIFICATION_LIVE_CODE_FILES.includes(path));
+});
+
+test('the manifest covers the complete runtime-loaded project import graph', async () => {
+  // Parsing/bundling only: no application module is evaluated, credential or
+  // ledger opened, output written, or transport constructed. Vendor versions
+  // remain bound by the unchanged package/lock files on the trusted host.
+  const result = await build({ absWorkingDir: resolve(calibrationRepository), entryPoints: ['scripts/grader-qualification-live.ts'], bundle: true, platform: 'node', format: 'esm', packages: 'external', write: false, metafile: true, logLevel: 'silent' });
+  const loaded = Object.keys(result.metafile!.inputs);
+  assert.deepEqual(loaded.filter(file => !QUALIFICATION_LIVE_CODE_FILES.includes(file)), [], 'A runtime-loaded project module is absent from the approved code manifest.');
+  for (const required of ['server/revision-policy.ts', 'server/answer-policy-protocol.ts', 'server/answer-review-source.ts', 'server/context-comparison.ts']) assert.ok(loaded.includes(required));
 });

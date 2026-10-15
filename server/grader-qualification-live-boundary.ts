@@ -22,7 +22,9 @@ export const QUALIFICATION_LIVE_CODE_FILES = Object.freeze([...new Set([
   'server/grader-qualification-live-transport.ts',
   'scripts/grader-qualification-native.sh',
   'server/feedback-provider.ts', 'server/grader-calibration-boundary.ts',
-  'server/grader-calibration.ts', 'server/grader-calibration-fixtures.ts'
+  'server/grader-calibration.ts', 'server/grader-calibration-fixtures.ts',
+  'server/revision-policy.ts', 'server/answer-policy-protocol.ts',
+  'server/answer-review-source.ts', 'server/context-comparison.ts'
 ])]);
 
 export function qualificationLiveCodeHashes(commit?: string, root = calibrationRepository): Record<string, string> {
