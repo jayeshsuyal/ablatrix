@@ -2,14 +2,16 @@ import { test } from 'node:test';
 import { createServer } from 'node:http';
 import { spawn } from 'node:child_process';
 import { once } from 'node:events';
+import { DatabaseSync } from 'node:sqlite';
 import assert from 'node:assert/strict';
-import { mkdtempSync, readFileSync, rmSync, statSync, symlinkSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, realpathSync, readFileSync, rmSync, statSync, symlinkSync, mkdirSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { RunStore } from './store.ts';
 import { contextComparisonHash } from './context-comparison.ts';
 import { SapiomFeedbackProvider, constrainedSourceIdAnswerRequestBody, constrainedSourceIdRevisionRequestBody } from './feedback-provider.ts';
 import { DIAGNOSTIC_CASE_IDS, DIAGNOSTIC_CODE_FILES, diagnosticSha256, diagnosticRevisionInput, prepareSourceIdDiagnostic, executeSourceIdDiagnostic, privateDiagnosticOutput, sourceIdDiagnosticCli, inspectDiagnosticApp, diagnosticAppPort, type DiagnosticArtifact, type DiagnosticExecution, type DiagnosticPreparation, type DiagnosticResult, type DiagnosticState } from './source-id-diagnostic.ts';
+import { defaultCalibrationScope, inspectCalibrationWorkers } from './grader-calibration-boundary.ts';
 
 const clone = <T>(v: T): T => JSON.parse(JSON.stringify(v));
 function artifact(path: string): DiagnosticArtifact { const raw = readFileSync(new URL(`../${path}`, import.meta.url)); return { path, fileSha256: diagnosticSha256(raw), document: JSON.parse(raw.toString()) }; }
@@ -172,7 +174,7 @@ test('existing private output refuses a new execution before constructing its pr
 
 
 function temporaryAppPaths() {
-  const directory = mkdtempSync(join(tmpdir(), 'ablatrix-diagnostic-app-'));
+  const directory = realpathSync(mkdtempSync(join(tmpdir(), 'ablatrix-diagnostic-app-')));
   const paths = { budgetPath: join(directory, 'budget.sqlite'), reviewPath: join(directory, 'review.sqlite'), appDbPath: join(directory, 'app.sqlite'), loopDbPath: join(directory, 'loop.sqlite') };
   writeFileSync(paths.budgetPath, ''); writeFileSync(paths.reviewPath, '');
   return { directory, paths };
@@ -200,19 +202,42 @@ test('stopped-app check follows default/configured PORT and blocks real listener
   } finally { defaultServer.close(); alternateServer.close(); rmSync(directory, { recursive: true, force: true }); }
 });
 
-test('a worker holding the shared SQLite files on an unconfigured port blocks execution without a provider lease', async () => {
+test('one self-owned SQLite file with the other closed does not falsely signal an active worker', () => {
+  const { directory, paths } = temporaryAppPaths();
+  const budget = new DatabaseSync(paths.budgetPath), workspacePath = join(directory, 'workspace.sqlite'), runtimePath = join(directory, 'runtime.sqlite');
+  const workspace = new DatabaseSync(workspacePath); new DatabaseSync(runtimePath).close();
+  try {
+    const state = inspectDiagnosticApp(paths); assert.equal(state.stopped, true); assert.deepEqual(state.sharedFileOwnerPids, []);
+    const workers = inspectCalibrationWorkers({ ...defaultCalibrationScope(), ...paths, repositoryPath: directory, workspaceDbPath: workspacePath, runtimePolicyDbPath: runtimePath });
+    assert.equal(workers.app.stopped, true); assert.deepEqual(workers.otherFileOwnerPids, []);
+  } finally { budget.close(); workspace.close(); rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('a worker holding only one shared SQLite file on an unconfigured port blocks execution without a provider lease', async () => {
   const { directory, paths } = temporaryAppPaths();
   const script = `import {DatabaseSync} from 'node:sqlite'; import {createServer} from 'node:http';
-    const budget = new DatabaseSync(process.argv[1]), review = new DatabaseSync(process.argv[2]);
-    budget.exec('CREATE TABLE synthetic_fixture(id INTEGER)'); review.exec('CREATE TABLE synthetic_fixture(id INTEGER)');
+    const budget = new DatabaseSync(process.argv[1]);
+    budget.exec('CREATE TABLE synthetic_fixture(id INTEGER)');
     const server = createServer((_req,res) => res.end('SYNTHETIC worker')); server.listen(0,'127.0.0.1',()=>process.send({port:server.address().port}));
-    process.on('SIGTERM',()=>server.close(()=>{budget.close();review.close();process.exit(0);}));`;
+    process.on('SIGTERM',()=>server.close(()=>{budget.close();process.exit(0);}));`;
   const child = spawn(process.execPath, ['--input-type=module', '-e', script, paths.budgetPath, paths.reviewPath], { stdio: ['ignore', 'ignore', 'pipe', 'ipc'] });
   try {
     const [message] = await once(child, 'message', { signal: AbortSignal.timeout(10_000) }); assert.ok(message.port !== 4173);
     const state = inspectDiagnosticApp(paths); assert.equal(state.stopped, false); assert.deepEqual(state.listenerPids, []); assert.ok(state.sharedFileOwnerPids.includes(child.pid!));
     const h = harness(valid); h.deps.inspectApp = () => inspectDiagnosticApp(paths);
     await assert.rejects(executeSourceIdDiagnostic(h.manifest, h.deps), /Stop the local application/); assert.equal(h.counts().providerCreations, 0); assert.equal(h.counts().outputCreations, 0); assert.equal(h.bodies.length, 0);
+  } finally { if (child.exitCode === null && child.signalCode === null) { const exited = once(child, 'exit'); child.kill('SIGTERM'); await exited; } rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('a worker holding only the workspace database blocks calibration while the runtime database is closed', async () => {
+  const { directory, paths } = temporaryAppPaths();
+  const workspaceDbPath = join(directory, 'workspace.sqlite'), runtimePolicyDbPath = join(directory, 'runtime.sqlite');
+  new DatabaseSync(workspaceDbPath).close(); new DatabaseSync(runtimePolicyDbPath).close();
+  const script = `import {DatabaseSync} from 'node:sqlite'; const db=new DatabaseSync(process.argv[1]);process.send({ready:true}); const timer=setInterval(()=>{},1000);process.on('SIGTERM',()=>{clearInterval(timer);db.close();process.exit(0);});`;
+  const child = spawn(process.execPath, ['--input-type=module', '-e', script, workspaceDbPath], { stdio: ['ignore', 'ignore', 'pipe', 'ipc'] });
+  try {
+    await once(child, 'message', { signal: AbortSignal.timeout(10_000) });
+    assert.throws(() => inspectCalibrationWorkers({ ...defaultCalibrationScope(), ...paths, repositoryPath: directory, workspaceDbPath, runtimePolicyDbPath }), /Stop and drain/);
   } finally { if (child.exitCode === null && child.signalCode === null) { const exited = once(child, 'exit'); child.kill('SIGTERM'); await exited; } rmSync(directory, { recursive: true, force: true }); }
 });
 

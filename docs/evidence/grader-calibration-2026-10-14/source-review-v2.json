@@ -1,0 +1,175 @@
+{
+  "format": "constructed-reference-source-review-v1",
+  "reviewKind": "independent_ai_source_consistency",
+  "humanGold": false,
+  "externalTruthVerified": false,
+  "productionCalibrationQualified": false,
+  "datasetSha256": "83d31f8d792f249c85e4d5792d74588093711d8b432d49d2703ecdea13ddeb39",
+  "reviewers": [
+    "parent",
+    "independent claim-grader-contract reviewer"
+  ],
+  "cases": [
+    {
+      "caseId": "707da8909bf987409010bbc784ad618c9d7a439e871c0826b8f58d2ad9f97ead",
+      "familyId": "985cf351544d36fdd62ea15032a8039b85c24ad44cff97ed4a7487fbe7530c05",
+      "inputSha256": "c196729d4a0a69e92a69c1a896310279ea4e58dd6a620235a33033411175697c",
+      "referenceSha256": "edb34612e32aece0136447665be9bb1d15aaf70ebbc52f30731059d6335a11ec",
+      "sourceConsistency": "reviewed",
+      "expectedDisposition": [
+        "repair",
+        "uncertain"
+      ],
+      "answerQuality": "flawed",
+      "neutralInputSha256": "ef48ecc5eb16548cbf944025759e3e212b9bcdee93967619567883cce51341dd",
+      "requestSha256": "79acb3c042aab7dd091e03bd9bf5302f07ee33ce271ed284502ab0249c28a11c",
+      "slotIndex": 0
+    },
+    {
+      "caseId": "b7356c6f94fa4334b96762688e2d81a48fc08a086e1f2c94372e76b47fe2a1e0",
+      "familyId": "966fe464f902c8c01b731a0d5bc5d3a11a071ee09736417cdfe29dd5e3e7aecd",
+      "inputSha256": "43b18d5387605731b286a23df16b2b72c5720abf1b9e53c3ac71274076afde47",
+      "referenceSha256": "ad369ca39578243c310cf47594f5a599986c6d4ff24888fff9557b63ce5b984b",
+      "sourceConsistency": "reviewed",
+      "expectedDisposition": [
+        "repair"
+      ],
+      "answerQuality": "flawed",
+      "neutralInputSha256": "580e8dd7c4c37b47abeb377bae9c0478e91cceb725be3348807d7304cb6cc09a",
+      "requestSha256": "5eaeae44044ee01b3cf8c163333bc04b1a37bee2630db5f6817ccfacb6d41c50",
+      "slotIndex": 1
+    },
+    {
+      "caseId": "9e46702bdfe2574195528bc4d6c67a9b927bf23fa7e2dd13de423a45f0d6b3d0",
+      "familyId": "35472c2478cdbffff8505d66487ad347a11d73010e1381c7f0fe929aed1256e6",
+      "inputSha256": "f40849a9410b708aa4ab78cad3dd7f351de58cac71b41e92fe026b64f4ce757a",
+      "referenceSha256": "e12f76c5efb022df5189b8796314038680320f56ad3a61d0c257210414f2aa34",
+      "sourceConsistency": "reviewed",
+      "expectedDisposition": [
+        "repair",
+        "uncertain"
+      ],
+      "answerQuality": "flawed",
+      "neutralInputSha256": "1d7a09d67c3ef5432de22572f9e9f3de8a147af3c8f5029dd7c04abc46b33cc8",
+      "requestSha256": "a318fe422cd467ac0eeb245c231aa4d4728133c69c453c7e633f49c079d07e8b",
+      "slotIndex": 2
+    },
+    {
+      "caseId": "24b5ff6a0d0e55a5b2cc5b27ce7efc9780ef114df84cc2bb30d7b263550842c9",
+      "familyId": "35472c2478cdbffff8505d66487ad347a11d73010e1381c7f0fe929aed1256e6",
+      "inputSha256": "bc5fb4bfe8ff8fd62ef21e6954584a3c96dc8decef727c9ce4827f2bf2380dc6",
+      "referenceSha256": "04d00ca30d198f537f4726677f1df0fde2eefdcc451b32e505309457fbc54bcd",
+      "sourceConsistency": "reviewed",
+      "expectedDisposition": [
+        "pass"
+      ],
+      "answerQuality": "good",
+      "neutralInputSha256": "46c13a53e5721028315212ccafe480dcafbcae88f0d6b8f44b5ed2e38bf9a087",
+      "requestSha256": "de32cdd44f558bc2778d6764bca0c16f984f9938f6db41092d6e821c1f28358e",
+      "slotIndex": 3
+    },
+    {
+      "caseId": "80858f5586dd741ede381f3be2fb7102fc22f364a9361d109d650fb3288e5ca8",
+      "familyId": "f981a3662c9e089d447001df5e50471777952daee2465fa1b0b78341f41a3ccb",
+      "inputSha256": "41530679b2f3d2a573a4be5d3c4f2f2bbaf3af7ef68692a99cec1db5279f1ed9",
+      "referenceSha256": "f38e2831d82bb1a5def9c2c7844d8b367e935340241fbc76b7d44111b79cda6c",
+      "sourceConsistency": "reviewed",
+      "expectedDisposition": [
+        "pass"
+      ],
+      "answerQuality": "good",
+      "neutralInputSha256": "016a3432941749ab708cae5ec4b42840c1c69ba22b43c1497f8abbfddaa170d4",
+      "requestSha256": "f9f8c88ba6bcb697320e46c7d3d48444207909cb6833eaf2aa7aa9cfafe6d166",
+      "slotIndex": 4
+    },
+    {
+      "caseId": "82b8fcad099f84962d22e76e6751bb5cc50580220607ae9d7ca4e5fd2a51824e",
+      "familyId": "d68a38caa5807aa26af7cba2a416a95288e528926110d8f2acb4ecdd1ed27475",
+      "inputSha256": "0ef19c54608c898d049cfbf34ac8128fb24b5efdef0ec85a4696454cb154aeaa",
+      "referenceSha256": "97acb2ad12b09d43734796dd84a482f8ec4565840b5b4dac1c9298e9bde54a0d",
+      "sourceConsistency": "reviewed",
+      "expectedDisposition": [
+        "abstain",
+        "uncertain"
+      ],
+      "answerQuality": "flawed",
+      "neutralInputSha256": "5c5451e2d53cfe5011b4385c0a7589a43aebc7d0caab9f1b7e79b37e96d5c6db",
+      "requestSha256": "7cc588db9c652f6a033b80408d39fa79e4307bae807b5cd77ed9cdf712602834",
+      "slotIndex": 5
+    },
+    {
+      "caseId": "854eb4909a41c9b779fc1595a5241941de2adaf612812c5876b71a5183b0a6f6",
+      "familyId": "985cf351544d36fdd62ea15032a8039b85c24ad44cff97ed4a7487fbe7530c05",
+      "inputSha256": "60bb5855c481cfc2a066d9fba62f4336b5685e6d9317fb5853154748a48d8ae5",
+      "referenceSha256": "ad257db8fc9b3badd6b3ba10143d52a7c6899896a336e7c85e4edb09a4bfd9b9",
+      "sourceConsistency": "reviewed",
+      "expectedDisposition": [
+        "pass"
+      ],
+      "answerQuality": "good",
+      "neutralInputSha256": "2ff4af421af7c2b1e89481f05863088a81026e71f603ab206d066d727bec14a7",
+      "requestSha256": "de8c29f45af8af62a3541571ed9738323e6cf1d9a10edcc8560a92bc12e019e5",
+      "slotIndex": 6
+    },
+    {
+      "caseId": "f5f6a1cfa9f32bbe3448bd929b2aa04dc6eba2eddeb10b57d145be114b699d17",
+      "familyId": "966fe464f902c8c01b731a0d5bc5d3a11a071ee09736417cdfe29dd5e3e7aecd",
+      "inputSha256": "761274251a5b997e858cdc9e177ed0d42ddf747771bda726779f8bcba83ce023",
+      "referenceSha256": "90ee1a0249a54b7ff32bf8732781e00c5b14355ab14a66aea7b10db97ba42987",
+      "sourceConsistency": "reviewed",
+      "expectedDisposition": [
+        "pass"
+      ],
+      "answerQuality": "good",
+      "neutralInputSha256": "df1ed8603e7aa918cace45d5d6e856016c9dc42edcf9f463d4cfb00fb5e57c5c",
+      "requestSha256": "89e86e783c01d493839c59cc14ca565bb267b64d5dd8119adc49d937c96ed8d3",
+      "slotIndex": 7
+    },
+    {
+      "caseId": "6ee72be1103b735b1ee2d97792ccf367967c38bd6a3c5607990ae23ba0ddea05",
+      "familyId": "d68a38caa5807aa26af7cba2a416a95288e528926110d8f2acb4ecdd1ed27475",
+      "inputSha256": "00c61830fce4157e990177ab14e317bc45785d802be914dfc2dd6d34de802b6b",
+      "referenceSha256": "e3bd3c1b2b1cbf5ec6c6add7362037c70507fedd0b693ed89625b417127cc0a9",
+      "sourceConsistency": "reviewed",
+      "expectedDisposition": [
+        "abstain"
+      ],
+      "answerQuality": "good",
+      "neutralInputSha256": "97729b6004811e16816024e12b767a502ce9c652e0d68c84000a30340983b8d0",
+      "requestSha256": "afdf5844f357c568235d40c3f6d65e3798fced8c0d651c8916d6069abded582b",
+      "slotIndex": 8
+    },
+    {
+      "caseId": "74b81863c5397062d4c445faed9e325e072563ae760a5a8d5ad03988b5b4ed6a",
+      "familyId": "f981a3662c9e089d447001df5e50471777952daee2465fa1b0b78341f41a3ccb",
+      "inputSha256": "3774bc300e57399239be22455dd566ca531d45c0644b4a955542a2d660a0cb23",
+      "referenceSha256": "91b154a04040c2dec67af945a4cc57d20d78552291f49896d47175a80410a8bf",
+      "sourceConsistency": "reviewed",
+      "expectedDisposition": [
+        "repair"
+      ],
+      "answerQuality": "flawed",
+      "neutralInputSha256": "fee85f87fdf2ae8f1992821a80b0c60d591314634bbc721ebd3ea42b95db447a",
+      "requestSha256": "8527759abdbd2330cad5f93e0f01d3bafa0aa7ffc16eedd0790f8b0e428f569a",
+      "slotIndex": 9
+    }
+  ],
+  "findings": [
+    "The agreement question in the Doran family cleanly separates coverage from incorrect content.",
+    "Correct Aven abstention is separate from a raw pass or false rejection.",
+    "Absent and wrong-model support is not treated as an explicit contradiction.",
+    "All references are constructed AI-authored labels, not human gold."
+  ],
+  "reviewedAt": "2026-10-15T05:10:01.493Z",
+  "planSha256": "84a8dc07c278a64468dad009b248327358cafe93f9dc05235bc648de2c79e4e7",
+  "implementationCommit": "26f808d877e5984483e4ae41c8240443138a8623",
+  "status": "completed_ai_source_consistency_review",
+  "acknowledgement": "Parent acknowledges the exact frozen plan for the already authorized bounded live grader pilot.",
+  "originalReferenceAuthorship": {
+    "authorship": "ai_authored_constructed_reference",
+    "reviewStatus": "pending_parent_source_review"
+  },
+  "originalPendingLabelPreserved": true,
+  "explanation": "The frozen references retain their original AI authorship and pending-at-construction label. This separate exact-plan record completes AI source-consistency review; it is not human gold, external truth verification, general calibration, or authorization for learned-policy activation.",
+  "sourceReviewSha256": "41f1d8a824c0186ca70b7e0b65804af3e0c4479529d69732a31e89ffb174ecec"
+}

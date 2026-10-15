@@ -1,0 +1,41 @@
+{
+  "format": "grader-calibration-zero-dispatch-reconciliation-v1",
+  "createdAt": "2026-10-15T05:14:06.780Z",
+  "planSha256": "84a8dc07c278a64468dad009b248327358cafe93f9dc05235bc648de2c79e4e7",
+  "implementationCommit": "26f808d877e5984483e4ae41c8240443138a8623",
+  "originalReportSha256": "3f7b7b20193b3430605f3fb9b8f5770e2142beca0baab5986607f84222e899db",
+  "artifactFileSha256": {
+    "plan": "3e4232a1ceeedcd0697ff002a2554b8eef0f74131ddbadbe8c4d61c88435a2e1",
+    "report": "8cfadb3499873d303a88aa304afecf11da6df1794b46bf760b40853bb8d9041f",
+    "privateCheckpoint": "2e6180f6c5bc9fe550394eeea269fe67545ed09b4bf3e28df342ae872493adc0",
+    "canonicalClaim": "b656ae014311a7af4980d9018362ec3f15ab99cc396996ff84448179f861243d"
+  },
+  "ledger": {
+    "startingAttempts": 86,
+    "endingAttempts": 86,
+    "pending": 0,
+    "activeOwners": 0,
+    "startingHistoricalSha256": "9e7a8895e0b4a9a6300a19b2957369b5ab9f72c622f86dd5933f4158de4228fa",
+    "endingHistoricalSha256": "9e7a8895e0b4a9a6300a19b2957369b5ab9f72c622f86dd5933f4158de4228fa",
+    "newApprovedRunIds": [],
+    "additionalReservedAllowanceUsd": 0
+  },
+  "localProtocolDispatches": 0,
+  "providerBillingAttested": false,
+  "validGrades": 0,
+  "calibration": "not_measured_no_valid_grades",
+  "originalReportPreserved": true,
+  "originalConservativeExactTransportCount": null,
+  "rootCause": "macOS lsof with two file operands returns status 1 with valid partial-match output when only the runner budget handle is open; the strict OS guard rejected this before reservation.",
+  "proof": [
+    "The frozen provider awaits the before_reservation guard before inserting its ledger reservation.",
+    "The frozen bounded transport requires active.attemptId, which is set only by after_reservation following a durable ledger insert.",
+    "The exact historical receipt digest is unchanged, there are still 86 rows, and no new approved run ID or pending reservation exists.",
+    "The durable journal contains intent, slot_started and stopped, with no slot_reserved or slot_observed.",
+    "Therefore no transport was reachable under the frozen local protocol. This is not independent provider billing attestation."
+  ],
+  "review": "Parent and independent architecture reviewer checked the control-flow proof; no human gold judgment is created.",
+  "nextAction": "Preserve v2 without retry. Review and merge the per-file OS inspection fix, then freeze a new plan under the same unused ten-call allowance.",
+  "qualityClaimEligible": false,
+  "productionActivationQualified": false
+}

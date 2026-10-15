@@ -115,10 +115,13 @@ export function readCalibrationReceipts(plan: CalibrationPlan): Record<string, N
 function otherFileOwners(paths: string[]) {
   const files = [...new Set(paths.filter(existsSync))];
   if (!files.length) return [];
-  const result = spawnSync('lsof', ['-nP', '-F', 'p', '--', ...files], { encoding: 'utf8' });
-  if (result.error) throw result.error;
-  assert.ok(!result.stderr.trim() && (result.status === 0 || result.status === 1 && !result.stdout.trim()), 'Cannot verify calibration shared-file ownership.');
-  return [...new Set(result.stdout.split('\n').filter(line => /^p\d+$/.test(line)).map(line => Number(line.slice(1))))].filter(pid => pid !== process.pid);
+  const pids = files.flatMap(path => {
+    const result = spawnSync('lsof', ['-nP', '-F', 'p', '--', path], { encoding: 'utf8' });
+    if (result.error) throw result.error;
+    assert.ok(!result.stderr.trim() && (result.status === 0 || result.status === 1 && !result.stdout.trim()), 'Cannot verify calibration shared-file ownership.');
+    return result.stdout.split('\n').filter(line => /^p\d+$/.test(line)).map(line => Number(line.slice(1)));
+  });
+  return [...new Set(pids)].filter(pid => pid !== process.pid);
 }
 function queuedJobs(path: string, table: string, statuses: string[]) {
   if (!existsSync(path)) return 0;
