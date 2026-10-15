@@ -227,6 +227,7 @@ function flatSourceIdOutput(output: unknown, scope: SourceCitationScope) {
 export type FeedbackProviderOptions = {
   enabled?: boolean; apiKey?: string; credentialsFile?: string; fetchImpl?: typeof fetch;
   dbPath?: string; capUsd?: number; priorSpendUsd?: number; allowancePerCallUsd?: number; callLimit?: number;
+  operationGuard?: (operation: { phase: 'before_reservation' | 'after_reservation'; kind: string; runId?: string; requestSha256: string; attemptId?: string }) => void | Promise<void>;
 };
 
 export class FeedbackExternalError extends Error {
@@ -251,6 +252,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
   private readonly prior: number;
   private readonly allowance: number;
   private readonly callLimit: number;
+  private readonly operationGuard?: FeedbackProviderOptions['operationGuard'];
   constructor(options: FeedbackProviderOptions = {}) {
     this.enabled = options.enabled ?? process.env.ABLATRIX_LOOP_LIVE === '1';
     let apiKey = options.apiKey ?? process.env.SAPIOM_API_KEY ?? '';
@@ -267,6 +269,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
     this.prior = options.priorSpendUsd ?? Number(process.env.ABLATRIX_LOOP_PRIOR_SPEND_USD ?? 0);
     this.allowance = options.allowancePerCallUsd ?? Number(process.env.ABLATRIX_LOOP_ALLOWANCE_USD ?? 0.10);
     this.callLimit = options.callLimit ?? Number(process.env.ABLATRIX_LOOP_CALL_LIMIT ?? 20);
+    this.operationGuard = options.operationGuard;
     const dbPath = options.dbPath ?? process.env.ABLATRIX_LOOP_BUDGET_DB ?? '.data/feedback-budget.sqlite';
     this.ownerKey = dbPath === ':memory:' ? null : resolve(dbPath);
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
@@ -399,15 +402,18 @@ export class SapiomFeedbackProvider implements LoopProvider {
   }
   private async request(kind: string, system: string, input: unknown, parameters: object, runId?: string, revisionIdentity?: { revisionPolicy?: RevisionPolicySelector; systemInstructionsSha256: string; citationInterface?: typeof SOURCE_ID_CITATION_INTERFACE | typeof CONSTRAINED_SOURCE_ID_CITATION_INTERFACE | typeof FLAT_SOURCE_ID_CITATION_INTERFACE; optionSetSha256?: string; responseSchemaSha256?: string; requestSha256?: string; answerSha256?: string; sourceContextSha256?: string; assessmentKind?: 'ai_claim_support_estimate' } | (RuntimeProtocolBindings & Record<string, unknown>)): Promise<{ id: string; output: unknown; model: string; usage: LoopUsage }> {
     const body = completionBody(kind, system, input, parameters);
+    const guardedIdentity = this.operationGuard ? { kind, runId, requestSha256: createHash('sha256').update(JSON.stringify(body)).digest('hex') } : undefined;
+    if (guardedIdentity) await this.operationGuard!({ ...guardedIdentity, phase: 'before_reservation' });
     const id = this.reserve(kind, runId);
-    if (revisionIdentity && 'operationRunId' in revisionIdentity) {
-      // Bind the pending runtime phase before transport. Interrupted and unknown
-      // results retain this identity and can never be hidden redispatches.
-      const promptVersion = typeof input === 'object' && input !== null && 'promptVersion' in input ? input.promptVersion : undefined;
-      this.db.prepare('UPDATE loop_provider_calls SET receipt_json=? WHERE id=?').run(JSON.stringify({ promptVersion, ...revisionIdentity }), id);
-    }
     let errorCode = 'network';
     try {
+      if (revisionIdentity && ('operationRunId' in revisionIdentity || guardedIdentity)) {
+        // Guarded pilots and runtime phases bind pending reservations before
+        // transport; ordinary historical request and receipt bodies are unchanged.
+        const promptVersion = typeof input === 'object' && input !== null && 'promptVersion' in input ? input.promptVersion : undefined;
+        this.db.prepare('UPDATE loop_provider_calls SET receipt_json=? WHERE id=?').run(JSON.stringify({ promptVersion, ...revisionIdentity }), id);
+      }
+      if (guardedIdentity) { errorCode = 'operation_guard'; await this.operationGuard!({ ...guardedIdentity, phase: 'after_reservation', attemptId: id }); errorCode = 'network'; }
       const response = await this.fetchImpl('https://router.sapiom.ai/v1/chat/completions', {
         method: 'POST', signal: AbortSignal.timeout(45_000),
         headers: { authorization: `Bearer ${this.apiKey}`, 'content-type': 'application/json', 'x-sapiom-lane': 'run_now' },
