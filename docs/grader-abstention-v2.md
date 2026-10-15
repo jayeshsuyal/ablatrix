@@ -2,6 +2,8 @@
 
 The earlier [live grader pilot](evidence/grader-calibration-2026-10-14/live-results.md) stopped when the model labeled a sensible refusal `supported` but supplied no proof. The validator correctly rejected that output. V2 clarifies the grading instructions while retaining the proof requirements.
 
+**Live outcome:** [all five fresh calls returned valid grades](evidence/grader-abstention-2026-10-14/live-results.md). The appropriate refusal used `non_factual` with no proof and routed to `abstain`. All five routing decisions matched the frozen sets, but only three matched every grading axis; coverage and uncertainty each missed one expectation. The predeclared smoke gate failed. V2 remains an explicit candidate, existing workers stay v1, and activation remains closed.
+
 ## Contract
 
 Call `gradeClaimSupport` with the explicit input selector `graderVersion: 'claim-support-v2-abstention'`. Omitting it preserves `claim-support-v1`; existing automatic workers retain their original version while this candidate is tested. Request, prompt and receipt hashes bind the selected version. Receipts cannot cross replay between versions.
@@ -62,4 +64,4 @@ npm test
 npm run build
 ```
 
-The live test remains pending until the implementation clears exact-commit CI and bot review and a newly reviewed plan is published before dispatch. Live learned-policy activation remains closed.
+The implementation cleared exact-commit CI and bot review in [PR #40](https://github.com/jayeshsuyal/ablatrix/pull/40). The [frozen plan](evidence/grader-abstention-2026-10-14/frozen-plan-v1.json) and [source review](evidence/grader-abstention-2026-10-14/source-review-v1.json) were published before dispatch. The live test is complete at 96 shared attempts with zero pending; no further call is authorized by this exhausted five-call scope. Live learned-policy activation remains closed.

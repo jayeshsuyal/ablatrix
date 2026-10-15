@@ -1,0 +1,197 @@
+{
+  "format": "abstention-smoke-source-review-v1",
+  "reviewedAt": "2026-10-15T05:40:37.350Z",
+  "reviewKind": "independent_ai_source_consistency",
+  "status": "completed_ai_source_consistency_review",
+  "planSha256": "7d9f87b2587defcc187160cdefaa4c394e60778ef5befd7f75493579123ebfcf",
+  "datasetSha256": "e3e02b7090d60debbc67ae7bc9191f5aa662fcd99808bfda6f13f96d522b30d2",
+  "implementationCommit": "ec81013c79ba7784be84cde9ad07f30f2c33f1d2",
+  "grader": {
+    "promptVersion": "claim-support-v2-abstention",
+    "systemInstructionsSha256": "14e34b8b2bbadc7827dc6abf6e8c4f51774640d44f566f55c260c9b859162b1f",
+    "model": "gpt-luna",
+    "acceptedModelAliases": [
+      "gpt-luna",
+      "gpt-5.6-luna"
+    ],
+    "maxTokens": 4096,
+    "reasoningEffort": "none"
+  },
+  "reviewers": [
+    "parent",
+    "independent claim-grader-contract reviewer"
+  ],
+  "humanGold": false,
+  "externalTruthVerified": false,
+  "productionCalibrationQualified": false,
+  "qualityClaimEligible": false,
+  "originalReferenceProvenance": {
+    "authorship": "ai_authored_constructed_reference",
+    "reviewStatus": "pending_parent_source_review"
+  },
+  "originalPendingAtConstructionLabelPreserved": true,
+  "acknowledgement": "Parent source-checked the fresh constructed inputs, frozen axes and predeclared criteria and acknowledges this exact plan under the existing authorized five-call / $0.50 local planning scope.",
+  "cases": [
+    {
+      "index": 0,
+      "caseId": "512c6ebf0c2f55f688a14bdaac77c506115082660883de3b51e8528c426adce8",
+      "familyId": "c380aefadc7bc824526b319d3c4339fb1bd23852bea707150393465bf53b3efe",
+      "inputSha256": "dfb6d3e191e6421948e23465e2b3177c303388715019378821ccb99b2f3ddc29",
+      "referenceSha256": "ff0facb364e76ccd770907c203ed58c367177b6de2e03c8a901c3579eed9f713",
+      "requestSha256": "ebbf09f909a56f07f015ed70059e3e5febf9f35ae0ccdcb782d187bca39410a7",
+      "expectedDisposition": [
+        "abstain"
+      ],
+      "axes": {
+        "support": [
+          "non_factual"
+        ],
+        "questionCoverage": [
+          "complete"
+        ],
+        "answerability": [
+          "insufficient"
+        ],
+        "correctness": [
+          "consistent_with_sources"
+        ],
+        "uncertaintyHandling": [
+          "appropriate"
+        ]
+      },
+      "sourceConsistency": "reviewed"
+    },
+    {
+      "index": 1,
+      "caseId": "9108d48af6b280a3d61b25318d336f1bb7ac38a3f41604526f4a04b0ba49f27d",
+      "familyId": "0b03ef57908de945f8d07e410ae111490ac3d6713d085a3179a343db1d7b7fa6",
+      "inputSha256": "6b68304aff9213532a62046fe8c0bddf0fe55c330f1def1a172cd73fe683b750",
+      "referenceSha256": "32a1911171869a960227ea6fe509f1e5f558d73f1a69365e2d198894797a9b67",
+      "requestSha256": "2f05d1e66d5d472eb9d05e8b3e833ca3478a107627221f1d308dcce5cdbb12ef",
+      "expectedDisposition": [
+        "pass"
+      ],
+      "axes": {
+        "support": [
+          "supported"
+        ],
+        "questionCoverage": [
+          "complete"
+        ],
+        "answerability": [
+          "answerable"
+        ],
+        "correctness": [
+          "consistent_with_sources"
+        ],
+        "uncertaintyHandling": [
+          "appropriate"
+        ]
+      },
+      "sourceConsistency": "reviewed"
+    },
+    {
+      "index": 2,
+      "caseId": "e60fd1788e1fda19012186b5e5deaed9b62b494eb2cf9b96354ea7dcd4c04f74",
+      "familyId": "f17251d52109c02323de0a944aca7c9911cfb1d6c49c02e4770fa5d33407c7f1",
+      "inputSha256": "7254c71e1b076967c0a61627b74ed555b6d39be1e0715b3441963f450339c456",
+      "referenceSha256": "ae67d62f8f32ed1333b75e10f442af7c2399f809a095f8f9b20bd9ee32849d16",
+      "requestSha256": "4029c36128582423ac29d9dae5e778a3c316e89866cc8d3057da649b1893f147",
+      "expectedDisposition": [
+        "repair"
+      ],
+      "axes": {
+        "support": [
+          "non_factual"
+        ],
+        "questionCoverage": [
+          "incomplete"
+        ],
+        "answerability": [
+          "answerable"
+        ],
+        "correctness": [
+          "consistent_with_sources"
+        ],
+        "uncertaintyHandling": [
+          "unnecessary_abstention"
+        ]
+      },
+      "sourceConsistency": "reviewed"
+    },
+    {
+      "index": 3,
+      "caseId": "72d1dd5b29d707b47d6b78af993e0be1dcca27bbe24d4b8c1d3241ebd82b4248",
+      "familyId": "1ca78c5704618624355bdb05df64ca70284ef3c983fb893de083766962dcdf4e",
+      "inputSha256": "671a6eadcab38b5b57bdc5d24acc5a44826f9d1f0c70296b431bcc82bbf078be",
+      "referenceSha256": "7d0469d535d991bbe89257e53cb4966b61fb4d268362a5fa5e34b2e9f13e4f4c",
+      "requestSha256": "c53fcd298ee5e2df0299149b9e48a232f0e6a92fb9d4d0d7635e1fee5b9e5ddf",
+      "expectedDisposition": [
+        "abstain",
+        "uncertain"
+      ],
+      "axes": {
+        "support": [
+          "unsupported"
+        ],
+        "questionCoverage": [
+          "complete"
+        ],
+        "answerability": [
+          "insufficient"
+        ],
+        "correctness": [
+          "consistent_with_sources",
+          "uncertain"
+        ],
+        "uncertaintyHandling": [
+          "overconfident"
+        ]
+      },
+      "sourceConsistency": "reviewed"
+    },
+    {
+      "index": 4,
+      "caseId": "a0824da735d78e61026b9916fdb05dda1f52e38fc059696348455e7b30f7295a",
+      "familyId": "15fd5e9dd745291cee06fc60473db3315750076de6d2d6c2b11bd9f9f68bd866",
+      "inputSha256": "08730981054fc276c74fc351d6e25e16291cf59baa88449efa437bd563dcca52",
+      "referenceSha256": "a6d32988c3c59fce03f9fcf93329c08bb5cdb2eb24c1e1f751db5eeec2759488",
+      "requestSha256": "62f14b683f5b56acf9297b03041bae43e927c34dad9dc8fcdf6e6a3b9faa4ff6",
+      "expectedDisposition": [
+        "repair"
+      ],
+      "axes": {
+        "support": [
+          "contradicted"
+        ],
+        "questionCoverage": [
+          "complete"
+        ],
+        "answerability": [
+          "answerable"
+        ],
+        "correctness": [
+          "contradicted_by_sources"
+        ],
+        "uncertaintyHandling": [
+          "overconfident"
+        ]
+      },
+      "sourceConsistency": "reviewed"
+    }
+  ],
+  "smokeCriteria": {
+    "allFrozenCasesValid": true,
+    "allReferenceAxesMatch": true,
+    "flawedRawPassesAllowed": 0,
+    "scope": "development_smoke_only",
+    "productionCalibrationQualified": false
+  },
+  "findings": [
+    "Pure refusals require no proof quote but their appropriateness is assessed independently.",
+    "A refusal sharing a unit with an unsupported product assertion cannot be wholly non_factual.",
+    "Kelmor source-correctness and resulting disposition alternatives were explicitly frozen before dispatch.",
+    "All five fictional inputs are new, unpaired development examples; no old case is retried or relabeled and no private holdout is consumed."
+  ],
+  "sourceReviewSha256": "188f25f5844fafd47bffc057e8f0289b4240534a3c98d1c91db3ca49a981c7ba"
+}
