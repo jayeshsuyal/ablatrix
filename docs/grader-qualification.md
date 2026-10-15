@@ -36,7 +36,7 @@ These are predeclared engineering choices. Invalid or missing observations preve
 
 ## Offline reproduction
 
-Requires the repository's Node.js runtime and dependencies. Commit the reviewed implementation before sealing; the CLI compares the current code/dependency bytes with that exact commit. Use new absolute output paths:
+Requires the repository's Node.js runtime, dependencies and the recorded implementation's Git history. A normal full clone includes that history. If using a shallow clone, first run `git fetch --unshallow origin` (use your clone's remote name). CI uses `fetch-depth: 0` and verifies/rehearses the published seal byte for byte. Keep artifact-bearing implementation commits reachable by merging this PR with a merge commit. Commit the reviewed implementation before sealing; the CLI compares the current code/dependency bytes with that exact commit. Use new absolute output paths:
 
 ```sh
 npm ci
@@ -52,6 +52,8 @@ npm run grader:qualification -- --rehearse \
 ```
 
 Preparation creates four exclusive, read-only JSON files in a new directory: `plan.json`, `requests.json`, `references.json` and `record.json`. Existing or partial seals cannot be overwritten or resumed. Verification reconstructs them against current committed fixtures/code; edited self hashes cannot waive those bindings. Keep the recorded code checkout for historical verification after implementation changes.
+
+The published seal is tied to its exact code and dependency bytes. CI reproduces it in an isolated checkout of the recorded implementation using that commit's lockfile, with saved artifacts from the current checkout. Later implementation changes can coexist with this historical check. To seal a future benchmark under changed code, create new artifacts and preserve this seal; a changed grader prompt additionally requires a fresh cohort.
 
 The rehearsal scripts expected outputs from references to exercise evaluator mechanics. It does **not** query a judge or measure accuracy. Its provenance is always `offline_reference_scripted_mechanics_only`, its provider-call count is zero, and `qualified`, `productionActivationQualified` and `qualityClaimEligible` remain false. Even supplied real-looking output JSON cannot change those fields. All 92 slots, invalid/missing outcomes, primary category metrics and repeat consistency remain inspectable.
 

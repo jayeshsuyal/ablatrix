@@ -24,12 +24,13 @@ The rehearsal generates expected outputs from references. Its passing mechanics 
 npm ci
 npm run grader:qualification -- --verify \
   --dir "$PWD/docs/evidence/grader-qualification-2026-10-15/seal-v1"
+mkdir -p "$PWD/.data/grader-qualification"
 npm run grader:qualification -- --rehearse \
   --dir "$PWD/docs/evidence/grader-qualification-2026-10-15/seal-v1" \
-  --out /tmp/ablatrix-new-qualification-rehearsal.json
+  --out "$PWD/.data/grader-qualification/new-rehearsal.json"
 ```
 
-Use a new output path; overwriting is rejected. These commands need the recorded implementation bytes and no credentials or private ledger. A future code change must retain the originating checkout for historical verification.
+Use a new output path; overwriting is rejected. These commands need the recorded implementation bytes and Git object, and no credentials or private ledger. A normal full clone contains the implementation ancestor. For a shallow clone, first run `git fetch --unshallow origin` (substitute your remote name). CI fetches full history and runs both commands, comparing the rehearsal byte for byte. A future code change must retain the originating checkout for historical verification. The [additive review follow-up](review-followup-v1.json) records the shallow-checkout repair without changing the original seal.
 
 Verification: 16 focused checks, 449 server tests passed with one platform skip, production build, CLI typecheck, exact seal verification and independent source/code/artifact reviews pass. All 135 protected historical artifacts remain unchanged, and the shared ledger stays at **102 attempts with zero pending**.
 
