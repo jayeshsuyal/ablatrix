@@ -66,7 +66,7 @@ async function runCalibrationCli(argv: string[]) {
   if (command === '--replay') {
     const state = readCalibrationLedgerState(scope.budgetPath); assert.equal(state.initialSha256, scope.ledgerInitialSha256, 'Historical shared receipts changed.');
     const result = verifyGraderCalibrationCheckpoint(options, { verification, readLedgerReceipts: readCalibrationReceipts });
-    return { mode: 'read_only_checkpoint_replay', planSha256: plan.planSha256, savedReportPresent: existsSync(options.reportPath), complete: result.report.complete, accounting: result.report.accounting, metrics: result.report.metrics, newProviderCalls: 0, qualityClaimEligible: false };
+    return { mode: 'read_only_checkpoint_replay', planSha256: plan.planSha256, savedReportPresent: existsSync(options.reportPath), complete: result.report.complete, terminal: result.report.terminal, checkpointInspection: result.checkpointInspection ?? null, accounting: result.report.accounting, metrics: result.report.metrics, newProviderCalls: 0, qualityClaimEligible: false };
   }
   // All static/environment/commit/OS/ledger checks occur before the provider
   // constructor can read its existing project credential. No .env is loaded.

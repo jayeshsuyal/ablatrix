@@ -26,7 +26,8 @@ export type CalibrationExecutionDependencies = {
   /** Read only these newly approved opaque run IDs from the existing ledger. */
   readLedgerReceipts(plan: CalibrationPlan): Record<string, ClaimSupportReceipt | null | undefined>;
 };
-export type CalibrationExecutionResult = { report: CalibrationReport; reportPath: string; checkpointPath: string; claimPath: string; stopped: boolean };
+export type CalibrationExecutionResult = { report: CalibrationReport; reportPath: string; checkpointPath: string; claimPath: string; stopped: boolean;
+  checkpointInspection?: { state: 'one_record_append_window'; anchoredRecordCount: number; unanchoredTail: CalibrationCheckpointRecord; explanation: string } };
 type ClaimAnchor = {
   format: 'grader-calibration-claim-v1'; sequence: number; previousSha256: string; planSha256: string;
   checkpointPath: string; reportPath: string; ledgerPath: string; transportProvenance: Provenance;
@@ -52,10 +53,11 @@ function append(path: string, value: unknown) {
   const fd = openSync(path, constants.O_WRONLY | constants.O_APPEND | constants.O_NOFOLLOW);
   try { writeFileSync(fd, `${JSON.stringify(value)}\n`); fsyncSync(fd); } finally { closeSync(fd); }
 }
-function readLines<T>(path: string): T[] {
+function readLines<T>(path: string, allowEmpty = false): T[] {
   const metadata = lstatSync(path);
-  if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size > MAX_JOURNAL_BYTES || metadata.size < 1) throw new Error('Calibration checkpoint file is missing, replaced or outside its size bound.');
+  if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size > MAX_JOURNAL_BYTES || (!allowEmpty && metadata.size < 1)) throw new Error('Calibration checkpoint file is missing, replaced or outside its size bound.');
   const content = readFileSync(path, 'utf8');
+  if (allowEmpty && content === '') return [];
   if (!content.endsWith('\n') || content.includes('\r')) throw new Error('Calibration checkpoint has an incomplete or altered record.');
   return content.slice(0, -1).split('\n').map(line => JSON.parse(line) as T);
 }
@@ -85,14 +87,24 @@ function exactReceipts(plan: CalibrationPlan, receipts: ReturnType<CalibrationEx
  * a provider, reserves an allowance, creates files or resumes dispatch. */
 export function verifyGraderCalibrationCheckpoint(options: CalibrationExecutionOptions, dependencies: Pick<CalibrationExecutionDependencies, 'verification' | 'readLedgerReceipts'>): CalibrationExecutionResult {
   const plan = verifyCalibrationPlan(options.plan, dependencies.verification), frozen = { ...options, plan }, locations = paths(frozen);
-  const records = readLines<CalibrationCheckpointRecord>(locations.checkpointPath), anchors = readLines<ClaimAnchor>(locations.claimPath);
-  verifyCalibrationCheckpointRecords(plan, records); verifyAnchors(frozen, locations, records, anchors);
-  const report = deriveCalibrationReport(plan, { executionMode: 'live', transportProvenance: frozen.transportProvenance, receiptsByRunId: exactReceipts(plan, dependencies.readLedgerReceipts(plan)), checkpointRecords: records });
+  const records = readLines<CalibrationCheckpointRecord>(locations.checkpointPath, true), anchors = readLines<ClaimAnchor>(locations.claimPath);
+  verifyCalibrationCheckpointRecords(plan, records);
+  // The journal is fsynced before its independent anchor. A crash can leave
+  // exactly one complete tail unanchored. Inspect it without repairing files,
+  // trusting its result/timing, or reopening dispatch. A published report still
+  // requires the complete original anchor chain.
+  const appendWindow = anchors.length > 0 && anchors.length === records.length && !existsSync(locations.reportPath);
+  const anchoredRecords = appendWindow ? records.slice(0, -1) : records;
+  verifyAnchors(frozen, locations, anchoredRecords, anchors);
+  const receiptsByRunId = exactReceipts(plan, dependencies.readLedgerReceipts(plan));
+  if (appendWindow) deriveCalibrationReport(plan, { executionMode: 'live', transportProvenance: frozen.transportProvenance, receiptsByRunId, checkpointRecords: records }); // Validate tail receipt binding only.
+  const report = deriveCalibrationReport(plan, { executionMode: 'live', transportProvenance: frozen.transportProvenance, receiptsByRunId, checkpointRecords: anchoredRecords });
   if (existsSync(locations.reportPath)) {
     const current = JSON.parse(readFileSync(locations.reportPath, 'utf8'));
     if (calibrationHash(current) !== calibrationHash(report)) throw new Error('Immutable calibration report differs from the exact current ledger, plan or checkpoints.');
   }
-  return { report, reportPath: locations.reportPath, checkpointPath: locations.checkpointPath, claimPath: locations.claimPath, stopped: !report.complete };
+  return { report, reportPath: locations.reportPath, checkpointPath: locations.checkpointPath, claimPath: locations.claimPath, stopped: !report.complete,
+    ...(appendWindow ? { checkpointInspection: { state: 'one_record_append_window' as const, anchoredRecordCount: anchoredRecords.length, unanchoredTail: structuredClone(records.at(-1)!), explanation: 'One complete journal tail lacks its independent anchor. This may be an interrupted append or anchor deletion; only the anchored prefix contributes grades and transport counts. Trusted ledger reservations remain counted. No files were repaired and dispatch cannot resume.' } } : {}) };
 }
 
 /** Only an explicitly acknowledged fresh plan can enter this function. All

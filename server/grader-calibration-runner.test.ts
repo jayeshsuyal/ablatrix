@@ -188,6 +188,50 @@ test('a durable intent before provider construction blocks changed-path restart 
   } finally { fixture.cleanup(); }
 });
 
+test('read-only replay inspects a single unanchored append without trusting its grade, timing or completion', async () => {
+  for (const recordCount of [0, 1, 2, 3, 4, 32]) {
+    const fixture = setup();
+    try {
+      const result = await executeGraderCalibration(fixture.options, fixture.dependencies);
+      const records = result.report.checkpointProof.records.slice(0, recordCount);
+      const originalAnchors = readFileSync(result.claimPath, 'utf8').trimEnd().split('\n');
+      const anchors = originalAnchors.slice(0, Math.max(1, recordCount));
+      rmSync(result.reportPath);
+      writeFileSync(result.checkpointPath, records.map(record => JSON.stringify(record) + '\n').join(''));
+      writeFileSync(result.claimPath, anchors.join('\n') + '\n');
+      // Model a crash at this write boundary: no later reservation occurred.
+      const db = new DatabaseSync(fixture.ledgerPath);
+      for (const slot of fixture.plan.slots) if (!records.some(record => record.kind === 'slot_reserved' && record.runId === slot.input.runId)) db.prepare('DELETE FROM loop_provider_calls WHERE run_id=?').run(slot.input.runId);
+      db.close();
+      const before = [readFileSync(result.checkpointPath, 'utf8'), readFileSync(result.claimPath, 'utf8')];
+      const counts = fixture.counts();
+      const replay = verifyGraderCalibrationCheckpoint(fixture.options, fixture.dependencies);
+      assert.equal(replay.report.complete, false); assert.equal(replay.stopped, true);
+      assert.equal(replay.report.checkpointProof.recordCount, Math.max(0, recordCount - 1));
+      assert.equal(replay.report.accounting.reservedSlots, records.filter(record => record.kind === 'slot_reserved').length);
+      if (recordCount) {
+        assert.equal(replay.checkpointInspection?.state, 'one_record_append_window');
+        assert.deepEqual(replay.checkpointInspection?.unanchoredTail, records.at(-1));
+        assert.match(replay.checkpointInspection?.explanation ?? '', /anchor deletion/);
+      } else assert.equal(replay.checkpointInspection, undefined);
+      if (recordCount === 4) { assert.equal(replay.report.slots[0].status, 'unknown'); assert.equal(replay.report.accounting.validGrades, 0); assert.equal(replay.report.accounting.exactTransportCount, null); }
+      if (recordCount === 32) { assert.equal(replay.report.terminal.kind, 'interrupted'); assert.equal(replay.report.accounting.validGrades, 10); }
+      assert.deepEqual([readFileSync(result.checkpointPath, 'utf8'), readFileSync(result.claimPath, 'utf8')], before);
+      assert.equal(existsSync(result.reportPath), false); assert.deepEqual(fixture.counts(), counts);
+      await assert.rejects(executeGraderCalibration(fixture.options, fixture.dependencies), /existing durable intent/);
+      if (recordCount === 4) {
+        writeFileSync(result.claimPath, anchors.slice(0, -1).join('\n') + '\n');
+        assert.throws(() => verifyGraderCalibrationCheckpoint(fixture.options, fixture.dependencies), /record counts/);
+        writeFileSync(result.claimPath, before[1]);
+        const tail = structuredClone(records.at(-1)!); tail.receipt!.error_code = 'altered-unanchored-receipt'; tail.receiptSha256 = calibrationHash(tail.receipt);
+        const { sha256: _old, ...body } = tail; tail.sha256 = calibrationHash(body);
+        writeFileSync(result.checkpointPath, [...records.slice(0, -1), tail].map(record => JSON.stringify(record) + '\n').join(''));
+        assert.throws(() => verifyGraderCalibrationCheckpoint(fixture.options, fixture.dependencies), /trusted ledger/);
+      }
+    } finally { fixture.cleanup(); }
+  }
+});
+
 test('a historical change while the final response body streams cannot publish a completed report', { timeout: 15_000 }, async () => {
   const fixture = setup(), inspect = fixture.dependencies.inspectBoundary;
   let calls = 0, headersObserved!: () => void;
