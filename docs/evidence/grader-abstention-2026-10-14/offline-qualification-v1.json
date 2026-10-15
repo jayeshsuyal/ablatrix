@@ -1,0 +1,40 @@
+{
+  "format": "abstention-smoke-offline-qualification-v1",
+  "createdAt": "2026-10-15T05:40:37.359Z",
+  "planSha256": "7d9f87b2587defcc187160cdefaa4c394e60778ef5befd7f75493579123ebfcf",
+  "implementationCommit": "ec81013c79ba7784be84cde9ad07f30f2c33f1d2",
+  "sourceReviewSha256": "188f25f5844fafd47bffc057e8f0289b4240534a3c98d1c91db3ca49a981c7ba",
+  "verification": {
+    "focusedPassed": 54,
+    "localServerPassed": 428,
+    "localServerPlatformSkipped": 1,
+    "ciServerPassed": 429,
+    "ciChromiumPassed": 41,
+    "ciPythonPassed": 7,
+    "auditVulnerabilities": 0,
+    "build": "passed",
+    "cliTypecheck": "passed",
+    "exactHeadCi": "https://github.com/jayeshsuyal/ablatrix/actions/runs/38687750688",
+    "implementationPr": "https://github.com/jayeshsuyal/ablatrix/pull/40",
+    "independentCodeReview": "completed_no_remaining_findings",
+    "botReview": "completed_no_remaining_findings",
+    "protectedArtifacts": 122,
+    "protectedArtifactsChanged": 0
+  },
+  "newProviderCallsAtPreparation": 0,
+  "budget": {
+    "startingAttempts": 91,
+    "startingPending": 0,
+    "startingReservedUsd": 9.1,
+    "priorSpendUsd": 0.200281,
+    "newCalls": 5,
+    "allowancePerCallUsd": 0.1,
+    "absoluteCallLimit": 96,
+    "spendingCapUsd": 10,
+    "maxPlanningExposureUsd": 9.800281
+  },
+  "humanGold": false,
+  "productionCalibrationQualified": false,
+  "qualityClaimEligible": false,
+  "versionPolicy": "Explicit v2 pilot only; omitted version and existing workers preserve v1. Historical receipt bytes and invalid outcomes are unchanged."
+}
