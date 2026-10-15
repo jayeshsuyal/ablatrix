@@ -123,7 +123,9 @@ export function inspectDiagnosticApp(input: { port?: string; budgetPath: string;
   // index.ts opens these stores when it initializes its worker, even with no
   // queued jobs or paid-provider lease. Checking their file owners catches the
   // same application on any port or under a different ABLATRIX_DB setting.
-  const sharedFileOwnerPids = lsofPids(['--', input.budgetPath, input.reviewPath]).filter(pid => pid !== process.pid);
+  // macOS lsof exits 1 when only some file operands match. Query each file
+  // independently so an unopened review DB does not invalidate a budget owner.
+  const sharedFileOwnerPids = [...new Set([input.budgetPath, input.reviewPath].flatMap(path => lsofPids(['--', path])))].filter(pid => pid !== process.pid);
   const activeLockPids: number[] = [];
   for (const database of [input.appDbPath, input.loopDbPath]) {
     assert.notEqual(database, ':memory:', 'Diagnostic application database paths must be explicit files.');
