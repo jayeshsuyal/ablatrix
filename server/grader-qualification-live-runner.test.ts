@@ -163,7 +163,7 @@ test('production execute and verifiers reject a caller-selected temp scope befor
   globalThis.fetch = async () => { fetchCalls++; throw new Error('SYNTHETIC unexpected network access'); };
   t.after(() => { globalThis.fetch = savedFetch; });
   assert.throws(() => verifyLiveQualificationPlanFile(planPath), /canonical production scope/);
-  assert.throws(() => verifyLiveQualification(planPath), /canonical production scope/);
-  await assert.rejects(executeLiveQualification({ planPath, acknowledgedPlanSha256: f.plan.executionPlanSha256 }), /canonical production scope/);
+  assert.throws(() => verifyLiveQualification(planPath), /clean standalone native CLI/);
+  await assert.rejects(executeLiveQualification({ planPath, acknowledgedPlanSha256: f.plan.executionPlanSha256 }), /clean standalone native CLI/);
   assert.equal(fetchCalls, 0); assert.equal(f.counts().factoryCalls, 0); assert.equal(readLiveQualificationLedger(f.budgetPath).attempts, 102); assert.deepEqual(readFileSync(planPath), before); assert.equal(existsSync(f.plan.paths.checkpointPath), false);
 });

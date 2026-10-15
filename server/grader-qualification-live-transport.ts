@@ -12,7 +12,8 @@ async function transport(request: Request, url: Parameters<typeof fetch>[0], ini
   assert.equal(typeof url === 'string' ? url : url instanceof URL ? url.href : url.url, endpoint);
   assert.ok(init?.method === 'POST' && typeof init.body === 'string' && init.redirect === 'error' && init.signal, 'Direct Router transport requires a bounded exact POST.');
   init.signal.throwIfAborted();
-  const body = init.body, signal = init.signal, headers = Object.fromEntries(new Headers(init.headers));
+  const body = init.body, signal = init.signal, headers: Record<string, string> = {};
+  new Headers(init.headers).forEach((value, key) => { headers[key] = value; });
   assert.deepEqual(Object.keys(headers).sort(), ['authorization', 'content-type', 'x-sapiom-lane']);
   assert.ok(headers.authorization.startsWith('Bearer ') && headers['content-type'] === 'application/json' && headers['x-sapiom-lane'] === 'run_now', 'Direct Router transport requires the existing provider header contract.');
   assert.ok(Buffer.byteLength(body) <= 128 * 1024, 'Frozen grading request exceeds its transport bound.');

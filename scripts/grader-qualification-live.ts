@@ -1,7 +1,25 @@
 import assert from 'node:assert/strict';
 import { isAbsolute, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import childProcess from 'node:child_process';
+import http from 'node:http';
+import https from 'node:https';
+import tls from 'node:tls';
 import { executeLiveQualification, prepareLiveQualification, verifyLiveQualification, verifyLiveQualificationPlanFile } from '../server/grader-qualification-live-runner.ts';
+
+// This capability is module-local runtime metadata, not caller input. An
+// importing module cannot turn another module's import.meta.main into true.
+// The launcher removes preloads before Node starts; native TS avoids loaders.
+// Current env/argv checks detect mislaunches; they cannot attest a process that
+// was already compromised by a preload. The reviewed launcher/trusted host is
+// an explicit external precondition, not inferred from absent env variables.
+export const NATIVE_QUALIFICATION_ENTRY = import.meta.main === true &&
+  process.execArgv.length === 1 && process.execArgv[0] === '--experimental-transform-types' &&
+  !process.env.NODE_OPTIONS && !process.env.NODE_PATH;
+if (NATIVE_QUALIFICATION_ENTRY) {
+  // The clean standalone program imports only its reviewed dependency graph.
+  // Lock the built-ins implicated by review before any execution/async work.
+  for (const value of [childProcess, http, https, tls, http.Agent.prototype, https.Agent.prototype, http.ClientRequest.prototype]) Object.freeze(value);
+}
 
 function absolutePath(path: string) {
   assert.ok(isAbsolute(path) && resolve(path) === path, 'Use an absolute canonical qualification artifact path.');
@@ -17,7 +35,7 @@ async function offline<T>(operation: () => T | Promise<T>): Promise<T> {
 
 /** The CLI never loads .env. The reviewed runner owns all execution approval gates. */
 export async function runQualificationLiveCli(argv: string[]) {
-  if (!argv.length) return { usage: 'node --import tsx scripts/grader-qualification-live.ts --prepare --implementation-commit <SHA> --out <absolute-new-plan.json> | --verify --plan <absolute-plan.json> | --replay --plan <absolute-plan.json> | --execute --plan <absolute-plan.json> --acknowledged-plan-sha256 <SHA>', execution: 'help_only', liveProviderCalls: 0, financialApproval: 'not_granted' };
+  if (!argv.length) return { usage: 'node --import tsx scripts/grader-qualification-live.ts --prepare|--verify; sh scripts/grader-qualification-native.sh --replay --plan <absolute-plan.json> | --execute --plan <absolute-plan.json> --acknowledged-plan-sha256 <SHA>', execution: 'help_only', liveProviderCalls: 0, financialApproval: 'not_granted' };
   const command = argv[0];
   assert.ok(['--prepare', '--verify', '--replay', '--execute'].includes(command), 'Unknown live qualification command.');
   const flags = new Map<string, string>();
@@ -41,7 +59,7 @@ export async function runQualificationLiveCli(argv: string[]) {
   return executeLiveQualification({ planPath, acknowledgedPlanSha256 });
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (import.meta.main === true) {
   try {
     const result = await runQualificationLiveCli(process.argv.slice(2));
     process.stdout.write(`${JSON.stringify(result)}\n`);

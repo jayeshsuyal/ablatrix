@@ -6,6 +6,7 @@ import { CLAIM_SUPPORT_TOOL, type ClaimSupportInput } from './claim-support.ts';
 import { SapiomFeedbackProvider, type FeedbackProviderOptions } from './feedback-provider.ts';
 import { confirmNativeQualification, verifyNativeConfirmationMetadata, type NativeQualificationConfirmation } from './grader-qualification-live-authorization.ts';
 import { qualificationRouterTransport } from './grader-qualification-live-transport.ts';
+import { NATIVE_QUALIFICATION_ENTRY } from '../scripts/grader-qualification-live.ts';
 import { qualificationHash as sha } from './grader-qualification.ts';
 import { assertLiveQualificationMerged, assertLiveQualificationStartingLedger, calibrationCredentialOptions, defaultLiveQualificationScope, inspectLiveQualificationBoundary, qualificationLiveCodeHashes, readLiveQualificationLedger, readLiveQualificationReceipts, validateLiveScope, type LiveQualificationBoundary, type LiveQualificationReceipt } from './grader-qualification-live-boundary.ts';
 import { appendQualificationJournal, createQualificationJournal, publishQualificationJson, readQualificationJournal, type QualificationJournalBinding } from './grader-qualification-live-journal.ts';
@@ -207,6 +208,7 @@ function deriveProduction(frozen: Frozen) {
 /** Independent, non-injectable, read-only verifier. Does not open credentials,
  * construct a provider, repair checkpoints, dispatch calls or promote policy. */
 export function verifyLiveQualification(planPath: string) {
+  assert.equal(NATIVE_QUALIFICATION_ENTRY, true, 'Certifying replay requires the clean standalone native CLI; imported callers cannot certify.');
   const loaded = loadPlan(planPath), frozen = { ...loaded, approval: approvalFor(loaded.plan) }, result = deriveProduction(frozen);
   for (const [path, expected] of [[frozen.plan.paths.reportPath, result.report], [frozen.plan.paths.recordPath, result.record]] as const) if (existsSync(path)) assert.equal(sha(readJson(path).value), sha(expected), 'Published qualification artifact differs from independent reconstruction.');
   return { mode: 'read_only_live_qualification_replay', ...result, status: result.record.status, newProviderCalls: 0 };
@@ -215,6 +217,7 @@ export function verifyLiveQualification(planPath: string) {
 /** The only production dispatch entry point. There are deliberately no hooks
  * for caller-selected transport, credential readers, scope, receipts or mode. */
 export async function executeLiveQualification(options: { planPath: string; acknowledgedPlanSha256: string }) {
+  assert.equal(NATIVE_QUALIFICATION_ENTRY, true, 'Paid execution requires the clean standalone native CLI; imported callers cannot execute.');
   const loaded = loadPlan(options.planPath), { plan } = loaded, scope = scopeFor(plan), env = process.env;
   assert.equal(options.acknowledgedPlanSha256, plan.executionPlanSha256, 'Explicit acknowledgement of this exact execution plan is required.');
   const approval = approvalFor(plan), frozen: Frozen = { ...loaded, approval };

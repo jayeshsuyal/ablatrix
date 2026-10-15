@@ -6,7 +6,7 @@ This adapter executes the already [sealed qualification benchmark](grader-qualif
 
 1. Merge reviewed adapter code. Prepare a separate execution plan against that exact implementation commit and the first 102 unchanged shared ledger rows.
 2. Publish the plan and show its exact budget to the operator. Only after a direct approval of that plan, record that response in the separate authorization file. A plan acknowledgement or source review is not financial approval.
-3. Stop and drain all app/worker processes sharing these stores. Run the independently opted-in CLI with process-scoped limits; leave app settings unchanged. The production entry point opens a native macOS confirmation showing the full plan hash and exact budget. The operator must type its plan-specific challenge and click **Approve $9.20**; Cancel and timeout make no calls. Other/headless hosts fail closed. Approval JSON is audit metadata and cannot replace this interactive channel.
+3. Stop and drain all app/worker processes sharing these stores. Start `sh scripts/grader-qualification-native.sh --execute ...` from the trusted operator terminal with the independently opted-in process-scoped limits; leave app settings unchanged. The reviewed shell launcher removes Node preload/lookup hooks before creating a fresh native Node process. The production entry point opens a native macOS confirmation showing the full plan hash and exact budget. The operator must type its plan-specific challenge and click **Approve $9.20**; Cancel and timeout make no calls. Other/headless hosts fail closed. Approval JSON is audit metadata and cannot replace this interactive channel.
 4. Execute the 80 primary grading requests and 12 fixed repeats in their original order, stopping as soon as a frozen failure rule fires. Preserve every unattempted slot. There are no retries or resumes.
 5. Independently replay the canonical private checkpoint, dataset claim and actual shared ledger. Publish a new live report and qualification record; retain every historical artifact unchanged.
 
@@ -21,7 +21,7 @@ node --import tsx scripts/grader-qualification-live.ts --verify \
   --plan "$PWD/docs/evidence/grader-qualification-live-2026-10-15/execution-plan-v1.json"
 ```
 
-After a run, `--replay --plan <same-absolute-path>` reconstructs the result without credentials, network calls, new files or dispatch. No command loads `.env`. Full Git history is required to verify both recorded implementations.
+After a run, `sh scripts/grader-qualification-native.sh --replay --plan <same-absolute-path>` reconstructs the result without credentials, network calls, new files or dispatch. No command loads `.env`. Full Git history is required to verify both recorded implementations.
 
 ## Exact proposed financial scope
 
@@ -43,6 +43,7 @@ These are local planning allowances, **not settled charges or a provider-enforce
 ## Guardrails and evidence
 
 - The production entry point accepts only the frozen plan path and its exact acknowledgement. It owns the actual ledger reader, canonical caller scope and Router transport. No injected provider, transport, receipt JSON or caller-selected `live` flag can certify a result.
+  Paid execution and certifying replay require the CLI's module-local native-main capability. Importing callers are rejected before any private file, credential, provider or network access, even if they patch built-ins or spoof argv. The standalone main locks the implicated built-ins before executing. Offline preparation, static plan verification and mechanics remain non-certifying.
   Production uses a captured Node HTTPS request function with a fixed TLS host/path, certificate validation and no shared global agent. It never reads the caller's mutable global `fetch`; low-level wire mocks are separate mechanics tests.
 - Dispatch obtains approval directly from the system-owned native dialog interpreter, with no stdin, environment, file or caller hook supplying the confirmation result. Saved approval/confirmation fields are audit bindings, not cryptographic authentication of a human identity or standalone dispatch authority. Scope and worker checks repeat after confirmation and before cohort consumption/provider construction.
   The operator must complete the native confirmation; agents must not automate its text entry or approval button.
@@ -55,6 +56,8 @@ These are local planning allowances, **not settled charges or a provider-enforce
 ## What a pass means
 
 A passing record qualifies v3 for **constructed single-unit source-support shadow evaluation**. References have an independent AI source-consistency review; they are not human gold or externally verified truth. The record binds locally observed Router transport and ledger receipts, not provider-signed billing or pinned upstream weights.
+
+Execution trusts the operator to start the reviewed shell launcher on an uncompromised host. Direct Node invocation, arbitrary preloads/loaders and embedding execution inside another JavaScript program are unsupported. Checking current env/argv cannot prove that an already compromised process never ran a preload; this adapter is not a sandbox or cryptographic host attestation.
 
 Citation matching, grader/reference agreement, answer correctness and human-reviewed quality remain different claims. This benchmark does not establish real-user answer improvement. Production activation and policy promotion remain closed; the existing workers retain their current grader. A future integration must explicitly consume this scoped record and separately satisfy the activation gates.
 
