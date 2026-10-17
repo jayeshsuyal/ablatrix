@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { runInNewContext } from 'node:vm';
 import { qualificationHash as sha } from './grader-qualification.ts';
 import { QUALIFICATION_LIVE_BUDGET, type QualificationLivePlan } from './grader-qualification-live.ts';
 import { confirmNativeQualification, qualificationApprovalDialog, verifyNativeConfirmationMetadata } from './grader-qualification-live-authorization.ts';
@@ -13,6 +14,27 @@ test('native approval displays the exact plan and every financial bound with Can
   assert.ok(dialog.script.includes('result.textReturned !==')); assert.ok(dialog.script.includes('result.buttonReturned !=='));
   const different = qualificationApprovalDialog({ ...plan, executionPlanSha256: 'b'.repeat(64) }); assert.notEqual(different.challenge, dialog.challenge);
   assert.throws(() => qualificationApprovalDialog({ ...plan, budget: { ...plan.budget, newCalls: 93 } as never }), /exact frozen financial scope/);
+});
+
+test('prefilling removes transcription but still requires the explicit approval button and exact plan', () => {
+  const dialog = qualificationApprovalDialog(plan);
+  const run = (reply: { gaveUp: boolean; buttonReturned: string; textReturned: string }) => runInNewContext(dialog.script, {
+    Application: { currentApplication: () => ({ displayDialog(message: string, options: Record<string, unknown>) {
+      assert.equal(message, dialog.message);
+      assert.equal(options.defaultAnswer, dialog.challenge);
+      assert.equal(options.defaultButton, 'Cancel');
+      assert.equal(options.cancelButton, 'Cancel');
+      assert.deepEqual(Array.from(options.buttons as string[]), ['Cancel', 'Approve $9.20']);
+      return reply;
+    } }) }
+  });
+  assert.ok(dialog.message.includes('No typing is required'));
+  assert.equal(run({ gaveUp: false, buttonReturned: 'Approve $9.20', textReturned: dialog.challenge }), `confirmed:${plan.executionPlanSha256}`);
+  assert.throws(() => run({ gaveUp: true, buttonReturned: 'Approve $9.20', textReturned: dialog.challenge }), /timed out/);
+  assert.throws(() => run({ gaveUp: false, buttonReturned: 'Cancel', textReturned: dialog.challenge }), /not approved/);
+  for (const textReturned of ['', 'APPROVE', ` ${dialog.challenge}`, `APPROVE ${'b'.repeat(12)}`]) {
+    assert.throws(() => run({ gaveUp: false, buttonReturned: 'Approve $9.20', textReturned }), /challenge was changed/);
+  }
 });
 
 test('stored native confirmation is checked audit metadata, never a dispatch capability', () => {
