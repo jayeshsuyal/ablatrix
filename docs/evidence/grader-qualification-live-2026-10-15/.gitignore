@@ -1,0 +1,4 @@
+# Host-specific execution scope and local ledger fingerprint stay private.
+execution-plan-v1.json
+preparation-audit-v1.json
+execution-authorization-v1.json

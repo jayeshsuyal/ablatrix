@@ -1,0 +1,52 @@
+{
+  "format": "grader-qualification-public-budget-summary-v1",
+  "status": "proposed_pending_financial_approval",
+  "executable": false,
+  "financialApprovalGranted": false,
+  "privateExecutionPlanSha256": "12b1e3057e974f222248ff7c1ca6938c6ef80e3e832aee0560ff075603ea305f",
+  "reviewedImplementationCommit": "255e53ff722fe68799eac4f9981a333554a1eadf",
+  "adapterPullRequest": "https://github.com/jayeshsuyal/ablatrix/pull/45",
+  "reviewReceipt": "https://github.com/jayeshsuyal/ablatrix/pull/45#issuecomment-6202649353",
+  "ci": "https://github.com/jayeshsuyal/ablatrix/actions/runs/38809716686",
+  "scope": {
+    "primaryGradingCalls": 80,
+    "fixedRepeatGradingCalls": 12,
+    "maximumNewCalls": 92,
+    "retries": 0,
+    "resume": false,
+    "codeManifestFiles": 24,
+    "excludedOperations": [
+      "answer_generation",
+      "repair",
+      "search",
+      "training",
+      "policy_activation"
+    ]
+  },
+  "budget": {
+    "startingAttempts": 102,
+    "startingReservedUsd": 10.2,
+    "newCalls": 92,
+    "allowancePerCallUsd": 0.1,
+    "maxAddedPlanningAllowanceUsd": 9.2,
+    "absoluteCallLimit": 194,
+    "maximumReservedUsd": 19.4,
+    "priorSpendUsd": 0.200281,
+    "spendingCapUsd": 20,
+    "maximumPlanningUsageUsd": 19.600281
+  },
+  "accounting": "local_planning_allowances_not_settled_charges_or_provider_enforced_cap",
+  "qualificationGates": {
+    "validOutcomesRequired": 92,
+    "flawedPrimaryRawPassesAllowed": 0,
+    "criticalAxisMatchesRequired": 80,
+    "acceptableDispositionMatchesRequired": 20,
+    "minimumPrimaryFullAxisMatches": 76,
+    "stableRepeatsRequired": 12
+  },
+  "liveQualificationStatus": "pending_live_evidence",
+  "newProviderCalls": 0,
+  "productionActivationQualified": false,
+  "qualityClaimEligible": false,
+  "interpretation": "A future pass qualifies only constructed single-unit source-support shadow evaluation. References have independent AI source-consistency review, not human gold. No answer-quality improvement is established."
+}
