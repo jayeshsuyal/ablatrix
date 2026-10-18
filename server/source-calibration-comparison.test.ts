@@ -37,11 +37,18 @@ function preparation(): SourceCalibrationPreparation {
   const path = '/synthetic/.data/feedback-budget.sqlite';
   return { packet, candidateFreeze, retrieval, familyAudit, exposureAudit, selectionAudit, implementationSha256, historySha256: { 'docs/exposed.md': hash('SYNTHETIC history') }, createdAt: '2026-10-18T12:00:00.000Z', policy: { id: 'synthetic-policy', parentId: null, instructions: 'SYNTHETIC shared answer policy with source attribution and bounded scope.', rationale: 'SYNTHETIC fixture.', feedbackRunIds: [], status: 'baseline', mode: 'live', createdAt: '2026-10-18T00:00:00.000Z' }, ledgerAnchor: { canonicalPath: path, pathSha256: hash(path), historicalRowsSha256: hash('SYNTHETIC historical rows'), attempts: 122, reservedUsd: 12.2, priorSpendUsd: .200281, pending: 0, owners: 0 }, scope: { repositoryPath: '/synthetic', outputDirectory: '/synthetic/.data/fresh-result', workspacePaths: [], comparisonPaths: [] }, exposure: { metadataSha256: fingerprints.sha256, publicExposureSha256: hash('SYNTHETIC public exposure') } };
 }
-function retrievalPreparation(unchangedLast = false): SourceCalibrationPreparation {
+function retrievalPreparation(unchangedLast = false, historicalImplementation = false): SourceCalibrationPreparation {
   const p = preparation(), seed = 'ablatrix-retrieval-coverage-2026-10-18-v1';
   p.experiment = RETRIEVAL_COVERAGE_EXPERIMENT; p.ledgerAnchor.attempts = 138; p.ledgerAnchor.reservedUsd = 13.8;
   p.implementationSha256 = Object.fromEntries(RETRIEVAL_COVERAGE_CODE_FILES.map(path => [path, hash(`SYNTHETIC implementation ${path}`)]));
+  if (historicalImplementation) Object.assign(p.implementationSha256, {
+    'server/workspace-source-coverage.ts': 'b85ba8cde947ac995ceb1bb1d09c22c28e8359645c7fbc14d7895b47e8e67750',
+    'server/source-calibration-comparison.ts': 'e903b22150202f1af3128a6168d26dfb00c2e82793079b8028a522c7c0e1b879'
+  });
   p.candidateFreeze = artifact('retrieval-freeze', { format: 'ablatrix-retrieval-coverage-candidate-freeze-v1', frozen: true, status: 'experimental_not_promoted', retrievalContract: WORKSPACE_SOURCE_COVERAGE_CONTRACT, generationContract: WORKSPACE_GENERATION_CONTRACT, systemInstructionsSha256: workspaceGenerationPromptIdentity().systemInstructionsSha256, selectionSeed: seed, implementationSha256: clone(p.implementationSha256), qualityClaimEligible: false });
+  // The real pre-selection candidate freeze binds the core rules, while the
+  // later retrieval artifact additionally binds the comparison adapter.
+  if (historicalImplementation) { delete p.candidateFreeze.document.implementationSha256['server/source-calibration-comparison.ts']; p.candidateFreeze.fileSha256 = hash(JSON.stringify(p.candidateFreeze.document)); }
   const consumed = [{ fileSha256: hash('SYNTHETIC consumed cohort'), cohortSha256: hash('SYNTHETIC consumed seal'), sourceReviewFileSha256: hash('SYNTHETIC passed source review'), executionFileSha256: hash('SYNTHETIC execution metadata'), generationPerformed: true, planSha256: hash('SYNTHETIC consumed plan'), newProviderAttempts: 16, attemptScopeSha256: hash('SYNTHETIC consumed slots'), protectionScope: 'entire_cohort_after_any_recorded_provider_attempt', executionMetadataProvenance: 'allowlisted_existing_execution_metadata',
     productIds: Array.from({ length: 8 }, (_, i) => `SYNTHETIC-CONSUMED-${i}`), canonicalFamilyTitles: ['SYNTHETIC prior family'], modelIdentifiers: ['PRIOR123'], sourcePacketFingerprints: [hash('SYNTHETIC prior source')] }];
   const immutableHelperSha256 = Object.fromEntries(['scripts/prepare-source-calibration-cohort.py', 'scripts/prepare-flat-source-cohort.py', 'scripts/prepare-correction-cohort.py', 'scripts/prepare-source-id-cohort.py'].map(path => [path, p.implementationSha256[path]]));
@@ -77,6 +84,19 @@ function retrievalPreparation(unchangedLast = false): SourceCalibrationPreparati
   const body = { format: 'retrieval-coverage-retrieval-v1', cohortFileSha256: p.packet.fileSha256, implementationSha256: Object.fromEntries(RETRIEVAL_COVERAGE_RETRIEVAL_FILES.map(path => [path, p.implementationSha256[path]])), corpusSha256: hash(corpus), results, providerCalls: 0, semanticAssessment: 'not_run', generationPerformed: false };
   p.retrieval = artifact('paired-retrieval', { ...body, sha256: hash(body) });
   p.familyAudit.document.retrievalFileSha256 = p.retrieval.fileSha256; p.familyAudit.fileSha256 = hash(JSON.stringify(p.familyAudit.document));
+  return p;
+}
+function amendRetrievalPreparation(p: SourceCalibrationPreparation) {
+  const implementationChanges = {
+    'server/workspace-source-coverage.ts': { from: p.implementationSha256['server/workspace-source-coverage.ts'], to: 'f0caf3c477f7e629f962df3cb38a842d98af71f2e54948e2241fb1a989275e31' },
+    'server/source-calibration-comparison.ts': { from: p.implementationSha256['server/source-calibration-comparison.ts'], to: hash('SYNTHETIC amended comparison adapter') }
+  };
+  for (const [path, change] of Object.entries(implementationChanges)) p.implementationSha256[path] = change.to;
+  p.compatibilityAmendment = artifact('compatibility-amendment', {
+    format: 'ablatrix-retrieval-coverage-compatibility-amendment-v1', reason: 'combined_item_package_dimensions_regression', originalImplementationCommit: '0537436882649ad541b86635288f181a09871989',
+    candidateFreezeFileSha256: p.candidateFreeze.fileSha256, cohortFileSha256: p.packet.fileSha256, retrievalFileSha256: p.retrieval.fileSha256,
+    generationPerformed: false, newProviderCalls: 0, modelOutputsInspected: false, frozenContextsUnchanged: true, implementationChanges
+  });
   return p;
 }
 function harness(options: { response?: (body: any, index: number) => any; transportFailure?: boolean; changeBody?: boolean; duplicateTransport?: boolean; preparation?: SourceCalibrationPreparation } = {}) {
@@ -284,6 +304,63 @@ test('retrieval comparison dispatches sixteen exact v1 requests and resolves cit
   for (const item of review.armMapping.mapping) {
     const c = h.manifest.plan.cases.find(c => c.id === item.caseId)!;
     assert.deepEqual(item.generationSourceIds, c.generationSourceIdsByArm![item.arm as 'baseline' | 'candidate'], 'Per-arm source availability stays in the separate mapping.');
+  }
+});
+
+test('the narrow retrieval compatibility amendment preserves all frozen artifacts and sixteen original requests', () => {
+  const p = retrievalPreparation(false, true), original = prepareSourceCalibrationComparison(p);
+  const frozen = clone({ packet: p.packet, retrieval: p.retrieval, candidateFreeze: p.candidateFreeze, selectionAudit: p.selectionAudit, familyAudit: p.familyAudit, exposureAudit: p.exposureAudit });
+  amendRetrievalPreparation(p);
+  const amended = prepareSourceCalibrationComparison(p);
+  assert.deepEqual({ packet: p.packet, retrieval: p.retrieval, candidateFreeze: p.candidateFreeze, selectionAudit: p.selectionAudit, familyAudit: p.familyAudit, exposureAudit: p.exposureAudit }, frozen);
+  assert.notEqual(amended.planSha256, original.planSha256, 'The new code and amendment require a new exact approval.');
+  assert.deepEqual(amended.plan.slots.map(slot => slot.binding.requestSha256), original.plan.slots.map(slot => slot.binding.requestSha256));
+  assert.deepEqual(amended.plan.slots, original.plan.slots); assert.deepEqual(amended.plan.cases, original.plan.cases);
+  verifySourceCalibrationPlan(amended);
+  const missing = clone(p); delete missing.compatibilityAmendment;
+  assert.throws(() => prepareSourceCalibrationComparison(missing), /Frozen candidateFreeze implementation changed/);
+  const old = preparation(); old.compatibilityAmendment = p.compatibilityAmendment;
+  assert.throws(() => prepareSourceCalibrationComparison(old), /limited to the retrieval experiment/);
+});
+
+test('compatibility amendments cannot broaden paths, historical bindings, current code or pre-generation claims', () => {
+  const mutations: ((p: SourceCalibrationPreparation, a: any) => void)[] = [
+    (_p, a) => { a.format = 'other-format'; }, (_p, a) => { a.reason = 'general_override'; }, (_p, a) => { a.originalImplementationCommit = '0'.repeat(40); },
+    ...['candidateFreezeFileSha256', 'cohortFileSha256', 'retrievalFileSha256'].map(field => (_p: SourceCalibrationPreparation, a: any) => { a[field] = hash('SYNTHETIC detached artifact'); }),
+    ...['generationPerformed', 'modelOutputsInspected'].map(field => (_p: SourceCalibrationPreparation, a: any) => { a[field] = true; }),
+    (_p, a) => { a.newProviderCalls = 1; }, (_p, a) => { a.frozenContextsUnchanged = false; }, (_p, a) => { a.extraPermission = true; },
+    (_p, a) => { a.implementationChanges['server/feedback-provider.ts'] = { from: hash('old'), to: hash('new') }; },
+    (_p, a) => { delete a.implementationChanges['server/source-calibration-comparison.ts']; },
+    (_p, a) => { a.implementationChanges['server/source-calibration-comparison.ts'].extra = true; },
+    (_p, a) => { a.implementationChanges['server/workspace-source-coverage.ts'].from = hash('SYNTHETIC other historical core'); },
+    (p, a) => { a.implementationChanges['server/workspace-source-coverage.ts'].to = p.implementationSha256['server/workspace-source-coverage.ts'] = hash('SYNTHETIC other new core'); },
+    (_p, a) => { a.implementationChanges['server/source-calibration-comparison.ts'].from = hash('SYNTHETIC other historical adapter'); },
+    (_p, a) => { a.implementationChanges['server/source-calibration-comparison.ts'].to = hash('SYNTHETIC unbound current adapter'); },
+    p => { p.implementationSha256['server/workspace-generation.ts'] = hash('SYNTHETIC changed prompt'); },
+    p => { p.implementationSha256['server/product-retrieval.ts'] = hash('SYNTHETIC changed ranking'); },
+    p => { p.compatibilityAmendment!.path = p.packet.path; },
+    p => { p.compatibilityAmendment!.path = `./${p.packet.path}`; },
+    p => { p.compatibilityAmendment!.path = 'server/workspace-source-coverage.ts'; },
+    p => { p.compatibilityAmendment!.path = Object.keys(p.historySha256)[0]; }
+  ];
+  for (const mutate of mutations) {
+    const p = amendRetrievalPreparation(retrievalPreparation(false, true)); mutate(p, p.compatibilityAmendment!.document);
+    p.compatibilityAmendment!.fileSha256 = hash(JSON.stringify(p.compatibilityAmendment!.document));
+    assert.throws(() => prepareSourceCalibrationComparison(p));
+  }
+});
+
+test('a resealed compatibility amendment cannot accept any changed frozen context or addition', () => {
+  for (const mutate of [
+    (row: any) => { row.baseline.passages = row.candidate.passages; },
+    (row: any) => { row.candidate.passages.reverse(); },
+    (row: any) => { row.candidate.passages.pop(); },
+    (row: any) => { row.additions[0].reasons = ['SYNTHETIC different priority']; }
+  ]) {
+    const p = amendRetrievalPreparation(retrievalPreparation(false, true)); mutate(p.retrieval.document.results[0]);
+    resealPreparation(p); p.compatibilityAmendment!.document.retrievalFileSha256 = p.retrieval.fileSha256;
+    p.compatibilityAmendment!.fileSha256 = hash(JSON.stringify(p.compatibilityAmendment!.document));
+    assert.throws(() => prepareSourceCalibrationComparison(p), /Expected values to be strictly deep-equal/);
   }
 });
 

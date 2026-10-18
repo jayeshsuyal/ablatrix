@@ -36,6 +36,7 @@ type Source = Pick<RevisionSource, 'id' | 'label' | 'text' | 'sha256' | 'origina
 export type SourceCalibrationPreparation = {
   experiment?: typeof RETRIEVAL_COVERAGE_EXPERIMENT;
   packet: SourceCalibrationArtifact; retrieval: SourceCalibrationArtifact; familyAudit: SourceCalibrationArtifact; candidateFreeze: SourceCalibrationArtifact; exposureAudit: SourceCalibrationArtifact; selectionAudit: SourceCalibrationArtifact;
+  compatibilityAmendment?: SourceCalibrationArtifact;
   implementationSha256: Record<string, string>; historySha256: Record<string, string>; policy: LoopPolicy; createdAt: string;
   ledgerAnchor: SourceCalibrationLedgerAnchor;
   scope: { repositoryPath: string; outputDirectory: string; workspacePaths: string[]; comparisonPaths: string[] };
@@ -44,6 +45,40 @@ export type SourceCalibrationPreparation = {
 type Arm = 'baseline' | 'candidate';
 type Slot = { index: number; caseId: string; arm: Arm; input: WorkspaceGenerationInput; requestBody: ReturnType<typeof workspaceGenerationParts>['body']; binding: ReturnType<typeof workspaceGenerationParts>['binding'] };
 const artifactNames = ['packet', 'retrieval', 'familyAudit', 'candidateFreeze', 'exposureAudit', 'selectionAudit'] as const;
+const coverageCompatibility = {
+  'server/workspace-source-coverage.ts': { from: 'b85ba8cde947ac995ceb1bb1d09c22c28e8359645c7fbc14d7895b47e8e67750', to: 'f0caf3c477f7e629f962df3cb38a842d98af71f2e54948e2241fb1a989275e31' },
+  'server/source-calibration-comparison.ts': { from: 'e903b22150202f1af3128a6168d26dfb00c2e82793079b8028a522c7c0e1b879' }
+} as const;
+function boundArtifacts(p: SourceCalibrationPreparation) { return [...artifactNames.map(name => p[name]), ...(p.compatibilityAmendment === undefined ? [] : [p.compatibilityAmendment])]; }
+function verifyCompatibilityAmendment(p: SourceCalibrationPreparation) {
+  if (p.compatibilityAmendment === undefined) return;
+  assert.equal(p.experiment, RETRIEVAL_COVERAGE_EXPERIMENT, 'Compatibility amendments are limited to the retrieval experiment.');
+  const artifact = p.compatibilityAmendment, amendment = artifact.document;
+  const amendmentPath = resolve(p.scope.repositoryPath, artifact.path);
+  assert.equal(relative(p.scope.repositoryPath, amendmentPath), artifact.path, 'The amendment path must be canonical.');
+  const occupiedPaths = [...Object.keys(p.implementationSha256), ...Object.keys(p.historySha256), ...artifactNames.map(name => p[name].path)];
+  assert.ok(occupiedPaths.every(path => resolve(p.scope.repositoryPath, path) !== amendmentPath), 'An amendment cannot replace a code, history or source-artifact binding.');
+  assert.deepEqual(Object.keys(amendment).sort(), ['format', 'reason', 'originalImplementationCommit', 'candidateFreezeFileSha256', 'cohortFileSha256', 'retrievalFileSha256', 'generationPerformed', 'newProviderCalls', 'modelOutputsInspected', 'frozenContextsUnchanged', 'implementationChanges'].sort());
+  assert.equal(amendment.format, 'ablatrix-retrieval-coverage-compatibility-amendment-v1');
+  assert.equal(amendment.reason, 'combined_item_package_dimensions_regression');
+  assert.equal(amendment.originalImplementationCommit, '0537436882649ad541b86635288f181a09871989');
+  assert.equal(amendment.candidateFreezeFileSha256, p.candidateFreeze.fileSha256); assert.equal(amendment.cohortFileSha256, p.packet.fileSha256); assert.equal(amendment.retrievalFileSha256, p.retrieval.fileSha256);
+  assert.equal(amendment.generationPerformed, false); assert.equal(amendment.newProviderCalls, 0); assert.equal(amendment.modelOutputsInspected, false); assert.equal(amendment.frozenContextsUnchanged, true);
+  assert.deepEqual(Object.keys(amendment.implementationChanges).sort(), Object.keys(coverageCompatibility).sort());
+  for (const [path, original] of Object.entries(coverageCompatibility)) {
+    const change = amendment.implementationChanges[path]; assert.deepEqual(Object.keys(change).sort(), ['from', 'to']); digest(change.from); digest(change.to);
+    assert.equal(change.from, original.from); assert.equal(change.to, p.implementationSha256[path]); assert.notEqual(change.from, change.to);
+    if ('to' in original) assert.equal(change.to, original.to);
+    assert.equal(p.retrieval.document.implementationSha256[path], change.from);
+  }
+  assert.equal(p.candidateFreeze.document.implementationSha256['server/workspace-source-coverage.ts'], coverageCompatibility['server/workspace-source-coverage.ts'].from);
+}
+function verifyFrozenImplementation(p: SourceCalibrationPreparation, path: string, frozenSha: unknown, artifact: 'candidateFreeze' | 'retrieval') {
+  const current = p.implementationSha256[path];
+  if (frozenSha === current) return;
+  const change = p.compatibilityAmendment?.document.implementationChanges[path];
+  assert.ok(change && (artifact === 'retrieval' || path === 'server/workspace-source-coverage.ts') && frozenSha === change.from && current === change.to, `Frozen ${artifact} implementation changed: ${path}`);
+}
 function relativeFile(path: string) { assert.ok(path && !isAbsolute(path) && !path.split('/').includes('..') && !path.includes('\\'), 'Bound files must stay in the repository.'); return path; }
 function privatePath(path: string, root: string) { const rel = relative(resolve(root, '.data'), path); assert.ok(isAbsolute(path) && resolve(path) === path && rel && !rel.startsWith('..') && !isAbsolute(rel), 'Output must be canonical and private under .data.'); }
 function verifySelectionSeal(p: SourceCalibrationPreparation) {
@@ -114,6 +149,7 @@ export function prepareSourceCalibrationComparison(preparation: SourceCalibratio
   const p = clone(preparation), cases = p.packet.document.cases as Json[];
   assert.ok(p.experiment === undefined || p.experiment === RETRIEVAL_COVERAGE_EXPERIMENT, 'Unknown comparison experiment.');
   const coverage = p.experiment === RETRIEVAL_COVERAGE_EXPERIMENT;
+  verifyCompatibilityAmendment(p);
   verifySelectionSeal(p);
   assert.ok(Array.isArray(cases) && cases.length === 8, 'Exactly eight cases are required.');
   const ids = cases.map(c => c.id); assert.equal(new Set(ids).size, 8); assert.equal(new Set(cases.map(c => c.product.id.toUpperCase())).size, 8);
@@ -125,8 +161,9 @@ export function prepareSourceCalibrationComparison(preparation: SourceCalibratio
   // 122-attempt floor rejects this checkout's unrelated empty default ledger.
   assert.ok(Number.isSafeInteger(anchor.attempts) && (coverage ? anchor.attempts === 138 : anchor.attempts >= 122 && anchor.attempts + 16 <= 200)); assert.equal(anchor.pending, 0); assert.equal(anchor.owners, 0);
   assert.ok(Number.isFinite(anchor.reservedUsd) && anchor.reservedUsd >= 0 && Number.isFinite(anchor.priorSpendUsd) && anchor.priorSpendUsd >= 0 && anchor.reservedUsd + anchor.priorSpendUsd + 1.6 <= 20);
-  for (const name of artifactNames) { relativeFile(p[name].path); digest(p[name].fileSha256); }
-  assert.equal(new Set(artifactNames.map(n => p[n].path)).size, artifactNames.length);
+  const artifacts = boundArtifacts(p);
+  for (const artifact of artifacts) { relativeFile(artifact.path); digest(artifact.fileSha256); }
+  assert.equal(new Set(artifacts.map(artifact => artifact.path)).size, artifacts.length);
   for (const path of coverage ? RETRIEVAL_COVERAGE_CODE_FILES : SOURCE_CALIBRATION_CODE_FILES) digest(p.implementationSha256[path] ?? '');
   assert.ok(Object.keys(p.historySha256).length > 0);
   for (const [path, sha] of Object.entries({ ...p.implementationSha256, ...p.historySha256 })) { relativeFile(path); digest(sha); }
@@ -140,8 +177,8 @@ export function prepareSourceCalibrationComparison(preparation: SourceCalibratio
   if (coverage) {
     assert.equal(freeze.format, 'ablatrix-retrieval-coverage-candidate-freeze-v1'); assert.equal(freeze.retrievalContract, WORKSPACE_SOURCE_COVERAGE_CONTRACT); assert.equal(freeze.generationContract, WORKSPACE_GENERATION_CONTRACT); assert.equal(freeze.systemInstructionsSha256, candidate.systemInstructionsSha256);
     const required = ['server/workspace-source-coverage.ts', 'server/workspace-retrieval-context.ts', 'server/product-corpus.ts', 'server/loop-types.ts', 'server/product-retrieval.ts', 'server/workspace-generation.ts', 'server/feedback-provider.ts', 'server/citation-options.ts', 'package-lock.json', 'scripts/prepare-retrieval-coverage-cohort.py', ...retrievalSelectionHelpers];
-    for (const path of required) { digest(freeze.implementationSha256?.[path] ?? ''); assert.equal(freeze.implementationSha256[path], p.implementationSha256[path]); }
-    for (const [path, sha] of Object.entries(freeze.implementationSha256)) assert.equal(sha, p.implementationSha256[path]);
+    for (const path of required) { digest(freeze.implementationSha256?.[path] ?? ''); verifyFrozenImplementation(p, path, freeze.implementationSha256[path], 'candidateFreeze'); }
+    for (const [path, sha] of Object.entries(freeze.implementationSha256)) verifyFrozenImplementation(p, path, sha, 'candidateFreeze');
   } else {
     assert.equal(freeze.contract, candidate.contract); assert.equal(freeze.tool, candidate.tool); assert.equal(freeze.systemInstructionsSha256, candidateSha); assert.equal(candidate.systemInstructionsSha256, candidateSha);
   }
@@ -150,8 +187,8 @@ export function prepareSourceCalibrationComparison(preparation: SourceCalibratio
   const retrieval = p.retrieval.document, { sha256, ...retrievalBody } = retrieval;
   assert.equal(sha256, sourceCalibrationHash(retrievalBody)); assert.equal(retrieval.cohortFileSha256, p.packet.fileSha256);
   assert.deepEqual(retrieval.results.map((r: Json) => r.caseId), ids);
-  for (const [path, value] of Object.entries(retrieval.implementationSha256)) assert.equal(p.implementationSha256[path], value, 'Retrieval implementation changed.');
-  for (const path of coverage ? RETRIEVAL_COVERAGE_RETRIEVAL_FILES : ['scripts/source-calibration-retrieval.ts', 'server/product-retrieval.ts', 'server/product-corpus.ts', 'server/workspace-retrieval-context.ts', 'server/loop-types.ts', 'package-lock.json']) assert.equal(retrieval.implementationSha256[path], p.implementationSha256[path]);
+  for (const [path, value] of Object.entries(retrieval.implementationSha256)) verifyFrozenImplementation(p, path, value, 'retrieval');
+  for (const path of coverage ? RETRIEVAL_COVERAGE_RETRIEVAL_FILES : ['scripts/source-calibration-retrieval.ts', 'server/product-retrieval.ts', 'server/product-corpus.ts', 'server/workspace-retrieval-context.ts', 'server/loop-types.ts', 'package-lock.json']) verifyFrozenImplementation(p, path, retrieval.implementationSha256[path], 'retrieval');
   const coverageCorpus = coverage ? retrievalCoverageCorpus(p.packet) : undefined;
   if (coverage) { assert.equal(retrieval.format, 'retrieval-coverage-retrieval-v1'); assert.equal(retrieval.corpusSha256, sourceCalibrationHash(coverageCorpus)); assert.equal(retrieval.providerCalls, 0); assert.equal(retrieval.generationPerformed, false); assert.equal(retrieval.semanticAssessment, 'not_run'); }
   const audit = p.familyAudit.document;
@@ -346,7 +383,7 @@ export function verifySourceCalibrationCheckpoints(manifest: SourceCalibrationMa
 function checkFiles(manifest: SourceCalibrationManifest, manifestPath?: string) {
   const p = manifest.plan.preparation, root = p.scope.repositoryPath;
   assert.deepEqual(fileHashes(root, p.implementationSha256), p.implementationSha256); assert.deepEqual(fileHashes(root, p.historySha256), p.historySha256);
-  const artifacts = artifactNames.map(name => p[name]); for (const a of artifacts) { const bytes = readFileSync(resolve(root, a.path)); assert.equal(sourceCalibrationHash(bytes), a.fileSha256); assert.deepEqual(JSON.parse(bytes.toString()), a.document); }
+  const artifacts = boundArtifacts(p); for (const a of artifacts) { const bytes = readFileSync(resolve(root, a.path)); assert.equal(sourceCalibrationHash(bytes), a.fileSha256); assert.deepEqual(JSON.parse(bytes.toString()), a.document); }
   assert.equal(metadataFingerprints(readFlatExposureMetadata(p.scope.workspacePaths, p.scope.comparisonPaths)).sha256, p.exposure.metadataSha256);
   const excluded = [...artifacts, ...Object.entries(p.historySha256).map(([path, fileSha256]) => ({ path, fileSha256 }))];
   if (manifestPath) { privatePath(manifestPath, root); assert.deepEqual(JSON.parse(readFileSync(manifestPath, 'utf8')), manifest, 'Frozen plan file changed.'); }

@@ -1,0 +1,22 @@
+{
+  "format": "ablatrix-retrieval-coverage-compatibility-amendment-v1",
+  "reason": "combined_item_package_dimensions_regression",
+  "originalImplementationCommit": "0537436882649ad541b86635288f181a09871989",
+  "candidateFreezeFileSha256": "f54ef0a9f3622439ea53a45c79cf85eb3b25e3c8a31d629c6aa7a6903bee112e",
+  "cohortFileSha256": "681544a9e7ea23b1d0cef61106655fafd6736ee26e6228d33389d99c3cc84164",
+  "retrievalFileSha256": "d5b257be27edaa800e59ff475a18eec830af9cc22af8cc80227b35c436585384",
+  "generationPerformed": false,
+  "newProviderCalls": 0,
+  "modelOutputsInspected": false,
+  "frozenContextsUnchanged": true,
+  "implementationChanges": {
+    "server/workspace-source-coverage.ts": {
+      "from": "b85ba8cde947ac995ceb1bb1d09c22c28e8359645c7fbc14d7895b47e8e67750",
+      "to": "f0caf3c477f7e629f962df3cb38a842d98af71f2e54948e2241fb1a989275e31"
+    },
+    "server/source-calibration-comparison.ts": {
+      "from": "e903b22150202f1af3128a6168d26dfb00c2e82793079b8028a522c7c0e1b879",
+      "to": "1ecd3055360847b0c437f29434ca9519d31943bb3f26c8a641cd201248a610ca"
+    }
+  }
+}

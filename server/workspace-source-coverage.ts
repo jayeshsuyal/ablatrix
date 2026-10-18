@@ -38,6 +38,7 @@ function relevance(source: Source, question: string): { priority: number; reason
   const q = question.toLowerCase(), requested = identifiers(question);
   const dimensionIntent = /\b(?:dimensions?|measurements?|length|width|height|depth|diameter|size|thickness|tall|wide|long|deep)\b|\bhow\s+(?:big|large|small)\b/.test(q);
   const packageIntent = /\b(?:packag(?:e|es|ing)|box|carton|shipping)\b/.test(q);
+  const itemDimensionIntent = !packageIntent || /\b(?:item|product)\s+(?:dimensions?|measurements?|size|length|width|height|depth|diameter|thickness)\b|\b(?:item|product)\s+(?:and|&)\s+(?:(?:the|its)\s+)?(?:packag(?:e|es|ing)|box|carton|shipping)\b/.test(q);
   const identityIntent = requested.size > 0 || /\b(?:fit(?:s|ting)?|compatib\w*|replac(?:e|es|ing|ement)|models?|part\s*(?:numbers?|no\.?|#)|skus?)\b/.test(q);
   const intents = {
     color: /\bcolou?rs?\b|\b(?:white|black|red|blue|green|yellow|brown|grey|gray|beige|silver|gold|pink|purple|orange)\b/.test(q),
@@ -49,8 +50,8 @@ function relevance(source: Source, question: string): { priority: number; reason
   const field = source.text.match(/^\s*(?:\{\s*)?(?:"([a-z][a-z0-9_ -]{0,60})"|'([a-z][a-z0-9_ -]{0,60})'|([a-z][a-z0-9_ -]{0,60}))\s*:\s*/i);
   const key = field?.slice(1).find(value => value !== undefined)?.toLowerCase().replace(/[^a-z0-9]/g, '');
   if (key && listingLabel.test(source.label.trim())) {
-    if (dimensionIntent && (packageIntent ? packageDimensionKeys : dimensionKeys).has(key)) {
-      reasons.push(`structured_field:${key}`, packageIntent ? 'question_intent:package_dimensions' : 'question_intent:item_dimensions');
+    if (dimensionIntent && ((packageIntent && packageDimensionKeys.has(key)) || (itemDimensionIntent && dimensionKeys.has(key)))) {
+      reasons.push(`structured_field:${key}`, packageDimensionKeys.has(key) ? 'question_intent:package_dimensions' : 'question_intent:item_dimensions');
       priority = 0;
     }
     for (const facet of ['color', 'material', 'capacity'] as const) {
