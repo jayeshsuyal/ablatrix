@@ -39,6 +39,58 @@ test('a lost question response reuses its browser request identity across reload
   expect(intents).toHaveLength(2); expect(intents[0].idempotencyKey).toMatch(/^[a-f0-9-]{36}$/); expect(intents[1]).toEqual(intents[0]);
 });
 
+test('confirmed terminal failures clear browser intents and never fill the pending queue', async ({ page }) => {
+  const keys: string[] = [];
+  const product = { id: 'fixture-product', title: 'Fictional failed flask', sources: [], createdAt: '2026-10-17T00:00:00.000Z' };
+  const readiness = { ready: true, reason: 'Browser fixture; no dispatch.' };
+  await page.route('**/api/**', async route => {
+    const path = new URL(route.request().url()).pathname;
+    if (path === '/api/session') return route.fulfill({ json: { hosted: false, providerMode: 'local', actor: null } });
+    if (path === '/api/workspace') return route.fulfill({ json: { products: [product], runs: [], readiness, automaticCheckReadiness: readiness, busy: false } });
+    if (path === '/api/workspace/questions') {
+      const payload = route.request().postDataJSON(); keys.push(payload.idempotencyKey);
+      return route.fulfill({ status: 502, json: { id: `failed-run-${keys.length}`, productId: product.id, question: payload.question, mode: payload.mode, status: 'failed', requestIdentity: { idempotencyKey: payload.idempotencyKey, sha256: '0'.repeat(64) }, retrieval: null, answer: null, model: null, usage: null, createdAt: product.createdAt, error: 'Synthetic recorded provider failure.' } });
+    }
+    return route.fulfill({ status: 404, json: { error: 'Not part of the browser fixture.' } });
+  });
+  await page.goto('/');
+  await page.getByRole('textbox', { name: 'Question', exact: true }).fill('What is the listed capacity?');
+  for (let attempt = 0; attempt < 22; attempt++) {
+    await page.getByRole('button', { name: 'Generate cited answer' }).click();
+    await expect(page.locator('.ask-main>.ask-alert[role="alert"]')).toContainText('attempt was saved as failed');
+    await expect(page.getByRole('button', { name: 'Generate cited answer' })).toBeEnabled();
+  }
+  expect(keys).toHaveLength(22); expect(new Set(keys).size).toBe(22);
+  await page.reload();
+  await expect(page.getByRole('textbox', { name: 'Question', exact: true })).toHaveValue('');
+  await expect(page.locator('.ask-notice')).toHaveCount(0);
+});
+
+test('a failed response with a different request identity remains recoverable with the original key', async ({ page }) => {
+  const keys: string[] = [];
+  const product = { id: 'fixture-product', title: 'Fictional ambiguous flask', sources: [], createdAt: '2026-10-17T00:00:00.000Z' };
+  const readiness = { ready: true, reason: 'Browser fixture; no dispatch.' };
+  await page.route('**/api/**', async route => {
+    const path = new URL(route.request().url()).pathname;
+    if (path === '/api/session') return route.fulfill({ json: { hosted: false, providerMode: 'local', actor: null } });
+    if (path === '/api/workspace') return route.fulfill({ json: { products: [product], runs: [], readiness, automaticCheckReadiness: readiness, busy: false } });
+    if (path === '/api/workspace/questions') {
+      const payload = route.request().postDataJSON(); keys.push(payload.idempotencyKey);
+      return route.fulfill({ status: 502, json: { id: 'different-saved-run', productId: product.id, question: payload.question, mode: payload.mode, status: 'failed', requestIdentity: { idempotencyKey: 'different-request' }, error: 'Unconfirmed fixture response.' } });
+    }
+    return route.fulfill({ status: 404, json: { error: 'Not part of the browser fixture.' } });
+  });
+  await page.goto('/');
+  await page.getByRole('textbox', { name: 'Question', exact: true }).fill('What is the listed capacity?');
+  await page.getByRole('button', { name: 'Generate cited answer' }).click();
+  await expect(page.locator('.ask-main>.ask-alert[role="alert"]')).toContainText('request identity is saved');
+  await page.reload();
+  await expect(page.getByRole('textbox', { name: 'Question', exact: true })).toHaveValue('What is the listed capacity?');
+  await page.getByRole('button', { name: 'Generate cited answer' }).click();
+  await expect(page.locator('.ask-main>.ask-alert[role="alert"]')).toContainText('request identity is saved');
+  expect(keys).toHaveLength(2); expect(keys[1]).toBe(keys[0]);
+});
+
 test('fresh isolated demo exposes recovery, bounded correction, safe stop, sources and exact proof export', async ({ page, request }, testInfo) => {
   const directory = mkdtempSync(join(tmpdir(), 'ablatrix-product-demo-browser-'));
   const demo = await createLocalDemo(directory);

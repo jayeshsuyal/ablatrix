@@ -82,8 +82,14 @@ export default function Ask() {
     let intent: QuestionIntent | undefined;
     try {
       intent = questionIntent({ productId, question: question.trim(), mode, ...(mode !== 'preview' ? { automaticCheck: automatic } : {}) });
-      run = await request<QuestionResponse>('/api/workspace/questions', { ...intent.payload, idempotencyKey: intent.idempotencyKey });
-      if (!run || typeof run.id !== 'string' || !run.id || run.productId !== intent.payload.productId || run.question !== intent.payload.question || run.mode !== intent.payload.mode) throw new Error('The saved response identity could not be confirmed.');
+      const response = await fetch('/api/workspace/questions', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ...intent.payload, idempotencyKey: intent.idempotencyKey }) });
+      run = await response.json();
+      const matches = run && typeof run.id === 'string' && run.id && run.productId === intent.payload.productId && run.question === intent.payload.question && run.mode === intent.payload.mode;
+      // A matching saved failure confirms the attempt even though the API uses
+      // HTTP 502. Only ambiguous/mismatched replies retain the retry identity.
+      const confirmedFailure = response.status === 502 && matches && run.status === 'failed' && run.requestIdentity?.idempotencyKey === intent.idempotencyKey;
+      if (!response.ok && !confirmedFailure) throw new Error(run?.error ?? 'Question failed.');
+      if (!matches) throw new Error('The saved response identity could not be confirmed.');
       sessionStorage.setItem(intentStorage, JSON.stringify(pendingIntents().filter(item => item.idempotencyKey !== intent!.idempotencyKey)));
     } catch (reason) {
       const value = await refresh().catch(() => null);
@@ -96,6 +102,11 @@ export default function Ask() {
     setOverview(current => current ? withSavedRun(current, run) : current);
     if (run.automaticCheck) setAutomaticChecks(current => ({ ...current, [run.automaticCheck!.qid]: run.automaticCheck! }));
     setSelectedRunId(run.id);
+    if (run.status === 'failed') {
+      setError(`This attempt was saved as failed. ${run.error ?? 'Inspect the saved attempt for details.'}`);
+      setBusy(false);
+      return;
+    }
     const savedNotice = run.automaticCheckError
       ? `Answer saved. ${run.automaticCheckError}${run.reviewHandoff === 'pending' ? ' Review is temporarily unavailable.' : ''}` : run.reviewHandoff === 'pending'
       ? 'Answer saved. Review is temporarily unavailable; try opening its review again later.'
