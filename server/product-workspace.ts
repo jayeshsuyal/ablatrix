@@ -25,7 +25,7 @@ export type WorkspaceGeneration = { contract: WorkspaceGenerationContract; phase
 export type WorkspaceAskOptions = { automaticCheck?: boolean; idempotencyKey?: string; generationContract?: WorkspaceGenerationContract; automaticCheckPreflight?: (context: RevisionContext, runId: string) => void };
 export type WorkspaceFaultBoundary = 'before_dispatch' | 'after_dispatch_intent' | 'after_receipt' | 'after_answer_persist';
 export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live' | 'synthetic'; generationProtocol?: 'product-answer-v2-context' | 'synthetic-product-answer-v1' | WorkspaceGenerationContract; reviewContext?: RevisionContext;
-  requestIdentity?: { sha256: string; idempotencyKey?: string; generationContract?: WorkspaceGenerationContract }; generation?: WorkspaceGeneration; generationPassages?: RetrievedPassage[]; reviewHandoff?: 'pending' | 'registered';
+  requestIdentity?: { sha256: string; idempotencyKey?: string; generationContract?: WorkspaceGenerationContract; retrievalContract?: typeof WORKSPACE_SOURCE_COVERAGE_CONTRACT }; generation?: WorkspaceGeneration; generationPassages?: RetrievedPassage[]; reviewHandoff?: 'pending' | 'registered';
   finishedAt?: string; durationMs?: number;
   sourceCoverage?: { contract: typeof WORKSPACE_SOURCE_COVERAGE_CONTRACT; additions: { sourceId: string; reasons: string[] }[] };
   runtimePolicy?: RuntimePolicyBinding; runtimePolicyInstructions?: string;
@@ -147,7 +147,7 @@ export class ProductWorkspace {
     const contract = workspaceGenerationContract(options.generationContract);
     if (options.idempotencyKey === undefined) return undefined;
     const key = z.string().trim().min(1).max(160).parse(options.idempotencyKey), input = questionInput.parse(raw);
-    const requestHash = workspaceQuestionRequestHash(input, options.automaticCheck ?? false, contract);
+    const requestHash = workspaceQuestionRequestHash(input, options.automaticCheck ?? false, contract, this.hooks.sourceCoverage ? WORKSPACE_SOURCE_COVERAGE_CONTRACT : undefined);
     const prior = this.db.prepare('SELECT request_sha256,run_id FROM workspace_question_requests WHERE idempotency_key=?').get(key) as { request_sha256: string; run_id: string } | undefined;
     if (prior && prior.request_sha256 !== requestHash) throw new Error('Workspace: idempotency key belongs to a different question request.');
     // The immutable request on a saved run remains authoritative if its lookup
@@ -156,7 +156,7 @@ export class ProductWorkspace {
     if (!prior && !retained.length) return undefined;
     if (retained.length > 1) throw new Error('Workspace: idempotency key has conflicting retained runs.');
     const run = prior ? this.getRun(prior.run_id) : JSON.parse(retained[0].document) as WorkspaceRun;
-    if (!run || run.requestIdentity?.sha256 !== requestHash || run.requestIdentity.idempotencyKey !== key || workspaceGenerationContract(run.requestIdentity.generationContract) !== contract) throw new Error('Workspace: saved request identity is inconsistent.');
+    if (!run || run.requestIdentity?.sha256 !== requestHash || run.requestIdentity.idempotencyKey !== key || workspaceGenerationContract(run.requestIdentity.generationContract) !== contract || run.requestIdentity.retrievalContract !== (this.hooks.sourceCoverage ? WORKSPACE_SOURCE_COVERAGE_CONTRACT : undefined)) throw new Error('Workspace: saved request identity is inconsistent.');
     return run;
   }
   private reconcileGeneration(id: string, recovered = false): WorkspaceRun {
@@ -223,7 +223,7 @@ export class ProductWorkspace {
     if (contract !== WORKSPACE_GENERATION_CONTRACT && !modern) throw new Error('Workspace: provider does not support the selected generation contract.');
     if (this.hooks.sourceCoverage && !modern) throw new Error('Workspace: source coverage requires receipt-enabled answer generation.');
     const corpus = this.corpus(product);
-    const requestIdentity = { sha256: workspaceQuestionRequestHash(input, options.automaticCheck ?? false, contract), ...(options.idempotencyKey !== undefined ? { idempotencyKey: z.string().trim().min(1).max(160).parse(options.idempotencyKey) } : {}), ...(contract !== WORKSPACE_GENERATION_CONTRACT ? { generationContract: contract } : {}) };
+    const requestIdentity = { sha256: workspaceQuestionRequestHash(input, options.automaticCheck ?? false, contract, this.hooks.sourceCoverage ? WORKSPACE_SOURCE_COVERAGE_CONTRACT : undefined), ...(options.idempotencyKey !== undefined ? { idempotencyKey: z.string().trim().min(1).max(160).parse(options.idempotencyKey) } : {}), ...(contract !== WORKSPACE_GENERATION_CONTRACT ? { generationContract: contract } : {}), ...(this.hooks.sourceCoverage ? { retrievalContract: WORKSPACE_SOURCE_COVERAGE_CONTRACT } : {}) };
     this.busy = true;
     let interrupted = false, persisted = false, returningExisting = false;
     const fault = (boundary: WorkspaceFaultBoundary) => { interrupted = true; this.hooks.fault?.(boundary, structuredClone(run)); interrupted = false; };

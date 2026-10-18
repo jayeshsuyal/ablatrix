@@ -6,6 +6,8 @@ import { join } from 'node:path';
 import { ProductWorkspace, verifyWorkspaceRunGeneration } from './product-workspace.ts';
 import { SapiomFeedbackProvider } from './feedback-provider.ts';
 import { WORKSPACE_GENERATION_CONTRACT, workspaceGenerationPromptIdentity } from './workspace-generation.ts';
+import { workspaceQuestionRequestHash } from './workspace-generation-identity.ts';
+import { DatabaseSync } from 'node:sqlite';
 import { WORKSPACE_SOURCE_COVERAGE_CONTRACT } from './workspace-source-coverage.ts';
 import type { ProductCorpus, LoopRetriever } from './loop-types.ts';
 
@@ -49,13 +51,31 @@ test('opt-in source coverage reaches the actual generation request, preserves v1
     assert.equal(interrupted.generation!.binding.systemInstructionsSha256, workspaceGenerationPromptIdentity().systemInstructionsSha256);
     const receiptId = provider.receipt(interrupted.id)!.id;
     workspace.close(); workspace = new ProductWorkspace(dbPath, provider, oneParent);
-    const recovered = await workspace.ask(input, undefined, { idempotencyKey: 'candidate' });
+    await assert.rejects(workspace.ask(input, undefined, { idempotencyKey: 'candidate' }), /different question request/);
+    const recovered = workspace.proofRuns().find(run => run.id === interrupted.id)!;
+    workspace.close(); workspace = new ProductWorkspace(dbPath, provider, oneParent, undefined, { sourceCoverage: true });
+    assert.equal((await workspace.ask(input, undefined, { idempotencyKey: 'candidate' })).id, recovered.id);
+    await assert.rejects(workspace.ask(input, undefined, { idempotencyKey: 'baseline' }), /different question request/);
+    assert.equal(recovered.requestIdentity?.retrievalContract, WORKSPACE_SOURCE_COVERAGE_CONTRACT);
     assert.equal(recovered.id, interrupted.id); assert.equal(recovered.status, 'completed'); assert.equal(recovered.generation?.recovered, true);
     assert.equal(provider.receipt(recovered.id)?.id, receiptId); assert.equal(bodies.length, 2); verifyWorkspaceRunGeneration(recovered);
     assert.deepEqual(recovered.sourceCoverage, interrupted.sourceCoverage); assert.deepEqual(recovered.generationPassages, interrupted.generationPassages);
     assert.equal(recovered.answer!.citations[0].quote, product.sources.find(s => s.id === recovered.answer!.citations[0].passageId)!.text);
+    const db = new DatabaseSync(dbPath); try { db.prepare('DELETE FROM workspace_question_requests').run(); } finally { db.close(); }
+    assert.equal((await workspace.ask(input, undefined, { idempotencyKey: 'candidate' })).id, recovered.id);
+    workspace.close(); workspace = new ProductWorkspace(dbPath, provider, oneParent);
+    await assert.rejects(workspace.ask(input, undefined, { idempotencyKey: 'candidate' }), /saved request identity/);
     const nextDefault = await workspace.ask(input, undefined, { idempotencyKey: 'next-default' });
     assert.equal(nextDefault.sourceCoverage, undefined); assert.equal(nextDefault.generationPassages!.length, 1); assert.equal(bodies.length, 3);
     await assert.rejects(workspace.ask({ ...input, sourceCoverage: true }), /Unrecognized key/); assert.equal(bodies.length, 3);
   } finally { workspace.close(); provider.close(); rmSync(directory, { recursive: true, force: true }); }
+});
+
+
+test('retrieval contract identity is additive, strict and cannot alter historical default request bytes', () => {
+  const input = { productId: 'synthetic-identity', question: 'SYNTHETIC dimensions?', mode: 'live' as const };
+  const plain = workspaceQuestionRequestHash(input);
+  assert.equal(plain, workspaceQuestionRequestHash(input, false, WORKSPACE_GENERATION_CONTRACT));
+  assert.notEqual(plain, workspaceQuestionRequestHash(input, false, WORKSPACE_GENERATION_CONTRACT, WORKSPACE_SOURCE_COVERAGE_CONTRACT));
+  assert.throws(() => workspaceQuestionRequestHash(input, false, WORKSPACE_GENERATION_CONTRACT, 'unknown' as typeof WORKSPACE_SOURCE_COVERAGE_CONTRACT), /Unknown workspace retrieval/);
 });

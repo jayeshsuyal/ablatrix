@@ -1,0 +1,94 @@
+{
+  "format": "ablatrix-consumed-source-cohort-execution-v1",
+  "cohortFileSha256": "658b9e2ab6e2cec0904da67b31980b4e4d6bd0f1e2dadb8181e5f4ec31869934",
+  "sourceReviewFileSha256": "948391ed5a5a31b4a3e86e867d374a5ff7a1ca3628ae5d8fafce7626dec9cfbe",
+  "planSha256": "d1d1c49c6d47edcf2c9dae4351701c42b531d362fd5b42acc1184433e8a8a78e",
+  "generationPerformed": true,
+  "newProviderAttempts": 16,
+  "attempts": [
+    {
+      "caseId": "source-calibration-train-12543",
+      "arm": "baseline",
+      "attemptId": "6a7adf53-41d3-4e07-a830-8b326a32f269"
+    },
+    {
+      "caseId": "source-calibration-train-12543",
+      "arm": "candidate",
+      "attemptId": "fbc00811-b049-47b2-aa9a-e089c54ecd8b"
+    },
+    {
+      "caseId": "source-calibration-train-2652",
+      "arm": "candidate",
+      "attemptId": "2332cb32-15a7-4bad-9ea8-12cceefd362c"
+    },
+    {
+      "caseId": "source-calibration-train-2652",
+      "arm": "baseline",
+      "attemptId": "e5afb9ae-7719-4dda-8b60-fc6b429ba94c"
+    },
+    {
+      "caseId": "source-calibration-train-12047",
+      "arm": "baseline",
+      "attemptId": "3cb3066a-1588-4299-8144-cac20587e0cf"
+    },
+    {
+      "caseId": "source-calibration-train-12047",
+      "arm": "candidate",
+      "attemptId": "94b02ac1-fe2f-451f-a5be-5e2753b0e0fe"
+    },
+    {
+      "caseId": "source-calibration-train-12773",
+      "arm": "candidate",
+      "attemptId": "d3adaaf7-9f7d-41e5-a3ba-4ab07f0fad9c"
+    },
+    {
+      "caseId": "source-calibration-train-12773",
+      "arm": "baseline",
+      "attemptId": "1ca6664a-6d9e-469a-8b74-168a28228f0b"
+    },
+    {
+      "caseId": "source-calibration-train-195",
+      "arm": "baseline",
+      "attemptId": "0da686a3-bcbc-4c5a-b128-ccbe020e5978"
+    },
+    {
+      "caseId": "source-calibration-train-195",
+      "arm": "candidate",
+      "attemptId": "ff41c3a0-2372-42a2-9bd3-109cd93efa8f"
+    },
+    {
+      "caseId": "source-calibration-train-8836",
+      "arm": "candidate",
+      "attemptId": "3f701fa9-87db-4474-b72d-9dfb85ff2eee"
+    },
+    {
+      "caseId": "source-calibration-train-8836",
+      "arm": "baseline",
+      "attemptId": "a2f136c2-9f0f-4bf3-ac1c-336026de2c8e"
+    },
+    {
+      "caseId": "source-calibration-train-4472",
+      "arm": "baseline",
+      "attemptId": "131d8666-9d8e-4c10-a907-760d3fa88dd5"
+    },
+    {
+      "caseId": "source-calibration-train-4472",
+      "arm": "candidate",
+      "attemptId": "817b45c8-7b3b-408b-80d3-12b05805dd16"
+    },
+    {
+      "caseId": "source-calibration-train-13670",
+      "arm": "candidate",
+      "attemptId": "3a2ce5f4-8894-460f-a46e-18731d81b3c2"
+    },
+    {
+      "caseId": "source-calibration-train-13670",
+      "arm": "baseline",
+      "attemptId": "b3935a3b-1bd7-48d9-a2de-a0f4535e8e04"
+    }
+  ],
+  "modelOutputsUsed": false,
+  "generatedAnswersOrJudgmentsRead": false,
+  "sourceExecutionRecordFileSha256": "392df46af070992650e646a175a28f8f87fc8b90dbe1f69cd116fe61348093e4",
+  "provenance": "allowlisted_existing_execution_metadata_for_full_cohort_exclusion"
+}

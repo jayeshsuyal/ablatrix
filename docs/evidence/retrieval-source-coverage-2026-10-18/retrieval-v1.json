@@ -1,0 +1,1659 @@
+{
+  "format": "retrieval-coverage-retrieval-v1",
+  "cohortFileSha256": "681544a9e7ea23b1d0cef61106655fafd6736ee26e6228d33389d99c3cc84164",
+  "implementationSha256": {
+    "scripts/retrieval-coverage-retrieval.ts": "10a04c720631fee6fc5aad44a070b6f975e4304d01e29a5131fe91c830635f6d",
+    "server/source-calibration-comparison.ts": "e903b22150202f1af3128a6168d26dfb00c2e82793079b8028a522c7c0e1b879",
+    "server/workspace-source-coverage.ts": "b85ba8cde947ac995ceb1bb1d09c22c28e8359645c7fbc14d7895b47e8e67750",
+    "server/product-retrieval.ts": "f07ee0d3c49674aeb9115b84539b2b4a535fdec416eac7c785f612adf58874be",
+    "server/workspace-retrieval-context.ts": "311567d944c2c4361b10b5c6bf6ea6edcbf3cb863f3a48d97a76408af54689af",
+    "server/product-corpus.ts": "27fbc86475c95a33367c459a96bdb345e1249842ba6ea28be5cba3f97ad2d478",
+    "server/loop-types.ts": "0425b27e2d361a74e5aee6d6ab1452f9a0557fb3befb0a0d57c5945b54bb41bf",
+    "package-lock.json": "d9e11ec921fa80c8177ff295a2a19f326ea3b47f33651315434149edbe532204"
+  },
+  "corpusSha256": "86a7888e5793d18860e75bd134fc9473aa0688c5f8cbfd8ccae024d2643bf19c",
+  "results": [
+    {
+      "caseId": "retrieval-coverage-train-5918",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B00251EPL2-review-0acbdf3cca5a86a5",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "i bought the medium size for my 20lb shetland sheepdog, it's a perfect fit",
+            "reference": "review",
+            "sha256": "1de4dc641b649e9d05cab4dfdf20c6f573a831386d2e4b3987ee0dadf93958c9",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B00251EPL2-review-8b0a87c4ce568415",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "i have the medium size which would work well for small to medium dogs.",
+            "reference": "review",
+            "sha256": "82e18e31f1aae34013c43389fd6b6fc752097aff15dab8165bbcb929887f8e79",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00251EPL2-review-0df39fb0015b6686",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "i would definitely recommend this bowl for a small to medium sized dog.",
+            "reference": "review",
+            "sha256": "17948ba74c3557022b53b19e72e3ab8a4d4511052001702ec5d8d661baa4240b",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B00251EPL2-review-285e086201831659",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "size is good for about a scoop of food for 20 lb or less animal.",
+            "reference": "review",
+            "sha256": "9652f3be16d6beeba234b376f9ae930ae37935a29e99530db4d3619060395919",
+            "lexicalRank": 4,
+            "semanticRank": 3,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B00251EPL2-attribute-76c1d623020c4e07",
+            "productId": "B00251EPL2",
+            "source": "attribute",
+            "text": "size:  { value:\"medium (pack of 1)\" }",
+            "reference": "attribute",
+            "sha256": "9e196bc0d10d5a9400bd7aae065cc48047c46d10e558d78fcd9f2f3b7ae58a1f",
+            "lexicalRank": 5,
+            "semanticRank": 6,
+            "score": 0.030536130536130537
+          }
+        ],
+        "durationMs": 1228.154417,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B00251EPL2-review-0acbdf3cca5a86a5",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "i bought the medium size for my 20lb shetland sheepdog, it's a perfect fit",
+            "reference": "review",
+            "sha256": "1de4dc641b649e9d05cab4dfdf20c6f573a831386d2e4b3987ee0dadf93958c9",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B00251EPL2-review-8b0a87c4ce568415",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "i have the medium size which would work well for small to medium dogs.",
+            "reference": "review",
+            "sha256": "82e18e31f1aae34013c43389fd6b6fc752097aff15dab8165bbcb929887f8e79",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00251EPL2-review-0df39fb0015b6686",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "i would definitely recommend this bowl for a small to medium sized dog.",
+            "reference": "review",
+            "sha256": "17948ba74c3557022b53b19e72e3ab8a4d4511052001702ec5d8d661baa4240b",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B00251EPL2-review-285e086201831659",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "size is good for about a scoop of food for 20 lb or less animal.",
+            "reference": "review",
+            "sha256": "9652f3be16d6beeba234b376f9ae930ae37935a29e99530db4d3619060395919",
+            "lexicalRank": 4,
+            "semanticRank": 3,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B00251EPL2-attribute-76c1d623020c4e07",
+            "productId": "B00251EPL2",
+            "source": "attribute",
+            "text": "size:  { value:\"medium (pack of 1)\" }",
+            "reference": "attribute",
+            "sha256": "9e196bc0d10d5a9400bd7aae065cc48047c46d10e558d78fcd9f2f3b7ae58a1f",
+            "lexicalRank": 5,
+            "semanticRank": 6,
+            "score": 0.030536130536130537
+          }
+        ],
+        "durationMs": 1228.154417,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B00251EPL2-review-0acbdf3cca5a86a5",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "i bought the medium size for my 20lb shetland sheepdog, it's a perfect fit",
+            "reference": "review",
+            "sha256": "1de4dc641b649e9d05cab4dfdf20c6f573a831386d2e4b3987ee0dadf93958c9",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B00251EPL2-review-8b0a87c4ce568415",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "i have the medium size which would work well for small to medium dogs.",
+            "reference": "review",
+            "sha256": "82e18e31f1aae34013c43389fd6b6fc752097aff15dab8165bbcb929887f8e79",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00251EPL2-review-0df39fb0015b6686",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "i would definitely recommend this bowl for a small to medium sized dog.",
+            "reference": "review",
+            "sha256": "17948ba74c3557022b53b19e72e3ab8a4d4511052001702ec5d8d661baa4240b",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B00251EPL2-review-285e086201831659",
+            "productId": "B00251EPL2",
+            "source": "review",
+            "text": "size is good for about a scoop of food for 20 lb or less animal.",
+            "reference": "review",
+            "sha256": "9652f3be16d6beeba234b376f9ae930ae37935a29e99530db4d3619060395919",
+            "lexicalRank": 4,
+            "semanticRank": 3,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B00251EPL2-attribute-76c1d623020c4e07",
+            "productId": "B00251EPL2",
+            "source": "attribute",
+            "text": "size:  { value:\"medium (pack of 1)\" }",
+            "reference": "attribute",
+            "sha256": "9e196bc0d10d5a9400bd7aae065cc48047c46d10e558d78fcd9f2f3b7ae58a1f",
+            "lexicalRank": 5,
+            "semanticRank": 6,
+            "score": 0.030536130536130537
+          }
+        ],
+        "durationMs": 1228.154417,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "additions": [],
+      "contract": "workspace-source-coverage-v1"
+    },
+    {
+      "caseId": "retrieval-coverage-train-13455",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B0782338VH-bullet-da7df3eae9611758",
+            "productId": "B0782338VH",
+            "source": "bullet",
+            "text": "boot shaft circumference 14.17 inches",
+            "reference": "bullet",
+            "sha256": "a5fa4a826852dec87e0fa21d45d7f22649873f888788e34d3a1a742e9e5308e3",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B0782338VH-bullet-6e2f3f28f10fc6ad",
+            "productId": "B0782338VH",
+            "source": "bullet",
+            "text": "boot shaft width 7.08 inches",
+            "reference": "bullet",
+            "sha256": "7e70bd7c268dbeebecc211e78689a15d216e5c1070c20ace386ee47ef5d8f265",
+            "lexicalRank": 4,
+            "semanticRank": 2,
+            "score": 0.031754032258064516
+          },
+          {
+            "id": "epqa-B0782338VH-review-1b1394aa636310a7",
+            "productId": "B0782338VH",
+            "source": "review",
+            "text": "this boot was exactly what i wanted except the site did not make clear that most of the boot is stretchy material at the back of the calf!",
+            "reference": "review",
+            "sha256": "7c9a1e6b0a1b99c6c99ee0b68d2222c2176372e614cec0b49fc3e36c137007e5",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B0782338VH-review-2a3e533ba10492fb",
+            "productId": "B0782338VH",
+            "source": "review",
+            "text": "my calf is 12.5 inches but i wear a wide shoe.",
+            "reference": "review",
+            "sha256": "862f469452479ef7092c3676c8ef74baf4592acb31def2c7c891d9a27a5353a0",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B0782338VH-review-639c021ead47ed18",
+            "productId": "B0782338VH",
+            "source": "review",
+            "text": "i normally need a wider calf, mine measure 15.5 inches at the widest point.",
+            "reference": "review",
+            "sha256": "e9c33ae0191c30cbfd046bb6f05b0ba163875ab542dd93f6ac677f9539d5fa01",
+            "lexicalRank": 8,
+            "semanticRank": 3,
+            "score": 0.03057889822595705
+          }
+        ],
+        "durationMs": 146.23091599999975,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B0782338VH-bullet-da7df3eae9611758",
+            "productId": "B0782338VH",
+            "source": "bullet",
+            "text": "boot shaft circumference 14.17 inches",
+            "reference": "bullet",
+            "sha256": "a5fa4a826852dec87e0fa21d45d7f22649873f888788e34d3a1a742e9e5308e3",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B0782338VH-bullet-6e2f3f28f10fc6ad",
+            "productId": "B0782338VH",
+            "source": "bullet",
+            "text": "boot shaft width 7.08 inches",
+            "reference": "bullet",
+            "sha256": "7e70bd7c268dbeebecc211e78689a15d216e5c1070c20ace386ee47ef5d8f265",
+            "lexicalRank": 4,
+            "semanticRank": 2,
+            "score": 0.031754032258064516
+          },
+          {
+            "id": "epqa-B0782338VH-review-1b1394aa636310a7",
+            "productId": "B0782338VH",
+            "source": "review",
+            "text": "this boot was exactly what i wanted except the site did not make clear that most of the boot is stretchy material at the back of the calf!",
+            "reference": "review",
+            "sha256": "7c9a1e6b0a1b99c6c99ee0b68d2222c2176372e614cec0b49fc3e36c137007e5",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B0782338VH-review-2a3e533ba10492fb",
+            "productId": "B0782338VH",
+            "source": "review",
+            "text": "my calf is 12.5 inches but i wear a wide shoe.",
+            "reference": "review",
+            "sha256": "862f469452479ef7092c3676c8ef74baf4592acb31def2c7c891d9a27a5353a0",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B0782338VH-review-639c021ead47ed18",
+            "productId": "B0782338VH",
+            "source": "review",
+            "text": "i normally need a wider calf, mine measure 15.5 inches at the widest point.",
+            "reference": "review",
+            "sha256": "e9c33ae0191c30cbfd046bb6f05b0ba163875ab542dd93f6ac677f9539d5fa01",
+            "lexicalRank": 8,
+            "semanticRank": 3,
+            "score": 0.03057889822595705
+          }
+        ],
+        "durationMs": 146.23091599999975,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B0782338VH-bullet-da7df3eae9611758",
+            "productId": "B0782338VH",
+            "source": "bullet",
+            "text": "boot shaft circumference 14.17 inches",
+            "reference": "bullet",
+            "sha256": "a5fa4a826852dec87e0fa21d45d7f22649873f888788e34d3a1a742e9e5308e3",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B0782338VH-bullet-6e2f3f28f10fc6ad",
+            "productId": "B0782338VH",
+            "source": "bullet",
+            "text": "boot shaft width 7.08 inches",
+            "reference": "bullet",
+            "sha256": "7e70bd7c268dbeebecc211e78689a15d216e5c1070c20ace386ee47ef5d8f265",
+            "lexicalRank": 4,
+            "semanticRank": 2,
+            "score": 0.031754032258064516
+          },
+          {
+            "id": "epqa-B0782338VH-review-1b1394aa636310a7",
+            "productId": "B0782338VH",
+            "source": "review",
+            "text": "this boot was exactly what i wanted except the site did not make clear that most of the boot is stretchy material at the back of the calf!",
+            "reference": "review",
+            "sha256": "7c9a1e6b0a1b99c6c99ee0b68d2222c2176372e614cec0b49fc3e36c137007e5",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B0782338VH-review-2a3e533ba10492fb",
+            "productId": "B0782338VH",
+            "source": "review",
+            "text": "my calf is 12.5 inches but i wear a wide shoe.",
+            "reference": "review",
+            "sha256": "862f469452479ef7092c3676c8ef74baf4592acb31def2c7c891d9a27a5353a0",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B0782338VH-review-639c021ead47ed18",
+            "productId": "B0782338VH",
+            "source": "review",
+            "text": "i normally need a wider calf, mine measure 15.5 inches at the widest point.",
+            "reference": "review",
+            "sha256": "e9c33ae0191c30cbfd046bb6f05b0ba163875ab542dd93f6ac677f9539d5fa01",
+            "lexicalRank": 8,
+            "semanticRank": 3,
+            "score": 0.03057889822595705
+          },
+          {
+            "id": "epqa-B0782338VH-attribute-7c8d97450d13e31a",
+            "productId": "B0782338VH",
+            "source": "attribute",
+            "text": "size:  { value:\"8 wide\" }",
+            "reference": "attribute",
+            "sha256": "b42152bc13ed2bcae38469887a810ba37e81fd9803cab1f9c3b18a1f5b4dcd13",
+            "lexicalRank": null,
+            "semanticRank": null,
+            "score": 0
+          }
+        ],
+        "durationMs": 146.23091599999975,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "additions": [
+        {
+          "sourceId": "epqa-B0782338VH-attribute-7c8d97450d13e31a",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_field:size"
+          ]
+        }
+      ],
+      "contract": "workspace-source-coverage-v1"
+    },
+    {
+      "caseId": "retrieval-coverage-train-7340",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B002PNL41Y-review-947dd7e37d58dbf9",
+            "productId": "B002PNL41Y",
+            "source": "review",
+            "text": "the wood is some type of laminate, but is very hard and sturdy as well as very heavy.",
+            "reference": "review",
+            "sha256": "0fa431d68aefd8631d3b662abf8292c2adb6a0c7e75e38c793404ad23a7c91d0",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B002PNL41Y-bullet-04cb231ae189581f",
+            "productId": "B002PNL41Y",
+            "source": "bullet",
+            "text": "made of sustainable hardwood",
+            "reference": "bullet",
+            "sha256": "d8c8fecc1b777aef126ed0c89507a19b9526786b1d995de482c6115dac752bee",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B002PNL41Y-review-43098ad741eb22e2",
+            "productId": "B002PNL41Y",
+            "source": "review",
+            "text": "realy  beautiful, stable and very sturdy...just, i dont undersrand that, why it's massif wood every where on the body of this pretty cart, but except the top and the bottom shelf are plywood ( even, a nice good quality of plywood, but i would much prefer the top in massive genuine wood ) ?",
+            "reference": "review",
+            "sha256": "62bb4582a1a0cb219bb13635b978cb10c3eaa88517db83b19100965c45d8e985",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B002PNL41Y-description-ec31bcc8d78088c0",
+            "productId": "B002PNL41Y",
+            "source": "description",
+            "text": "the natural finished cart is constructed from sustainable hardwood with a clear coat finish helping to protect against marring from normal use.",
+            "reference": "description",
+            "sha256": "2cf14a081b9ced00a5424b4a6896d310c98c7b1e06d65eed2e3e9e225bcc331d",
+            "lexicalRank": 9,
+            "semanticRank": 5,
+            "score": 0.029877369007803793
+          },
+          {
+            "id": "epqa-B002PNL41Y-cqa-8e5d8ed69821c3d6",
+            "productId": "B002PNL41Y",
+            "source": "cqa",
+            "text": "this is a beautiful, solid cart.",
+            "reference": "cqa",
+            "sha256": "42a4a68e6f86eb3f16c7b7c8cf2783929838043fbf7a47d163e4c83e9ede0ac5",
+            "originalQuestion": "do i have to assemble the cart.?",
+            "lexicalRank": 4,
+            "semanticRank": 13,
+            "score": 0.0293236301369863
+          }
+        ],
+        "durationMs": 166.01350000000002,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B002PNL41Y-review-947dd7e37d58dbf9",
+            "productId": "B002PNL41Y",
+            "source": "review",
+            "text": "the wood is some type of laminate, but is very hard and sturdy as well as very heavy.",
+            "reference": "review",
+            "sha256": "0fa431d68aefd8631d3b662abf8292c2adb6a0c7e75e38c793404ad23a7c91d0",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B002PNL41Y-bullet-04cb231ae189581f",
+            "productId": "B002PNL41Y",
+            "source": "bullet",
+            "text": "made of sustainable hardwood",
+            "reference": "bullet",
+            "sha256": "d8c8fecc1b777aef126ed0c89507a19b9526786b1d995de482c6115dac752bee",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B002PNL41Y-review-43098ad741eb22e2",
+            "productId": "B002PNL41Y",
+            "source": "review",
+            "text": "realy  beautiful, stable and very sturdy...just, i dont undersrand that, why it's massif wood every where on the body of this pretty cart, but except the top and the bottom shelf are plywood ( even, a nice good quality of plywood, but i would much prefer the top in massive genuine wood ) ?",
+            "reference": "review",
+            "sha256": "62bb4582a1a0cb219bb13635b978cb10c3eaa88517db83b19100965c45d8e985",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B002PNL41Y-description-ec31bcc8d78088c0",
+            "productId": "B002PNL41Y",
+            "source": "description",
+            "text": "the natural finished cart is constructed from sustainable hardwood with a clear coat finish helping to protect against marring from normal use.",
+            "reference": "description",
+            "sha256": "2cf14a081b9ced00a5424b4a6896d310c98c7b1e06d65eed2e3e9e225bcc331d",
+            "lexicalRank": 9,
+            "semanticRank": 5,
+            "score": 0.029877369007803793
+          },
+          {
+            "id": "epqa-B002PNL41Y-cqa-8e5d8ed69821c3d6",
+            "productId": "B002PNL41Y",
+            "source": "cqa",
+            "text": "this is a beautiful, solid cart.",
+            "reference": "cqa",
+            "sha256": "42a4a68e6f86eb3f16c7b7c8cf2783929838043fbf7a47d163e4c83e9ede0ac5",
+            "originalQuestion": "do i have to assemble the cart.?",
+            "lexicalRank": 4,
+            "semanticRank": 13,
+            "score": 0.0293236301369863
+          }
+        ],
+        "durationMs": 166.01350000000002,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B002PNL41Y-review-947dd7e37d58dbf9",
+            "productId": "B002PNL41Y",
+            "source": "review",
+            "text": "the wood is some type of laminate, but is very hard and sturdy as well as very heavy.",
+            "reference": "review",
+            "sha256": "0fa431d68aefd8631d3b662abf8292c2adb6a0c7e75e38c793404ad23a7c91d0",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B002PNL41Y-bullet-04cb231ae189581f",
+            "productId": "B002PNL41Y",
+            "source": "bullet",
+            "text": "made of sustainable hardwood",
+            "reference": "bullet",
+            "sha256": "d8c8fecc1b777aef126ed0c89507a19b9526786b1d995de482c6115dac752bee",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B002PNL41Y-review-43098ad741eb22e2",
+            "productId": "B002PNL41Y",
+            "source": "review",
+            "text": "realy  beautiful, stable and very sturdy...just, i dont undersrand that, why it's massif wood every where on the body of this pretty cart, but except the top and the bottom shelf are plywood ( even, a nice good quality of plywood, but i would much prefer the top in massive genuine wood ) ?",
+            "reference": "review",
+            "sha256": "62bb4582a1a0cb219bb13635b978cb10c3eaa88517db83b19100965c45d8e985",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B002PNL41Y-description-ec31bcc8d78088c0",
+            "productId": "B002PNL41Y",
+            "source": "description",
+            "text": "the natural finished cart is constructed from sustainable hardwood with a clear coat finish helping to protect against marring from normal use.",
+            "reference": "description",
+            "sha256": "2cf14a081b9ced00a5424b4a6896d310c98c7b1e06d65eed2e3e9e225bcc331d",
+            "lexicalRank": 9,
+            "semanticRank": 5,
+            "score": 0.029877369007803793
+          },
+          {
+            "id": "epqa-B002PNL41Y-cqa-8e5d8ed69821c3d6",
+            "productId": "B002PNL41Y",
+            "source": "cqa",
+            "text": "this is a beautiful, solid cart.",
+            "reference": "cqa",
+            "sha256": "42a4a68e6f86eb3f16c7b7c8cf2783929838043fbf7a47d163e4c83e9ede0ac5",
+            "originalQuestion": "do i have to assemble the cart.?",
+            "lexicalRank": 4,
+            "semanticRank": 13,
+            "score": 0.0293236301369863
+          },
+          {
+            "id": "epqa-B002PNL41Y-attribute-332e8a7ec8961b94",
+            "productId": "B002PNL41Y",
+            "source": "attribute",
+            "text": "material:  { value:\"hardwood\" }",
+            "reference": "attribute",
+            "sha256": "9e300ee168443ae5ff633083c8c39ef58acb9c15cb09cc873e237cbd0431e8e2",
+            "lexicalRank": null,
+            "semanticRank": null,
+            "score": 0
+          }
+        ],
+        "durationMs": 166.01350000000002,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "additions": [
+        {
+          "sourceId": "epqa-B002PNL41Y-attribute-332e8a7ec8961b94",
+          "reasons": [
+            "question_intent:material",
+            "structured_field:material"
+          ]
+        }
+      ],
+      "contract": "workspace-source-coverage-v1"
+    },
+    {
+      "caseId": "retrieval-coverage-train-677",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B000FGKC34-cqa-8fee29e9e6571e04",
+            "productId": "B000FGKC34",
+            "source": "cqa",
+            "text": "i think the multi is the same, because if you look, the pictures are identical not matter if you choose white or the multi.",
+            "reference": "cqa",
+            "sha256": "3e094f979407b7872b2e16c5a075172373d6da02e39baecd4ee616fc343ba954",
+            "originalQuestion": "what's the difference between the colors white and multi?  is the multi in white or orange?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B000FGKC34-cqa-83bc333f22834090",
+            "productId": "B000FGKC34",
+            "source": "cqa",
+            "text": "the white is just as the picture shows, white with black stripes and colored space patches.",
+            "reference": "cqa",
+            "sha256": "4cf0fee5e97032de939c712e252c04a4d9dcc9a9eba47adf1e68c1dc9e7c8d67",
+            "originalQuestion": "what's the difference between the colors white and multi?  is the multi in white or orange?",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B000FGKC34-attribute-b30d7d85b15a0e2e",
+            "productId": "B000FGKC34",
+            "source": "attribute",
+            "text": "color:  { standardized_values:[ \"white\" ], value:\"white\" }",
+            "reference": "attribute",
+            "sha256": "7e1a8c21e2c15faa33f5d7983d3375c051555a4977dd868f5d8b4c0738e01489",
+            "lexicalRank": 3,
+            "semanticRank": 3,
+            "score": 0.031746031746031744
+          },
+          {
+            "id": "epqa-B000FGKC34-review-a7246d43d8e19308",
+            "productId": "B000FGKC34",
+            "source": "review",
+            "text": "the white is see-through so you will want to plan on your child wearing something underneath this costume.",
+            "reference": "review",
+            "sha256": "9fe59ddda26dc64ed7f910b681e9ee3469023713aef0cbc61877890528ee6448",
+            "lexicalRank": 4,
+            "semanticRank": 6,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B000FGKC34-review-c3765d45d232ddc9",
+            "productId": "B000FGKC34",
+            "source": "review",
+            "text": "the white suit was cheaper than the orange, and my husband informed me that the white was 'old school' and he preferred it.",
+            "reference": "review",
+            "sha256": "8aea1c6ed2700ca5a8b33f67cbe3315efa712ce78157fdd9a1142b9c3e6472b5",
+            "lexicalRank": 5,
+            "semanticRank": 7,
+            "score": 0.030309988518943745
+          }
+        ],
+        "durationMs": 215.64495799999986,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B000FGKC34-cqa-8fee29e9e6571e04",
+            "productId": "B000FGKC34",
+            "source": "cqa",
+            "text": "i think the multi is the same, because if you look, the pictures are identical not matter if you choose white or the multi.",
+            "reference": "cqa",
+            "sha256": "3e094f979407b7872b2e16c5a075172373d6da02e39baecd4ee616fc343ba954",
+            "originalQuestion": "what's the difference between the colors white and multi?  is the multi in white or orange?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B000FGKC34-cqa-83bc333f22834090",
+            "productId": "B000FGKC34",
+            "source": "cqa",
+            "text": "the white is just as the picture shows, white with black stripes and colored space patches.",
+            "reference": "cqa",
+            "sha256": "4cf0fee5e97032de939c712e252c04a4d9dcc9a9eba47adf1e68c1dc9e7c8d67",
+            "originalQuestion": "what's the difference between the colors white and multi?  is the multi in white or orange?",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B000FGKC34-attribute-b30d7d85b15a0e2e",
+            "productId": "B000FGKC34",
+            "source": "attribute",
+            "text": "color:  { standardized_values:[ \"white\" ], value:\"white\" }",
+            "reference": "attribute",
+            "sha256": "7e1a8c21e2c15faa33f5d7983d3375c051555a4977dd868f5d8b4c0738e01489",
+            "lexicalRank": 3,
+            "semanticRank": 3,
+            "score": 0.031746031746031744
+          },
+          {
+            "id": "epqa-B000FGKC34-review-a7246d43d8e19308",
+            "productId": "B000FGKC34",
+            "source": "review",
+            "text": "the white is see-through so you will want to plan on your child wearing something underneath this costume.",
+            "reference": "review",
+            "sha256": "9fe59ddda26dc64ed7f910b681e9ee3469023713aef0cbc61877890528ee6448",
+            "lexicalRank": 4,
+            "semanticRank": 6,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B000FGKC34-review-c3765d45d232ddc9",
+            "productId": "B000FGKC34",
+            "source": "review",
+            "text": "the white suit was cheaper than the orange, and my husband informed me that the white was 'old school' and he preferred it.",
+            "reference": "review",
+            "sha256": "8aea1c6ed2700ca5a8b33f67cbe3315efa712ce78157fdd9a1142b9c3e6472b5",
+            "lexicalRank": 5,
+            "semanticRank": 7,
+            "score": 0.030309988518943745
+          }
+        ],
+        "durationMs": 215.64495799999986,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B000FGKC34-cqa-8fee29e9e6571e04",
+            "productId": "B000FGKC34",
+            "source": "cqa",
+            "text": "i think the multi is the same, because if you look, the pictures are identical not matter if you choose white or the multi.",
+            "reference": "cqa",
+            "sha256": "3e094f979407b7872b2e16c5a075172373d6da02e39baecd4ee616fc343ba954",
+            "originalQuestion": "what's the difference between the colors white and multi?  is the multi in white or orange?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B000FGKC34-cqa-83bc333f22834090",
+            "productId": "B000FGKC34",
+            "source": "cqa",
+            "text": "the white is just as the picture shows, white with black stripes and colored space patches.",
+            "reference": "cqa",
+            "sha256": "4cf0fee5e97032de939c712e252c04a4d9dcc9a9eba47adf1e68c1dc9e7c8d67",
+            "originalQuestion": "what's the difference between the colors white and multi?  is the multi in white or orange?",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B000FGKC34-attribute-b30d7d85b15a0e2e",
+            "productId": "B000FGKC34",
+            "source": "attribute",
+            "text": "color:  { standardized_values:[ \"white\" ], value:\"white\" }",
+            "reference": "attribute",
+            "sha256": "7e1a8c21e2c15faa33f5d7983d3375c051555a4977dd868f5d8b4c0738e01489",
+            "lexicalRank": 3,
+            "semanticRank": 3,
+            "score": 0.031746031746031744
+          },
+          {
+            "id": "epqa-B000FGKC34-review-a7246d43d8e19308",
+            "productId": "B000FGKC34",
+            "source": "review",
+            "text": "the white is see-through so you will want to plan on your child wearing something underneath this costume.",
+            "reference": "review",
+            "sha256": "9fe59ddda26dc64ed7f910b681e9ee3469023713aef0cbc61877890528ee6448",
+            "lexicalRank": 4,
+            "semanticRank": 6,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B000FGKC34-review-c3765d45d232ddc9",
+            "productId": "B000FGKC34",
+            "source": "review",
+            "text": "the white suit was cheaper than the orange, and my husband informed me that the white was 'old school' and he preferred it.",
+            "reference": "review",
+            "sha256": "8aea1c6ed2700ca5a8b33f67cbe3315efa712ce78157fdd9a1142b9c3e6472b5",
+            "lexicalRank": 5,
+            "semanticRank": 7,
+            "score": 0.030309988518943745
+          }
+        ],
+        "durationMs": 215.64495799999986,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "additions": [],
+      "contract": "workspace-source-coverage-v1"
+    },
+    {
+      "caseId": "retrieval-coverage-train-3500",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B000CIN02K-cqa-e7dd1bee52ede6f5",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "it will work with both 3 speed and 4 speed transmissions.",
+            "reference": "cqa",
+            "sha256": "2346981db5bac51a4e4aa7a2d834e27218ecdcf313b8f6e59e3e052f64cbae03",
+            "originalQuestion": "will this work on a 72 camaro z28 with a 3 speed automatic?",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B000CIN02K-description-42a888d99ed80f3c",
+            "productId": "B000CIN02K",
+            "source": "description",
+            "text": "for most popular 3-speed auto transmissionsconsole can be trimmed for custom fitratchet action ensures positive shiftsdual-action detent/ratchet shifterclassic race styling & heritage",
+            "reference": "description",
+            "sha256": "f2325cb9be654a2fb51e5ea1b0a2b44400b38e2e37a58ad0b16705e5c5dde523",
+            "lexicalRank": 3,
+            "semanticRank": 5,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B000CIN02K-cqa-c3bf88362c00d32f",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "yes has all the adapter for any american car",
+            "reference": "cqa",
+            "sha256": "d11f2c1cab1d215eb397279fe0404b165381a633f6cc426fa0bc972406b393fb",
+            "originalQuestion": "will this work on a 94 wrangler three speed",
+            "lexicalRank": 2,
+            "semanticRank": 11,
+            "score": 0.03021353930031804
+          },
+          {
+            "id": "epqa-B000CIN02K-cqa-dc057e53a5f37a4a",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "good day, yes the b&m 80675 comes with cable and brackets for popular 3 speed automatic transissionskind regards-",
+            "reference": "cqa",
+            "sha256": "f04a17ea1af949abb5666381e2fd5c86ad5c5d1effe186f6e834989f538545a2",
+            "originalQuestion": "does this kit comes  with cables and brakets?",
+            "lexicalRank": 5,
+            "semanticRank": 9,
+            "score": 0.029877369007803793
+          },
+          {
+            "id": "epqa-B000CIN02K-cqa-0bc7f056d1b99849",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "good day,the b&m 80675 comes with cable and bracketry for the c4 included-kind regards-",
+            "reference": "cqa",
+            "sha256": "3f437027505b53f0d0f15929d82ca855393e1693d44f7e8255462db7d629f768",
+            "originalQuestion": "is it compatible with a ford c4 without any additional adapters or parts?",
+            "lexicalRank": 4,
+            "semanticRank": 13,
+            "score": 0.0293236301369863
+          }
+        ],
+        "durationMs": 95.07387500000004,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B000CIN02K-cqa-e7dd1bee52ede6f5",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "it will work with both 3 speed and 4 speed transmissions.",
+            "reference": "cqa",
+            "sha256": "2346981db5bac51a4e4aa7a2d834e27218ecdcf313b8f6e59e3e052f64cbae03",
+            "originalQuestion": "will this work on a 72 camaro z28 with a 3 speed automatic?",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B000CIN02K-description-42a888d99ed80f3c",
+            "productId": "B000CIN02K",
+            "source": "description",
+            "text": "for most popular 3-speed auto transmissionsconsole can be trimmed for custom fitratchet action ensures positive shiftsdual-action detent/ratchet shifterclassic race styling & heritage",
+            "reference": "description",
+            "sha256": "f2325cb9be654a2fb51e5ea1b0a2b44400b38e2e37a58ad0b16705e5c5dde523",
+            "lexicalRank": 3,
+            "semanticRank": 5,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B000CIN02K-cqa-c3bf88362c00d32f",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "yes has all the adapter for any american car",
+            "reference": "cqa",
+            "sha256": "d11f2c1cab1d215eb397279fe0404b165381a633f6cc426fa0bc972406b393fb",
+            "originalQuestion": "will this work on a 94 wrangler three speed",
+            "lexicalRank": 2,
+            "semanticRank": 11,
+            "score": 0.03021353930031804
+          },
+          {
+            "id": "epqa-B000CIN02K-cqa-dc057e53a5f37a4a",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "good day, yes the b&m 80675 comes with cable and brackets for popular 3 speed automatic transissionskind regards-",
+            "reference": "cqa",
+            "sha256": "f04a17ea1af949abb5666381e2fd5c86ad5c5d1effe186f6e834989f538545a2",
+            "originalQuestion": "does this kit comes  with cables and brakets?",
+            "lexicalRank": 5,
+            "semanticRank": 9,
+            "score": 0.029877369007803793
+          },
+          {
+            "id": "epqa-B000CIN02K-cqa-0bc7f056d1b99849",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "good day,the b&m 80675 comes with cable and bracketry for the c4 included-kind regards-",
+            "reference": "cqa",
+            "sha256": "3f437027505b53f0d0f15929d82ca855393e1693d44f7e8255462db7d629f768",
+            "originalQuestion": "is it compatible with a ford c4 without any additional adapters or parts?",
+            "lexicalRank": 4,
+            "semanticRank": 13,
+            "score": 0.0293236301369863
+          }
+        ],
+        "durationMs": 95.07387500000004,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B000CIN02K-cqa-e7dd1bee52ede6f5",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "it will work with both 3 speed and 4 speed transmissions.",
+            "reference": "cqa",
+            "sha256": "2346981db5bac51a4e4aa7a2d834e27218ecdcf313b8f6e59e3e052f64cbae03",
+            "originalQuestion": "will this work on a 72 camaro z28 with a 3 speed automatic?",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B000CIN02K-description-42a888d99ed80f3c",
+            "productId": "B000CIN02K",
+            "source": "description",
+            "text": "for most popular 3-speed auto transmissionsconsole can be trimmed for custom fitratchet action ensures positive shiftsdual-action detent/ratchet shifterclassic race styling & heritage",
+            "reference": "description",
+            "sha256": "f2325cb9be654a2fb51e5ea1b0a2b44400b38e2e37a58ad0b16705e5c5dde523",
+            "lexicalRank": 3,
+            "semanticRank": 5,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B000CIN02K-cqa-c3bf88362c00d32f",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "yes has all the adapter for any american car",
+            "reference": "cqa",
+            "sha256": "d11f2c1cab1d215eb397279fe0404b165381a633f6cc426fa0bc972406b393fb",
+            "originalQuestion": "will this work on a 94 wrangler three speed",
+            "lexicalRank": 2,
+            "semanticRank": 11,
+            "score": 0.03021353930031804
+          },
+          {
+            "id": "epqa-B000CIN02K-cqa-dc057e53a5f37a4a",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "good day, yes the b&m 80675 comes with cable and brackets for popular 3 speed automatic transissionskind regards-",
+            "reference": "cqa",
+            "sha256": "f04a17ea1af949abb5666381e2fd5c86ad5c5d1effe186f6e834989f538545a2",
+            "originalQuestion": "does this kit comes  with cables and brakets?",
+            "lexicalRank": 5,
+            "semanticRank": 9,
+            "score": 0.029877369007803793
+          },
+          {
+            "id": "epqa-B000CIN02K-cqa-0bc7f056d1b99849",
+            "productId": "B000CIN02K",
+            "source": "cqa",
+            "text": "good day,the b&m 80675 comes with cable and bracketry for the c4 included-kind regards-",
+            "reference": "cqa",
+            "sha256": "3f437027505b53f0d0f15929d82ca855393e1693d44f7e8255462db7d629f768",
+            "originalQuestion": "is it compatible with a ford c4 without any additional adapters or parts?",
+            "lexicalRank": 4,
+            "semanticRank": 13,
+            "score": 0.0293236301369863
+          }
+        ],
+        "durationMs": 95.07387500000004,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "additions": [],
+      "contract": "workspace-source-coverage-v1"
+    },
+    {
+      "caseId": "retrieval-coverage-train-4621",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B00805EAI0-cqa-93baf8391daae606",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "yes, these will work in the sunquest pro 16.",
+            "reference": "cqa",
+            "sha256": "c7af816237d5b1afa56d4c4f22a6d237e797ec3790bb5c0c2bcbe10c745dea8c",
+            "originalQuestion": "are these comparable with the  sunquest pro 16se?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-1101c9d7eb7ecf44",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "yes they will work in most all sunquest beds",
+            "reference": "cqa",
+            "sha256": "40dc50fdd430d875e05a339c8465028d6c2283b8cd95ceb9f83f3d9d9d4bc1c5",
+            "originalQuestion": "will these bulbs fit a sunquest pro 22 rs?  thank you.",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-3de278cb283b42c6",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "i do not knowi do not have that kind of tanning bed",
+            "reference": "cqa",
+            "sha256": "d5881c88504ea9bbd3f64b82d2617c7b9fcfca5dad586eae25e0abec4d5fda21",
+            "originalQuestion": "would these work for a wolff n-24xph",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-53cd029db031b6f4",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "i don’t knowi do not have that tanning bed",
+            "reference": "cqa",
+            "sha256": "d7bd2c45a2e8dcd2538b4108f385e198bcfa0e9141b4a92c9a9008f02c875fee",
+            "originalQuestion": "will they fit my prosun 2400 tanning bad",
+            "lexicalRank": 3,
+            "semanticRank": 6,
+            "score": 0.031024531024531024
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-a0fb3f1364e075b3",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "i don't know sorry our tanning bed goes to 15 only so i can't really answer that sorry i just know that these bulbs are working really great for us they heat up fast and we tan easily",
+            "reference": "cqa",
+            "sha256": "8ff0e7dfb8a26fea26bbbad2a49c88ba676e348994da8f8bc40afc3f7bd567e8",
+            "originalQuestion": "do these bulbs work in a sunquest pro 20 s bed. it is a 20 minute bed with 20 bulbs.",
+            "lexicalRank": 6,
+            "semanticRank": 3,
+            "score": 0.031024531024531024
+          }
+        ],
+        "durationMs": 43.72966700000006,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B00805EAI0-cqa-93baf8391daae606",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "yes, these will work in the sunquest pro 16.",
+            "reference": "cqa",
+            "sha256": "c7af816237d5b1afa56d4c4f22a6d237e797ec3790bb5c0c2bcbe10c745dea8c",
+            "originalQuestion": "are these comparable with the  sunquest pro 16se?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-1101c9d7eb7ecf44",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "yes they will work in most all sunquest beds",
+            "reference": "cqa",
+            "sha256": "40dc50fdd430d875e05a339c8465028d6c2283b8cd95ceb9f83f3d9d9d4bc1c5",
+            "originalQuestion": "will these bulbs fit a sunquest pro 22 rs?  thank you.",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-3de278cb283b42c6",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "i do not knowi do not have that kind of tanning bed",
+            "reference": "cqa",
+            "sha256": "d5881c88504ea9bbd3f64b82d2617c7b9fcfca5dad586eae25e0abec4d5fda21",
+            "originalQuestion": "would these work for a wolff n-24xph",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-53cd029db031b6f4",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "i don’t knowi do not have that tanning bed",
+            "reference": "cqa",
+            "sha256": "d7bd2c45a2e8dcd2538b4108f385e198bcfa0e9141b4a92c9a9008f02c875fee",
+            "originalQuestion": "will they fit my prosun 2400 tanning bad",
+            "lexicalRank": 3,
+            "semanticRank": 6,
+            "score": 0.031024531024531024
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-a0fb3f1364e075b3",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "i don't know sorry our tanning bed goes to 15 only so i can't really answer that sorry i just know that these bulbs are working really great for us they heat up fast and we tan easily",
+            "reference": "cqa",
+            "sha256": "8ff0e7dfb8a26fea26bbbad2a49c88ba676e348994da8f8bc40afc3f7bd567e8",
+            "originalQuestion": "do these bulbs work in a sunquest pro 20 s bed. it is a 20 minute bed with 20 bulbs.",
+            "lexicalRank": 6,
+            "semanticRank": 3,
+            "score": 0.031024531024531024
+          }
+        ],
+        "durationMs": 43.72966700000006,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B00805EAI0-cqa-93baf8391daae606",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "yes, these will work in the sunquest pro 16.",
+            "reference": "cqa",
+            "sha256": "c7af816237d5b1afa56d4c4f22a6d237e797ec3790bb5c0c2bcbe10c745dea8c",
+            "originalQuestion": "are these comparable with the  sunquest pro 16se?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-1101c9d7eb7ecf44",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "yes they will work in most all sunquest beds",
+            "reference": "cqa",
+            "sha256": "40dc50fdd430d875e05a339c8465028d6c2283b8cd95ceb9f83f3d9d9d4bc1c5",
+            "originalQuestion": "will these bulbs fit a sunquest pro 22 rs?  thank you.",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-3de278cb283b42c6",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "i do not knowi do not have that kind of tanning bed",
+            "reference": "cqa",
+            "sha256": "d5881c88504ea9bbd3f64b82d2617c7b9fcfca5dad586eae25e0abec4d5fda21",
+            "originalQuestion": "would these work for a wolff n-24xph",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-53cd029db031b6f4",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "i don’t knowi do not have that tanning bed",
+            "reference": "cqa",
+            "sha256": "d7bd2c45a2e8dcd2538b4108f385e198bcfa0e9141b4a92c9a9008f02c875fee",
+            "originalQuestion": "will they fit my prosun 2400 tanning bad",
+            "lexicalRank": 3,
+            "semanticRank": 6,
+            "score": 0.031024531024531024
+          },
+          {
+            "id": "epqa-B00805EAI0-cqa-a0fb3f1364e075b3",
+            "productId": "B00805EAI0",
+            "source": "cqa",
+            "text": "i don't know sorry our tanning bed goes to 15 only so i can't really answer that sorry i just know that these bulbs are working really great for us they heat up fast and we tan easily",
+            "reference": "cqa",
+            "sha256": "8ff0e7dfb8a26fea26bbbad2a49c88ba676e348994da8f8bc40afc3f7bd567e8",
+            "originalQuestion": "do these bulbs work in a sunquest pro 20 s bed. it is a 20 minute bed with 20 bulbs.",
+            "lexicalRank": 6,
+            "semanticRank": 3,
+            "score": 0.031024531024531024
+          }
+        ],
+        "durationMs": 43.72966700000006,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "additions": [],
+      "contract": "workspace-source-coverage-v1"
+    },
+    {
+      "caseId": "retrieval-coverage-train-2032",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B000F5KF1O-review-a1a5768f2c8765fd",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "exact replacement for liftmaster and champion oem wired garage door switch.",
+            "reference": "review",
+            "sha256": "cb754ce72fa938da1da968777f7fe5800c83ecbeb9bf2318efdebbab67fae60f",
+            "lexicalRank": 1,
+            "semanticRank": 2,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B000F5KF1O-review-04dbb513b21d4091",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "simple and inexpensive replacement for older 2-wire liftmaster/chamberlain garage door opener.",
+            "reference": "review",
+            "sha256": "2a570f76fdf7d023c9408bdb95812fb0b5edbe27cc734dc3a46056f7c3000e79",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B000F5KF1O-cqa-b195d662cc937848",
+            "productId": "B000F5KF1O",
+            "source": "cqa",
+            "text": "it will work on any liftmaster opener as long as it does not have a yellow learn button",
+            "reference": "cqa",
+            "sha256": "74afe5b40e8c25311174529aa1394e98d83f141020b1719f976e4aab046bc6a6",
+            "originalQuestion": "will this work on a chamberlain whisper drive garage opener?",
+            "lexicalRank": 5,
+            "semanticRank": 1,
+            "score": 0.03177805800756621
+          },
+          {
+            "id": "epqa-B000F5KF1O-review-adba2690d746d273",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "works perfect for my door opener",
+            "reference": "review",
+            "sha256": "611f3686ef94f49689740d9091ea3e129498f847344ac4b7605c70ddd6a2c4a7",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          },
+          {
+            "id": "epqa-B000F5KF1O-review-9e223ed98c2a4367-1",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "easy to install, comes with wire in case you do not have it, bought through sanford and sons (lol, great name), and fulfilled by amazon, delivery was great, easy transaction.this was a replacement for a raynor garage door control panel (9 years old), works perfect, and is exactly the same, seems as",
+            "reference": "review (part 1)",
+            "sha256": "c9919799fb0e20d1cefe080e029df600c50232efa6fab3e52285989ce19b443e",
+            "lexicalRank": 3,
+            "semanticRank": 8,
+            "score": 0.03057889822595705
+          }
+        ],
+        "durationMs": 158.26400000000012,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B000F5KF1O-review-a1a5768f2c8765fd",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "exact replacement for liftmaster and champion oem wired garage door switch.",
+            "reference": "review",
+            "sha256": "cb754ce72fa938da1da968777f7fe5800c83ecbeb9bf2318efdebbab67fae60f",
+            "lexicalRank": 1,
+            "semanticRank": 2,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B000F5KF1O-review-04dbb513b21d4091",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "simple and inexpensive replacement for older 2-wire liftmaster/chamberlain garage door opener.",
+            "reference": "review",
+            "sha256": "2a570f76fdf7d023c9408bdb95812fb0b5edbe27cc734dc3a46056f7c3000e79",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B000F5KF1O-cqa-b195d662cc937848",
+            "productId": "B000F5KF1O",
+            "source": "cqa",
+            "text": "it will work on any liftmaster opener as long as it does not have a yellow learn button",
+            "reference": "cqa",
+            "sha256": "74afe5b40e8c25311174529aa1394e98d83f141020b1719f976e4aab046bc6a6",
+            "originalQuestion": "will this work on a chamberlain whisper drive garage opener?",
+            "lexicalRank": 5,
+            "semanticRank": 1,
+            "score": 0.03177805800756621
+          },
+          {
+            "id": "epqa-B000F5KF1O-review-adba2690d746d273",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "works perfect for my door opener",
+            "reference": "review",
+            "sha256": "611f3686ef94f49689740d9091ea3e129498f847344ac4b7605c70ddd6a2c4a7",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          },
+          {
+            "id": "epqa-B000F5KF1O-review-9e223ed98c2a4367",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "easy to install, comes with wire in case you do not have it, bought through sanford and sons (lol, great name), and fulfilled by amazon, delivery was great, easy transaction.this was a replacement for a raynor garage door control panel (9 years old), works perfect, and is exactly the same, seems as though this unit is same as used on multiple brands, raynor, chamberlain, liftmaster, sears, etc.until i got the unit, i did not know how to access the mounting screws, but it is easy, just insert a flat head screw driver at the top of the white button an pry down slightly and the button comes out allowing you to access the mounting screws, and then you disconnect, reconnect the wires on the back and off you go.",
+            "reference": "review",
+            "sha256": "c603e3c3bd82e6f9f08ba58c6a29e8955a384ccf0b0dfcd1448af1534754afb1",
+            "lexicalRank": 3,
+            "semanticRank": 8,
+            "score": 0.03057889822595705
+          }
+        ],
+        "durationMs": 158.26400000000012,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B000F5KF1O-review-a1a5768f2c8765fd",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "exact replacement for liftmaster and champion oem wired garage door switch.",
+            "reference": "review",
+            "sha256": "cb754ce72fa938da1da968777f7fe5800c83ecbeb9bf2318efdebbab67fae60f",
+            "lexicalRank": 1,
+            "semanticRank": 2,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B000F5KF1O-review-04dbb513b21d4091",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "simple and inexpensive replacement for older 2-wire liftmaster/chamberlain garage door opener.",
+            "reference": "review",
+            "sha256": "2a570f76fdf7d023c9408bdb95812fb0b5edbe27cc734dc3a46056f7c3000e79",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B000F5KF1O-cqa-b195d662cc937848",
+            "productId": "B000F5KF1O",
+            "source": "cqa",
+            "text": "it will work on any liftmaster opener as long as it does not have a yellow learn button",
+            "reference": "cqa",
+            "sha256": "74afe5b40e8c25311174529aa1394e98d83f141020b1719f976e4aab046bc6a6",
+            "originalQuestion": "will this work on a chamberlain whisper drive garage opener?",
+            "lexicalRank": 5,
+            "semanticRank": 1,
+            "score": 0.03177805800756621
+          },
+          {
+            "id": "epqa-B000F5KF1O-review-adba2690d746d273",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "works perfect for my door opener",
+            "reference": "review",
+            "sha256": "611f3686ef94f49689740d9091ea3e129498f847344ac4b7605c70ddd6a2c4a7",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          },
+          {
+            "id": "epqa-B000F5KF1O-review-9e223ed98c2a4367",
+            "productId": "B000F5KF1O",
+            "source": "review",
+            "text": "easy to install, comes with wire in case you do not have it, bought through sanford and sons (lol, great name), and fulfilled by amazon, delivery was great, easy transaction.this was a replacement for a raynor garage door control panel (9 years old), works perfect, and is exactly the same, seems as though this unit is same as used on multiple brands, raynor, chamberlain, liftmaster, sears, etc.until i got the unit, i did not know how to access the mounting screws, but it is easy, just insert a flat head screw driver at the top of the white button an pry down slightly and the button comes out allowing you to access the mounting screws, and then you disconnect, reconnect the wires on the back and off you go.",
+            "reference": "review",
+            "sha256": "c603e3c3bd82e6f9f08ba58c6a29e8955a384ccf0b0dfcd1448af1534754afb1",
+            "lexicalRank": 3,
+            "semanticRank": 8,
+            "score": 0.03057889822595705
+          }
+        ],
+        "durationMs": 158.26400000000012,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "additions": [],
+      "contract": "workspace-source-coverage-v1"
+    },
+    {
+      "caseId": "retrieval-coverage-train-1268",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B0045Y1F4W-cqa-e4933f9af5a68331",
+            "productId": "B0045Y1F4W",
+            "source": "cqa",
+            "text": "you should select englacha 2-in-1 cozy x rider for your stroller, its universal connectors can be attached on the frames when in use",
+            "reference": "cqa",
+            "sha256": "13b125281ee7a67ef4339eadee04bca967ef736c4ed944ade7926f38500e2aba",
+            "originalQuestion": "will this work on the quinny zapp xtra 2",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B0045Y1F4W-cqa-37822c1567302ac8",
+            "productId": "B0045Y1F4W",
+            "source": "cqa",
+            "text": "the grabbers that hook onto the stroller come with 6 different fittings.",
+            "reference": "cqa",
+            "sha256": "eef12c008ebb0710c55a75ada779ddbaa69bfc4615c92dedeb8de135acda5e1c",
+            "originalQuestion": "does this work with the bumbleride indie twin? thanks",
+            "lexicalRank": 1,
+            "semanticRank": 4,
+            "score": 0.032018442622950824
+          },
+          {
+            "id": "epqa-B0045Y1F4W-review-8666022bb1d08f74",
+            "productId": "B0045Y1F4W",
+            "source": "review",
+            "text": "it's easy to attache and detached and it comes with 3 different size top for the hook.",
+            "reference": "review",
+            "sha256": "bd8438f3d62eab54f933353b8526a5defbee238cd341d9b8c7bce94eebfc206c",
+            "lexicalRank": 6,
+            "semanticRank": 1,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B0045Y1F4W-review-18c57c3a4feda886-1",
+            "productId": "B0045Y1F4W",
+            "source": "review",
+            "text": "we will be traveling international in april so we are planning on using a bungee cord of some sort to attach it to our stroller when folded for flights, otherwise it will have to be stored under the stroller when not needed.the box includes lots of adapter pieces so it really should fit all",
+            "reference": "review (part 1)",
+            "sha256": "4bcbe520b883c9922c16c3a9ff3affb156d6eaef74f25815c6463e4a639023ba",
+            "lexicalRank": 4,
+            "semanticRank": 5,
+            "score": 0.031009615384615385
+          },
+          {
+            "id": "epqa-B0045Y1F4W-cqa-7632bbb45950dda3",
+            "productId": "B0045Y1F4W",
+            "source": "cqa",
+            "text": "it should fit with any stroller it comes with adapters to adjust fit",
+            "reference": "cqa",
+            "sha256": "6bc9be5b55d9835d203b0bd8282c8b7a0c9e6e401e497a231c55338ef29c3975",
+            "originalQuestion": "does this work with the joovy single stroller?",
+            "lexicalRank": 5,
+            "semanticRank": 6,
+            "score": 0.030536130536130537
+          }
+        ],
+        "durationMs": 127.72045799999978,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B0045Y1F4W-cqa-e4933f9af5a68331",
+            "productId": "B0045Y1F4W",
+            "source": "cqa",
+            "text": "you should select englacha 2-in-1 cozy x rider for your stroller, its universal connectors can be attached on the frames when in use",
+            "reference": "cqa",
+            "sha256": "13b125281ee7a67ef4339eadee04bca967ef736c4ed944ade7926f38500e2aba",
+            "originalQuestion": "will this work on the quinny zapp xtra 2",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B0045Y1F4W-cqa-37822c1567302ac8",
+            "productId": "B0045Y1F4W",
+            "source": "cqa",
+            "text": "the grabbers that hook onto the stroller come with 6 different fittings.",
+            "reference": "cqa",
+            "sha256": "eef12c008ebb0710c55a75ada779ddbaa69bfc4615c92dedeb8de135acda5e1c",
+            "originalQuestion": "does this work with the bumbleride indie twin? thanks",
+            "lexicalRank": 1,
+            "semanticRank": 4,
+            "score": 0.032018442622950824
+          },
+          {
+            "id": "epqa-B0045Y1F4W-review-8666022bb1d08f74",
+            "productId": "B0045Y1F4W",
+            "source": "review",
+            "text": "it's easy to attache and detached and it comes with 3 different size top for the hook.",
+            "reference": "review",
+            "sha256": "bd8438f3d62eab54f933353b8526a5defbee238cd341d9b8c7bce94eebfc206c",
+            "lexicalRank": 6,
+            "semanticRank": 1,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B0045Y1F4W-review-18c57c3a4feda886",
+            "productId": "B0045Y1F4W",
+            "source": "review",
+            "text": "we will be traveling international in april so we are planning on using a bungee cord of some sort to attach it to our stroller when folded for flights, otherwise it will have to be stored under the stroller when not needed.the box includes lots of adapter pieces so it really should fit all strollers.",
+            "reference": "review",
+            "sha256": "2ba66237f99bd340a0f374ff8d4428fcedbad61f6f8d06b78afe61bf3debcad3",
+            "lexicalRank": 4,
+            "semanticRank": 5,
+            "score": 0.031009615384615385
+          },
+          {
+            "id": "epqa-B0045Y1F4W-cqa-7632bbb45950dda3",
+            "productId": "B0045Y1F4W",
+            "source": "cqa",
+            "text": "it should fit with any stroller it comes with adapters to adjust fit",
+            "reference": "cqa",
+            "sha256": "6bc9be5b55d9835d203b0bd8282c8b7a0c9e6e401e497a231c55338ef29c3975",
+            "originalQuestion": "does this work with the joovy single stroller?",
+            "lexicalRank": 5,
+            "semanticRank": 6,
+            "score": 0.030536130536130537
+          }
+        ],
+        "durationMs": 127.72045799999978,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B0045Y1F4W-cqa-e4933f9af5a68331",
+            "productId": "B0045Y1F4W",
+            "source": "cqa",
+            "text": "you should select englacha 2-in-1 cozy x rider for your stroller, its universal connectors can be attached on the frames when in use",
+            "reference": "cqa",
+            "sha256": "13b125281ee7a67ef4339eadee04bca967ef736c4ed944ade7926f38500e2aba",
+            "originalQuestion": "will this work on the quinny zapp xtra 2",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B0045Y1F4W-cqa-37822c1567302ac8",
+            "productId": "B0045Y1F4W",
+            "source": "cqa",
+            "text": "the grabbers that hook onto the stroller come with 6 different fittings.",
+            "reference": "cqa",
+            "sha256": "eef12c008ebb0710c55a75ada779ddbaa69bfc4615c92dedeb8de135acda5e1c",
+            "originalQuestion": "does this work with the bumbleride indie twin? thanks",
+            "lexicalRank": 1,
+            "semanticRank": 4,
+            "score": 0.032018442622950824
+          },
+          {
+            "id": "epqa-B0045Y1F4W-review-8666022bb1d08f74",
+            "productId": "B0045Y1F4W",
+            "source": "review",
+            "text": "it's easy to attache and detached and it comes with 3 different size top for the hook.",
+            "reference": "review",
+            "sha256": "bd8438f3d62eab54f933353b8526a5defbee238cd341d9b8c7bce94eebfc206c",
+            "lexicalRank": 6,
+            "semanticRank": 1,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B0045Y1F4W-review-18c57c3a4feda886",
+            "productId": "B0045Y1F4W",
+            "source": "review",
+            "text": "we will be traveling international in april so we are planning on using a bungee cord of some sort to attach it to our stroller when folded for flights, otherwise it will have to be stored under the stroller when not needed.the box includes lots of adapter pieces so it really should fit all strollers.",
+            "reference": "review",
+            "sha256": "2ba66237f99bd340a0f374ff8d4428fcedbad61f6f8d06b78afe61bf3debcad3",
+            "lexicalRank": 4,
+            "semanticRank": 5,
+            "score": 0.031009615384615385
+          },
+          {
+            "id": "epqa-B0045Y1F4W-cqa-7632bbb45950dda3",
+            "productId": "B0045Y1F4W",
+            "source": "cqa",
+            "text": "it should fit with any stroller it comes with adapters to adjust fit",
+            "reference": "cqa",
+            "sha256": "6bc9be5b55d9835d203b0bd8282c8b7a0c9e6e401e497a231c55338ef29c3975",
+            "originalQuestion": "does this work with the joovy single stroller?",
+            "lexicalRank": 5,
+            "semanticRank": 6,
+            "score": 0.030536130536130537
+          }
+        ],
+        "durationMs": 127.72045799999978,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "retrieval-coverage-681544a9e7ea23b1d0cef611"
+      },
+      "additions": [],
+      "contract": "workspace-source-coverage-v1"
+    }
+  ],
+  "providerCalls": 0,
+  "semanticAssessment": "not_run",
+  "generationPerformed": false,
+  "sha256": "2e6b02035eea84ce6df628301bd66eb9fdf4d7004bc92bb459a63eaf7bb2efea"
+}
