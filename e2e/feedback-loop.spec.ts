@@ -8,8 +8,8 @@ test('feedback loop persists a reviewed proposal, validates, promotes and rolls 
   page.setDefaultTimeout(15_000);
   await page.goto('/loop?mode=fixture');
   await expect(page.getByRole('heading', { name: 'Evidence to decision' })).toBeVisible();
-  await expect(page.locator('.fl-disclosure')).toContainText('answers and feedback outcomes do not establish model improvement');
   await expect(page.getByRole('combobox', { name: 'Product', exact: true })).not.toHaveValue('');
+  await expect(page.locator('.fl-disclosure')).toContainText('answers and feedback outcomes do not establish model improvement');
 
   // Editing a predefined question must remove its benchmark case identity.
   const originalQuestion = await page.getByRole('textbox', { name: 'Question', exact: true }).inputValue();

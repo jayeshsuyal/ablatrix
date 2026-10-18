@@ -1,3 +1,4 @@
+import { historicalQualificationTestSources } from './qualification-historical-test-sources.ts';
 import { test, type TestContext } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
@@ -12,7 +13,7 @@ import { executeLiveQualification, executeQualificationMechanics, verifyLiveQual
 import { prepareQualificationLivePlan, readQualificationLiveSources, type QualificationLiveApproval, type QualificationLivePlan } from './grader-qualification-live.ts';
 
 const repository = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const sources = readQualificationLiveSources(repository);
+const sources = historicalQualificationTestSources(repository);
 const implementationCommit = 'a'.repeat(40);
 const codeFileSha256 = Object.fromEntries(QUALIFICATION_LIVE_CODE_FILES.map(path => [path, qualificationHash(`SYNTHETIC mocked code identity: ${path}`)]));
 const outputs = rehearseQualification(sources.bundle, { implementationCommit: sources.bundle.plan.implementationCommit, codeFileSha256: sources.bundle.plan.codeFileSha256 }).slots.map(slot => {

@@ -1,3 +1,4 @@
+import { historicalQualificationTestSources } from './qualification-historical-test-sources.ts';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
@@ -12,7 +13,7 @@ import type { QualificationJournalRecord } from './grader-qualification-live-jou
 import { QUALIFICATION_LIVE_BUDGET, QUALIFICATION_SOURCE_DIRECTORY, QUALIFICATION_SOURCE_HASHES, inspectQualificationObservations, prepareQualificationLivePlan, qualificationStopReasons, readQualificationLiveSources, verifyQualificationLiveApproval, verifyQualificationLivePlan, verifyQualificationLiveSources, type QualificationLiveApproval, type QualificationLivePlan } from './grader-qualification-live.ts';
 
 const repository = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const sources = readQualificationLiveSources(repository);
+const sources = historicalQualificationTestSources(repository);
 const commit = 'a'.repeat(40);
 const codeFileSha256 = Object.fromEntries(QUALIFICATION_LIVE_CODE_FILES.map(path => [path, qualificationHash(`SYNTHETIC adapter code identity: ${path}`)]));
 const syntheticRoot = '/private/tmp/ablatrix-qualification-pure-test';
@@ -90,6 +91,10 @@ test('self-consistent altered source labels, review, model and criteria cannot v
     const { planSha256: _old, ...body } = changed.bundle.plan; changed.bundle.plan.planSha256 = qualificationHash(body);
     assert.throws(() => verifyQualificationLiveSources(changed));
   }
+});
+
+test('historical consumed v3 execution sources stay closed when current sealed implementation changes', () => {
+  assert.throws(() => readQualificationLiveSources(repository), /Original sealed implementation changed/);
 });
 
 test('untrusted source manifest is rejected before it can select any local code path', () => {

@@ -11,13 +11,15 @@ import type { ProductCorpus, LoopRetriever } from './loop-types.ts';
 import { AnswerPolicyWorker, SYNTHETIC_RUNTIME_VALIDATION_PACKET, type AnswerPolicyProvider, type AnswerPolicyGroup, type RuntimeValidationCase } from './answer-policy-worker.ts';
 import { RuntimeAnswerPolicyStore, runtimeBaselinePolicy, runtimePolicyHash, type RuntimeTrialDecision } from './runtime-answer-policy.ts';
 import type { RuntimeAnswerInput } from './answer-policy-protocol.ts';
+import { createRuntimeGraderBinding } from './runtime-grader.ts';
+import { CITED_APPLICABILITY_GRADER_VERSION } from './claim-support-v4.ts';
 
 const retriever = (corpus: ProductCorpus): LoopRetriever => ({ close() {}, async retrieve() { return { passages: corpus.passages.map(passage => ({ ...passage, lexicalRank: 1, semanticRank: 1, score: 1 })), durationMs: 1, method: 'synthetic-test', embeddingModel: 'no-model', corpusVersion: corpus.version }; } });
 function harness() {
   const directory = mkdtempSync(join(tmpdir(), 'runtime-answer-policy-')), policyPath = join(directory, 'policy.sqlite'), receiptsPath = join(directory, 'receipts.sqlite');
   const provider = new SyntheticAnswerProvider(receiptsPath), store = new RuntimeAnswerPolicyStore(policyPath), support = new AutomaticSupport(provider, join(directory, 'support.sqlite'));
   const workspace = new ProductWorkspace(join(directory, 'workspace.sqlite'), provider, retriever, store);
-  const worker = new AnswerPolicyWorker(provider, store, policyPath);
+  const worker = new AnswerPolicyWorker(provider, store, policyPath, { completedJobs: () => support.overview() });
   return { directory, policyPath, receiptsPath, provider, store, support, workspace, worker,
     async failures() {
       const jobs: AutomaticSupportJob[] = [];
@@ -264,7 +266,7 @@ test('scripted durable failures produce one finite trial, later asks capture can
     const next = await h.workspace.ask({ productId: product.id, question: 'What does the fictional listing state?', mode: 'synthetic' });
     assert.equal(next.runtimePolicy?.id, candidate.id); assert.equal(next.runtimePolicy?.instructionSha256, candidate.instructionSha256);
     assert.equal(next.runtimePolicyInstructions, candidate.instructions); assert.match(next.runtimePolicyInstructions!, /Runtime answer-policy addition:/);
-    const generated = h.provider.receipt(next.id)!; assert.equal(generated.kind, 'synthetic_answer');
+    const generated = h.provider.receipt(next.id)!; assert.equal(generated.kind, 'workspace_answer_flat_sources_v1');
     h.store.rollback('synthetic', candidate.id);
     const restored = await h.workspace.ask({ productId: product.id, question: 'What does the fictional listing state?', mode: 'synthetic' });
     assert.equal(restored.runtimePolicy?.id, baseline.id); assert.equal(restored.runtimePolicyInstructions, baseline.instructions);
@@ -294,6 +296,7 @@ test('malformed, unknown, historically unbound and duplicate evidence cannot for
   const h = harness();
   try {
     const failures = await h.failures(), original = structuredClone(failures[0]);
+    h.worker.close(); h.worker = new AnswerPolicyWorker(h.provider, h.store, h.policyPath, { completedJobs: () => [original] });
     const variants = [structuredClone(original), structuredClone(original), structuredClone(original), structuredClone(original), structuredClone(original)];
     delete variants[0].original.runtimePolicy; variants[1].operations[0].status = 'unknown'; variants[2].originalAnswerSha256 = '0'.repeat(64); variants[3].assessments[0].assessment.units[0].verdict = 'uncertain'; variants[4].operations.push(structuredClone(variants[4].operations[0]));
     assert.deepEqual(h.worker.observeCompleted(variants), { observed: 0, eligible: 0 }); assert.equal(h.worker.overview().groups.length, 0);
@@ -310,7 +313,7 @@ test('always abstaining candidate fails independent answerability controls even 
     h.worker.observeCompleted(await h.failures()); h.worker.close();
     const wrapped: AnswerPolicyProvider = { executionMode: 'synthetic', readiness: h.provider.readiness.bind(h.provider), capacity: h.provider.capacity.bind(h.provider), receipt: h.provider.receipt.bind(h.provider), suggestRuntimePolicy: h.provider.suggestRuntimePolicy.bind(h.provider), gradeClaimSupport: h.provider.gradeClaimSupport.bind(h.provider),
       async answerRuntimePolicy(input: RuntimeAnswerInput) { const output = await h.provider.answerRuntimePolicy(input); if (input.policy.instructions.includes('Runtime answer-policy addition:')) changeReceipt(h.receiptsPath, input.runId, document => { document.output = { status: 'insufficient_evidence', answer: 'SYNTHETIC runtime fixture abstention: The requested fact is absent from this fictional source packet.', citations: [] }; }); return output; } };
-    h.worker = new AnswerPolicyWorker(wrapped, h.store, h.policyPath); const group = await evaluate(h.worker), decision = h.store.getDecision(group.decisionId!)!;
+    h.worker = new AnswerPolicyWorker(wrapped, h.store, h.policyPath, { completedJobs: () => h.support.overview() }); const group = await evaluate(h.worker), decision = h.store.getDecision(group.decisionId!)!;
     assert.equal(decision.verdict, 'rejected'); assert.equal(decision.candidateMetrics.usefulSupportedAnswers, 0); assert.equal(decision.candidateMetrics.unnecessaryAbstentions, 2); assert.equal(decision.candidateMetrics.regressions, 1);
     assert.throws(() => h.worker.activateTrial(group.id), /eligible/); assert.equal(h.store.capture('synthetic').status, 'baseline');
   } finally { h.cleanup(); }
@@ -329,8 +332,36 @@ test('cross-mode, missing calibration, stale parent and changed durable receipts
     const candidate = h.worker.activateTrial(group.id); assert.throws(() => h.worker.activateTrial(group.id), /stale parent/); assert.throws(() => h.store.rollback('synthetic', liveCandidate.id), /current candidate/);
     h.store.rollback('synthetic', candidate.id);
     changeReceipt(h.receiptsPath, group.operations[5].runId, document => { document.requestSha256 = '0'.repeat(64); });
-    assert.throws(() => h.worker.activateTrial(group.id), /reconciliation/); assert.equal(h.store.capture('synthetic').status, 'baseline');
+    assert.throws(() => h.worker.activateTrial(group.id), /reconciliation|unverifiable activated trial/); assert.equal(h.store.capture('synthetic').status, 'baseline');
   } finally { h.cleanup(); }
+});
+
+test('activation requires every originating automatic check before any transition is saved', async () => {
+  const h = harness();
+  try {
+    h.worker.observeCompleted(await h.failures()); const group = await evaluate(h.worker), before = h.store.overview('synthetic');
+    const db = new DatabaseSync(join(h.directory, 'support.sqlite')); db.prepare('DELETE FROM automatic_support_jobs WHERE id=?').run(group.bindings[0].jobId); db.close();
+    assert.throws(() => h.worker.activateTrial(group.id), /originating automatic check/);
+    assert.equal(h.store.capture('synthetic').id, before.active.id); assert.equal(h.store.overview('synthetic').events.length, before.events.length); assert.equal(h.worker.get(group.id)?.operations.length, 13);
+  } finally { h.cleanup(); }
+});
+
+test('policy trials pin the originating v4 grader and reject legacy mixing or altered qualification bindings', async () => {
+  const h = harness(), graderBinding = createRuntimeGraderBinding('synthetic', CITED_APPLICABILITY_GRADER_VERSION), checks = new AutomaticSupport(h.provider, join(h.directory, 'v4-checks.sqlite'), { graderBinding });
+  const worker = new AnswerPolicyWorker(h.provider, h.store, h.policyPath, { graderBinding, completedJobs: () => checks.overview() });
+  try {
+    assert.deepEqual(worker.observeCompleted(await h.failures()), { observed: 0, eligible: 0 }, 'Legacy and new grader signals cannot silently mix.');
+    for (const name of ['Quartz', 'Nacre', 'Jade']) {
+      const product = h.workspace.createProduct({ title: `Fictional ${name} bowl`, sources: [{ label: 'Synthetic fictional listing', text: `SYNTHETIC fixture: The fictional ${name} bowl holds twelve cups.` }] });
+      const answer = await h.workspace.ask({ productId: product.id, question: `How many cups does the fictional ${name} bowl hold?`, mode: 'synthetic' }); checks.enqueue(h.workspace.reviewSnapshots(answer.id)[0]); for (let phase = 0; phase < 3; phase++) await checks.tick();
+    }
+    worker.observeCompleted(checks.overview()); const group = await evaluate(worker), decision = h.store.getDecision(group.decisionId!)!;
+    assert.equal(group.status, 'completed'); assert.equal(group.graderBinding?.version, CITED_APPLICABILITY_GRADER_VERSION); assert.equal(decision.graderBindingSha256, graderBinding.bindingSha256);
+    assert.deepEqual(decision.graderBinding, graderBinding); assert(group.results.every(result => result.baseline?.assessment && 'v4' in result.baseline.assessment && result.candidate?.assessment && 'v4' in result.candidate.assessment));
+    const active = worker.activateTrial(group.id); h.store.rollback('synthetic', active.id);
+    group.graderBinding!.qualification.evidenceSha256 = '0'.repeat(64); writeGroup(h.policyPath, group);
+    assert.throws(() => worker.activateTrial(group.id), /altered|unverifiable/); assert.equal(h.store.capture('synthetic').status, 'baseline');
+  } finally { worker.close(); checks.close(); h.cleanup(); }
 });
 
 test('capacity ceiling, shared-provider exclusion and paused drain forbid hidden dispatch', async () => {
@@ -338,7 +369,7 @@ test('capacity ceiling, shared-provider exclusion and paused drain forbid hidden
   try {
     h.worker.observeCompleted(await h.failures()); h.worker.close(); let calls = 0, free = false; const allowances: number[] = [];
     const wrapped: AnswerPolicyProvider = { executionMode: 'synthetic', readiness: h.provider.readiness.bind(h.provider), capacity: count => { allowances.push(count); return { ready: false, reason: 'SYNTHETIC exhausted allowance fixture.' }; }, receipt: h.provider.receipt.bind(h.provider), gradeClaimSupport: h.provider.gradeClaimSupport.bind(h.provider), answerRuntimePolicy: h.provider.answerRuntimePolicy.bind(h.provider), async suggestRuntimePolicy(input) { calls++; return h.provider.suggestRuntimePolicy(input); } };
-    h.worker = new AnswerPolicyWorker(wrapped, h.store, h.policyPath, { canDispatch: () => free });
+    h.worker = new AnswerPolicyWorker(wrapped, h.store, h.policyPath, { canDispatch: () => free, completedJobs: () => h.support.overview() });
     await h.worker.tick(); assert.equal(calls, 0); assert.deepEqual(allowances, []);
     free = true; await h.worker.tick(); assert.equal(calls, 0); assert.deepEqual(allowances, [13]);
     assert.equal(h.worker.overview().groups[0].status, 'failed'); assert.equal(h.store.capture('synthetic').status, 'baseline');
@@ -355,7 +386,7 @@ test('completed receipt recovery advances exactly one phase without redispatch a
       group.phase = 1; group.status = 'running'; group.results = []; group.operations[1].status = 'started';
       h.worker.close(); writeGroup(h.policyPath, group);
       if (missing) { const db = new DatabaseSync(h.receiptsPath); db.prepare('DELETE FROM synthetic_answer_receipts WHERE run_id=?').run(group.operations[1].runId); db.close(); }
-      h.worker = new AnswerPolicyWorker(h.provider, h.store, h.policyPath);
+      h.worker = new AnswerPolicyWorker(h.provider, h.store, h.policyPath, { completedJobs: () => h.support.overview() });
       const recovered = h.worker.get(group.id)!;
       if (missing) { assert.equal(recovered.status, 'reconciliation'); for (let i = 0; i < 4; i++) await h.worker.tick(); assert.equal(h.worker.get(group.id)?.operations.length, 2); assert.throws(() => h.worker.activateTrial(group.id), /complete/); }
       else { assert.equal(recovered.phase, 2); assert.deepEqual(recovered.results[0], recoveredAnswer); for (let i = 0; i < 11; i++) await h.worker.tick(); assert.equal(h.worker.get(group.id)?.status, 'completed'); }
@@ -367,7 +398,7 @@ test('trial snapshot and decision survive restart and read-only overview never p
   const h = harness();
   try {
     h.worker.observeCompleted(await h.failures()); const group = await evaluate(h.worker), before = h.store.getDecision(group.decisionId!);
-    h.worker.close(); h.worker = new AnswerPolicyWorker(h.provider, h.store, h.policyPath);
+    h.worker.close(); h.worker = new AnswerPolicyWorker(h.provider, h.store, h.policyPath, { completedJobs: () => h.support.overview() });
     assert.deepEqual(h.store.getDecision(group.decisionId!), before);
     for (let i = 0; i < 5; i++) { h.worker.overview(); h.store.overview('synthetic'); h.worker.readiness(); }
     assert.equal(h.worker.get(group.id)?.operations.length, 13); assert.equal(h.store.overview('synthetic').events.length, 0);
@@ -383,7 +414,7 @@ test('incomplete or contradicted unanswerable control cannot be offset by a targ
       h.worker.observeCompleted(await h.failures()); h.worker.close();
       const wrapped: AnswerPolicyProvider = { executionMode: 'synthetic', readiness: h.provider.readiness.bind(h.provider), capacity: h.provider.capacity.bind(h.provider), receipt: h.provider.receipt.bind(h.provider), suggestRuntimePolicy: h.provider.suggestRuntimePolicy.bind(h.provider), answerRuntimePolicy: h.provider.answerRuntimePolicy.bind(h.provider),
         async gradeClaimSupport(input) { const result = await h.provider.gradeClaimSupport(input); if (input.runId.endsWith(':12')) changeReceipt(h.receiptsPath, input.runId, document => { document.output[field] = field === 'questionCoverage' ? 'incomplete' : 'contradicted_by_sources'; }); return result; } };
-      h.worker = new AnswerPolicyWorker(wrapped, h.store, h.policyPath); const group = await evaluate(h.worker), decision = h.store.getDecision(group.decisionId!)!;
+      h.worker = new AnswerPolicyWorker(wrapped, h.store, h.policyPath, { completedJobs: () => h.support.overview() }); const group = await evaluate(h.worker), decision = h.store.getDecision(group.decisionId!)!;
       assert.equal(group.status, 'completed'); assert.equal(decision.candidateMetrics.usefulSupportedAnswers, 2, 'Targeted answer still improves in this scripted fixture.');
       assert.equal(decision.candidateMetrics.regressions, 1); assert.equal(decision.verdict, 'rejected'); assert.throws(() => h.worker.activateTrial(group.id), /eligible/);
     } finally { h.cleanup(); }
@@ -406,7 +437,7 @@ test('unknown proposal and malformed paired answers/checks consume the attempt a
       assert.equal(exported.originalChecks.length, 3);
       assert.equal(exported.phaseReceipts.at(-1)?.verification, 'unaccepted_diagnostic');
       assert.ok(exported.phaseReceipts.slice(0, -1).every(item => item.verification === 'replayed_completed_phase'));
-      h.worker.close(); h.worker = new AnswerPolicyWorker(h.provider, h.store, h.policyPath); for (let i = 0; i < 5; i++) await h.worker.tick();
+      h.worker.close(); h.worker = new AnswerPolicyWorker(h.provider, h.store, h.policyPath, { completedJobs: () => h.support.overview() }); for (let i = 0; i < 5; i++) await h.worker.tick();
       assert.equal(h.worker.get(group.id)?.operations.length, operationCount); assert.throws(() => h.worker.activateTrial(group.id), /complete/); assert.equal(h.store.capture('synthetic').status, 'baseline');
     } finally { h.cleanup(); }
   }
@@ -430,9 +461,9 @@ test('a late receipt cannot revive an expired unknown lease, and shutdown drains
     h.worker.observeCompleted(await h.failures()); h.worker.close(); let release!: () => void, calls = 0; const waiting = new Promise<void>(resolve => { release = resolve; });
     const wrapped: AnswerPolicyProvider = { executionMode: 'synthetic', readiness: h.provider.readiness.bind(h.provider), capacity: h.provider.capacity.bind(h.provider), receipt: h.provider.receipt.bind(h.provider), answerRuntimePolicy: h.provider.answerRuntimePolicy.bind(h.provider), gradeClaimSupport: h.provider.gradeClaimSupport.bind(h.provider),
       async suggestRuntimePolicy(input) { calls++; await waiting; return h.provider.suggestRuntimePolicy(input); } };
-    h.worker = new AnswerPolicyWorker(wrapped, h.store, h.policyPath); const pending = h.worker.tick(); assert.equal(h.worker.hasActive(), true);
+    h.worker = new AnswerPolicyWorker(wrapped, h.store, h.policyPath, { completedJobs: () => h.support.overview() }); const pending = h.worker.tick(); assert.equal(h.worker.hasActive(), true);
     const started = h.worker.overview().groups[0]; assert.equal(started.status, 'running'); writeGroup(h.policyPath, started);
-    recovery = new AnswerPolicyWorker(h.provider, h.store, h.policyPath); assert.equal(recovery.get(started.id)?.status, 'reconciliation');
+    recovery = new AnswerPolicyWorker(h.provider, h.store, h.policyPath, { completedJobs: () => h.support.overview() }); assert.equal(recovery.get(started.id)?.status, 'reconciliation');
     const drain = h.worker.pauseAndDrain(); assert.deepEqual(h.worker.observeCompleted(await h.failures()), { observed: 0, eligible: 0 });
     release(); await pending; await drain; assert.equal(calls, 1); assert.equal(h.worker.hasActive(), false);
     assert.equal(h.worker.get(started.id)?.status, 'reconciliation'); assert.equal(h.worker.get(started.id)?.candidate, undefined);

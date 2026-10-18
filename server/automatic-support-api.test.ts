@@ -39,7 +39,11 @@ test('HTTP automatic source check repairs once, retains the original, and record
     assert.deepEqual((await (await fetch(base + `/api/workspace/automatic-checks?answer=workspace-${plain.id}`)).json()).checks, [], 'reading an old answer never enqueues grading');
     await post('/api/workspace/questions', { productId: product.id, question: 'How much does this bottle hold?', mode: 'synthetic', automaticCheck: 'yes' }, 400);
     await post('/api/workspace/questions', { productId: product.id, question: 'How much does this bottle hold?', mode: 'preview', automaticCheck: true }, 400);
-    const run = await post('/api/workspace/questions', { productId: product.id, question: 'How much does this bottle hold?', mode: 'synthetic', automaticCheck: true });
+    const run = await post('/api/workspace/questions', { productId: product.id, question: 'How much does this bottle hold?', mode: 'synthetic', automaticCheck: true, idempotencyKey: 'api-idempotency-checked-v1' });
+    const duplicate = await post('/api/workspace/questions', { productId: product.id, question: 'How much does this bottle hold?', mode: 'synthetic', automaticCheck: true, idempotencyKey: 'api-idempotency-checked-v1' }, 200);
+    assert.equal(duplicate.id, run.id);
+    assert.equal(duplicate.automaticCheck.id, run.automaticCheck.id);
+    await post('/api/workspace/questions', { productId: product.id, question: 'A different question cannot reuse that key.', mode: 'synthetic', automaticCheck: true, idempotencyKey: 'api-idempotency-checked-v1' }, 409);
     assert.equal(run.automaticCheck.status, 'queued');
     assert.equal(run.automaticCheckRequested, true);
     assert.equal(run.automaticCheckHandoff, 'enqueued');
@@ -56,6 +60,8 @@ test('HTTP automatic source check repairs once, retains the original, and record
     assert.deepEqual(check.operations.map((op: {phase:string}) => op.phase), ['grade_original', 'repair', 'grade_repair']);
     assert.equal(check.assessments.length, 2);
     assert.equal(check.qualityClaimEligible, false);
+    assert.equal(check.graderBinding.version, 'claim-support-v4-cited-applicability');
+    assert.equal(check.graderBinding.qualification.liveQualified, false);
     assert.equal(check.assessmentKind, 'synthetic_scripted_claim_support');
     assert.equal(check.delivery.origin, 'repair');
     assert.deepEqual(check.original.answer, run.answer);

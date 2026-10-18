@@ -33,7 +33,7 @@ test('a failed review write preserves the successful answer response and recover
     calls++;
     const request = JSON.parse(String(init?.body)), input = JSON.parse(request.messages[1].content);
     const name = request.tool_choice.function.name;
-    return new Response(JSON.stringify({ model: 'gpt-5.6-luna', choices: [{ finish_reason: 'tool_calls', message: { tool_calls: [{ function: { name, arguments: JSON.stringify({ answer: 'Synthetic fixture: the handle is oak wood.', status: 'answered', citations: [{ quoteId: input.quoteOptions[0].id }] }) } }] } }], usage: { prompt_tokens: 12, completion_tokens: 8 } }), { status: 200 });
+    return new Response(JSON.stringify({ model: 'gpt-5.6-luna', choices: [{ finish_reason: 'tool_calls', message: { tool_calls: [{ function: { name, arguments: JSON.stringify({ answer: 'Synthetic fixture: the handle is oak wood.', status: 'answered', citations: [input.quoteOptions[0].id] }) } }] } }], usage: { prompt_tokens: 12, completion_tokens: 8 } }), { status: 200 });
   } });
   const workspace = new ProductWorkspace(join(directory, 'workspace.sqlite'), provider, retriever);
   let snapshotReads = 0;
@@ -52,7 +52,7 @@ test('a failed review write preserves the successful answer response and recover
     // Fail the real database handoff only after generation has saved its output.
     reviewDb.exec("CREATE TRIGGER fixture_review_unavailable BEFORE INSERT ON workspace_review_answers BEGIN SELECT RAISE(ABORT, 'Synthetic review storage failure'); END");
     const product = workspace.createProduct({ title: 'Synthetic tool', sources: [{ label: 'Synthetic manual', text: 'Synthetic fixture only: this tool has an oak wood handle.' }] });
-    const response = await fetch(base + '/api/workspace/questions', { method: 'POST', headers: { 'content-type': 'application/json', origin: base }, body: JSON.stringify({ productId: product.id, question: 'What is the handle made from?', mode: 'live' }) });
+    const response = await fetch(base + '/api/workspace/questions', { method: 'POST', headers: { 'content-type': 'application/json', origin: base }, body: JSON.stringify({ productId: product.id, question: 'What is the handle made from?', mode: 'live', idempotencyKey: 'review-handoff-retry-v1' }) });
     const saved = await response.json();
     assert.equal(response.status, 201, JSON.stringify(saved));
     assert.equal(saved.status, 'completed');
@@ -65,6 +65,8 @@ test('a failed review write preserves the successful answer response and recover
     const history = await (await fetch(base + '/api/workspace')).json();
     assert.equal(history.runs.find((run: {id:string}) => run.id === saved.id).status, 'completed');
     assert.equal((reviewDb.prepare('SELECT COUNT(*) AS n FROM workspace_review_answers').get() as {n:number}).n, 0);
+    const retried = await fetch(base + '/api/workspace/questions', { method: 'POST', headers: { 'content-type': 'application/json', origin: base }, body: JSON.stringify({ productId: product.id, question: 'What is the handle made from?', mode: 'live', idempotencyKey: 'review-handoff-retry-v1' }) });
+    const duplicate = await retried.json(); assert.equal(retried.status, 200); assert.equal(duplicate.id, saved.id); assert.equal(duplicate.reviewHandoff, 'pending'); assert.equal(calls, 1);
     reviewDb.exec('DROP TRIGGER fixture_review_unavailable');
     const recoveredResponse = await fetch(base + '/api/workspace/reviews');
     assert.equal(recoveredResponse.status, 200);
@@ -121,7 +123,7 @@ test('HTTP workspace answer → rejection → background revision → source-che
       const kind = request.tool_choice.function.name;
       const revision = kind === 'answer_revision_v1';
       const source = input.evidence[0];
-      const output = { answer: revision ? 'Synthetic fixture revision: the handle is oak wood.' : 'Synthetic fixture original: an oak handle.', status: 'answered', citations: kind === 'product_answer_snippet' ? [{ quoteId: input.quoteOptions[0].id }] : [{ passageId: source.id, quote: source.text }] };
+      const output = { answer: revision ? 'Synthetic fixture revision: the handle is oak wood.' : 'Synthetic fixture original: an oak handle.', status: 'answered', citations: kind === 'workspace_answer_flat_sources_v1' ? [input.quoteOptions[0].id] : kind === 'product_answer_snippet' ? [{ quoteId: input.quoteOptions[0].id }] : [{ passageId: source.id, quote: source.text }] };
       return new Response(JSON.stringify({ model: 'gpt-5.6-luna', choices: [{ finish_reason: 'tool_calls', message: { tool_calls: [{ function: { name: kind, arguments: JSON.stringify(output) } }] } }], usage: { prompt_tokens: 12, completion_tokens: 8 } }), { status: 200 });
     } });
     const workspace = new ProductWorkspace(join(directory, 'workspace.sqlite'), provider, retriever);

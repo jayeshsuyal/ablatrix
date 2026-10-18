@@ -22,6 +22,10 @@ export async function buildRuntimeAnswerPolicyRehearsal() {
   globalThis.fetch = async () => { attemptedNetworkCalls++; throw new Error('Offline rehearsal forbids all network dispatch.'); };
   const dispatchedPolicies: { runId: string; id: string; instructionSha256: string; instructions: string }[] = [];
   class RecordingSyntheticProvider extends SyntheticAnswerProvider {
+    override async answerWorkspace(input: Parameters<SyntheticAnswerProvider['answerWorkspace']>[0]) {
+      dispatchedPolicies.push({ runId: input.runId, id: input.policy.id, instructionSha256: runtimePolicyHash(input.policy.instructions), instructions: input.policy.instructions });
+      return super.answerWorkspace(input);
+    }
     override async answer(input: Parameters<LoopProvider['answer']>[0]) {
       dispatchedPolicies.push({ runId: input.runId!, id: input.policy.id, instructionSha256: runtimePolicyHash(input.policy.instructions), instructions: input.policy.instructions });
       return super.answer(input);
@@ -38,7 +42,7 @@ export async function buildRuntimeAnswerPolicyRehearsal() {
   } });
   const workspace = new ProductWorkspace(paths.workspace, provider, retrieverFactory, store);
   const automatic = new AutomaticSupport(provider, paths.automatic);
-  const worker = new AnswerPolicyWorker(provider, store, paths.policy, { canDispatch: () => !workspace.hasActive() });
+  const worker = new AnswerPolicyWorker(provider, store, paths.policy, { canDispatch: () => !workspace.hasActive(), completedJobs: () => automatic.overview() });
   let releaseRetrieval: (() => void) | undefined;
   let pendingWorkspaceAsk: Promise<WorkspaceRun> | undefined;
   try {

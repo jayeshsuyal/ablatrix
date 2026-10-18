@@ -69,6 +69,14 @@ The report separates `mechanical: pass|fail|inconclusive` from `semanticAssessme
 
 This follows the practical distinction between reproducible code checks and more flexible, nondeterministic model grading described in [Anthropic's agent evaluation guide](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents). These checks provide an automatic regression gate, with narrow, inspectable guarantees.
 
-The harness section exercises the current workspace's legacy passage-and-quote revision contract. `source_ids_v3` remains an explicit comparison interface; this command does not enable it across the product or establish live Router reliability.
+The historical harness section exercises the passage-and-quote revision contract. The October 17 workspace suite additionally exercises the actual `/ask` `workspace-answer-flat-sources-v1` generation contract, receipt recovery, idempotency and bounded full-parent context. Historical `source_ids_v3` comparison receipts retain their original contract. These checks establish no live Router reliability or quality gain.
 
 Historical experiment bytes remain unchanged. The unexecuted October 11 paid plan binds the earlier retrieval code, so its verification rejects this revision. Future paid execution needs a newly qualified plan and approval; this gate creates neither a live result nor a promotion.
+
+## October 17 workflow extension
+
+The command now includes six workspace scenarios: interruptions before dispatch, after dispatch intent, after a completed receipt, and after saved answer persistence; an uncertain reserved operation with a late response; and the reproduced 300-byte chunk qualifier loss followed by bounded full-parent restoration. Matching completed receipts recover with zero new dispatches. Unknown or conflicting receipts remain consumed. Request identity and review/check handoff survive restart.
+
+The workspace contract retains raw retrieval chunks and supplies each selected parent's complete saved body for generation, within the workspace's eight-source/12000-body-character bound and the generation payload limit. Production retrieval still selects at most five chunks within its 6000-character budget; restoring full parent bodies has a separate, explicit bound. This restores the demonstrated condition and preserves the competing variant; it does not resolve source truth. Grading receives the full immutable workspace source snapshot under an explicit version and scope.
+
+An offline cached-BGE replay over the existing ten development questions retrieves 33/34 annotated reference passages for BM25 and hybrid, and 34/34 for dense; all ten questions have at least one reference. Upstream annotation caveats remain. This measures reference-passage coverage, not semantic source sufficiency, answer correctness or a fresh holdout. See the October 17 evidence report for exact code hashes and results.

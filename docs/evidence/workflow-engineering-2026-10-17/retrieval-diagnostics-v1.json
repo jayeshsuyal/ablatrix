@@ -1,0 +1,52 @@
+{
+  "format": "retrieval-development-diagnostics-v1",
+  "provenance": "already_exposed_development_questions",
+  "auditSha256": "504822eb2720e596217dd4f3be620dfe9bd99e21f63b0df835cab60544f78732",
+  "sourceHashes": {
+    "server/product-retrieval.ts": "f07ee0d3c49674aeb9115b84539b2b4a535fdec416eac7c785f612adf58874be",
+    "server/workspace-retrieval-context.ts": "311567d944c2c4361b10b5c6bf6ea6edcbf3cb863f3a48d97a76408af54689af",
+    "server/workspace-contracts.ts": "99e652b42f6fb28c0de0198b07076a2a0cdac4b65d0784966cbc9181f5274389",
+    "scripts/evaluate_product_retrieval.ts": "0cf44c12cac4422d5637e66d6bb152e46dcbedee40a87e243b35e0e0de8a0708",
+    "package-lock.json": "d9e11ec921fa80c8177ff295a2a19f326ea3b47f33651315434149edbe532204"
+  },
+  "observedReferenceCoverage": {
+    "bm25": [
+      33,
+      34
+    ],
+    "dense": [
+      34,
+      34
+    ],
+    "hybrid": [
+      33,
+      34
+    ],
+    "questions": [
+      10,
+      10
+    ]
+  },
+  "diagnostics": {
+    "retrievalReferenceOmission": {
+      "status": "observed",
+      "hybridMissingReferencePassages": 1,
+      "caveat": "AI-assisted upstream annotations may be wrong; reference omission alone does not prove a missing answer fact."
+    },
+    "conditionSeparatedFromClaim": {
+      "status": "reproduced_and_restored_in_fictional_workspace_fixture",
+      "evidence": "injected-v1.json workspace/qualifier_context_restoration"
+    },
+    "missingSourceInformation": {
+      "status": "synthetic_stop_demonstrated_natural_cases_not_assessed"
+    },
+    "conflictingSourceInformation": {
+      "status": "both_variants_preserved_in_workspace_fixture_not_semantically_resolved"
+    },
+    "generationMisuse": {
+      "status": "not_measured_on_natural_development_answers",
+      "providerCalls": 0
+    }
+  },
+  "qualityClaimEligible": false
+}

@@ -1,0 +1,58 @@
+{
+  "provenance": "actual_browser_synthetic_demo_recording",
+  "durationMs": 72005,
+  "externalRequests": 0,
+  "providerCalls": 0,
+  "proofSha256": "5e649a6a779adabc0e2dc9d466be25d1673ae949af1eaf11497ad3bfebf9115c",
+  "proofVerifiedOffline": true,
+  "qualityClaimEligible": false,
+  "stages": [
+    {
+      "stage": "Recovered original and checked delivery",
+      "elapsedMs": 903
+    },
+    {
+      "stage": "Original claim: eight cups; saved source: six",
+      "elapsedMs": 7177
+    },
+    {
+      "stage": "Inspect the exact scripted flaw and independent recheck",
+      "elapsedMs": 13250
+    },
+    {
+      "stage": "Expand the complete source body and literal citation",
+      "elapsedMs": 19417
+    },
+    {
+      "stage": "Uncertain check stops safely and preserves the original",
+      "elapsedMs": 24864
+    },
+    {
+      "stage": "Paired cohort: one scripted win and one unresolved case",
+      "elapsedMs": 30932
+    },
+    {
+      "stage": "Separate time, provider calls, operations and allowances",
+      "elapsedMs": 37157
+    },
+    {
+      "stage": "A real frozen synthetic evaluation rejects blanket abstention",
+      "elapsedMs": 43376
+    },
+    {
+      "stage": "Export the exact source, version, receipt and outcome evidence",
+      "elapsedMs": 50562
+    },
+    {
+      "stage": "Separately labeled recorded live replay; no fresh inference",
+      "elapsedMs": 55644
+    }
+  ],
+  "artifactsSha256": {
+    "product-workflow-entry-2026-10-17.png": "81e6d71d78b438c5616279e960e680581786677ef04dcdbc26334756e450b6fb",
+    "product-workflow-2026-10-17.png": "c7c000d2586df6c0538fef5c196d840f9444801eb07a536298c2dd422f8bdfd9",
+    "product-workflow-2026-10-17.webm": "ff81e88b6e52188ef6bb31642270fa1bfdd0523627571c4dbc0d9cd1e66376e2",
+    "product-workflow-mobile-2026-10-17.png": "a9792d03ba0651504f5b722e5ddf1873674180bf04f7f8f2018e4981992d4c2e"
+  },
+  "captureScriptSha256": "a00b7e6a50802948b3b5575c9ce42444b3f35945752afcd4cde0412632f9d329"
+}

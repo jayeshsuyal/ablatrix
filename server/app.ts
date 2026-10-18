@@ -25,7 +25,10 @@ import { ContextComparisonStore, createContextComparisonFixture } from './contex
 import { DemoAccess, DemoAccessError, type DemoActor } from './demo-access.ts';
 import { SyntheticAnswerProvider } from './synthetic-answer-provider.ts';
 import { AutomaticSupport } from './automatic-support.ts';
-import { RuntimeAnswerPolicyStore } from './runtime-answer-policy.ts';
+import { RuntimeAnswerPolicyStore, type RuntimePolicyActor } from './runtime-answer-policy.ts';
+import { createRuntimeGraderBinding } from './runtime-grader.ts';
+import { CITED_APPLICABILITY_GRADER_VERSION } from './claim-support-v4.ts';
+import { buildWorkspaceProof, verifyWorkspaceProof } from './workspace-proof.ts';
 import { AnswerPolicyWorker } from './answer-policy-worker.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
@@ -49,7 +52,7 @@ async function body(req: IncomingMessage, maxLength = 16_384): Promise<unknown> 
   return JSON.parse(text || '{}') as unknown;
 }
 
-export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview, startRevisionWorker = false, localOptions: { answerProvider?: SapiomFeedbackProvider | SyntheticAnswerProvider; reviewDbPath?: string; comparisonDbPath?: string; demoAccess?: DemoAccess; runtimePolicyDbPath?: string; runtimePolicyStore?: RuntimeAnswerPolicyStore; answerPolicyWorker?: AnswerPolicyWorker } = {}) {
+export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture', provider: MeteredLiveProvider = new SapiomLiveProvider(), pilot = new PilotRunner(new PilotStore()), feedback?: FeedbackLoop, telemetry?: LoopTelemetry, workspace?: ProductWorkspace, paidReview?: PaidAnswerReview, startRevisionWorker = false, localOptions: { answerProvider?: SapiomFeedbackProvider | SyntheticAnswerProvider; reviewDbPath?: string; comparisonDbPath?: string; demoAccess?: DemoAccess; runtimePolicyDbPath?: string; runtimePolicyStore?: RuntimeAnswerPolicyStore; answerPolicyWorker?: AnswerPolicyWorker; localDemo?: { label: string } } = {}) {
   const runner = new ExperimentRunner(store, mode, provider);
   const optimizer = new OptimizationRunner(store, runner, mode, provider);
   let feedbackProvider: SapiomFeedbackProvider | SyntheticAnswerProvider | undefined = localOptions.answerProvider;
@@ -72,9 +75,10 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   const productWorkspace = () => {
     workspace ??= new ProductWorkspace(process.env.ABLATRIX_WORKSPACE_DB, localAnswerProvider(), undefined, answerPolicies());
     workspace.attachRuntimePolicyStore(answerPolicies());
+    workspace.attachRuntimePolicyVerifier(verifyPolicyCapture);
     return workspace;
   };
-  const paidAnswerReview = () => paidReview ??= new PaidAnswerReview(reviewDbPath);
+  const paidAnswerReview = () => paidReview ??= new PaidAnswerReview(reviewDbPath, undefined, { workspaceOnly: !!localOptions.localDemo });
   let comparisons: ContextComparisonStore | undefined;
   const contextComparisons = () => comparisons ??= new ContextComparisonStore(localOptions.comparisonDbPath ?? process.env.ABLATRIX_COMPARISON_DB);
   let revisions: AnswerRevisions | undefined;
@@ -82,15 +86,22 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   let policyWorker = localOptions.answerPolicyWorker;
   const answerPolicyWorker = () => policyWorker ??= new AnswerPolicyWorker(localAnswerProvider(), answerPolicies(), policyDbPath, {
     automatic: false,
+    graderBinding: createRuntimeGraderBinding(localAnswerProvider().executionMode === 'synthetic' ? 'synthetic' : 'live', CITED_APPLICABILITY_GRADER_VERSION),
     liveEnabled: !localOptions.demoAccess && process.env.ABLATRIX_ANSWER_POLICY_SHADOW_LIVE === '1',
-    completedJobs: () => supportChecks?.overview() ?? [],
+    completedJobs: () => automaticSupport().overview(),
     canDispatch: () => !feedback?.publicOverview().busy && !workspace?.hasActive() && !revisions?.hasActive() && !supportChecks?.hasActive()
   });
   const automaticSupport = () => supportChecks ??= new AutomaticSupport(localAnswerProvider(), reviewDbPath, {
     automatic: false,
+    graderBinding: createRuntimeGraderBinding(localAnswerProvider().executionMode === 'synthetic' ? 'synthetic' : 'live', CITED_APPLICABILITY_GRADER_VERSION),
     liveEnabled: !localOptions.demoAccess && process.env.ABLATRIX_AUTOMATIC_CHECK_LIVE === '1',
     canDispatch: () => !feedback?.publicOverview().busy && !workspace?.hasActive() && !revisions?.hasActive() && !policyWorker?.hasActive()
   });
+  const verifyPolicyCapture = (binding: { id: string; mode: 'live' | 'synthetic' }) => {
+    const policies = answerPolicies().overview(binding.mode);
+    if (policies.active.id !== binding.id) throw new Error('Runtime captured policy no longer matches its active version.');
+    answerPolicyWorker().verifyActivatedHistory(policies);
+  };
   let importedWorkspaceVersion: string | undefined;
   const answerRevisions = () => {
     revisions ??= new AnswerRevisions(paidAnswerReview(), localAnswerProvider(), reviewDbPath, true, () => !feedback?.publicOverview().busy && !workspace?.hasActive() && !supportChecks?.hasActive() && !policyWorker?.hasActive());
@@ -99,7 +110,8 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
     // on every poll. A failed import leaves the old token so the next read retries.
     if (version !== importedWorkspaceVersion) {
       for (const snapshot of productWorkspace().reviewSnapshots()) revisions.registerAnswer(snapshot);
-      importedWorkspaceVersion = version;
+      for (const snapshot of productWorkspace().pendingReviewSnapshots()) productWorkspace().markReviewHandoff(snapshot.runId);
+      importedWorkspaceVersion = productWorkspace().reviewImportVersion();
     }
     return revisions;
   };
@@ -122,7 +134,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
   };
   const loopTelemetry = () => telemetry ??= new LoopTelemetry();
   const feedbackLoop = () => {
-    if (localOptions.demoAccess) throw new DemoAccessError(403, 'The hosted demo does not run legacy experiments.');
+    if (localOptions.demoAccess || localOptions.localDemo) throw new DemoAccessError(403, 'This synthetic demo does not run legacy experiments.');
     if (revisions?.hasActive() || supportChecks?.hasActive() || policyWorker?.hasActive()) throw new Error('Feedback revision, automatic check or policy trial is using the shared provider.');
     if (!feedback) {
       const corpus = loadProductCorpus();
@@ -160,6 +172,8 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
         res.setHeader('referrer-policy', 'same-origin');
         res.setHeader('content-security-policy', "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");
       }
+      const policyActor: RuntimePolicyActor = actor ? { kind: 'authenticated_member', id: actor.reviewer, role: 'operator' } : { kind: 'local_operator', id: 'local-loopback', role: 'operator' };
+      if (localOptions.localDemo && path.startsWith('/api/') && !path.startsWith('/api/workspace') && !['/api/session', '/api/health'].includes(path)) return json(res, 403, { error: 'The isolated synthetic demo exposes workspace evidence only.' });
       const authenticatedBody = async (limit?: number) => {
         const input = await body(req, limit);
         return actor && input && typeof input === 'object' && !Array.isArray(input) ? { ...input, reviewer: actor.reviewer } : input;
@@ -177,7 +191,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
           return json(res, 415, { error: 'JSON content type required.' });
         }
       }
-      if (req.method === 'GET' && path === '/api/session') return json(res, 200, { hosted: !!localOptions.demoAccess, providerMode: localOptions.demoAccess ? 'synthetic' : 'local', actor: actor ? { name: actor.name, role: actor.role, reviewer: actor.reviewer } : null });
+      if (req.method === 'GET' && path === '/api/session') return json(res, 200, { hosted: !!localOptions.demoAccess, providerMode: localOptions.demoAccess || localOptions.localDemo ? 'synthetic' : 'local', localDemo: !!localOptions.localDemo, demoLabel: localOptions.localDemo?.label, actor: actor ? { name: actor.name, role: actor.role, reviewer: actor.reviewer } : null });
       if (req.method === 'GET' && path === '/api/context-comparisons') return json(res, 200, contextComparisons().list());
       if (req.method === 'POST' && path === '/api/context-comparisons/fixture') {
         const input = await body(req);
@@ -215,17 +229,27 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (req.method === 'POST' && path === '/api/workspace/answer-policy/rollback') {
         const input = z.object({ expectedActiveId: z.string().min(1).max(200) }).strict().parse(await body(req));
         const policyMode = localAnswerProvider().executionMode === 'synthetic' ? 'synthetic' : 'live';
-        return json(res, 200, policyAction(() => answerPolicies().rollback(policyMode, input.expectedActiveId)));
+        return json(res, 200, policyAction(() => { verifyPolicyCapture(answerPolicies().capture(policyMode)); return answerPolicies().rollback(policyMode, input.expectedActiveId, policyActor); }));
       }
       if (req.method === 'POST' && /^\/api\/workspace\/answer-policy\/trials\/(?:runtime-trial-)?[a-f0-9-]{36}\/activate$/.test(path)) {
         z.object({}).strict().parse(await body(req));
-        return json(res, 200, policyAction(() => answerPolicyWorker().activateTrial(path.split('/')[5])));
+        return json(res, 200, policyAction(() => answerPolicyWorker().activateTrial(path.split('/')[5], policyActor)));
       }
       if (req.method === 'GET' && path === '/api/workspace/automatic-checks') {
         const answer = url.searchParams.get('answer');
         if (!answer || !/^workspace-[a-f0-9-]{36}$/.test(answer)) return json(res, 400, { error: 'A valid workspace answer ID is required.' });
         const check = automaticSupport().get(answer);
+        if (check) { try { automaticSupport().verifyForExport(check); } catch { throw new Error('Automatic check: Saved check evidence requires reconciliation.'); } }
         return json(res, 200, { checks: check ? [check] : [], readiness: automaticSupport().readiness() });
+      }
+      if (req.method === 'GET' && ['/api/workspace/proof', '/api/workspace/proof/export'].includes(path)) {
+        let packet;
+        try {
+          packet = buildWorkspaceProof(productWorkspace().proofRuns(), automaticSupport().verifiedOverview(), runId => localAnswerProvider().receipt(runId));
+          verifyWorkspaceProof(packet);
+        } catch { throw new Error('Automatic check: Paired evidence could not be verified against its exact saved sources, requests and receipts.'); }
+        if (path.endsWith('/export')) return download(res, 'ablatrix-paired-proof.json', JSON.stringify(packet, null, 2) + '\n', 'application/json');
+        return json(res, 200, packet);
       }
       if (req.method === 'GET' && path === '/api/workspace/reviews/export') {
         const first = answerRevisions().overview('workspace');
@@ -247,9 +271,19 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
       if (req.method === 'POST' && path === '/api/workspace/questions') {
         const rawInput = await body(req);
         if (!rawInput || typeof rawInput !== 'object' || Array.isArray(rawInput)) return json(res, 400, { error: 'A workspace question object is required.' });
-        const { automaticCheck = false, ...input } = rawInput as Record<string, unknown>;
+        const { automaticCheck = false, idempotencyKey, ...input } = rawInput as Record<string, unknown>;
         if (typeof automaticCheck !== 'boolean' || (automaticCheck && input.mode === 'preview')) return json(res, 400, { error: 'Automatic checking requires a generated answer and a boolean opt-in.' });
-        if (localOptions.demoAccess && (!input || typeof input !== 'object' || !('mode' in input) || !['preview', 'synthetic'].includes(String(input.mode)))) return json(res, 403, { error: 'The hosted demo accepts preview or synthetic generation only.' });
+        if ((localOptions.demoAccess || localOptions.localDemo) && (!input || typeof input !== 'object' || !('mode' in input) || !['preview', 'synthetic'].includes(String(input.mode)))) return json(res, 403, { error: 'The hosted demo accepts preview or synthetic generation only.' });
+        const replay = productWorkspace().findIdempotent(input, { automaticCheck, idempotencyKey: idempotencyKey as string | undefined });
+        if (replay) {
+          let check: ReturnType<AutomaticSupport['get']> | undefined;
+          if (replay.status === 'completed') {
+            try { answerRevisions(); } catch { console.warn('Review handoff remains pending for saved workspace answer:', replay.id); }
+            try { recoverAutomaticChecks(); check = automaticSupport().get(`workspace-${replay.id}`); } catch { console.warn('Automatic handoff remains pending for saved workspace answer:', replay.id); }
+          }
+          const stored = productWorkspace().findIdempotent(input, { automaticCheck, idempotencyKey: idempotencyKey as string | undefined })!;
+          return json(res, replay.status === 'failed' ? 502 : 200, { ...stored, ...(check ? { automaticCheck: check } : {}) });
+        }
         if (automaticCheck) {
           const checkReadiness = automaticSupport().readiness();
           if (!checkReadiness.ready) return json(res, 409, { error: checkReadiness.reason });
@@ -260,7 +294,7 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
         if (loop?.publicOverview().busy || revisions?.hasActive() || supportChecks?.hasActive() || policyWorker?.hasActive()) return json(res, 409, { error: 'Finish the active dispatch before a workspace answer.' });
         let run = await productWorkspace().ask(input, () => {
           if (loop?.publicOverview().busy || revisions?.hasActive() || supportChecks?.hasActive() || policyWorker?.hasActive()) throw new Error('Feedback experiment, revision, automatic check or policy trial started during retrieval; no workspace live call was made.');
-        }, { automaticCheck });
+        }, { automaticCheck, idempotencyKey: idempotencyKey as string | undefined, automaticCheckPreflight: (context, runId) => automaticSupport().preflight(context, runId) });
         let reviewHandoff: 'pending' | undefined;
         if (run.status === 'completed') {
           try { answerRevisions(); }

@@ -3,6 +3,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runRagContracts } from '../server/rag-contracts.ts';
+import { runWorkspaceContracts } from '../server/workspace-contracts.ts';
 import { runHarnessContracts } from '../server/harness-contracts.ts';
 
 type Mechanical = 'pass' | 'fail' | 'inconclusive';
@@ -13,6 +14,8 @@ const sourceFiles = [
   'server/feedback-provider.ts', 'server/answer-revisions.ts',
   'server/citation-options.ts', 'server/answer-review-source.ts',
   'server/rag-contracts.ts', 'server/harness-contracts.ts',
+  'server/product-workspace.ts', 'server/workspace-generation.ts', 'server/workspace-generation-identity.ts', 'server/workspace-retrieval-context.ts', 'server/workspace-contracts.ts',
+  'server/automatic-support.ts', 'server/claim-support-v4.ts', 'server/runtime-grader.ts', 'server/synthetic-answer-provider.ts',
   'scripts/reliability-check.ts'
 ];
 
@@ -44,19 +47,20 @@ async function main() {
   // inputs. Scripted transport and cached local embeddings are the only paths.
   const priorFetch = globalThis.fetch;
   globalThis.fetch = (async () => { throw new Error('Network disabled for offline reliability contracts; cache pinned BGE assets before requesting that mode.'); }) as typeof fetch;
-  let retrieval: Suite, harness: Suite;
+  let retrieval: Suite, harness: Suite, workspace: Suite;
   try {
     retrieval = await capture(() => runRagContracts({ mode }));
     harness = await capture(runHarnessContracts);
+    workspace = await capture(runWorkspaceContracts);
   } finally { globalThis.fetch = priorFetch; }
-  const suites = { retrieval, harness };
+  const suites = { retrieval, harness, workspace };
   const mechanical: Mechanical = Object.values(suites).some(suite => suite.mechanical === 'fail') ? 'fail'
     : Object.values(suites).some(suite => suite.mechanical === 'inconclusive') ? 'inconclusive' : 'pass';
   const report = {
     format: 'ablatrix-offline-reliability-v1', generatedAt: new Date().toISOString(),
     provenance: 'synthetic_contracts', embeddingMode: mode, sourceHashes, mechanical,
     semanticAssessment: 'not_run', qualityClaimEligible: false, paidProviderCalls: 0,
-    scope: 'Regression contracts for source retrieval and bounded revision execution. A pass is not answer correctness or a measured quality gain.',
+    scope: 'Regression contracts for source retrieval, original-answer recovery, request idempotency and bounded revision execution. A pass is not answer correctness or a measured quality gain.',
     suites
   };
   mkdirSync(dirname(output), { recursive: true });

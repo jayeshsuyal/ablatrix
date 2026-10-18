@@ -2,6 +2,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
+import type { RuntimeGraderBinding } from './runtime-grader.ts';
 
 export type RuntimePolicyMode = 'live' | 'synthetic';
 export type RuntimePolicyBinding = { id: string; instructionSha256: string; mode: RuntimePolicyMode };
@@ -22,10 +23,17 @@ export type RuntimeTrialDecision = {
   id: string; groupId: string; mode: RuntimePolicyMode; parent: RuntimePolicyBinding; candidate: RuntimePolicyBinding | null;
   kind: 'automated_shadow_trial' | 'synthetic_scripted_trial'; verdict: 'eligible_synthetic_trial' | 'shadow_candidate' | 'rejected' | 'inconclusive';
   qualityClaimEligible: false; calibration: 'not_measured'; gate: 'unqualified_ai' | 'synthetic_fixture_only'; complete: boolean;
+  graderBinding?: RuntimeGraderBinding; graderBindingSha256?: string;
   callCeiling: 13; packetSha256: string; graderSha256: string; validationPacket: unknown; operations: RuntimeTrialOperation[];
   baseline: RuntimeTrialMetrics; candidateMetrics: RuntimeTrialMetrics; caseResults: unknown[]; reasons: string[]; createdAt: string;
 };
-type PolicyEvent = { id: string; mode: RuntimePolicyMode; action: 'synthetic_trial_activation' | 'rollback'; fromId: string; toId: string; decisionId: string | null; createdAt: string; sequence: number; previousEventId: string | null };
+export type RuntimePolicyActor = { kind: 'authenticated_member' | 'local_operator'; id: string; role: 'operator' };
+const localOperator: RuntimePolicyActor = { kind: 'local_operator', id: 'local-loopback', role: 'operator' };
+function policyActor(actor: RuntimePolicyActor): RuntimePolicyActor {
+  if (!actor || !['authenticated_member', 'local_operator'].includes(actor.kind) || actor.role !== 'operator' || typeof actor.id !== 'string' || !actor.id.trim() || actor.id.length > 200) throw new Error('Runtime transition requires operator attribution.');
+  return { kind: actor.kind, id: actor.id, role: actor.role };
+}
+type PolicyEvent = { id: string; mode: RuntimePolicyMode; action: 'synthetic_trial_activation' | 'rollback'; fromId: string; toId: string; decisionId: string | null; createdAt: string; sequence: number; previousEventId: string | null; actor?: RuntimePolicyActor };
 
 /** Runtime trials have their own versions, pointers and evidence. They never
  * write the historical human-reviewed laboratory promotion tables. */
@@ -114,14 +122,15 @@ export class RuntimeAnswerPolicyStore {
     if (decision.id !== id || decision.mode !== row.mode) throw new Error('Trial decision indexed identity no longer matches its immutable document.');
     return decision;
   }
-  private move(mode: RuntimePolicyMode, expectedActiveId: string, target: RuntimeAnswerPolicy, action: PolicyEvent['action'], decisionId: string | null) {
+  private move(mode: RuntimePolicyMode, expectedActiveId: string, target: RuntimeAnswerPolicy, action: PolicyEvent['action'], decisionId: string | null, actor: RuntimePolicyActor) {
+    const attribution = policyActor(actor);
     this.db.exec('BEGIN IMMEDIATE');
     try {
       const current = this.capture(mode);
       if (current.id !== expectedActiveId || target.mode !== mode) throw new Error('Runtime activation has a stale parent or mismatched mode.');
       const prior = this.db.prepare('SELECT event_id,sequence FROM runtime_answer_policy_active WHERE mode=?').get(mode) as { event_id: string | null; sequence: number };
       if (!Number.isSafeInteger(prior.sequence + 1)) throw new Error('Runtime policy transition sequence exceeds its safe integer bound.');
-      const event: PolicyEvent = { id: randomUUID(), mode, action, fromId: current.id, toId: target.id, decisionId, createdAt: new Date().toISOString(), sequence: prior.sequence + 1, previousEventId: prior.event_id };
+      const event: PolicyEvent = { id: randomUUID(), mode, action, fromId: current.id, toId: target.id, decisionId, createdAt: new Date().toISOString(), sequence: prior.sequence + 1, previousEventId: prior.event_id, actor: attribution };
       this.db.prepare('UPDATE runtime_answer_policy_active SET policy_id=?,binding_sha256=?,event_id=?,sequence=? WHERE mode=? AND policy_id=?').run(target.id, runtimePolicyHash({ mode, policyId: target.id, eventId: event.id, sequence: event.sequence }), event.id, event.sequence, mode, expectedActiveId);
       const document = JSON.stringify(event);
       this.db.prepare('INSERT INTO runtime_answer_policy_events(id,mode,document,document_sha256) VALUES(?,?,?,?)').run(event.id, mode, document, runtimePolicyHash(document));
@@ -140,21 +149,24 @@ export class RuntimeAnswerPolicyStore {
       decision.candidateMetrics.usefulSupportedAnswers <= decision.baseline.usefulSupportedAnswers || decision.candidateMetrics.unnecessaryAbstentions > decision.baseline.unnecessaryAbstentions || decision.candidateMetrics.unsupportedClaims > decision.baseline.unsupportedClaims || decision.candidateMetrics.completeAnswers < decision.baseline.completeAnswers) throw new Error('Synthetic trial lacks complete, eligible, independently checked evidence.');
     return candidate;
   }
-  activateTrial(mode: RuntimePolicyMode, expectedActiveId: string, decisionId: string) {
-    return this.move(mode, expectedActiveId, this.trialTarget(mode, expectedActiveId, decisionId), 'synthetic_trial_activation', decisionId);
+  activateTrial(mode: RuntimePolicyMode, expectedActiveId: string, decisionId: string, actor: RuntimePolicyActor = localOperator) {
+    return this.move(mode, expectedActiveId, this.trialTarget(mode, expectedActiveId, decisionId), 'synthetic_trial_activation', decisionId, actor);
   }
-  rollback(mode: RuntimePolicyMode, expectedActiveId: string) {
+  rollback(mode: RuntimePolicyMode, expectedActiveId: string, actor: RuntimePolicyActor = localOperator) {
     const active = this.capture(mode);
     if (active.id !== expectedActiveId || !active.parentId) throw new Error('Rollback requires the current candidate version.');
     const parent = this.get(active.parentId);
     if (!parent || parent.mode !== mode) throw new Error('Rollback parent mode is invalid.');
-    return this.move(mode, expectedActiveId, parent, 'rollback', null);
+    return this.move(mode, expectedActiveId, parent, 'rollback', null, actor);
   }
   private events(mode: RuntimePolicyMode): PolicyEvent[] {
     const events = (this.db.prepare('SELECT id,mode,document,document_sha256 FROM runtime_answer_policy_events WHERE mode=? ORDER BY rowid DESC').all(mode) as { id: string; mode: string; document: string; document_sha256: string | null }[]).map(row => {
       if (!row.document_sha256 || runtimePolicyHash(row.document) !== row.document_sha256) throw new Error('Runtime policy event has no matching stored hash; reconciliation is required.');
       const event = JSON.parse(row.document) as PolicyEvent;
       if (event.id !== row.id || event.mode !== row.mode) throw new Error('Runtime policy event indexed identity no longer matches its verified document.');
+      // Legacy events retain their original bytes; all new transitions record
+      // attribution derived by the server, never a caller-supplied display name.
+      if (event.actor) policyActor(event.actor);
       return event;
     });
     let expectedFrom = runtimeBaselinePolicy(mode).id;

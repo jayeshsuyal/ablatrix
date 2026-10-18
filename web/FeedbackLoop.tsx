@@ -208,7 +208,7 @@ function ExploratoryComparison({ overview, comparison, caseId, selectCase }: { o
 
 export default function FeedbackLoop() {
   const [overview, setOverview] = useState<LoopOverview | null>(null);
-  const [mode, setMode] = useState<LoopMode>('live');
+  const [mode, setMode] = useState<LoopMode>(() => new URLSearchParams(window.location.search).get('mode') === 'fixture' ? 'fixture' : 'live');
   const [view, setView] = useState<View>('answer');
   const [productId, setProductId] = useState('');
   const [caseId, setCaseId] = useState('');

@@ -119,6 +119,7 @@ test('invited roles run a clearly synthetic answer, background correction, human
     await viewerContext.addCookies([{ name: 'test-role', value: 'viewer', url: origin }]);
     const viewer = await viewerContext.newPage();
     await viewer.goto(`${origin}/ask`);
+    await viewer.locator('.ask-import>summary').click();
     await expect(viewer.getByRole('button', { name: 'Save product', exact: true })).toBeDisabled();
     await expect(viewer.getByRole('button', { name: 'Generate synthetic answer', exact: true })).toBeDisabled();
     await expect(viewer.getByRole('button', { name: 'Preview evidence', exact: true })).toBeDisabled();

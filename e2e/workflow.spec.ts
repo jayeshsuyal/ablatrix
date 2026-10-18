@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test('fixture baseline, experiment, optimizer, export, and reload', async ({ page, request }) => {
-  await page.goto('/');
+  await page.goto('/research');
   await expect(page.getByText('Fixture responses are for testing the workflow.')).toBeVisible();
   await page.getByLabel('Curated evaluation task').selectOption('github-platform-v1');
   await page.getByRole('button', { name: 'Run baseline' }).click();
@@ -30,7 +30,7 @@ test('fixture baseline, experiment, optimizer, export, and reload', async ({ pag
 test('provider failure is shown, bounded API rejects unknown tasks, and history works on mobile', async ({ page, request }) => {
   const seeded = await request.post('/api/runs', { data: { entity: 'GitHub', question: 'What does GitHub provide for software teams?' } });
   expect(seeded.status()).toBe(201);
-  await page.goto('/');
+  await page.goto('/research');
   await page.route('**/api/runs', route => route.request().method() === 'POST'
     ? route.fulfill({ status: 503, contentType: 'application/json', body: JSON.stringify({ error: 'Research unavailable.' }) })
     : route.continue());
@@ -45,7 +45,7 @@ test('provider failure is shown, bounded API rejects unknown tasks, and history 
 });
 
 test('cancelled fixture experiment persists and does not start another task', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/research');
   await page.getByLabel('Fixture pacing').selectOption('2000');
   await page.getByRole('button', { name: 'Run experiment' }).click();
   await page.getByRole('button', { name: 'Cancel', exact: true }).click();
@@ -58,7 +58,7 @@ test('cancelled fixture experiment persists and does not start another task', as
 
 test('live readiness clearly blocks paid controls without verified accounting', async ({ page }) => {
   await page.route('**/api/health', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ ok: true, mode: 'live' }) }));
-  await page.goto('/');
+  await page.goto('/research');
   await expect(page.getByText('Live spending blocked')).toBeVisible();
   await expect(page.getByText(/Remote cap: not verified/)).toBeVisible();
   await expect(page.getByRole('button', { name: 'Run experiment' })).toBeDisabled();

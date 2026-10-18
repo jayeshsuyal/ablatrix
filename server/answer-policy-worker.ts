@@ -3,7 +3,7 @@ import { mkdirSync } from 'node:fs';
 import { dirname } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
 import { parseReviewAnswerSnapshot } from './answer-review-source.ts';
-import type { AutomaticSupportJob } from './automatic-support.ts';
+import { automaticSupportGradeInput, automaticSupportRepairInput, verifyAutomaticSupportEvidence, type AutomaticSupportJob } from './automatic-support.ts';
 import { claimSupportPromptIdentity, claimSupportRequestParts, replayClaimSupportReceipt, type ClaimSupportInput, type ValidatedClaimSupportAssessment } from './claim-support.ts';
 import type { AnswerRevisionReceipt } from './answer-revisions.ts';
 import type { LoopAnswer } from './loop-types.ts';
@@ -12,7 +12,8 @@ import { originalAnswerVersionId } from './paid-answer-review.ts';
 import { answerSchema, revisionRequestBody } from './feedback-provider.ts';
 import { revisionPromptIdentity } from './revision-policy.ts';
 import { runtimeAnswerRequestParts, runtimeProposalRequestParts, replayRuntimeAnswerReceipt, replayRuntimeProposalReceipt, type RuntimeAnswerInput, type RuntimeProposalInput, type RuntimeFailureBinding } from './answer-policy-protocol.ts';
-import { RuntimeAnswerPolicyStore, runtimePolicyHash as sha, type RuntimeAnswerPolicy, type RuntimePolicyBinding, type RuntimePolicyMode, type RuntimeTrialDecision, type RuntimeTrialMetrics, type RuntimeTrialOperation } from './runtime-answer-policy.ts';
+import { RuntimeAnswerPolicyStore, runtimePolicyHash as sha, type RuntimeAnswerPolicy, type RuntimePolicyBinding, type RuntimePolicyMode, type RuntimeTrialDecision, type RuntimeTrialMetrics, type RuntimeTrialOperation, type RuntimePolicyActor } from './runtime-answer-policy.ts';
+import { createRuntimeGraderBinding, runtimeGraderReadiness, validateRuntimeGraderBinding, type RuntimeGraderBinding } from './runtime-grader.ts';
 
 type Category = RuntimeProposalInput['failure']['category'];
 export type RuntimeValidationCase = { id: string; role: 'targeted' | 'correct_control' | 'unanswerable_control'; question: string; product: { id: string; title: string }; evidence: CitationEvidence[];
@@ -39,6 +40,7 @@ type CaseResult = { caseId: string; baseline?: { answer: LoopAnswer; assessment?
 export type AnswerPolicyGroup = { id: string; mode: RuntimePolicyMode; category: Category; parent: RuntimeAnswerPolicy; bindings: RuntimeFailureBinding[];
   groupSha256: string; status: 'collecting' | 'queued' | 'running' | 'completed' | 'failed' | 'reconciliation'; phase: number; callCeiling: 13;
   packet: RuntimeValidationPacket | null; packetSha256: string; graderSha256: string; operations: RuntimeTrialOperation[];
+  graderBinding?: RuntimeGraderBinding;
   candidate?: RuntimeAnswerPolicy; results: CaseResult[]; decisionId?: string; decision?: RuntimeTrialDecision; createdAt: string; finishedAt?: string; error?: string };
 type StoredGroup = { id: string; status: string; mode: string; parent_id: string; category: string; document: string; document_sha256: string | null };
 const CALL_CEILING = 13;
@@ -67,7 +69,7 @@ export class AnswerPolicyWorker {
   private inFlight: Promise<void> | null = null;
   private readonly packet: RuntimeValidationPacket | null;
   constructor(private readonly provider: AnswerPolicyProvider, private readonly store: RuntimeAnswerPolicyStore, dbPath = '.data/runtime-answer-policy.sqlite',
-    private readonly options: { automatic?: boolean; canDispatch?: () => boolean; liveEnabled?: boolean; completedJobs?: () => AutomaticSupportJob[]; validationPacket?: RuntimeValidationPacket } = {}) {
+    private readonly options: { automatic?: boolean; canDispatch?: () => boolean; liveEnabled?: boolean; completedJobs?: () => AutomaticSupportJob[]; validationPacket?: RuntimeValidationPacket; graderBinding?: RuntimeGraderBinding } = {}) {
     this.packet = options.validationPacket ? packetCopy(options.validationPacket) : (provider.executionMode === 'synthetic' ? packetCopy(SYNTHETIC_RUNTIME_VALIDATION_PACKET) : null);
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
@@ -89,15 +91,20 @@ export class AnswerPolicyWorker {
     if (typeof this.provider.suggestRuntimePolicy !== 'function' || typeof this.provider.answerRuntimePolicy !== 'function') return { ready: false, reason: 'Provider has no bounded runtime policy methods.' };
     if (this.provider.executionMode !== 'synthetic' && !this.options.liveEnabled) return { ready: false, reason: 'Live shadow execution requires independent opt-in and explicit approval for thirteen operations.' };
     if (!this.packet || this.packet.mode !== (this.provider.executionMode ?? 'live')) return { ready: false, reason: 'A separately approved frozen validation packet with matching mode is missing.' };
+    const grader = runtimeGraderReadiness(this.graderBinding()); if (!grader.ready) return grader;
     return this.provider.capacity(CALL_CEILING);
   }
+  private graderBinding() { const binding = this.options.graderBinding ?? createRuntimeGraderBinding(this.provider.executionMode ?? 'live'); validateRuntimeGraderBinding(binding); if (binding.mode !== (this.provider.executionMode ?? 'live')) throw new Error('Policy worker grader mode differs from its provider.'); return binding; }
+  private groupIdentity(group: AnswerPolicyGroup) { return sha({ parent: group.parent, category: group.category, bindings: group.bindings, ...(group.graderBinding ? { graderBinding: group.graderBinding } : {}) }); }
   private gradeInput(job: AutomaticSupportJob): ClaimSupportInput {
-    return { runId: `${job.id}:grade-original`, question: job.original.context.question, product: job.original.context.product, answer: job.original.answer,
-      evidence: job.original.context.sources.map(source => ({ id: source.id, source: source.label, text: source.text, ...(source.originalQuestion !== null ? { originalQuestion: source.originalQuestion } : {}), origin: source.origin, ...(source.reference ? { reference: source.reference } : {}) })), clarifications: job.original.context.clarifications };
+    return automaticSupportGradeInput(job, 'grade_original');
   }
   private failure(job: AutomaticSupportJob): { category: Category; parent: RuntimeAnswerPolicy; binding: RuntimeFailureBinding } | null {
     if (!TERMINAL_CHECKS.has(job.status) || !job.finishedAt || !job.original.runtimePolicy || !job.originalSnapshotSha256 || sha(job.original) !== job.originalSnapshotSha256 || !job.operations.length || job.operations.some(operation => operation.status !== 'completed') ||
       new Set(job.operations.map(operation => operation.phase)).size !== job.operations.length || new Set(job.operations.map(operation => operation.runId)).size !== job.operations.length || new Set(job.operations.map(operation => operation.receiptId)).size !== job.operations.length) return null;
+    verifyAutomaticSupportEvidence(job, this.provider.receipt.bind(this.provider));
+    const grader = this.graderBinding(), originatingGrader = job.graderBinding ?? createRuntimeGraderBinding(job.mode);
+    if (originatingGrader.bindingSha256 !== grader.bindingSha256 || !runtimeGraderReadiness(grader).ready) return null;
     const snapshot = parseReviewAnswerSnapshot(job.original), parent = this.store.validateBinding(snapshot.runtimePolicy!);
     if (snapshot.contextProvenance !== 'workspace_source_snapshot' || originalAnswerVersionId(snapshot.id, snapshot.runId) !== job.originalId || parent.mode !== job.mode || parent.mode !== (this.provider.executionMode ?? 'live') || sha(snapshot.context) !== job.sourceContextSha256 || sha(snapshot.answer) !== job.originalAnswerSha256) return null;
     for (const operation of job.operations) {
@@ -120,9 +127,7 @@ export class AnswerPolicyWorker {
       const final = job.assessments.find(item => item.phase === 'repair')!.assessment;
       if (job.status === 'repaired' ? final.disposition !== 'pass' : job.status !== 'abstained' || !['repair', 'abstain'].includes(final.disposition)) return null;
       const repair = this.provider.receipt(`${job.id}:repair`)!, document = JSON.parse(repair.receipt_json!), prompt = revisionPromptIdentity('baseline', false);
-      const critique = JSON.stringify({ reason: assessment.reason, questionCoverage: assessment.questionCoverage, answerability: assessment.answerability, correctness: assessment.correctness, uncertaintyHandling: assessment.uncertaintyHandling,
-        units: assessment.units.map(unit => ({ unitId: unit.unitId, verdict: unit.verdict, reason: unit.reason, sourceIds: unit.evidence.map(proof => proof.sourceId) })) });
-      const repairRequest = { runId: `${job.id}:repair`, question: input.question, product: input.product, rejectedAnswer: snapshot.answer.answer, critique, evidence: input.evidence, clarifications: input.clarifications };
+      const repairRequest = automaticSupportRepairInput(job);
       if (sha(revisionRequestBody(repairRequest)) !== document.requestSha256 || JSON.stringify(answerSchema.parse(document.output)) !== JSON.stringify(job.repaired.answer) || document.promptVersion !== prompt.promptVersion || document.systemInstructionsSha256 !== prompt.systemInstructionsSha256 || document.model !== repair.model ||
         (job.mode === 'synthetic' ? repair.kind !== 'synthetic_automatic_revision' || document.model !== 'synthetic-fixture' || document.accounting !== 'no_provider_call' : repair.kind !== 'answer_revision_v1' || !['gpt-luna', 'gpt-5.6-luna'].includes(document.model)) ||
         job.repaired.answer.citations.some(citation => !snapshot.context.sources.some(source => source.id === citation.passageId && source.text.includes(citation.quote)))) return null;
@@ -152,20 +157,20 @@ export class AnswerPolicyWorker {
         if (consumed) { this.db.exec('COMMIT'); continue; }
         const prior = this.db.prepare("SELECT binding FROM runtime_policy_observed_checks WHERE job_id=? OR run_id=? OR json_extract(binding,'$.assessmentReceiptId')=?").get(job.id, job.original.runId, failure.binding.assessmentReceiptId) as { binding: string } | undefined;
         if (prior) { this.db.exec('COMMIT'); continue; }
-        const row = this.db.prepare("SELECT * FROM runtime_policy_failure_groups WHERE status='collecting' AND mode=? AND parent_id=? AND category=? ORDER BY rowid LIMIT 1").get(job.mode, failure.parent.id, failure.category) as StoredGroup | undefined;
+        const row = this.db.prepare("SELECT * FROM runtime_policy_failure_groups WHERE status='collecting' AND mode=? AND parent_id=? AND category=? AND json_extract(document,'$.graderBinding.bindingSha256')=? ORDER BY rowid LIMIT 1").get(job.mode, failure.parent.id, failure.category, this.graderBinding().bindingSha256) as StoredGroup | undefined;
         let group: AnswerPolicyGroup;
         if (row) group = this.readStoredGroup(row);
         else {
           const count = this.db.prepare('SELECT count(*) AS count FROM runtime_policy_failure_groups').get() as { count: number };
           if (count.count >= MAX_GROUPS) { this.db.exec('COMMIT'); continue; }
           group = { id: randomUUID(), mode: job.mode, category: failure.category, parent: failure.parent, bindings: [], groupSha256: '', status: 'collecting', phase: 0, callCeiling: CALL_CEILING,
-            packet: this.packet && this.packet.mode === job.mode ? structuredClone(this.packet) : null, packetSha256: this.packet && this.packet.mode === job.mode ? sha(this.packet) : '', graderSha256: claimSupportPromptIdentity().systemInstructionsSha256,
+            packet: this.packet && this.packet.mode === job.mode ? structuredClone(this.packet) : null, packetSha256: this.packet && this.packet.mode === job.mode ? sha(this.packet) : '', graderSha256: this.graderBinding().systemInstructionsSha256, graderBinding: structuredClone(this.graderBinding()),
             operations: [], results: [], createdAt: new Date().toISOString() };
           const document = JSON.stringify(group);
           this.db.prepare('INSERT INTO runtime_policy_failure_groups(id,status,mode,parent_id,category,document,document_sha256) VALUES(?,?,?,?,?,?,?)').run(group.id, group.status, group.mode, group.parent.id, group.category, document, sha(document));
         }
         if (group.bindings.length >= 5) { this.db.exec('COMMIT'); continue; }
-        group.bindings.push(failure.binding); group.groupSha256 = sha({ parent: group.parent, category: group.category, bindings: group.bindings });
+        group.bindings.push(failure.binding); group.groupSha256 = this.groupIdentity(group);
         this.db.prepare('INSERT INTO runtime_policy_observed_checks(job_id,run_id,binding) VALUES(?,?,?)').run(job.id, job.original.runId, JSON.stringify(failure.binding)); observed++;
         if (group.bindings.length >= 3) { group.status = 'queued'; eligible++; }
         this.save(group); this.db.exec('COMMIT');
@@ -238,12 +243,13 @@ export class AnswerPolicyWorker {
     return { caseIndex, step, item, side, policy: side === 'baseline' ? group.parent : group.candidate };
   }
   private answerInput(group: AnswerPolicyGroup): RuntimeAnswerInput { const part = this.phaseParts(group); return { runId: this.runId(group), question: part.item.question, product: part.item.product, evidence: part.item.evidence, clarifications: [], policy: this.snapshot(part.policy), validationPacketSha256: group.packetSha256, caseId: part.item.id }; }
-  private checkInput(group: AnswerPolicyGroup): ClaimSupportInput { const part = this.phaseParts(group), result = group.results[part.caseIndex]?.[part.side]; if (!result) throw new Error('A frozen paired answer is missing.'); return { runId: this.runId(group), question: part.item.question, product: part.item.product, evidence: part.item.evidence, clarifications: [], answer: result.answer }; }
+  private checkInput(group: AnswerPolicyGroup): ClaimSupportInput { const part = this.phaseParts(group), result = group.results[part.caseIndex]?.[part.side]; if (!result) throw new Error('A frozen paired answer is missing.'); return { runId: this.runId(group), ...(group.graderBinding ? { graderVersion: group.graderBinding.version, graderBindingSha256: group.graderBinding.bindingSha256 } : {}), question: part.item.question, product: part.item.product, evidence: part.item.evidence, clarifications: [], answer: result.answer }; }
   private requestHash(group: AnswerPolicyGroup) { return group.phase === 0 ? runtimeProposalRequestParts(this.proposalInput(group)).bindings.requestSha256 : this.phaseParts(group).step % 2 === 0 ? runtimeAnswerRequestParts(this.answerInput(group)).bindings.requestSha256 : claimSupportRequestParts(this.checkInput(group)).bindings.requestSha256; }
   private validate(group: AnswerPolicyGroup) {
     const parent = this.store.validateBinding(group.parent);
-    if (parent.instructions !== group.parent.instructions || group.mode !== parent.mode || group.groupSha256 !== sha({ parent: group.parent, category: group.category, bindings: group.bindings }) || group.bindings.length < 3 || group.bindings.length > 5 || new Set(group.bindings.map(item => item.runId)).size !== group.bindings.length ||
-      group.packetSha256 !== sha(group.packet) || !group.packet || group.packet.mode !== group.mode || group.graderSha256 !== claimSupportPromptIdentity().systemInstructionsSha256 || group.callCeiling !== 13) throw new Error('Runtime trial immutable bindings are invalid.');
+    if (group.graderBinding) { validateRuntimeGraderBinding(group.graderBinding); if (group.graderBinding.mode !== group.mode || !runtimeGraderReadiness(group.graderBinding).ready) throw new Error('Runtime trial grader qualification is missing or incompatible.'); }
+    if (parent.instructions !== group.parent.instructions || group.mode !== parent.mode || group.groupSha256 !== this.groupIdentity(group) || group.bindings.length < 3 || group.bindings.length > 5 || new Set(group.bindings.map(item => item.runId)).size !== group.bindings.length ||
+      group.packetSha256 !== sha(group.packet) || !group.packet || group.packet.mode !== group.mode || group.graderSha256 !== (group.graderBinding?.systemInstructionsSha256 ?? claimSupportPromptIdentity().systemInstructionsSha256) || group.callCeiling !== 13) throw new Error('Runtime trial immutable bindings are invalid.');
     packetCopy(group.packet);
     if (group.candidate && this.store.validateBinding(group.candidate).instructions !== group.candidate.instructions) throw new Error('Runtime candidate identity changed.');
   }
@@ -287,6 +293,7 @@ export class AnswerPolicyWorker {
     const decision: RuntimeTrialDecision = { id: `runtime-trial-${group.id}`, groupId: group.id, mode: group.mode, parent: this.binding(group.parent), candidate: group.candidate ? this.binding(group.candidate) : null,
       kind: group.mode === 'synthetic' ? 'synthetic_scripted_trial' : 'automated_shadow_trial', verdict: !complete ? 'inconclusive' : stale || !gain ? 'rejected' : group.mode === 'synthetic' ? 'eligible_synthetic_trial' : 'shadow_candidate',
       qualityClaimEligible: false, calibration: 'not_measured', gate: group.mode === 'synthetic' ? 'synthetic_fixture_only' : 'unqualified_ai', complete, callCeiling: 13, packetSha256: group.packetSha256, graderSha256: group.graderSha256, validationPacket: structuredClone(group.packet),
+      ...(group.graderBinding ? { graderBinding: structuredClone(group.graderBinding), graderBindingSha256: group.graderBinding.bindingSha256 } : {}),
       operations: structuredClone(group.operations), baseline, candidateMetrics: candidate, caseResults: structuredClone(group.results), reasons, createdAt: group.finishedAt };
     group.decision = decision; group.decisionId = decision.id; this.save(group);
   }
@@ -363,13 +370,15 @@ export class AnswerPolicyWorker {
       else { const persisted = this.get(group.id); if (persisted?.status === 'running' && persisted.phase === group.phase) this.finish(persisted, 'reconciliation', 'Started operation has no durable receipt; it will not be retried.'); }
     } finally { this.busy = false; this.syncDecisions(); }
   }
-  activateTrial(id: string) {
+  activateTrial(id: string, actor?: RuntimePolicyActor) {
     const group = this.get(id) ?? this.overview().groups.find(item => item.decisionId === id);
     if (!group?.decisionId || group.status !== 'completed' || !group.decision || !group.candidate) throw new Error('A complete persisted trial decision is required.');
     if (group.mode !== (this.provider.executionMode ?? 'live')) throw new Error('Runtime trial activation mode differs from the configured provider.');
     if (this.store.capture(group.mode).id !== group.parent.id) throw new Error('Runtime activation has a stale parent.');
+    this.verifyActivatedHistory(this.store.overview(group.mode));
+    this.verifiedOriginalChecks([group]);
     this.verifyCompletedTrial(group);
-    return this.store.activateTrial(group.mode, group.parent.id, group.decisionId);
+    return this.store.activateTrial(group.mode, group.parent.id, group.decisionId, actor);
   }
   private verifyCompletedTrial(group: AnswerPolicyGroup) {
     if (!group.decisionId || group.status !== 'completed' || !group.decision || !group.candidate) throw new Error('A complete persisted trial decision is required.');
