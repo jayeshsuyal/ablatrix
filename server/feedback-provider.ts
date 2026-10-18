@@ -6,8 +6,10 @@ import { z } from 'zod';
 import type { LoopProvider, LoopUsage, RetrievedPassage } from './loop-types.ts';
 import { revisionPromptIdentity, type RevisionPolicySelector, type RevisionPromptIdentity } from './revision-policy.ts';
 import { CLAIM_SUPPORT_TOOL, claimSupportRequestParts, validateClaimSupportOutput, replayClaimSupportReceipt, type ClaimSupportInput } from './claim-support.ts';
+import { CITED_APPLICABILITY_GRADER_VERSION } from './claim-support-v4.ts';
 import { SOURCE_ID_CITATION_INTERFACE, sourceCitationEvidence, sourceCitationOptions, resolveSourceCitationIds, stripSourceIdMarkers, type SourceCitationScope } from './citation-options.ts';
 import { RUNTIME_POLICY_PROPOSAL_TOOL, RUNTIME_POLICY_ANSWER_TOOL, runtimeProposalRequestParts, runtimeAnswerRequestParts, validateRuntimeProposalOutput, validateRuntimeAnswerOutput, replayRuntimeProposalReceipt, replayRuntimeAnswerReceipt, type RuntimeProposalInput, type RuntimeAnswerInput, type RuntimeProtocolBindings } from './answer-policy-protocol.ts';
+import { WORKSPACE_GENERATION_TOOL, workspaceGenerationParts, replayWorkspaceGenerationReceipt, type WorkspaceGenerationInput } from './workspace-generation.ts';
 export { SOURCE_ID_CITATION_INTERFACE, SOURCE_ID_LIMITS, sourceCitationEvidence, sourceCitationOptions, resolveSourceCitationIds, stripSourceIdMarkers, type SourceCitationScope, type SourceCitationOption, type CitationEvidence } from './citation-options.ts';
 
 const MODEL = 'gpt-luna';
@@ -484,9 +486,10 @@ export class SapiomFeedbackProvider implements LoopProvider {
   async gradeClaimSupport(input: ClaimSupportInput) {
     const parts = claimSupportRequestParts(input), previous = this.receipt(input.runId);
     if (previous) return replayClaimSupportReceipt(input, previous);
-    const frozenInput: ClaimSupportInput = { runId: input.runId, ...parts.normalized, graderVersion: parts.prompt.promptVersion };
+    if (input.graderVersion === CITED_APPLICABILITY_GRADER_VERSION) throw new Error('V4 live grading is closed until this exact scope has independently verified qualification; no reservation or dispatch occurred.');
+    const frozenInput: ClaimSupportInput = { runId: input.runId, ...parts.normalized, graderVersion: parts.prompt.promptVersion, ...(input.graderBindingSha256 ? { graderBindingSha256: input.graderBindingSha256 } : {}) };
     const identity = { ...parts.bindings, assessmentKind: 'ai_claim_support_estimate' as const };
-    const result = await this.request(CLAIM_SUPPORT_TOOL, parts.prompt.systemInstructions, parts.payload, parts.parameters, input.runId, identity);
+    const result = await this.request(parts.tool, parts.prompt.systemInstructions, parts.payload, parts.parameters, input.runId, identity);
     try {
       const assessment = validateClaimSupportOutput(frozenInput, result.output);
       return { assessment, attemptId: result.id, model: result.model, usage: result.usage, promptVersion: parts.prompt.promptVersion, ...parts.bindings };
@@ -590,6 +593,17 @@ export class SapiomFeedbackProvider implements LoopProvider {
     const result = await this.request('product_answer_source_ids_v3', prompt.systemInstructions, payload, parameters, input.runId, identity);
     try { return { ...flatSourceIdOutput(result.output, scope), attemptId: result.id, model: result.model, usage: result.usage, promptVersion: prompt.promptVersion, optionCount: quoteOptions.length, ...identity }; }
     catch { this.markOutputInvalid(result.id); throw new Error(`Feedback flat source-ID answer failed output validation (attempt ${result.id}).`); }
+  }
+  /** Actual workspace generation has its own immutable run-bound replay contract. */
+  async answerWorkspace(input: WorkspaceGenerationInput) {
+    const parts = workspaceGenerationParts(input);
+    if (parts.binding.executionMode !== this.executionMode) throw new Error('Workspace generation mode does not match this provider.');
+    const previous = this.receipt(parts.input.runId);
+    if (previous) return replayWorkspaceGenerationReceipt(parts.input, previous, this.executionMode);
+    const result = await this.request(WORKSPACE_GENERATION_TOOL, parts.systemInstructions, parts.payload, parts.parameters, parts.input.runId,
+      { ...parts.binding, mode: this.executionMode, accounting: 'local_planning_allowance' });
+    try { return replayWorkspaceGenerationReceipt(parts.input, this.receipt(parts.input.runId)!, this.executionMode); }
+    catch { this.markOutputInvalid(result.id); throw new Error(`Workspace generation failed exact flat source-ID validation (attempt ${result.id}); it was not retried.`); }
   }
   async reviseWithFlatSourceIds(input: RevisionInput) {
     const { prompt, scope, quoteOptions, payload, parameters } = flatSourceIdRevisionParts(input);

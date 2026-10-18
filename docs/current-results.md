@@ -1,0 +1,49 @@
+# Current results
+
+Updated October 17, 2026. This index distinguishes implementation checks, scripted demonstrations and recorded live observations. The full chronology remains in the [build and evidence ledger](build-plan.md).
+
+## Current release status
+
+The local product workflow retrieves saved product sources, preserves the original answer and request identity, checks source support, attempts at most one repair, and independently rechecks before delivering or stopping. The `/ask` entry point exposes exact source bodies, original versions and a paired proof export. The isolated `npm run demo` uses fictional scripts and no provider calls or embedding download.
+
+The current work adds a versioned flat-source generation contract and a v4 grader separating factual consistency, cited support, product applicability, coverage and uncertainty. Offline contract tests and synthetic fixtures establish mechanics. **Fresh live v4 qualification and natural-product correction benefit are not established. Live policy release remains closed.** Grader qualification alone would not release an answer policy.
+
+## Latest recorded live qualification
+
+**V3 qualification failed after 20 of 92 planned grading calls.** The frozen stop rule fired on case 20; independent read-only replay matched the report. All attempted responses were structurally valid.
+
+| Measure | Observed denominator |
+| --- | ---: |
+| Primary cases evaluated | 20 / 80 planned |
+| Critical-axis agreement | 19 / 20 evaluated |
+| Full-axis agreement | 18 / 20 evaluated |
+| Flawed answers receiving a false raw pass | 0 / 15 evaluated; 60 planned |
+| Acceptable answers routed as expected | 5 / 5 evaluated; 20 planned |
+| Repeat observations | 0 / 12 planned |
+| Total calls unattempted | 72 / 92 planned |
+| Added reserved planning allowance | $2.00 / $9.20 approved maximum |
+
+The recorded ledger contained **122 attempts, zero pending and $12.20 reserved**, plus the unchanged $0.200281 prior adjustment. These are planning reservations, not settled charges. The original 102 rows were unchanged. [Sanitized result and disagreements](evidence/grader-qualification-live-approval-ux-2026-10-16/RESULTS.md).
+
+The reference judgments were AI-reviewed constructed examples. These partial denominators do not establish a full-benchmark rate, human gold, external truth, real-user correctness or an answer-quality gain. The 72 unattempted calls are not a resumable fresh cohort after tuning.
+
+## Product demonstration
+
+The fresh synthetic demo includes a completed original recovered from its existing receipt, a scripted original → check → one repair → recheck sequence, an uncertain-check safe stop, source inspection and export. Its paired view keeps unresolved outcomes in the denominator; its resource view separates recorded operations, actual provider calls, time, tokens and planning allowances. Synthetic operations make **zero provider calls**. Live receipt counts describe recorded attempts/reservations; actual transport may be unknown. Missing measurements remain unknown.
+
+The read-only live replay copies one already-public September 28 answer and its complete saved retrieved excerpts. It neither regenerates the answer nor treats historical acceptance as current source-context-valid human review. [Original public batch outputs](evidence/paid-qa-batch-2026-09-28/results.json).
+
+The [October 17 engineering report](evidence/workflow-engineering-2026-10-17/RESULTS.md) links the exact injected/BGE contracts, development retrieval audit, paired synthetic proof and prospective budget. It reports mechanical evidence separately from live qualification and quality claims.
+
+## Historical development observations
+
+| Record | Observation | Scope |
+| --- | --- | --- |
+| [V3 development smoke](evidence/grader-coverage-confidence-2026-10-15/live-results.md) | 6/6 structurally valid live grades; 0/3 flawed answers passed | Small constructed development smoke; superseded as qualification evidence by the later failed run |
+| [V2 abstention smoke](evidence/grader-abstention-2026-10-14/live-results.md) | 5/5 valid grades, 3/5 full-axis matches | Targeted development evidence; candidate remained unqualified |
+| [Initial grader pilot](evidence/grader-calibration-2026-10-14/live-results.md) | 5/10 calls attempted; 4 valid, 1 invalid, 5 unattempted | Partial constructed pilot; invalid output stopped execution |
+| [Public product batch](evidence/paid-qa-batch-2026-09-28/report.md) | 20/20 calls completed; 52/52 citation quotes matched saved passages | Mechanical provenance; current source-context-valid human review remains 0/20 |
+| [Selected correction follow-through](evidence/local-correction-live-2026-10-10.md) | 2/2 revisions, 5/5 literal quotes; mixed adequacy | Selected development examples, not a whole-workflow gain estimate |
+| [Search ablation](pilot-live-results-2026-09-24.md) | 16 paired repetitions over eight questions; 81.2% median answer-stage time reduction | Narrow source-given search decision; independent human correctness review pending |
+
+Results from different cohorts, graders and interventions are not an upward learning curve. A later future-policy comparison must use another prospectively frozen, product-family-disjoint set with model, retrieval and grader held constant.

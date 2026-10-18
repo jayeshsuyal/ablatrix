@@ -1,10 +1,89 @@
 # Next release plan
 
-Updated October 9, 2026. These five stages describe the product roadmap; their numbers are not GitHub pull-request numbers. The older [build and evidence ledger](build-plan.md) retains the project's implementation history.
+Updated October 17, 2026 following a source-code, saved-results and research audit. The [build and evidence ledger](build-plan.md) retains implementation history. The numbered slices below are proposed work, not existing GitHub PR numbers or completed capabilities.
 
-**Current priority:** demonstrate and validate the correction loop locally with the [five-case development walkthrough](local-correction-walkthrough.md). External hosting is deferred at the user's direction. The merged deployment package remains available; a hosted service is not a prerequisite for the local walkthrough.
+**Product direction:** an inspectable product-QA workflow that retrieves applicable sources, detects unsupported answers, attempts one bounded correction, and evaluates proposed instruction changes before releasing them to future questions.
 
-## Where the build stands
+**Current priority:** recover completed answers after interruption, connect the intended citation and grader contracts to the actual workspace path, and measure whether correction helps. External hosting remains deferred. A useful local demonstration and reproducible evidence are the release target.
+
+## What the October 17 audit establishes
+
+- The current offline reliability command passed 11 retrieval scenarios and four revision-harness scenarios using injected embeddings and scripted responses. This establishes mechanical contracts; semantic assessment was not run.
+- The latest v3 qualification stopped after 20 valid live grades: 19/20 critical-axis matches, 18/20 full-axis matches, zero raw passes among 15 flawed answers evaluated, five of five acceptable answers routed as expected, 72 planned calls unattempted and no repeat observations. Qualification failed; live activation remains closed. These are constructed cases with AI-reviewed references, not a real-user quality rate. The sanitized current result still needs to be incorporated into the public evidence index.
+- Isolated synthetic reproductions confirmed a first-answer receipt-to-workspace recovery gap and a difference between activated-policy inspection and actual question capture. A third late-response regression requires overlapping automatic-check workers; it is hardening for overlapping recovery, not an ordinary singleton failure.
+- `/ask` still uses the legacy snippet/copy citation choice, and automatic checks implicitly select grader v1. The newer flat-source interface and v3 qualification do not change these runtime defaults.
+- Current natural-product retrieval coverage and whole-workflow repair benefit remain unmeasured under the latest implementation. The September retrieval audit and selected correction examples remain historical development evidence.
+
+## Six bounded build slices
+
+### 1. Recover completed work and prevent duplicate requests
+
+Persist the original question request identity and add request idempotency. Reconcile a matching completed provider receipt when the process stops before the workspace answer is saved, then resume its requested review/check handoff. Preserve uncertain outcomes without dispatching again. Add persisted phase and terminal-state checks before consuming a late automatic-check response.
+
+**Acceptance:** injected crashes before reservation, after reservation, after receipt persistence and after answer persistence produce explicit, correct states. A restart recovers one completed answer with zero additional dispatches. A repeated request returns the same run. An overlapping recovery cannot reopen a terminal job. Extend the existing harness report with these scenarios.
+
+### 2. Qualify the actual RAG and citation path
+
+Exercise the existing flat-source citation resolver through the workspace request path with a versioned generation contract. Cover decimals, complete source bodies, original customer questions, wrong-context IDs, duplicate IDs and malformed response shapes. Replay the current retriever over already exposed development questions and source-sufficiency cases. Classify omitted facts, missing source information, conflicts and generation misuse separately.
+
+First reproduce whether the approximately 300-byte workspace chunks separate a claim from its condition. Change chunk boundaries or add bounded neighboring context only when that test demonstrates loss. Evaluate retrieval changes against the same frozen development inputs before choosing a candidate.
+
+**Acceptance:** workspace generation uses the intended protocol, invalid citations fail explicitly, and exact saved sources remain reconstructable. Publish current code/model/data identities and required-fact/condition coverage. A targeted context-selection change must fix its reproduced failure without dropping applicable conflicts or exceeding the context budget.
+
+### 3. Clarify and qualify the grader's operating scope
+
+Create a new versioned grading contract separating factual consistency, support from the actual cited span, product/variant applicability, question coverage and appropriate uncertainty. Keep the consumed v3 cases as development regressions. Test supported facts with irrelevant citations, explicitly wrong variants, genuinely ambiguous scope, mixed assertions, justified refusals and unnecessary refusal.
+
+Qualification must cover the answer lengths the product will send. Either constrain the qualified scope explicitly or include multiple answer units, boundary-spanning assertions and response-size preflight. Track exposed cases, source packets and related product families across cohorts so renaming or regrouping them cannot establish freshness.
+
+**Acceptance:** the semantics are unambiguous before new outcomes are observed; oversized requests fail before dispatch; omitted units never pass. A fresh, independently reviewed qualification plan freezes references, scope, stopping rules and budget before execution. A failed or incomplete run remains unqualified. Build/review and a proposed plan do not authorize paid execution.
+
+### 4. Bind runtime checks and policy release to verified evidence
+
+Freeze grader version, prompt/schema identity, model identity and applicable qualification evidence into each new check job. Replay old jobs using their recorded contract. Use one verification boundary for policy activation, inspection and future-question capture, with operator attribution for authenticated release and rollback actions.
+
+**Acceptance:** pending, failed, altered or incompatible qualification records cannot enable a qualified runtime grader. Missing activation support blocks affected candidate generation. In-flight requests retain captured instructions; later requests use an explicitly released version; rollback restores its parent. Grader qualification alone never activates an answer policy. Fixtures can prove these mechanics while live release remains closed.
+
+### 5. Demonstrate correction benefit and future-policy benefit separately
+
+Build one evidence bundle with frozen inputs, applicable sources, exact versions, paired outcomes, invalid/unknown states, receipts and labeled accounting. Verify the bundle offline without dispatch or new reservations. Retain the original answers as the paired control. On development cases, compare a critique-guided repair with a matched extra-call rewrite without critique to test whether feedback adds value beyond another generation attempt.
+
+Use distinct data roles: exposed development cases; fresh judge-qualification packets with deliberately acceptable and defective answers; and fresh product-family-disjoint questions with naturally generated baseline answers for the complete workflow. Holdout product documents remain available in the frozen retrieval index; their queries and reference labels stay outside tuning. A later policy proposal requires another fresh comparison of future answers, holding the model, retrieval and grader constant.
+
+**Acceptance:** report useful supported answers, factual errors, cited support, available-fact coverage, unnecessary abstention, wins/regressions/unresolved outcomes and total calls/time/usage. Report the whole frozen cohort as well as the repair-triggered subset. Repeated trials do not become additional independent products. Choose sample size prospectively from the smallest useful gain, tolerated regressions, observed development variability and budget; a small demonstration must retain that label. Preserve the baseline when improvement is absent or inconclusive.
+
+Automate routine deterministic validation and qualified source checks. Audit severe anomalies, recurring failure groups and a random sample of apparently successful answers, with additional coverage of difficult variants and long answers. A rejection-only queue cannot expose silent false approvals. AI-only reference agreement retains AI provenance. The current repository contribution rules reserve final answer-quality claims and answer-policy promotion for source-checked human reviews plus demonstrated gain on fresh, product-disjoint validation. This release-evidence requirement does not require a person to check every routine answer.
+
+### 6. Make the product and proof easy to inspect
+
+Make `/ask` the clear local entry point, group historical labs under a secondary research area, and show a direct answer with expandable sources and precise uncertainty. Provide an isolated preseeded synthetic demo requiring no credentials or embedding download, plus a separately labeled read-only replay of a historical live case. Reuse current answer, review and export surfaces.
+
+Record a 60–90-second walkthrough: original answer, precise flaw, bounded correction or justified stop, source inspection, then an export. Show a failure/recovery example and an evaluation that rejects a candidate. Synthetic behavior, recorded live output and fresh execution must remain visually distinct.
+
+Refresh the README, architecture, screenshots and quick start around that journey. Scope the older architecture's statements about authorization, snapshots and its six-task suite to the legacy research path. Publish a concise sanitized current-results index with links to immutable underlying records; retain the full experiment chronology separately.
+
+**Acceptance:** a fresh reviewer can complete the local demonstration in five minutes and inspect the code, source packet and verifier behind a result. Current status is consistent across the README, app and architecture. Use two result views: paired wins/ties/regressions/unresolved cases, and quality versus total time/planning allowance. Show observed outcomes with denominators and provenance. Include failed, rejected and uncertain attempts in recorded time, usage and reservations; missing measurements remain unknown. Do not infer an upward learning curve from unrelated or incomplete experiments.
+
+## October 17 implementation status
+
+The workflow branch implements all six engineering slices: durable first-answer reconciliation and idempotency; the actual versioned flat-source generation path with reproduced qualifier restoration; a separately versioned v4 grader; frozen runtime grader and policy-evidence bindings; paired proof export/offline verification and matched no-critique development control; and an isolated synthetic demo with current product navigation and historical replay.
+
+Current checks remain mechanical or scripted. V4 live checking stays closed pending independent qualification. The consumed v3 execution plan rejects this changed implementation and cannot resume. Fresh qualification and product-family-disjoint workflow/future-policy packets still need independent source/family review, prospective code-bound plans, measured pilot assumptions, and separate paid-execution authorization. The proposed budget is a planning illustration, not an approved allowance. No fresh quality gain or policy release is claimed. See [proof protocol](proof-protocol.md) and [current results](current-results.md).
+
+## Research informing the choices
+
+- [ALCE](https://aclanthology.org/2023.emnlp-main.398/) evaluates correctness and citation quality separately; literal citation membership must not stand in for either.
+- [RAGChecker](https://proceedings.neurips.cc/paper_files/paper/2024/hash/27245589131d17368cccdfa990cbf16e-Abstract.html) motivates diagnosing retrieval and generation independently before choosing a fix.
+- [ARES](https://aclanthology.org/2024.naacl-long.20/) evaluates RAG with model judges and independently labeled examples; automated judgments need validation of their own.
+- [Anthropic's agent-evaluation guide](https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents) distinguishes harness behavior, outcomes and grader reliability, and recommends deterministic checks where possible with calibrated model grading.
+- [Langfuse experiment comparison](https://langfuse.com/docs/evaluation/experiments/compare-experiments) already supports versioned comparisons and trace inspection. Ablatrix can use its existing optional export while concentrating product work on source-aware correction, recovery and release decisions.
+- [Contextual retrieval](https://www.anthropic.com/engineering/contextual-retrieval) offers techniques worth testing when measured source coverage calls for them; its reported gains are not Ablatrix results or a reason to add every retrieval component.
+
+Keep SQLite for the current single-process operating scope. Revisit storage and worker topology when measured concurrent usage or durability requirements demand it. Fine-tuning, additional agent frameworks and expanded hosting are separate decisions after the local workflow and its results are convincing.
+
+## Earlier release-stage record (October 9)
+
+The following stage account is retained as historical roadmap context. It is superseded by the priorities and acceptance criteria above.
 
 | Stage | Intended result | Current position |
 | --- | --- | --- |

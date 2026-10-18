@@ -2,16 +2,17 @@ import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { sourceCitationEvidence, type CitationEvidence } from './citation-options.ts';
 import type { LoopAnswer, LoopUsage } from './loop-types.ts';
+import { CITED_APPLICABILITY_GRADER_VERSION, claimSupportV4PromptIdentity, claimSupportV4RequestParts, validateClaimSupportV4Output } from './claim-support-v4.ts';
 
 export const CLAIM_SUPPORT_TOOL = 'claim_support_v1' as const;
 const PROMPT_VERSION = 'claim-support-v1';
 export const ABSTENTION_GRADER_VERSION = 'claim-support-v2-abstention' as const;
 export const COVERAGE_CONFIDENCE_GRADER_VERSION = 'claim-support-v3-coverage-confidence' as const;
-export type ClaimSupportVersion = typeof PROMPT_VERSION | typeof ABSTENTION_GRADER_VERSION | typeof COVERAGE_CONFIDENCE_GRADER_VERSION;
+export type ClaimSupportVersion = typeof PROMPT_VERSION | typeof ABSTENTION_GRADER_VERSION | typeof COVERAGE_CONFIDENCE_GRADER_VERSION | typeof CITED_APPLICABILITY_GRADER_VERSION;
 const MODEL = 'gpt-luna';
 const modelAliases = new Set(['gpt-luna', 'gpt-5.6-luna']);
 const sha = (value: unknown) => createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(value)).digest('hex');
-export type ClaimSupportInput = { runId: string; graderVersion?: ClaimSupportVersion; question: string; product: { id: string; title: string }; answer: LoopAnswer; evidence: CitationEvidence[]; clarifications?: { text: string; reviewer: string }[] };
+export type ClaimSupportInput = { runId: string; graderVersion?: ClaimSupportVersion; graderBindingSha256?: string; question: string; product: { id: string; title: string }; answer: LoopAnswer; evidence: CitationEvidence[]; clarifications?: { text: string; reviewer: string }[] };
 export type ClaimSupportBindings = { answerSha256: string; sourceContextSha256: string; requestSha256: string; responseSchemaSha256: string; systemInstructionsSha256: string };
 export type ClaimSupportUnit = { id: string; start: number; end: number; text: string };
 const proofSchema = z.object({ sourceId: z.string().min(1).max(160), quote: z.string().min(1).max(3000), relation: z.enum(['supports', 'contradicts']) }).strict();
@@ -46,6 +47,7 @@ Worked rubric examples (illustrative instructions, not evaluation cases):
 - Source: cord is 2 m long. Question: length? Answer: "It is 2 m long. I cannot determine its heat resistance." with the length citation => supported, answerable, complete, appropriate uncertainty; the last sentence asserts no heat-resistance capability.
 Return the labels produced by these definitions even when final routing would be repair or abstain either way. Do not make the axis labels agree merely with the final routing decision.`;
 export function claimSupportPromptIdentity(version: ClaimSupportVersion = PROMPT_VERSION) {
+  if (version === CITED_APPLICABILITY_GRADER_VERSION) return claimSupportV4PromptIdentity();
   if (version !== PROMPT_VERSION && version !== ABSTENTION_GRADER_VERSION && version !== COVERAGE_CONFIDENCE_GRADER_VERSION) throw new Error('Unknown frozen claim-support grader version.');
   const instructions = version === PROMPT_VERSION ? system : system + abstentionRules + (version === COVERAGE_CONFIDENCE_GRADER_VERSION ? coverageConfidenceRules : '');
   return Object.freeze({ promptVersion: version, systemInstructions: instructions, systemInstructionsSha256: sha(instructions) });
@@ -98,12 +100,14 @@ function responseParameters(units: ClaimSupportUnit[], evidence: CitationEvidenc
   }, required: ['units', 'questionCoverage', 'answerability', 'correctness', 'uncertaintyHandling', 'reason'] };
 }
 export function claimSupportRequestParts(input: ClaimSupportInput) {
-  const normalized = normalizedInput(input), prompt = claimSupportPromptIdentity(input.graderVersion), units = claimSupportAnswerUnits(normalized.answer.answer), parameters = responseParameters(units, normalized.evidence);
+  const normalized = normalizedInput(input), units = claimSupportAnswerUnits(normalized.answer.answer);
+  if (input.graderVersion === CITED_APPLICABILITY_GRADER_VERSION) return claimSupportV4RequestParts(input, normalized, units);
+  const prompt = claimSupportPromptIdentity(input.graderVersion), parameters = responseParameters(units, normalized.evidence);
   const payload = { promptVersion: prompt.promptVersion, ...normalized, answerUnits: units, citedSourceIds: [...new Set(normalized.answer.citations.map(citation => citation.passageId))] };
   if (JSON.stringify(payload).length > 40_000) throw new Error('Claim support input exceeds the bounded context size.');
   const body = { model: MODEL, max_tokens: 4096, reasoning_effort: 'none', messages: [{ role: 'system', content: prompt.systemInstructions }, { role: 'user', content: JSON.stringify(payload) }], tools: [{ type: 'function', function: { name: CLAIM_SUPPORT_TOOL, description: 'Return the requested structured result.', parameters: structuredClone(parameters) } }], tool_choice: { type: 'function', function: { name: CLAIM_SUPPORT_TOOL } }, parallel_tool_calls: false };
   const bindings: ClaimSupportBindings = { answerSha256: sha(normalized.answer), sourceContextSha256: sha({ question: normalized.question, product: normalized.product, evidence: normalized.evidence, clarifications: normalized.clarifications }), requestSha256: sha(body), responseSchemaSha256: sha(parameters), systemInstructionsSha256: prompt.systemInstructionsSha256 };
-  return { normalized, prompt, units, parameters, payload, body, bindings };
+  return { normalized, prompt, units, parameters, payload, body, bindings, tool: CLAIM_SUPPORT_TOOL };
 }
 /** Exact frozen Router request; no provider, ledger or credential is opened. */
 export function claimSupportRequestBody(input: ClaimSupportInput) { return claimSupportRequestParts(input).body; }
@@ -121,6 +125,10 @@ export function deriveClaimSupportDisposition(input: Pick<ClaimSupportInput, 'an
   return 'pass';
 }
 export function validateClaimSupportOutput(input: ClaimSupportInput, output: unknown, assessmentKind: ClaimSupportProvenance = 'ai_claim_support_estimate'): ValidatedClaimSupportAssessment {
+  if (input.graderVersion === CITED_APPLICABILITY_GRADER_VERSION) {
+    const parts = claimSupportRequestParts(input) as ReturnType<typeof claimSupportV4RequestParts>;
+    return validateClaimSupportV4Output(input, output, parts, assessmentKind);
+  }
   const parts = claimSupportRequestParts(input), grade = claimSupportWireSchema.parse(output), expected = new Set(parts.units.map(unit => unit.id)), seen = new Set<string>();
   for (const unit of grade.units) {
     if (!expected.has(unit.unitId) || seen.has(unit.unitId)) throw new Error('Claim support units must match the exact answer once.');
@@ -145,7 +153,7 @@ export function validateClaimSupportOutput(input: ClaimSupportInput, output: unk
 export function replayClaimSupportReceipt(input: ClaimSupportInput, receipt: ClaimSupportReceipt, executionMode: 'live' | 'synthetic' = 'live'): ClaimSupportResult {
   const parts = claimSupportRequestParts(input);
   try {
-    if (receipt.kind !== CLAIM_SUPPORT_TOOL || receipt.status !== 'completed' || receipt.error_code || !receipt.receipt_json || !receipt.id) throw new Error('receipt_state');
+    if (receipt.kind !== parts.tool || receipt.status !== 'completed' || receipt.error_code || !receipt.receipt_json || !receipt.id) throw new Error('receipt_state');
     const document = JSON.parse(receipt.receipt_json), assessmentKind: ClaimSupportProvenance = executionMode === 'synthetic' ? 'synthetic_scripted_claim_support' : 'ai_claim_support_estimate';
     if (document.promptVersion !== parts.prompt.promptVersion || document.assessmentKind !== assessmentKind || document.model !== receipt.model || (executionMode === 'synthetic' ? document.model !== 'synthetic-fixture' || document.accounting !== 'no_provider_call' : !modelAliases.has(document.model))) throw new Error('receipt_provenance');
     for (const [key, expected] of Object.entries(parts.bindings)) if (document[key] !== expected) throw new Error('receipt_identity');

@@ -48,4 +48,6 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
+      - name: Isolated synthetic demo browser flow
+        run: npm run test:demo
       - run: npm audit --audit-level=low

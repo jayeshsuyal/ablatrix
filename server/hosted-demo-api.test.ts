@@ -49,10 +49,11 @@ async function boot(directory: string) {
   const paidReview = new PaidAnswerReview(reviewPath);
   const store = new RunStore(join(directory, 'runs.sqlite'));
   const observations = { readiness: 0, snapshots: 0, answer: 0, revise: 0 };
-  const readiness = provider.readiness.bind(provider), snapshots = workspace.reviewSnapshots.bind(workspace), answer = provider.answer.bind(provider), revise = provider.revise.bind(provider);
+  const readiness = provider.readiness.bind(provider), snapshots = workspace.reviewSnapshots.bind(workspace), answer = provider.answer.bind(provider), answerWorkspace = provider.answerWorkspace.bind(provider), revise = provider.revise.bind(provider);
   provider.readiness = () => { observations.readiness++; return readiness(); };
   workspace.reviewSnapshots = () => { observations.snapshots++; return snapshots(); };
   provider.answer = async input => { observations.answer++; return answer(input); };
+  provider.answerWorkspace = async input => { observations.answer++; return answerWorkspace(input); };
   provider.revise = async input => { observations.revise++; return revise(input); };
   const server = createApp(store, 'fixture', undefined, new PilotRunner(new PilotStore(':memory:')), undefined, undefined, workspace, paidReview, false, { answerProvider: provider, reviewDbPath: reviewPath, comparisonDbPath: join(directory, 'comparisons.sqlite'), demoAccess });
   server.listen(0, '127.0.0.1'); await once(server, 'listening');

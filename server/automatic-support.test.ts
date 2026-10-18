@@ -5,10 +5,12 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { DatabaseSync } from 'node:sqlite';
-import { AutomaticSupport, type AutomaticSupportJob, type AutomaticSupportProvider } from './automatic-support.ts';
+import { AutomaticSupport, verifyAutomaticSupportEvidence, type AutomaticSupportJob, type AutomaticSupportProvider } from './automatic-support.ts';
 import { workspaceReviewSourceHash, type ReviewAnswerSnapshot } from './answer-review-source.ts';
 import { SapiomFeedbackProvider } from './feedback-provider.ts';
 import { SyntheticAnswerProvider } from './synthetic-answer-provider.ts';
+import { createRuntimeGraderBinding } from './runtime-grader.ts';
+import { CITED_APPLICABILITY_GRADER_VERSION } from './claim-support-v4.ts';
 
 function snapshot(mode: 'live' | 'synthetic' = 'live'): ReviewAnswerSnapshot {
   const runId = randomUUID(), source = { id: 'fixture-source-1', label: 'Synthetic fixture listing', text: 'SYNTHETIC fixture: the container holds twelve cups.', originalQuestion: null, origin: 'workspace' as const };
@@ -241,4 +243,43 @@ test('mutated context hash stops before a provider reservation', async () => {
     job.originalAnswerSha256 = createHash('sha256').update('different original').digest('hex'); expire(h.path, job);
     await flow.tick(); assert.equal(flow.get(original.id)?.status, 'inconclusive'); assert.equal(h.calls.length, 0);
   } finally { flow.close(); h.cleanup(); }
+});
+
+test('new checks freeze explicit v4 bindings, replay them after restart, and reject incompatible or unqualified scope', async () => {
+  const directory = mkdtempSync(join(tmpdir(), 'automatic-v4-')), path = join(directory, 'checks.sqlite'), provider = new SyntheticAnswerProvider(join(directory, 'receipts.sqlite'));
+  const binding = createRuntimeGraderBinding('synthetic', CITED_APPLICABILITY_GRADER_VERSION); let flow = new AutomaticSupport(provider, path, { graderBinding: binding });
+  try {
+    const original = snapshot('synthetic'); flow.preflight(original.context, 'synthetic-preflight'); const job = flow.enqueue(original);
+    assert.equal(job.graderBinding?.version, CITED_APPLICABILITY_GRADER_VERSION); assert.equal(job.graderBinding?.scope.maxAnswerCharacters, 1500); assert.equal(job.graderBinding?.qualification.liveQualified, false);
+    for (let index = 0; index < 3; index++) await flow.tick(); const complete = flow.get(original.id)!; assert.equal(complete.status, 'repaired');
+    assert(complete.assessments.every(item => item.promptVersion === CITED_APPLICABILITY_GRADER_VERSION)); flow.verifyForExport(complete);
+    flow.close(); flow = new AutomaticSupport(provider, path); assert.equal(flow.verifiedOverview()[0].status, 'repaired');
+    const changed = structuredClone(complete); changed.graderBinding!.scope.maxAnswerCharacters = 10000; assert.throws(() => verifyAutomaticSupportEvidence(changed, provider.receipt.bind(provider)), /altered/);
+    const changedGrade = structuredClone(complete); changedGrade.assessments[0].assessment.questionCoverage = 'uncertain'; assert.throws(() => verifyAutomaticSupportEvidence(changedGrade, provider.receipt.bind(provider)), /exact replay/);
+    const changedUsage = structuredClone(complete); changedUsage.operations[0].usage = { inputTokens: 1, outputTokens: 1 }; assert.throws(() => verifyAutomaticSupportEvidence(changedUsage, provider.receipt.bind(provider)), /accounting/);
+    const changedRepair = structuredClone(complete); changedRepair.repaired!.model = 'another-model'; assert.throws(() => verifyAutomaticSupportEvidence(changedRepair, provider.receipt.bind(provider)), /repair differs/);
+    const impossibleTerminal = structuredClone(complete); impossibleTerminal.status = 'abstained'; assert.throws(() => verifyAutomaticSupportEvidence(impossibleTerminal, provider.receipt.bind(provider)), /terminal transition/);
+    const oversized = snapshot('synthetic'); oversized.answer.answer = 'SYNTHETIC ' + 'x'.repeat(1500); const bounded = new AutomaticSupport(provider, ':memory:', { graderBinding: binding });
+    try { assert.throws(() => bounded.enqueue(oversized), /1500/); assert.equal(bounded.overview().length, 0); } finally { bounded.close(); }
+  } finally { flow.close(); provider.close(); rmSync(directory, { recursive: true, force: true }); }
+  const h = harness(['pass']), blocked = new AutomaticSupport(h.provider, h.path, { liveEnabled: true, graderBinding: createRuntimeGraderBinding('live', CITED_APPLICABILITY_GRADER_VERSION) });
+  try { assert.equal(blocked.readiness().ready, false); assert.throws(() => blocked.enqueue(snapshot()), /qualification/); assert.equal(h.calls.length, 0); } finally { blocked.close(); h.cleanup(); }
+});
+
+test('overlapping recovery cannot reopen a terminal job when its original grader returns late', async () => {
+  for (const receiptBeforeWait of [false, true]) {
+    const directory = mkdtempSync(join(tmpdir(), 'automatic-overlap-')), path = join(directory, 'checks.sqlite'), provider = new SyntheticAnswerProvider(join(directory, 'receipts.sqlite'));
+    let release!: () => void, calls = 0; const waiting = new Promise<void>(resolve => { release = resolve; });
+    const wrapped: AutomaticSupportProvider = { executionMode: 'synthetic', readiness: provider.readiness.bind(provider), capacity: provider.capacity.bind(provider), receipt: provider.receipt.bind(provider), reviseAutomatic: provider.reviseAutomatic.bind(provider),
+      async gradeClaimSupport(input) { calls++; if (receiptBeforeWait) { const result = await provider.gradeClaimSupport(input); await waiting; return result; } await waiting; return provider.gradeClaimSupport(input); } };
+    const flow = new AutomaticSupport(wrapped, path); let recovery: AutomaticSupport | undefined;
+    try {
+      const original = snapshot('synthetic'); original.answer.answer = 'SYNTHETIC revision — scripted source excerpts, not a model-generated answer.';
+      flow.enqueue(original); const pending = flow.tick(), started = flow.get(original.id)!; expire(path, started);
+      recovery = new AutomaticSupport(provider, path); const terminal = recovery.get(original.id)!; assert.equal(terminal.status, receiptBeforeWait ? 'supported' : 'reconciliation');
+      release(); await pending; const late = flow.get(original.id)!; assert.deepEqual(late, terminal); assert.equal(calls, 1);
+      assert.equal(late.assessments.length, receiptBeforeWait ? 1 : 0); assert.equal(late.delivery?.origin, receiptBeforeWait ? 'original' : 'safe_abstention'); flow.verifyForExport(late);
+      await recovery.tick(); await flow.tick(); assert.equal(calls, 1); assert.deepEqual(flow.get(original.id), terminal);
+    } finally { release(); await flow.pauseAndDrain(); recovery?.close(); flow.close(); provider.close(); rmSync(directory, { recursive: true, force: true }); }
+  }
 });

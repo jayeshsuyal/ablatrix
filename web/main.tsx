@@ -227,6 +227,6 @@ function App() {
 const route = window.location.pathname.replace(/\/$/, '');
 function Route() {
   const session = useDemoSession();
-  return route === '/ask' || (session.hosted && route === '') ? <Ask /> : route === '/compare' ? <ContextComparison /> : route === '/review' ? <WorkspaceReview /> : route === '/paid-review' ? <PaidReview /> : route === '/loop' ? <FeedbackLoop /> : route === '/pilot' ? <Pilot /> : <App />;
+  return route === '/ask' || route === '' ? <Ask /> : route === '/compare' ? <ContextComparison /> : route === '/review' ? <WorkspaceReview /> : route === '/paid-review' ? <PaidReview /> : route === '/loop' ? <FeedbackLoop /> : route === '/pilot' ? <Pilot /> : <App />;
 }
 createRoot(document.getElementById('root')!).render(<DemoSessionProvider><Route /></DemoSessionProvider>);

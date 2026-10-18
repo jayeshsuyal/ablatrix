@@ -7,7 +7,10 @@ import { revisionPromptIdentity } from './revision-policy.ts';
 import type { AnswerRevisionProvider, AnswerRevisionReceipt } from './answer-revisions.ts';
 import type { LoopAnswer, LoopProvider } from './loop-types.ts';
 import { CLAIM_SUPPORT_TOOL, claimSupportRequestParts, validateClaimSupportOutput, replayClaimSupportReceipt, type ClaimSupportInput, type ClaimSupportWireOutput } from './claim-support.ts';
+import { CITED_APPLICABILITY_GRADER_VERSION, scriptedClaimSupportV4Output } from './claim-support-v4.ts';
 import { RUNTIME_POLICY_PROPOSAL_TOOL, RUNTIME_POLICY_ANSWER_TOOL, runtimeProposalRequestParts, runtimeAnswerRequestParts, validateRuntimeProposalOutput, validateRuntimeAnswerOutput, replayRuntimeProposalReceipt, replayRuntimeAnswerReceipt, type RuntimeProposalInput, type RuntimeAnswerInput } from './answer-policy-protocol.ts';
+import { WORKSPACE_GENERATION_CONTRACT, WORKSPACE_GENERATION_TOOL, workspaceGenerationParts, replayWorkspaceGenerationReceipt, type WorkspaceGenerationInput } from './workspace-generation.ts';
+import { sourceCitationOptions } from './citation-options.ts';
 
 type Source = { id: string; source: string; text: string; originalQuestion?: string; origin?: string };
 /** Offline templates with durable replay receipts. No credentials, network, tokens or spending reservations. */
@@ -15,7 +18,7 @@ export class SyntheticAnswerProvider implements LoopProvider, AnswerRevisionProv
   readonly executionMode = 'synthetic' as const;
   private readonly db: DatabaseSync;
   private closed = false;
-  constructor(dbPath: string) {
+  constructor(dbPath: string, private readonly options: { workspaceFixture?: 'thistle-capacity-demo' } = {}) {
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec('PRAGMA busy_timeout=5000; CREATE TABLE IF NOT EXISTS synthetic_answer_receipts(run_id TEXT PRIMARY KEY,input_sha256 TEXT NOT NULL,document TEXT NOT NULL)');
@@ -54,6 +57,18 @@ export class SyntheticAnswerProvider implements LoopProvider, AnswerRevisionProv
     return this.execute(input.runId ?? randomUUID(), 'synthetic_answer', input, () => this.template(input.passages.map(passage => ({ ...passage })), false));
   }
   async answerWithSnippetIds(input: Parameters<LoopProvider['answer']>[0]) { return this.answer(input); }
+  async answerWorkspace(input: WorkspaceGenerationInput) {
+    if (this.closed) throw new Error('Synthetic provider is closed.');
+    const parts = workspaceGenerationParts(input);
+    if (parts.binding.executionMode !== this.executionMode) throw new Error('Workspace generation mode does not match this provider.');
+    const previous = this.receipt(parts.input.runId);
+    if (previous) return replayWorkspaceGenerationReceipt(parts.input, previous, this.executionMode);
+    const answer = this.template(parts.input.passages, false), offered = sourceCitationOptions(parts.scope);
+    const demo = this.options.workspaceFixture === 'thistle-capacity-demo' && parts.input.passages.length === 1 && parts.input.passages[0].text === 'SYNTHETIC fixture: The Thistle flask holds six cups and has a cork lid. The body is stainless steel.';
+    const output = { answer: demo ? 'SYNTHETIC draft — scripted source excerpts, not a model-generated answer.\nThe Thistle flask holds eight cups and has a cork lid.\nThis intentionally scripted error demonstrates the correction workflow.' : answer.answer, status: answer.status, citations: answer.citations.map(citation => offered.find(option => option.passageId === citation.passageId)!.id) };
+    this.insertRuntimeReceipt(parts.input.runId, WORKSPACE_GENERATION_TOOL, output, WORKSPACE_GENERATION_CONTRACT, parts.binding);
+    return replayWorkspaceGenerationReceipt(parts.input, this.receipt(parts.input.runId)!, this.executionMode);
+  }
   async revise(input: Parameters<AnswerRevisionProvider['revise']>[0]) { return this.execute(input.runId, 'synthetic_revision', input, () => this.template(input.evidence, true)); }
   async reviseAutomatic(input: RevisionInput) {
     const frozen = structuredClone(input), prompt = revisionPromptIdentity(frozen.revisionPolicy, Boolean(frozen.investigation)), requestSha256 = createHash('sha256').update(JSON.stringify(revisionRequestBody(frozen))).digest('hex'), previous = this.receipt(frozen.runId);
@@ -105,13 +120,19 @@ export class SyntheticAnswerProvider implements LoopProvider, AnswerRevisionProv
     const proof = parts.normalized.evidence.find(source => input.answer.citations.some(citation => citation.passageId === source.id));
     // Only explicitly synthetic source fixtures demonstrate repair/pass. All
     // ordinary source snapshots remain uncertain; there is no semantic model.
-    const output: ClaimSupportWireOutput = runtimeFixtureGrade(input) ?? {
+    const legacyOutput: ClaimSupportWireOutput = runtimeFixtureGrade(input) ?? {
       units: parts.units.map(unit => ({ unitId: unit.id, verdict: revised && proof ? 'supported' : draft ? 'unsupported' : 'uncertain', evidence: revised && proof ? [{ sourceId: proof.id, quote: proof.text, relation: 'supports' }] : [], reason: 'SYNTHETIC scripted workflow state only; no semantic model assessment.' })),
       questionCoverage: draft || revised ? 'complete' : 'uncertain', answerability: draft || revised ? 'answerable' : 'uncertain', correctness: draft || revised ? 'consistent_with_sources' : 'uncertain', uncertaintyHandling: 'appropriate',
       reason: 'SYNTHETIC demonstration: this template checks workflow behavior only and does not establish answer correctness or improvement.'
     };
+    if (this.options.workspaceFixture === 'thistle-capacity-demo' && draft && input.answer.answer.includes('eight cups') && parts.normalized.evidence.length === 1 && parts.normalized.evidence[0].text === 'SYNTHETIC fixture: The Thistle flask holds six cups and has a cork lid. The body is stainless steel.') {
+      legacyOutput.units = parts.units.map(unit => ({ unitId: unit.id, verdict: 'contradicted', evidence: [{ sourceId: parts.normalized.evidence[0].id, quote: 'The Thistle flask holds six cups', relation: 'contradicts' }], reason: 'SYNTHETIC control: eight cups conflicts with the saved six cups.' }));
+      legacyOutput.correctness = 'contradicted_by_sources'; legacyOutput.uncertaintyHandling = 'overconfident';
+      legacyOutput.reason = 'SYNTHETIC control: original says eight cups; saved specification says six. Repair must preserve six cups and cork lid.';
+    }
+    const output = input.graderVersion === CITED_APPLICABILITY_GRADER_VERSION ? scriptedClaimSupportV4Output(input, legacyOutput) : legacyOutput;
     const assessment = validateClaimSupportOutput(input, output, 'synthetic_scripted_claim_support');
-    const receipt: AnswerRevisionReceipt = { id: `synthetic-${randomUUID()}`, kind: CLAIM_SUPPORT_TOOL, status: 'completed', model: 'synthetic-fixture', input_tokens: null, output_tokens: null, error_code: null,
+    const receipt: AnswerRevisionReceipt = { id: `synthetic-${randomUUID()}`, kind: parts.tool, status: 'completed', model: 'synthetic-fixture', input_tokens: null, output_tokens: null, error_code: null,
       receipt_json: JSON.stringify({ output, model: 'synthetic-fixture', usage: null, promptVersion: parts.prompt.promptVersion, ...parts.bindings, assessmentKind: 'synthetic_scripted_claim_support', mode: 'synthetic', accounting: 'no_provider_call' }), allowance_usd: 0, executionMode: 'synthetic', accounting: 'no_provider_call' };
     this.db.prepare('INSERT INTO synthetic_answer_receipts(run_id,input_sha256,document) VALUES(?,?,?)').run(input.runId, parts.bindings.requestSha256, JSON.stringify(receipt));
     return { assessment, attemptId: receipt.id, model: 'synthetic-fixture', usage: null, promptVersion: parts.prompt.promptVersion, ...parts.bindings };

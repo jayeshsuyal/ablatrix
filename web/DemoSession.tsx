@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 
-export type DemoSession = { hosted: boolean; providerMode: 'synthetic' | 'local'; actor: null | { name: string; role: 'viewer' | 'reviewer' | 'operator'; reviewer: string } };
+export type DemoSession = { hosted: boolean; localDemo?: boolean; providerMode: 'synthetic' | 'local'; actor: null | { name: string; role: 'viewer' | 'reviewer' | 'operator'; reviewer: string } };
 const local: DemoSession = { hosted: false, providerMode: 'local', actor: null };
 const Session = createContext<DemoSession>(local);
 export const useDemoSession = () => useContext(Session);

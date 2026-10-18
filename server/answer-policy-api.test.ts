@@ -60,6 +60,9 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
       assert.deepEqual(policies.getDecision(decision.id), decision, 'Activation decision remains authentic while its supporting group is absent.');
       await readsFail(['/api/workspace/answer-policy', '/api/workspace/answer-policy/export'], 'Runtime policy history references a missing or unverifiable activated trial group.');
       assert.throws(() => worker.exportEvidence(), /missing or unverifiable activated trial group/);
+      const runCount = workspace.proofRuns().length;
+      await post('/api/workspace/questions', { productId: products[0].id, question: 'Can this missing activation support authorize an answer?', mode: 'synthetic' }, 409);
+      assert.equal(workspace.proofRuns().length, runCount, 'Future capture rejects missing supporting group before retrieval or dispatch.');
     } finally {
       db.prepare('INSERT INTO runtime_policy_failure_groups(rowid,id,status,mode,parent_id,category,document,document_sha256,lease_expires) VALUES(?,?,?,?,?,?,?,?,?)').run(saved.rowid, saved.id, saved.status, saved.mode, saved.parent_id, saved.category, saved.document, saved.document_sha256, saved.lease_expires);
       db.close();
@@ -94,6 +97,7 @@ test('HTTP exact policy evidence and synthetic release/rollback affect future an
     const reviews = await (await fetch(base + '/api/workspace/reviews/export')).json();
     assert.equal(reviews.cases.flatMap((item: {events: unknown[]}) => item.events).length, 0);
     assert.equal(policies.overview('synthetic').events.length, 2);
+    assert.ok(policies.overview('synthetic').events.every(event => event.actor?.kind === 'local_operator' && event.actor.id === 'local-loopback' && event.actor.role === 'operator'));
     await missingGroupFails();
     const missingDecision = new DatabaseSync(join(dir, 'policies.sqlite'));
     const savedDecision = missingDecision.prepare('SELECT mode,document,sha256 FROM runtime_answer_policy_decisions WHERE id=?').get(decision.id) as { mode: string; document: string; sha256: string };

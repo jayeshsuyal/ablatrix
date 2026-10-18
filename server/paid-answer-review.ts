@@ -32,11 +32,12 @@ export type PaidAiDraft = { qid: string; asin: string; runId: string; answerVerd
 /** Reviews a pinned historical batch; no model provider or experiment workspace is opened. */
 export class PaidAnswerReview {
   private db: DatabaseSync;
-  private cases: ManifestCase[];
-  private runs: Map<string, SavedRun>;
-  private aiDrafts: Map<string, PaidAiDraft>;
-  private sourceContexts: Map<string, string>;
-  constructor(dbPath = '.data/paid-answer-review.sqlite', sourceDir = evidenceDir) {
+  private cases: ManifestCase[] = [];
+  private runs: Map<string, SavedRun> = new Map();
+  private aiDrafts: Map<string, PaidAiDraft> = new Map();
+  private sourceContexts: Map<string, string> = new Map();
+  constructor(dbPath = '.data/paid-answer-review.sqlite', sourceDir = evidenceDir, options: { workspaceOnly?: boolean } = {}) {
+    if (!options.workspaceOnly) {
     const bytes = readFileSync(resolve(sourceDir, 'manifest.json'));
     const sha = createHash('sha256').update(bytes).digest('hex');
     if (sha !== pinnedManifestSha) throw new Error('Paid review: pinned manifest changed.');
@@ -73,6 +74,7 @@ export class PaidAnswerReview {
           !draft.note || !draft.sourceShas.length || draft.sourceShas.some(sourceSha => !item.sources.some(source => source.sha256 === sourceSha));
       })) throw new Error('Paid review: AI drafts do not match the pinned batch.');
     this.aiDrafts = new Map(packet.drafts.map(item => [item.qid, item]));
+    }
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     // Keep pre-context reviews in the old table for audit, but never count them under this protocol.

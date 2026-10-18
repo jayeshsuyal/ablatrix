@@ -1,0 +1,23 @@
+{
+  "status": "proposal_missing_independent_packets_and_pilot_variability",
+  "sample": {
+    "independentFamilies": 234,
+    "minimumGain": 0.1,
+    "discordantRate": 0.3,
+    "toleratedRegressionRate": 0.02,
+    "alpha": 0.05,
+    "powerTarget": 0.8,
+    "method": "normal_approximation_paired_difference",
+    "limitation": "A planning approximation; pilot variability, exact paired analysis and human review remain required."
+  },
+  "qualificationCases": 80,
+  "qualificationRepeatChecks": 3,
+  "qualificationCalls": 83,
+  "workflowFamilies": 234,
+  "futurePolicyFamilies": 234,
+  "maxCalls": 1955,
+  "additionalPlanningAllowanceUsd": 195.5,
+  "approved": false,
+  "liveQualified": false,
+  "qualityClaimEligible": false
+}
