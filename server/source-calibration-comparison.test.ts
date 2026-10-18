@@ -11,7 +11,7 @@ import { metadataFingerprints } from './flat-source-comparison.ts';
 import { workspaceGenerationPromptIdentity, WORKSPACE_GENERATION_CONTRACT, WORKSPACE_SOURCE_CALIBRATION_CONTRACT } from './workspace-generation.ts';
 import { workspaceCompleteSourceContext } from './workspace-retrieval-context.ts';
 import { workspaceSourceCoverageContext, WORKSPACE_SOURCE_COVERAGE_CONTRACT } from './workspace-source-coverage.ts';
-import { SOURCE_CALIBRATION_CODE_FILES, RETRIEVAL_COVERAGE_CODE_FILES, RETRIEVAL_COVERAGE_RETRIEVAL_FILES, RETRIEVAL_COVERAGE_EXPERIMENT, retrievalCoverageCorpus, retrievalCoverageComparisonCli, sourceCalibrationHash as hash, prepareSourceCalibrationComparison, verifySourceCalibrationPlan, verifySourceCalibrationResult, verifySourceCalibrationCheckpoints, executeSourceCalibrationComparison, sourceCalibrationReviewWorksheet, privateSourceCalibrationOutput, readLedgerAnchor, sourceCalibrationComparisonCli, type SourceCalibrationArtifact, type SourceCalibrationPreparation, type SourceCalibrationDependencies, type SourceCalibrationCheckpoint } from './source-calibration-comparison.ts';
+import { SOURCE_CALIBRATION_CODE_FILES, RETRIEVAL_COVERAGE_CODE_FILES, RETRIEVAL_COVERAGE_RETRIEVAL_FILES, RETRIEVAL_COVERAGE_EXPERIMENT, SOURCE_GAP_EXPERIMENT, SOURCE_GAP_SEED, SOURCE_GAP_QUOTAS, SOURCE_GAP_CODE_FILES, SOURCE_GAP_RETRIEVAL_FILES, sourceGapBaselineContextHash, verifySourceGapAssemblyAudit, sourceGapComparisonCli, retrievalCoverageCorpus, retrievalCoverageComparisonCli, sourceCalibrationHash as hash, prepareSourceCalibrationComparison, verifySourceCalibrationPlan, verifySourceCalibrationResult, verifySourceCalibrationCheckpoints, executeSourceCalibrationComparison, sourceCalibrationReviewWorksheet, privateSourceCalibrationOutput, readLedgerAnchor, sourceCalibrationComparisonCli, type SourceCalibrationArtifact, type SourceCalibrationPreparation, type SourceCalibrationDependencies, type SourceCalibrationCheckpoint } from './source-calibration-comparison.ts';
 
 const clone = <T>(value: T): T => structuredClone(value);
 function artifact(path: string, document: Record<string, any>): SourceCalibrationArtifact { return { path: `docs/${path}.json`, document, fileSha256: hash(JSON.stringify(document)) }; }
@@ -98,6 +98,62 @@ function amendRetrievalPreparation(p: SourceCalibrationPreparation) {
     generationPerformed: false, newProviderCalls: 0, modelOutputsInspected: false, frozenContextsUnchanged: true, implementationChanges
   });
   return p;
+}
+function sourceGapPreparation(): SourceCalibrationPreparation {
+  const p = retrievalPreparation(), strata = [{ name: 'capacity_dimensions', count: 2 }, { name: 'appearance_material', count: 2 }, { name: 'model_scope', count: 2 }, { name: 'missing_information', count: 1 }, { name: 'preservation_control', count: 1 }];
+  p.experiment = SOURCE_GAP_EXPERIMENT; p.implementationSha256 = Object.fromEntries(SOURCE_GAP_CODE_FILES.map(path => [path, hash(`SYNTHETIC implementation ${path}`)]));
+  p.candidateFreeze = artifact('source-gap-freeze', { ...p.candidateFreeze.document, format: 'ablatrix-source-gap-candidate-freeze-v1', selectionSeed: SOURCE_GAP_SEED, implementationSha256: clone(p.implementationSha256) });
+  const protocolBody = { format: 'ablatrix-source-gap-selection-protocol-v1', selectionProtocol: 'baseline_source_gap_v1', selectionSeed: SOURCE_GAP_SEED, screeningProducts: 64, rounds: 8, roundStrata: strata, deckStrata: { capacity_dimensions: 16, appearance_material: 16, model_scope: 16, missing_information: 8, preservation_control: 8 }, quotas: clone(SOURCE_GAP_QUOTAS), candidateEligibilityUsed: false, modelOutputsUsed: false, caseReplacement: false, finalBaselineRevalidationRequired: true, maximumNewAnswerAttempts: 16, candidateFreezeFileSha256: p.candidateFreeze.fileSha256 };
+  const protocol = artifact('source-gap-protocol', { ...protocolBody, protocolSha256: contextComparisonHash(protocolBody) });
+  const cases = Array.from({ length: 64 }, (_, i) => {
+    const c = clone(p.packet.document.cases[i % 8]), qid = String(1000 + i), round = Math.floor(i / 8) + 1;
+    c.id = `source-gap-train-${qid}`; c.upstream.qid = qid; c.product = { id: `SYNTHETIC-GAP-${i}`, title: `SYNTHETIC gap product ${i}` }; c.deckRound = round;
+    c.selectionRankSha256 = hash(`${SOURCE_GAP_SEED}:round:${round}:${c.stratum}:${qid}`);
+    c.question = i === 0 ? 'SYNTHETIC What is the encoded specification?' : i >= 3 && i <= 5 ? 'SYNTHETIC What is the item model number?' : 'SYNTHETIC What are the dimensions?';
+    c.sources.forEach((source: any, j: number) => { source.id = `gap-${i}-${j}`; source.reference = `synthetic:gap-${i}-${j}`; });
+    c.sources[0].text = i === 6 || i === 7 ? 'SYNTHETIC Product Dimensions: 12.3 x 4.5 x 6 inches' : `SYNTHETIC baseline statement ${i}.`;
+    c.sources[3].text = `Item Model Number: GAP${i}X`;
+    if (i === 0) c.sources.push({ id: 'gap-0-extra', label: 'customer review', text: 'SYNTHETIC The encoded specification is fifty.', reference: 'synthetic:encoded', originalQuestion: null });
+    c.sources = c.sources.map((source: any) => ({ ...source, sha256: workspaceReviewSourceHash(source) })); c.sourcePoolSha256 = contextComparisonHash(c.sources); return c;
+  });
+  const exposedUnexecutedCohorts = [{ fileSha256: hash('SYNTHETIC exposed natural cohort'), cohortSha256: hash('SYNTHETIC exposed seal'), sourceReviewFileSha256: hash('SYNTHETIC natural source review'), status: 'exposed_unexecuted_cohort', generationPerformed: false, productIds: Array.from({ length: 8 }, (_, i) => `SYNTHETIC-EXPOSED-${i}`) }];
+  const common = { ...clone(p.packet.document.selection), selectionCodeSha256: p.implementationSha256['scripts/prepare-source-gap-deck.py'], immutableHelperSha256: Object.fromEntries(['scripts/prepare-retrieval-coverage-cohort.py', 'scripts/prepare-source-calibration-cohort.py', 'scripts/prepare-flat-source-cohort.py', 'scripts/prepare-correction-cohort.py', 'scripts/prepare-source-id-cohort.py'].map(path => [path, p.implementationSha256[path]])), exposedUnexecutedCohorts };
+  const deckBody = { format: 'ablatrix-source-gap-deck-v1', selectionSeed: SOURCE_GAP_SEED, selectionProtocol: 'baseline_source_gap_v1', protocolFileSha256: protocol.fileSha256, candidateFreeze: { fileSha256: p.candidateFreeze.fileSha256, document: p.candidateFreeze.document }, source: p.packet.document.source, selection: { ...common, generatedAnswersOrJudgmentsRead: false, modelOutputsUsed: false, candidateContextInspected: false }, exposureAuditSha256: p.exposureAudit.document.auditSha256,
+    rounds: Array.from({ length: 8 }, (_, i) => ({ round: i + 1, seed: `${SOURCE_GAP_SEED}:round:${i + 1}`, caseIds: cases.slice(i * 8, i * 8 + 8).map(c => c.id), inventory: { passed: true }, decisions: [] })), status: { generationPerformed: false, paidExecutionAuthorized: false, qualityClaimEligible: false }, cases };
+  const deck = artifact('source-gap-deck', { ...deckBody, deckSha256: contextComparisonHash(deckBody) });
+  const baselineFor = (input: SourceCalibrationArtifact, scope: 'screening_deck' | 'selected_cohort') => {
+    const corpus = retrievalCoverageCorpus(input), rows = input.document.cases.map((c: any, i: number) => {
+      // A selected-cohort baseline may add an irrelevant source after the64-case
+      // screening review. Eligibility is reconfirmed against this own snapshot.
+      const count = scope === 'selected_cohort' && i === 1 ? 2 : 1;
+      const indexRetrieval = { passages: c.sources.slice(0, count).map((s: any, rank: number) => ({ ...corpus.passages.find(source => source.id === s.id)!, lexicalRank: rank + 1, semanticRank: rank + 1, score: 1 / (rank + 1) })), durationMs: 0, method: 'SYNTHETIC', embeddingModel: 'SYNTHETIC', corpusVersion: corpus.version };
+      const product = { ...c.product, sources: c.sources.map((s: any) => ({ ...s, originalQuestion: s.originalQuestion ?? undefined })) }, passages = workspaceCompleteSourceContext(product, corpus, indexRetrieval);
+      return { caseId: c.id, indexRetrieval, baseline: { ...indexRetrieval, passages }, baselineContextSha256: sourceGapBaselineContextHash(c.product, c.question, passages) };
+    });
+    const body = { format: 'ablatrix-source-gap-baseline-v1', scope, inputFileSha256: input.fileSha256, corpusSha256: hash(corpus), implementationSha256: Object.fromEntries(SOURCE_GAP_RETRIEVAL_FILES.map(path => [path, p.implementationSha256[path]])), results: rows, providerCalls: 0, generationPerformed: false, candidateContextInspected: false };
+    return artifact(`source-gap-${scope}-baseline`, { ...body, sha256: hash(body) });
+  };
+  const baseline = baselineFor(deck, 'screening_deck');
+  const gapRows = cases.map((c, i) => {
+    const group = i < 3 ? 'specification_gap' : i < 6 ? 'model_detail_gap' : i < 8 ? 'baseline_complete_control' : 'ineligible_or_uncertain';
+    const source = i === 0 ? c.sources.at(-1) : i < 3 ? c.sources[2] : i < 6 ? c.sources[3] : c.sources[0];
+    return { caseId: c.id, sourceGapGroup: group, baselineContextSha256: baseline.document.results[i].baselineContextSha256, sourcePoolSha256: c.sourcePoolSha256, sourceScopeReviewed: true, baselineAndTitleReviewed: true, originalQuestionsReviewed: true, noEquivalentFactInBaseline: i < 6, baselineComplete: i === 6 || i === 7, designatedFacts: i < 8 ? [{ fact: 'SYNTHETIC predeclared source fact.', sourceIds: [source.id], quote: source.text, qualification: 'SYNTHETIC source-only mechanics fixture.' }] : [], notes: 'SYNTHETIC source-only mechanical label; no quality assessment.' };
+  });
+  const gapReview = artifact('source-gap-review', { format: 'ablatrix-source-gap-review-v1', protocolFileSha256: protocol.fileSha256, deckFileSha256: deck.fileSha256, baselineFileSha256: baseline.fileSha256, provenance: 'independent_ai_source_gap_review', status: 'completed', modelOutputsInspected: false, candidateContextInspected: false, cases: gapRows });
+  const inputArtifacts = { protocol, deck, baseline, gapReview }, selected = cases.slice(0, 8).map((c, i) => ({ ...c, sourceGapGroup: gapRows[i].sourceGapGroup, designatedFacts: gapRows[i].designatedFacts, screeningBaselineContextSha256: gapRows[i].baselineContextSha256 }));
+  const selection = { ...common, inputArtifacts, finalizationCodeSha256: p.implementationSha256['scripts/finalize-source-gap-cohort.py'] };
+  Object.assign(p.packet.document, { format: 'ablatrix-source-gap-cohort-v1', selectionSeed: SOURCE_GAP_SEED, candidateFreeze: deckBody.candidateFreeze, selection, cases: selected });
+  Object.assign(p.selectionAudit.document, { ...selection, format: 'ablatrix-source-gap-selection-audit-v1', selectionSeed: SOURCE_GAP_SEED, candidateFreezeFileSha256: p.candidateFreeze.fileSha256, decisions: selected.map(c => ({ stage: 'ranked_selection', selected: true, qid: c.upstream.qid, productId: c.product.id, stratum: c.stratum, rankSha256: c.selectionRankSha256 })) });
+  resealPreparation(p);
+  const finalBaseline = baselineFor(p.packet, 'selected_cohort');
+  p.familyAudit = artifact('source-gap-final-audit', { format: 'source-gap-source-family-review-v1', status: 'passed', provenance: 'independent_ai_source_and_family_review', cohortFileSha256: p.packet.fileSha256, finalBaselineFileSha256: finalBaseline.fileSha256, exposureAuditFileSha256: p.exposureAudit.fileSha256, generationPerformed: false, newProviderCalls: 0, modelOutputsInspected: false, candidateContextInspected: false, cases: selected.map((c, i) => ({ ...gapRows[i], familySeparationReviewed: true, designatedFactsSemanticallyRechecked: true, gapOrControlConfirmed: true })) });
+  const corpus = retrievalCoverageCorpus(p.packet), results = finalBaseline.document.results.map((row: any, i: number) => {
+    const c = selected[i], product = { ...c.product, sources: c.sources.map((s: any) => ({ ...s, originalQuestion: s.originalQuestion ?? undefined })) };
+    const candidate = workspaceSourceCoverageContext(product, corpus, row.indexRetrieval, c.question);
+    return { caseId: c.id, indexRetrieval: row.indexRetrieval, baseline: row.baseline, candidate: { ...row.indexRetrieval, passages: candidate.passages }, additions: candidate.additions, contract: candidate.contract };
+  });
+  const body = { format: 'source-gap-retrieval-v1', cohortFileSha256: p.packet.fileSha256, implementationSha256: Object.fromEntries(SOURCE_GAP_RETRIEVAL_FILES.map(path => [path, p.implementationSha256[path]])), corpusSha256: hash(corpus), inputArtifacts: { finalBaseline }, familyAuditFileSha256: p.familyAudit.fileSha256, results, providerCalls: 0, semanticAssessment: 'not_run', generationPerformed: false };
+  p.retrieval = artifact('source-gap-paired-retrieval', { ...body, sha256: hash(body) }); return p;
 }
 function harness(options: { response?: (body: any, index: number) => any; transportFailure?: boolean; changeBody?: boolean; duplicateTransport?: boolean; preparation?: SourceCalibrationPreparation } = {}) {
   const prep = options.preparation ?? preparation(), manifest = prepareSourceCalibrationComparison(prep), checkpoints: SourceCalibrationCheckpoint[] = [], bodies: any[] = [];
@@ -383,5 +439,91 @@ test('retrieval CLI cannot accept a historical prompt comparison and rejects mis
     await assert.rejects(retrievalCoverageComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', old.planSha256], env), /Wrong comparison CLI/);
     const current = prepareSourceCalibrationComparison(retrievalPreparation()); writeFileSync(path, JSON.stringify(current));
     await assert.rejects(retrievalCoverageComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', '0'.repeat(64)], env), /Exact approval/);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('targeted gaps freeze first-by-deck3/3/2 quotas and keep candidate misses without changing answer instructions', () => {
+  const prep = sourceGapPreparation(), manifest = prepareSourceCalibrationComparison(prep);
+  assert.equal(manifest.plan.format, 'ablatrix-source-gap-first-answer-plan-v1'); assert.equal(manifest.plan.slots.length, 16); assert.equal(manifest.plan.budget.absoluteCallLimit, 154);
+  assert.deepEqual(Object.fromEntries(Object.entries(manifest.plan.sourceGapGroups!).map(([group, value]) => [group, value.plannedCases])), SOURCE_GAP_QUOTAS);
+  assert.ok(manifest.plan.retrievalContexts!.unchangedCaseIds.includes('source-gap-train-1000'), 'The first qualifying gap remains selected even when the frozen candidate misses it.');
+  const screening = prep.packet.document.selection.inputArtifacts.baseline.document.results[1].baseline.passages, final = prep.retrieval.document.inputArtifacts.finalBaseline.document.results[1].baseline.passages;
+  assert.notDeepEqual(final, screening, 'The final8 corpus can legitimately alter baseline source assembly before independent reconfirmation.');
+  for (const slot of manifest.plan.slots) {
+    assert.equal(slot.binding.contract, WORKSPACE_GENERATION_CONTRACT); const payload = JSON.parse(slot.requestBody.messages[1].content);
+    for (const forbidden of ['sourceGapGroup', 'designatedFacts', 'screeningBaselineContextSha256', 'gapReview', 'noEquivalentFactInBaseline']) assert.ok(!Object.hasOwn(payload, forbidden));
+    assert.equal(slot.requestBody.messages[0].content, manifest.plan.slots[0].requestBody.messages[0].content);
+  }
+  verifySourceCalibrationPlan(manifest);
+});
+
+test('targeted source-gap inputs reject detached reviews, changed quotas, candidate-conditioned eligibility and empty controls', () => {
+  const mutations: ((p: SourceCalibrationPreparation) => void)[] = [
+    p => { p.packet.document.selection.inputArtifacts.extra = p.packet; },
+    p => { p.packet.document.selection.inputArtifacts.protocol.document.candidateEligibilityUsed = true; },
+    p => { p.packet.document.selection.inputArtifacts.protocol.document.quotas.specification_gap = 4; },
+    p => { p.packet.document.selection.inputArtifacts.deck.document.cases.pop(); },
+    p => { p.packet.document.selection.inputArtifacts.deck.document.selection.candidateContextInspected = true; },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.candidateContextInspected = true; },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.cases[0].baselineContextSha256 = hash('SYNTHETIC detached context'); },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.cases[0].designatedFacts[0].quote = 'SYNTHETIC fabricated source quote'; },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.cases[6].designatedFacts = []; },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.cases[6].designatedFacts[0] = clone(p.packet.document.selection.inputArtifacts.gapReview.document.cases[3].designatedFacts[0]); },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.cases[0].sourceGapGroup = 'ineligible_or_uncertain'; },
+    p => { p.packet.document.selection.exposedUnexecutedCohorts[0].status = 'failed'; },
+    p => { p.packet.document.selection.exposedUnexecutedCohorts[0].productIds[0] = p.packet.document.cases[0].product.id; },
+    p => { p.familyAudit.document.candidateContextInspected = true; },
+    p => { p.familyAudit.document.cases[0].noEquivalentFactInBaseline = false; },
+    p => { p.familyAudit.document.cases[0].designatedFactsSemanticallyRechecked = false; },
+    p => { p.familyAudit.document.cases[6].baselineComplete = false; },
+    p => { p.familyAudit.document.finalBaselineFileSha256 = hash('SYNTHETIC old corpus'); },
+    p => { p.retrieval.document.inputArtifacts.finalBaseline.document.results[0].baseline.passages.pop(); },
+    p => { p.retrieval.document.familyAuditFileSha256 = hash('SYNTHETIC detached final audit'); },
+    p => { p.retrieval.document.inputArtifacts.finalBaseline.path = p.packet.document.selection.inputArtifacts.baseline.path; },
+    p => { p.packet.document.selection.inputArtifacts.protocol.path = './server/workspace-source-coverage.ts'; },
+    p => { p.compatibilityAmendment = amendRetrievalPreparation(retrievalPreparation(false, true)).compatibilityAmendment; }
+  ];
+  for (const mutate of mutations) { const p = sourceGapPreparation(); mutate(p); assert.throws(() => prepareSourceCalibrationComparison(p)); }
+  const reordered = sourceGapPreparation(); reordered.packet.document.cases.reverse(); reordered.selectionAudit.document.decisions.reverse(); resealPreparation(reordered);
+  assert.throws(() => prepareSourceCalibrationComparison(reordered), /first qualifying cases in fixed deck order/);
+});
+
+test('targeted execution retains all groups, changed/unchanged contexts and the full denominator on first failure', async () => {
+  const h = harness({ preparation: sourceGapPreparation() }); const { result } = await h.execute();
+  assert.equal(result.format, 'source-gap-result-v1'); assert.equal(result.completedAnswers, 16); assert.equal(result.newProviderAttempts, 16); assert.equal(result.qualityClaimEligible, false);
+  assert.deepEqual(Object.fromEntries(Object.entries(result.sourceGapGroups!).map(([group, value]) => [group, value.completedPairs])), SOURCE_GAP_QUOTAS);
+  assert.match(result.selectionCaveat!, /not a natural-product sample/); assert.ok(result.retrievalContexts!.completedUnchangedPairs >= 1);
+  const stopped = harness({ preparation: sourceGapPreparation(), response: () => ({ answer: 'SYNTHETIC invalid response.', status: 'answered', citations: ['src_wrong'] }) });
+  const partial = (await stopped.execute()).result; assert.equal(partial.newProviderAttempts, 1); assert.equal(partial.networkDispatches, 1); assert.equal(partial.steps.filter(s => s.status === 'not_attempted').length, 15); assert.equal(partial.plannedCases, 8);
+  assert.deepEqual(Object.fromEntries(Object.entries(partial.sourceGapGroups!).map(([group, value]) => [group, value.plannedCases])), SOURCE_GAP_QUOTAS);
+});
+
+test('both source-gap review stages reject a missing fact already present in that exact cited baseline body', () => {
+  const p = sourceGapPreparation(), inputs = p.packet.document.selection.inputArtifacts;
+  const source = inputs.baseline.document.results[0].baseline.passages[0];
+  const fact = { fact: 'SYNTHETIC incorrectly claimed missing fact.', sourceIds: [source.id], quote: source.text, qualification: 'SYNTHETIC direct same-source contradiction.' };
+  inputs.gapReview.document.cases[0].designatedFacts = [fact]; inputs.gapReview.fileSha256 = hash(JSON.stringify(inputs.gapReview.document));
+  p.selectionAudit.document.inputArtifacts = clone(inputs); resealPreparation(p);
+  assert.throws(() => prepareSourceCalibrationComparison(p), /A missing fact cannot already occur in its cited baseline source body/);
+  const final = sourceGapPreparation(), saved = final.retrieval.document.inputArtifacts.finalBaseline;
+  final.packet.document.cases[0].designatedFacts = [fact]; final.familyAudit.document.cases[0].designatedFacts = [fact];
+  assert.throws(() => verifySourceGapAssemblyAudit(final.packet, saved, final.familyAudit), /A missing fact cannot already occur in its cited baseline source body/);
+  // The same literal under a different cited source remains a scope question
+  // for independent review; do not equate short CQA answers across models.
+  const separate = sourceGapPreparation(), case0 = separate.packet.document.cases[0], row0 = separate.familyAudit.document.cases[0];
+  case0.sources[1].text = source.text; case0.sources[1].originalQuestion = 'SYNTHETIC different model scope?';
+  const separateFact = { ...fact, sourceIds: [case0.sources[1].id] }; case0.designatedFacts = [separateFact]; row0.designatedFacts = [separateFact];
+  assert.doesNotThrow(() => verifySourceGapAssemblyAudit(separate.packet, separate.retrieval.document.inputArtifacts.finalBaseline, separate.familyAudit));
+});
+
+test('targeted CLI retains exact approval and protocol isolation before private access', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'source-gap-comparison-cli-'));
+  try {
+    const path = join(root, 'plan.json'), env = new Proxy({ ABLATRIX_LOOP_LIVE: '1' }, { get(target, key) { if (String(key).includes('SAPIOM')) assert.fail('Credential access before approval'); return Reflect.get(target, key); } });
+    const old = prepareSourceCalibrationComparison(retrievalPreparation()); writeFileSync(path, JSON.stringify(old));
+    await assert.rejects(sourceGapComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', old.planSha256], env), /Wrong comparison CLI/);
+    const current = prepareSourceCalibrationComparison(sourceGapPreparation()); writeFileSync(path, JSON.stringify(current));
+    await assert.rejects(sourceGapComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', '0'.repeat(64)], env), /Exact approval/);
+    await assert.rejects(retrievalCoverageComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', current.planSha256], env), /Wrong comparison CLI/);
   } finally { rmSync(root, { recursive: true, force: true }); }
 });

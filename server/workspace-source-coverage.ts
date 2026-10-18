@@ -22,7 +22,7 @@ const listingLabel = /^(?:attribute|attributes|specification|specifications|spec
 const proseListingLabel = /^(?:bullet|description|listing|product description|product details)$/i;
 const itemScope = String.raw`\b(?:item|product)\b`;
 const packageScope = String.raw`\b(?:packag(?:e|es|ing)|box|carton|shipping)\b`;
-const scopeJoin = String.raw`(?:\s*(?:&|/)\s*|\s+(?:and|or|versus|vs\.?|as\s+well\s+as|compared\s+(?:with|to))\s+)(?:(?:the|its|this)\s+)?`;
+const scopeJoin = String.raw`(?:\s*(?:&|/)\s*|\s+(?:and|or|versus|vs\.?|as\s+well\s+as|compared\s+(?:with|to))\s+)(?:(?:also|of|for|the|its|this|that)\s+)*`;
 const coordinatedDimensionScopes = new RegExp(`${itemScope}${scopeJoin}${packageScope}|${packageScope}${scopeJoin}${itemScope}`);
 // Case folding is permitted; punctuation is part of a literal identifier.
 // ZX-100 and ZX100 must never be presented as an established exact match.
