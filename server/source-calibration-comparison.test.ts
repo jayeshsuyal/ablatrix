@@ -146,7 +146,7 @@ function sourceGapPreparation(): SourceCalibrationPreparation {
   Object.assign(p.selectionAudit.document, { ...selection, format: 'ablatrix-source-gap-selection-audit-v1', selectionSeed: SOURCE_GAP_SEED, candidateFreezeFileSha256: p.candidateFreeze.fileSha256, decisions: selected.map(c => ({ stage: 'ranked_selection', selected: true, qid: c.upstream.qid, productId: c.product.id, stratum: c.stratum, rankSha256: c.selectionRankSha256 })) });
   resealPreparation(p);
   const finalBaseline = baselineFor(p.packet, 'selected_cohort');
-  p.familyAudit = artifact('source-gap-final-audit', { format: 'source-gap-source-family-review-v1', status: 'passed', provenance: 'independent_ai_source_and_family_review', cohortFileSha256: p.packet.fileSha256, finalBaselineFileSha256: finalBaseline.fileSha256, exposureAuditFileSha256: p.exposureAudit.fileSha256, generationPerformed: false, newProviderCalls: 0, modelOutputsInspected: false, candidateContextInspected: false, cases: selected.map((c, i) => ({ ...gapRows[i], familySeparationReviewed: true, designatedFactsSemanticallyRechecked: true, gapOrControlConfirmed: true })) });
+  p.familyAudit = artifact('source-gap-final-audit', { format: 'source-gap-source-family-review-v1', status: 'passed', provenance: 'independent_ai_source_and_family_review', cohortFileSha256: p.packet.fileSha256, finalBaselineFileSha256: finalBaseline.fileSha256, exposureAuditFileSha256: p.exposureAudit.fileSha256, generationPerformed: false, newProviderCalls: 0, modelOutputsInspected: false, candidateContextInspected: false, cases: selected.map((c, i) => ({ ...gapRows[i], baselineContextSha256: finalBaseline.document.results[i].baselineContextSha256, familySeparationReviewed: true, designatedFactsSemanticallyRechecked: true, gapOrControlConfirmed: true })) });
   const corpus = retrievalCoverageCorpus(p.packet), results = finalBaseline.document.results.map((row: any, i: number) => {
     const c = selected[i], product = { ...c.product, sources: c.sources.map((s: any) => ({ ...s, originalQuestion: s.originalQuestion ?? undefined })) };
     const candidate = workspaceSourceCoverageContext(product, corpus, row.indexRetrieval, c.question);
@@ -486,6 +486,29 @@ test('targeted source-gap inputs reject detached reviews, changed quotas, candid
   for (const mutate of mutations) { const p = sourceGapPreparation(); mutate(p); assert.throws(() => prepareSourceCalibrationComparison(p)); }
   const reordered = sourceGapPreparation(); reordered.packet.document.cases.reverse(); reordered.selectionAudit.document.decisions.reverse(); resealPreparation(reordered);
   assert.throws(() => prepareSourceCalibrationComparison(reordered), /first qualifying cases in fixed deck order/);
+});
+
+test('final source-gap review rejects a copied screening hash despite the correct final-baseline file binding', () => {
+  const p = sourceGapPreparation(), finalBaseline = p.retrieval.document.inputArtifacts.finalBaseline;
+  const screeningHash = p.packet.document.selection.inputArtifacts.baseline.document.results[1].baselineContextSha256;
+  const finalHash = finalBaseline.document.results[1].baselineContextSha256;
+  assert.notEqual(screeningHash, finalHash, 'The selected corpus changes this case baseline source context.');
+  assert.equal(p.familyAudit.document.cases[1].baselineContextSha256, finalHash);
+  assert.doesNotThrow(() => verifySourceGapAssemblyAudit(p.packet, finalBaseline, p.familyAudit));
+  assert.doesNotThrow(() => prepareSourceCalibrationComparison(p));
+
+  p.familyAudit.document.cases[1].baselineContextSha256 = screeningHash;
+  p.familyAudit.fileSha256 = hash(JSON.stringify(p.familyAudit.document));
+  p.retrieval.document.familyAuditFileSha256 = p.familyAudit.fileSha256;
+  const { sha256: _sha256, ...retrievalBody } = p.retrieval.document;
+  p.retrieval.document.sha256 = hash(retrievalBody); p.retrieval.fileSha256 = hash(JSON.stringify(p.retrieval.document));
+  assert.equal(p.familyAudit.document.finalBaselineFileSha256, finalBaseline.fileSha256);
+  assert.throws(() => verifySourceGapAssemblyAudit(p.packet, finalBaseline, p.familyAudit), /Final review must bind the selected-cohort baseline context/);
+  assert.throws(() => prepareSourceCalibrationComparison(p), /Final review must bind the selected-cohort baseline context/);
+
+  p.familyAudit.document.cases[1].baselineContextSha256 = finalHash;
+  finalBaseline.document.results.reverse();
+  assert.throws(() => verifySourceGapAssemblyAudit(p.packet, finalBaseline, p.familyAudit), /The final baseline must retain the reviewed case order/);
 });
 
 test('targeted execution retains all groups, changed/unchanged contexts and the full denominator on first failure', async () => {

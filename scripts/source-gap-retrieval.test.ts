@@ -49,7 +49,7 @@ function retriever(input: SourceCalibrationArtifact, chooseDetail = false) {
 function familyAudit(cohort: SourceCalibrationArtifact, baseline: SourceCalibrationArtifact) {
   return artifact('family-audit', { status: 'passed', provenance: 'independent_ai_source_and_family_review', cohortFileSha256: cohort.fileSha256, finalBaselineFileSha256: baseline.fileSha256,
     exposureAuditFileSha256: 'a'.repeat(64), generationPerformed: false, newProviderCalls: 0, modelOutputsInspected: false, candidateContextInspected: false,
-    cases: cohort.document.cases.map((c: Json) => ({ caseId: c.id, sourceScopeReviewed: true, familySeparationReviewed: true, baselineAndTitleReviewed: true, originalQuestionsReviewed: true,
+    cases: cohort.document.cases.map((c: Json, index: number) => ({ caseId: c.id, baselineContextSha256: baseline.document.results[index].baselineContextSha256, sourceScopeReviewed: true, familySeparationReviewed: true, baselineAndTitleReviewed: true, originalQuestionsReviewed: true,
       sourceGapGroup: c.sourceGapGroup, designatedFacts: structuredClone(c.designatedFacts), designatedFactsSemanticallyRechecked: true, gapOrControlConfirmed: true,
       noEquivalentFactInBaseline: c.sourceGapGroup !== 'baseline_complete_control', baselineComplete: c.sourceGapGroup === 'baseline_complete_control', notes: 'Fictional source-only mechanics fixture; no real semantic assessment.' })) });
 }
@@ -92,6 +92,7 @@ test('failed/stale/nonsemantic audit and role/fact drift reject assembly before 
   for (const mutate of [
     (audit: Json) => { audit.status = 'failed'; },
     (audit: Json) => { audit.finalBaselineFileSha256 = 'b'.repeat(64); },
+    (audit: Json) => { audit.cases[0].baselineContextSha256 = 'b'.repeat(64); },
     (audit: Json) => { audit.candidateContextInspected = true; },
     (audit: Json) => { audit.cases[0].designatedFactsSemanticallyRechecked = false; },
     (audit: Json) => { audit.cases[0].sourceGapGroup = 'baseline_complete_control'; },

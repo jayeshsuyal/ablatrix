@@ -103,6 +103,26 @@ test('explicit material and capacity intents rescue only their corresponding str
   assert.deepEqual(f.run('Is it blue?').additions.map(a => a.sourceId), ['color']);
 });
 
+test('incidental coordinated nouns do not consume a slot with unrequested item dimensions', () => {
+  const f = setup([source('report', 'review', 'A customer report, retained unchanged.'),
+    source('a-item', 'attribute', 'item_dimensions: { width:8, height:12 }'),
+    source('b-package', 'attribute', 'item_package_dimensions: { width:10, height:14 }'),
+    source('c-color', 'attribute', 'color: { value:"blue" }'),
+    source('d-material', 'attribute', 'material: { value:"wood" }')], ['report']);
+  for (const question of [
+    'I have the package and product; what are the package dimensions, color, and material?',
+    'I have the package and product, what are the package dimensions, color, and material?',
+    'I have the package and product. What are the package dimensions, color, and material?',
+    'I have the product and its box; what are the package dimensions, color, and material?',
+  ]) {
+    const result = f.run(question);
+    assert.deepEqual(result.additions.map(a => a.sourceId), ['b-package', 'c-color', 'd-material']);
+    assert.equal(result.passages[0].text, f.product.sources[0].text);
+    assert.ok(result.additions.every(a => !a.reasons.includes('question_intent:item_dimensions')));
+  }
+  assert.deepEqual(f.run('How large are the product and its package?').additions.map(a => a.sourceId), ['a-item', 'b-package']);
+});
+
 test('exact identifiers preserve separators, and near-model strings are not standalone family matches', () => {
   const f = setup([
     source('report', 'cqa', 'No; this is for the other model.', 'Does it fit VGSU1646BBL?'),

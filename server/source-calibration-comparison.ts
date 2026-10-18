@@ -196,9 +196,12 @@ export function verifySourceGapAssemblyAudit(packet: SourceCalibrationArtifact, 
   assert.equal(audit.cohortFileSha256, packet.fileSha256); assert.equal(audit.finalBaselineFileSha256, finalBaseline.fileSha256);
   for (const field of ['generationPerformed', 'modelOutputsInspected', 'candidateContextInspected']) assert.equal(audit[field], false); assert.equal(audit.newProviderCalls, 0);
   assert.deepEqual(audit.cases.map((c: Json) => c.caseId), cases.map(c => c.id)); assert.equal(cases.length, 8);
+  assert.deepEqual(finalBaseline.document.results.map((row: Json) => row.caseId), cases.map(c => c.id), 'The final baseline must retain the reviewed case order.');
   assert.deepEqual(Object.fromEntries(Object.keys(SOURCE_GAP_QUOTAS).map(group => [group, cases.filter(c => c.sourceGapGroup === group).length])), SOURCE_GAP_QUOTAS);
   for (const [i, c] of cases.entries()) {
     const row = audit.cases[i]; assert.equal(row.familySeparationReviewed, true); assert.equal(row.sourceGapGroup, c.sourceGapGroup); assert.deepEqual(row.designatedFacts, c.designatedFacts);
+    digest(finalBaseline.document.results[i].baselineContextSha256);
+    assert.equal(row.baselineContextSha256, finalBaseline.document.results[i].baselineContextSha256, 'Final review must bind the selected-cohort baseline context.');
     assert.equal(row.designatedFactsSemanticallyRechecked, true); assert.equal(row.gapOrControlConfirmed, true); verifyGapRole(row, c.sources, finalBaseline.document.results[i].baseline.passages);
   }
 }
