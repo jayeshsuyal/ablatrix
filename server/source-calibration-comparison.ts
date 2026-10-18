@@ -61,7 +61,8 @@ export function prepareSourceCalibrationComparison(preparation: SourceCalibratio
   assert.equal(p.scope.workspacePaths.length, exposureBody.metadata.workspaces.length); assert.equal(p.scope.comparisonPaths.length, exposureBody.metadata.comparisons.length);
   const freeze = p.candidateFreeze.document, candidate = workspaceGenerationPromptIdentity(WORKSPACE_SOURCE_CALIBRATION_CONTRACT);
   assert.equal(freeze.frozen, true); assert.equal(freeze.status, 'experimental_not_promoted'); assert.equal(freeze.contract, candidate.contract); assert.equal(freeze.tool, candidate.tool); assert.equal(freeze.systemInstructionsSha256, candidateSha); assert.equal(candidate.systemInstructionsSha256, candidateSha); assert.equal(freeze.qualityClaimEligible, false);
-  assert.equal(p.packet.document.candidateFreezeFileSha256, p.candidateFreeze.fileSha256);
+  assert.equal(p.packet.document.candidateFreeze?.fileSha256, p.candidateFreeze.fileSha256);
+  assert.deepEqual(p.packet.document.candidateFreeze?.document, freeze, 'Selection must retain the exact pre-selection instruction freeze.');
   const retrieval = p.retrieval.document, { sha256, ...retrievalBody } = retrieval;
   assert.equal(sha256, sourceCalibrationHash(retrievalBody)); assert.equal(retrieval.cohortFileSha256, p.packet.fileSha256);
   assert.deepEqual(retrieval.results.map((r: Json) => r.caseId), ids);
