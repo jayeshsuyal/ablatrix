@@ -1,0 +1,25 @@
+{
+  "format": "ablatrix-source-calibration-selection-summary-v1",
+  "candidateInstructionsChanged": false,
+  "cases": 8,
+  "reviewerSources": 161,
+  "selectedSourceBodies": 39,
+  "sourceFamilyReview": "passed",
+  "reviewProvenance": "independent_ai_source_and_family_review",
+  "preservedRejectedDrafts": 2,
+  "previouslyReviewedProductsExcluded": 16,
+  "sourceOnly": true,
+  "generatedAnswersObserved": 0,
+  "providerCalls": 0,
+  "paidExecutionAuthorized": false,
+  "qualityClaimEligible": false,
+  "files": {
+    "cohort-v1.json": "658b9e2ab6e2cec0904da67b31980b4e4d6bd0f1e2dadb8181e5f4ec31869934",
+    "retrieval-v1.json": "06bf9965ec2d34531a305d2f2cb653268cace0d6b7907fc327f2665a876ec782",
+    "source-family-review-v1.json": "948391ed5a5a31b4a3e86e867d374a5ff7a1ca3628ae5d8fafce7626dec9cfbe"
+  },
+  "privatePreparationSha256": {
+    "selection-audit.json": "edaa461da2cb358a599378350297bdd3da96e985d154cb7e161990a90e4e5599",
+    "exposure-audit.json": "046db7059e21456246dcab4144cbe9b04553e6eb5527450c8c6ac4315efbb665"
+  }
+}

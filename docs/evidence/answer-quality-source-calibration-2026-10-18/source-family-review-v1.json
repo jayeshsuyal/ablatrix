@@ -1,0 +1,383 @@
+{
+  "format": "source-calibration-source-family-review-v1",
+  "cohortFileSha256": "658b9e2ab6e2cec0904da67b31980b4e4d6bd0f1e2dadb8181e5f4ec31869934",
+  "retrievalFileSha256": "06bf9965ec2d34531a305d2f2cb653268cace0d6b7907fc327f2665a876ec782",
+  "exposureAuditFileSha256": "046db7059e21456246dcab4144cbe9b04553e6eb5527450c8c6ac4315efbb665",
+  "status": "passed",
+  "provenance": "independent_ai_source_and_family_review",
+  "cases": [
+    {
+      "caseId": "source-calibration-train-12543",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "No concrete family overlap or safety exclusion found. The kraft notebook family has no established identity with protected AzureGreen leather books or any of the sixteen prior reviewed families; shared stationery category is insufficient. All 10 upstream rows and 10 unique source parents are represented exactly, with all five retrieved bodies intact. The complete pool confirms lined/ruled pages but does not distinguish college from wide ruling; this legitimate missing-information relationship is frozen before outputs.",
+      "requiredSupportedFacts": [
+        "The ruling_type attribute says ruled.",
+        "A bullet says each notebook has 80 lined pages.",
+        "Neither the complete source pool nor the retrieved passages specify college ruling, wide ruling, or line spacing.",
+        "Notebook page dimensions describe page size rather than the spacing between ruled lines."
+      ],
+      "unresolvedRelationships": [
+        "Whether the notebook is college ruled or wide ruled.",
+        "The actual distance between ruled lines."
+      ],
+      "prohibitedInferences": [
+        "Selecting college or wide ruling from the ruled attribute alone.",
+        "Deriving line spacing from notebook dimensions or page count.",
+        "Treating small notebook size as proof of a particular ruling standard."
+      ],
+      "sourceIds": [
+        "epqa-B079JHHYGT-attribute-b74e93a5f9ae63f4",
+        "epqa-B079JHHYGT-attribute-3dac9471ce2ea68f",
+        "epqa-B079JHHYGT-bullet-2b9fc3d82df26781",
+        "epqa-B079JHHYGT-attribute-c97549b1823f5869",
+        "epqa-B079JHHYGT-description-bfd639557dd83d0e",
+        "epqa-B079JHHYGT-attribute-8bf9e0f81cf249de",
+        "epqa-B079JHHYGT-description-1d1a44a7a5f3cf08",
+        "epqa-B079JHHYGT-description-058d69aaceb7bac3",
+        "epqa-B079JHHYGT-review-a4b49926d9490d1b",
+        "epqa-B079JHHYGT-review-f7f361390c75926c"
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-2652",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "No concrete family overlap or safety exclusion found for Plasticade/Signicade sign-display shipping. All 30 raw rows reduce to 28 unique exact source parents; all five final retrieved parents match, including their separate original CQA questions. The shipping deadline promise is scoped to another customer's historical order, while other shipping reviews are qualitative anecdotes. Its capacity_dimensions label is retained as frozen; the actual target asks about shipping time, limiting any interpretation as a pure dimensions probe. This semantic-label limitation is not a source or family eligibility failure.",
+      "requiredSupportedFacts": [
+        "Reviews describe fast or early shipping without a numerical shipping interval.",
+        "One CQA promises an original customer delivery by Thursday September 19 if that customer ordered that day.",
+        "That CQA's original question, order timing, destination and seller context are distinct from the present target question.",
+        "The complete source pool supplies no generally applicable or current dispatch/delivery duration."
+      ],
+      "unresolvedRelationships": [
+        "Current dispatch time and delivery estimate for the target order.",
+        "The target seller, stock, destination, shipping method and order date."
+      ],
+      "prohibitedInferences": [
+        "Reusing the historical September 19 promise as a current shipping guarantee.",
+        "Turning fast shipping anecdotes into a specific number of days.",
+        "Speaking as the vendor or claiming the current order will meet a deadline.",
+        "Using sign size, weight or insert thickness to infer shipping duration."
+      ],
+      "sourceIds": [
+        "epqa-B004XI6OG4-cqa-526a95f66165493b",
+        "epqa-B004XI6OG4-description-4a6f38b201d52287",
+        "epqa-B004XI6OG4-cqa-c05aa2ba2de06cbd",
+        "epqa-B004XI6OG4-review-e611a60bc2ca312d",
+        "epqa-B004XI6OG4-cqa-877ea3268bc590bd",
+        "epqa-B004XI6OG4-description-280106a5110ed50d",
+        "epqa-B004XI6OG4-description-43701ba231c00b1b",
+        "epqa-B004XI6OG4-attribute-9e50a9f32483d866",
+        "epqa-B004XI6OG4-review-3ab746c545290888",
+        "epqa-B004XI6OG4-review-00525e60ad288c42",
+        "epqa-B004XI6OG4-cqa-b87000b3329ff8bf",
+        "epqa-B004XI6OG4-description-36f2aea34be5aa2d",
+        "epqa-B004XI6OG4-attribute-bec986c363b67f55",
+        "epqa-B004XI6OG4-cqa-78e6fb70ca5ca31f",
+        "epqa-B004XI6OG4-cqa-0267073e1ec906ab",
+        "epqa-B004XI6OG4-attribute-a3bc655efdb2b80c",
+        "epqa-B004XI6OG4-attribute-f79d264e03d5ed28",
+        "epqa-B004XI6OG4-cqa-55b42d02e68d02fe",
+        "epqa-B004XI6OG4-review-e9de42f7df27bddf",
+        "epqa-B004XI6OG4-cqa-893ef57884182745",
+        "epqa-B004XI6OG4-review-fbc7b0d88285bb76",
+        "epqa-B004XI6OG4-review-fa2d95dff8f25cb0",
+        "epqa-B004XI6OG4-review-bcc1f34169dbd958",
+        "epqa-B004XI6OG4-description-fba4bbdf542b280a",
+        "epqa-B004XI6OG4-bullet-0c9572f7f2169fb6",
+        "epqa-B004XI6OG4-description-371b1fe544cfe212",
+        "epqa-B004XI6OG4-cqa-c378ff420bed347b",
+        "epqa-B004XI6OG4-review-10d07571ef462800"
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-12047",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "No concrete family overlap or safety exclusion found. CHH Chinese checkers is distinct from the prior double-twelve dominoes set; both being tabletop games does not establish brand, model or source identity. All 30 raw rows and 27 unique source parents match upstream; all five final retrieved bodies are exact. The retrieved passages capture muted colors and blue/green/white/beige comparisons. Omitted full-pool passages add a missing-black-marble report and a complaint that the expected red is pale/absent; they do not supply a clean authoritative six-color inventory.",
+      "requiredSupportedFacts": [
+        "The attribute identifies the set as multicolor and the description says there are six sets of colored pieces.",
+        "Reviews explicitly discuss blue or light-blue, green or light-green, white and beige colors.",
+        "Several purchasers say some colors are muted or difficult to tell apart, especially blue versus green and white versus beige.",
+        "The complete pool also contains a report of a missing black marble and complaints that red is absent or replaced by an unusually pale shade.",
+        "The complete source pool does not establish one unambiguous exhaustive six-color list."
+      ],
+      "unresolvedRelationships": [
+        "The complete and consistent six-color set supplied with this selected item.",
+        "Whether reported missing or pale colors reflect packaging defects, production variation or normal appearance."
+      ],
+      "prohibitedInferences": [
+        "Inventing a standard six-color set such as red/yellow/blue/green/black/white.",
+        "Treating every color mentioned in separate reviews as a guaranteed complete package list.",
+        "Claiming vivid, clearly separated colors in the face of repeated muted/close-color reports.",
+        "Resolving contradictory wood-versus-glass material reviews while answering the color question."
+      ],
+      "sourceIds": [
+        "epqa-B0009U7UZE-review-d2852eee5bee1476",
+        "epqa-B0009U7UZE-attribute-f20dd274935ecf54",
+        "epqa-B0009U7UZE-review-97f522e5267a1866",
+        "epqa-B0009U7UZE-review-ba25c0b3df1b7b75",
+        "epqa-B0009U7UZE-review-b394a5dbc1fd1e19",
+        "epqa-B0009U7UZE-attribute-6f2b8d6b0ed15423",
+        "epqa-B0009U7UZE-attribute-d0f190f4679922ca",
+        "epqa-B0009U7UZE-attribute-47e8b4d0f97104aa",
+        "epqa-B0009U7UZE-review-f15d19dfcf4a8ce2",
+        "epqa-B0009U7UZE-review-4c47331daed14d3f",
+        "epqa-B0009U7UZE-review-bc138540e62431b6",
+        "epqa-B0009U7UZE-review-1ffd0e0ef237d32b",
+        "epqa-B0009U7UZE-review-b8c9bb9f012b9ab3",
+        "epqa-B0009U7UZE-review-b48f707c53fed426",
+        "epqa-B0009U7UZE-description-ab8d4f9feb362ec4",
+        "epqa-B0009U7UZE-description-297894ca5de40d76",
+        "epqa-B0009U7UZE-attribute-5acd6f90e96eb6c5",
+        "epqa-B0009U7UZE-review-6cf951f1e3c0e912",
+        "epqa-B0009U7UZE-review-32a52fc4fc21623d",
+        "epqa-B0009U7UZE-review-87999c1b22f0bea1",
+        "epqa-B0009U7UZE-review-7e9b2b90e77390b7",
+        "epqa-B0009U7UZE-review-504a86573c3b443e",
+        "epqa-B0009U7UZE-description-e359f63a7a9c6c32",
+        "epqa-B0009U7UZE-bullet-e74462d840fe6cf6",
+        "epqa-B0009U7UZE-review-4f83e62118efbc97",
+        "epqa-B0009U7UZE-review-f3f21c8860f04e62",
+        "epqa-B0009U7UZE-review-299f69aa3766e2c5"
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-12773",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "No concrete protected-family or within-cohort overlap found for Hudora 205/14724 scooters. The target asks wheel construction; it does not request pressure containment, inflation limits, riding safety or modification advice. All 30 raw rows and 28 unique source parents are complete and exact; all five final retrieved parents preserve original scope. The full-pool polyurethane-wheel attribute and PU-cast-wheel description, omitted by retrieval, corroborate the retrieved no-air statement. A title substring matching 2year is part of 12 years age wording, not a protected model identifier.",
+      "requiredSupportedFacts": [
+        "The wheel attribute names polyurethane.",
+        "The description calls them PU cast wheels of approximately eight-inch diameter.",
+        "A CQA whose original question asks how far one kick travels says the tire or wheels have no air in them.",
+        "A purchaser also describes polyurethane wheels.",
+        "These sources support describing the selected wheels as PU/cast rather than pneumatic or air-filled, while retaining the source's original CQA context."
+      ],
+      "unresolvedRelationships": [
+        "No substantive unresolved relationship is needed to distinguish air-filled from PU cast wheels in this selected source pool.",
+        "The pool contains other model and weight-capacity variation, which does not define tire inflation specifications."
+      ],
+      "prohibitedInferences": [
+        "Claiming an inflation pressure, puncture rating, maintenance requirement or riding-safety guarantee.",
+        "Treating the CQA as a formal performance test of travel per kick.",
+        "Conflating the Hudora 230 front-wheel specifications with the selected 205/14724 wheel size."
+      ],
+      "sourceIds": [
+        "epqa-B01N563SG0-attribute-6d99a11f2a50b333",
+        "epqa-B01N563SG0-review-dd575d887f1df924",
+        "epqa-B01N563SG0-cqa-629f376f563ba6b1",
+        "epqa-B01N563SG0-description-cbdc1dbce678f63d",
+        "epqa-B01N563SG0-review-17fd98cc502533fe",
+        "epqa-B01N563SG0-attribute-5d07b08bc1b1ef9a",
+        "epqa-B01N563SG0-description-c7f832dc6fadab99",
+        "epqa-B01N563SG0-description-843f807602f10938",
+        "epqa-B01N563SG0-review-6639de18ba252487",
+        "epqa-B01N563SG0-review-6fa6ef4c2d79663c",
+        "epqa-B01N563SG0-attribute-d0a672581c2521e1",
+        "epqa-B01N563SG0-attribute-14cc2b3a1e9530c8",
+        "epqa-B01N563SG0-description-a4697cbabffc6e4d",
+        "epqa-B01N563SG0-cqa-5b2961d80b9e94b2",
+        "epqa-B01N563SG0-cqa-a614cae1749ddfc1",
+        "epqa-B01N563SG0-description-e5488b476466aa4c",
+        "epqa-B01N563SG0-attribute-27ab5b52b2171589",
+        "epqa-B01N563SG0-description-9e7210003fe8ee56",
+        "epqa-B01N563SG0-review-e3320ce7504ec8fa",
+        "epqa-B01N563SG0-review-dd8fc7583dd271a6",
+        "epqa-B01N563SG0-bullet-0ccccd32dd33f3d5",
+        "epqa-B01N563SG0-cqa-fe4987645095b8d9",
+        "epqa-B01N563SG0-cqa-5ab664eb1e11e7f9",
+        "epqa-B01N563SG0-description-ab9f986ea12ba062",
+        "epqa-B01N563SG0-description-b543eed1bfb4bc65",
+        "epqa-B01N563SG0-description-aba5a414becf3e75",
+        "epqa-B01N563SG0-review-814db1c6002468a6",
+        "epqa-B01N563SG0-review-ec0ff09914b3897a"
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-195",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "No concrete family overlap found. Toyota/Camry/17801 filter fit is distinct from protected Mopar/Ford automotive items and all sixteen prior reviewed families. This is an ordinary engine air-filter compatibility comparison, with no safety-system modification or repair procedure requested. All 20 raw rows and 20 source parents match exactly, and all five final retrieved bodies preserve scope. Strong exact-year/engine evidence supports YZZ02, but YZZ01 comparison and the different title/model-number identifiers remain unresolved.",
+      "requiredSupportedFacts": [
+        "The model_name attribute identifies 17801-YZZ02.",
+        "An exact CQA about Camry 2014 SE Sport 2.5L explicitly says 17801-YZZ02 fits a 2014 Camry SE 2.5L engine.",
+        "Other CQAs also say this filter fits a 2014 four-cylinder Camry.",
+        "The product title and model_number attribute instead carry 17801-0H050/178010H050; the pool does not clearly explain the relationship between those identifiers and YZZ02.",
+        "No source directly evaluates 17801-YZZ01 or compares its fit against YZZ02."
+      ],
+      "unresolvedRelationships": [
+        "Whether YZZ01 also fits, and any comparative fit difference between YZZ01 and YZZ02.",
+        "The exact interchange or supersession relationship among 17801-0H050 and 17801-YZZ02.",
+        "Vehicle-specific variants beyond the stated 2014 four-cylinder/SE 2.5L evidence."
+      ],
+      "prohibitedInferences": [
+        "Saying YZZ01 does not fit merely because the pool positively supports YZZ02.",
+        "Claiming YZZ02 is demonstrably better or dimensionally superior to YZZ01 without comparison evidence.",
+        "Assuming all listed part identifiers are interchangeable or supersede each other.",
+        "Extending fit to every 2014 Camry engine or using a 2007-2010 CQA as the only basis for 2014 fit."
+      ],
+      "sourceIds": [
+        "epqa-B0044B30TO-cqa-4e8b4e7d067b3422",
+        "epqa-B0044B30TO-cqa-4af37e214778af2f",
+        "epqa-B0044B30TO-attribute-d66ebb60a1959c5b",
+        "epqa-B0044B30TO-cqa-75e5ab9285097cfe",
+        "epqa-B0044B30TO-cqa-8e88515f603f6b11",
+        "epqa-B0044B30TO-attribute-c101e4e26eea9e88",
+        "epqa-B0044B30TO-bullet-70975cd140178027",
+        "epqa-B0044B30TO-description-6ec2b684ea43952f",
+        "epqa-B0044B30TO-review-0a6e5159dc2d8727",
+        "epqa-B0044B30TO-review-4e966c62fd7e4f24",
+        "epqa-B0044B30TO-review-fb2a0183e78139be",
+        "epqa-B0044B30TO-cqa-7cfc7dc8cd7b0fdd",
+        "epqa-B0044B30TO-attribute-914b5bd921fd3507",
+        "epqa-B0044B30TO-attribute-8b2d068c8ad317fc",
+        "epqa-B0044B30TO-review-1c659a58011e7235",
+        "epqa-B0044B30TO-attribute-cbe7b1d531d0782c",
+        "epqa-B0044B30TO-attribute-444c4fbbe3d94c7b",
+        "epqa-B0044B30TO-attribute-e3e39e93dd0872a4",
+        "epqa-B0044B30TO-review-252f51d1e15e2030",
+        "epqa-B0044B30TO-review-730f533e4c28b330"
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-8836",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "No concrete protected-family or within-cohort overlap found. Viking/PD040035/PD040075 rubber grate feet do not establish identity with the protected Whirlpool/Kenmore/KitchenAid namespace; a general cooktop-manufacturer category is not a sourced alias. The target is passive accessory fit, without gas hookup, electrical repair or hazardous operating advice. All 20 raw rows reduce to 19 unique exact parents; all five retrieved parents match. Retrieved positive/negative Viking anecdotes conflict; omitted full-pool VGSU/part-number and size evidence is still insufficient for the exact VGSU1646BBK target.",
+      "requiredSupportedFacts": [
+        "The product is sold as rubber grate feet or bumpers, with a bullet listing PD040035, PD040075, AP5316217 and VGSU.",
+        "The complete pool does not name the exact VGSU1646BBK model.",
+        "Several reviews report poor fit for unspecified Viking stoves, while another describes a good-enough fit for a Viking 5-series VGRT rangetop.",
+        "Several sources describe the feet as generic or universal despite the OEM factory part description.",
+        "The DCS 305-SS CQA explicitly says the respondent does not know; it does not establish Viking fit."
+      ],
+      "unresolvedRelationships": [
+        "Exact fit for Viking VGSU1646BBK.",
+        "Which Viking models or hole dimensions explain the conflicting fit reports.",
+        "Whether the generic/OEM wording reflects the same supplied part specification."
+      ],
+      "prohibitedInferences": [
+        "A definitive yes or no for VGSU1646BBK from unspecified Viking fit anecdotes.",
+        "Treating the VGSU prefix or universal-fit advertising as exact-model confirmation.",
+        "Converting a purchaser's hole-size warning into a verified manufacturer fit specification.",
+        "Providing installation or heat/gas-safety guarantees from accessory-fit comments."
+      ],
+      "sourceIds": [
+        "epqa-B0064FCQUM-review-55194fa3933fd13d",
+        "epqa-B0064FCQUM-review-2409e03b7db3444c",
+        "epqa-B0064FCQUM-attribute-9ef516d2dafbee2a",
+        "epqa-B0064FCQUM-review-0b85ba5edb6bee28",
+        "epqa-B0064FCQUM-cqa-2136e460e1621f97",
+        "epqa-B0064FCQUM-attribute-f322bbeb57d6b3e0",
+        "epqa-B0064FCQUM-attribute-7519327d9d9d6e9b",
+        "epqa-B0064FCQUM-attribute-45e9c7d099fc636e",
+        "epqa-B0064FCQUM-review-e53f073fea273f3c",
+        "epqa-B0064FCQUM-review-614421d9db3ed491",
+        "epqa-B0064FCQUM-review-5733434749c292a0",
+        "epqa-B0064FCQUM-review-d89b51b8df648d02",
+        "epqa-B0064FCQUM-review-124af6fe1f0bc662",
+        "epqa-B0064FCQUM-review-f265a14a65519ebd",
+        "epqa-B0064FCQUM-bullet-90a3c80707ebc3a7",
+        "epqa-B0064FCQUM-bullet-6caabd1e2e05364a",
+        "epqa-B0064FCQUM-description-7c85bcffecc1ffd5",
+        "epqa-B0064FCQUM-review-5060fcf2c9354f6e",
+        "epqa-B0064FCQUM-review-a9c3316a68b12f3e"
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-4472",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "No concrete protected-family or within-cohort overlap found. Datel Action Replay for Sony PlayStation 2 is distinct from protected Microsoft Xbox and Nintendo game products; a common gaming category or downstream platform mention does not identify the same accessory/brand family. All 10 raw rows and 10 source parents match exactly; all five retrieved parents preserve original CQA scope. Broad all-PS2/Slim claims coexist with region/version caveats and a report about SCPH-77001B, not the requested SCPH-77004. Missing exact compatibility remains legitimate.",
+      "requiredSupportedFacts": [
+        "The platform attribute is PlayStation 2 and the brand attribute is Datel.",
+        "One CQA broadly says Action Replay works on all PS2 systems including Slim systems.",
+        "Another CQA expresses belief that standard PS2 systems work unless altered or using a different region code.",
+        "A model-specific anecdote names SCPH-77001B/GH-051-52 and discusses version/disc limitations; it does not name SCPH-77004.",
+        "The complete pool supplies no explicit compatibility confirmation, device-version identification or region mapping for SCPH-77004."
+      ],
+      "unresolvedRelationships": [
+        "Exact operation with PS2 SCPH-77004.",
+        "The supplied Action Replay software/disc version and the target console's applicable region/version requirements.",
+        "How the broad all-PS2 claim relates to the more cautious region/version remarks."
+      ],
+      "prohibitedInferences": [
+        "Treating SCPH-77001B as interchangeable with SCPH-77004 based on the similar prefix.",
+        "Guaranteeing exact-model compatibility from generic all-PS2/Slim wording.",
+        "Assuming the target region, disc compatibility or product software version from memory.",
+        "Promising present-day download services or support from historical product descriptions."
+      ],
+      "sourceIds": [
+        "epqa-B001UIG6M2-cqa-0d7c9051808b6ec7",
+        "epqa-B001UIG6M2-cqa-9e6742a9ce7ae9c1",
+        "epqa-B001UIG6M2-cqa-2da7d1633af24c7b",
+        "epqa-B001UIG6M2-cqa-2d68068527dc53c9",
+        "epqa-B001UIG6M2-attribute-8454f99c665c3629",
+        "epqa-B001UIG6M2-bullet-f9abbae74c7d38a3",
+        "epqa-B001UIG6M2-attribute-b1a089a9ef279e75",
+        "epqa-B001UIG6M2-description-155b4412959bdb3f",
+        "epqa-B001UIG6M2-cqa-54961e7e738660cb",
+        "epqa-B001UIG6M2-review-5061ca8e3544c369"
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-13670",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "No concrete family overlap or safety exclusion found for identifying a component material. Metabo HPT/C10FSHCT/Koki Holdings is distinct from protected Poulan power-tool products and the other selected families; shared tool category is insufficient. The question requests material, without an operating, calibration or modification procedure. All 20 raw rows and 19 unique parents match upstream; final retrieval restores four complete parents from the selected index chunks with no body or CQA-scope changes. The complete pool discusses several different plastic components and includes an isolated metal statement without a clear referent. Neither the full pool nor retrieved parents reliably identifies the requested base hole plate. The preservation_control label is retained, but it cannot be assumed to be an already confirmed positive material answer.",
+      "requiredSupportedFacts": [
+        "Some sources explicitly discuss plastic in the laser mount, miter-angle lock mechanism or blade guard.",
+        "The CQA about plastic angle-setting parts is originally about fine adjustments for 90 and 45 degrees.",
+        "Another review says it is one solid piece of metal, but the supplied excerpt does not establish which component it refers to.",
+        "No complete-pool source unambiguously states the material of the requested base hole plate for the blade."
+      ],
+      "unresolvedRelationships": [
+        "Which physical component the user means by base hole plate for the blade.",
+        "Whether that exact component is metal or plastic.",
+        "The referent of the isolated one-solid-piece-of-metal review."
+      ],
+      "prohibitedInferences": [
+        "Applying plastic laser-mount, blade-guard or lock-mechanism evidence to the base plate without a sourced component relationship.",
+        "Applying the isolated metal review to the requested plate by guessing its antecedent.",
+        "Concluding that the entire saw or every base-related component is plastic or metal.",
+        "Adding blade-guard lifting, calibration, adjustment or operating instructions to answer a material question."
+      ],
+      "sourceIds": [
+        "epqa-B07Y6TTYCR-review-73667c99eb149de4",
+        "epqa-B07Y6TTYCR-cqa-6c9beabef9be4f8e",
+        "epqa-B07Y6TTYCR-review-f80b930480f39809",
+        "epqa-B07Y6TTYCR-review-fd389a2cc01c0160",
+        "epqa-B07Y6TTYCR-review-073a894dc4dbaefe",
+        "epqa-B07Y6TTYCR-attribute-48d400025c8ee59e",
+        "epqa-B07Y6TTYCR-description-700a78c790c5cb00",
+        "epqa-B07Y6TTYCR-attribute-79581dc0313a1425",
+        "epqa-B07Y6TTYCR-review-bff6cf82386335e3",
+        "epqa-B07Y6TTYCR-review-a8a6755d6ac927d7",
+        "epqa-B07Y6TTYCR-review-5872f8ab054645e0",
+        "epqa-B07Y6TTYCR-attribute-7a35b19c7ef6444c",
+        "epqa-B07Y6TTYCR-cqa-d26561dd94f576f1",
+        "epqa-B07Y6TTYCR-review-e812405157920d4b",
+        "epqa-B07Y6TTYCR-attribute-f0e37ec4b6df5950",
+        "epqa-B07Y6TTYCR-description-707b862a75412834",
+        "epqa-B07Y6TTYCR-description-d1359eece6837df2",
+        "epqa-B07Y6TTYCR-review-a0e766a198d32999",
+        "epqa-B07Y6TTYCR-review-ffc93c3330a0370a"
+      ]
+    }
+  ],
+  "limitations": [
+    "This is an independent AI source/family review conducted before answer generation. It is not human gold, a human quality judgment, or evidence that answer quality improved.",
+    "Review used only the designated v3 cohort/retrieval/exposure/selection packets, previously read contributor instructions and source-only draft-review context, and pinned upstream train.csv source/question/title/ASIN/qa_pair_id/source/qid columns. No candidate instructions, modified implementation, arm identities, generated answers, upstream relevance labels, answer columns, credentials, live models/APIs, or operational stores were inspected.",
+    "Pinned train.csv raw SHA256 verified as b63de9681b770573240367e919f7f04f087f6a4745ab1f79a77e6b800105ea25. All 170 raw rows for the eight products are represented by 161 unique source parents. Every source body, original CQA question, origin row, qid, qa_pair_id and raw candidate digest matched upstream. All 39 final selected parent bodies match exact cohort text/scope.",
+    "Family review compared all 91 protected product titles/IDs and 423 identifier projections, both prior eight-case cohorts/family namespaces and their 62 model-identifier projections, canonical sibling metadata in the exposure packet, and all eight selected full source pools. No selected ASIN or exact source-body/label/originalQuestion tuple recurs from any of the sixteen prior reviewed products. No concrete family alias, exact-model or source-packet reuse was found.",
+    "The explicit source-established Amana/Kenmore/KitchenAid/Maytag/Whirlpool namespace was applied, including Kitchen Aid spelling equivalence. No selected family falls in that namespace. Unrelated shared categories, comparative brand mentions or downstream compatibility alone were not treated as brand/family identity; no unrecorded corporate relationships were assumed.",
+    "Pressure-containment, medical, legal, weapon and hazardous electrical/repair requests were checked in target and source context. The scooter question concerns PU wheel construction; the Viking question concerns passive bumper fit; the saw question concerns material. None requests the excluded high-risk operation. Their source anecdotes must remain bounded as specified in the per-case prohibited inferences.",
+    "Canonical sibling source-only metadata is represented by two workspace inventories and one comparison inventory in the exposure packet. Its Columbia-shorts product/source projection has no observed overlap with these selected families. This review did not inspect the underlying private stores.",
+    "The selection audit records eight selected ranks matching the eight cohort cases and declared stratum counts, but omits ranks for the full unselected eligible pool. First-ranked eligibility cannot therefore be completely reconstructed from this audit alone without implementation access. No candidate/code access was used to fill that limitation.",
+    "Cohort-to-exposure/selection internal digest links and retrieval-to-cohort raw-file digest link match. Actual raw packet digests are pinned above. Reviewed selection-audit.json raw SHA256 was edaa461da2cb358a599378350297bdd3da96e985d154cb7e161990a90e4e5599.",
+    "The capacity_dimensions label includes a shipping-time question, and the preservation_control source pool does not unambiguously identify the requested component material. These frozen label/coverage limitations constrain stratum-specific or known-answer-preservation interpretations; they are not grounds to replace valid missing-information probes.",
+    "Passing means no concrete source-integrity, safety-eligibility or actual family-separation blocker was found within this authorized review. It does not mean every target is answerable, every source claim is correct/current, or any answer outcome has passed. All expected facts, gaps and prohibited inferences were frozen before outputs. No cases or candidate instructions were replaced or tuned."
+  ]
+}
