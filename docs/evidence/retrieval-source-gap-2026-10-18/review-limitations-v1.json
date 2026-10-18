@@ -1,0 +1,16 @@
+{
+  "format": "ablatrix-source-gap-review-limitations-v1",
+  "recordedBeforeSourceScreening": true,
+  "implementationCommit": "09dba20f52bcfab3b624acc440e91cbe349be369",
+  "reviewFinding": "https://github.com/jayeshsuyal/ablatrix/pull/50#discussion_r4308521706",
+  "status": "accepted_experimental_limitation_not_fixed",
+  "example": "Color, material, and capacity, can you tell me?",
+  "effect": "The postposed request marker can discard facet intent and miss supplemental sources; all baseline parents remain unchanged.",
+  "independentReviewDisposition": "Not a blocker for the bounded opt-in comparison; this is a real coverage defect and must not be presented as fixed or a clean review.",
+  "selectionRulesChanged": false,
+  "exampleRemainsEligible": true,
+  "candidateMissesRetained": true,
+  "defaultPromoted": false,
+  "qualityClaimEligible": false,
+  "newProviderCalls": 0
+}
