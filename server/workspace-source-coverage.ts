@@ -20,6 +20,10 @@ const facetKeys = {
 };
 const listingLabel = /^(?:attribute|attributes|specification|specifications|specs|product specifications|listing|product details)$/i;
 const proseListingLabel = /^(?:bullet|description|listing|product description|product details)$/i;
+const itemScope = String.raw`\b(?:item|product)\b`;
+const packageScope = String.raw`\b(?:packag(?:e|es|ing)|box|carton|shipping)\b`;
+const scopeJoin = String.raw`(?:\s*(?:&|/)\s*|\s+(?:and|or|versus|vs\.?|as\s+well\s+as|compared\s+(?:with|to))\s+)(?:(?:the|its|this)\s+)?`;
+const coordinatedDimensionScopes = new RegExp(`${itemScope}${scopeJoin}${packageScope}|${packageScope}${scopeJoin}${itemScope}`);
 // Case folding is permitted; punctuation is part of a literal identifier.
 // ZX-100 and ZX100 must never be presented as an established exact match.
 const canonicalIdentifier = (value: string) => value.toUpperCase();
@@ -40,7 +44,7 @@ function relevance(source: Source, question: string): { priority: number; reason
   const q = question.toLowerCase().replace(/\b(item|product|package|packaging|box|carton)['’]s\b/g, '$1'), requested = identifiers(question);
   const dimensionIntent = /\b(?:dimensions?|measurements?|length|width|height|depth|diameter|size|thickness|tall|wide|long|deep)\b|\bhow\s+(?:big|large|small)\b/.test(q);
   const packageIntent = /\b(?:packag(?:e|es|ing)|box|carton|shipping)\b/.test(q);
-  const itemDimensionIntent = !packageIntent || /\b(?:item|product)\s+(?:dimensions?|measurements?|size|length|width|height|depth|diameter|thickness)\b|\b(?:item|product)\s+(?:and|&)\s+(?:(?:the|its)\s+)?(?:packag(?:e|es|ing)|box|carton|shipping)\b/.test(q);
+  const itemDimensionIntent = !packageIntent || /\b(?:item|product)\s+(?:dimensions?|measurements?|size|length|width|height|depth|diameter|thickness)\b/.test(q) || coordinatedDimensionScopes.test(q);
   const identityIntent = requested.size > 0 || /\b(?:fit(?:s|ting)?|compatib\w*|replac(?:e|es|ing|ement)|models?|part\s*(?:numbers?|no\.?|#)|skus?)\b/.test(q);
   const intents = {
     color: /\bcolou?rs?\b|\b(?:white|black|red|blue|green|yellow|brown|grey|gray|beige|silver|gold|pink|purple|orange)\b/.test(q),
