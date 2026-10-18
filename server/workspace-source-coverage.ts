@@ -30,7 +30,7 @@ const scopeDeterminers = String.raw`(?:(?:the|its|this|that)\s+)*`;
 // such as "I have the package and product; ..." cannot expand a later scope.
 const coordinatedDimensionRequest = new RegExp(`${coordinatedScopes}\\s+${dimensionNoun}|${dimensionNoun}\\s+(?:of|for)\\s+${scopeDeterminers}${coordinatedScopes}|\\bhow\\s+(?:big|large|small|wide|tall|long|deep)\\s+(?:is|are)\\s+${scopeDeterminers}${coordinatedScopes}`);
 const dimensionRequest = /\b(?:dimensions?|measurements?|length|width|height|depth|diameter|size|thickness|tall|wide|long|deep)\b|\bhow\s+(?:big|large|small)\b/;
-const requestMarker = /\b(?:what|how|which|where|when|why|please|tell|show|need|want|compare|comparing|give|list|provide|find|confirm|describe|check)\b/;
+const requestMarker = /\b(?:what|how|which|where|when|why|tell|show|need|want|compare|comparing|give|list|provide|find|confirm|describe|check)\b/;
 /** A bounded request heuristic, not discourse understanding. Prefer explicit
  * requests over declarative context; retain bare nominal queries as fallback.
  * Periods inside decimals/model IDs are not sentence boundaries. */

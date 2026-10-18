@@ -136,6 +136,9 @@ test('known background dimensions cannot crowd out the three actually requested 
     'I already know the product and package dimensions; what are the color, material, and capacity?',
     'I already know the product and package dimensions, what are the color, material, and capacity?',
     'What are the color, material, and capacity? I already know the product and package dimensions.',
+    'Please note that I already know product and package dimensions. What are color, material, capacity?',
+    'Color, material, and capacity, please?',
+    'Color, material, and capacity, please',
   ]) assert.deepEqual(f.run(question).additions.map(a => a.sourceId), ['c-color', 'd-material', 'e-capacity']);
   assert.deepEqual(f.run('I know the color, material and capacity. What are the package dimensions?').additions.map(a => a.sourceId), ['b-package']);
   assert.deepEqual(f.run('My model ZX100 is known. What color is it?').additions.map(a => a.sourceId), ['c-color']);
