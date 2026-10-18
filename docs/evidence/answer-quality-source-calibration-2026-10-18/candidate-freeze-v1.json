@@ -1,0 +1,13 @@
+{
+  "format": "ablatrix-source-calibration-candidate-freeze-v1",
+  "frozen": true,
+  "contract": "workspace-answer-source-calibration-v2",
+  "tool": "workspace_answer_source_calibration_v2",
+  "systemInstructionsSha256": "e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8",
+  "baseCommit": "804cb94d12f19ca8066bacb064f08b0f97bc9086",
+  "createdAt": "2026-10-18T17:27:28.887Z",
+  "target": "source interpretation and calibration",
+  "selectionSeed": "ablatrix-source-calibration-2026-10-18-v1",
+  "status": "experimental_not_promoted",
+  "qualityClaimEligible": false
+}

@@ -9,7 +9,7 @@ import { CLAIM_SUPPORT_TOOL, claimSupportRequestParts, validateClaimSupportOutpu
 import { CITED_APPLICABILITY_GRADER_VERSION } from './claim-support-v4.ts';
 import { SOURCE_ID_CITATION_INTERFACE, sourceCitationEvidence, sourceCitationOptions, resolveSourceCitationIds, stripSourceIdMarkers, type SourceCitationScope } from './citation-options.ts';
 import { RUNTIME_POLICY_PROPOSAL_TOOL, RUNTIME_POLICY_ANSWER_TOOL, runtimeProposalRequestParts, runtimeAnswerRequestParts, validateRuntimeProposalOutput, validateRuntimeAnswerOutput, replayRuntimeProposalReceipt, replayRuntimeAnswerReceipt, type RuntimeProposalInput, type RuntimeAnswerInput, type RuntimeProtocolBindings } from './answer-policy-protocol.ts';
-import { WORKSPACE_GENERATION_TOOL, workspaceGenerationParts, replayWorkspaceGenerationReceipt, type WorkspaceGenerationInput } from './workspace-generation.ts';
+import { workspaceGenerationParts, replayWorkspaceGenerationReceipt, type WorkspaceGenerationInput } from './workspace-generation.ts';
 export { SOURCE_ID_CITATION_INTERFACE, SOURCE_ID_LIMITS, sourceCitationEvidence, sourceCitationOptions, resolveSourceCitationIds, stripSourceIdMarkers, type SourceCitationScope, type SourceCitationOption, type CitationEvidence } from './citation-options.ts';
 
 const MODEL = 'gpt-luna';
@@ -600,7 +600,7 @@ export class SapiomFeedbackProvider implements LoopProvider {
     if (parts.binding.executionMode !== this.executionMode) throw new Error('Workspace generation mode does not match this provider.');
     const previous = this.receipt(parts.input.runId);
     if (previous) return replayWorkspaceGenerationReceipt(parts.input, previous, this.executionMode);
-    const result = await this.request(WORKSPACE_GENERATION_TOOL, parts.systemInstructions, parts.payload, parts.parameters, parts.input.runId,
+    const result = await this.request(parts.tool, parts.systemInstructions, parts.payload, parts.parameters, parts.input.runId,
       { ...parts.binding, mode: this.executionMode, accounting: 'local_planning_allowance' });
     try { return replayWorkspaceGenerationReceipt(parts.input, this.receipt(parts.input.runId)!, this.executionMode); }
     catch { this.markOutputInvalid(result.id); throw new Error(`Workspace generation failed exact flat source-ID validation (attempt ${result.id}); it was not retried.`); }

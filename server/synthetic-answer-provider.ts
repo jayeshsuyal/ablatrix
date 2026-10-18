@@ -9,7 +9,7 @@ import type { LoopAnswer, LoopProvider } from './loop-types.ts';
 import { CLAIM_SUPPORT_TOOL, claimSupportRequestParts, validateClaimSupportOutput, replayClaimSupportReceipt, type ClaimSupportInput, type ClaimSupportWireOutput } from './claim-support.ts';
 import { CITED_APPLICABILITY_GRADER_VERSION, scriptedClaimSupportV4Output } from './claim-support-v4.ts';
 import { RUNTIME_POLICY_PROPOSAL_TOOL, RUNTIME_POLICY_ANSWER_TOOL, runtimeProposalRequestParts, runtimeAnswerRequestParts, validateRuntimeProposalOutput, validateRuntimeAnswerOutput, replayRuntimeProposalReceipt, replayRuntimeAnswerReceipt, type RuntimeProposalInput, type RuntimeAnswerInput } from './answer-policy-protocol.ts';
-import { WORKSPACE_GENERATION_CONTRACT, WORKSPACE_GENERATION_TOOL, workspaceGenerationParts, replayWorkspaceGenerationReceipt, type WorkspaceGenerationInput } from './workspace-generation.ts';
+import { workspaceGenerationParts, replayWorkspaceGenerationReceipt, type WorkspaceGenerationInput } from './workspace-generation.ts';
 import { sourceCitationOptions } from './citation-options.ts';
 
 type Source = { id: string; source: string; text: string; originalQuestion?: string; origin?: string };
@@ -66,7 +66,7 @@ export class SyntheticAnswerProvider implements LoopProvider, AnswerRevisionProv
     const answer = this.template(parts.input.passages, false), offered = sourceCitationOptions(parts.scope);
     const demo = this.options.workspaceFixture === 'thistle-capacity-demo' && parts.input.passages.length === 1 && parts.input.passages[0].text === 'SYNTHETIC fixture: The Thistle flask holds six cups and has a cork lid. The body is stainless steel.';
     const output = { answer: demo ? 'SYNTHETIC draft — scripted source excerpts, not a model-generated answer.\nThe Thistle flask holds eight cups and has a cork lid.\nThis intentionally scripted error demonstrates the correction workflow.' : answer.answer, status: answer.status, citations: answer.citations.map(citation => offered.find(option => option.passageId === citation.passageId)!.id) };
-    this.insertRuntimeReceipt(parts.input.runId, WORKSPACE_GENERATION_TOOL, output, WORKSPACE_GENERATION_CONTRACT, parts.binding);
+    this.insertRuntimeReceipt(parts.input.runId, parts.tool, output, parts.binding.contract, parts.binding);
     return replayWorkspaceGenerationReceipt(parts.input, this.receipt(parts.input.runId)!, this.executionMode);
   }
   async revise(input: Parameters<AnswerRevisionProvider['revise']>[0]) { return this.execute(input.runId, 'synthetic_revision', input, () => this.template(input.evidence, true)); }

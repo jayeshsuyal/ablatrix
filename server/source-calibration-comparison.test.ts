@@ -1,0 +1,142 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { mkdtempSync, mkdirSync, readFileSync, realpathSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { DatabaseSync } from 'node:sqlite';
+import { SapiomFeedbackProvider } from './feedback-provider.ts';
+import { workspaceReviewSourceHash } from './answer-review-source.ts';
+import { contextComparisonHash } from './context-comparison.ts';
+import { metadataFingerprints } from './flat-source-comparison.ts';
+import { workspaceGenerationPromptIdentity, WORKSPACE_SOURCE_CALIBRATION_CONTRACT } from './workspace-generation.ts';
+import { SOURCE_CALIBRATION_CODE_FILES, sourceCalibrationHash as hash, prepareSourceCalibrationComparison, verifySourceCalibrationPlan, verifySourceCalibrationResult, verifySourceCalibrationCheckpoints, executeSourceCalibrationComparison, sourceCalibrationReviewWorksheet, privateSourceCalibrationOutput, readLedgerAnchor, sourceCalibrationComparisonCli, type SourceCalibrationArtifact, type SourceCalibrationPreparation, type SourceCalibrationDependencies, type SourceCalibrationCheckpoint } from './source-calibration-comparison.ts';
+
+const clone = <T>(value: T): T => structuredClone(value);
+function artifact(path: string, document: Record<string, any>): SourceCalibrationArtifact { return { path: `docs/${path}.json`, document, fileSha256: hash(JSON.stringify(document)) }; }
+function preparation(): SourceCalibrationPreparation {
+  const implementationSha256 = Object.fromEntries(SOURCE_CALIBRATION_CODE_FILES.map(path => [path, hash(`SYNTHETIC implementation ${path}`)]));
+  const candidateFreeze = artifact('freeze', { frozen: true, status: 'experimental_not_promoted', ...workspaceGenerationPromptIdentity(WORKSPACE_SOURCE_CALIBRATION_CONTRACT), qualityClaimEligible: false });
+  const cases = Array.from({ length: 8 }, (_, i) => {
+    const sources = [{ id: `source-${i}`, label: 'SYNTHETIC listing', text: `SYNTHETIC Product ${i} supports model ${i}.`, originalQuestion: null, reference: `synthetic:source-${i}` }, { id: `other-${i}`, label: 'SYNTHETIC customer', text: 'SYNTHETIC customer report about a different variant.', originalQuestion: 'SYNTHETIC other model?', reference: `synthetic:other-${i}` }].map(source => ({ ...source, sha256: workspaceReviewSourceHash(source) }));
+    return { id: `synthetic-case-${i}`, product: { id: `SYNTHETIC-${i}`, title: `SYNTHETIC Product ${i}` }, question: `SYNTHETIC Does model ${i} fit?`, sources, sourcePoolSha256: contextComparisonHash(sources) };
+  });
+  const packet = artifact('packet', { candidateFreezeFileSha256: candidateFreeze.fileSha256, cases });
+  const results = cases.map(c => ({ caseId: c.id, retrieval: { passages: c.sources.slice(0, 1).map(s => ({ id: s.id, productId: c.product.id, source: s.label, text: s.text, sha256: hash(s.text), reference: s.label, lexicalRank: 1, semanticRank: 1, score: 1 })), durationMs: 0, method: 'SYNTHETIC', embeddingModel: 'SYNTHETIC', corpusVersion: 'SYNTHETIC' } }));
+  const retrievalBody = { format: 'source-calibration-retrieval-v1', cohortFileSha256: packet.fileSha256, implementationSha256, results };
+  const metadata = { workspaces: [], comparisons: [] }, fingerprints = metadataFingerprints(metadata), exposure = { metadata, metadataSha256: fingerprints.sha256, metadataInventorySha256: fingerprints.inventories, metadataOnly: true, generatedAnswersOrJudgmentsRead: false, newProviderCalls: 0, paidExecutionAuthorized: false };
+  const retrieval = artifact('retrieval', { ...retrievalBody, sha256: hash(retrievalBody) }), exposureAudit = artifact('exposure', { ...exposure, auditSha256: contextComparisonHash(exposure) });
+  const familyAudit = artifact('audit', { format: 'source-calibration-source-family-review-v1', status: 'passed', provenance: 'independent_ai_source_and_family_review', cohortFileSha256: packet.fileSha256, retrievalFileSha256: retrieval.fileSha256, exposureAuditFileSha256: exposureAudit.fileSha256, cases: cases.map(c => ({ caseId: c.id, sourceScopeReviewed: true, familySeparationReviewed: true, notes: 'SYNTHETIC mechanical fixture only.' })) });
+  const path = '/synthetic/.data/feedback-budget.sqlite';
+  return { packet, candidateFreeze, retrieval, familyAudit, exposureAudit, implementationSha256, historySha256: { 'docs/exposed.md': hash('SYNTHETIC history') }, createdAt: '2026-10-18T12:00:00.000Z', policy: { id: 'synthetic-policy', parentId: null, instructions: 'SYNTHETIC shared answer policy with source attribution and bounded scope.', rationale: 'SYNTHETIC fixture.', feedbackRunIds: [], status: 'baseline', mode: 'live', createdAt: '2026-10-18T00:00:00.000Z' }, ledgerAnchor: { canonicalPath: path, pathSha256: hash(path), historicalRowsSha256: hash('SYNTHETIC historical rows'), attempts: 122, reservedUsd: 12.2, priorSpendUsd: .200281, pending: 0, owners: 0 }, scope: { repositoryPath: '/synthetic', outputDirectory: '/synthetic/.data/fresh-result', workspacePaths: [], comparisonPaths: [] }, exposure: { metadataSha256: fingerprints.sha256, publicExposureSha256: hash('SYNTHETIC public exposure') } };
+}
+function harness(options: { response?: (body: any, index: number) => any; transportFailure?: boolean; changeBody?: boolean; duplicateTransport?: boolean } = {}) {
+  const prep = preparation(), manifest = prepareSourceCalibrationComparison(prep), checkpoints: SourceCalibrationCheckpoint[] = [], bodies: any[] = [];
+  let provider: SapiomFeedbackProvider | undefined, creations = 0, outputs = 0, finished = 0, changed = false, closed = false;
+  const dependencies: SourceCalibrationDependencies = {
+    checkFrozenFiles() { assert.equal(changed, false, 'SYNTHETIC code/history/exposure changed.'); },
+    readLedger() {
+      const rows = manifest.plan.slots.flatMap(slot => { const receipt = provider?.receipt(slot.input.runId); return receipt ? [{ ...receipt, run_id: slot.input.runId, created_at: 'SYNTHETIC' }] : []; });
+      return { ...prep.ledgerAnchor, attempts: prep.ledgerAnchor.attempts + rows.length, reservedUsd: prep.ledgerAnchor.reservedUsd + rows.length * .1, pending: rows.filter(r => r.status === 'pending').length, owners: rows.length ? 1 : 0, ownerRows: rows.length ? [{ pid: process.pid, token: 'SYNTHETIC-owner', expires_at: Date.now() + 60_000 }] : [], rows };
+    },
+    createProvider(hooks) {
+      creations++; provider = new SapiomFeedbackProvider({ enabled: true, apiKey: 'SYNTHETIC-TEST-ONLY', dbPath: ':memory:', callLimit: manifest.plan.budget.absoluteCallLimit, capUsd: 20, priorSpendUsd: prep.ledgerAnchor.priorSpendUsd, allowancePerCallUsd: .1, operationGuard: hooks.operationGuard,
+        fetchImpl: async (url, init) => { if (options.changeBody) return hooks.fetchImpl(url, { ...init, body: `${init?.body} ` }); const response = await hooks.fetchImpl(url, init); if (options.duplicateTransport) await hooks.fetchImpl(url, init); return response; } });
+      const close = provider.close.bind(provider); provider.close = () => { closed = true; close(); }; return provider;
+    },
+    transport: async (_url, init) => { const body = JSON.parse(String(init?.body)), index = bodies.length; bodies.push(body); assert.equal(init?.redirect, 'error'); assert.ok(checkpoints.at(-1)?.steps[index].dispatchIntent); assert.equal(checkpoints.at(-1)?.steps[index].dispatched, false); if (options.transportFailure) throw new Error('SYNTHETIC ambiguous transport'); const payload = JSON.parse(body.messages[1].content); const output = options.response?.(body, index) ?? { answer: 'SYNTHETIC supported answer.', status: 'answered', citations: [payload.quoteOptions[0].id] }; return new Response(JSON.stringify({ model: 'gpt-luna', usage: { prompt_tokens: 10, completion_tokens: 5 }, choices: [{ finish_reason: 'tool_calls', message: { tool_calls: [{ function: { name: body.tool_choice.function.name, arguments: JSON.stringify(output) } }] } }] })); },
+    output: { create() { outputs++; }, checkpoint(value) { checkpoints.push(clone(value)); }, finish() { finished++; } }
+  };
+  return { manifest, dependencies, checkpoints, bodies, change() { changed = true; }, counts: () => ({ creations, outputs, finished, closed }), execute: () => executeSourceCalibrationComparison(manifest, { execute: true, liveOptIn: true, approvedPlanSha256: manifest.planSha256, transportProvenance: 'mocked_mechanics_only' }, dependencies) };
+}
+
+test('two first-answer arms freeze exact shared context, all source pools, alternating order and dynamic ledger ceiling', () => {
+  const prep = preparation(), manifest = prepareSourceCalibrationComparison(prep); assert.equal(manifest.plan.cases.length, 8); assert.equal(manifest.plan.slots.length, 16); assert.equal(manifest.plan.budget.absoluteCallLimit, 138); assert.equal(manifest.plan.budget.capUsd, 20);
+  assert.deepEqual(manifest.plan.slots.slice(0, 4).map(s => s.arm), ['baseline', 'candidate', 'candidate', 'baseline']);
+  for (let i = 0; i < 16; i += 2) { const [a, b] = manifest.plan.slots.slice(i, i + 2); assert.deepEqual(a.input.passages, b.input.passages); assert.equal(a.binding.responseSchemaSha256, b.binding.responseSchemaSha256); assert.equal(a.binding.sourceContextSha256, b.binding.sourceContextSha256); assert.notEqual(a.binding.requestSha256, b.binding.requestSha256); assert.equal(a.requestBody.model, b.requestBody.model); }
+  prep.ledgerAnchor.attempts = 125; prep.ledgerAnchor.reservedUsd = 12.5; assert.equal(prepareSourceCalibrationComparison(prep).plan.budget.absoluteCallLimit, 141);
+  prep.ledgerAnchor.canonicalPath = '/synthetic-other-checkout/.data/feedback-budget.sqlite'; prep.ledgerAnchor.pathSha256 = hash(prep.ledgerAnchor.canonicalPath); assert.equal(prepareSourceCalibrationComparison(prep).plan.preparation.ledgerAnchor.canonicalPath, prep.ledgerAnchor.canonicalPath); prep.ledgerAnchor.attempts = 0; assert.throws(() => prepareSourceCalibrationComparison(prep));
+});
+
+test('changed sources, original questions, retrieval order, audit, prompt or requests cannot retain a verified plan', () => {
+  const mutations: ((p: SourceCalibrationPreparation) => void)[] = [p => { p.packet.document.cases[0].sources[0].text = 'Changed'; }, p => { p.packet.document.cases[0].sources[1].originalQuestion = 'Changed'; }, p => { p.retrieval.document.results.reverse(); }, p => { p.familyAudit.document.cases[0].sourceScopeReviewed = false; }, p => { p.candidateFreeze.document.systemInstructionsSha256 = '0'.repeat(64); }, p => { p.implementationSha256['server/product-retrieval.ts'] = '0'.repeat(64); }, p => { p.ledgerAnchor.owners = 1; }, p => { p.ledgerAnchor.pending = 1; }];
+  for (const mutate of mutations) { const p = preparation(); mutate(p); assert.throws(() => prepareSourceCalibrationComparison(p)); }
+  const m = prepareSourceCalibrationComparison(preparation()); m.plan.slots[0].requestBody.messages[1].content += ' '; m.planSha256 = hash(m.plan); assert.throws(() => verifySourceCalibrationPlan(m));
+});
+
+test('exact approval, opt-in and boundary checks precede output and credential-owning provider construction', async () => {
+  for (const mutate of [(o: any) => { o.execute = false; }, (o: any) => { o.liveOptIn = false; }, (o: any) => { o.approvedPlanSha256 = '0'.repeat(64); }]) {
+    const h = harness(), options = { execute: true, liveOptIn: true, approvedPlanSha256: h.manifest.planSha256, transportProvenance: 'mocked_mechanics_only' as const }; mutate(options); await assert.rejects(executeSourceCalibrationComparison(h.manifest, options, h.dependencies)); assert.deepEqual(h.counts(), { creations: 0, outputs: 0, finished: 0, closed: false });
+  }
+  const h = harness(); h.change(); await assert.rejects(h.execute()); assert.equal(h.counts().creations, 0);
+});
+
+test('sixteen injected provider responses replay receipts and create anonymous full-source worksheet without verdicts', async () => {
+  const h = harness(), { result, checkpoint } = await h.execute(); assert.equal(result.status, 'awaiting_independent_review'); assert.equal(result.completedAnswers, 16); assert.equal(result.newProviderAttempts, 16); assert.equal(h.bodies.length, 16); assert.equal(result.humanJudgments, 0); assert.equal(result.qualityClaimEligible, false); assert.equal(h.counts().closed, true);
+  assert.deepEqual(verifySourceCalibrationResult(h.manifest, checkpoint), result); assert.deepEqual(verifySourceCalibrationCheckpoints(h.manifest, h.checkpoints), result); assert.equal(result.planningAllowanceReservedUsd, 1.6); assert.deepEqual(result.usage, { inputTokens: 160, outputTokens: 80 }); assert.ok(result.steps.every(s => s.finishedAt && s.elapsedMs !== null));
+  const review = sourceCalibrationReviewWorksheet(h.manifest, checkpoint); assert.ok(review.worksheet.includes('SYNTHETIC customer report about a different variant.')); assert.ok(review.worksheet.includes('Original customer question:')); assert.equal(review.armMapping.mapping.length, 16); assert.ok(!review.worksheet.includes('workspace-answer-source-calibration') && !review.worksheet.includes('gpt-luna')); assert.ok(review.worksheet.includes('support ___'));
+});
+
+test('first invalid, ambiguous, changed or duplicate request stops without redispatch and keeps all planned arms', async () => {
+  for (const options of [{ transportFailure: true }, { changeBody: true }, { duplicateTransport: true }, { response: () => ({ answer: 'SYNTHETIC invalid citation.', status: 'answered', citations: ['src_invalid'] }) }]) {
+    const h = harness(options), { result } = await h.execute(); assert.equal(result.status, 'stopped'); assert.equal(result.plannedAnswers, 16); assert.equal(result.newProviderAttempts, 1); assert.equal(result.planningAllowanceReservedUsd, .1); assert.deepEqual(result.usage, options.response ? { inputTokens: 10, outputTokens: 5 } : null); assert.equal(result.steps[0].finishedAt, null); assert.equal(result.steps[0].elapsedMs, null); assert.ok(result.steps[0].attemptDurationMs !== null); assert.equal(result.completedAnswers, 0); assert.equal(result.steps.filter(s => s.status === 'not_attempted').length, 15); assert.equal(h.bodies.length, options.changeBody ? 0 : 1);
+  }
+});
+
+test('history/code/exposure change after dispatch stops and preserves the single ambiguous reservation', async () => {
+  const h = harness(), original = h.dependencies.transport; h.dependencies.transport = async (...args) => { const response = await original(...args); h.change(); return response; };
+  const { result } = await h.execute(); assert.equal(result.status, 'stopped'); assert.equal(result.newProviderAttempts, 1); assert.equal(result.networkDispatches, 1); assert.equal(result.completedAnswers, 0); assert.equal(result.steps.length, 16);
+});
+
+test('a failed dispatch-intent checkpoint cannot count a transport entry', async () => {
+  const h = harness(), persist = h.dependencies.output.checkpoint;
+  let injected = false;
+  h.dependencies.output.checkpoint = value => {
+    if (!injected && value.steps[0].dispatchIntent && !value.steps[0].dispatched) { injected = true; throw new Error('SYNTHETIC failed intent persistence'); }
+    persist(value);
+  };
+  const { result, checkpoint } = await h.execute();
+  assert.equal(injected, true); assert.equal(h.bodies.length, 0); assert.equal(result.networkDispatches, 0);
+  assert.equal(result.dispatchIntentsWithoutObservedEntry, 1); assert.equal(result.newProviderAttempts, 1);
+  assert.equal(result.planningAllowanceReservedUsd, .1); assert.equal(result.completedAnswers, 0);
+  assert.equal(result.steps.filter(step => step.status === 'not_attempted').length, 15);
+  assert.deepEqual(verifySourceCalibrationResult(h.manifest, checkpoint), result);
+  const erased = clone(checkpoint); delete erased.steps[0].dispatchIntent;
+  assert.equal(verifySourceCalibrationResult(h.manifest, erased).dispatchIntentsWithoutObservedEntry, 0);
+  assert.throws(() => verifySourceCalibrationCheckpoints(h.manifest, [...h.checkpoints, erased]));
+});
+
+test('a bound rejected output retains measured usage without becoming an accepted answer', async () => {
+  const h = harness({ response: () => ({ answer: 'SYNTHETIC invalid source selection.', status: 'answered', citations: ['src_not_offered'] }) });
+  const { result, checkpoint } = await h.execute();
+  assert.equal(checkpoint.steps[0].receipt!.error_code, 'output_validation');
+  assert.equal(result.completedAnswers, 0); assert.equal(result.steps[0].status, 'failed_or_unknown');
+  assert.deepEqual(result.knownUsageSubtotal, { inputTokens: 10, outputTokens: 5 });
+  assert.deepEqual(result.usage, result.knownUsageSubtotal); assert.equal(result.attemptsWithKnownUsage, 1);
+  const unbound = clone(checkpoint), receipt = unbound.steps[0].receipt!, document = JSON.parse(receipt.receipt_json!);
+  document.requestSha256 = '0'.repeat(64); receipt.receipt_json = JSON.stringify(document); unbound.steps[0].receiptSha256 = hash(receipt);
+  const replay = verifySourceCalibrationResult(h.manifest, unbound);
+  assert.equal(replay.completedAnswers, 0); assert.equal(replay.usage, null); assert.equal(replay.attemptsWithKnownUsage, 0);
+});
+
+test('historical ledger changes at reservation prevent transport; pending checkpoints keep unknown timing and usage', async () => {
+  const h = harness(), read = h.dependencies.readLedger; h.dependencies.readLedger = () => { const state = read(); return state.rows.length ? { ...state, historicalRowsSha256: hash('SYNTHETIC altered history') } : state; };
+  const { result } = await h.execute(); assert.equal(result.newProviderAttempts, 1); assert.equal(result.networkDispatches, 0); assert.equal(result.completedAnswers, 0); assert.equal(result.planningAllowanceReservedUsd, .1);
+  const successful = harness(); await successful.execute(); const pending = successful.checkpoints.find(c => c.steps[0].attemptId && !c.steps[0].dispatched)!; const replay = verifySourceCalibrationResult(successful.manifest, pending); assert.equal(replay.newProviderAttempts, 1); assert.equal(replay.completedAnswers, 0); assert.equal(replay.usage, null); assert.equal(replay.steps[0].finishedAt, null); assert.equal(replay.steps[0].elapsedMs, null); assert.equal(replay.steps[0].attemptDurationMs, null); assert.equal(replay.steps.filter(s => s.status === 'not_attempted').length, 15);
+});
+
+test('receipt hash tampering fails; request binding tampering stays unknown and cannot create a success', async () => {
+  const h = harness({ transportFailure: true }), failed = await h.execute(); const tampered = clone(failed.checkpoint); tampered.steps[0].receipt!.model = 'invented'; assert.throws(() => verifySourceCalibrationResult(h.manifest, tampered));
+  const good = harness(), saved = await good.execute(), altered = clone(saved.checkpoint); const receipt = altered.steps[15].receipt!, parsed = JSON.parse(receipt.receipt_json!); parsed.sourceContextSha256 = '0'.repeat(64); receipt.receipt_json = JSON.stringify(parsed); altered.steps[15].receiptSha256 = hash(receipt); const verification = verifySourceCalibrationResult(good.manifest, altered); assert.equal(verification.completedAnswers, 15); assert.equal(verification.steps[15].status, 'failed_or_unknown');
+});
+
+test('private output is exclusive and symlink-free, and ledger anchor reads historical rows in stable rowid order', () => {
+  const root = realpathSync(mkdtempSync(join(tmpdir(), 'source-calibration-'))); try {
+    mkdirSync(join(root, '.data')); const directory = join(root, '.data', 'result'), output = privateSourceCalibrationOutput(directory, root); output.create(); assert.equal(statSync(directory).mode & 0o777, 0o700); assert.equal(statSync(join(directory, 'checkpoint.jsonl')).mode & 0o777, 0o600); assert.throws(() => privateSourceCalibrationOutput(directory, root).create());
+    symlinkSync(root, join(root, '.data', 'escape')); assert.throws(() => privateSourceCalibrationOutput(join(root, '.data', 'escape', 'out'), root).create());
+    const path = join(root, '.data', 'feedback-budget.sqlite'), db = new DatabaseSync(path); db.exec('CREATE TABLE loop_provider_calls(id TEXT,run_id TEXT,allowance_usd REAL,status TEXT,receipt_json TEXT); CREATE TABLE loop_provider_owner(id INTEGER,pid INTEGER,token TEXT,expires_at INTEGER)'); db.prepare('INSERT INTO loop_provider_calls VALUES(?,?,?,?,?)').run('b', 'historical', .1, 'completed', 'SYNTHETIC saved receipt'); const initial = readLedgerAnchor(path, .200281); assert.equal(initial.attempts, 1); assert.equal(initial.pending, 0); assert.equal(initial.owners, 0); assert.ok(!JSON.stringify(initial).includes('SYNTHETIC saved receipt')); assert.deepEqual(readLedgerAnchor(path, .200281), initial); db.prepare('UPDATE loop_provider_calls SET receipt_json=?').run('Changed'); assert.notEqual(readLedgerAnchor(path, .200281).historicalRowsSha256, initial.historicalRowsSha256); db.close();
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('CLI defaults offline and rejects approval before reading a credential or shared ledger', async () => {
+  const help = await sourceCalibrationComparisonCli([]); assert.ok('mode' in help && help.mode === 'offline'); const root = mkdtempSync(join(tmpdir(), 'source-calibration-cli-')); try { const path = join(root, 'plan.json'); writeFileSync(path, JSON.stringify(prepareSourceCalibrationComparison(preparation()))); const env = new Proxy({ ABLATRIX_LOOP_LIVE: '1' }, { get(target, key) { if (String(key).includes('SAPIOM')) assert.fail('Credential access before approval'); return Reflect.get(target, key); } }); await assert.rejects(sourceCalibrationComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', '0'.repeat(64)], env)); assert.equal(readFileSync(path, 'utf8').includes('planSha256'), true); } finally { rmSync(root, { recursive: true, force: true }); }
+});

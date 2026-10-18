@@ -1,0 +1,23 @@
+{
+  "format": "ablatrix-source-calibration-pre-generation-amendment-v2",
+  "createdAt": "2026-10-18T17:45:29.397Z",
+  "candidateInstructionsChanged": false,
+  "candidateSystemInstructionsSha256": "e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8",
+  "previousDraft": {
+    "cohortFileSha256": "0aeb9892647fe8f9501a94d4b4b4a2012805c613bee319768efeaac02cf3fc04",
+    "retrievalFileSha256": "20ec85a499551b32275a3e97e0d03c26230ff46a2826b445dfbe1acf66c0fa31",
+    "sourceFamilyReviewFileSha256": "9e2dd517b86b656eaae9e9225957ad63009ba2362e584c0798d60bfa62a7c8db",
+    "status": "failed_source_only_family_review",
+    "cases": 8,
+    "providerCalls": 0
+  },
+  "amendments": [
+    "Include KitchenAid/Kitchen Aid in appliance-brand alias vocabulary; retain the requirement for an explicit source-established relationship.",
+    "Protect all sixteen source-reviewed products, source packets, model identifiers and related families from both rejected drafts.",
+    "Keep camera mount compatibility and printer-toner categories distinct unless actual source/model/family reuse establishes a relationship."
+  ],
+  "selectionSeed": "ablatrix-source-calibration-2026-10-18-v1",
+  "newAnswersObserved": 0,
+  "paidExecutionAuthorized": false,
+  "qualityClaimEligible": false
+}

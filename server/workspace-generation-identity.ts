@@ -1,19 +1,28 @@
 import { textHash } from './product-corpus.ts';
 import { workspaceReviewSourceHash } from './answer-review-source.ts';
-import { WORKSPACE_GENERATION_CONTRACT, workspaceGenerationParts } from './workspace-generation.ts';
+import { WORKSPACE_GENERATION_CONTRACT, workspaceGenerationContract, workspaceGenerationParts, type WorkspaceGenerationContract } from './workspace-generation.ts';
 import type { WorkspaceRun } from './product-workspace.ts';
+
+/** Default/explicit v1 keep the historical identity bytes. Experimental
+ * requests add their contract so a retry cannot change its generation policy. */
+export function workspaceQuestionRequestHash(input: Pick<WorkspaceRun, 'productId' | 'question' | 'mode'>, automaticCheck = false, selected?: WorkspaceGenerationContract) {
+  const contract = workspaceGenerationContract(selected);
+  return textHash(JSON.stringify({ productId: input.productId, question: input.question, mode: input.mode, automaticCheck,
+    ...(contract !== WORKSPACE_GENERATION_CONTRACT ? { generationContract: contract } : {}) }));
+}
 
 /** Pure identity check shared by crash recovery and offline evidence export.
  * An early failed request may have no prepared generation; it cannot assert a
  * generation receipt. Once prepared, every question, policy and source byte is
  * bound to the exact persisted request and the immutable review snapshot. */
 export function verifyWorkspaceRunGeneration(run: WorkspaceRun): void {
-  const requestSha256 = textHash(JSON.stringify({ productId: run.productId, question: run.question, mode: run.mode, automaticCheck: run.automaticCheckRequested ?? false }));
+  const contract = workspaceGenerationContract(run.requestIdentity?.generationContract);
+  const requestSha256 = workspaceQuestionRequestHash(run, run.automaticCheckRequested ?? false, contract);
   if (run.requestIdentity && run.requestIdentity.sha256 !== requestSha256) throw new Error('Saved generation request identity is inconsistent.');
   const generation = run.generation;
   if (!generation) return;
   const parts = workspaceGenerationParts(generation.input), sources = run.reviewContext?.sources;
-  if (generation.contract !== WORKSPACE_GENERATION_CONTRACT || run.generationProtocol !== WORKSPACE_GENERATION_CONTRACT || textHash(JSON.stringify(parts.body)) !== generation.binding.requestSha256 || JSON.stringify(parts.body) !== JSON.stringify(generation.requestBody) || JSON.stringify(parts.binding) !== JSON.stringify(generation.binding) ||
+  if (generation.contract !== contract || run.generationProtocol !== contract || parts.binding.contract !== contract || textHash(JSON.stringify(parts.body)) !== generation.binding.requestSha256 || JSON.stringify(parts.body) !== JSON.stringify(generation.requestBody) || JSON.stringify(parts.binding) !== JSON.stringify(generation.binding) ||
     run.requestIdentity?.sha256 !== requestSha256 ||
     generation.input.runId !== run.id || generation.input.product.id !== run.productId || generation.input.question !== run.question || generation.binding.executionMode !== run.mode ||
     generation.input.product.id !== run.reviewContext?.product.id || generation.input.product.title !== run.reviewContext?.product.title || generation.input.question !== run.reviewContext.question ||

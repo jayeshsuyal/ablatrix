@@ -1,0 +1,24 @@
+{
+  "format": "ablatrix-source-calibration-pre-generation-amendment-v1",
+  "createdAt": "2026-10-18T17:39:39.636Z",
+  "candidateInstructionsChanged": false,
+  "candidateSystemInstructionsSha256": "e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8",
+  "previousDraft": {
+    "cohortFileSha256": "800addd39722f6717312d81eca706ac02085bf30f65358c133db4a86c9e03b9d",
+    "retrievalFileSha256": "c8e5eb6f336bf7cec5a0a96638ec3474282510eec8ef8a88ad71ec69fb4acb5a",
+    "sourceFamilyReviewFileSha256": "a5355d9ecdce007a2fb00a3bc30691a8bf060e7da3ee4f8e61bb2ab164253b94",
+    "status": "failed_source_only_eligibility_review",
+    "cases": 8,
+    "providerCalls": 0
+  },
+  "amendments": [
+    "Exclude pressure/psi/pressurized-vessel suitability uniformly before selection.",
+    "Protect related manufacturer and appliance-parts families established by source co-mentions.",
+    "Include both current-checkout and configured canonical sibling workspace/comparison source metadata inventories.",
+    "Exclude all eight source-reviewed draft products, families, identifiers and normalized source packets from the next preparation."
+  ],
+  "selectionSeed": "ablatrix-source-calibration-2026-10-18-v1",
+  "newAnswersObserved": 0,
+  "paidExecutionAuthorized": false,
+  "qualityClaimEligible": false
+}

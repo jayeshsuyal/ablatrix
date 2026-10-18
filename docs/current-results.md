@@ -1,12 +1,14 @@
 # Current results
 
-Updated October 17, 2026. This index distinguishes implementation checks, scripted demonstrations and recorded live observations. The full chronology remains in the [build and evidence ledger](build-plan.md).
+Updated October 18, 2026. This index distinguishes implementation checks, scripted demonstrations and recorded live observations. The full chronology remains in the [build and evidence ledger](build-plan.md).
 
 ## Current release status
 
 The local product workflow retrieves saved product sources, preserves the original answer and request identity, checks source support, attempts at most one repair, and independently rechecks before delivering or stopping. The `/ask` entry point exposes exact source bodies, original versions and a paired proof export. The isolated `npm run demo` uses fictional scripts and no provider calls or embedding download.
 
 The current work adds a versioned flat-source generation contract and a v4 grader separating factual consistency, cited support, product applicability, coverage and uncertainty. Offline contract tests and synthetic fixtures establish mechanics. **Fresh live v4 qualification and natural-product correction benefit are not established. Live policy release remains closed.** Grader qualification alone would not release an answer policy.
+
+An [experimental source-calibrated first-answer contract](answer-quality-sprint-2026-10-18.md) targets interpretation defects found in saved answers. Its instructions were frozen before separate question selection; a controlled live comparison is being prepared. The ordinary workspace default is unchanged, and this preparation establishes no new answer-quality result.
 
 ## Latest recorded live qualification
 
