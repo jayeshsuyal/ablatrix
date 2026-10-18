@@ -1,0 +1,297 @@
+{
+  "format": "ablatrix-retrieval-coverage-public-plan-v2",
+  "status": "prepared_not_authorized",
+  "planSha256": "ba737ce27eecfec57e5f9b8289bda14b01f33e63142674eead1a85cee4c355f1",
+  "implementationCommit": "ba3482fc3d32af5f423c8ba2b7ed5d539f240262",
+  "candidateFreezeCommit": "0537436882649ad541b86635288f181a09871989",
+  "generationContract": "workspace-answer-flat-sources-v1",
+  "systemInstructionsSha256": "bee83f3637714b8c1d3345689d64b89748f2ba14887a6226ee5de33f53eb8d8f",
+  "experiment": {
+    "cases": 8,
+    "plannedAnswers": 16,
+    "modelRoute": "gpt-luna",
+    "retrieval": "same_hybrid_baseline_plus_bounded_literal_structured_context",
+    "sameGenerationPromptAndSettings": true,
+    "baselineSourceBodies": 40,
+    "candidateSourceBodies": 42,
+    "changedCaseIds": [
+      "retrieval-coverage-train-13455",
+      "retrieval-coverage-train-7340"
+    ],
+    "unchangedCaseIds": [
+      "retrieval-coverage-train-5918",
+      "retrieval-coverage-train-677",
+      "retrieval-coverage-train-3500",
+      "retrieval-coverage-train-4621",
+      "retrieval-coverage-train-2032",
+      "retrieval-coverage-train-1268"
+    ],
+    "order": "alternating_baseline_candidate_by_case",
+    "sourceFamilyReview": "passed_independent_ai_review",
+    "graderCalls": 0,
+    "revisions": 0,
+    "webCalls": 0,
+    "retries": 0,
+    "automaticActivation": false
+  },
+  "budget": {
+    "initialAttempts": 138,
+    "initialReservedAllowanceUsd": 13.8,
+    "priorPlanningAdjustmentUsd": 0.200281,
+    "maximumNewAttempts": 16,
+    "planningAllowancePerAttemptUsd": 0.1,
+    "maximumAdditionalPlanningAllowanceUsd": 1.6,
+    "maximumCumulativeAttempts": 154,
+    "maximumCombinedPlanningUsageUsd": 15.600281,
+    "cumulativeLocalCapUsd": 20,
+    "settledProviderCharges": "unavailable",
+    "providerEnforcedCap": false
+  },
+  "artifacts": {
+    "packet": {
+      "fileSha256": "681544a9e7ea23b1d0cef61106655fafd6736ee26e6228d33389d99c3cc84164",
+      "path": "docs/evidence/retrieval-source-coverage-2026-10-18/cohort-v1.json"
+    },
+    "retrieval": {
+      "fileSha256": "d5b257be27edaa800e59ff475a18eec830af9cc22af8cc80227b35c436585384",
+      "path": "docs/evidence/retrieval-source-coverage-2026-10-18/retrieval-v1.json"
+    },
+    "familyAudit": {
+      "fileSha256": "6385aaa92cdd44a18ea063793067fcafce4aedba54749a305294205f1c230153",
+      "path": "docs/evidence/retrieval-source-coverage-2026-10-18/source-family-review-v1.json"
+    },
+    "candidateFreeze": {
+      "fileSha256": "f54ef0a9f3622439ea53a45c79cf85eb3b25e3c8a31d629c6aa7a6903bee112e",
+      "path": "docs/evidence/retrieval-source-coverage-2026-10-18/candidate-freeze-v1.json"
+    },
+    "exposureAudit": {
+      "fileSha256": "e2cdf0f823893230bef6668bb9c62c81911bace8fd75407b8baaa202a6e07bca",
+      "privateMetadata": true
+    },
+    "selectionAudit": {
+      "fileSha256": "b56d3348bd3bee97e233babd275cbcf962b8fc8a34ea67ea06929b3f1a360b82",
+      "privateMetadata": true
+    },
+    "compatibilityAmendment": {
+      "path": "docs/evidence/retrieval-source-coverage-2026-10-18/compatibility-amendment-v1.json",
+      "fileSha256": "bd1f50680f10fd0bf8a56da013122bd1205058bfcc7b8bc225dfd7d80790b850"
+    },
+    "contextReplay": {
+      "path": "docs/evidence/retrieval-source-coverage-2026-10-18/context-replay-v1.json",
+      "fileSha256": "82df1458ec09b8f29b7e0ec0f6ba2f6579ddf64a63287ef451fe68992fbe925f"
+    }
+  },
+  "implementationSha256": {
+    "scripts/prepare-source-calibration-cohort.py": "e900cac3c050b6ffc187171ae97f0a14a76d8511dafad3b4e1229e5545add960",
+    "scripts/test_prepare_source_calibration_cohort.py": "43f4a8f5d77d7e648e3ce5bbf1a2283087ab27ebd5bdd7e1f8a22898069d1ed8",
+    "scripts/prepare-flat-source-cohort.py": "3e8d627d143900e661c17c53c67bf65743f8587afef695a9c517e0032f7eb4d9",
+    "scripts/prepare-correction-cohort.py": "b4518d71c302090358c6523b89c7774ad7ca1a7e13d44addd766c21ad35a93d1",
+    "scripts/prepare-source-id-cohort.py": "67d34d46373a16d3af7b80655f7702ebf68c7afc6c193b4a0de43a1824c3c67a",
+    "server/source-calibration-comparison.ts": "1ecd3055360847b0c437f29434ca9519d31943bb3f26c8a641cd201248a610ca",
+    "server/source-calibration-comparison.test.ts": "fcd07d33ab745a90e07ab14803dda266ec902cdc06acee87e47af62ac4346d4d",
+    "scripts/source-calibration-comparison.ts": "f51e461f95cf5053354b69497e9818d0e05e8497855ac7bb9a80b0b45ca9d729",
+    "scripts/source-calibration-retrieval.ts": "5799c2df6aafcaa403134c4796180283e51d2f84b4e918b569228724f16294be",
+    "server/workspace-generation.ts": "218f2ac1e6eaa16b5e343262ede0f31f1397bb139957801e7a4fa1b389e3f130",
+    "server/feedback-provider.ts": "1a2f67186dd919251891f10a08d1521499df9dcfe6713fdf40f2ace6c0b7720a",
+    "server/citation-options.ts": "0845b2922b7880de4f641453c307d042a31211948514dc4e57e4f9ad4cb1d93d",
+    "server/answer-review-source.ts": "61fda73dfb35bb198fd8e9f6091f2e269008a8a358c3918754b58169e8396825",
+    "server/flat-source-comparison.ts": "bede19d5c22ba0b6f08f83d621f4afd98b78ca8657f931693d04d12cc3c2f4c0",
+    "server/context-comparison.ts": "0071c15dae0e74eb874678df1e4d1d11d11f3783335e2afede91a62a57b995a2",
+    "server/product-retrieval.ts": "f07ee0d3c49674aeb9115b84539b2b4a535fdec416eac7c785f612adf58874be",
+    "server/product-corpus.ts": "27fbc86475c95a33367c459a96bdb345e1249842ba6ea28be5cba3f97ad2d478",
+    "server/workspace-retrieval-context.ts": "311567d944c2c4361b10b5c6bf6ea6edcbf3cb863f3a48d97a76408af54689af",
+    "server/loop-types.ts": "0425b27e2d361a74e5aee6d6ab1452f9a0557fb3befb0a0d57c5945b54bb41bf",
+    "package-lock.json": "d9e11ec921fa80c8177ff295a2a19f326ea3b47f33651315434149edbe532204",
+    "scripts/prepare-retrieval-coverage-cohort.py": "d4a7d904245721d1277914a52dff1ace6094e76357999909287d2de8653f3445",
+    "scripts/test_prepare_retrieval_coverage_cohort.py": "c32c284c93d49aa8959aa52d0f356510ee2892b535a5346f3a398294b8d8c536",
+    "scripts/retrieval-coverage-comparison.ts": "808898071a1ac2e2dde9a9f09fb152e7260864e0d533e82c2f44aa3fe63f2a00",
+    "scripts/retrieval-coverage-retrieval.ts": "10a04c720631fee6fc5aad44a070b6f975e4304d01e29a5131fe91c830635f6d",
+    "server/workspace-source-coverage.ts": "f0caf3c477f7e629f962df3cb38a842d98af71f2e54948e2241fb1a989275e31",
+    "server/workspace-source-coverage.test.ts": "3447edef385a1500ad570327756561bb72d89e620d4704e6b80aec60b9955d8b",
+    "server/product-workspace.ts": "8e0fb468cc19aba0150c241982aca26778c73802e00888784155efaa21b5d59c",
+    "server/workspace-source-coverage-integration.test.ts": "7798ae1190cd2ff6b7e0607b9a0874649f1be34c2922af67c4e529e1e61a09cd",
+    "server/workspace-generation-identity.ts": "3c71c1cba9cfbafc1b30c10ba440973c0af1258e182e39d544c9e3d2f2796516",
+    "server/synthetic-answer-provider.ts": "3fa8e534fe785305ff938adb1f80b0230089ee1eb1b3fab7756311b84cfef824",
+    "server/runtime-answer-policy.ts": "15a747727aebc7ecfc18063cfa08236405c0014616331d3e6c53e9c1424569ca"
+  },
+  "requests": [
+    {
+      "index": 0,
+      "caseId": "retrieval-coverage-train-5918",
+      "arm": "baseline",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "cd83983d0b64265c56a35924523ac70a07b3add5e7f85ccbc563a1855188c6a9",
+      "sourceContextSha256": "60a00d280152dc2064b0ea755f045f2ce712a18ef1ebf3601049c903875e4e06",
+      "responseSchemaSha256": "7785448d457dd72ca51cf6eeada64fd892a50dc5eccfbb1a769446fedf5f203d",
+      "optionSetSha256": "b12d0ef74545d252fe11569138e4d0c7c724cda14a9a34a9f0dd4cdbe865fc75"
+    },
+    {
+      "index": 1,
+      "caseId": "retrieval-coverage-train-5918",
+      "arm": "candidate",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "05e5bf701eb01208873c079c6069ab382d77f1184fd5dc912507ef830e9d1855",
+      "sourceContextSha256": "60a00d280152dc2064b0ea755f045f2ce712a18ef1ebf3601049c903875e4e06",
+      "responseSchemaSha256": "7785448d457dd72ca51cf6eeada64fd892a50dc5eccfbb1a769446fedf5f203d",
+      "optionSetSha256": "b12d0ef74545d252fe11569138e4d0c7c724cda14a9a34a9f0dd4cdbe865fc75"
+    },
+    {
+      "index": 2,
+      "caseId": "retrieval-coverage-train-13455",
+      "arm": "candidate",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "4c8370ba60b65983c54a4cb0f378d70b3be306c2e8271f9675a96348c7f5ca9f",
+      "sourceContextSha256": "dcb04212f55f4d49f409303aa81053c18421311b9264e7b3cde42c111b67bdc6",
+      "responseSchemaSha256": "ae99b485022ed1149fe82401f00d029cf24038fff8f24f811c3390a7f3aaf9e3",
+      "optionSetSha256": "c9b2e97a73dbbdd92a16265f845ace90edafce095bff68a7468ecc95f66b164c"
+    },
+    {
+      "index": 3,
+      "caseId": "retrieval-coverage-train-13455",
+      "arm": "baseline",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "d5c1a39a0da9791d0d708ef083ab44125ba8295dd5153c96908f2097790f0d12",
+      "sourceContextSha256": "412f992717c38beaf23545fbd93d1ebeaeae3747b897c61872e733c305653476",
+      "responseSchemaSha256": "e706e2091021d9fde2b20687ddae4160cb0ba5c1560196b68d8d659ab8e29579",
+      "optionSetSha256": "7171b6ad67a6933d9e556d3dee0019f18575e419c45ff38678a67d208e41d8d5"
+    },
+    {
+      "index": 4,
+      "caseId": "retrieval-coverage-train-7340",
+      "arm": "baseline",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "a0245cb0ef874443ae9bc6e909b1fae08c580992ad5062ee128652cc00094d4a",
+      "sourceContextSha256": "4b3b3d74617e9f68af595958d398f38c7d1f9d8ffa678a189a06411586c3ae4a",
+      "responseSchemaSha256": "0aaac5261d634ba04f75b11e5a8e610f739c709ce9c79679153983afea31979a",
+      "optionSetSha256": "89f48c22a3143ad4028928db9a8d9bf0915a783b136bf301fb57fdd39a5362e2"
+    },
+    {
+      "index": 5,
+      "caseId": "retrieval-coverage-train-7340",
+      "arm": "candidate",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "d5a368519b9e198a3c63378c87e91e3852c51e69d8526e68afbc0ef4a287ad1d",
+      "sourceContextSha256": "8d576eb74811cb6a9270f16d7b6e42a80a8d766e1ece6c096c5c0061acf13c8e",
+      "responseSchemaSha256": "691f1c68fa7c0a885368cf041897d8a352b69dae13a3dbc568111ebe9bb9e0c6",
+      "optionSetSha256": "0dc0448b9a0ffee665cf5421e1b2e0015f611bd3fe8421ac1601343a1c9b8bf4"
+    },
+    {
+      "index": 6,
+      "caseId": "retrieval-coverage-train-677",
+      "arm": "candidate",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "801c100e4d93f457f20fe681bdf632d6fc5939cf2feff200f0e0067a12c83ff1",
+      "sourceContextSha256": "bcec456090a5a9321eadd6c0dc079c4cc4c7c539dddac233e8a76ea5bc7caa67",
+      "responseSchemaSha256": "6394993d37abe288a0fb6177616e450ead5f91a015b1518e92d8d0d4c271faee",
+      "optionSetSha256": "4f34ede1355fa7a6e11c5201acab35db145349b336b4c31bce61c5720c897031"
+    },
+    {
+      "index": 7,
+      "caseId": "retrieval-coverage-train-677",
+      "arm": "baseline",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "1db86eef2d8988f8d4e59a7a7dd5910127451929e46c34830ad035e81efbc8dd",
+      "sourceContextSha256": "bcec456090a5a9321eadd6c0dc079c4cc4c7c539dddac233e8a76ea5bc7caa67",
+      "responseSchemaSha256": "6394993d37abe288a0fb6177616e450ead5f91a015b1518e92d8d0d4c271faee",
+      "optionSetSha256": "4f34ede1355fa7a6e11c5201acab35db145349b336b4c31bce61c5720c897031"
+    },
+    {
+      "index": 8,
+      "caseId": "retrieval-coverage-train-3500",
+      "arm": "baseline",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "44dcefb72003af78e2bacb55f4bfec87c76f7389c41f3c4784b2bb4456a72e6e",
+      "sourceContextSha256": "58d30b5fdc96ad755f644fd571579923e41865d2b26ba4429835c2dc120e9b21",
+      "responseSchemaSha256": "75ad93dca4b3b72cd3529962d3df452553cfa494ca26977d24303197dd0af135",
+      "optionSetSha256": "f634e3ee0d85ff9d9dca976022ca2fbb859dc3a8a4c5f38d0a2182264ae3d1c1"
+    },
+    {
+      "index": 9,
+      "caseId": "retrieval-coverage-train-3500",
+      "arm": "candidate",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "93b0d68d7d6b86e162ea4a76bf36f24ac499f8617dab20e4379d1d0a3291aeca",
+      "sourceContextSha256": "58d30b5fdc96ad755f644fd571579923e41865d2b26ba4429835c2dc120e9b21",
+      "responseSchemaSha256": "75ad93dca4b3b72cd3529962d3df452553cfa494ca26977d24303197dd0af135",
+      "optionSetSha256": "f634e3ee0d85ff9d9dca976022ca2fbb859dc3a8a4c5f38d0a2182264ae3d1c1"
+    },
+    {
+      "index": 10,
+      "caseId": "retrieval-coverage-train-4621",
+      "arm": "candidate",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "e1ee8035bc04596ed07ef3eb719d97c878606c7b8e0881a490d351111d6bb469",
+      "sourceContextSha256": "735d5dc90c648fd6c7473a18ef768d3b6bc46116d9edc8d4091b0f358bfa5fae",
+      "responseSchemaSha256": "e7cf47c0f3939c77714fdce2dd1009829016fadddf0dbdfdead5c99347650d72",
+      "optionSetSha256": "7f7fd9f9beb67d74e884897d9e8f4ec3a2c2f7e2413905d93bb6cce662bb961c"
+    },
+    {
+      "index": 11,
+      "caseId": "retrieval-coverage-train-4621",
+      "arm": "baseline",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "4dafcc3a55685a1028137d7c2c5a335ee14a53803e814109193b4198dc833582",
+      "sourceContextSha256": "735d5dc90c648fd6c7473a18ef768d3b6bc46116d9edc8d4091b0f358bfa5fae",
+      "responseSchemaSha256": "e7cf47c0f3939c77714fdce2dd1009829016fadddf0dbdfdead5c99347650d72",
+      "optionSetSha256": "7f7fd9f9beb67d74e884897d9e8f4ec3a2c2f7e2413905d93bb6cce662bb961c"
+    },
+    {
+      "index": 12,
+      "caseId": "retrieval-coverage-train-2032",
+      "arm": "baseline",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "447000c57e48aebe81a68983fee70b86013dcfd1aaacfc0c065438433e4b2aa4",
+      "sourceContextSha256": "22c8ec84a1fdf7204cf19310c3be0a00fc1967e8118aaef75c231634d9246d49",
+      "responseSchemaSha256": "b94be42215f04458ff0c7555d9975c61565f25b333e9f195ede3925be91530a3",
+      "optionSetSha256": "77f564062e99b14b8f46ead7a6291b93ad6c3eb5c07766c6659b95e1feb54a4c"
+    },
+    {
+      "index": 13,
+      "caseId": "retrieval-coverage-train-2032",
+      "arm": "candidate",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "f00f5d3a2717ff75697a622dc957cad0e65966b791096ebf0819bc213fb35aaa",
+      "sourceContextSha256": "22c8ec84a1fdf7204cf19310c3be0a00fc1967e8118aaef75c231634d9246d49",
+      "responseSchemaSha256": "b94be42215f04458ff0c7555d9975c61565f25b333e9f195ede3925be91530a3",
+      "optionSetSha256": "77f564062e99b14b8f46ead7a6291b93ad6c3eb5c07766c6659b95e1feb54a4c"
+    },
+    {
+      "index": 14,
+      "caseId": "retrieval-coverage-train-1268",
+      "arm": "candidate",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "46ac2fae4e191a86a3766c33b5b624c7822378a2bfdbf8315dd71bbb3cc9cab3",
+      "sourceContextSha256": "d9cb973ea4f6c9f4a401d39d25a279526a629fa1e58d406baf826c47a1289dd0",
+      "responseSchemaSha256": "ef4e0801a95582c3f5c9e9146c51a4aeae797a554fad881e4ebc85e9ba54e6e9",
+      "optionSetSha256": "3539b370098be7458b2d90f0edd116a815073e0aff67807b157546b6e3508a4c"
+    },
+    {
+      "index": 15,
+      "caseId": "retrieval-coverage-train-1268",
+      "arm": "baseline",
+      "generationContract": "workspace-answer-flat-sources-v1",
+      "requestSha256": "ec1bdc68e783f47ac964ce14b912401acd46ac8998d17d42fdd052495a829c33",
+      "sourceContextSha256": "d9cb973ea4f6c9f4a401d39d25a279526a629fa1e58d406baf826c47a1289dd0",
+      "responseSchemaSha256": "ef4e0801a95582c3f5c9e9146c51a4aeae797a554fad881e4ebc85e9ba54e6e9",
+      "optionSetSha256": "3539b370098be7458b2d90f0edd116a815073e0aff67807b157546b6e3508a4c"
+    }
+  ],
+  "limitations": [
+    "Both added structured fields repeat facts already present in baseline title/prose. This cohort tests structured-context salience and answer behavior, not recovery of previously unavailable decisive facts.",
+    "Only two cases receive an addition; six unchanged-context controls retain the full denominator.",
+    "Fresh additions concern size/material; model-identity delivery is development-checked but not an isolated fresh intervention here.",
+    "Context amount differs; report measured source counts and input tokens, with no equal-context reranking or cost-saving claim.",
+    "AI source checks are not human gold or external physical verification."
+  ],
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false,
+  "supersedes": {
+    "planSha256": "64998b3eaaac4e043306acd209f540796f976b3c325ac5ff3bcf4bf31f5c4de4",
+    "status": "unapproved_unexecuted",
+    "reason": "generic_combined_dimensions_fix_with_identical_frozen_contexts_and_requests"
+  },
+  "originalQuestionsSourceContextsReferencesAndAllSixteenRequestsUnchanged": true,
+  "generationPerformed": false,
+  "newProviderCalls": 0
+}
