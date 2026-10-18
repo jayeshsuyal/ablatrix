@@ -43,19 +43,19 @@ Independent source-only review rejected the first draft for a pressure-vessel pr
 
 The shared ledger was checked read-only: 122 attempts, $12.20 reserved, $0.200281 prior adjustment, zero pending reservations and zero owners. Sixteen further attempts would reserve at most $1.60, reach 138 attempts and $14.000281 combined planning usage under a $20 local cap. These figures describe the proposed local scope, not approval or settled charges. The exact code-bound plan must be reviewed before financial approval and execution.
 
-The server suite passes 554 tests with one platform skip; 13 existing ask/context/review browser checks, 23 Python selector tests, production build and standalone CLI/retrieval script typechecks pass. The saved historical development proof still verifies with its original hash and explicit absent legacy final-delivery metrics. New synthetic tests establish bounded execution and accounting mechanics only; they do not score answer quality.
+The server suite passes 555 tests with one platform skip; 13 existing ask/context/review browser checks, 24 Python selector tests, production build and standalone CLI/retrieval script typechecks pass. The saved historical development proof still verifies with its original hash and explicit absent legacy final-delivery metrics. New synthetic tests establish bounded execution and accounting mechanics only; they do not score answer quality.
 
 ## Frozen separate-question plan
 
 The final [eight-product source packet](evidence/answer-quality-source-calibration-2026-10-18/cohort-v1.json), [cached-BGE retrieval](evidence/answer-quality-source-calibration-2026-10-18/retrieval-v1.json) and [independent AI source/family review](evidence/answer-quality-source-calibration-2026-10-18/source-family-review-v1.json) preserve 161 reviewer passages and 39 selected complete source bodies. The review passed with no remaining eligibility blockers. Its expected facts, missing relationships and prohibited inferences were written before any generated answer. Relevant missing information and conflicts remain in the packet.
 
-The [selection summary](evidence/answer-quality-source-calibration-2026-10-18/selection-summary-v1.json) records both rejected drafts and their private audit commitments. The [public bounded plan](evidence/answer-quality-source-calibration-2026-10-18/bounded-plan-v1.json) records all sixteen request hashes and the exact proposed allowance. The execution plan additionally binds private canonical store paths and historical ledger commitments; those host details are not public.
+The [selection summary](evidence/answer-quality-source-calibration-2026-10-18/selection-summary-v1.json) records both rejected drafts and their private audit commitments. The [public bounded plan](evidence/answer-quality-source-calibration-2026-10-18/bounded-plan-v2.json) records all sixteen request hashes and the exact proposed allowance. The execution plan additionally binds private canonical store paths and historical ledger commitments; those host details are not public.
 
-Plan `cfa89bf59bb161cf9d35624cca01a8dca6a2b6a90812c63f50ccfb3a8d746cce` passes preparation and offline verification with zero provider calls. Paid execution is unapproved. There are no fresh generated answers or paired quality verdicts yet.
+Plan `d1d1c49c6d47edcf2c9dae4351701c42b531d362fd5b42acc1184433e8a8a78e` passes preparation and offline verification with zero provider calls. It supersedes the preserved, unapproved v1 plan after review required stronger pre-generation cohort seals and exactly one rejection review per prior draft. The source packet and candidate prompt are unchanged. Historical selection code at `fa49ba7` is pinned separately from current validation code at `f32d15e`; immutable helper hashes and actual inventory-path commitments are checked. Paid execution is unapproved. There are no fresh generated answers or paired quality verdicts yet.
 
 On the preparing host, verify without loading credentials or creating a provider:
 
 ```sh
 node --import tsx scripts/source-calibration-comparison.ts --verify \
-  --plan .data/source-calibration-2026-10-18/plan-v1.json
+  --plan .data/source-calibration-2026-10-18/plan-v2.json
 ```
