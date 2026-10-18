@@ -29,6 +29,24 @@ const scopeDeterminers = String.raw`(?:(?:the|its|this|that)\s+)*`;
 // Both nouns must share the dimension request itself. An earlier statement
 // such as "I have the package and product; ..." cannot expand a later scope.
 const coordinatedDimensionRequest = new RegExp(`${coordinatedScopes}\\s+${dimensionNoun}|${dimensionNoun}\\s+(?:of|for)\\s+${scopeDeterminers}${coordinatedScopes}|\\bhow\\s+(?:big|large|small|wide|tall|long|deep)\\s+(?:is|are)\\s+${scopeDeterminers}${coordinatedScopes}`);
+const dimensionRequest = /\b(?:dimensions?|measurements?|length|width|height|depth|diameter|size|thickness|tall|wide|long|deep)\b|\bhow\s+(?:big|large|small)\b/;
+const requestMarker = /\b(?:what|how|which|where|when|why|please|tell|show|need|want|compare|comparing|give|list|provide|find|confirm|describe|check)\b/;
+/** A bounded request heuristic, not discourse understanding. Prefer explicit
+ * requests over declarative context; retain bare nominal queries as fallback.
+ * Periods inside decimals/model IDs are not sentence boundaries. */
+function requestedIntentClauses(question: string): string[] {
+  const intentText = question.toLowerCase()
+    .replace(/\b(item|product|package|packaging|box|carton)['’]s\b/g, '$1')
+    .replace(/\bvs\.(?=\s|$)/g, 'vs');
+  const parts = intentText.split(/([;?!]+|\.(?=\s|$))/), clauses: { text: string; requested: boolean }[] = [];
+  for (let index = 0; index < parts.length; index += 2) {
+    const text = parts[index].trim(); if (!text) continue;
+    const marker = text.match(requestMarker);
+    clauses.push({ text: marker ? text.slice(marker.index) : text, requested: Boolean(marker) || Boolean(parts[index + 1]?.includes('?')) });
+  }
+  const explicit = clauses.filter(clause => clause.requested);
+  return (explicit.length ? explicit : clauses).map(clause => clause.text);
+}
 // Case folding is permitted; punctuation is part of a literal identifier.
 // ZX-100 and ZX100 must never be presented as an established exact match.
 const canonicalIdentifier = (value: string) => value.toUpperCase();
@@ -44,13 +62,15 @@ function identifiers(text: string): Set<string> {
 }
 
 function relevance(source: Source, question: string): { priority: number; reasons: string[] } | undefined {
-  // Normalize possessive scope nouns only for intent matching. Identifier
-  // comparisons and every returned question/source byte use the original text.
-  const q = question.toLowerCase().replace(/\b(item|product|package|packaging|box|carton)['’]s\b/g, '$1'), requested = identifiers(question);
-  const dimensionIntent = /\b(?:dimensions?|measurements?|length|width|height|depth|diameter|size|thickness|tall|wide|long|deep)\b|\bhow\s+(?:big|large|small)\b/.test(q);
-  const packageIntent = /\b(?:packag(?:e|es|ing)|box|carton|shipping)\b/.test(q);
-  const itemDimensionIntent = !packageIntent || /\b(?:item|product)\s+(?:dimensions?|measurements?|size|length|width|height|depth|diameter|thickness)\b/.test(q) || coordinatedDimensionRequest.test(q);
-  const identityIntent = requested.size > 0 || /\b(?:fit(?:s|ting)?|compatib\w*|replac(?:e|es|ing|ement)|models?|part\s*(?:numbers?|no\.?|#)|skus?)\b/.test(q);
+  const clauses = requestedIntentClauses(question), q = clauses.join(' '), requested = identifiers(question);
+  const dimensionClauses = clauses.filter(clause => dimensionRequest.test(clause));
+  const dimensionIntent = dimensionClauses.length > 0;
+  const packageIntent = dimensionClauses.some(clause => new RegExp(packageScope).test(clause));
+  const itemDimensionIntent = dimensionClauses.some(clause => !new RegExp(packageScope).test(clause) || /\b(?:item|product)\s+(?:dimensions?|measurements?|size|length|width|height|depth|diameter|thickness)\b/.test(clause) || coordinatedDimensionRequest.test(clause));
+  // Context model identifiers retain their literal punctuation and remain
+  // available when a later request asks about fit; they do not create an
+  // identity request when the user instead asks only about another facet.
+  const identityIntent = identifiers(q).size > 0 || /\b(?:fit(?:s|ting)?|compatib\w*|replac(?:e|es|ing|ement)|models?|part\s*(?:numbers?|no\.?|#)|skus?)\b/.test(q);
   const intents = {
     color: /\bcolou?rs?\b|\b(?:white|black|red|blue|green|yellow|brown|grey|gray|beige|silver|gold|pink|purple|orange)\b/.test(q),
     material: /\b(?:materials?|composition|made\s+(?:of|from|out\s+of))\b|\b(?:is|are)\b.*\b(?:wood(?:en)?|plastic|metal|steel|glass|cotton|leather)\b/.test(q),

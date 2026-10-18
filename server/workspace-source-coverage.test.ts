@@ -123,6 +123,43 @@ test('incidental coordinated nouns do not consume a slot with unrequested item d
   assert.deepEqual(f.run('How large are the product and its package?').additions.map(a => a.sourceId), ['a-item', 'b-package']);
 });
 
+test('known background dimensions cannot crowd out the three actually requested facets', () => {
+  const f = setup([source('report', 'review', 'A customer report, retained unchanged.'),
+    source('a-item', 'attribute', 'item_dimensions: { width:8, height:12 }'),
+    source('b-package', 'attribute', 'item_package_dimensions: { width:10, height:14 }'),
+    source('c-color', 'attribute', 'color: { value:"blue" }'),
+    source('d-material', 'attribute', 'material: { value:"wood" }'),
+    source('e-capacity', 'attribute', 'capacity: { value:12, unit:cups }'),
+    source('f-model', 'attribute', 'model_number: { value:"ZX100" }')], ['report']);
+  for (const question of [
+    'I already know the product and package dimensions. What are the color, material, and capacity?',
+    'I already know the product and package dimensions; what are the color, material, and capacity?',
+    'I already know the product and package dimensions, what are the color, material, and capacity?',
+    'What are the color, material, and capacity? I already know the product and package dimensions.',
+  ]) assert.deepEqual(f.run(question).additions.map(a => a.sourceId), ['c-color', 'd-material', 'e-capacity']);
+  assert.deepEqual(f.run('I know the color, material and capacity. What are the package dimensions?').additions.map(a => a.sourceId), ['b-package']);
+  assert.deepEqual(f.run('My model ZX100 is known. What color is it?').additions.map(a => a.sourceId), ['c-color']);
+});
+
+test('separate requested dimension clauses aggregate scopes without unrelated package facets suppressing item dimensions', () => {
+  const f = setup([source('report', 'review', 'A report.'), source('item', 'attribute', 'item_dimensions: { width:8 }'),
+    source('package', 'attribute', 'item_package_dimensions: { width:10 }'), source('color', 'attribute', 'color: { value:"blue" }')], ['report']);
+  assert.deepEqual(f.run('How wide is it? What are the package dimensions?').additions.map(a => a.sourceId), ['item', 'package']);
+  assert.deepEqual(f.run('What are its dimensions? What color is the package?').additions.map(a => a.sourceId), ['color', 'item']);
+  assert.deepEqual(f.run('product and package dimensions').additions.map(a => a.sourceId), ['item', 'package']);
+  assert.deepEqual(f.run('Compare the package vs. the product dimensions.').additions.map(a => a.sourceId), ['item', 'package']);
+});
+
+test('clause selection preserves decimal/model dots and literal context identifiers for a later fit request', () => {
+  const f = setup([source('report', 'review', 'A report.'), source('exact', 'bullet', 'For ZX.100.'),
+    source('family', 'bullet', 'VGSU family context only.'), source('dimension', 'attribute', 'item_dimensions: { width:2.5, unit:cm }')], ['report']);
+  assert.deepEqual(f.run('Which part fits ZX.100?').additions.map(a => a.sourceId), ['exact']);
+  assert.deepEqual(f.run('How wide is it in 2.5 cm units?').additions.map(a => a.sourceId), ['dimension']);
+  const fit = f.run('My model is VGSU1646BBK. Will these fit?');
+  assert.deepEqual(fit.additions.map(a => a.sourceId), ['family']);
+  assert.deepEqual(fit.additions[0].reasons, ['identifier_family_context_only:VGSU']);
+});
+
 test('exact identifiers preserve separators, and near-model strings are not standalone family matches', () => {
   const f = setup([
     source('report', 'cqa', 'No; this is for the other model.', 'Does it fit VGSU1646BBL?'),
