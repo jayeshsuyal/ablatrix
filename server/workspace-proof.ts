@@ -33,8 +33,9 @@ export function buildWorkspaceProof(runs: WorkspaceRun[], jobs: AutomaticSupport
     const originalGrade = axes(job?.assessments.find(item => item.phase === 'original'));
     const repairGrade = axes(job?.assessments.find(item => item.phase === 'repair'));
     let outcome: Outcome = 'unresolved';
-    if (originalGrade && job?.delivery?.origin === 'original' && originalGrade.disposition === 'pass') outcome = 'tie';
-    if (originalGrade && repairGrade) outcome = originalGrade.disposition !== 'pass' && repairGrade.disposition === 'pass' ? 'win' : originalGrade.disposition === 'pass' && repairGrade.disposition !== 'pass' ? 'regression' : originalGrade.disposition === repairGrade.disposition ? 'tie' : 'unresolved';
+    if (job?.status === 'supported' && job.delivery?.origin === 'original' && originalGrade?.disposition === 'pass') outcome = 'tie';
+    if (job?.status === 'repaired' && job.delivery?.origin === 'repair' && originalGrade && repairGrade?.disposition === 'pass') outcome = originalGrade.disposition !== 'pass' ? 'win' : 'tie';
+    if (job?.status === 'abstained' && originalGrade && repairGrade && repairGrade.disposition !== 'pass') outcome = originalGrade.disposition === 'pass' ? 'regression' : originalGrade.disposition === repairGrade.disposition ? 'tie' : 'unresolved';
     const originalReceipt = receipt(run.id) ?? null;
     const operations = (job?.operations ?? []).map(operation => ({ ...operation, receipt: receipt(operation.runId) ?? null }));
     const receipts = [originalReceipt, ...operations.map(operation => operation.receipt)].filter((item): item is AnswerRevisionReceipt => !!item);
@@ -63,14 +64,17 @@ export function buildWorkspaceProof(runs: WorkspaceRun[], jobs: AutomaticSupport
   });
   const paired = { wins: cases.filter(item=>item.outcome==='win').length, ties: cases.filter(item=>item.outcome==='tie').length, regressions: cases.filter(item=>item.outcome==='regression').length, unresolved: cases.filter(item=>item.outcome==='unresolved').length };
   const repairCases = cases.filter(item=>item.repairTriggered);
-  const metrics = (items: typeof cases, phase: 'original' | 'repair') => ({ denominator: items.length, assessed: items.filter(item => item[phase]?.grade).length,
-    usefulSupportedAnswers: items.filter(item => item[phase]?.grade?.usefulSupported).length, factualErrors: items.filter(item => item[phase]?.grade?.factualErrors).length, citedSupport: items.filter(item => item[phase]?.grade?.citedSupport).length,
-    factsNotEstablished: items.filter(item => item[phase]?.grade?.factualNotEstablished).length, applicabilityUnresolved: items.filter(item => item[phase]?.grade?.applicability?.some(axis=>axis==='ambiguous_scope')).length, wrongVariant: items.filter(item => item[phase]?.grade?.applicability?.some(axis=>axis==='wrong_variant')).length, completeCoverage: items.filter(item => item[phase]?.grade?.availableFactCoverage === 'complete').length, unnecessaryAbstentions: items.filter(item => item[phase]?.grade?.unnecessaryAbstention).length });
+  const metrics = (items: typeof cases, phase: 'original' | 'repair', finalDelivery = false) => {
+    const grades = items.map(item => finalDelivery ? item.job?.status === 'supported' && item.job.delivery?.origin === 'original' ? item.original.grade : item.job?.status === 'repaired' && item.job.delivery?.origin === 'repair' ? item.repair?.grade : null : item[phase]?.grade);
+    return { denominator: items.length, assessed: grades.filter(Boolean).length,
+      usefulSupportedAnswers: grades.filter(grade => grade?.usefulSupported).length, factualErrors: grades.filter(grade => grade?.factualErrors).length, citedSupport: grades.filter(grade => grade?.citedSupport).length,
+      factsNotEstablished: grades.filter(grade => grade?.factualNotEstablished).length, applicabilityUnresolved: grades.filter(grade => grade?.applicability?.some(axis => axis === 'ambiguous_scope')).length, wrongVariant: grades.filter(grade => grade?.applicability?.some(axis => axis === 'wrong_variant')).length, completeCoverage: grades.filter(grade => grade?.availableFactCoverage === 'complete').length, unnecessaryAbstentions: grades.filter(grade => grade?.unnecessaryAbstention).length };
+  };
   const modes = new Set(cases.map(item=>item.mode));
   const body = { schemaVersion: 'workspace-paired-proof-v1' as const, kind: 'original_vs_repair' as const, qualityClaimEligible: false as const,
     provenance: { kind: modes.size > 1 ? 'mixed' : modes.has('live') ? 'live' : 'synthetic', assessment: 'unqualified_automated_or_scripted', providerAuthenticity: 'not_attested', generationVersions: [...new Set(cases.map(item=>item.original.generationVersion))].sort(), graderVersions: [...new Set(jobs.flatMap(job=>job.assessments.map(item=>item.promptVersion)))].sort() },
     cohort: { planned: generated.length, evaluated: cases.length-paired.unresolved, repairTriggered: repairCases.length, previewExcluded: runs.length-generated.length }, paired,
-    metrics: { wholeCohort: { original: metrics(cases,'original'), repair: metrics(cases,'repair') }, repairTriggered: { original: metrics(repairCases,'original'), repair: metrics(repairCases,'repair') } },
+    metrics: { wholeCohort: { original: metrics(cases,'original'), repair: metrics(cases,'repair') }, repairTriggered: { original: metrics(repairCases,'original'), repair: metrics(repairCases,'repair') }, finalDelivery: metrics(cases, 'repair', true) },
     accounting: { calls: cases.reduce((sum,item)=>sum+item.calls,0), unknownCallSlots: cases.reduce((sum,item)=>sum+item.unknownCallSlots,0), recordedOperations: cases.reduce((sum,item)=>sum+item.recordedOperations,0), totalMs: cases.some(item=>item.totalMs===null) ? null : cases.reduce((sum,item)=>sum+item.totalMs!,0), knownTotalMs: cases.reduce((sum,item)=>sum+(item.totalMs??0),0), planningAllowanceUsd: cases.some(item=>item.planningAllowanceUsd===null) ? null : cases.reduce((sum,item)=>sum+item.planningAllowanceUsd!,0), tokens: cases.some(item=>item.mode==='live' && item.tokens===null) ? null : { input: cases.reduce((sum,item)=>sum+(item.tokens?.input??0),0), output: cases.reduce((sum,item)=>sum+(item.tokens?.output??0),0) }, accounting: 'planning_allowance_not_provider_charges' },
     cases, unknowns: cases.flatMap(item=>item.unknowns.map(reason=>({questionId:item.questionId,reason}))), limitations: ['Observed local workspace requests, not a prospectively frozen independent cohort.', 'AI and scripted judgments do not establish human-reviewed quality gain.', 'Synthetic operations make zero provider calls; planning allowances are not charges.', 'Future-policy evaluation is a separate comparison and is excluded here.', 'Missing measurements remain unknown; unresolved and failed attempts retain their denominator.'] };
   return { ...body, sha256: sha(body) };
@@ -97,7 +101,11 @@ export function verifyWorkspaceProof(packet: WorkspaceProof) {
   // Preview requests carry no generation or cost; only their exclusion count is
   // retained. Every generated run, including failures, must match recomputation.
   rebuilt.cohort.previewExcluded=packet.cohort.previewExcluded;
+  const legacyFinalMetrics = !Object.hasOwn(packet.metrics, 'finalDelivery');
+  // Older v1 exports retain their original bytes and raw repair-arm metrics.
+  // Only the absent additive metric is omitted; present metrics must recompute.
+  if (legacyFinalMetrics) Reflect.deleteProperty(rebuilt.metrics, 'finalDelivery');
   const {sha256:ignored,...rebuiltBody}=rebuilt;
   if(sha(rebuiltBody)!==sha(body))throw new Error('Proof derived outcomes, denominators, sources or accounting are inconsistent.');
-  return { valid:true as const, sha256, cases:runs.length, qualityClaimEligible:false as const };
+  return { valid:true as const, sha256, cases:runs.length, qualityClaimEligible:false as const, finalDeliveryMetrics: legacyFinalMetrics ? 'absent_legacy' as const : 'verified' as const };
 }

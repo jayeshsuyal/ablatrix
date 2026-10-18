@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {SyntheticAnswerProvider} from './synthetic-answer-provider.ts';
 import {ProductWorkspace} from './product-workspace.ts';
-import {AutomaticSupport} from './automatic-support.ts';
+import {AutomaticSupport,verifyAutomaticSupportEvidence} from './automatic-support.ts';
 import {createRuntimeGraderBinding} from './runtime-grader.ts';
 import {CITED_APPLICABILITY_GRADER_VERSION} from './claim-support-v4.ts';
 import {localDemoRetriever} from './local-demo.ts';
@@ -50,4 +50,40 @@ test('a completed but invalid original receipt remains an unaccepted diagnostic 
   assert.equal(run.status,'failed');assert.equal(provider.receipt(run.id)?.status,'completed');
   const proof=buildWorkspaceProof(workspace.proofRuns(),[],id=>provider.receipt(id));assert.equal(proof.cohort.planned,1);assert.equal(proof.paired.unresolved,1);assert.equal(proof.accounting.recordedOperations,1);assert.ok(proof.cases[0].unknowns.includes('generation_result_not_accepted'));assert.equal(verifyWorkspaceProof(proof).valid,true);
  }finally{workspace.close();provider.close();}
+});
+
+test('proof rejects missing repair phases and leaves terminal uncertainty unresolved',async()=>{
+ const provider=new SyntheticAnswerProvider(':memory:'),workspace=new ProductWorkspace(':memory:',provider,localDemoRetriever),checks=new AutomaticSupport(provider,':memory:',{graderBinding:createRuntimeGraderBinding('synthetic',CITED_APPLICABILITY_GRADER_VERSION)});
+ try{
+  const product=workspace.createProduct({title:'Fictional phase-prefix bottle',sources:[{label:'Fictional specification',text:'SYNTHETIC fixture: The bottle holds six cups and has a cork lid.'}]});
+  const run=await workspace.ask({productId:product.id,question:'What capacity and lid are listed?',mode:'synthetic'});
+  checks.enqueue(workspace.reviewSnapshots(run.id)[0]);for(let phase=0;phase<3;phase++)await checks.tick();
+  const repaired=checks.overview()[0];assert.equal(repaired.status,'repaired');
+  const stopped=structuredClone(repaired);stopped.status='inconclusive';stopped.delivery={origin:'safe_abstention',versionId:null,answer:{status:'insufficient_evidence',answer:'SYNTHETIC example: I could not confirm an answer against the saved sources.',citations:[]}};
+  verifyAutomaticSupportEvidence(stopped,id=>provider.receipt(id));
+  const unresolved=buildWorkspaceProof([run],[stopped],id=>provider.receipt(id));
+  assert.deepEqual(unresolved.paired,{wins:0,ties:0,regressions:0,unresolved:1});assert.equal(unresolved.metrics.finalDelivery.assessed,0);assert.equal(verifyWorkspaceProof(unresolved).valid,true);
+  const missing=structuredClone(stopped);missing.operations=missing.operations.filter(operation=>operation.phase!=='repair');
+  assert.throws(()=>verifyAutomaticSupportEvidence(missing,id=>provider.receipt(id)),/phase prefix|completed repair operation/);
+  assert.throws(()=>verifyWorkspaceProof(buildWorkspaceProof([run],[missing],id=>provider.receipt(id))),/phase prefix|completed repair operation/);
+  const reordered=structuredClone(stopped);reordered.operations.reverse();assert.throws(()=>verifyAutomaticSupportEvidence(reordered,id=>provider.receipt(id)),/phase prefix/);
+  const unfinished=structuredClone(stopped);unfinished.operations[1].status='unknown';assert.throws(()=>verifyAutomaticSupportEvidence(unfinished,id=>provider.receipt(id)),/phase prefix/);
+ }finally{checks.close();workspace.close();provider.close();}
+});
+
+test('final-delivery metrics retain supported originals and preserve legacy proof verification',async()=>{
+ class SupportedOriginal extends SyntheticAnswerProvider{
+  override receipt(runId:string){const receipt=super.receipt(runId);if(!receipt||receipt.kind!=='workspace_answer_flat_sources_v1')return receipt;const document=JSON.parse(receipt.receipt_json!);document.output.answer=document.output.answer.replace(/^SYNTHETIC draft/,'SYNTHETIC revision');return {...receipt,receipt_json:JSON.stringify(document)};}
+ }
+ const provider=new SupportedOriginal(':memory:'),workspace=new ProductWorkspace(':memory:',provider,localDemoRetriever),checks=new AutomaticSupport(provider,':memory:',{graderBinding:createRuntimeGraderBinding('synthetic',CITED_APPLICABILITY_GRADER_VERSION)});
+ try{
+  const product=workspace.createProduct({title:'Fictional already-supported bottle',sources:[{label:'Fictional specification',text:'SYNTHETIC fixture: The bottle holds six cups and has a cork lid.'}]});
+  const run=await workspace.ask({productId:product.id,question:'What capacity and lid are listed?',mode:'synthetic'});
+  checks.enqueue(workspace.reviewSnapshots(run.id)[0]);await checks.tick();assert.equal(checks.overview()[0].status,'supported');
+  const proof=buildWorkspaceProof([run],checks.verifiedOverview(),id=>provider.receipt(id));
+  assert.equal(proof.paired.ties,1);assert.equal(proof.metrics.wholeCohort.original.usefulSupportedAnswers,1);assert.equal(proof.metrics.wholeCohort.repair.assessed,0);
+  assert.deepEqual(proof.metrics.finalDelivery,proof.metrics.wholeCohort.original);assert.equal(verifyWorkspaceProof(proof).finalDeliveryMetrics,'verified');
+  const changed=structuredClone(proof);changed.metrics.finalDelivery.usefulSupportedAnswers=0;assert.throws(()=>verifyWorkspaceProof(rehash(changed)),/derived/);
+  const legacy=structuredClone(proof);Reflect.deleteProperty(legacy.metrics,'finalDelivery');assert.equal(verifyWorkspaceProof(rehash(legacy)).finalDeliveryMetrics,'absent_legacy');
+ }finally{checks.close();workspace.close();provider.close();}
 });

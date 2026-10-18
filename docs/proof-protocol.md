@@ -16,6 +16,10 @@ A bundle checksum detects accidental changes; exact receipt replay detects incon
 
 Reported time is the sum of each case's elapsed time from request creation through its final check, including retrieval, queues, failed and unresolved attempts when measured. Missing durations and usage stay unknown. Synthetic operations have zero provider calls; their logical operation count is separate. Live receipt counts represent recorded provider attempts/reservations; actual transport can remain unknown. Planning allowances include recorded reservations and are not provider charges. Wins and ties reflect the recorded automated rubric, not source-checked human improvement.
 
+`metrics.finalDelivery` measures the checked answer delivered by the workflow across the complete generated cohort: retained supported originals use their original grade, and completed checked repairs use their repair grade. Inconclusive, interrupted and unresolved cases have no assessed final delivery and retain their denominator. The existing original/repair metrics describe those individual arms; the raw repair arm excludes unchanged original answers. Older v1 bundles without the additive final-delivery metric still verify and report `finalDeliveryMetrics: absent_legacy`; present metrics must recompute exactly.
+
+Paired outcome categories compare recorded check dispositions. A passing original terminates without repair, so the legacy pass-to-nonpass regression counter cannot establish absence of factual regressions. Independent factual/source review and the separate controlled comparison remain necessary for that claim. Every operation history must form the exact durable check/repair/recheck prefix, including unsuccessful and partial histories; a missing repair receipt cannot produce an accepted repair grade or win.
+
 ## Matched development control
 
 ```sh

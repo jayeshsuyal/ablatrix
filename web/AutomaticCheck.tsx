@@ -53,7 +53,7 @@ export function AutomaticCheck({ state, sourceAnchor = 'id', pending = false, mo
   const { job, error } = state;
   if (!job && !error && !pending) return null;
   const permitted = !error ? job?.delivery : undefined;
-  const fixtureRevision = permitted?.answer.answer.startsWith('SYNTHETIC revision — scripted source excerpts, not a model-generated answer.\n');
+  const fixtureRevision = job?.mode === 'synthetic' && permitted?.answer.answer.startsWith('SYNTHETIC revision — scripted source excerpts, not a model-generated answer.\n');
   // Presentation only: the complete scripted wire output remains expandable.
   // Real model output and every immutable saved version are left verbatim.
   const displayAnswer = fixtureRevision ? permitted!.answer.answer.split('\n').slice(1, -1).join('\n').replace(/^[^:\n]+: “SYNTHETIC fixture: (.*)”$/gm, '$1') : permitted?.answer.answer;

@@ -99,12 +99,13 @@ export class AnswerPolicyWorker {
   private gradeInput(job: AutomaticSupportJob): ClaimSupportInput {
     return automaticSupportGradeInput(job, 'grade_original');
   }
-  private failure(job: AutomaticSupportJob): { category: Category; parent: RuntimeAnswerPolicy; binding: RuntimeFailureBinding } | null {
+  private failure(job: AutomaticSupportJob, historicalGrader?: RuntimeGraderBinding): { category: Category; parent: RuntimeAnswerPolicy; binding: RuntimeFailureBinding } | null {
     if (!TERMINAL_CHECKS.has(job.status) || !job.finishedAt || !job.original.runtimePolicy || !job.originalSnapshotSha256 || sha(job.original) !== job.originalSnapshotSha256 || !job.operations.length || job.operations.some(operation => operation.status !== 'completed') ||
       new Set(job.operations.map(operation => operation.phase)).size !== job.operations.length || new Set(job.operations.map(operation => operation.runId)).size !== job.operations.length || new Set(job.operations.map(operation => operation.receiptId)).size !== job.operations.length) return null;
     verifyAutomaticSupportEvidence(job, this.provider.receipt.bind(this.provider));
-    const grader = this.graderBinding(), originatingGrader = job.graderBinding ?? createRuntimeGraderBinding(job.mode);
-    if (originatingGrader.bindingSha256 !== grader.bindingSha256 || !runtimeGraderReadiness(grader).ready) return null;
+    const grader = historicalGrader ?? this.graderBinding(), originatingGrader = job.graderBinding ?? createRuntimeGraderBinding(job.mode);
+    validateRuntimeGraderBinding(grader);
+    if (originatingGrader.bindingSha256 !== grader.bindingSha256 || !historicalGrader && !runtimeGraderReadiness(grader).ready) return null;
     const snapshot = parseReviewAnswerSnapshot(job.original), parent = this.store.validateBinding(snapshot.runtimePolicy!);
     if (snapshot.contextProvenance !== 'workspace_source_snapshot' || originalAnswerVersionId(snapshot.id, snapshot.runId) !== job.originalId || parent.mode !== job.mode || parent.mode !== (this.provider.executionMode ?? 'live') || sha(snapshot.context) !== job.sourceContextSha256 || sha(snapshot.answer) !== job.originalAnswerSha256) return null;
     for (const operation of job.operations) {
@@ -207,7 +208,7 @@ export class AnswerPolicyWorker {
     return groups.flatMap(group => group.bindings.map(binding => {
       const job = checks.find(item => item.id === binding.jobId && item.mode === group.mode);
       let failure: ReturnType<AnswerPolicyWorker['failure']> = null;
-      try { if (job) failure = this.failure(job); } catch { /* Unverifiable supporting records cannot enter an evidence bundle. */ }
+      try { if (job) failure = this.failure(job, group.graderBinding ?? createRuntimeGraderBinding(group.mode)); } catch { /* Unverifiable supporting records cannot enter an evidence bundle. */ }
       if (!job || !failure || failure.category !== group.category || JSON.stringify(failure.binding) !== JSON.stringify(binding)) throw new Error('Runtime policy export: An originating automatic check no longer matches its consumed failure binding.');
       return job;
     }));

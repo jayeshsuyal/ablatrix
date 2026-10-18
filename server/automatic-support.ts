@@ -59,6 +59,30 @@ function verifyContext(job: AutomaticSupportJob) {
 export function verifyAutomaticSupportEvidence(job: AutomaticSupportJob, receiptReader: (runId: string) => AnswerRevisionReceipt | undefined): void {
   verifyContext(job);
   if (new Set(job.operations.map(operation => operation.phase)).size !== job.operations.length || new Set(job.operations.map(operation => operation.runId)).size !== job.operations.length || new Set(job.assessments.map(item => item.phase)).size !== job.assessments.length) throw new Error('Automatic evidence has duplicated phases.');
+  const phases: Phase[] = ['grade_original', 'repair', 'grade_repair'];
+  const phaseIndex = phases.indexOf(job.phase);
+  if (phaseIndex < 0 || job.operations.length > phases.length ||
+    job.operations.some((operation, index) => operation.phase !== phases[index] || index < job.operations.length - 1 && operation.status !== 'completed') ||
+    phaseIndex < job.operations.length - 1 || phaseIndex > job.operations.length) {
+    throw new Error('Automatic evidence does not form a durable phase prefix.');
+  }
+  const originalGrade = job.assessments.find(item => item.phase === 'original');
+  const repairOperation = job.operations.find(operation => operation.phase === 'repair');
+  if ((phaseIndex > 0 || repairOperation || job.repaired || job.assessments.some(item => item.phase === 'repair')) &&
+    (job.operations[0]?.status !== 'completed' || originalGrade?.assessment.disposition !== 'repair')) {
+    throw new Error('Automatic repair lacks its completed original repair decision.');
+  }
+  if ((job.repaired || phaseIndex === 2 || job.assessments.some(item => item.phase === 'repair')) && repairOperation?.status !== 'completed' ||
+    repairOperation?.status === 'completed' && !job.repaired) {
+    throw new Error('Automatic repair result lacks its completed repair operation.');
+  }
+  if (active.has(job.status) && (job.status !== phaseStatus[job.phase] || job.operations.length !== phaseIndex + 1 || job.operations.at(-1)?.status !== 'started' || job.finishedAt || job.delivery) ||
+    job.status === 'queued' && (job.operations.length !== phaseIndex || job.finishedAt || job.delivery)) {
+    throw new Error('Automatic pending state does not match its durable phase.');
+  }
+  if (['abstained', 'inconclusive', 'reconciliation'].includes(job.status) && (!job.finishedAt || !job.delivery)) {
+    throw new Error('Automatic terminal stop lacks its saved unresolved delivery.');
+  }
   let completedGrades = 0;
   for (const operation of job.operations) {
     if (operation.runId !== `${job.id}:${operation.phase.replaceAll('_', '-')}`) throw new Error('Automatic operation run binding is invalid.');

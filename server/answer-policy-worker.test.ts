@@ -346,6 +346,20 @@ test('activation requires every originating automatic check before any transitio
   } finally { h.cleanup(); }
 });
 
+test('a newer worker grader preserves intact historical policy evidence without mixing new failures', async () => {
+  const h = harness(); let upgraded: AnswerPolicyWorker | undefined;
+  try {
+    const failures = await h.failures(); h.worker.observeCompleted(failures);
+    const group = await evaluate(h.worker), activated = h.worker.activateTrial(group.id);
+    h.worker.verifyActivatedHistory(); h.worker.close();
+    upgraded = new AnswerPolicyWorker(h.provider, h.store, h.policyPath, { graderBinding: createRuntimeGraderBinding('synthetic', CITED_APPLICABILITY_GRADER_VERSION), completedJobs: () => failures });
+    upgraded.verifyActivatedHistory(); assert.equal(upgraded.exportEvidence().originalChecks.length, 3);
+    assert.deepEqual(upgraded.observeCompleted(await h.failures()), { observed: 0, eligible: 0 }, 'Unconsumed legacy failures cannot enter new v4 groups.');
+    assert.equal(h.store.capture('synthetic').id, activated.id);
+    h.store.rollback('synthetic', activated.id); upgraded.verifyActivatedHistory();
+  } finally { upgraded?.close(); h.cleanup(); }
+});
+
 test('policy trials pin the originating v4 grader and reject legacy mixing or altered qualification bindings', async () => {
   const h = harness(), graderBinding = createRuntimeGraderBinding('synthetic', CITED_APPLICABILITY_GRADER_VERSION), checks = new AutomaticSupport(h.provider, join(h.directory, 'v4-checks.sqlite'), { graderBinding });
   const worker = new AnswerPolicyWorker(h.provider, h.store, h.policyPath, { graderBinding, completedJobs: () => checks.overview() });
