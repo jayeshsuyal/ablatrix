@@ -4,6 +4,10 @@ All six engineering slices are implemented. Live v4 qualification, natural-produ
 
 ## Verification
 
+Parent review added regressions and fixed incomplete repair histories, final-delivery metrics, frozen historical grader replay, terminal browser-intent recovery and unfinished workflow timing. The final server suite passes **536 tests with one platform skip (537 total)**; **46/46 normal** and **12/12 isolated-demo** browser checks pass, alongside production/demo builds. CI includes both browser suites. Historical evidence packets remain unchanged. See the dated entries in the [build ledger](../../build-plan.md).
+
+The original build verification is retained below:
+
 | Check | Result |
 | --- | --- |
 | Server suite | 532 passed; one platform-specific skip (533 total) |

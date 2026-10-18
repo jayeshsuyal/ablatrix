@@ -87,3 +87,22 @@ test('final-delivery metrics retain supported originals and preserve legacy proo
   const legacy=structuredClone(proof);Reflect.deleteProperty(legacy.metrics,'finalDelivery');assert.equal(verifyWorkspaceProof(rehash(legacy)).finalDeliveryMetrics,'absent_legacy');
  }finally{checks.close();workspace.close();provider.close();}
 });
+
+test('workflow elapsed time stays unknown throughout an unfinished automatic check',async()=>{
+ const provider=new SyntheticAnswerProvider(':memory:'),workspace=new ProductWorkspace(':memory:',provider,localDemoRetriever),checks=new AutomaticSupport(provider,':memory:',{graderBinding:createRuntimeGraderBinding('synthetic',CITED_APPLICABILITY_GRADER_VERSION)});
+ try{
+  const product=workspace.createProduct({title:'Fictional pending-time bottle',sources:[{label:'Fictional specification',text:'SYNTHETIC fixture: The bottle holds six cups and has a cork lid.'}]});
+  const run=await workspace.ask({productId:product.id,question:'What capacity and lid are listed?',mode:'synthetic'},undefined,{automaticCheck:true});assert.ok(run.finishedAt);assert.equal(run.automaticCheckHandoff,'pending');
+  const handoff=buildWorkspaceProof([run],[],id=>provider.receipt(id));
+  assert.equal(handoff.cases[0].totalMs,null);assert.equal(handoff.accounting.totalMs,null);assert.equal(verifyWorkspaceProof(handoff).valid,true);
+  checks.enqueue(workspace.reviewSnapshots(run.id)[0]);
+  for (const phase of ['grade_original','repair','grade_repair']) {
+   assert.equal(checks.overview()[0].phase,phase);assert.equal(checks.overview()[0].finishedAt,undefined);
+   const pending=buildWorkspaceProof([run],checks.verifiedOverview(),id=>provider.receipt(id));
+   assert.equal(pending.cases[0].totalMs,null);assert.equal(pending.accounting.totalMs,null);assert.ok(pending.cases[0].unknowns.includes('elapsed_time_unavailable'));assert.equal(verifyWorkspaceProof(pending).valid,true);
+   await checks.tick();
+  }
+  const finished=buildWorkspaceProof([run],checks.verifiedOverview(),id=>provider.receipt(id));
+  assert.equal(typeof finished.cases[0].totalMs,'number');assert.equal(typeof finished.accounting.totalMs,'number');assert.equal(verifyWorkspaceProof(finished).valid,true);
+ }finally{checks.close();workspace.close();provider.close();}
+});

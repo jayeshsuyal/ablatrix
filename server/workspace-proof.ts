@@ -46,7 +46,8 @@ export function buildWorkspaceProof(runs: WorkspaceRun[], jobs: AutomaticSupport
     if (!originalGrade) unknowns.push('original_assessment_unavailable');
     if (job?.repaired && !repairGrade) unknowns.push('repair_assessment_unavailable');
     if (operations.some(operation => ['unknown', 'invalid', 'started'].includes(operation.status))) unknowns.push('non_completed_operation');
-    const end = job?.finishedAt ?? run.finishedAt;
+    const end = job ? job.finishedAt
+      : run.automaticCheckRequested && run.status === 'completed' ? undefined : run.finishedAt;
     const totalMs = elapsed(run.createdAt, end);
     if (totalMs === null) unknowns.push('elapsed_time_unavailable');
     const live = run.mode === 'live';
