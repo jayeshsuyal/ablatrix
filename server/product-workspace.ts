@@ -9,9 +9,9 @@ import { quoteOptions } from './feedback-provider.ts';
 import { workspaceReviewSourceHash, type ReviewAnswerSnapshot, type RevisionContext } from './answer-review-source.ts';
 import { claimSupportRequestParts } from './claim-support.ts';
 import { RUNTIME_BASELINE_INSTRUCTIONS, type RuntimeAnswerPolicyStore, type RuntimePolicyBinding } from './runtime-answer-policy.ts';
-import { WORKSPACE_GENERATION_CONTRACT, workspaceGenerationParts, replayWorkspaceGenerationReceipt, type WorkspaceGenerationInput, type WorkspaceGenerationBinding, type WorkspaceGenerationProvider } from './workspace-generation.ts';
+import { WORKSPACE_GENERATION_CONTRACT, workspaceGenerationContract, workspaceGenerationParts, replayWorkspaceGenerationReceipt, type WorkspaceGenerationContract, type WorkspaceGenerationInput, type WorkspaceGenerationBinding, type WorkspaceGenerationProvider } from './workspace-generation.ts';
 import { workspaceSourceChunks as sourceChunks, workspaceCompleteSourceContext } from './workspace-retrieval-context.ts';
-import { verifyWorkspaceRunGeneration } from './workspace-generation-identity.ts';
+import { verifyWorkspaceRunGeneration, workspaceQuestionRequestHash } from './workspace-generation-identity.ts';
 export { verifyWorkspaceRunGeneration } from './workspace-generation-identity.ts';
 import type { LoopAnswer, LoopPolicy, LoopProvider, LoopRetriever, LoopUsage, ProductCorpus, RetrievalResult, RetrievedPassage } from './loop-types.ts';
 
@@ -20,11 +20,11 @@ const productInput = z.object({ title: z.string().trim().min(3).max(160), source
 const questionInput = z.object({ productId: z.uuid(), question: z.string().trim().min(5).max(500), mode: z.enum(['preview', 'live', 'synthetic']) }).strict();
 
 export type WorkspaceProduct = { id: string; title: string; sources: { id: string; label: string; text: string; originalQuestion?: string }[]; createdAt: string };
-export type WorkspaceGeneration = { contract: typeof WORKSPACE_GENERATION_CONTRACT; phase: 'prepared' | 'dispatching' | 'completed' | 'reconciliation'; input: WorkspaceGenerationInput; requestBody: ReturnType<typeof workspaceGenerationParts>['body']; binding: WorkspaceGenerationBinding; receiptId?: string; recovered?: true };
-export type WorkspaceAskOptions = { automaticCheck?: boolean; idempotencyKey?: string; automaticCheckPreflight?: (context: RevisionContext, runId: string) => void };
+export type WorkspaceGeneration = { contract: WorkspaceGenerationContract; phase: 'prepared' | 'dispatching' | 'completed' | 'reconciliation'; input: WorkspaceGenerationInput; requestBody: ReturnType<typeof workspaceGenerationParts>['body']; binding: WorkspaceGenerationBinding; receiptId?: string; recovered?: true };
+export type WorkspaceAskOptions = { automaticCheck?: boolean; idempotencyKey?: string; generationContract?: WorkspaceGenerationContract; automaticCheckPreflight?: (context: RevisionContext, runId: string) => void };
 export type WorkspaceFaultBoundary = 'before_dispatch' | 'after_dispatch_intent' | 'after_receipt' | 'after_answer_persist';
-export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live' | 'synthetic'; generationProtocol?: 'product-answer-v2-context' | 'synthetic-product-answer-v1' | typeof WORKSPACE_GENERATION_CONTRACT; reviewContext?: RevisionContext;
-  requestIdentity?: { sha256: string; idempotencyKey?: string }; generation?: WorkspaceGeneration; generationPassages?: RetrievedPassage[]; reviewHandoff?: 'pending' | 'registered';
+export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live' | 'synthetic'; generationProtocol?: 'product-answer-v2-context' | 'synthetic-product-answer-v1' | WorkspaceGenerationContract; reviewContext?: RevisionContext;
+  requestIdentity?: { sha256: string; idempotencyKey?: string; generationContract?: WorkspaceGenerationContract }; generation?: WorkspaceGeneration; generationPassages?: RetrievedPassage[]; reviewHandoff?: 'pending' | 'registered';
   finishedAt?: string; durationMs?: number;
   runtimePolicy?: RuntimePolicyBinding; runtimePolicyInstructions?: string;
   automaticCheckRequested?: true; automaticCheckHandoff?: 'pending' | 'enqueued' | 'unavailable'; automaticCheckError?: string;
@@ -140,10 +140,11 @@ export class ProductWorkspace {
   }
   private getRun(id: string): WorkspaceRun | undefined { const row = this.db.prepare('SELECT document FROM workspace_runs WHERE id=?').get(id) as { document: string } | undefined; return row ? JSON.parse(row.document) as WorkspaceRun : undefined; }
   private finishTime(run: WorkspaceRun) { run.finishedAt ??= new Date().toISOString(); run.durationMs ??= Math.max(0, Date.parse(run.finishedAt) - Date.parse(run.createdAt)); }
-  findIdempotent(raw: unknown, options: Pick<WorkspaceAskOptions, 'idempotencyKey' | 'automaticCheck'> = {}): WorkspaceRun | undefined {
+  findIdempotent(raw: unknown, options: Pick<WorkspaceAskOptions, 'idempotencyKey' | 'automaticCheck' | 'generationContract'> = {}): WorkspaceRun | undefined {
+    const contract = workspaceGenerationContract(options.generationContract);
     if (options.idempotencyKey === undefined) return undefined;
     const key = z.string().trim().min(1).max(160).parse(options.idempotencyKey), input = questionInput.parse(raw);
-    const requestHash = textHash(JSON.stringify({ ...input, automaticCheck: options.automaticCheck ?? false }));
+    const requestHash = workspaceQuestionRequestHash(input, options.automaticCheck ?? false, contract);
     const prior = this.db.prepare('SELECT request_sha256,run_id FROM workspace_question_requests WHERE idempotency_key=?').get(key) as { request_sha256: string; run_id: string } | undefined;
     if (prior && prior.request_sha256 !== requestHash) throw new Error('Workspace: idempotency key belongs to a different question request.');
     // The immutable request on a saved run remains authoritative if its lookup
@@ -152,7 +153,7 @@ export class ProductWorkspace {
     if (!prior && !retained.length) return undefined;
     if (retained.length > 1) throw new Error('Workspace: idempotency key has conflicting retained runs.');
     const run = prior ? this.getRun(prior.run_id) : JSON.parse(retained[0].document) as WorkspaceRun;
-    if (!run || run.requestIdentity?.sha256 !== requestHash || run.requestIdentity.idempotencyKey !== key) throw new Error('Workspace: saved request identity is inconsistent.');
+    if (!run || run.requestIdentity?.sha256 !== requestHash || run.requestIdentity.idempotencyKey !== key || workspaceGenerationContract(run.requestIdentity.generationContract) !== contract) throw new Error('Workspace: saved request identity is inconsistent.');
     return run;
   }
   private reconcileGeneration(id: string, recovered = false): WorkspaceRun {
@@ -204,6 +205,8 @@ export class ProductWorkspace {
   }
   async ask(raw: unknown, beforeLiveDispatch?: () => void, options: WorkspaceAskOptions = {}): Promise<WorkspaceRun> {
     const input = questionInput.parse(raw);
+    const contract = workspaceGenerationContract(options.generationContract);
+    if (input.mode === 'preview' && contract !== WORKSPACE_GENERATION_CONTRACT) throw new Error('Workspace: experimental generation requires a generated answer.');
     if (options.automaticCheck && input.mode === 'preview') throw new Error('Workspace: automatic checking requires a generated answer.');
     const duplicate = this.findIdempotent(input, options);
     if (duplicate) return duplicate;
@@ -214,12 +217,13 @@ export class ProductWorkspace {
     if (input.mode !== 'preview' && !this.provider.readiness().ready) throw new Error(`Workspace: ${this.provider.readiness().reason}`);
     const capturedPolicy = input.mode === 'preview' ? undefined : this.capturePolicy(input.mode);
     const modern = input.mode !== 'preview' && typeof this.provider.answerWorkspace === 'function' && typeof this.provider.receipt === 'function';
+    if (contract !== WORKSPACE_GENERATION_CONTRACT && !modern) throw new Error('Workspace: provider does not support the selected generation contract.');
     const corpus = this.corpus(product);
-    const requestIdentity = { sha256: textHash(JSON.stringify({ ...input, automaticCheck: options.automaticCheck ?? false })), ...(options.idempotencyKey !== undefined ? { idempotencyKey: z.string().trim().min(1).max(160).parse(options.idempotencyKey) } : {}) };
+    const requestIdentity = { sha256: workspaceQuestionRequestHash(input, options.automaticCheck ?? false, contract), ...(options.idempotencyKey !== undefined ? { idempotencyKey: z.string().trim().min(1).max(160).parse(options.idempotencyKey) } : {}), ...(contract !== WORKSPACE_GENERATION_CONTRACT ? { generationContract: contract } : {}) };
     this.busy = true;
     let interrupted = false, persisted = false, returningExisting = false;
     const fault = (boundary: WorkspaceFaultBoundary) => { interrupted = true; this.hooks.fault?.(boundary, structuredClone(run)); interrupted = false; };
-    let run: WorkspaceRun = { id: randomUUID(), productId: product.id, question: input.question, mode: input.mode, requestIdentity, ...(input.mode !== 'preview' ? { generationProtocol: modern ? WORKSPACE_GENERATION_CONTRACT : input.mode === 'synthetic' ? 'synthetic-product-answer-v1' as const : 'product-answer-v2-context' as const,
+    let run: WorkspaceRun = { id: randomUUID(), productId: product.id, question: input.question, mode: input.mode, requestIdentity, ...(input.mode !== 'preview' ? { generationProtocol: modern ? contract : input.mode === 'synthetic' ? 'synthetic-product-answer-v1' as const : 'product-answer-v2-context' as const,
       runtimePolicy: capturedPolicy!.binding, runtimePolicyInstructions: capturedPolicy!.policy.instructions,
       reviewHandoff: 'pending' as const,
       reviewContext: { question: input.question, product: { id: product.id, title: product.title }, sources: (modern ? product.sources.map(source => ({ id: source.id, text: source.text, reference: source.label, originalQuestion: source.originalQuestion })) : corpus.passages).map(passage => {
@@ -260,10 +264,10 @@ export class ProductWorkspace {
         const passages = modern ? workspaceCompleteSourceContext(product, corpus, run.retrieval) : run.retrieval.passages;
         if (!passages.length) throw new Error('No product evidence was retrieved.');
         if (passages.some(passage => passage.productId !== product.id || passage.sha256 !== textHash(passage.text) || !run.reviewContext!.sources.some(source => source.id === passage.id && source.text === passage.text && source.originalQuestion === (passage.originalQuestion ?? null)))) throw new Error('Retrieved evidence does not match the saved product snapshot.');
-        const generationInput: WorkspaceGenerationInput = { question: input.question, product: { id: product.id, title: product.title, split: 'development' }, policy: capturedPolicy!.policy, passages, runId: run.id };
+        const generationInput: WorkspaceGenerationInput = { question: input.question, product: { id: product.id, title: product.title, split: 'development' }, policy: capturedPolicy!.policy, passages, runId: run.id, ...(contract !== WORKSPACE_GENERATION_CONTRACT ? { generationContract: contract } : {}) };
         if (modern) {
           const parts = workspaceGenerationParts(generationInput);
-          run.generationPassages = structuredClone(passages); run.generation = { contract: WORKSPACE_GENERATION_CONTRACT, phase: 'prepared', input: parts.input, requestBody: parts.body, binding: parts.binding };
+          run.generationPassages = structuredClone(passages); run.generation = { contract, phase: 'prepared', input: parts.input, requestBody: parts.body, binding: parts.binding };
           this.saveRun(run); fault('before_dispatch');
           if (input.mode === 'live') beforeLiveDispatch?.();
           run.generation.phase = 'dispatching'; this.saveRun(run); fault('after_dispatch_intent');

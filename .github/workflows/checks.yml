@@ -44,7 +44,11 @@ jobs:
           name: offline-reliability
           path: /tmp/ablatrix-reliability.json
           if-no-files-found: error
-      - run: python3 -m unittest scripts/test_prepare_flat_source_cohort.py
+      - run: python3 -m unittest scripts/test_prepare_flat_source_cohort.py scripts/test_prepare_source_calibration_cohort.py
+      - name: First-answer comparison offline CLI and script types
+        run: |
+          node --import tsx scripts/source-calibration-comparison.ts
+          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/source-calibration-retrieval.ts scripts/source-calibration-comparison.ts
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e

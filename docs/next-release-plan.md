@@ -6,7 +6,9 @@ Updated October 17, 2026 following a source-code, saved-results and research aud
 
 **Current priority:** recover completed answers after interruption, connect the intended citation and grader contracts to the actual workspace path, and measure whether correction helps. External hosting remains deferred. A useful local demonstration and reproducible evidence are the release target.
 
-## What the October 17 audit establishes
+## Initial October 17 audit, before the six-slice build
+
+These observations describe the pre-build state. The October 17 implementation status below records the completed engineering changes; [current results](current-results.md) remains the release-status index.
 
 - The current offline reliability command passed 11 retrieval scenarios and four revision-harness scenarios using injected embeddings and scripted responses. This establishes mechanical contracts; semantic assessment was not run.
 - The latest v3 qualification stopped after 20 valid live grades: 19/20 critical-axis matches, 18/20 full-axis matches, zero raw passes among 15 flawed answers evaluated, five of five acceptable answers routed as expected, 72 planned calls unattempted and no repeat observations. Qualification failed; live activation remains closed. These are constructed cases with AI-reviewed references, not a real-user quality rate. The sanitized current result still needs to be incorporated into the public evidence index.

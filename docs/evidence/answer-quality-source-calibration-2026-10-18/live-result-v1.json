@@ -1,0 +1,753 @@
+{
+  "format": "source-calibration-result-v1",
+  "planSha256": "d1d1c49c6d47edcf2c9dae4351701c42b531d362fd5b42acc1184433e8a8a78e",
+  "status": "awaiting_independent_review",
+  "transportProvenance": "live_router",
+  "plannedCases": 8,
+  "plannedAnswers": 16,
+  "newProviderAttempts": 16,
+  "planningAllowanceReservedUsd": 1.6,
+  "allowanceIsProviderCharge": false,
+  "networkDispatches": 16,
+  "dispatchIntentsWithoutObservedEntry": 0,
+  "completedAnswers": 16,
+  "usage": {
+    "inputTokens": 28712,
+    "outputTokens": 2014
+  },
+  "knownUsageSubtotal": {
+    "inputTokens": 28712,
+    "outputTokens": 2014
+  },
+  "attemptsWithKnownUsage": 16,
+  "observedModels": [
+    "gpt-5.6-luna"
+  ],
+  "modelIdentityConsistent": true,
+  "retries": 0,
+  "revisions": 0,
+  "graderCalls": 0,
+  "webCalls": 0,
+  "steps": [
+    {
+      "index": 0,
+      "caseId": "source-calibration-train-12543",
+      "arm": "baseline",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The notebooks are described only as ruled/lined. The supplied information does not specify whether the ruling is college-ruled or wide-ruled.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "epqa-B079JHHYGT-attribute-b74e93a5f9ae63f4",
+              "quote": "ruling_type:  { value:\"ruled\" }"
+            },
+            {
+              "passageId": "epqa-B079JHHYGT-bullet-2b9fc3d82df26781",
+              "quote": "dimensions: each notebook has 80 lined pages and measures 4.1 x 5.8 inches"
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1818,
+          "outputTokens": 90
+        },
+        "attemptId": "6a7adf53-41d3-4e07-a830-8b326a32f269",
+        "contract": "workspace-answer-flat-sources-v1",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-0-baseline",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "567fcddf1b54a3675e3fa52cb416ac09edf977de0e570663fa2e42265b8ff20d",
+        "systemInstructionsSha256": "bee83f3637714b8c1d3345689d64b89748f2ba14887a6226ee5de33f53eb8d8f",
+        "responseSchemaSha256": "45213b9daa3e952f6d066d92b70a0acfa40810aa741700ac4c12d8825e7b27f6",
+        "optionSetSha256": "e2d935477ed83a8856c7b0fc4cf42bb58a63a049b40d0b51f53c4a0090e969fb",
+        "sourceContextSha256": "c3b0f26385cd17505b56960401ac7e0ca8266208e39e463dc756e85e4943c964"
+      },
+      "startedAt": "2026-10-18T18:09:34.585Z",
+      "observedAt": "2026-10-18T18:09:38.010Z",
+      "finishedAt": "2026-10-18T18:09:38.010Z",
+      "elapsedMs": 3425,
+      "attemptDurationMs": 3425
+    },
+    {
+      "index": 1,
+      "caseId": "source-calibration-train-12543",
+      "arm": "candidate",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The listing identifies the notebooks as ruled/lined, but it does not specify whether the ruling is college or wide ruled.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "epqa-B079JHHYGT-attribute-b74e93a5f9ae63f4",
+              "quote": "ruling_type:  { value:\"ruled\" }"
+            },
+            {
+              "passageId": "epqa-B079JHHYGT-bullet-2b9fc3d82df26781",
+              "quote": "dimensions: each notebook has 80 lined pages and measures 4.1 x 5.8 inches"
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 2062,
+          "outputTokens": 85
+        },
+        "attemptId": "fbc00811-b049-47b2-aa9a-e089c54ecd8b",
+        "contract": "workspace-answer-source-calibration-v2",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-0-candidate",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "9cbf43f287c144bac8f7ced89466634e077561765af86bcd84f9f96c0a6dabba",
+        "systemInstructionsSha256": "e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8",
+        "responseSchemaSha256": "45213b9daa3e952f6d066d92b70a0acfa40810aa741700ac4c12d8825e7b27f6",
+        "optionSetSha256": "e2d935477ed83a8856c7b0fc4cf42bb58a63a049b40d0b51f53c4a0090e969fb",
+        "sourceContextSha256": "c3b0f26385cd17505b56960401ac7e0ca8266208e39e463dc756e85e4943c964"
+      },
+      "startedAt": "2026-10-18T18:09:38.212Z",
+      "observedAt": "2026-10-18T18:09:40.758Z",
+      "finishedAt": "2026-10-18T18:09:40.758Z",
+      "elapsedMs": 2546,
+      "attemptDurationMs": 2546
+    },
+    {
+      "index": 2,
+      "caseId": "source-calibration-train-2652",
+      "arm": "candidate",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The available product information does not give a specific shipping time or delivery estimate. One customer reported fast shipping, and a separate response said an order placed that day could meet a particular Thursday deadline, but the destination and date for your order are not provided.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "epqa-B004XI6OG4-review-fa2d95dff8f25cb0",
+              "quote": "great product and fast shipping from the company (even to alaska)."
+            },
+            {
+              "passageId": "epqa-B004XI6OG4-cqa-893ef57884182745",
+              "quote": "if you were to place your order today, we would have no problem meeting your timeline for delivery."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1831,
+          "outputTokens": 112
+        },
+        "attemptId": "2332cb32-15a7-4bad-9ea8-12cceefd362c",
+        "contract": "workspace-answer-source-calibration-v2",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-1-candidate",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "c0088ba9dc945619edd41f2237a6f9d735336d4a6ce89dd51b129eebc4cd022d",
+        "systemInstructionsSha256": "e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8",
+        "responseSchemaSha256": "98ecda5643e22d721b86d227015d040b63f86b77f248748cbdc25f441dcdf264",
+        "optionSetSha256": "95fd71b93911ad88992789700e5123b71a942ee9510319cb700b01f69192cd9f",
+        "sourceContextSha256": "9f7d4fa4c9db98745907c9823b5aa21338fd6434ca0a2414838651c3ba297961"
+      },
+      "startedAt": "2026-10-18T18:09:40.955Z",
+      "observedAt": "2026-10-18T18:09:43.963Z",
+      "finishedAt": "2026-10-18T18:09:43.963Z",
+      "elapsedMs": 3008,
+      "attemptDurationMs": 3008
+    },
+    {
+      "index": 3,
+      "caseId": "source-calibration-train-2652",
+      "arm": "baseline",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The supplied sources do not specify an exact shipping time or number of days. One customer reported fast shipping, and another response said an order placed that day could meet the customer’s stated Thursday delivery timeline, but delivery depends on the order and destination.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "epqa-B004XI6OG4-review-fa2d95dff8f25cb0",
+              "quote": "great product and fast shipping from the company (even to alaska)."
+            },
+            {
+              "passageId": "epqa-B004XI6OG4-cqa-893ef57884182745",
+              "quote": "if you were to place your order today, we would have no problem meeting your timeline for delivery."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1587,
+          "outputTokens": 107
+        },
+        "attemptId": "e5afb9ae-7719-4dda-8b60-fc6b429ba94c",
+        "contract": "workspace-answer-flat-sources-v1",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-1-baseline",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "51bea3f1406b19938104325bdc395b3b3e99f42c50542aecf892fe8423d968a9",
+        "systemInstructionsSha256": "bee83f3637714b8c1d3345689d64b89748f2ba14887a6226ee5de33f53eb8d8f",
+        "responseSchemaSha256": "98ecda5643e22d721b86d227015d040b63f86b77f248748cbdc25f441dcdf264",
+        "optionSetSha256": "95fd71b93911ad88992789700e5123b71a942ee9510319cb700b01f69192cd9f",
+        "sourceContextSha256": "9f7d4fa4c9db98745907c9823b5aa21338fd6434ca0a2414838651c3ba297961"
+      },
+      "startedAt": "2026-10-18T18:09:44.154Z",
+      "observedAt": "2026-10-18T18:09:46.827Z",
+      "finishedAt": "2026-10-18T18:09:46.827Z",
+      "elapsedMs": 2673,
+      "attemptDurationMs": 2673
+    },
+    {
+      "index": 4,
+      "caseId": "source-calibration-train-12047",
+      "arm": "baseline",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The supplied reviews indicate the marbles include blue, green, white, and beige. One review describes the blue marbles as light blue and very close in shade to the light green. The sources do not provide a complete list of all marble colors.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "epqa-B0009U7UZE-review-ba25c0b3df1b7b75",
+              "quote": "the color of the blue and green marbles and white and beige ones are hard to tell apart on the board."
+            },
+            {
+              "passageId": "epqa-B0009U7UZE-review-b394a5dbc1fd1e19",
+              "quote": "blue marbles are light blue, very close in shade to the light green."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1553,
+          "outputTokens": 113
+        },
+        "attemptId": "3cb3066a-1588-4299-8144-cac20587e0cf",
+        "contract": "workspace-answer-flat-sources-v1",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-2-baseline",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "9100f805902bd369823d7f97d964beac88c0661d953382c23c55195f86713cc7",
+        "systemInstructionsSha256": "bee83f3637714b8c1d3345689d64b89748f2ba14887a6226ee5de33f53eb8d8f",
+        "responseSchemaSha256": "63a04097cf5040955c47133dea3f44a8312b225f12165192333115179fe9eced",
+        "optionSetSha256": "0e8ddac678854f167ca539cfe207ca7ac2552d0a5bf06dc60bd4a77ef5be1ad5",
+        "sourceContextSha256": "84b21efe4bac5d6ac0982deb3c6c7bbf86a21e156b6c35e65009e384fd87194e"
+      },
+      "startedAt": "2026-10-18T18:09:47.043Z",
+      "observedAt": "2026-10-18T18:09:49.384Z",
+      "finishedAt": "2026-10-18T18:09:49.384Z",
+      "elapsedMs": 2341,
+      "attemptDurationMs": 2341
+    },
+    {
+      "index": 5,
+      "caseId": "source-calibration-train-12047",
+      "arm": "candidate",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The marbles include blue, green, white, and beige. A customer describes the blue marbles as light blue and very close in shade to the light green; another says the colors are muted. These are customer reports, not a complete manufacturer color specification.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "epqa-B0009U7UZE-review-ba25c0b3df1b7b75",
+              "quote": "the color of the blue and green marbles and white and beige ones are hard to tell apart on the board."
+            },
+            {
+              "passageId": "epqa-B0009U7UZE-review-b394a5dbc1fd1e19",
+              "quote": "blue marbles are light blue, very close in shade to the light green."
+            },
+            {
+              "passageId": "epqa-B0009U7UZE-review-d2852eee5bee1476",
+              "quote": "the colors of the marbles are muted, but it is not difficult to tell which marble is which."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1797,
+          "outputTokens": 135
+        },
+        "attemptId": "94b02ac1-fe2f-451f-a5be-5e2753b0e0fe",
+        "contract": "workspace-answer-source-calibration-v2",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-2-candidate",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "1ce6d6cf185f3ac48f944ce3a26dd8e3cfde84073ad0a39cf246c7ddcff0b9ee",
+        "systemInstructionsSha256": "e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8",
+        "responseSchemaSha256": "63a04097cf5040955c47133dea3f44a8312b225f12165192333115179fe9eced",
+        "optionSetSha256": "0e8ddac678854f167ca539cfe207ca7ac2552d0a5bf06dc60bd4a77ef5be1ad5",
+        "sourceContextSha256": "84b21efe4bac5d6ac0982deb3c6c7bbf86a21e156b6c35e65009e384fd87194e"
+      },
+      "startedAt": "2026-10-18T18:09:49.565Z",
+      "observedAt": "2026-10-18T18:09:52.248Z",
+      "finishedAt": "2026-10-18T18:09:52.248Z",
+      "elapsedMs": 2683,
+      "attemptDurationMs": 2683
+    },
+    {
+      "index": 6,
+      "caseId": "source-calibration-train-12773",
+      "arm": "candidate",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "No. The available product-related response says the tire has no air, and a review describes the wheels as polyurethane. This indicates solid, non-air-filled wheels rather than pneumatic tires.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "epqa-B01N563SG0-cqa-629f376f563ba6b1",
+              "quote": "you cannot go very far on the surface of concrete because the tire has no air in it or the wheels"
+            },
+            {
+              "passageId": "epqa-B01N563SG0-review-17fd98cc502533fe",
+              "quote": "the larger than usual polyurethane wheels go over bumps and cracks in the pavement without much trouble."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 2032,
+          "outputTokens": 94
+        },
+        "attemptId": "d3adaaf7-9f7d-41e5-a3ba-4ab07f0fad9c",
+        "contract": "workspace-answer-source-calibration-v2",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-3-candidate",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "8b98880f65d10794caf9d1938584ad5f8a294eea29a076eff6c3b0637133bcd9",
+        "systemInstructionsSha256": "e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8",
+        "responseSchemaSha256": "b4afe5355e7c2b18a421f2f4ca9065868f467ef074e2a0578451a50738cac335",
+        "optionSetSha256": "623be2f3f3a643adb00f63e66adc860939bef2ee6ec60e6bffc26942e5a9873b",
+        "sourceContextSha256": "2156930f6671618799374b12d95687c948579f3c08030401963497a419b7633f"
+      },
+      "startedAt": "2026-10-18T18:09:52.420Z",
+      "observedAt": "2026-10-18T18:09:55.087Z",
+      "finishedAt": "2026-10-18T18:09:55.087Z",
+      "elapsedMs": 2667,
+      "attemptDurationMs": 2667
+    },
+    {
+      "index": 7,
+      "caseId": "source-calibration-train-12773",
+      "arm": "baseline",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "No. The supplied evidence describes the wheels as polyurethane and says they have no air in them, so they are solid rather than air-filled tires.",
+          "status": "answered",
+          "citations": [
+            {
+              "passageId": "epqa-B01N563SG0-cqa-629f376f563ba6b1",
+              "quote": "you cannot go very far on the surface of concrete because the tire has no air in it or the wheels"
+            },
+            {
+              "passageId": "epqa-B01N563SG0-review-17fd98cc502533fe",
+              "quote": "the larger than usual polyurethane wheels go over bumps and cracks in the pavement without much trouble."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1788,
+          "outputTokens": 86
+        },
+        "attemptId": "1ca6664a-6d9e-469a-8b74-168a28228f0b",
+        "contract": "workspace-answer-flat-sources-v1",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-3-baseline",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "467e67ef6d6473c23b39552751cd8416bccb8d11f4809be968186b15499ef0d0",
+        "systemInstructionsSha256": "bee83f3637714b8c1d3345689d64b89748f2ba14887a6226ee5de33f53eb8d8f",
+        "responseSchemaSha256": "b4afe5355e7c2b18a421f2f4ca9065868f467ef074e2a0578451a50738cac335",
+        "optionSetSha256": "623be2f3f3a643adb00f63e66adc860939bef2ee6ec60e6bffc26942e5a9873b",
+        "sourceContextSha256": "2156930f6671618799374b12d95687c948579f3c08030401963497a419b7633f"
+      },
+      "startedAt": "2026-10-18T18:09:55.354Z",
+      "observedAt": "2026-10-18T18:09:59.391Z",
+      "finishedAt": "2026-10-18T18:09:59.391Z",
+      "elapsedMs": 4037,
+      "attemptDurationMs": 4037
+    },
+    {
+      "index": 8,
+      "caseId": "source-calibration-train-195",
+      "arm": "baseline",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The supplied evidence supports 17801-YZZ02 as fitting a 2014 Camry 4-cylinder, including the SE 2.5L. It does not provide dimensions or establish whether 17801-YZZ01 fits, nor does it document which is the better fit when dimensions differ. Please provide the exact 17801-YZZ01 application/specification or Toyota compatibility documentation for a direct comparison.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "epqa-B0044B30TO-cqa-8e88515f603f6b11",
+              "quote": "17801-yzz02 does fit a 2014 camry se 2.5l engine"
+            },
+            {
+              "passageId": "epqa-B0044B30TO-cqa-4af37e214778af2f",
+              "quote": "yes, it fits the 2014 camry 4 cylinder."
+            },
+            {
+              "passageId": "epqa-B0044B30TO-attribute-c101e4e26eea9e88",
+              "quote": "model_name:  { value:\"17801-yzz02\" }"
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1667,
+          "outputTokens": 159
+        },
+        "attemptId": "0da686a3-bcbc-4c5a-b128-ccbe020e5978",
+        "contract": "workspace-answer-flat-sources-v1",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-4-baseline",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "448fec37c6e778281a0bacf2661ff016a8a0e36464c36bb84d7990c7ff6e4734",
+        "systemInstructionsSha256": "bee83f3637714b8c1d3345689d64b89748f2ba14887a6226ee5de33f53eb8d8f",
+        "responseSchemaSha256": "c605e850e888ad44c570bfa59a0c1959c57578e184df2d54f83176c0e855da57",
+        "optionSetSha256": "76519cab8411c0d5cda82d10d9b72ac8e973ddf2a8dc7abf53a499913b42e607",
+        "sourceContextSha256": "8359d5445d059f48c24c215dd801217d5ec5e57d2a667a9287e05f2fd34507fb"
+      },
+      "startedAt": "2026-10-18T18:09:59.583Z",
+      "observedAt": "2026-10-18T18:10:02.268Z",
+      "finishedAt": "2026-10-18T18:10:02.268Z",
+      "elapsedMs": 2685,
+      "attemptDurationMs": 2685
+    },
+    {
+      "index": 9,
+      "caseId": "source-calibration-train-195",
+      "arm": "candidate",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The available product evidence supports 17801-YZZ02 as fitting a 2014 Camry 4-cylinder, including the SE 2.5L version. It does not provide dimensions or fitment evidence for 17801-YZZ01, so it cannot establish which is the better fit by comparing the two.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "epqa-B0044B30TO-cqa-8e88515f603f6b11",
+              "quote": "17801-yzz02 does fit a 2014 camry se 2.5l engine"
+            },
+            {
+              "passageId": "epqa-B0044B30TO-cqa-4af37e214778af2f",
+              "quote": "yes, it fits the 2014 camry 4 cylinder."
+            },
+            {
+              "passageId": "epqa-B0044B30TO-attribute-c101e4e26eea9e88",
+              "quote": "model_name:  { value:\"17801-yzz02\" }"
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1911,
+          "outputTokens": 142
+        },
+        "attemptId": "ff41c3a0-2372-42a2-9bd3-109cd93efa8f",
+        "contract": "workspace-answer-source-calibration-v2",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-4-candidate",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "f12fdee3e121b82944cc107f08eb323fb0768d6812c46dd2613d8e18338bb780",
+        "systemInstructionsSha256": "e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8",
+        "responseSchemaSha256": "c605e850e888ad44c570bfa59a0c1959c57578e184df2d54f83176c0e855da57",
+        "optionSetSha256": "76519cab8411c0d5cda82d10d9b72ac8e973ddf2a8dc7abf53a499913b42e607",
+        "sourceContextSha256": "8359d5445d059f48c24c215dd801217d5ec5e57d2a667a9287e05f2fd34507fb"
+      },
+      "startedAt": "2026-10-18T18:10:02.470Z",
+      "observedAt": "2026-10-18T18:10:04.786Z",
+      "finishedAt": "2026-10-18T18:10:04.786Z",
+      "elapsedMs": 2316,
+      "attemptDurationMs": 2316
+    },
+    {
+      "index": 10,
+      "caseId": "source-calibration-train-8836",
+      "arm": "candidate",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The provided sources do not establish that these feet fit the Viking VGSU1646BBK specifically. Customer reports are mixed: one says they did not fit a Viking stove, while another reports a “good enough” fit on a Viking 5 Series gas rangetop; neither identifies the VGSU1646BBK. Compatibility documentation for that exact model is needed.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "epqa-B0064FCQUM-review-f265a14a65519ebd",
+              "quote": "unfortunately these do not fit my viking stove as advertised."
+            },
+            {
+              "passageId": "epqa-B0064FCQUM-review-0b85ba5edb6bee28",
+              "quote": "these rubber feet are obviously generic/universal replacements, but they are a \"good enough\" fit for my viking 5 series gas rangetop (vgrt)."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1784,
+          "outputTokens": 139
+        },
+        "attemptId": "3f701fa9-87db-4474-b72d-9dfb85ff2eee",
+        "contract": "workspace-answer-source-calibration-v2",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-5-candidate",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "4c02d724d6b508050dbd8d1a2e5b5b64a9b27548b45aaa68098701f9587e4514",
+        "systemInstructionsSha256": "e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8",
+        "responseSchemaSha256": "8eaf3fbbfcaea72b5feb21e921d0dd93a35086ff12b7e6a9b5f49986c62a0510",
+        "optionSetSha256": "0f5e455192875b7bc8466650cca4b8d9f25ff25e3227e583dc4b5b0366f9426f",
+        "sourceContextSha256": "19834e64e18150a022785eddef13ac5327f9aae17736efc2b563c97511ca1e33"
+      },
+      "startedAt": "2026-10-18T18:10:04.976Z",
+      "observedAt": "2026-10-18T18:10:07.764Z",
+      "finishedAt": "2026-10-18T18:10:07.764Z",
+      "elapsedMs": 2788,
+      "attemptDurationMs": 2788
+    },
+    {
+      "index": 11,
+      "caseId": "source-calibration-train-8836",
+      "arm": "baseline",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The supplied evidence does not establish that these feet fit the exact Viking VGSU1646BBK model. Reviews conflict: one reports they did not fit a Viking stove, while another describes only a “good enough” fit on a Viking 5 Series gas rangetop. The sources also characterize them as generic rather than specifically intended for Viking ranges. Please provide the exact replacement-part number or manufacturer compatibility documentation for VGSU1646BBK before purchasing.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "epqa-B0064FCQUM-review-f265a14a65519ebd",
+              "quote": "unfortunately these do not fit my viking stove as advertised."
+            },
+            {
+              "passageId": "epqa-B0064FCQUM-review-0b85ba5edb6bee28",
+              "quote": "these rubber feet are obviously generic/universal replacements, but they are a \"good enough\" fit for my viking 5 series gas rangetop (vgrt)."
+            },
+            {
+              "passageId": "epqa-B0064FCQUM-review-d89b51b8df648d02",
+              "quote": "i am pretty sure the are a generic foot for this application and not specifically intended for viking ranges."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1540,
+          "outputTokens": 170
+        },
+        "attemptId": "a2f136c2-9f0f-4bf3-ac1c-336026de2c8e",
+        "contract": "workspace-answer-flat-sources-v1",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-5-baseline",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "e5f4ec56100634fe2521a20ab9d9e99795a5041d2d1ae2c88e28217c9f8e2ae0",
+        "systemInstructionsSha256": "bee83f3637714b8c1d3345689d64b89748f2ba14887a6226ee5de33f53eb8d8f",
+        "responseSchemaSha256": "8eaf3fbbfcaea72b5feb21e921d0dd93a35086ff12b7e6a9b5f49986c62a0510",
+        "optionSetSha256": "0f5e455192875b7bc8466650cca4b8d9f25ff25e3227e583dc4b5b0366f9426f",
+        "sourceContextSha256": "19834e64e18150a022785eddef13ac5327f9aae17736efc2b563c97511ca1e33"
+      },
+      "startedAt": "2026-10-18T18:10:07.946Z",
+      "observedAt": "2026-10-18T18:10:12.300Z",
+      "finishedAt": "2026-10-18T18:10:12.300Z",
+      "elapsedMs": 4354,
+      "attemptDurationMs": 4354
+    },
+    {
+      "index": 12,
+      "caseId": "source-calibration-train-4472",
+      "arm": "baseline",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The supplied evidence does not specifically confirm compatibility with PS2 model SCPH-77004. It mentions a different slim model (SCPH-77001B) and includes an unverified claim that Action Replay works on all PS2 systems, but that does not establish compatibility with SCPH-77004. Please provide the product’s exact version and manufacturer compatibility documentation for SCPH-77004.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "epqa-B001UIG6M2-cqa-2d68068527dc53c9",
+              "quote": "i can tell you though that my slim ps2 is model number scph-77001b  gh-051-52 which that is a version 15. also my ps2 does not play blue bottom disc's, so i can't use gameshark."
+            },
+            {
+              "passageId": "epqa-B001UIG6M2-cqa-9e6742a9ce7ae9c1",
+              "quote": "action replay works on all ps2 systems, including the slim ps2's."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1805,
+          "outputTokens": 144
+        },
+        "attemptId": "131d8666-9d8e-4c10-a907-760d3fa88dd5",
+        "contract": "workspace-answer-flat-sources-v1",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-6-baseline",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "cee95f7a040d0a7915f58f653941f731a0da0330ca7cdb32b8e0f03d40447347",
+        "systemInstructionsSha256": "bee83f3637714b8c1d3345689d64b89748f2ba14887a6226ee5de33f53eb8d8f",
+        "responseSchemaSha256": "594c3586812ca06684d1c0fe194a7340f9b908409f687b143126346aa08db7ff",
+        "optionSetSha256": "65197841e165fa780ba71300402bb7635ae23f807509b45c6e0ea988c87bd66c",
+        "sourceContextSha256": "b37130e8701a992f4e944073967c6a447dc6d0c73adbb03ab643628a3f52883b"
+      },
+      "startedAt": "2026-10-18T18:10:12.490Z",
+      "observedAt": "2026-10-18T18:10:19.072Z",
+      "finishedAt": "2026-10-18T18:10:19.072Z",
+      "elapsedMs": 6582,
+      "attemptDurationMs": 6582
+    },
+    {
+      "index": 13,
+      "caseId": "source-calibration-train-4472",
+      "arm": "candidate",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The available information does not specifically confirm compatibility with PS2 model SCPH-77004. One customer reports that Action Replay works on PS2 systems including slim models, while another says they believe it works on standard PS2 systems but notes possible exceptions for altered systems or different region codes; these reports do not establish compatibility with your exact model and region.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "epqa-B001UIG6M2-cqa-9e6742a9ce7ae9c1",
+              "quote": "action replay works on all ps2 systems, including the slim ps2's."
+            },
+            {
+              "passageId": "epqa-B001UIG6M2-cqa-0d7c9051808b6ec7",
+              "quote": "from what i no i believe it works with all standard ps2  systems unless yours has been altered or has a different region code"
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 2049,
+          "outputTokens": 136
+        },
+        "attemptId": "817b45c8-7b3b-408b-80d3-12b05805dd16",
+        "contract": "workspace-answer-source-calibration-v2",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-6-candidate",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "73c647614ef75973cac46279b631cb8a2b8e7d2122c332d47a8253986c3195e8",
+        "systemInstructionsSha256": "e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8",
+        "responseSchemaSha256": "594c3586812ca06684d1c0fe194a7340f9b908409f687b143126346aa08db7ff",
+        "optionSetSha256": "65197841e165fa780ba71300402bb7635ae23f807509b45c6e0ea988c87bd66c",
+        "sourceContextSha256": "b37130e8701a992f4e944073967c6a447dc6d0c73adbb03ab643628a3f52883b"
+      },
+      "startedAt": "2026-10-18T18:10:19.287Z",
+      "observedAt": "2026-10-18T18:10:21.707Z",
+      "finishedAt": "2026-10-18T18:10:21.707Z",
+      "elapsedMs": 2420,
+      "attemptDurationMs": 2420
+    },
+    {
+      "index": 14,
+      "caseId": "source-calibration-train-13670",
+      "arm": "candidate",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The provided sources do not identify the material of the blade’s base hole plate. They discuss plastic parts in the miter-angle mechanism and separately mention a solid metal piece, but do not establish that either description applies to the base hole plate.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "epqa-B07Y6TTYCR-review-f80b930480f39809",
+              "quote": "a.the plastic nature of this lock mechanism is not likely to be an issue provided that the saw is taken care of, and not banged around  b.the purpose of using plastic is to enhance the ease of the lock mechanism, allowing for much quicker angle  changes [just keep your square at the ready], the plastic serves to store up tension allowing for a tighter  lock."
+            },
+            {
+              "passageId": "epqa-B07Y6TTYCR-review-073a894dc4dbaefe",
+              "quote": "but it's actually one solid piece of metal."
+            },
+            {
+              "passageId": "epqa-B07Y6TTYCR-cqa-6c9beabef9be4f8e",
+              "quote": "the problem with the metabo miter saws is the cheap plastic parts used in the miter angle setting mechanism."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1866,
+          "outputTokens": 131
+        },
+        "attemptId": "3a2ce5f4-8894-460f-a46e-18731d81b3c2",
+        "contract": "workspace-answer-source-calibration-v2",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-7-candidate",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "645e2f045387c536447b8853b7ef534bba792671e3aac723f3c1e5f54864d599",
+        "systemInstructionsSha256": "e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8",
+        "responseSchemaSha256": "33a3049d3feaf342940a4fb7d75a00967d6a9e449f7b8aab870cbfa85dff0443",
+        "optionSetSha256": "73755ec5de606ebec40ac2c882076086a9d97990fca672c48385a2eb83d9bde2",
+        "sourceContextSha256": "905f01375533b054322b91a45fc989b30be285b6f413f5b9757fad8abc1bdf82"
+      },
+      "startedAt": "2026-10-18T18:10:21.925Z",
+      "observedAt": "2026-10-18T18:10:26.062Z",
+      "finishedAt": "2026-10-18T18:10:26.062Z",
+      "elapsedMs": 4137,
+      "attemptDurationMs": 4137
+    },
+    {
+      "index": 15,
+      "caseId": "source-calibration-train-13670",
+      "arm": "baseline",
+      "status": "completed",
+      "output": {
+        "answer": {
+          "answer": "The supplied evidence does not identify the material of the blade’s base hole plate. It mentions plastic in the miter-angle lock mechanism and blade guard, and one review says an unspecified component is a solid piece of metal, but none of these sources establishes that the base hole plate is metal or plastic. Please provide the exact plate/model part number or manufacturer compatibility/material documentation.",
+          "status": "insufficient_evidence",
+          "citations": [
+            {
+              "passageId": "epqa-B07Y6TTYCR-review-f80b930480f39809",
+              "quote": "a.the plastic nature of this lock mechanism is not likely to be an issue provided that the saw is taken care of, and not banged around  b.the purpose of using plastic is to enhance the ease of the lock mechanism, allowing for much quicker angle  changes [just keep your square at the ready], the plastic serves to store up tension allowing for a tighter  lock."
+            },
+            {
+              "passageId": "epqa-B07Y6TTYCR-review-073a894dc4dbaefe",
+              "quote": "but it's actually one solid piece of metal."
+            },
+            {
+              "passageId": "epqa-B07Y6TTYCR-review-fd389a2cc01c0160",
+              "quote": "the laser refracts through the blade guard plastic and smears out on the surface of the wood that you are trying to align, and if you lift the blade guard to get a better look, then you don't have access to the adjustment knobs for the laser!"
+            },
+            {
+              "passageId": "epqa-B07Y6TTYCR-cqa-6c9beabef9be4f8e",
+              "quote": "the problem with the metabo miter saws is the cheap plastic parts used in the miter angle setting mechanism."
+            }
+          ]
+        },
+        "model": "gpt-5.6-luna",
+        "usage": {
+          "inputTokens": 1622,
+          "outputTokens": 171
+        },
+        "attemptId": "b3935a3b-1bd7-48d9-a2de-a0f4535e8e04",
+        "contract": "workspace-answer-flat-sources-v1",
+        "executionMode": "live",
+        "operationRunId": "source-calibration-d4da8eea2cbf15d3f97e88a7-7-baseline",
+        "policyId": "workspace-baseline-v2-context",
+        "policySha256": "ef48086c716636d020c87ed570e34d28d35a5b217f7159e87b7c9e12e23406f0",
+        "requestSha256": "9ce9bc91386ea0654b9147d363e62f8f7daf7e299b9cf1a83f417114c8312ff5",
+        "systemInstructionsSha256": "bee83f3637714b8c1d3345689d64b89748f2ba14887a6226ee5de33f53eb8d8f",
+        "responseSchemaSha256": "33a3049d3feaf342940a4fb7d75a00967d6a9e449f7b8aab870cbfa85dff0443",
+        "optionSetSha256": "73755ec5de606ebec40ac2c882076086a9d97990fca672c48385a2eb83d9bde2",
+        "sourceContextSha256": "905f01375533b054322b91a45fc989b30be285b6f413f5b9757fad8abc1bdf82"
+      },
+      "startedAt": "2026-10-18T18:10:26.289Z",
+      "observedAt": "2026-10-18T18:10:29.129Z",
+      "finishedAt": "2026-10-18T18:10:29.129Z",
+      "elapsedMs": 2840,
+      "attemptDurationMs": 2840
+    }
+  ],
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "actualProviderCharges": "unavailable",
+  "limitation": "Local structural replay only; does not authenticate provider origin, certify a grader or establish answer quality. Timings measure the local operation; unknown provider completion stays null."
+}

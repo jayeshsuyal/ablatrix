@@ -1,0 +1,679 @@
+{
+  "format": "source-calibration-blind-ai-review-v1",
+  "provenance": "independent_ai_source_check",
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "cases": [
+    {
+      "caseId": "source-calibration-train-12543",
+      "answers": {
+        "A": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "complete",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [],
+          "factsUnavailableInGeneration": [],
+          "notes": "Independently checked: ruling_type is only ruled (epqa-B079JHHYGT-attribute-b74e93a5f9ae63f4), and the bullet says lined pages (epqa-B079JHHYGT-bullet-2b9fc3d82df26781). No saved source supplies line spacing or a college/wide designation. The answer fully reports the useful supported result and the actual gap; it does not infer ruling from notebook dimensions."
+        },
+        "B": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "complete",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [],
+          "factsUnavailableInGeneration": [],
+          "notes": "Independently checked: the ruled attribute and lined-pages bullet support the description (epqa-B079JHHYGT-attribute-b74e93a5f9ae63f4; epqa-B079JHHYGT-bullet-2b9fc3d82df26781). Neither the generation sources nor complete pool identifies college or wide ruling. Its missing-information statement is accurate and useful, rather than avoidable abstention."
+        }
+      },
+      "substantivePreference": "tie",
+      "substantiveReason": "Both give the same supported ruled/lined information and accurately preserve the unresolved college-versus-wide distinction. Neither supplies or suppresses a supported answer to that distinction.",
+      "wordingPreference": "B",
+      "wordingReason": "B expresses the same result in one smoothly connected sentence. This wording preference does not create a substantive advantage.",
+      "referenceCorrections": []
+    },
+    {
+      "caseId": "source-calibration-train-2652",
+      "answers": {
+        "A": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "complete",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [],
+          "factsUnavailableInGeneration": [],
+          "notes": "Independently checked epqa-B004XI6OG4-review-fa2d95dff8f25cb0 and epqa-B004XI6OG4-cqa-893ef57884182745 with its original Thursday September 19 question. The fast-shipping report and conditional promise to a different customer are accurately attributed. No saved source gives an applicable interval in days. The final order/destination qualifier functions as a limitation, not a numerical or current seller promise. Other full-pool shipping anecdotes repeat the same qualitative result and add no useful duration."
+        },
+        "B": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "complete",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [],
+          "factsUnavailableInGeneration": [],
+          "notes": "Independently checked epqa-B004XI6OG4-review-fa2d95dff8f25cb0 and epqa-B004XI6OG4-cqa-893ef57884182745 with original-question scope. It distinguishes a particular Thursday promise from a present-order estimate and accurately notes that the target question provides no destination or order date. Its opening is read as no estimate applicable to the target order; it does not deny the particular historical promise that it immediately describes."
+        }
+      },
+      "substantivePreference": "tie",
+      "substantiveReason": "Both preserve the qualitative positive shipping anecdotes without inventing days or extending the other customer's deadline to this order. The full pool adds no generally applicable shipping interval.",
+      "wordingPreference": "B",
+      "wordingReason": "B makes the present order's missing date and destination concrete and scopes the Thursday deadline particularly clearly.",
+      "referenceCorrections": []
+    },
+    {
+      "caseId": "source-calibration-train-12047",
+      "answers": {
+        "A": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "partial",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [
+            {
+              "fact": "The cited blue/green/white/beige review also says white and beige are hard to distinguish, a useful shade qualification.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-review-ba25c0b3df1b7b75"
+              ],
+              "unavailableInGeneration": false
+            },
+            {
+              "fact": "The full-pool description specifies six sets of colored pieces, and an attribute says multicolor; neither supplies an exhaustive named inventory.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-description-e359f63a7a9c6c32",
+                "epqa-B0009U7UZE-attribute-f20dd274935ecf54"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Useful inventory context omitted from both answers, but absent from generation."
+            },
+            {
+              "fact": "One review reports a missing black marble. This implies that reviewer expected black; it does not guarantee black in every supplied set.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-review-32a52fc4fc21623d"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "An additional color-related report unavailable in generation, not a basis for a definitive complete list."
+            },
+            {
+              "fact": "One reviewer says red is absent or an unusual pale shade; another says an unspecified color is close to white and wishes red were included. The second excerpt does not itself identify the pale color.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-review-87999c1b22f0bea1",
+                "epqa-B0009U7UZE-review-7e9b2b90e77390b7"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Additional useful color-variation caveats unavailable in generation."
+            }
+          ],
+          "factsUnavailableInGeneration": [
+            {
+              "fact": "The full-pool description specifies six sets of colored pieces, and an attribute says multicolor; neither supplies an exhaustive named inventory.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-description-e359f63a7a9c6c32",
+                "epqa-B0009U7UZE-attribute-f20dd274935ecf54"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Useful inventory context omitted from both answers, but absent from generation."
+            },
+            {
+              "fact": "One review reports a missing black marble. This implies that reviewer expected black; it does not guarantee black in every supplied set.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-review-32a52fc4fc21623d"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "An additional color-related report unavailable in generation, not a basis for a definitive complete list."
+            },
+            {
+              "fact": "One reviewer says red is absent or an unusual pale shade; another says an unspecified color is close to white and wishes red were included. The second excerpt does not itself identify the pale color.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-review-87999c1b22f0bea1",
+                "epqa-B0009U7UZE-review-7e9b2b90e77390b7"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Additional useful color-variation caveats unavailable in generation."
+            }
+          ],
+          "notes": "Independently checked the named-color review epqa-B0009U7UZE-review-ba25c0b3df1b7b75, light-blue/light-green review epqa-B0009U7UZE-review-b394a5dbc1fd1e19 and muted-colors review epqa-B0009U7UZE-review-d2852eee5bee1476. All attributed descriptions are supported. The final customer-report disclaimer scopes the opening list as nonexhaustive. Partial coverage records extra useful full-pool color reports and the unmentioned white/beige similarity; unavailable facts are not treated as generator-known omissions. No standard six-color list is justified."
+        },
+        "B": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "partial",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [
+            {
+              "fact": "A generation-available review describes the colors overall as muted, a useful qualitative description.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-review-d2852eee5bee1476"
+              ],
+              "unavailableInGeneration": false
+            },
+            {
+              "fact": "The cited blue/green/white/beige review also says white and beige are hard to distinguish, a useful shade qualification.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-review-ba25c0b3df1b7b75"
+              ],
+              "unavailableInGeneration": false
+            },
+            {
+              "fact": "The full-pool description specifies six sets of colored pieces, and an attribute says multicolor; neither supplies an exhaustive named inventory.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-description-e359f63a7a9c6c32",
+                "epqa-B0009U7UZE-attribute-f20dd274935ecf54"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Useful inventory context omitted from both answers, but absent from generation."
+            },
+            {
+              "fact": "One review reports a missing black marble. This implies that reviewer expected black; it does not guarantee black in every supplied set.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-review-32a52fc4fc21623d"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "An additional color-related report unavailable in generation, not a basis for a definitive complete list."
+            },
+            {
+              "fact": "One reviewer says red is absent or an unusual pale shade; another says an unspecified color is close to white and wishes red were included. The second excerpt does not itself identify the pale color.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-review-87999c1b22f0bea1",
+                "epqa-B0009U7UZE-review-7e9b2b90e77390b7"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Additional useful color-variation caveats unavailable in generation."
+            }
+          ],
+          "factsUnavailableInGeneration": [
+            {
+              "fact": "The full-pool description specifies six sets of colored pieces, and an attribute says multicolor; neither supplies an exhaustive named inventory.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-description-e359f63a7a9c6c32",
+                "epqa-B0009U7UZE-attribute-f20dd274935ecf54"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Useful inventory context omitted from both answers, but absent from generation."
+            },
+            {
+              "fact": "One review reports a missing black marble. This implies that reviewer expected black; it does not guarantee black in every supplied set.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-review-32a52fc4fc21623d"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "An additional color-related report unavailable in generation, not a basis for a definitive complete list."
+            },
+            {
+              "fact": "One reviewer says red is absent or an unusual pale shade; another says an unspecified color is close to white and wishes red were included. The second excerpt does not itself identify the pale color.",
+              "sourceIds": [
+                "epqa-B0009U7UZE-review-87999c1b22f0bea1",
+                "epqa-B0009U7UZE-review-7e9b2b90e77390b7"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Additional useful color-variation caveats unavailable in generation."
+            }
+          ],
+          "notes": "Independently checked epqa-B0009U7UZE-review-ba25c0b3df1b7b75 and epqa-B0009U7UZE-review-b394a5dbc1fd1e19. They support the named colors and light-blue/light-green closeness. The full pool still has no unambiguous exhaustive inventory, so the explicit limitation is correct. It omits the supported muted descriptor, white/beige similarity and generation-unavailable color reports, while retaining the central named colors and a useful shade caveat."
+        }
+      },
+      "substantivePreference": "tie",
+      "substantiveReason": "Both provide the same four explicitly named colors and preserve the incomplete inventory. A adds the supported muted descriptor, while B states incompleteness more explicitly; neither resolves the additional full-pool color variation. The descriptor alone is insufficient for a material substantive win here.",
+      "wordingPreference": "B",
+      "wordingReason": "B attributes the color list to reviews at the start and plainly says the list is incomplete. A's final qualification is also adequate.",
+      "referenceCorrections": [
+        {
+          "claim": "The reference summarizes the white-close-color excerpt as another complaint that red is pale/absent.",
+          "reason": "epqa-B0009U7UZE-review-87999c1b22f0bea1 explicitly says red is absent or unusually pale, but epqa-B0009U7UZE-review-7e9b2b90e77390b7 has an unresolved it antecedent. Retain that second report as an unspecified color close to white, rather than silently identifying that color.",
+          "sourceIds": [
+            "epqa-B0009U7UZE-review-87999c1b22f0bea1",
+            "epqa-B0009U7UZE-review-7e9b2b90e77390b7"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-12773",
+      "answers": {
+        "A": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "complete",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [],
+          "factsUnavailableInGeneration": [
+            {
+              "fact": "The full-pool wheel attribute names polyurethane and the description says PU cast wheels, corroborating the retrieved no-air statement.",
+              "sourceIds": [
+                "epqa-B01N563SG0-attribute-6d99a11f2a50b333",
+                "epqa-B01N563SG0-description-cbdc1dbce678f63d"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Corroboration was unavailable in generation; the retrieved construction evidence already answers the question."
+            }
+          ],
+          "notes": "Independently checked epqa-B01N563SG0-cqa-629f376f563ba6b1 in its original one-kick-distance scope and epqa-B01N563SG0-review-17fd98cc502533fe. Although the CQA was not asked directly about inflation, its no-air statement semantically addresses wheel construction, and the review names polyurethane. The full-pool PU-cast description corroborates the nonpneumatic conclusion. No distance, pressure, safety or maintenance claim is added."
+        },
+        "B": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "complete",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [],
+          "factsUnavailableInGeneration": [
+            {
+              "fact": "The full-pool wheel attribute names polyurethane and the description says PU cast wheels, corroborating the retrieved no-air statement.",
+              "sourceIds": [
+                "epqa-B01N563SG0-attribute-6d99a11f2a50b333",
+                "epqa-B01N563SG0-description-cbdc1dbce678f63d"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Corroboration was unavailable in generation; the retrieved construction evidence already answers the question."
+            }
+          ],
+          "notes": "Independently checked the no-air CQA epqa-B01N563SG0-cqa-629f376f563ba6b1 and polyurethane review epqa-B01N563SG0-review-17fd98cc502533fe. The no-air assertion is relevant even though the original question concerned travel per kick. Solid is a reasonable non-air-filled construction inference from these statements and is corroborated by the generation-unavailable PU-cast description; it is not a performance guarantee."
+        }
+      },
+      "substantivePreference": "tie",
+      "substantiveReason": "Both answer no and support the same polyurethane/non-air-filled construction. A's indicates and B's so do not create a meaningful calibration difference given the actual no-air evidence and corroborating full pool.",
+      "wordingPreference": "B",
+      "wordingReason": "B states the construction and its basis more directly without the less informative phrase product-related response.",
+      "referenceCorrections": []
+    },
+    {
+      "caseId": "source-calibration-train-195",
+      "answers": {
+        "A": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "partial",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [
+            {
+              "fact": "The title names 17801-0H050 while the cited model_name says 17801-YZZ02. Their precise relationship is unresolved; the explicit YZZ02 fit CQA remains direct positive evidence.",
+              "sourceIds": [
+                "epqa-B0044B30TO-attribute-c101e4e26eea9e88"
+              ],
+              "unavailableInGeneration": false
+            },
+            {
+              "fact": "The complete pool does provide listed item dimensions: width 8 inches, length 11.7 inches and height 1.8 inches. These are listing dimensions, not a two-part dimensional comparison or proof of YZZ01 fit.",
+              "sourceIds": [
+                "epqa-B0044B30TO-attribute-d66ebb60a1959c5b"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "This corrects any reading of no dimensions as applying to the complete pool; the generation context omitted this source."
+            },
+            {
+              "fact": "The model_number attribute is 178010h050, whereas model_name is 17801-yzz02; the saved title likewise names 17801-0H050. A vague same-model/item-model CQA supplies no explicit identifier mapping.",
+              "sourceIds": [
+                "epqa-B0044B30TO-attribute-e3e39e93dd0872a4",
+                "epqa-B0044B30TO-cqa-4e8b4e7d067b3422"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "The additional model_number and vague reconciliation sources were unavailable in generation. The title/model-name mismatch itself is visible from product metadata and the retrieved model_name."
+            }
+          ],
+          "factsUnavailableInGeneration": [
+            {
+              "fact": "The complete pool does provide listed item dimensions: width 8 inches, length 11.7 inches and height 1.8 inches. These are listing dimensions, not a two-part dimensional comparison or proof of YZZ01 fit.",
+              "sourceIds": [
+                "epqa-B0044B30TO-attribute-d66ebb60a1959c5b"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "This corrects any reading of no dimensions as applying to the complete pool; the generation context omitted this source."
+            },
+            {
+              "fact": "The model_number attribute is 178010h050, whereas model_name is 17801-yzz02; the saved title likewise names 17801-0H050. A vague same-model/item-model CQA supplies no explicit identifier mapping.",
+              "sourceIds": [
+                "epqa-B0044B30TO-attribute-e3e39e93dd0872a4",
+                "epqa-B0044B30TO-cqa-4e8b4e7d067b3422"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "The additional model_number and vague reconciliation sources were unavailable in generation. The title/model-name mismatch itself is visible from product metadata and the retrieved model_name."
+            }
+          ],
+          "notes": "Independently checked exact-year/engine CQA epqa-B0044B30TO-cqa-8e88515f603f6b11, 2014 four-cylinder CQA epqa-B0044B30TO-cqa-4af37e214778af2f and YZZ02 model_name epqa-B0044B30TO-attribute-c101e4e26eea9e88. Positive YZZ02 fit is supported; no source compares YZZ01. The phrase supplied evidence does not provide dimensions is accurate for the specified generationSourceIds, so it is not marked an unsupported generator claim. It would be false as a statement about the complete pool, which contains listed item dimensions. Coverage is partial against that pool and the unmentioned title identifier relationship; the request for comparison documentation is appropriate."
+        },
+        "B": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "partial",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [
+            {
+              "fact": "The title names 17801-0H050 while the cited model_name says 17801-YZZ02. Their precise relationship is unresolved; the explicit YZZ02 fit CQA remains direct positive evidence.",
+              "sourceIds": [
+                "epqa-B0044B30TO-attribute-c101e4e26eea9e88"
+              ],
+              "unavailableInGeneration": false
+            },
+            {
+              "fact": "The complete pool does provide listed item dimensions: width 8 inches, length 11.7 inches and height 1.8 inches. These are listing dimensions, not a two-part dimensional comparison or proof of YZZ01 fit.",
+              "sourceIds": [
+                "epqa-B0044B30TO-attribute-d66ebb60a1959c5b"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "This corrects any reading of no dimensions as applying to the complete pool; the generation context omitted this source."
+            },
+            {
+              "fact": "The model_number attribute is 178010h050, whereas model_name is 17801-yzz02; the saved title likewise names 17801-0H050. A vague same-model/item-model CQA supplies no explicit identifier mapping.",
+              "sourceIds": [
+                "epqa-B0044B30TO-attribute-e3e39e93dd0872a4",
+                "epqa-B0044B30TO-cqa-4e8b4e7d067b3422"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "The additional model_number and vague reconciliation sources were unavailable in generation. The title/model-name mismatch itself is visible from product metadata and the retrieved model_name."
+            }
+          ],
+          "factsUnavailableInGeneration": [
+            {
+              "fact": "The complete pool does provide listed item dimensions: width 8 inches, length 11.7 inches and height 1.8 inches. These are listing dimensions, not a two-part dimensional comparison or proof of YZZ01 fit.",
+              "sourceIds": [
+                "epqa-B0044B30TO-attribute-d66ebb60a1959c5b"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "This corrects any reading of no dimensions as applying to the complete pool; the generation context omitted this source."
+            },
+            {
+              "fact": "The model_number attribute is 178010h050, whereas model_name is 17801-yzz02; the saved title likewise names 17801-0H050. A vague same-model/item-model CQA supplies no explicit identifier mapping.",
+              "sourceIds": [
+                "epqa-B0044B30TO-attribute-e3e39e93dd0872a4",
+                "epqa-B0044B30TO-cqa-4e8b4e7d067b3422"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "The additional model_number and vague reconciliation sources were unavailable in generation. The title/model-name mismatch itself is visible from product metadata and the retrieved model_name."
+            }
+          ],
+          "notes": "Independently checked epqa-B0044B30TO-cqa-8e88515f603f6b11, epqa-B0044B30TO-cqa-4af37e214778af2f and epqa-B0044B30TO-attribute-c101e4e26eea9e88. The answer correctly reports affirmative YZZ02 fit and leaves comparative fit unresolved, without inferring YZZ01 nonfit. Available product evidence is interpreted as its supplied generation context, where dimensions really are absent. Against the complete pool, the no-dimensions statement needs that scope: listed item dimensions exist but no dimensions for both candidates or dimensional fit comparison is established. It omits the visible title/model-name discrepancy."
+        }
+      },
+      "substantivePreference": "tie",
+      "substantiveReason": "Both supply the supported YZZ02 fit, preserve the missing YZZ01 comparison and share the same full-pool omissions and scope caveat concerning dimensions. A's request for documentation does not add a supported comparative result.",
+      "wordingPreference": "B",
+      "wordingReason": "B answers the fit comparison and its limit without turning the remaining evidence gap into an extra user task.",
+      "referenceCorrections": [
+        {
+          "claim": "The prewritten reference omits the full-pool dimensions when describing what useful facts are available for a dimensions-based comparison.",
+          "reason": "epqa-B0044B30TO-attribute-d66ebb60a1959c5b explicitly lists item dimensions of 8 by 11.7 by 1.8 inches. They were unavailable in generation and do not identify YZZ01 dimensions or establish which part fits better. Any full-pool no-dimensions conclusion would be wrong.",
+          "sourceIds": [
+            "epqa-B0044B30TO-attribute-d66ebb60a1959c5b"
+          ]
+        },
+        {
+          "claim": "The identifier relationship remains unresolved.",
+          "reason": "Retain this conclusion but acknowledge epqa-B0044B30TO-cqa-4e8b4e7d067b3422: its original question asks why model and item model differ, and the response says they are the same. It is weak reconciliation evidence, not an explicit mapping or supersession statement for named identifiers.",
+          "sourceIds": [
+            "epqa-B0044B30TO-cqa-4e8b4e7d067b3422",
+            "epqa-B0044B30TO-attribute-c101e4e26eea9e88",
+            "epqa-B0044B30TO-attribute-e3e39e93dd0872a4"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-8836",
+      "answers": {
+        "A": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "partial",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [
+            {
+              "fact": "Generation-available reviewers characterize these as generic/universal, including one tentative statement that they were not specifically intended for Viking ranges.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-review-0b85ba5edb6bee28",
+                "epqa-B0064FCQUM-review-d89b51b8df648d02"
+              ],
+              "unavailableInGeneration": false
+            },
+            {
+              "fact": "A full-pool bullet lists PD040035, PD040075, AP5316217 and VGSU, but does not identify VGSU1646BBK.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-bullet-6caabd1e2e05364a"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Potentially relevant family/part context unavailable in generation; it remains insufficient for exact-model fit."
+            },
+            {
+              "fact": "The description calls the item an OEM factory part while purchaser reviews characterize it as generic; the saved text does not resolve the provenance or exact intended applications.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-description-7c85bcffecc1ffd5"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "The OEM description was unavailable in generation and should temper any global third-party/generic conclusion."
+            },
+            {
+              "fact": "Full-pool attributes give dimensions 0.3 by 0.34 by 0.34 inches, and one purchaser warns against holes 1/8 inch or larger; no target-model hole specification is supplied.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-attribute-45e9c7d099fc636e",
+                "epqa-B0064FCQUM-review-55194fa3933fd13d"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Useful potential comparison data unavailable in generation, with no verified exact-model mapping."
+            }
+          ],
+          "factsUnavailableInGeneration": [
+            {
+              "fact": "A full-pool bullet lists PD040035, PD040075, AP5316217 and VGSU, but does not identify VGSU1646BBK.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-bullet-6caabd1e2e05364a"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Potentially relevant family/part context unavailable in generation; it remains insufficient for exact-model fit."
+            },
+            {
+              "fact": "The description calls the item an OEM factory part while purchaser reviews characterize it as generic; the saved text does not resolve the provenance or exact intended applications.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-description-7c85bcffecc1ffd5"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "The OEM description was unavailable in generation and should temper any global third-party/generic conclusion."
+            },
+            {
+              "fact": "Full-pool attributes give dimensions 0.3 by 0.34 by 0.34 inches, and one purchaser warns against holes 1/8 inch or larger; no target-model hole specification is supplied.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-attribute-45e9c7d099fc636e",
+                "epqa-B0064FCQUM-review-55194fa3933fd13d"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Useful potential comparison data unavailable in generation, with no verified exact-model mapping."
+            }
+          ],
+          "notes": "Independently checked epqa-B0064FCQUM-review-f265a14a65519ebd and epqa-B0064FCQUM-review-0b85ba5edb6bee28. A accurately calls the reports mixed and explicitly preserves their distinct scopes: an unspecified Viking stove versus VGRT. Both reports can be true, and neither establishes VGSU1646BBK fit. It usefully preserves the missing exact answer. Partial coverage reflects unmentioned generic characterizations and additional full-pool context, not a need to guess fit."
+        },
+        "B": {
+          "sourceCorrectness": "fail",
+          "citedSupport": "fail",
+          "coverage": "partial",
+          "calibration": "mixed",
+          "directness": "useful",
+          "materialDefects": [
+            {
+              "claim": "Reviews conflict: one reports they did not fit a Viking stove, while another describes only a good enough fit on a Viking 5 Series gas rangetop.",
+              "reason": "These reports concern an unspecified Viking stove and a named VGRT family, with no source establishing the same model or hole dimensions. Positive fit on one model and nonfit on another are compatible. The quoted reviews support mixed outcomes, but not a genuine incompatibility between the reports. The surrounding exact-model caution is appropriate; the conflict characterization is the defect.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-review-f265a14a65519ebd",
+                "epqa-B0064FCQUM-review-0b85ba5edb6bee28"
+              ]
+            }
+          ],
+          "missingUsefulFacts": [
+            {
+              "fact": "A full-pool bullet lists PD040035, PD040075, AP5316217 and VGSU, but does not identify VGSU1646BBK.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-bullet-6caabd1e2e05364a"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Potentially relevant family/part context unavailable in generation; it remains insufficient for exact-model fit."
+            },
+            {
+              "fact": "The description calls the item an OEM factory part while purchaser reviews characterize it as generic; the saved text does not resolve the provenance or exact intended applications.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-description-7c85bcffecc1ffd5"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "The OEM description was unavailable in generation and should temper any global third-party/generic conclusion."
+            },
+            {
+              "fact": "Full-pool attributes give dimensions 0.3 by 0.34 by 0.34 inches, and one purchaser warns against holes 1/8 inch or larger; no target-model hole specification is supplied.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-attribute-45e9c7d099fc636e",
+                "epqa-B0064FCQUM-review-55194fa3933fd13d"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Useful potential comparison data unavailable in generation, with no verified exact-model mapping."
+            }
+          ],
+          "factsUnavailableInGeneration": [
+            {
+              "fact": "A full-pool bullet lists PD040035, PD040075, AP5316217 and VGSU, but does not identify VGSU1646BBK.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-bullet-6caabd1e2e05364a"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Potentially relevant family/part context unavailable in generation; it remains insufficient for exact-model fit."
+            },
+            {
+              "fact": "The description calls the item an OEM factory part while purchaser reviews characterize it as generic; the saved text does not resolve the provenance or exact intended applications.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-description-7c85bcffecc1ffd5"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "The OEM description was unavailable in generation and should temper any global third-party/generic conclusion."
+            },
+            {
+              "fact": "Full-pool attributes give dimensions 0.3 by 0.34 by 0.34 inches, and one purchaser warns against holes 1/8 inch or larger; no target-model hole specification is supplied.",
+              "sourceIds": [
+                "epqa-B0064FCQUM-attribute-45e9c7d099fc636e",
+                "epqa-B0064FCQUM-review-55194fa3933fd13d"
+              ],
+              "unavailableInGeneration": true,
+              "impact": "Useful potential comparison data unavailable in generation, with no verified exact-model mapping."
+            }
+          ],
+          "notes": "Independently checked epqa-B0064FCQUM-review-f265a14a65519ebd, epqa-B0064FCQUM-review-0b85ba5edb6bee28 and epqa-B0064FCQUM-review-d89b51b8df648d02. The no-exact-model-confirmation conclusion is supported. Describing generic intent as a source characterization is supportable; it should preserve that the not-specifically-intended review says pretty sure rather than establishing factory intent. The failure flags the material scope error in calling compatible, differently scoped fit anecdotes conflicting, not the proper refusal to guarantee exact fit."
+        }
+      },
+      "substantivePreference": "A",
+      "substantiveReason": "A accurately reports varied fit outcomes while preserving their different model scopes. B adds useful generic-characterization context, but its claim of conflict is not established by those compatible reports. Both lack exact VGSU1646BBK confirmation and both miss full-pool family/size context unavailable in generation.",
+      "wordingPreference": "A",
+      "wordingReason": "A makes the distinct report scopes explicit and avoids the stronger conflict framing. B's purchase-documentation request is less direct.",
+      "referenceCorrections": [
+        {
+          "claim": "The reference calls the retrieved positive/negative anecdotes conflicting and asks which models or hole dimensions explain the conflicting fit reports.",
+          "reason": "One nonfit report names only my Viking stove, while the positive report specifies a Viking 5 Series VGRT. No shared exact model is established. Describe these as differently scoped, mixed fit reports; they are compatible and do not show a genuine contradiction. This does not resolve target-model fit.",
+          "sourceIds": [
+            "epqa-B0064FCQUM-review-f265a14a65519ebd",
+            "epqa-B0064FCQUM-review-0b85ba5edb6bee28"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-4472",
+      "answers": {
+        "A": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "partial",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [
+            {
+              "fact": "A generation-available CQA expresses belief in standard-PS2 compatibility subject to altered-system or region-code exceptions. This is a concrete limitation relevant to the target question.",
+              "sourceIds": [
+                "epqa-B001UIG6M2-cqa-0d7c9051808b6ec7"
+              ],
+              "unavailableInGeneration": false
+            }
+          ],
+          "factsUnavailableInGeneration": [],
+          "notes": "Independently checked epqa-B001UIG6M2-cqa-2d68068527dc53c9 with its original software-version question and epqa-B001UIG6M2-cqa-9e6742a9ce7ae9c1. The different-model mention and broad all-PS2 claim are accurately represented; no exact SCPH-77004 mapping is supplied. Calling the broad report unverified is fair in this saved-source context, but its support and the explicit region exception deserve useful coverage. A does not turn the Gameshark disc comment into an Action Replay failure claim."
+        },
+        "B": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "partial",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [
+            {
+              "fact": "The original question attached to the SCPH-77001B anecdote raises an Action Replay software-version concern, while the answer does not identify the supplied Action Replay version. The premise is not independently verified, but the unresolved version is useful context.",
+              "sourceIds": [
+                "epqa-B001UIG6M2-cqa-2d68068527dc53c9"
+              ],
+              "unavailableInGeneration": false
+            }
+          ],
+          "factsUnavailableInGeneration": [],
+          "notes": "Independently checked epqa-B001UIG6M2-cqa-9e6742a9ce7ae9c1 and epqa-B001UIG6M2-cqa-0d7c9051808b6ec7, including both original Slim questions. B preserves the positive broad report, the second respondent's belief-level wording and concrete altered-system/region caveats. Those comments can coexist and do not establish a contradiction. Exact model/region confirmation is absent from the complete pool. Partial coverage records the omitted version-context issue, not a missing supported yes/no."
+        }
+      },
+      "substantivePreference": "B",
+      "substantiveReason": "B provides a directly relevant region/alteration condition supported by a generation-available source, with its tentativeness preserved. A omits that useful condition and mainly contrasts an unrelated exact model with a broad unverified claim. Both correctly avoid an exact-model guarantee; B's useful supported condition gives it the substantive advantage.",
+      "wordingPreference": "B",
+      "wordingReason": "B explains the specific uncertainty to the user through attributed reports and concrete conditions, rather than ending with a generic documentation request.",
+      "referenceCorrections": [
+        {
+          "claim": "The reference says the SCPH-77001B anecdote discusses version/disc limitations.",
+          "reason": "Preserve the distinction between the original question's Action Replay below-version-3.30 compatibility premise, the respondent's console-version-15 statement, and the respondent's Gameshark/blue-disc comment. These do not independently establish an Action Replay version requirement or failure on SCPH-77004.",
+          "sourceIds": [
+            "epqa-B001UIG6M2-cqa-2d68068527dc53c9"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-13670",
+      "answers": {
+        "A": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "complete",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [],
+          "factsUnavailableInGeneration": [],
+          "notes": "Independently checked epqa-B07Y6TTYCR-review-f80b930480f39809, epqa-B07Y6TTYCR-review-073a894dc4dbaefe and epqa-B07Y6TTYCR-cqa-6c9beabef9be4f8e with its original fine-angle-adjustment question. The plastic evidence concerns a lock/angle mechanism; the metal excerpt lacks a component antecedent. The full pool adds other plastic-component comments but no identified base-hole-plate material. A correctly avoids treating different-component materials as a conflict or as an answer about the requested plate."
+        },
+        "B": {
+          "sourceCorrectness": "pass",
+          "citedSupport": "pass",
+          "coverage": "complete",
+          "calibration": "appropriate",
+          "directness": "useful",
+          "materialDefects": [],
+          "missingUsefulFacts": [],
+          "factsUnavailableInGeneration": [],
+          "notes": "Independently checked epqa-B07Y6TTYCR-review-f80b930480f39809, epqa-B07Y6TTYCR-review-073a894dc4dbaefe, epqa-B07Y6TTYCR-review-fd389a2cc01c0160 and epqa-B07Y6TTYCR-cqa-6c9beabef9be4f8e. Plastic angle mechanism and blade guard are supported, and the isolated metal piece is correctly called unspecified. None identifies the plate. This is appropriate missing-information calibration, not excessive abstention. The exact-component documentation request is reasonable, although asking for a model again and mentioning compatibility documentation adds little to a material question whose product model is already supplied."
+        }
+      },
+      "substantivePreference": "tie",
+      "substantiveReason": "Both correctly preserve the component-identification gap and avoid transferring a material from other parts to the requested plate. B's added blade-guard context is supported but does not change the useful material answer or resolve the gap.",
+      "wordingPreference": "A",
+      "wordingReason": "A explains the gap directly. B's additional generic part/model and compatibility-documentation request is less focused on the material question.",
+      "referenceCorrections": []
+    }
+  ]
+}

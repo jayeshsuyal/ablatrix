@@ -1,0 +1,101 @@
+{
+  "planSha256": "d1d1c49c6d47edcf2c9dae4351701c42b531d362fd5b42acc1184433e8a8a78e",
+  "mapping": [
+    {
+      "caseId": "source-calibration-train-12543",
+      "label": "A",
+      "arm": "baseline",
+      "slotIndex": 0
+    },
+    {
+      "caseId": "source-calibration-train-12543",
+      "label": "B",
+      "arm": "candidate",
+      "slotIndex": 1
+    },
+    {
+      "caseId": "source-calibration-train-2652",
+      "label": "A",
+      "arm": "baseline",
+      "slotIndex": 3
+    },
+    {
+      "caseId": "source-calibration-train-2652",
+      "label": "B",
+      "arm": "candidate",
+      "slotIndex": 2
+    },
+    {
+      "caseId": "source-calibration-train-12047",
+      "label": "A",
+      "arm": "candidate",
+      "slotIndex": 5
+    },
+    {
+      "caseId": "source-calibration-train-12047",
+      "label": "B",
+      "arm": "baseline",
+      "slotIndex": 4
+    },
+    {
+      "caseId": "source-calibration-train-12773",
+      "label": "A",
+      "arm": "candidate",
+      "slotIndex": 6
+    },
+    {
+      "caseId": "source-calibration-train-12773",
+      "label": "B",
+      "arm": "baseline",
+      "slotIndex": 7
+    },
+    {
+      "caseId": "source-calibration-train-195",
+      "label": "A",
+      "arm": "baseline",
+      "slotIndex": 8
+    },
+    {
+      "caseId": "source-calibration-train-195",
+      "label": "B",
+      "arm": "candidate",
+      "slotIndex": 9
+    },
+    {
+      "caseId": "source-calibration-train-8836",
+      "label": "A",
+      "arm": "candidate",
+      "slotIndex": 10
+    },
+    {
+      "caseId": "source-calibration-train-8836",
+      "label": "B",
+      "arm": "baseline",
+      "slotIndex": 11
+    },
+    {
+      "caseId": "source-calibration-train-4472",
+      "label": "A",
+      "arm": "baseline",
+      "slotIndex": 12
+    },
+    {
+      "caseId": "source-calibration-train-4472",
+      "label": "B",
+      "arm": "candidate",
+      "slotIndex": 13
+    },
+    {
+      "caseId": "source-calibration-train-13670",
+      "label": "A",
+      "arm": "candidate",
+      "slotIndex": 14
+    },
+    {
+      "caseId": "source-calibration-train-13670",
+      "label": "B",
+      "arm": "baseline",
+      "slotIndex": 15
+    }
+  ]
+}

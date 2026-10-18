@@ -1,12 +1,20 @@
 # Current results
 
-Updated October 17, 2026. This index distinguishes implementation checks, scripted demonstrations and recorded live observations. The full chronology remains in the [build and evidence ledger](build-plan.md).
+Updated October 18, 2026. This index distinguishes implementation checks, scripted demonstrations and recorded live observations. The full chronology remains in the [build and evidence ledger](build-plan.md).
 
 ## Current release status
 
 The local product workflow retrieves saved product sources, preserves the original answer and request identity, checks source support, attempts at most one repair, and independently rechecks before delivering or stopping. The `/ask` entry point exposes exact source bodies, original versions and a paired proof export. The isolated `npm run demo` uses fictional scripts and no provider calls or embedding download.
 
 The current work adds a versioned flat-source generation contract and a v4 grader separating factual consistency, cited support, product applicability, coverage and uncertainty. Offline contract tests and synthetic fixtures establish mechanics. **Fresh live v4 qualification and natural-product correction benefit are not established. Live policy release remains closed.** Grader qualification alone would not release an answer policy.
+
+An [experimental source-calibrated first-answer contract](answer-quality-sprint-2026-10-18.md) targets interpretation defects found in saved answers. Its instructions were frozen before separate question selection; the approved 16-call comparison is complete. The ordinary workspace default is unchanged. Two independent blind AI reviews agree on one substantive candidate preference and six ties, with one disputed benefit. This is limited exploratory evidence, not human-reviewed or general correctness gain. [Full outputs, review disagreements and reproduction](evidence/answer-quality-source-calibration-2026-10-18/RESULTS.md).
+
+## Latest first-answer comparison
+
+Eight separate products received one baseline and one source-calibrated answer with the same model, retrieval and source context. All 16 calls completed; 39/39 citation occurrences matched offered source bodies. Both AI reviewers preferred the candidate's wording on six of eight; wording and citation membership are separate from substantive correctness. Useful structured facts remained outside retrieval, and AI source references themselves needed explicit corrections.
+
+The shared ledger now records **138 attempts**, zero pending/owners, and **$13.80 reserved + $0.200281 prior adjustment = $14.000281** combined planning usage. The experiment added exactly $1.60 local planning allowance. Actual charges are unavailable. Saved human source-checked judgments remain **0/16** for this comparison, and no default or policy was activated. [Inspectable live comparison](evidence/answer-quality-source-calibration-2026-10-18/RESULTS.md).
 
 ## Latest recorded live qualification
 

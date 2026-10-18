@@ -1,0 +1,39 @@
+{
+  "format": "source-calibration-live-execution-record-v1",
+  "planSha256": "d1d1c49c6d47edcf2c9dae4351701c42b531d362fd5b42acc1184433e8a8a78e",
+  "status": "live_completed_independent_ai_review_in_progress",
+  "operatorApproval": {
+    "format": "ablatrix-source-calibration-operator-approval-v1",
+    "planSha256": "d1d1c49c6d47edcf2c9dae4351701c42b531d362fd5b42acc1184433e8a8a78e",
+    "approvalSource": "explicit_human_chat_reply",
+    "approvalText": "Approve 16-call comparison",
+    "recordedAt": "2026-10-18T18:09:25.304Z",
+    "maximumNewAttempts": 16,
+    "maximumAdditionalPlanningAllowanceUsd": 1.6,
+    "maximumCumulativeAttempts": 138,
+    "maximumCombinedPlanningUsageUsd": 14.000281,
+    "cumulativeLocalCapUsd": 20,
+    "retries": 0,
+    "automaticActivation": false
+  },
+  "codeReview": {
+    "implementationCommit": "f32d15e9671e37280b3a2c9d6090fa45a32ddec3",
+    "status": "completed",
+    "findings": false,
+    "pr": "https://github.com/jayeshsuyal/ablatrix/pull/49"
+  },
+  "files": {
+    "live-result-v1.json": "57d7d73ea7a3140995734b685f7829f83e3809b924ed05a101918cbb20e0809b",
+    "execution-verification-v1.json": "7cbb2d2e6da59781235108c6a4ce8e5f6f6f6f7586939e54fca378316ae76959",
+    "anonymous-review-v1.md": "7475de9fac71222de1f64bde5cf9f2d3e300d5058d746217fc1c51dadba68ef5",
+    "arm-mapping-v1.json": "d36acb048d625228e8ebb4a26552cbe781fe36ca50b100e5cb8264b32febaccf",
+    "blind-references-v1.json": "0b9390afba14547f6930ba7154b030cabce672e36b35eeeaf3fa385337d7d63c",
+    "blind-review-protocol-v1.json": "e518317e84a5871af9fdc70b29203bc4bf8ad71bfb03da327a11f3aecd191097"
+  },
+  "privateCheckpointSha256": "6528cff425f00fdb2e6709331ea2e691d4e232f88a45b5b95965350d1b6fbbca",
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "policyActivated": false,
+  "providerCharges": "unavailable",
+  "limitation": "Local bounded Router execution and replay. Public artifacts do not authenticate provider origin or establish general answer correctness."
+}

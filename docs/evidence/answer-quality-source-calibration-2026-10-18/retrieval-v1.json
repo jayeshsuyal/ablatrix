@@ -1,0 +1,1068 @@
+{
+  "format": "source-calibration-retrieval-v1",
+  "cohortFileSha256": "658b9e2ab6e2cec0904da67b31980b4e4d6bd0f1e2dadb8181e5f4ec31869934",
+  "implementationSha256": {
+    "scripts/source-calibration-retrieval.ts": "5799c2df6aafcaa403134c4796180283e51d2f84b4e918b569228724f16294be",
+    "server/product-retrieval.ts": "f07ee0d3c49674aeb9115b84539b2b4a535fdec416eac7c785f612adf58874be",
+    "server/workspace-retrieval-context.ts": "311567d944c2c4361b10b5c6bf6ea6edcbf3cb863f3a48d97a76408af54689af",
+    "server/product-corpus.ts": "27fbc86475c95a33367c459a96bdb345e1249842ba6ea28be5cba3f97ad2d478",
+    "server/loop-types.ts": "0425b27e2d361a74e5aee6d6ab1452f9a0557fb3befb0a0d57c5945b54bb41bf",
+    "package-lock.json": "d9e11ec921fa80c8177ff295a2a19f326ea3b47f33651315434149edbe532204"
+  },
+  "corpusSha256": "7afdc92d0e05f56c053695c0fcecc61e85b2103b0ff5e68af7ca219240be32cc",
+  "results": [
+    {
+      "caseId": "source-calibration-train-12543",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B079JHHYGT-attribute-b74e93a5f9ae63f4",
+            "productId": "B079JHHYGT",
+            "source": "attribute",
+            "text": "ruling_type:  { value:\"ruled\" }",
+            "reference": "attribute",
+            "sha256": "c322ae064ef5c6e9188a6bf89bc63d0d736b16a771162b595e47dc59d035e128",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B079JHHYGT-bullet-2b9fc3d82df26781",
+            "productId": "B079JHHYGT",
+            "source": "bullet",
+            "text": "dimensions: each notebook has 80 lined pages and measures 4.1 x 5.8 inches",
+            "reference": "bullet",
+            "sha256": "81a76b6ed377f5572ebb34739cc9cf2b3b4d31f0b52124c65d24c72ae46a5800",
+            "lexicalRank": null,
+            "semanticRank": 2,
+            "score": 0.016129032258064516
+          },
+          {
+            "id": "epqa-B079JHHYGT-description-bfd639557dd83d0e",
+            "productId": "B079JHHYGT",
+            "source": "description",
+            "text": "each kraft paper journal measures 4.1 x 5.8 inches, perfectly sized for on-the-go note-taking.",
+            "reference": "description",
+            "sha256": "91fcfc628be0ccf9947a24a8e26ac8ce07fed1659393c14d9ddd48450c43fdbc",
+            "lexicalRank": null,
+            "semanticRank": 3,
+            "score": 0.015873015873015872
+          },
+          {
+            "id": "epqa-B079JHHYGT-attribute-c97549b1823f5869",
+            "productId": "B079JHHYGT",
+            "source": "attribute",
+            "text": "item_package_dimensions:  { length:{ unit:centimeters, normalized_value:{ unit:inches, value:6.65 }, value:6.1 }, width:{ unit:centimeters, normalized_value:{ unit:inches, value:4.88 }, value:12.4 }, height:{ unit:centimeters, normalized_value:{ unit:inches, value:2.4 }, value:16.89 } }",
+            "reference": "attribute",
+            "sha256": "2020a18000d746236a11bb8e0b2e55f32f89cba70c66f0d23ae48ee0b1d72255",
+            "lexicalRank": null,
+            "semanticRank": 4,
+            "score": 0.015625
+          },
+          {
+            "id": "epqa-B079JHHYGT-attribute-3dac9471ce2ea68f",
+            "productId": "B079JHHYGT",
+            "source": "attribute",
+            "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:4.1 }, value:4.1 }, length:{ unit:inches, normalized_value:{ unit:inches, value:5.8 }, value:5.8 }, height:{ unit:inches, normalized_value:{ unit:inches, value:2.5 }, value:2.5 } }",
+            "reference": "attribute",
+            "sha256": "a46919e1e03dbbe54ec1c08e4833bf2cecb2e6816240baee0954be0e52124088",
+            "lexicalRank": null,
+            "semanticRank": 5,
+            "score": 0.015384615384615385
+          }
+        ],
+        "durationMs": 719.727708,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      },
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B079JHHYGT-attribute-b74e93a5f9ae63f4",
+            "productId": "B079JHHYGT",
+            "source": "attribute",
+            "text": "ruling_type:  { value:\"ruled\" }",
+            "reference": "attribute",
+            "sha256": "c322ae064ef5c6e9188a6bf89bc63d0d736b16a771162b595e47dc59d035e128",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B079JHHYGT-bullet-2b9fc3d82df26781",
+            "productId": "B079JHHYGT",
+            "source": "bullet",
+            "text": "dimensions: each notebook has 80 lined pages and measures 4.1 x 5.8 inches",
+            "reference": "bullet",
+            "sha256": "81a76b6ed377f5572ebb34739cc9cf2b3b4d31f0b52124c65d24c72ae46a5800",
+            "lexicalRank": null,
+            "semanticRank": 2,
+            "score": 0.016129032258064516
+          },
+          {
+            "id": "epqa-B079JHHYGT-description-bfd639557dd83d0e",
+            "productId": "B079JHHYGT",
+            "source": "description",
+            "text": "each kraft paper journal measures 4.1 x 5.8 inches, perfectly sized for on-the-go note-taking.",
+            "reference": "description",
+            "sha256": "91fcfc628be0ccf9947a24a8e26ac8ce07fed1659393c14d9ddd48450c43fdbc",
+            "lexicalRank": null,
+            "semanticRank": 3,
+            "score": 0.015873015873015872
+          },
+          {
+            "id": "epqa-B079JHHYGT-attribute-c97549b1823f5869",
+            "productId": "B079JHHYGT",
+            "source": "attribute",
+            "text": "item_package_dimensions:  { length:{ unit:centimeters, normalized_value:{ unit:inches, value:6.65 }, value:6.1 }, width:{ unit:centimeters, normalized_value:{ unit:inches, value:4.88 }, value:12.4 }, height:{ unit:centimeters, normalized_value:{ unit:inches, value:2.4 }, value:16.89 } }",
+            "reference": "attribute",
+            "sha256": "2020a18000d746236a11bb8e0b2e55f32f89cba70c66f0d23ae48ee0b1d72255",
+            "lexicalRank": null,
+            "semanticRank": 4,
+            "score": 0.015625
+          },
+          {
+            "id": "epqa-B079JHHYGT-attribute-3dac9471ce2ea68f",
+            "productId": "B079JHHYGT",
+            "source": "attribute",
+            "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:4.1 }, value:4.1 }, length:{ unit:inches, normalized_value:{ unit:inches, value:5.8 }, value:5.8 }, height:{ unit:inches, normalized_value:{ unit:inches, value:2.5 }, value:2.5 } }",
+            "reference": "attribute",
+            "sha256": "a46919e1e03dbbe54ec1c08e4833bf2cecb2e6816240baee0954be0e52124088",
+            "lexicalRank": null,
+            "semanticRank": 5,
+            "score": 0.015384615384615385
+          }
+        ],
+        "durationMs": 719.727708,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      }
+    },
+    {
+      "caseId": "source-calibration-train-2652",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B004XI6OG4-review-fa2d95dff8f25cb0",
+            "productId": "B004XI6OG4",
+            "source": "review",
+            "text": "great product and fast shipping from the company (even to alaska).",
+            "reference": "review",
+            "sha256": "08493ec15f26cad6ef8461409e56481c431ee61ee699fc6da9fc9e4950d73e56",
+            "lexicalRank": 5,
+            "semanticRank": 4,
+            "score": 0.031009615384615385
+          },
+          {
+            "id": "epqa-B004XI6OG4-cqa-893ef57884182745",
+            "productId": "B004XI6OG4",
+            "source": "cqa",
+            "text": "if you were to place your order today, we would have no problem meeting your timeline for delivery.",
+            "reference": "cqa",
+            "sha256": "0767c0f450aa643be462c91a5a561772130199f43b740b1271985e70ee64eb01",
+            "originalQuestion": "where is this shipping from?  we need by thursday, sept 19.  thanks!",
+            "lexicalRank": 7,
+            "semanticRank": 5,
+            "score": 0.030309988518943745
+          },
+          {
+            "id": "epqa-B004XI6OG4-review-10d07571ef462800",
+            "productId": "B004XI6OG4",
+            "source": "review",
+            "text": "normally it would be “whatever” but i also ordered white inserts to match.",
+            "reference": "review",
+            "sha256": "1a16f150063a2f6abf84a36f79f3037ed2f217ca04a5e015529bff8ac5fc446c",
+            "lexicalRank": 6,
+            "semanticRank": 10,
+            "score": 0.029437229437229435
+          },
+          {
+            "id": "epqa-B004XI6OG4-cqa-78e6fb70ca5ca31f",
+            "productId": "B004XI6OG4",
+            "source": "cqa",
+            "text": "the manufacture only has the stand in black and white at this time.",
+            "reference": "cqa",
+            "sha256": "f0e260cdb7c9c6af21b7a286533f030b20d045877247521249c076d31666224b",
+            "originalQuestion": "does this sign stand come in red color",
+            "lexicalRank": 2,
+            "semanticRank": 17,
+            "score": 0.029116045245077504
+          },
+          {
+            "id": "epqa-B004XI6OG4-cqa-526a95f66165493b",
+            "productId": "B004XI6OG4",
+            "source": "cqa",
+            "text": "this sign frame has slots on each of the sides to allow you slide in printed inserts up to 3/16\" thick.",
+            "reference": "cqa",
+            "sha256": "7880da5c12ee96cc3c2f548b9c3ed6cbec3ca690c1ea5da4111bdcc6a5349f07",
+            "originalQuestion": "does this work with just poster board alone?",
+            "lexicalRank": 1,
+            "semanticRank": 19,
+            "score": 0.029051670471052088
+          }
+        ],
+        "durationMs": 148.47362499999997,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      },
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B004XI6OG4-review-fa2d95dff8f25cb0",
+            "productId": "B004XI6OG4",
+            "source": "review",
+            "text": "great product and fast shipping from the company (even to alaska).",
+            "reference": "review",
+            "sha256": "08493ec15f26cad6ef8461409e56481c431ee61ee699fc6da9fc9e4950d73e56",
+            "lexicalRank": 5,
+            "semanticRank": 4,
+            "score": 0.031009615384615385
+          },
+          {
+            "id": "epqa-B004XI6OG4-cqa-893ef57884182745",
+            "productId": "B004XI6OG4",
+            "source": "cqa",
+            "text": "if you were to place your order today, we would have no problem meeting your timeline for delivery.",
+            "reference": "cqa",
+            "sha256": "0767c0f450aa643be462c91a5a561772130199f43b740b1271985e70ee64eb01",
+            "originalQuestion": "where is this shipping from?  we need by thursday, sept 19.  thanks!",
+            "lexicalRank": 7,
+            "semanticRank": 5,
+            "score": 0.030309988518943745
+          },
+          {
+            "id": "epqa-B004XI6OG4-review-10d07571ef462800",
+            "productId": "B004XI6OG4",
+            "source": "review",
+            "text": "normally it would be “whatever” but i also ordered white inserts to match.",
+            "reference": "review",
+            "sha256": "1a16f150063a2f6abf84a36f79f3037ed2f217ca04a5e015529bff8ac5fc446c",
+            "lexicalRank": 6,
+            "semanticRank": 10,
+            "score": 0.029437229437229435
+          },
+          {
+            "id": "epqa-B004XI6OG4-cqa-78e6fb70ca5ca31f",
+            "productId": "B004XI6OG4",
+            "source": "cqa",
+            "text": "the manufacture only has the stand in black and white at this time.",
+            "reference": "cqa",
+            "sha256": "f0e260cdb7c9c6af21b7a286533f030b20d045877247521249c076d31666224b",
+            "originalQuestion": "does this sign stand come in red color",
+            "lexicalRank": 2,
+            "semanticRank": 17,
+            "score": 0.029116045245077504
+          },
+          {
+            "id": "epqa-B004XI6OG4-cqa-526a95f66165493b",
+            "productId": "B004XI6OG4",
+            "source": "cqa",
+            "text": "this sign frame has slots on each of the sides to allow you slide in printed inserts up to 3/16\" thick.",
+            "reference": "cqa",
+            "sha256": "7880da5c12ee96cc3c2f548b9c3ed6cbec3ca690c1ea5da4111bdcc6a5349f07",
+            "originalQuestion": "does this work with just poster board alone?",
+            "lexicalRank": 1,
+            "semanticRank": 19,
+            "score": 0.029051670471052088
+          }
+        ],
+        "durationMs": 148.47362499999997,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      }
+    },
+    {
+      "caseId": "source-calibration-train-12047",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B0009U7UZE-review-97f522e5267a1866",
+            "productId": "B0009U7UZE",
+            "source": "review",
+            "text": "the color of the marbles are disastrous.",
+            "reference": "review",
+            "sha256": "38578d068bc7adb7ed88ac986ec4ad838a38d3d7ca1acd96793b0662b0e751bb",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B0009U7UZE-review-ba25c0b3df1b7b75",
+            "productId": "B0009U7UZE",
+            "source": "review",
+            "text": "the color of the blue and green marbles and white and beige ones are hard to tell apart on the board.",
+            "reference": "review",
+            "sha256": "94c802c39bc4706f89d21c4c69851b02c57a930b0c3b7715bd33fae4f13fc2d5",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B0009U7UZE-review-d2852eee5bee1476",
+            "productId": "B0009U7UZE",
+            "source": "review",
+            "text": "the colors of the marbles are muted, but it is not difficult to tell which marble is which.",
+            "reference": "review",
+            "sha256": "a6a8567693640dc232d4280201113e4c7f1b276311a7bd7f51e3c9db6307a771",
+            "lexicalRank": 5,
+            "semanticRank": 2,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B0009U7UZE-review-504a86573c3b443e",
+            "productId": "B0009U7UZE",
+            "source": "review",
+            "text": "the board is and i like the color of the marbles, but quality of marbles wasn't quite as i expected.",
+            "reference": "review",
+            "sha256": "3446b2fe9a2ed2aa41bdc7e94483239c7da282d555237e408b5db7780f22d275",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B0009U7UZE-review-b394a5dbc1fd1e19",
+            "productId": "B0009U7UZE",
+            "source": "review",
+            "text": "blue marbles are light blue, very close in shade to the light green.",
+            "reference": "review",
+            "sha256": "81ae707268587e6519bf5c403e90f5b4c4bf821dc6eefd9a203a30fc263f173b",
+            "lexicalRank": 8,
+            "semanticRank": 1,
+            "score": 0.031099324975891997
+          }
+        ],
+        "durationMs": 83.83450000000016,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      },
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B0009U7UZE-review-97f522e5267a1866",
+            "productId": "B0009U7UZE",
+            "source": "review",
+            "text": "the color of the marbles are disastrous.",
+            "reference": "review",
+            "sha256": "38578d068bc7adb7ed88ac986ec4ad838a38d3d7ca1acd96793b0662b0e751bb",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B0009U7UZE-review-ba25c0b3df1b7b75",
+            "productId": "B0009U7UZE",
+            "source": "review",
+            "text": "the color of the blue and green marbles and white and beige ones are hard to tell apart on the board.",
+            "reference": "review",
+            "sha256": "94c802c39bc4706f89d21c4c69851b02c57a930b0c3b7715bd33fae4f13fc2d5",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B0009U7UZE-review-d2852eee5bee1476",
+            "productId": "B0009U7UZE",
+            "source": "review",
+            "text": "the colors of the marbles are muted, but it is not difficult to tell which marble is which.",
+            "reference": "review",
+            "sha256": "a6a8567693640dc232d4280201113e4c7f1b276311a7bd7f51e3c9db6307a771",
+            "lexicalRank": 5,
+            "semanticRank": 2,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B0009U7UZE-review-504a86573c3b443e",
+            "productId": "B0009U7UZE",
+            "source": "review",
+            "text": "the board is and i like the color of the marbles, but quality of marbles wasn't quite as i expected.",
+            "reference": "review",
+            "sha256": "3446b2fe9a2ed2aa41bdc7e94483239c7da282d555237e408b5db7780f22d275",
+            "lexicalRank": 3,
+            "semanticRank": 4,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B0009U7UZE-review-b394a5dbc1fd1e19",
+            "productId": "B0009U7UZE",
+            "source": "review",
+            "text": "blue marbles are light blue, very close in shade to the light green.",
+            "reference": "review",
+            "sha256": "81ae707268587e6519bf5c403e90f5b4c4bf821dc6eefd9a203a30fc263f173b",
+            "lexicalRank": 8,
+            "semanticRank": 1,
+            "score": 0.031099324975891997
+          }
+        ],
+        "durationMs": 83.83450000000016,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      }
+    },
+    {
+      "caseId": "source-calibration-train-12773",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B01N563SG0-cqa-629f376f563ba6b1",
+            "productId": "B01N563SG0",
+            "source": "cqa",
+            "text": "you cannot go very far on the surface of concrete because the tire has no air in it or the wheels",
+            "reference": "cqa",
+            "sha256": "23ab1d0f2f9323a6206e7bf8a496009dcca290e84bc9228d9702862b1cad1943",
+            "originalQuestion": "how far can you go with one kick?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B01N563SG0-cqa-fe4987645095b8d9",
+            "productId": "B01N563SG0",
+            "source": "cqa",
+            "text": "hello there, there are mainly three differences between hudora 230 kick scooter and 205 kick scooter: 1. the diameter of hudora 230 kick scooter's front wheel is 230mm (9.06 in) and the turquoise one hudora 205 kick scooter is 205mm (8.08 in).",
+            "reference": "cqa",
+            "sha256": "5b3b6dbcdae5f230e715fb506f9885a3493c90d4ad944159c7da61493463e967",
+            "originalQuestion": "i think the difference between the 205 and the 230 is the diameter of the front wheel. correct? 230 can go faster, then? thanks!",
+            "lexicalRank": 2,
+            "semanticRank": 6,
+            "score": 0.03128054740957967
+          },
+          {
+            "id": "epqa-B01N563SG0-review-dd575d887f1df924",
+            "productId": "B01N563SG0",
+            "source": "review",
+            "text": "quality ball bearings, the wheels roll beautifully.",
+            "reference": "review",
+            "sha256": "ee92ac4516abe8d35be458c78800294632a008779e7f492fa06f27b64f083bbf",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B01N563SG0-review-17fd98cc502533fe",
+            "productId": "B01N563SG0",
+            "source": "review",
+            "text": "the larger than usual polyurethane wheels go over bumps and cracks in the pavement without much trouble.",
+            "reference": "review",
+            "sha256": "e73f97f659cd45020d8a8ac1a7006ec34a24c2f829199736f6fdc12ce55ee7e2",
+            "lexicalRank": 5,
+            "semanticRank": 7,
+            "score": 0.030309988518943745
+          },
+          {
+            "id": "epqa-B01N563SG0-review-dd8fc7583dd271a6-1",
+            "productId": "B01N563SG0",
+            "source": "review",
+            "text": "the foot rest part is too small/short...wish it was a bit longer, i got it cause i’m tired of walking while my 5 yr old rides his scooter, thought there must be an adult scooter, and here it is,,now my 5 yr old likes mine better than his, it’s nice that the handle is adjustable, higher or",
+            "reference": "review (part 1)",
+            "sha256": "34be151fb91d0211e06715ff8bbef8e2db763aa4f4116e8dd7f245cd412e280e",
+            "lexicalRank": 3,
+            "semanticRank": 10,
+            "score": 0.030158730158730156
+          }
+        ],
+        "durationMs": 199.9877919999999,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      },
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B01N563SG0-cqa-629f376f563ba6b1",
+            "productId": "B01N563SG0",
+            "source": "cqa",
+            "text": "you cannot go very far on the surface of concrete because the tire has no air in it or the wheels",
+            "reference": "cqa",
+            "sha256": "23ab1d0f2f9323a6206e7bf8a496009dcca290e84bc9228d9702862b1cad1943",
+            "originalQuestion": "how far can you go with one kick?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B01N563SG0-cqa-fe4987645095b8d9",
+            "productId": "B01N563SG0",
+            "source": "cqa",
+            "text": "hello there, there are mainly three differences between hudora 230 kick scooter and 205 kick scooter: 1. the diameter of hudora 230 kick scooter's front wheel is 230mm (9.06 in) and the turquoise one hudora 205 kick scooter is 205mm (8.08 in).",
+            "reference": "cqa",
+            "sha256": "5b3b6dbcdae5f230e715fb506f9885a3493c90d4ad944159c7da61493463e967",
+            "originalQuestion": "i think the difference between the 205 and the 230 is the diameter of the front wheel. correct? 230 can go faster, then? thanks!",
+            "lexicalRank": 2,
+            "semanticRank": 6,
+            "score": 0.03128054740957967
+          },
+          {
+            "id": "epqa-B01N563SG0-review-dd575d887f1df924",
+            "productId": "B01N563SG0",
+            "source": "review",
+            "text": "quality ball bearings, the wheels roll beautifully.",
+            "reference": "review",
+            "sha256": "ee92ac4516abe8d35be458c78800294632a008779e7f492fa06f27b64f083bbf",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B01N563SG0-review-17fd98cc502533fe",
+            "productId": "B01N563SG0",
+            "source": "review",
+            "text": "the larger than usual polyurethane wheels go over bumps and cracks in the pavement without much trouble.",
+            "reference": "review",
+            "sha256": "e73f97f659cd45020d8a8ac1a7006ec34a24c2f829199736f6fdc12ce55ee7e2",
+            "lexicalRank": 5,
+            "semanticRank": 7,
+            "score": 0.030309988518943745
+          },
+          {
+            "id": "epqa-B01N563SG0-review-dd8fc7583dd271a6",
+            "productId": "B01N563SG0",
+            "source": "review",
+            "text": "the foot rest part is too small/short...wish it was a bit longer, i got it cause i’m tired of walking while my 5 yr old rides his scooter, thought there must be an adult scooter, and here it is,,now my 5 yr old likes mine better than his, it’s nice that the handle is adjustable, higher or lower, it fits him good.",
+            "reference": "review",
+            "sha256": "87ab1be609d934e25595b0cd69b4d2f1df7459278c942599a225d0a9783bb6e8",
+            "lexicalRank": 3,
+            "semanticRank": 10,
+            "score": 0.030158730158730156
+          }
+        ],
+        "durationMs": 199.9877919999999,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      }
+    },
+    {
+      "caseId": "source-calibration-train-195",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B0044B30TO-cqa-8e88515f603f6b11",
+            "productId": "B0044B30TO",
+            "source": "cqa",
+            "text": "17801-yzz02 does fit a 2014 camry se 2.5l engine",
+            "reference": "cqa",
+            "sha256": "1b5c8d78b46b97a56531205a83185f17a2ae7101572da2a1ba1ec24a278fae49",
+            "originalQuestion": "does it fit camry 2014 se sport 2.5l? amazon suggest it does not, instead it suggested the ty17801-0h010 which is like an extra inch wider. thoughts?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B0044B30TO-cqa-4af37e214778af2f",
+            "productId": "B0044B30TO",
+            "source": "cqa",
+            "text": "yes, it fits the 2014 camry 4 cylinder.",
+            "reference": "cqa",
+            "sha256": "86e40b865aa5c50c1b7fd5ae5ed1d14064cfff1b3ca0ca10db3ff46d1f241b65",
+            "originalQuestion": "does it fit to toyota camry 2014?",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B0044B30TO-cqa-75e5ab9285097cfe",
+            "productId": "B0044B30TO",
+            "source": "cqa",
+            "text": "yes, this will fit a 2014 4 cyl camry",
+            "reference": "cqa",
+            "sha256": "35dbba00af92be4e788564fc7287d6e8fe57955b4a480f7243b7d1cc35baf22e",
+            "originalQuestion": "does it fit 2014 camry se 4 cyl ?",
+            "lexicalRank": 3,
+            "semanticRank": 3,
+            "score": 0.031746031746031744
+          },
+          {
+            "id": "epqa-B0044B30TO-attribute-c101e4e26eea9e88",
+            "productId": "B0044B30TO",
+            "source": "attribute",
+            "text": "model_name:  { value:\"17801-yzz02\" }",
+            "reference": "attribute",
+            "sha256": "87c6eaac255504426670e347b5681814b45d9399152249f265b805d9b525f341",
+            "lexicalRank": 4,
+            "semanticRank": 7,
+            "score": 0.03055037313432836
+          },
+          {
+            "id": "epqa-B0044B30TO-cqa-7cfc7dc8cd7b0fdd",
+            "productId": "B0044B30TO",
+            "source": "cqa",
+            "text": "this fits toyota camry 2007-2010 (4 cyl engine)",
+            "reference": "cqa",
+            "sha256": "abcdf41095b915731e2f19c58634d929a11765e6d3ef7529b6f9da9e2aaee902",
+            "originalQuestion": "does it fix toyota camry 2009 le 2.4? thank you.",
+            "lexicalRank": 7,
+            "semanticRank": 4,
+            "score": 0.03055037313432836
+          }
+        ],
+        "durationMs": 151.07004099999995,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      },
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B0044B30TO-cqa-8e88515f603f6b11",
+            "productId": "B0044B30TO",
+            "source": "cqa",
+            "text": "17801-yzz02 does fit a 2014 camry se 2.5l engine",
+            "reference": "cqa",
+            "sha256": "1b5c8d78b46b97a56531205a83185f17a2ae7101572da2a1ba1ec24a278fae49",
+            "originalQuestion": "does it fit camry 2014 se sport 2.5l? amazon suggest it does not, instead it suggested the ty17801-0h010 which is like an extra inch wider. thoughts?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B0044B30TO-cqa-4af37e214778af2f",
+            "productId": "B0044B30TO",
+            "source": "cqa",
+            "text": "yes, it fits the 2014 camry 4 cylinder.",
+            "reference": "cqa",
+            "sha256": "86e40b865aa5c50c1b7fd5ae5ed1d14064cfff1b3ca0ca10db3ff46d1f241b65",
+            "originalQuestion": "does it fit to toyota camry 2014?",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B0044B30TO-cqa-75e5ab9285097cfe",
+            "productId": "B0044B30TO",
+            "source": "cqa",
+            "text": "yes, this will fit a 2014 4 cyl camry",
+            "reference": "cqa",
+            "sha256": "35dbba00af92be4e788564fc7287d6e8fe57955b4a480f7243b7d1cc35baf22e",
+            "originalQuestion": "does it fit 2014 camry se 4 cyl ?",
+            "lexicalRank": 3,
+            "semanticRank": 3,
+            "score": 0.031746031746031744
+          },
+          {
+            "id": "epqa-B0044B30TO-attribute-c101e4e26eea9e88",
+            "productId": "B0044B30TO",
+            "source": "attribute",
+            "text": "model_name:  { value:\"17801-yzz02\" }",
+            "reference": "attribute",
+            "sha256": "87c6eaac255504426670e347b5681814b45d9399152249f265b805d9b525f341",
+            "lexicalRank": 4,
+            "semanticRank": 7,
+            "score": 0.03055037313432836
+          },
+          {
+            "id": "epqa-B0044B30TO-cqa-7cfc7dc8cd7b0fdd",
+            "productId": "B0044B30TO",
+            "source": "cqa",
+            "text": "this fits toyota camry 2007-2010 (4 cyl engine)",
+            "reference": "cqa",
+            "sha256": "abcdf41095b915731e2f19c58634d929a11765e6d3ef7529b6f9da9e2aaee902",
+            "originalQuestion": "does it fix toyota camry 2009 le 2.4? thank you.",
+            "lexicalRank": 7,
+            "semanticRank": 4,
+            "score": 0.03055037313432836
+          }
+        ],
+        "durationMs": 151.07004099999995,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      }
+    },
+    {
+      "caseId": "source-calibration-train-8836",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B0064FCQUM-review-f265a14a65519ebd",
+            "productId": "B0064FCQUM",
+            "source": "review",
+            "text": "unfortunately these do not fit my viking stove as advertised.",
+            "reference": "review",
+            "sha256": "2a07830fad7a9ceb0e72d6d84dc84d5b760dac0c02aac9509febcb32a5072e66",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B0064FCQUM-review-0b85ba5edb6bee28",
+            "productId": "B0064FCQUM",
+            "source": "review",
+            "text": "these rubber feet are obviously generic/universal replacements, but they are a \"good enough\" fit for my viking 5 series gas rangetop (vgrt).",
+            "reference": "review",
+            "sha256": "442dc17d36947af528d962b20f069d91af4140377152c2c5cd5615a935a4738e",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B0064FCQUM-review-124af6fe1f0bc662",
+            "productId": "B0064FCQUM",
+            "source": "review",
+            "text": "do not buy if you have a viking!",
+            "reference": "review",
+            "sha256": "f5ee82159268371b3a5f2954744a819763ed0cc71c747fa0cb6064fa94f6212d",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B0064FCQUM-review-5733434749c292a0",
+            "productId": "B0064FCQUM",
+            "source": "review",
+            "text": "the description read they would universally fit all viking grills.",
+            "reference": "review",
+            "sha256": "bd139548aa38fe45e20c86587c25fa1f5cca670d24c9aeaac0fad8cf13d5b321",
+            "lexicalRank": 4,
+            "semanticRank": 5,
+            "score": 0.031009615384615385
+          },
+          {
+            "id": "epqa-B0064FCQUM-review-d89b51b8df648d02",
+            "productId": "B0064FCQUM",
+            "source": "review",
+            "text": "i am pretty sure the are a generic foot for this application and not specifically intended for viking ranges.",
+            "reference": "review",
+            "sha256": "85bfa3d15a643a16ec6f916bfde3d5fe9b360a4a4daf51262b7476aeeef6f1f5",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          }
+        ],
+        "durationMs": 129.74149999999986,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      },
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B0064FCQUM-review-f265a14a65519ebd",
+            "productId": "B0064FCQUM",
+            "source": "review",
+            "text": "unfortunately these do not fit my viking stove as advertised.",
+            "reference": "review",
+            "sha256": "2a07830fad7a9ceb0e72d6d84dc84d5b760dac0c02aac9509febcb32a5072e66",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B0064FCQUM-review-0b85ba5edb6bee28",
+            "productId": "B0064FCQUM",
+            "source": "review",
+            "text": "these rubber feet are obviously generic/universal replacements, but they are a \"good enough\" fit for my viking 5 series gas rangetop (vgrt).",
+            "reference": "review",
+            "sha256": "442dc17d36947af528d962b20f069d91af4140377152c2c5cd5615a935a4738e",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B0064FCQUM-review-124af6fe1f0bc662",
+            "productId": "B0064FCQUM",
+            "source": "review",
+            "text": "do not buy if you have a viking!",
+            "reference": "review",
+            "sha256": "f5ee82159268371b3a5f2954744a819763ed0cc71c747fa0cb6064fa94f6212d",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B0064FCQUM-review-5733434749c292a0",
+            "productId": "B0064FCQUM",
+            "source": "review",
+            "text": "the description read they would universally fit all viking grills.",
+            "reference": "review",
+            "sha256": "bd139548aa38fe45e20c86587c25fa1f5cca670d24c9aeaac0fad8cf13d5b321",
+            "lexicalRank": 4,
+            "semanticRank": 5,
+            "score": 0.031009615384615385
+          },
+          {
+            "id": "epqa-B0064FCQUM-review-d89b51b8df648d02",
+            "productId": "B0064FCQUM",
+            "source": "review",
+            "text": "i am pretty sure the are a generic foot for this application and not specifically intended for viking ranges.",
+            "reference": "review",
+            "sha256": "85bfa3d15a643a16ec6f916bfde3d5fe9b360a4a4daf51262b7476aeeef6f1f5",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          }
+        ],
+        "durationMs": 129.74149999999986,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      }
+    },
+    {
+      "caseId": "source-calibration-train-4472",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B001UIG6M2-cqa-2d68068527dc53c9",
+            "productId": "B001UIG6M2",
+            "source": "cqa",
+            "text": "i can tell you though that my slim ps2 is model number scph-77001b  gh-051-52 which that is a version 15. also my ps2 does not play blue bottom disc's, so i can't use gameshark.",
+            "reference": "cqa",
+            "sha256": "ad27e1148ee355ec35cb3b7ded1ea0b138a21689dd33ae789dd5e3bcd1a637cd",
+            "originalQuestion": "i have a newer model of the ps2 slim, and it says that it isn't compatible with action replay below version 3.30. what version is this one?",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B001UIG6M2-cqa-2da7d1633af24c7b",
+            "productId": "B001UIG6M2",
+            "source": "cqa",
+            "text": "not sure about if it works on ps2",
+            "reference": "cqa",
+            "sha256": "7d8edee3f741cbb58b5eaf683feb774282115543b001acebfcb6045ffbd44f6a",
+            "originalQuestion": "does this work on nfl street for playstation 2",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B001UIG6M2-cqa-0d7c9051808b6ec7",
+            "productId": "B001UIG6M2",
+            "source": "cqa",
+            "text": "from what i no i believe it works with all standard ps2  systems unless yours has been altered or has a different region code",
+            "reference": "cqa",
+            "sha256": "754fe4e59f2078ea93df34b7112aa6760fe3f3300a809981d782dcfe57f70dc6",
+            "originalQuestion": "does it work with the ps2 slim?",
+            "lexicalRank": 5,
+            "semanticRank": 1,
+            "score": 0.03177805800756621
+          },
+          {
+            "id": "epqa-B001UIG6M2-cqa-9e6742a9ce7ae9c1",
+            "productId": "B001UIG6M2",
+            "source": "cqa",
+            "text": "action replay works on all ps2 systems, including the slim ps2's.",
+            "reference": "cqa",
+            "sha256": "d91981eb664e080647ea54de7db810a2fa90bb450c1ac1f6e7fbb83a7ffd7e3a",
+            "originalQuestion": "does this disc work for a ps2 slim?",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B001UIG6M2-review-5061ca8e3544c369",
+            "productId": "B001UIG6M2",
+            "source": "review",
+            "text": "if the following number is 50001 or 50010 then you have one of the new ps2 consoles.since the actionreplay v2 has been discontinued for several years, since december 2003, and is not sold in stores, we no longer supply upgrade or replacement discs.",
+            "reference": "review",
+            "sha256": "a4f775a620d8e48a06eb260d6321b63f4e6da14e32e4fa93ca0aa6425c99b0ef",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          }
+        ],
+        "durationMs": 45.621374999999944,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      },
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B001UIG6M2-cqa-2d68068527dc53c9",
+            "productId": "B001UIG6M2",
+            "source": "cqa",
+            "text": "i can tell you though that my slim ps2 is model number scph-77001b  gh-051-52 which that is a version 15. also my ps2 does not play blue bottom disc's, so i can't use gameshark.",
+            "reference": "cqa",
+            "sha256": "ad27e1148ee355ec35cb3b7ded1ea0b138a21689dd33ae789dd5e3bcd1a637cd",
+            "originalQuestion": "i have a newer model of the ps2 slim, and it says that it isn't compatible with action replay below version 3.30. what version is this one?",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B001UIG6M2-cqa-2da7d1633af24c7b",
+            "productId": "B001UIG6M2",
+            "source": "cqa",
+            "text": "not sure about if it works on ps2",
+            "reference": "cqa",
+            "sha256": "7d8edee3f741cbb58b5eaf683feb774282115543b001acebfcb6045ffbd44f6a",
+            "originalQuestion": "does this work on nfl street for playstation 2",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B001UIG6M2-cqa-0d7c9051808b6ec7",
+            "productId": "B001UIG6M2",
+            "source": "cqa",
+            "text": "from what i no i believe it works with all standard ps2  systems unless yours has been altered or has a different region code",
+            "reference": "cqa",
+            "sha256": "754fe4e59f2078ea93df34b7112aa6760fe3f3300a809981d782dcfe57f70dc6",
+            "originalQuestion": "does it work with the ps2 slim?",
+            "lexicalRank": 5,
+            "semanticRank": 1,
+            "score": 0.03177805800756621
+          },
+          {
+            "id": "epqa-B001UIG6M2-cqa-9e6742a9ce7ae9c1",
+            "productId": "B001UIG6M2",
+            "source": "cqa",
+            "text": "action replay works on all ps2 systems, including the slim ps2's.",
+            "reference": "cqa",
+            "sha256": "d91981eb664e080647ea54de7db810a2fa90bb450c1ac1f6e7fbb83a7ffd7e3a",
+            "originalQuestion": "does this disc work for a ps2 slim?",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B001UIG6M2-review-5061ca8e3544c369",
+            "productId": "B001UIG6M2",
+            "source": "review",
+            "text": "if the following number is 50001 or 50010 then you have one of the new ps2 consoles.since the actionreplay v2 has been discontinued for several years, since december 2003, and is not sold in stores, we no longer supply upgrade or replacement discs.",
+            "reference": "review",
+            "sha256": "a4f775a620d8e48a06eb260d6321b63f4e6da14e32e4fa93ca0aa6425c99b0ef",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          }
+        ],
+        "durationMs": 45.621374999999944,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      }
+    },
+    {
+      "caseId": "source-calibration-train-13670",
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B07Y6TTYCR-review-f80b930480f39809-1",
+            "productId": "B07Y6TTYCR",
+            "source": "review",
+            "text": "a.the plastic nature of this lock mechanism is not likely to be an issue provided that the saw is taken care of, and not banged around  b.the purpose of using plastic is to enhance the ease of the lock mechanism, allowing for much quicker angle  changes [just keep your square at the ready], the",
+            "reference": "review (part 1)",
+            "sha256": "4cb025de3b788b13334f2152381a72c7a76219638047010d08fa0559b98be391",
+            "lexicalRank": 2,
+            "semanticRank": 1,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B07Y6TTYCR-review-073a894dc4dbaefe",
+            "productId": "B07Y6TTYCR",
+            "source": "review",
+            "text": "but it's actually one solid piece of metal.",
+            "reference": "review",
+            "sha256": "7fd9c98442ed36a4335f986517cfade455968e590fe02de6b38c3446e47a4bfb",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B07Y6TTYCR-review-fd389a2cc01c0160",
+            "productId": "B07Y6TTYCR",
+            "source": "review",
+            "text": "the laser refracts through the blade guard plastic and smears out on the surface of the wood that you are trying to align, and if you lift the blade guard to get a better look, then you don't have access to the adjustment knobs for the laser!",
+            "reference": "review",
+            "sha256": "f79a400415de0c6d1cc7d842c202389d5ec62d93366b44546379b7cf5411d732",
+            "lexicalRank": 1,
+            "semanticRank": 6,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B07Y6TTYCR-cqa-6c9beabef9be4f8e",
+            "productId": "B07Y6TTYCR",
+            "source": "cqa",
+            "text": "the problem with the metabo miter saws is the cheap plastic parts used in the miter angle setting mechanism.",
+            "reference": "cqa",
+            "sha256": "a501969307b36e08108b83962218baccf3b4a754f52fd27939b6eb73b24da4ff",
+            "originalQuestion": "is there away to fine tune the adjustments for 90° and the 45°",
+            "lexicalRank": 6,
+            "semanticRank": 3,
+            "score": 0.031024531024531024
+          },
+          {
+            "id": "epqa-B07Y6TTYCR-review-f80b930480f39809-2",
+            "productId": "B07Y6TTYCR",
+            "source": "review",
+            "text": "plastic serves to store up tension allowing for a tighter  lock.",
+            "reference": "review (part 2)",
+            "sha256": "4a2223253a86c7f73db22df64941d0c9c9e96bfd20b27eb04feac718de1adf50",
+            "lexicalRank": 5,
+            "semanticRank": 4,
+            "score": 0.031009615384615385
+          }
+        ],
+        "durationMs": 90.87645900000007,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      },
+      "retrieval": {
+        "passages": [
+          {
+            "id": "epqa-B07Y6TTYCR-review-f80b930480f39809",
+            "productId": "B07Y6TTYCR",
+            "source": "review",
+            "text": "a.the plastic nature of this lock mechanism is not likely to be an issue provided that the saw is taken care of, and not banged around  b.the purpose of using plastic is to enhance the ease of the lock mechanism, allowing for much quicker angle  changes [just keep your square at the ready], the plastic serves to store up tension allowing for a tighter  lock.",
+            "reference": "review",
+            "sha256": "3e55ebf6c36934dbcb08e072c0b94cf3c2e2cc3f820e4784213357e0ef602827",
+            "lexicalRank": 2,
+            "semanticRank": 1,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B07Y6TTYCR-review-073a894dc4dbaefe",
+            "productId": "B07Y6TTYCR",
+            "source": "review",
+            "text": "but it's actually one solid piece of metal.",
+            "reference": "review",
+            "sha256": "7fd9c98442ed36a4335f986517cfade455968e590fe02de6b38c3446e47a4bfb",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B07Y6TTYCR-review-fd389a2cc01c0160",
+            "productId": "B07Y6TTYCR",
+            "source": "review",
+            "text": "the laser refracts through the blade guard plastic and smears out on the surface of the wood that you are trying to align, and if you lift the blade guard to get a better look, then you don't have access to the adjustment knobs for the laser!",
+            "reference": "review",
+            "sha256": "f79a400415de0c6d1cc7d842c202389d5ec62d93366b44546379b7cf5411d732",
+            "lexicalRank": 1,
+            "semanticRank": 6,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B07Y6TTYCR-cqa-6c9beabef9be4f8e",
+            "productId": "B07Y6TTYCR",
+            "source": "cqa",
+            "text": "the problem with the metabo miter saws is the cheap plastic parts used in the miter angle setting mechanism.",
+            "reference": "cqa",
+            "sha256": "a501969307b36e08108b83962218baccf3b4a754f52fd27939b6eb73b24da4ff",
+            "originalQuestion": "is there away to fine tune the adjustments for 90° and the 45°",
+            "lexicalRank": 6,
+            "semanticRank": 3,
+            "score": 0.031024531024531024
+          }
+        ],
+        "durationMs": 90.87645900000007,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-calibration-658b9e2ab6e2cec0904da67b"
+      }
+    }
+  ],
+  "providerCalls": 0,
+  "semanticAssessment": "not_run",
+  "generationPerformed": false,
+  "sha256": "cbd397fb493548628ba87eea4d1cc6b09d27c6bb8b5f27cadc5a01481d135896"
+}
