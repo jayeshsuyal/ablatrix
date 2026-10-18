@@ -8,8 +8,10 @@ import { SapiomFeedbackProvider } from './feedback-provider.ts';
 import { workspaceReviewSourceHash } from './answer-review-source.ts';
 import { contextComparisonHash } from './context-comparison.ts';
 import { metadataFingerprints } from './flat-source-comparison.ts';
-import { workspaceGenerationPromptIdentity, WORKSPACE_SOURCE_CALIBRATION_CONTRACT } from './workspace-generation.ts';
-import { SOURCE_CALIBRATION_CODE_FILES, sourceCalibrationHash as hash, prepareSourceCalibrationComparison, verifySourceCalibrationPlan, verifySourceCalibrationResult, verifySourceCalibrationCheckpoints, executeSourceCalibrationComparison, sourceCalibrationReviewWorksheet, privateSourceCalibrationOutput, readLedgerAnchor, sourceCalibrationComparisonCli, type SourceCalibrationArtifact, type SourceCalibrationPreparation, type SourceCalibrationDependencies, type SourceCalibrationCheckpoint } from './source-calibration-comparison.ts';
+import { workspaceGenerationPromptIdentity, WORKSPACE_GENERATION_CONTRACT, WORKSPACE_SOURCE_CALIBRATION_CONTRACT } from './workspace-generation.ts';
+import { workspaceCompleteSourceContext } from './workspace-retrieval-context.ts';
+import { workspaceSourceCoverageContext, WORKSPACE_SOURCE_COVERAGE_CONTRACT } from './workspace-source-coverage.ts';
+import { SOURCE_CALIBRATION_CODE_FILES, RETRIEVAL_COVERAGE_CODE_FILES, RETRIEVAL_COVERAGE_RETRIEVAL_FILES, RETRIEVAL_COVERAGE_EXPERIMENT, retrievalCoverageCorpus, retrievalCoverageComparisonCli, sourceCalibrationHash as hash, prepareSourceCalibrationComparison, verifySourceCalibrationPlan, verifySourceCalibrationResult, verifySourceCalibrationCheckpoints, executeSourceCalibrationComparison, sourceCalibrationReviewWorksheet, privateSourceCalibrationOutput, readLedgerAnchor, sourceCalibrationComparisonCli, type SourceCalibrationArtifact, type SourceCalibrationPreparation, type SourceCalibrationDependencies, type SourceCalibrationCheckpoint } from './source-calibration-comparison.ts';
 
 const clone = <T>(value: T): T => structuredClone(value);
 function artifact(path: string, document: Record<string, any>): SourceCalibrationArtifact { return { path: `docs/${path}.json`, document, fileSha256: hash(JSON.stringify(document)) }; }
@@ -35,8 +37,50 @@ function preparation(): SourceCalibrationPreparation {
   const path = '/synthetic/.data/feedback-budget.sqlite';
   return { packet, candidateFreeze, retrieval, familyAudit, exposureAudit, selectionAudit, implementationSha256, historySha256: { 'docs/exposed.md': hash('SYNTHETIC history') }, createdAt: '2026-10-18T12:00:00.000Z', policy: { id: 'synthetic-policy', parentId: null, instructions: 'SYNTHETIC shared answer policy with source attribution and bounded scope.', rationale: 'SYNTHETIC fixture.', feedbackRunIds: [], status: 'baseline', mode: 'live', createdAt: '2026-10-18T00:00:00.000Z' }, ledgerAnchor: { canonicalPath: path, pathSha256: hash(path), historicalRowsSha256: hash('SYNTHETIC historical rows'), attempts: 122, reservedUsd: 12.2, priorSpendUsd: .200281, pending: 0, owners: 0 }, scope: { repositoryPath: '/synthetic', outputDirectory: '/synthetic/.data/fresh-result', workspacePaths: [], comparisonPaths: [] }, exposure: { metadataSha256: fingerprints.sha256, publicExposureSha256: hash('SYNTHETIC public exposure') } };
 }
-function harness(options: { response?: (body: any, index: number) => any; transportFailure?: boolean; changeBody?: boolean; duplicateTransport?: boolean } = {}) {
-  const prep = preparation(), manifest = prepareSourceCalibrationComparison(prep), checkpoints: SourceCalibrationCheckpoint[] = [], bodies: any[] = [];
+function retrievalPreparation(unchangedLast = false): SourceCalibrationPreparation {
+  const p = preparation(), seed = 'ablatrix-retrieval-coverage-2026-10-18-v1';
+  p.experiment = RETRIEVAL_COVERAGE_EXPERIMENT; p.ledgerAnchor.attempts = 138; p.ledgerAnchor.reservedUsd = 13.8;
+  p.implementationSha256 = Object.fromEntries(RETRIEVAL_COVERAGE_CODE_FILES.map(path => [path, hash(`SYNTHETIC implementation ${path}`)]));
+  p.candidateFreeze = artifact('retrieval-freeze', { format: 'ablatrix-retrieval-coverage-candidate-freeze-v1', frozen: true, status: 'experimental_not_promoted', retrievalContract: WORKSPACE_SOURCE_COVERAGE_CONTRACT, generationContract: WORKSPACE_GENERATION_CONTRACT, systemInstructionsSha256: workspaceGenerationPromptIdentity().systemInstructionsSha256, selectionSeed: seed, implementationSha256: clone(p.implementationSha256), qualityClaimEligible: false });
+  const consumed = [{ fileSha256: hash('SYNTHETIC consumed cohort'), cohortSha256: hash('SYNTHETIC consumed seal'), sourceReviewFileSha256: hash('SYNTHETIC passed source review'), executionFileSha256: hash('SYNTHETIC execution metadata'), generationPerformed: true, planSha256: hash('SYNTHETIC consumed plan'), newProviderAttempts: 16, attemptScopeSha256: hash('SYNTHETIC consumed slots'), protectionScope: 'entire_cohort_after_any_recorded_provider_attempt', executionMetadataProvenance: 'allowlisted_existing_execution_metadata',
+    productIds: Array.from({ length: 8 }, (_, i) => `SYNTHETIC-CONSUMED-${i}`), canonicalFamilyTitles: ['SYNTHETIC prior family'], modelIdentifiers: ['PRIOR123'], sourcePacketFingerprints: [hash('SYNTHETIC prior source')] }];
+  const immutableHelperSha256 = Object.fromEntries(['scripts/prepare-source-calibration-cohort.py', 'scripts/prepare-flat-source-cohort.py', 'scripts/prepare-correction-cohort.py', 'scripts/prepare-source-id-cohort.py'].map(path => [path, p.implementationSha256[path]]));
+  const priorCohorts = [1, 2].map(i => ({ fileSha256: hash(`SYNTHETIC rejected draft ${i}`) })), priorSourceReviews = priorCohorts.map(c => ({ cohortFileSha256: c.fileSha256, status: 'failed', provenance: 'independent_ai_source_and_family_review' }));
+  const eligibilityAmendment = { rules: 'unchanged_source_calibration_revision_3', generationInstructionsChanged: false, modelOutputsUsed: false, rejectedDraftsRemainProtected: true, consumedCohortsRemainProtected: true };
+  p.scope.workspacePaths = ['/synthetic/workspace-current.sqlite', '/synthetic/workspace-canonical.sqlite']; p.scope.comparisonPaths = ['/synthetic/comparison.sqlite'];
+  const inventoryInputs = { workspaceCount: 2, comparisonCount: 1, canonicalPathSha256: [...p.scope.workspacePaths, ...p.scope.comparisonPaths].map(hash).sort() };
+  const metadata = { workspaces: [1, 2].map(i => ({ inventory: `workspace-${i}`, products: [], runs: [] })), comparisons: [{ inventory: 'comparison-1', cases: [], reservedProducts: [] }] }, fingerprints = metadataFingerprints(metadata);
+  const exposure = { metadata, metadataSha256: fingerprints.sha256, metadataInventorySha256: fingerprints.inventories, metadataOnly: true, generatedAnswersOrJudgmentsRead: false, newProviderCalls: 0, paidExecutionAuthorized: false };
+  p.exposureAudit = artifact('exposure', { ...exposure, auditSha256: contextComparisonHash(exposure) }); p.exposure.metadataSha256 = fingerprints.sha256;
+  Object.assign(p.selectionAudit.document, { format: 'ablatrix-retrieval-coverage-selection-audit-v1', selectionSeed: seed, candidateFreezeFileSha256: p.candidateFreeze.fileSha256, exposureAuditSha256: p.exposureAudit.document.auditSha256, selectionCodeSha256: p.implementationSha256['scripts/prepare-retrieval-coverage-cohort.py'], immutableHelperSha256, consumedCohorts: consumed, priorCohorts, priorSourceReviews, eligibilityAmendment, inventoryInputs, modelOutputsUsed: false });
+  Object.assign(p.packet.document, { format: 'ablatrix-retrieval-coverage-cohort-v1', selectionSeed: seed, candidateFreeze: { fileSha256: p.candidateFreeze.fileSha256, document: p.candidateFreeze.document } });
+  Object.assign(p.packet.document.selection, { selectionCodeSha256: p.selectionAudit.document.selectionCodeSha256, immutableHelperSha256, consumedCohorts: consumed, priorCohorts, priorSourceReviews, eligibilityAmendment, inventoryInputs });
+  p.packet.document.exposureAuditSha256 = p.exposureAudit.document.auditSha256; p.familyAudit.document.exposureAuditFileSha256 = p.exposureAudit.fileSha256;
+  Object.assign(p.packet.document.executionPlan, { generationContract: WORKSPACE_GENERATION_CONTRACT, retrievalCandidateContract: WORKSPACE_SOURCE_COVERAGE_CONTRACT });
+  for (const [i, c] of p.packet.document.cases.entries()) {
+    c.question = unchangedLast && i === 7 ? 'SYNTHETIC What do customers say?' : `SYNTHETIC What are the dimensions for model AB123${i}?`;
+    c.sources.push(...[
+      { id: `dimensions-${i}`, label: 'attribute', text: 'Product Dimensions: 12.3 x 4.5 x 6 inches', originalQuestion: null, reference: `synthetic:dimensions-${i}` },
+      { id: `model-${i}`, label: 'attribute', text: `Item Model Number: AB123${i}`, originalQuestion: null, reference: `synthetic:model-${i}` }
+    ].map(source => ({ ...source, sha256: workspaceReviewSourceHash(source) })));
+    c.sourcePoolSha256 = contextComparisonHash(c.sources);
+  }
+  resealPreparation(p);
+  const corpus = retrievalCoverageCorpus(p.packet);
+  const results = p.packet.document.cases.map((c: any) => {
+    const source = corpus.passages.find(s => s.id === c.sources[0].id)!;
+    const indexRetrieval = { passages: [{ ...source, lexicalRank: 1, semanticRank: 1, score: 1 }], durationMs: 0, method: 'SYNTHETIC baseline ranking', embeddingModel: 'SYNTHETIC', corpusVersion: corpus.version };
+    const product = { ...c.product, sources: c.sources.map((s: any) => ({ ...s, originalQuestion: s.originalQuestion ?? undefined })) };
+    const baseline = workspaceCompleteSourceContext(product, corpus, indexRetrieval), candidate = workspaceSourceCoverageContext(product, corpus, indexRetrieval, c.question);
+    return { caseId: c.id, indexRetrieval, baseline: { ...indexRetrieval, passages: baseline }, candidate: { ...indexRetrieval, passages: candidate.passages }, additions: candidate.additions, contract: candidate.contract };
+  });
+  const body = { format: 'retrieval-coverage-retrieval-v1', cohortFileSha256: p.packet.fileSha256, implementationSha256: Object.fromEntries(RETRIEVAL_COVERAGE_RETRIEVAL_FILES.map(path => [path, p.implementationSha256[path]])), corpusSha256: hash(corpus), results, providerCalls: 0, semanticAssessment: 'not_run', generationPerformed: false };
+  p.retrieval = artifact('paired-retrieval', { ...body, sha256: hash(body) });
+  p.familyAudit.document.retrievalFileSha256 = p.retrieval.fileSha256; p.familyAudit.fileSha256 = hash(JSON.stringify(p.familyAudit.document));
+  return p;
+}
+function harness(options: { response?: (body: any, index: number) => any; transportFailure?: boolean; changeBody?: boolean; duplicateTransport?: boolean; preparation?: SourceCalibrationPreparation } = {}) {
+  const prep = options.preparation ?? preparation(), manifest = prepareSourceCalibrationComparison(prep), checkpoints: SourceCalibrationCheckpoint[] = [], bodies: any[] = [];
   let provider: SapiomFeedbackProvider | undefined, creations = 0, outputs = 0, finished = 0, changed = false, closed = false;
   const dependencies: SourceCalibrationDependencies = {
     checkFrozenFiles() { assert.equal(changed, false, 'SYNTHETIC code/history/exposure changed.'); },
@@ -57,6 +101,7 @@ function harness(options: { response?: (body: any, index: number) => any; transp
 
 test('two first-answer arms freeze exact shared context, all source pools, alternating order and dynamic ledger ceiling', () => {
   const prep = preparation(), manifest = prepareSourceCalibrationComparison(prep); assert.equal(manifest.plan.cases.length, 8); assert.equal(manifest.plan.slots.length, 16); assert.equal(manifest.plan.budget.absoluteCallLimit, 138); assert.equal(manifest.plan.budget.capUsd, 20);
+  assert.equal(manifest.planSha256, '26a6e90d446b4328328265c8f12347cfe927d3ab83e07e8b4ac4a54aeea90e50', 'The historical prompt-comparison preparation must retain exact bytes.');
   assert.deepEqual(manifest.plan.slots.slice(0, 4).map(s => s.arm), ['baseline', 'candidate', 'candidate', 'baseline']);
   for (let i = 0; i < 16; i += 2) { const [a, b] = manifest.plan.slots.slice(i, i + 2); assert.deepEqual(a.input.passages, b.input.passages); assert.equal(a.binding.responseSchemaSha256, b.binding.responseSchemaSha256); assert.equal(a.binding.sourceContextSha256, b.binding.sourceContextSha256); assert.notEqual(a.binding.requestSha256, b.binding.requestSha256); assert.equal(a.requestBody.model, b.requestBody.model); }
   prep.ledgerAnchor.attempts = 125; prep.ledgerAnchor.reservedUsd = 12.5; assert.equal(prepareSourceCalibrationComparison(prep).plan.budget.absoluteCallLimit, 141);
@@ -183,4 +228,83 @@ test('private output is exclusive and symlink-free, and ledger anchor reads hist
 
 test('CLI defaults offline and rejects approval before reading a credential or shared ledger', async () => {
   const help = await sourceCalibrationComparisonCli([]); assert.ok('mode' in help && help.mode === 'offline'); const root = mkdtempSync(join(tmpdir(), 'source-calibration-cli-')); try { const path = join(root, 'plan.json'); writeFileSync(path, JSON.stringify(prepareSourceCalibrationComparison(preparation()))); const env = new Proxy({ ABLATRIX_LOOP_LIVE: '1' }, { get(target, key) { if (String(key).includes('SAPIOM')) assert.fail('Credential access before approval'); return Reflect.get(target, key); } }); await assert.rejects(sourceCalibrationComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', '0'.repeat(64)], env)); assert.equal(readFileSync(path, 'utf8').includes('planSha256'), true); } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('retrieval protocol freezes appended parent bodies while holding the shipped answer instructions and settings constant', () => {
+  const manifest = prepareSourceCalibrationComparison(retrievalPreparation());
+  assert.equal(manifest.plan.format, 'ablatrix-retrieval-coverage-first-answer-plan-v1'); assert.equal(manifest.plan.budget.absoluteCallLimit, 154);
+  assert.equal(manifest.plan.retrievalContexts?.plannedChangedCases, 8); assert.equal(manifest.plan.retrievalContexts?.plannedUnchangedCases, 0);
+  for (let index = 0; index < 16; index += 2) {
+    const pair = manifest.plan.slots.slice(index, index + 2), baseline = pair.find(s => s.arm === 'baseline')!, candidate = pair.find(s => s.arm === 'candidate')!;
+    assert.equal(baseline.binding.contract, WORKSPACE_GENERATION_CONTRACT); assert.equal(candidate.binding.contract, WORKSPACE_GENERATION_CONTRACT);
+    assert.equal(baseline.binding.systemInstructionsSha256, candidate.binding.systemInstructionsSha256); assert.equal(baseline.requestBody.messages[0].content, workspaceGenerationPromptIdentity().systemInstructions);
+    assert.deepEqual(candidate.input.passages.slice(0, baseline.input.passages.length), baseline.input.passages); assert.equal(candidate.input.passages.length, baseline.input.passages.length + 2);
+    assert.notEqual(baseline.binding.sourceContextSha256, candidate.binding.sourceContextSha256); assert.notEqual(baseline.binding.optionSetSha256, candidate.binding.optionSetSha256); assert.notEqual(baseline.binding.responseSchemaSha256, candidate.binding.responseSchemaSha256);
+    const normalized = (body: typeof baseline.requestBody) => { const copy = clone(body), payload = JSON.parse(copy.messages[1].content); delete payload.evidence; delete payload.quoteOptions; delete payload.operationRunId; copy.messages[1].content = JSON.stringify(payload); (copy.tools[0].function.parameters as any).properties.citations.items.enum = []; return copy; };
+    assert.deepEqual(normalized(baseline.requestBody), normalized(candidate.requestBody));
+  }
+  assert.deepEqual(verifySourceCalibrationPlan(manifest), manifest);
+});
+
+test('retrieval preparation rejects edited selections, detached consumed exposure, prompt drift and stale starting counts even after hashes are rebound', () => {
+  const mutations: ((p: SourceCalibrationPreparation) => void)[] = [
+    p => { p.experiment = 'unrecognized' as any; },
+    p => { p.ledgerAnchor.attempts = 137; }, p => { p.ledgerAnchor.attempts = 139; },
+    p => { p.candidateFreeze.document.generationContract = WORKSPACE_SOURCE_CALIBRATION_CONTRACT; },
+    p => { p.candidateFreeze.document.systemInstructionsSha256 = workspaceGenerationPromptIdentity(WORKSPACE_SOURCE_CALIBRATION_CONTRACT).systemInstructionsSha256; },
+    p => { p.candidateFreeze.document.implementationSha256['server/workspace-source-coverage.ts'] = hash('SYNTHETIC changed rules'); },
+    p => { p.selectionAudit.document.consumedCohorts = []; p.packet.document.selection.consumedCohorts = []; },
+    p => { p.selectionAudit.document.consumedCohorts[0].productIds[0] = p.packet.document.cases[0].product.id; },
+    p => { p.retrieval.document.results[0].baseline.passages = p.retrieval.document.results[0].candidate.passages; },
+    p => { p.retrieval.document.results[0].candidate.passages.reverse(); },
+    p => { p.retrieval.document.results[0].candidate.passages.pop(); },
+    p => { p.retrieval.document.results[0].additions[0].reasons = ['SYNTHETIC unbound rationale']; },
+    p => { p.retrieval.document.results[0].indexRetrieval.passages[0].productId = 'SYNTHETIC foreign product'; },
+    p => { p.retrieval.document.corpusSha256 = hash('SYNTHETIC other corpus'); },
+    p => { p.retrieval.document.implementationSha256['server/workspace-source-coverage.ts'] = hash('SYNTHETIC other code'); }
+  ];
+  for (const mutate of mutations) { const p = retrievalPreparation(); mutate(p); resealPreparation(p); assert.throws(() => prepareSourceCalibrationComparison(p)); }
+  const manifest = prepareSourceCalibrationComparison(retrievalPreparation()); manifest.plan.slots[1].input.generationContract = WORKSPACE_SOURCE_CALIBRATION_CONTRACT; manifest.planSha256 = hash(manifest.plan); assert.throws(() => verifySourceCalibrationPlan(manifest));
+});
+
+test('retrieval comparison dispatches sixteen exact v1 requests and resolves citations from each arm own offered context', async () => {
+  const h = harness({ preparation: retrievalPreparation(true), response: body => { const payload = JSON.parse(body.messages[1].content); return { answer: 'SYNTHETIC literal-source response.', status: 'answered', citations: [payload.quoteOptions.at(-1).id] }; } });
+  const { result, checkpoint } = await h.execute();
+  assert.equal(result.format, 'retrieval-coverage-result-v1'); assert.equal(result.completedAnswers, 16); assert.equal(result.newProviderAttempts, 16); assert.equal(result.networkDispatches, 16); assert.equal(result.qualityClaimEligible, false);
+  assert.equal(result.retrievalContexts?.plannedChangedCases, 7); assert.equal(result.retrievalContexts?.completedChangedPairs, 7); assert.equal(result.retrievalContexts?.plannedUnchangedCases, 1); assert.equal(result.retrievalContexts?.completedUnchangedPairs, 1); assert.deepEqual(result.retrievalContexts?.unchangedCaseIds, ['synthetic-case-7']);
+  assert.deepEqual(verifySourceCalibrationCheckpoints(h.manifest, h.checkpoints), result); assert.deepEqual(verifySourceCalibrationResult(h.manifest, checkpoint), result);
+  for (const [index, body] of h.bodies.entries()) {
+    const slot = h.manifest.plan.slots[index]; assert.deepEqual(body, slot.requestBody); assert.equal(slot.binding.contract, WORKSPACE_GENERATION_CONTRACT);
+    const step = result.steps[index]; assert.equal(step.status, 'completed'); assert.ok(step.status === 'completed'); const output = step.output; assert.deepEqual(output.answer.citations, [{ passageId: slot.input.passages.at(-1)!.id, quote: slot.input.passages.at(-1)!.text }]);
+  }
+  const review = sourceCalibrationReviewWorksheet(h.manifest, checkpoint), worksheet = review.worksheet;
+  for (const label of ['Generation-available', 'generationSourceIds', 'workspace-source-coverage-v1', 'candidate', 'baseline', 'additions']) assert.ok(!worksheet.includes(label), `Anonymous worksheet leaked ${label}.`);
+  assert.deepEqual(worksheet.split('\n').filter(line => /^Source .* — /.test(line)), h.manifest.plan.cases.flatMap(c => c.sources.map(source => `Source ${source.id} — ${source.label}`)), 'Every complete review source is present, with no per-arm availability subset.');
+  for (const c of h.manifest.plan.cases) for (const source of c.sources) assert.ok(worksheet.includes(`Source ${source.id} — ${source.label}\n\n`));
+  for (const item of review.armMapping.mapping) {
+    const c = h.manifest.plan.cases.find(c => c.id === item.caseId)!;
+    assert.deepEqual(item.generationSourceIds, c.generationSourceIdsByArm![item.arm as 'baseline' | 'candidate'], 'Per-arm source availability stays in the separate mapping.');
+  }
+});
+
+test('retrieval scope shares pre-provider approval, partial-stop, reservation and pre-dispatch history guards', async () => {
+  const options = { execute: true, liveOptIn: true, approvedPlanSha256: 'wrong', transportProvenance: 'mocked_mechanics_only' as const }, unapproved = harness({ preparation: retrievalPreparation() });
+  await assert.rejects(executeSourceCalibrationComparison(unapproved.manifest, options, unapproved.dependencies)); assert.equal(unapproved.counts().creations, 0); assert.equal(unapproved.counts().outputs, 0);
+  const h = harness({ preparation: retrievalPreparation(), response: (body, index) => ({ answer: 'SYNTHETIC response.', status: 'answered', citations: index === 1 ? ['src_unoffered'] : [JSON.parse(body.messages[1].content).quoteOptions[0].id] }) });
+  const { result } = await h.execute(); assert.equal(result.status, 'stopped'); assert.equal(result.completedAnswers, 1); assert.equal(result.newProviderAttempts, 2); assert.equal(result.networkDispatches, 2); assert.equal(result.steps.filter(s => s.status === 'not_attempted').length, 14); assert.deepEqual(result.usage, { inputTokens: 20, outputTokens: 10 });
+  const changed = harness({ preparation: retrievalPreparation() }), read = changed.dependencies.readLedger;
+  changed.dependencies.readLedger = () => { const state = read(); return state.rows.length ? { ...state, historicalRowsSha256: hash('SYNTHETIC altered history') } : state; };
+  const stopped = await changed.execute(); assert.equal(stopped.result.newProviderAttempts, 1); assert.equal(stopped.result.networkDispatches, 0); assert.equal(changed.bodies.length, 0);
+});
+
+test('retrieval CLI cannot accept a historical prompt comparison and rejects missing approval before private state access', async () => {
+  const help = await retrievalCoverageComparisonCli([]); assert.ok('mode' in help && help.mode === 'offline');
+  const root = mkdtempSync(join(tmpdir(), 'retrieval-comparison-cli-'));
+  try {
+    const path = join(root, 'plan.json'), env = new Proxy({ ABLATRIX_LOOP_LIVE: '1' }, { get(target, key) { if (String(key).includes('SAPIOM')) assert.fail('Credential access before approval'); return Reflect.get(target, key); } });
+    const old = prepareSourceCalibrationComparison(preparation()); writeFileSync(path, JSON.stringify(old));
+    await assert.rejects(retrievalCoverageComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', old.planSha256], env), /Wrong comparison CLI/);
+    const current = prepareSourceCalibrationComparison(retrievalPreparation()); writeFileSync(path, JSON.stringify(current));
+    await assert.rejects(retrievalCoverageComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', '0'.repeat(64)], env), /Exact approval/);
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
