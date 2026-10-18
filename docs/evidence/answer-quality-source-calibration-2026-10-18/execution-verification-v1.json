@@ -1,0 +1,53 @@
+{
+  "format": "source-calibration-execution-verification-v1",
+  "planSha256": "d1d1c49c6d47edcf2c9dae4351701c42b531d362fd5b42acc1184433e8a8a78e",
+  "verifiedAt": "2026-10-18T18:11:43.172Z",
+  "transportProvenance": "live_router",
+  "plannedAnswers": 16,
+  "completedAnswers": 16,
+  "newProviderAttempts": 16,
+  "networkDispatches": 16,
+  "planningAllowanceReservedUsd": 1.6,
+  "actualProviderCharges": "unavailable",
+  "providerOriginAuthenticated": false,
+  "observedModels": [
+    "gpt-5.6-luna"
+  ],
+  "usage": {
+    "inputTokens": 28712,
+    "outputTokens": 2014
+  },
+  "boundCodeSourcesAndHistoryVerified": true,
+  "historicalLedgerRowsUnchanged": true,
+  "finalLedger": {
+    "attempts": 138,
+    "reservedPlanningAllowanceUsd": 13.8,
+    "priorPlanningAdjustmentUsd": 0.200281,
+    "combinedPlanningUsageUsd": 14.000281,
+    "pendingReservations": 0,
+    "owners": 0
+  },
+  "armStats": {
+    "baseline": {
+      "answers": 8,
+      "inputTokens": 13380,
+      "outputTokens": 1040,
+      "citationOccurrences": 20,
+      "answersContainingEvidence": 5,
+      "medianLocalOperationMs": 3132.5,
+      "meanLocalOperationMs": 3617
+    },
+    "candidate": {
+      "answers": 8,
+      "inputTokens": 15332,
+      "outputTokens": 974,
+      "citationOccurrences": 19,
+      "answersContainingEvidence": 1,
+      "medianLocalOperationMs": 2675,
+      "meanLocalOperationMs": 2821
+    }
+  },
+  "citationCheck": "Every accepted citation replays against exact offered quote options; semantic support is reviewed separately.",
+  "humanJudgments": 0,
+  "qualityClaimEligible": false
+}

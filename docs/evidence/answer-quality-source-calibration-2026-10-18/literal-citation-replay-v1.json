@@ -1,0 +1,10 @@
+{
+  "format": "source-calibration-public-literal-citation-replay-v1",
+  "planSha256": "d1d1c49c6d47edcf2c9dae4351701c42b531d362fd5b42acc1184433e8a8a78e",
+  "answers": 16,
+  "citationOccurrences": 39,
+  "unmatchedCitations": 0,
+  "scope": "Exact source-ID/body matching only. This does not evaluate answer correctness or semantic cited support.",
+  "humanJudgments": 0,
+  "qualityClaimEligible": false
+}

@@ -1,0 +1,322 @@
+{
+  "format": "source-calibration-comparison-assessment-v1",
+  "planSha256": "d1d1c49c6d47edcf2c9dae4351701c42b531d362fd5b42acc1184433e8a8a78e",
+  "status": "exploratory_independent_ai_review_complete",
+  "provenance": "two_separate_blind_ai_contexts_then_parent_unblinding",
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "reviewerFiles": {
+    "blind-ai-review-primary-v1.json": "1f252c6f983de5681b50df53d01e86ccc20f6ca7e4d65c5606124bf78e44ab8d",
+    "blind-ai-review-secondary-v1.json": "cced6d4f41ac5de3dd96c5440fdffb56f1bed191ae57b6fe596cfaa75dab706c"
+  },
+  "reviewers": [
+    {
+      "reviewer": "primary",
+      "substantive": {
+        "candidate": 1,
+        "baseline": 0,
+        "tie": 7,
+        "neither": 0,
+        "uncertain": 0
+      },
+      "wording": {
+        "candidate": 6,
+        "baseline": 2,
+        "tie": 0,
+        "neither": 0,
+        "uncertain": 0
+      }
+    },
+    {
+      "reviewer": "secondary",
+      "substantive": {
+        "candidate": 2,
+        "baseline": 0,
+        "tie": 6,
+        "neither": 0,
+        "uncertain": 0
+      },
+      "wording": {
+        "candidate": 6,
+        "baseline": 2,
+        "tie": 0,
+        "neither": 0,
+        "uncertain": 0
+      }
+    }
+  ],
+  "agreement": {
+    "candidateWins": 1,
+    "baselineWins": 0,
+    "ties": 6,
+    "disagreements": 1,
+    "neither": 0,
+    "uncertain": 0
+  },
+  "cases": [
+    {
+      "caseId": "source-calibration-train-12543",
+      "anonymousAssignment": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "reviews": [
+        {
+          "reviewer": "primary",
+          "substantivePreference": "tie",
+          "wordingPreference": "candidate"
+        },
+        {
+          "reviewer": "secondary",
+          "substantivePreference": "tie",
+          "wordingPreference": "candidate"
+        }
+      ],
+      "substantiveAgreement": "tie",
+      "sourceCheckedReasons": [
+        {
+          "reviewer": "primary",
+          "reason": "Both accurately report ruled/lined pages and preserve the same unresolved college-versus-wide distinction. Neither omits a supported answer to the actual question."
+        },
+        {
+          "reviewer": "secondary",
+          "reason": "Both give the same supported ruled/lined information and accurately preserve the unresolved college-versus-wide distinction. Neither supplies or suppresses a supported answer to that distinction."
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-2652",
+      "anonymousAssignment": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "reviews": [
+        {
+          "reviewer": "primary",
+          "substantivePreference": "tie",
+          "wordingPreference": "candidate"
+        },
+        {
+          "reviewer": "secondary",
+          "substantivePreference": "tie",
+          "wordingPreference": "candidate"
+        }
+      ],
+      "substantiveAgreement": "tie",
+      "sourceCheckedReasons": [
+        {
+          "reviewer": "primary",
+          "reason": "Both preserve the historical customer/order scope and the lack of a numerical or generally applicable delivery estimate. Additional full-pool fast/early-delivery anecdotes are redundant for this question."
+        },
+        {
+          "reviewer": "secondary",
+          "reason": "Both preserve the qualitative positive shipping anecdotes without inventing days or extending the other customer's deadline to this order. The full pool adds no generally applicable shipping interval."
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-12047",
+      "anonymousAssignment": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "reviews": [
+        {
+          "reviewer": "primary",
+          "substantivePreference": "tie",
+          "wordingPreference": "baseline"
+        },
+        {
+          "reviewer": "secondary",
+          "substantivePreference": "tie",
+          "wordingPreference": "baseline"
+        }
+      ],
+      "substantiveAgreement": "tie",
+      "sourceCheckedReasons": [
+        {
+          "reviewer": "primary",
+          "reason": "Both give the same source-supported four-color list and the same salient blue/green shade qualification, while preserving that a full inventory is unresolved. A adds the supported muted descriptor; B states the incomplete-list limitation more directly. The extra full-pool color reports were unavailable to both during generation and do not establish a clean alternative inventory."
+        },
+        {
+          "reviewer": "secondary",
+          "reason": "Both provide the same four explicitly named colors and preserve the incomplete inventory. A adds the supported muted descriptor, while B states incompleteness more explicitly; neither resolves the additional full-pool color variation. The descriptor alone is insufficient for a material substantive win here."
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-12773",
+      "anonymousAssignment": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "reviews": [
+        {
+          "reviewer": "primary",
+          "substantivePreference": "tie",
+          "wordingPreference": "baseline"
+        },
+        {
+          "reviewer": "secondary",
+          "substantivePreference": "tie",
+          "wordingPreference": "baseline"
+        }
+      ],
+      "substantiveAgreement": "tie",
+      "sourceCheckedReasons": [
+        {
+          "reviewer": "primary",
+          "reason": "Both give the same supported no-air/PU-wheel answer with appropriate confidence. Neither introduces unsupported tire pressure, safety or performance advice. Full-pool cast-wheel wording corroborates rather than changes that answer."
+        },
+        {
+          "reviewer": "secondary",
+          "reason": "Both answer no and support the same polyurethane/non-air-filled construction. A's indicates and B's so do not create a meaningful calibration difference given the actual no-air evidence and corroborating full pool."
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-195",
+      "anonymousAssignment": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "reviews": [
+        {
+          "reviewer": "primary",
+          "substantivePreference": "tie",
+          "wordingPreference": "candidate"
+        },
+        {
+          "reviewer": "secondary",
+          "substantivePreference": "tie",
+          "wordingPreference": "candidate"
+        }
+      ],
+      "substantiveAgreement": "tie",
+      "sourceCheckedReasons": [
+        {
+          "reviewer": "primary",
+          "reason": "Both preserve the supported YZZ02 fit and the absence of YZZ01 or comparative fit evidence. Neither falsely rejects YZZ01 or proves a better dimensional fit. The saved dimensions were unavailable during generation and cannot form a two-part comparison anyway; I do not convert A’s explicitly supplied-evidence scope into a full-pool claim. Both share the useful identifier qualification omission."
+        },
+        {
+          "reviewer": "secondary",
+          "reason": "Both supply the supported YZZ02 fit, preserve the missing YZZ01 comparison and share the same full-pool omissions and scope caveat concerning dimensions. A's request for documentation does not add a supported comparative result."
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-8836",
+      "anonymousAssignment": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "reviews": [
+        {
+          "reviewer": "primary",
+          "substantivePreference": "tie",
+          "wordingPreference": "candidate"
+        },
+        {
+          "reviewer": "secondary",
+          "substantivePreference": "candidate",
+          "wordingPreference": "candidate"
+        }
+      ],
+      "substantiveAgreement": "disagreement",
+      "sourceCheckedReasons": [
+        {
+          "reviewer": "primary",
+          "reason": "Both correctly preserve unknown exact-model fit and the relevant mixed customer experiences. B adds the supported generic characterization, which explains caution but does not provide a different compatibility conclusion. Full-pool OEM and VGSU/part-number evidence would be useful background, was unavailable during generation, and still cannot confirm VGSU1646BBK."
+        },
+        {
+          "reviewer": "secondary",
+          "reason": "A accurately reports varied fit outcomes while preserving their different model scopes. B adds useful generic-characterization context, but its claim of conflict is not established by those compatible reports. Both lack exact VGSU1646BBK confirmation and both miss full-pool family/size context unavailable in generation."
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-4472",
+      "anonymousAssignment": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "reviews": [
+        {
+          "reviewer": "primary",
+          "substantivePreference": "candidate",
+          "wordingPreference": "candidate"
+        },
+        {
+          "reviewer": "secondary",
+          "substantivePreference": "candidate",
+          "wordingPreference": "candidate"
+        }
+      ],
+      "substantiveAgreement": "candidate",
+      "sourceCheckedReasons": [
+        {
+          "reviewer": "primary",
+          "reason": "B has a substantive useful-coverage edge because it preserves the supplied region/alteration qualification and its tentative status. A correctly preserves the overall unknown and asks for a product version, but omits that explicit condition while labeling the broad claim unverified. This preference is based on relevant compatibility information, not length or fewer repeated citations. Neither answer establishes physical-world operation for SCPH-77004."
+        },
+        {
+          "reviewer": "secondary",
+          "reason": "B provides a directly relevant region/alteration condition supported by a generation-available source, with its tentativeness preserved. A omits that useful condition and mainly contrasts an unrelated exact model with a broad unverified claim. Both correctly avoid an exact-model guarantee; B's useful supported condition gives it the substantive advantage."
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-13670",
+      "anonymousAssignment": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "reviews": [
+        {
+          "reviewer": "primary",
+          "substantivePreference": "tie",
+          "wordingPreference": "candidate"
+        },
+        {
+          "reviewer": "secondary",
+          "substantivePreference": "tie",
+          "wordingPreference": "candidate"
+        }
+      ],
+      "substantiveAgreement": "tie",
+      "sourceCheckedReasons": [
+        {
+          "reviewer": "primary",
+          "reason": "Both correctly preserve the missing component-to-material relationship and avoid transferring plastic or metal statements to the requested plate. B’s additional blade-guard example is supported but does not resolve the question; A’s fewer examples are sufficient to explain the same source gap."
+        },
+        {
+          "reviewer": "secondary",
+          "reason": "Both correctly preserve the component-identification gap and avoid transferring a material from other parts to the requested plate. B's added blade-guard context is supported but does not change the useful material answer or resolve the gap."
+        }
+      ]
+    }
+  ],
+  "referenceCorrections": {
+    "originalPreGenerationReferenceRetained": true,
+    "correctionsPreservedInReviewerFiles": true,
+    "newTuningOrReplacementAfterReview": false
+  },
+  "remainingIssues": [
+    "Useful Toyota dimensions were in the full source pool but absent from generation context.",
+    "Viking part/family and dimensional facts, plus additional marble color context, were absent from generation.",
+    "Both Toyota answers omit a visible title/model-name identity qualification.",
+    "Some appearance details and compatibility-version context remain incomplete."
+  ],
+  "decision": {
+    "candidateDefaultActivated": false,
+    "graderQualified": false,
+    "policyActivated": false,
+    "reason": "One agreed substantive preference and one disputed benefit across eight products is limited exploratory AI evidence. Broad correctness improvement, human-reviewed quality and whole-workflow correction benefit remain unestablished."
+  },
+  "limitations": [
+    "Small single-observation eight-product comparison with no stochastic repeats.",
+    "AI reviewers may share correlated errors; agreement is not human gold or external truth.",
+    "Anonymous labels conceal assignment, but writing style may reveal it.",
+    "Reference inaccuracies were discovered after generation and explicitly retained/corrected; no silent reference replacement.",
+    "Literal quote membership is separate from semantic support, source-consistent correctness and human-reviewed quality."
+  ]
+}

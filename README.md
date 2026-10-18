@@ -34,6 +34,8 @@ The latest recorded live v3 qualification **failed after 20/92 planned calls**: 
 
 The current release makes the actual flat-source generation and v4 check contracts explicit. **Fresh v4 live qualification, whole-workflow correction benefit and future-policy gain remain unmeasured.** Literal quote membership, cited semantic support, factual consistency, applicability and completeness are separate checks. Neither a passing script nor a qualified grader automatically releases an answer policy.
 
+A separate first-answer comparison completed **16 live calls across eight products**. Two blind AI source reviews agreed on one substantive candidate preference and six ties, with one disputed benefit; both preferred the candidate's wording on six of eight. All 39 citation occurrences matched offered text, which is a separate mechanical check. Saved human source-checked judgments remain 0/16; the candidate is experimental. [Answers, disagreements and reproducible results](docs/evidence/answer-quality-source-calibration-2026-10-18/RESULTS.md).
+
 ## The product path
 
 ```mermaid

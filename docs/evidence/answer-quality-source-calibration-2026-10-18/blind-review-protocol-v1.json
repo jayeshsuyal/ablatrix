@@ -1,0 +1,27 @@
+{
+  "format": "ablatrix-source-calibration-blind-review-protocol-v1",
+  "planSha256": "d1d1c49c6d47edcf2c9dae4351701c42b531d362fd5b42acc1184433e8a8a78e",
+  "provenance": "independent_ai_source_check",
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "recordedBeforeParentInspectionOfAnswers": true,
+  "axes": {
+    "sourceCorrectness": "pass/fail/uncertain: consistent with full saved source text and original-question scope; no physical-world verification claim",
+    "citedSupport": "pass/fail/uncertain: cited text actually supports the material attributed claims",
+    "coverage": "complete/partial/missing/uncertain for useful source-supported facts that answer this question; flag facts unavailable in generation context separately",
+    "calibration": "appropriate/overconfident/excessive_abstention/mixed: preserve tentativeness, exact relationships, actual gaps and genuine conflicts",
+    "directness": "useful/excessive/unclear; wording only is secondary"
+  },
+  "preferences": {
+    "substantive": "A/B/tie/neither/uncertain based on correctness, support, useful coverage and calibrated scope",
+    "wording": "A/B/tie/neither/uncertain scored separately; shorter prose or fewer occurrences of evidence cannot create a substantive win"
+  },
+  "checks": [
+    "Evaluate both answers independently before pairing.",
+    "Check full sources directly; prewritten AI references are guides and may be corrected with source IDs and reasons.",
+    "Preserve unresolved facts and missing answers; do not replace cases.",
+    "Flag every material unsupported claim and regression.",
+    "Citations copied literally do not establish semantic support.",
+    "No arm identities, implementation, live grading calls or human-review claims."
+  ]
+}
