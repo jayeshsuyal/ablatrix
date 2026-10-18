@@ -16,14 +16,18 @@ export const sourceCalibrationHash = (value: unknown) => createHash('sha256').up
 const clone = <T>(value: T): T => structuredClone(value);
 const digest = (value: string) => assert.match(value, /^[a-f0-9]{64}$/);
 const candidateSha = 'e9faddec60d475fe358b01e6c7464eb2993848e982a764f7c12b122266d148f8';
-export const SOURCE_CALIBRATION_CODE_FILES = ['server/source-calibration-comparison.ts', 'server/source-calibration-comparison.test.ts', 'scripts/source-calibration-comparison.ts', 'scripts/source-calibration-retrieval.ts', 'server/workspace-generation.ts', 'server/feedback-provider.ts', 'server/citation-options.ts', 'server/answer-review-source.ts', 'server/flat-source-comparison.ts', 'server/context-comparison.ts', 'server/product-retrieval.ts', 'server/product-corpus.ts', 'server/workspace-retrieval-context.ts', 'server/loop-types.ts', 'package-lock.json'] as const;
+// Selection predates the one-to-one review validation fix. Pin the historical
+// selector that produced the unchanged packet; separately freeze current code.
+const selectionCodeSha = 'bf4e3686de1742eb0e0616f9b3e25875c3db60dfca476a36e74e4b3d8b66dba0';
+const selectionHelpers = ['scripts/prepare-flat-source-cohort.py', 'scripts/prepare-correction-cohort.py', 'scripts/prepare-source-id-cohort.py'] as const;
+export const SOURCE_CALIBRATION_CODE_FILES = ['scripts/prepare-source-calibration-cohort.py', 'scripts/test_prepare_source_calibration_cohort.py', ...selectionHelpers, 'server/source-calibration-comparison.ts', 'server/source-calibration-comparison.test.ts', 'scripts/source-calibration-comparison.ts', 'scripts/source-calibration-retrieval.ts', 'server/workspace-generation.ts', 'server/feedback-provider.ts', 'server/citation-options.ts', 'server/answer-review-source.ts', 'server/flat-source-comparison.ts', 'server/context-comparison.ts', 'server/product-retrieval.ts', 'server/product-corpus.ts', 'server/workspace-retrieval-context.ts', 'server/loop-types.ts', 'package-lock.json'] as const;
 export type SourceCalibrationArtifact = { path: string; fileSha256: string; document: Json };
 export type SourceCalibrationLedgerAnchor = { canonicalPath: string; pathSha256: string; historicalRowsSha256: string; attempts: number; reservedUsd: number; priorSpendUsd: number; pending: number; owners: number };
 type LedgerRow = WorkspaceGenerationReceipt & { created_at: string; run_id: string | null; allowance_usd: number };
 export type SourceCalibrationLedgerState = SourceCalibrationLedgerAnchor & { rows: LedgerRow[]; ownerRows: { pid: number; token: string; expires_at: number }[] };
 type Source = Pick<RevisionSource, 'id' | 'label' | 'text' | 'sha256' | 'originalQuestion' | 'reference'>;
 export type SourceCalibrationPreparation = {
-  packet: SourceCalibrationArtifact; retrieval: SourceCalibrationArtifact; familyAudit: SourceCalibrationArtifact; candidateFreeze: SourceCalibrationArtifact; exposureAudit: SourceCalibrationArtifact;
+  packet: SourceCalibrationArtifact; retrieval: SourceCalibrationArtifact; familyAudit: SourceCalibrationArtifact; candidateFreeze: SourceCalibrationArtifact; exposureAudit: SourceCalibrationArtifact; selectionAudit: SourceCalibrationArtifact;
   implementationSha256: Record<string, string>; historySha256: Record<string, string>; policy: LoopPolicy; createdAt: string;
   ledgerAnchor: SourceCalibrationLedgerAnchor;
   scope: { repositoryPath: string; outputDirectory: string; workspacePaths: string[]; comparisonPaths: string[] };
@@ -31,14 +35,41 @@ export type SourceCalibrationPreparation = {
 };
 type Arm = 'baseline' | 'candidate';
 type Slot = { index: number; caseId: string; arm: Arm; input: WorkspaceGenerationInput; requestBody: ReturnType<typeof workspaceGenerationParts>['body']; binding: ReturnType<typeof workspaceGenerationParts>['binding'] };
-const artifactNames = ['packet', 'retrieval', 'familyAudit', 'candidateFreeze', 'exposureAudit'] as const;
+const artifactNames = ['packet', 'retrieval', 'familyAudit', 'candidateFreeze', 'exposureAudit', 'selectionAudit'] as const;
 function relativeFile(path: string) { assert.ok(path && !isAbsolute(path) && !path.split('/').includes('..') && !path.includes('\\'), 'Bound files must stay in the repository.'); return path; }
 function privatePath(path: string, root: string) { const rel = relative(resolve(root, '.data'), path); assert.ok(isAbsolute(path) && resolve(path) === path && rel && !rel.startsWith('..') && !isAbsolute(rel), 'Output must be canonical and private under .data.'); }
+function verifySelectionSeal(p: SourceCalibrationPreparation) {
+  const cohort = p.packet.document, audit = p.selectionAudit.document, seed = 'ablatrix-source-calibration-2026-10-18-v1';
+  const checkHash = (document: Json, field: string) => { const body = { ...document }; delete body[field]; assert.equal(document[field], contextComparisonHash(body), `Invalid ${field} seal.`); };
+  checkHash(cohort, 'cohortSha256'); checkHash(audit, 'selectionAuditSha256');
+  assert.equal(cohort.format, 'ablatrix-source-calibration-cohort-v1'); assert.equal(audit.format, 'ablatrix-source-calibration-selection-audit-v1');
+  assert.equal(cohort.selectionSeed, seed); assert.equal(audit.selectionSeed, seed); assert.equal(p.candidateFreeze.document.selectionSeed, seed);
+  assert.equal(cohort.selectionAuditSha256, audit.selectionAuditSha256); assert.equal(cohort.exposureAuditSha256, p.exposureAudit.document.auditSha256); assert.equal(audit.exposureAuditSha256, cohort.exposureAuditSha256);
+  assert.equal(audit.candidateFreezeFileSha256, p.candidateFreeze.fileSha256);
+  assert.equal(cohort.source?.commit, 'cec976cc2f2218aa76e562ecc9c7d79f1f3271bc'); assert.equal(cohort.source?.sha256, 'b63de9681b770573240367e919f7f04f087f6a4745ab1f79a77e6b800105ea25'); assert.equal(cohort.source?.testSplitUsed, false);
+  assert.equal(cohort.status?.privateCandidateOnly, true); assert.equal(cohort.status?.generationPerformed, false); assert.equal(cohort.status?.humanJudgments, 0); assert.equal(cohort.status?.qualityClaimEligible, false); assert.equal(cohort.status?.paidExecutionAuthorized, false);
+  assert.equal(cohort.selection?.labelOrAnswerColumnsUsed, false); assert.equal(cohort.selection?.modelOutputsUsed, false);
+  assert.equal(audit.generatedAnswersOrJudgmentsRead, false); assert.equal(audit.generationPerformed, false); assert.equal(audit.newProviderCalls, 0);
+  assert.equal(cohort.inventory?.passed, true); assert.deepEqual(cohort.inventory, audit.inventory);
+  assert.equal(cohort.selection.selectionCodeSha256, audit.selectionCodeSha256); assert.equal(audit.selectionCodeSha256, selectionCodeSha); assert.deepEqual(cohort.selection.immutableHelperSha256, audit.immutableHelperSha256);
+  assert.deepEqual(Object.keys(audit.immutableHelperSha256).sort(), [...selectionHelpers].sort()); for (const path of selectionHelpers) assert.equal(audit.immutableHelperSha256[path], p.implementationSha256[path]);
+  assert.deepEqual(cohort.selection.eligibilityAmendment, audit.eligibilityAmendment); assert.equal(audit.eligibilityAmendment.candidateInstructionsUnchanged, true); assert.equal(audit.eligibilityAmendment.generationOutputsInspected, false);
+  assert.deepEqual(cohort.selection.priorCohorts, audit.priorCohorts); assert.deepEqual(cohort.selection.priorSourceReviews, audit.priorSourceReviews); assert.deepEqual(cohort.selection.inventoryInputs, audit.inventoryInputs);
+  assert.equal(audit.inventoryInputs.workspaceCount, p.scope.workspacePaths.length); assert.equal(audit.inventoryInputs.comparisonCount, p.scope.comparisonPaths.length);
+  const inventoryPaths = [...p.scope.workspacePaths, ...p.scope.comparisonPaths]; assert.ok(inventoryPaths.every(path => isAbsolute(path) && resolve(path) === path)); assert.equal(new Set(inventoryPaths).size, inventoryPaths.length);
+  assert.deepEqual(audit.inventoryInputs.canonicalPathSha256, inventoryPaths.map(sourceCalibrationHash).sort());
+  const priors = audit.priorCohorts.map((c: Json) => c.fileSha256), reviews = audit.priorSourceReviews.map((r: Json) => r.cohortFileSha256);
+  assert.equal(new Set(priors).size, priors.length); assert.equal(reviews.length, priors.length); assert.deepEqual([...new Set(reviews)].sort(), [...priors].sort()); assert.ok(audit.priorSourceReviews.every((r: Json) => r.status === 'failed' && r.provenance === 'independent_ai_source_and_family_review'));
+  assert.equal(cohort.executionPlan?.caseCount, 8); assert.equal(cohort.executionPlan?.maximumNewAnswerAttempts, 16); assert.equal(cohort.executionPlan?.automaticRetries, 0); assert.equal(cohort.executionPlan?.webCalls, 0); assert.equal(cohort.executionPlan?.caseReplacement, false); assert.equal(cohort.executionPlan?.paidExecutionAuthorized, false);
+  const selected = audit.decisions.filter((d: Json) => d.stage === 'ranked_selection' && d.selected === true);
+  assert.equal(selected.length, 8); assert.deepEqual(selected.map((d: Json) => [d.qid, d.productId, d.stratum, d.rankSha256]), cohort.cases.map((c: Json) => [String(c.upstream.qid), c.product.id, c.stratum, c.selectionRankSha256]));
+}
 
 /** Pure preparation. The caller supplies a freshly read anchor; no store,
  * credential, model, network or provider is opened here. */
 export function prepareSourceCalibrationComparison(preparation: SourceCalibrationPreparation) {
   const p = clone(preparation), cases = p.packet.document.cases as Json[];
+  verifySelectionSeal(p);
   assert.ok(Array.isArray(cases) && cases.length === 8, 'Exactly eight cases are required.');
   const ids = cases.map(c => c.id); assert.equal(new Set(ids).size, 8); assert.equal(new Set(cases.map(c => c.product.id.toUpperCase())).size, 8);
   assert.ok(Number.isFinite(Date.parse(p.createdAt))); assert.equal(p.policy.mode, 'live'); assert.ok(p.policy.instructions.length >= 40);

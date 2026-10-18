@@ -15,19 +15,25 @@ const clone = <T>(value: T): T => structuredClone(value);
 function artifact(path: string, document: Record<string, any>): SourceCalibrationArtifact { return { path: `docs/${path}.json`, document, fileSha256: hash(JSON.stringify(document)) }; }
 function preparation(): SourceCalibrationPreparation {
   const implementationSha256 = Object.fromEntries(SOURCE_CALIBRATION_CODE_FILES.map(path => [path, hash(`SYNTHETIC implementation ${path}`)]));
-  const candidateFreeze = artifact('freeze', { frozen: true, status: 'experimental_not_promoted', ...workspaceGenerationPromptIdentity(WORKSPACE_SOURCE_CALIBRATION_CONTRACT), qualityClaimEligible: false });
+  const seed = 'ablatrix-source-calibration-2026-10-18-v1';
+  const candidateFreeze = artifact('freeze', { selectionSeed: seed, frozen: true, status: 'experimental_not_promoted', ...workspaceGenerationPromptIdentity(WORKSPACE_SOURCE_CALIBRATION_CONTRACT), qualityClaimEligible: false });
   const cases = Array.from({ length: 8 }, (_, i) => {
     const sources = [{ id: `source-${i}`, label: 'SYNTHETIC listing', text: `SYNTHETIC Product ${i} supports model ${i}.`, originalQuestion: null, reference: `synthetic:source-${i}` }, { id: `other-${i}`, label: 'SYNTHETIC customer', text: 'SYNTHETIC customer report about a different variant.', originalQuestion: 'SYNTHETIC other model?', reference: `synthetic:other-${i}` }].map(source => ({ ...source, sha256: workspaceReviewSourceHash(source) }));
-    return { id: `synthetic-case-${i}`, product: { id: `SYNTHETIC-${i}`, title: `SYNTHETIC Product ${i}` }, question: `SYNTHETIC Does model ${i} fit?`, sources, sourcePoolSha256: contextComparisonHash(sources) };
+    return { id: `synthetic-case-${i}`, upstream: { qid: String(i) }, stratum: ['capacity_dimensions', 'capacity_dimensions', 'appearance_material', 'appearance_material', 'model_scope', 'model_scope', 'missing_information', 'preservation_control'][i], selectionRankSha256: hash(`SYNTHETIC rank ${i}`), product: { id: `SYNTHETIC-${i}`, title: `SYNTHETIC Product ${i}` }, question: `SYNTHETIC Does model ${i} fit?`, sources, sourcePoolSha256: contextComparisonHash(sources) };
   });
-  const packet = artifact('packet', { candidateFreeze: { fileSha256: candidateFreeze.fileSha256, document: candidateFreeze.document }, cases });
   const results = cases.map(c => ({ caseId: c.id, retrieval: { passages: c.sources.slice(0, 1).map(s => ({ id: s.id, productId: c.product.id, source: s.label, text: s.text, sha256: hash(s.text), reference: s.label, lexicalRank: 1, semanticRank: 1, score: 1 })), durationMs: 0, method: 'SYNTHETIC', embeddingModel: 'SYNTHETIC', corpusVersion: 'SYNTHETIC' } }));
-  const retrievalBody = { format: 'source-calibration-retrieval-v1', cohortFileSha256: packet.fileSha256, implementationSha256, results };
   const metadata = { workspaces: [], comparisons: [] }, fingerprints = metadataFingerprints(metadata), exposure = { metadata, metadataSha256: fingerprints.sha256, metadataInventorySha256: fingerprints.inventories, metadataOnly: true, generatedAnswersOrJudgmentsRead: false, newProviderCalls: 0, paidExecutionAuthorized: false };
-  const retrieval = artifact('retrieval', { ...retrievalBody, sha256: hash(retrievalBody) }), exposureAudit = artifact('exposure', { ...exposure, auditSha256: contextComparisonHash(exposure) });
+  const exposureAudit = artifact('exposure', { ...exposure, auditSha256: contextComparisonHash(exposure) });
+  const inventory = { passed: true }, selectionCodeSha256 = 'bf4e3686de1742eb0e0616f9b3e25875c3db60dfca476a36e74e4b3d8b66dba0', immutableHelperSha256 = Object.fromEntries(['scripts/prepare-flat-source-cohort.py', 'scripts/prepare-correction-cohort.py', 'scripts/prepare-source-id-cohort.py'].map(path => [path, implementationSha256[path]])), eligibilityAmendment = { candidateInstructionsUnchanged: true, generationOutputsInspected: false }, priorCohorts: any[] = [], priorSourceReviews: any[] = [], inventoryInputs = { workspaceCount: 0, comparisonCount: 0, canonicalPathSha256: [] };
+  const selectionBody = { format: 'ablatrix-source-calibration-selection-audit-v1', selectionSeed: seed, candidateFreezeFileSha256: candidateFreeze.fileSha256, exposureAuditSha256: exposureAudit.document.auditSha256, inventory, selectionCodeSha256, immutableHelperSha256, eligibilityAmendment, priorCohorts, priorSourceReviews, inventoryInputs, generatedAnswersOrJudgmentsRead: false, generationPerformed: false, newProviderCalls: 0, decisions: cases.map(c => ({ stage: 'ranked_selection', selected: true, eligible: true, qid: c.upstream.qid, productId: c.product.id, stratum: c.stratum, rankSha256: c.selectionRankSha256 })) };
+  const selectionAudit = artifact('selection', { ...selectionBody, selectionAuditSha256: contextComparisonHash(selectionBody) });
+  const packetBody = { format: 'ablatrix-source-calibration-cohort-v1', selectionSeed: seed, candidateFreeze: { fileSha256: candidateFreeze.fileSha256, document: candidateFreeze.document }, source: { commit: 'cec976cc2f2218aa76e562ecc9c7d79f1f3271bc', sha256: 'b63de9681b770573240367e919f7f04f087f6a4745ab1f79a77e6b800105ea25', testSplitUsed: false }, selection: { selectionCodeSha256, immutableHelperSha256, eligibilityAmendment, priorCohorts, priorSourceReviews, inventoryInputs, labelOrAnswerColumnsUsed: false, modelOutputsUsed: false }, inventory, exposureAuditSha256: exposureAudit.document.auditSha256, selectionAuditSha256: selectionAudit.document.selectionAuditSha256, status: { privateCandidateOnly: true, generationPerformed: false, humanJudgments: 0, qualityClaimEligible: false, paidExecutionAuthorized: false }, executionPlan: { caseCount: 8, maximumNewAnswerAttempts: 16, automaticRetries: 0, webCalls: 0, caseReplacement: false, paidExecutionAuthorized: false }, cases };
+  const packet = artifact('packet', { ...packetBody, cohortSha256: contextComparisonHash(packetBody) });
+  const retrievalBody = { format: 'source-calibration-retrieval-v1', cohortFileSha256: packet.fileSha256, implementationSha256, results };
+  const retrieval = artifact('retrieval', { ...retrievalBody, sha256: hash(retrievalBody) });
   const familyAudit = artifact('audit', { format: 'source-calibration-source-family-review-v1', status: 'passed', provenance: 'independent_ai_source_and_family_review', cohortFileSha256: packet.fileSha256, retrievalFileSha256: retrieval.fileSha256, exposureAuditFileSha256: exposureAudit.fileSha256, cases: cases.map(c => ({ caseId: c.id, sourceScopeReviewed: true, familySeparationReviewed: true, notes: 'SYNTHETIC mechanical fixture only.' })) });
   const path = '/synthetic/.data/feedback-budget.sqlite';
-  return { packet, candidateFreeze, retrieval, familyAudit, exposureAudit, implementationSha256, historySha256: { 'docs/exposed.md': hash('SYNTHETIC history') }, createdAt: '2026-10-18T12:00:00.000Z', policy: { id: 'synthetic-policy', parentId: null, instructions: 'SYNTHETIC shared answer policy with source attribution and bounded scope.', rationale: 'SYNTHETIC fixture.', feedbackRunIds: [], status: 'baseline', mode: 'live', createdAt: '2026-10-18T00:00:00.000Z' }, ledgerAnchor: { canonicalPath: path, pathSha256: hash(path), historicalRowsSha256: hash('SYNTHETIC historical rows'), attempts: 122, reservedUsd: 12.2, priorSpendUsd: .200281, pending: 0, owners: 0 }, scope: { repositoryPath: '/synthetic', outputDirectory: '/synthetic/.data/fresh-result', workspacePaths: [], comparisonPaths: [] }, exposure: { metadataSha256: fingerprints.sha256, publicExposureSha256: hash('SYNTHETIC public exposure') } };
+  return { packet, candidateFreeze, retrieval, familyAudit, exposureAudit, selectionAudit, implementationSha256, historySha256: { 'docs/exposed.md': hash('SYNTHETIC history') }, createdAt: '2026-10-18T12:00:00.000Z', policy: { id: 'synthetic-policy', parentId: null, instructions: 'SYNTHETIC shared answer policy with source attribution and bounded scope.', rationale: 'SYNTHETIC fixture.', feedbackRunIds: [], status: 'baseline', mode: 'live', createdAt: '2026-10-18T00:00:00.000Z' }, ledgerAnchor: { canonicalPath: path, pathSha256: hash(path), historicalRowsSha256: hash('SYNTHETIC historical rows'), attempts: 122, reservedUsd: 12.2, priorSpendUsd: .200281, pending: 0, owners: 0 }, scope: { repositoryPath: '/synthetic', outputDirectory: '/synthetic/.data/fresh-result', workspacePaths: [], comparisonPaths: [] }, exposure: { metadataSha256: fingerprints.sha256, publicExposureSha256: hash('SYNTHETIC public exposure') } };
 }
 function harness(options: { response?: (body: any, index: number) => any; transportFailure?: boolean; changeBody?: boolean; duplicateTransport?: boolean } = {}) {
   const prep = preparation(), manifest = prepareSourceCalibrationComparison(prep), checkpoints: SourceCalibrationCheckpoint[] = [], bodies: any[] = [];
@@ -61,6 +67,44 @@ test('changed sources, original questions, retrieval order, audit, prompt or req
   const mutations: ((p: SourceCalibrationPreparation) => void)[] = [p => { p.packet.document.cases[0].sources[0].text = 'Changed'; }, p => { p.packet.document.cases[0].sources[1].originalQuestion = 'Changed'; }, p => { p.retrieval.document.results.reverse(); }, p => { p.familyAudit.document.cases[0].sourceScopeReviewed = false; }, p => { p.candidateFreeze.document.systemInstructionsSha256 = '0'.repeat(64); }, p => { p.implementationSha256['server/product-retrieval.ts'] = '0'.repeat(64); }, p => { p.ledgerAnchor.owners = 1; }, p => { p.ledgerAnchor.pending = 1; }];
   for (const mutate of mutations) { const p = preparation(); mutate(p); assert.throws(() => prepareSourceCalibrationComparison(p)); }
   const m = prepareSourceCalibrationComparison(preparation()); m.plan.slots[0].requestBody.messages[1].content += ' '; m.planSha256 = hash(m.plan); assert.throws(() => verifySourceCalibrationPlan(m));
+});
+
+// Rebind every dependent seal so semantic regressions cannot pass merely by
+// updating hashes after an outcome-informed selection or a changed cohort.
+function resealPreparation(p: SourceCalibrationPreparation) {
+  const seal = (a: SourceCalibrationArtifact, field: string, canonical = true) => { delete a.document[field]; a.document[field] = canonical ? contextComparisonHash(a.document) : hash(a.document); a.fileSha256 = hash(JSON.stringify(a.document)); };
+  seal(p.selectionAudit, 'selectionAuditSha256');
+  p.packet.document.selectionAuditSha256 = p.selectionAudit.document.selectionAuditSha256;
+  seal(p.packet, 'cohortSha256');
+  p.retrieval.document.cohortFileSha256 = p.packet.fileSha256; seal(p.retrieval, 'sha256', false);
+  p.familyAudit.document.cohortFileSha256 = p.packet.fileSha256; p.familyAudit.document.retrievalFileSha256 = p.retrieval.fileSha256;
+  p.familyAudit.fileSha256 = hash(JSON.stringify(p.familyAudit.document));
+}
+
+test('selection seals bind the pre-generation cohort and reject outcome-informed or detached selections even after resealing', () => {
+  const missing = preparation(); delete missing.packet.document.cohortSha256; assert.throws(() => prepareSourceCalibrationComparison(missing));
+  const changed = preparation(); changed.packet.document.cases[0].question = 'SYNTHETIC changed question'; assert.throws(() => prepareSourceCalibrationComparison(changed), /cohortSha256/);
+  const mutations: ((p: SourceCalibrationPreparation) => void)[] = [
+    p => { p.packet.document.selectionSeed = 'different-seed'; },
+    p => { p.selectionAudit.document.format = 'different-audit'; },
+    p => { p.packet.document.status.generationPerformed = true; },
+    p => { p.packet.document.status.qualityClaimEligible = true; },
+    p => { p.packet.document.selection.labelOrAnswerColumnsUsed = true; },
+    p => { p.packet.document.selection.modelOutputsUsed = true; },
+    p => { p.selectionAudit.document.generatedAnswersOrJudgmentsRead = true; },
+    p => { p.selectionAudit.document.newProviderCalls = 1; },
+    p => { p.packet.document.executionPlan.caseReplacement = true; },
+    p => { p.selectionAudit.document.candidateFreezeFileSha256 = '0'.repeat(64); },
+    p => { p.selectionAudit.document.decisions[0].productId = 'SYNTHETIC swapped'; },
+    p => { p.selectionAudit.document.decisions.reverse(); },
+    p => { p.selectionAudit.document.exposureAuditSha256 = '0'.repeat(64); },
+    p => { p.selectionAudit.document.selectionCodeSha256 = p.packet.document.selection.selectionCodeSha256 = hash('SYNTHETIC different selector'); },
+    p => { p.selectionAudit.document.immutableHelperSha256['scripts/prepare-flat-source-cohort.py'] = p.packet.document.selection.immutableHelperSha256['scripts/prepare-flat-source-cohort.py'] = hash('SYNTHETIC different helper'); },
+    p => { p.packet.document.selection.priorSourceReviews = [{ cohortFileSha256: hash('SYNTHETIC detached prior') }]; },
+    p => { p.selectionAudit.document.inventoryInputs = p.packet.document.selection.inventoryInputs = { workspaceCount: 1, comparisonCount: 0, canonicalPathSha256: [hash('/synthetic/extra.sqlite')] }; },
+    p => { p.selectionAudit.document.priorCohorts = p.packet.document.selection.priorCohorts = [{ fileSha256: hash('SYNTHETIC prior 1') }, { fileSha256: hash('SYNTHETIC prior 2') }]; p.selectionAudit.document.priorSourceReviews = p.packet.document.selection.priorSourceReviews = Array.from({ length: 2 }, () => ({ cohortFileSha256: hash('SYNTHETIC prior 1'), status: 'failed', provenance: 'independent_ai_source_and_family_review' })); }
+  ];
+  for (const mutate of mutations) { const p = preparation(); mutate(p); resealPreparation(p); assert.throws(() => prepareSourceCalibrationComparison(p)); }
 });
 
 test('exact approval, opt-in and boundary checks precede output and credential-owning provider construction', async () => {

@@ -249,6 +249,27 @@ class SelectorTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     m.prior_source_reviews([path], [prior])
 
+    def test_prior_reviews_cover_multiple_cohorts_exactly_once(self):
+        with tempfile.TemporaryDirectory() as name:
+            folder = pathlib.Path(name)
+            priors = [{'fileSha256': '1' * 64}, {'fileSha256': '2' * 64}]
+            paths = [folder / f'review-{index}.json' for index in range(3)]
+            for index, cohort in enumerate([priors[0], priors[0], priors[1]]):
+                paths[index].write_text(json.dumps({
+                    'status': 'failed', 'provenance': 'independent_ai_source_and_family_review',
+                    'cohortFileSha256': cohort['fileSha256'], 'independentReviewId': index,
+                }))
+            # Different files and hashes are insufficient when both cover only
+            # the first cohort: the second cohort still lacks its own review.
+            self.assertNotEqual(m.legacy.sha(paths[0].read_bytes()), m.legacy.sha(paths[1].read_bytes()))
+            for incomplete in [[], paths[:1], paths[:2], paths]:
+                with self.assertRaisesRegex(ValueError, 'every prior cohort exactly once'):
+                    m.prior_source_reviews(incomplete, priors)
+            valid = m.prior_source_reviews([paths[0], paths[2]], priors)
+            self.assertEqual({item['cohortFileSha256'] for item in valid},
+                             {item['fileSha256'] for item in priors})
+            self.assertEqual(len(valid), 2)
+
     def test_pool_and_context_bounds_remain_fail_closed_without_replacement(self):
         oversized = rows()
         oversized[0]['candidate'] = 'x' * 1501

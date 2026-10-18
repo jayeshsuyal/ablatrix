@@ -153,6 +153,9 @@ def prior_source_reviews(paths, prior_projection):
                        'provenance': review['provenance']})
     if len({item['fileSha256'] for item in result}) != len(result):
         raise ValueError('Prior source reviews must be distinct.')
+    reviewed_cohorts = {item['cohortFileSha256'] for item in result}
+    if reviewed_cohorts != expected_cohorts or len(result) != len(expected_cohorts):
+        raise ValueError('Prior source reviews must cover every prior cohort exactly once.')
     return result
 
 
