@@ -1,6 +1,6 @@
 # Retrieval source coverage
 
-October 18, 2026. Experimental preparation; no new paid calls or fresh quality result yet.
+October 18, 2026. Experimental preparation; no new paid calls or fresh quality result yet. The natural eight-case packet is preserved as an unexecuted regression packet. A targeted source-gap benchmark is being prepared before proposing paid quality validation.
 
 ## Observed gap
 
@@ -42,8 +42,16 @@ Bot review caught a mode/idempotency mismatch. Retrieval contract now participat
 
 A second review found that explicitly requesting both item and package dimensions could omit the item field. The generic matcher now admits both requested scopes, including coordinated possessive wording, while package-only questions still exclude item dimensions. This finding came from code review, before any fresh answers existed. The [compatibility amendment](evidence/retrieval-source-coverage-2026-10-18/compatibility-amendment-v1.json) preserves the original candidate freeze, questions, source contexts and references. It allows only the exact core bug fix and comparison-adapter change. Pure replay reproduces all eight frozen contexts and addition traces and all sixteen original request bodies/bindings exactly. See the [replay record](evidence/retrieval-source-coverage-2026-10-18/context-replay-v1.json). The amendment cannot authorize a changed question, source body, answer prompt or provider setting.
 
-## Exact proposed live scope
+## Preserved natural-packet proposals
 
-The [amended bounded proposal](evidence/retrieval-source-coverage-2026-10-18/bounded-plan-v2.json) binds plan `ba737ce27eecfec57e5f9b8289bda14b01f33e63142674eead1a85cee4c355f1` to current code, source files, private inventory commitments, ledger history and all sixteen request hashes. It supersedes [unapproved, unexecuted v1](evidence/retrieval-source-coverage-2026-10-18/bounded-plan-v1.json) after the generic dimensions fix, with no reselection or request changes. Preparation and offline verification passed with zero provider calls. Paid execution remains unapproved.
+The [amended bounded proposal](evidence/retrieval-source-coverage-2026-10-18/bounded-plan-v2.json) binds plan `ba737ce27eecfec57e5f9b8289bda14b01f33e63142674eead1a85cee4c355f1` to its frozen code, source files, private inventory commitments, ledger history and all sixteen request hashes. It superseded [unapproved, unexecuted v1](evidence/retrieval-source-coverage-2026-10-18/bounded-plan-v1.json) after the first generic dimensions fix, with no reselection or request changes. Preparation and offline verification passed with zero provider calls. Both proposals remain unapproved and unexecuted; later possessive-scope code changes make their execution file bindings stale.
 
 The proposal preserves all eight pairs: two receive size/material additions and six are unchanged-context controls. The fresh comparison does not isolate a model-identity enrichment effect; model-detail delivery has development regression coverage. The exact addition is at most sixteen calls / $1.60 local planning allowance, 154 cumulative attempts and $15.600281 combined planning usage under the existing $20 cap. No retries, grader calls, discovery or activation.
+
+## Targeted gap validation before spending
+
+The natural packet cannot adequately test whether recovering a missing specification or model detail improves an answer: its only added facts already appear in the baseline. Preserve its passed source review and all artifacts without running it as missing-fact validation.
+
+Freeze a new source-only protocol and selection code before reading a bounded deck of 64 separate products. Independent source review must identify three specification gaps and three model/detail gaps, plus two controls whose baseline covers the available relevant facts. Select on facts absent from baseline sources and product title, including original CQA applicability; never select on candidate retrieval success or generated answers. Insufficient eligible cases means stop without a new seed or discretionary replacement.
+
+Freeze the selected eight, retrieve their final baseline, and independently revalidate the designated gaps before assembling the candidate. FTS5 rankings depend on the indexed corpus, so deck and final baselines may differ; loss of gap eligibility stops the whole packet. Candidate misses stay in the denominator. Any later result will describe this targeted gap sample and its controls separately; it cannot estimate natural failure prevalence or establish general quality improvement. The ceiling remains eight pairs / sixteen first answers; exact reviewed code, inputs, requests and fresh financial approval precede any live execution.

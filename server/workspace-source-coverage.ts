@@ -35,7 +35,9 @@ function identifiers(text: string): Set<string> {
 }
 
 function relevance(source: Source, question: string): { priority: number; reasons: string[] } | undefined {
-  const q = question.toLowerCase(), requested = identifiers(question);
+  // Normalize possessive scope nouns only for intent matching. Identifier
+  // comparisons and every returned question/source byte use the original text.
+  const q = question.toLowerCase().replace(/\b(item|product|package|packaging|box|carton)['’]s\b/g, '$1'), requested = identifiers(question);
   const dimensionIntent = /\b(?:dimensions?|measurements?|length|width|height|depth|diameter|size|thickness|tall|wide|long|deep)\b|\bhow\s+(?:big|large|small)\b/.test(q);
   const packageIntent = /\b(?:packag(?:e|es|ing)|box|carton|shipping)\b/.test(q);
   const itemDimensionIntent = !packageIntent || /\b(?:item|product)\s+(?:dimensions?|measurements?|size|length|width|height|depth|diameter|thickness)\b|\b(?:item|product)\s+(?:and|&)\s+(?:(?:the|its)\s+)?(?:packag(?:e|es|ing)|box|carton|shipping)\b/.test(q);

@@ -76,8 +76,13 @@ test('item and package dimensions remain separate, and unrelated fields do not b
   assert.deepEqual(f.run('What are its dimensions?').additions.map(a => a.sourceId), ['item']);
   assert.deepEqual(f.run('What are its package dimensions?').additions.map(a => a.sourceId), ['package']);
   assert.deepEqual(f.run('What are the package dimensions of this product?').additions.map(a => a.sourceId), ['package']);
+  for (const question of ["What are the package's dimensions of this product?", 'What are the package’s dimensions of this product?']) {
+    assert.deepEqual(f.run(question).additions.map(a => a.sourceId), ['package']);
+  }
   for (const question of ['What are the product and package dimensions?', 'What are the item dimensions and the package dimensions?', 'What are the package and product dimensions?',
-    'What are the dimensions of the product and its package?', 'What are the dimensions of the item and its box?']) {
+    'What are the dimensions of the product and its package?', 'What are the dimensions of the item and its box?',
+    "What are the item's dimensions and the package's dimensions?", 'What are the item’s dimensions and the package’s dimensions?',
+    "What are the product's and package's dimensions?", 'What are the product’s and package’s dimensions?']) {
     const combined = f.run(question);
     assert.deepEqual(combined.additions.map(a => a.sourceId), ['item', 'package']);
     assert.ok(combined.additions[0].reasons.includes('question_intent:item_dimensions'));
