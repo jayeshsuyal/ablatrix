@@ -37,3 +37,9 @@ The complete server suite passes 574 tests with one platform skip; production bu
 The fresh source-only packet passed independent family/source review: eight new products, 154 reviewer parents and 36 original CQA scopes. The same cached pinned BGE retrieval produces forty baseline parent bodies; the candidate supplies forty-two. Only two cases receive an addition, while six remain unchanged controls. Those groups will be reported separately without replacement. See the [selection summary](evidence/retrieval-source-coverage-2026-10-18/selection-summary-v1.json) and [pre-generation references](evidence/retrieval-source-coverage-2026-10-18/source-family-review-v1.json). No fresh answers exist yet.
 
 Bot review caught a mode/idempotency mismatch. Retrieval contract now participates in the persisted request hash, so a retry cannot change modes or silently obtain the other mode's answer. Present-index, lost-index and receipt-recovery checks pass; ordinary request bytes remain unchanged. The complete suite passes 574 tests with one platform skip after this fix.
+
+## Exact proposed live scope
+
+The [bounded proposal](evidence/retrieval-source-coverage-2026-10-18/bounded-plan-v1.json) binds plan `64998b3eaaac4e043306acd209f540796f976b3c325ac5ff3bcf4bf31f5c4de4` to current code, source files, private inventory commitments, ledger history and all sixteen request hashes. Preparation and offline verification passed with zero provider calls. Paid execution remains unapproved.
+
+The proposal preserves all eight pairs: two receive size/material additions and six are unchanged-context controls. The fresh comparison does not isolate a model-identity enrichment effect; model-detail delivery has development regression coverage. The exact addition is at most sixteen calls / $1.60 local planning allowance, 154 cumulative attempts and $15.600281 combined planning usage under the existing $20 cap. No retries, grader calls, discovery or activation.
