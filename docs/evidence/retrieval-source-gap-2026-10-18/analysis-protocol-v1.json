@@ -1,0 +1,76 @@
+{
+  "format": "ablatrix-source-gap-analysis-protocol-v1",
+  "recordedBeforeSourceScreening": true,
+  "recordedBeforeAnswerGeneration": true,
+  "plannedDenominator": {
+    "products": 8,
+    "answerSlots": 16,
+    "specificationGaps": 3,
+    "modelDetailGaps": 3,
+    "baselineCompleteControls": 2
+  },
+  "sourceGapEligibility": {
+    "reviewAllScreeningCases": true,
+    "candidateCodeContextsAndAnswersWithheld": true,
+    "specification_gap": "A scoped source supports a requested measurement, capacity, configuration, color, material or similar specification that is absent from the actual baseline and product title and would materially help answer the question.",
+    "model_detail_gap": "A scoped source supports a useful identity, exact part/model qualification or requested model relationship absent from the baseline and title. A question-only identifier is not factual proof; a neighboring model, shared brand or listing part number cannot establish compatibility. Preserve unresolved relationships.",
+    "baseline_complete_control": "The baseline covers the useful facts relevant to the question available in the full sources, including at least one useful fact supported by a literal quote from an actual baseline source body.",
+    "ineligible_or_uncertain": "Use when no useful supported gap or meaningful complete control can be established, support or applicability is ambiguous, or a supposedly new source only repeats an available fact.",
+    "multiplePossibleGroups": "Choose the group of the primary useful missing fact requested by the question. An incidental model identifier does not turn a specification question into a model-detail gap. A case occupies only one group.",
+    "absenceReview": "Check every supplied baseline body and the title for equivalent facts, preserving each source's original customer-question scope. Different IDs, wording or formatting alone do not establish a gap.",
+    "noPhysicalVerificationClaim": true
+  },
+  "blindReview": {
+    "independentAiReviewers": 2,
+    "receives": [
+      "question and product title",
+      "complete source bodies with original customer-question scope",
+      "independent source-supported references and unresolved relationships",
+      "anonymous A/B answers and their citations"
+    ],
+    "withheldUntilBothReviewsAreSaved": [
+      "arm assignment",
+      "per-answer generation-source availability",
+      "candidate implementation",
+      "gap/control group assignment",
+      "other reviewer judgments",
+      "latency, token usage and planning accounting"
+    ],
+    "axes": [
+      "factual consistency with the scoped full source packet",
+      "support from the actual cited source bodies",
+      "product, model and relationship applicability",
+      "coverage of useful supported facts",
+      "unsupported certainty and preserved qualifications",
+      "directness and wording"
+    ],
+    "pairPreferences": ["A", "B", "tie", "neither", "uncertain"],
+    "substantivePreferenceSeparateFromWording": true,
+    "contextClaims": "Do not mark a claim about which information was supplied, or an input-relative abstention, factually wrong without the withheld input context. Record missing useful facts as coverage observations; assess input-relative appropriateness after unblinding.",
+    "referenceCorrections": "Preserve source-supported corrections and disagreements. Source references are AI assessments, not human gold or independent physical verification."
+  },
+  "postReview": {
+    "unblindOnlyAfterBothReviewFilesAreSaved": true,
+    "primaryGroups": ["specification_gap", "model_detail_gap"],
+    "controlsReportedSeparately": true,
+    "changedAndUnchangedContextsReportedSeparately": true,
+    "candidateRetrievalMissesRetained": true,
+    "attribution": "Inspect whether a designated missing fact reached candidate generation and was correctly used and supported. A preference with unchanged context cannot establish a retrieval benefit. A wording preference alone is not a factual or coverage improvement.",
+    "agreement": "Report reviewer agreement and disagreement without forced consensus or treating two correlated AI judgments as human truth.",
+    "failedOrUnattemptedSlotsRetained": true,
+    "inputRelativeAbstention": "Separate an appropriate refusal under missing baseline context from end-to-end fact coverage. Baseline completeness is evaluated again using the actual frozen generation inputs."
+  },
+  "metrics": {
+    "literalCitationMatching": "A structural check; does not establish semantic support, factual correctness or human-reviewed quality.",
+    "quality": "Source-supported blind AI assessments on this targeted sample, with disagreements and limitations retained.",
+    "resources": "Report measured source counts, input/output tokens and response durations. Context size differs. Local planning allowances are not settled charges or provider-enforced caps; do not infer cost or latency savings."
+  },
+  "limitations": [
+    "Selection deliberately targets baseline-source gaps; results cannot estimate natural failure prevalence or general answer-quality improvement.",
+    "The fixed deck and quotas may fail before generation. Stop without replacement or reseeding.",
+    "A model identifier or listing part number does not establish compatibility or interchangeability."
+  ],
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "automaticActivation": false
+}

@@ -1,0 +1,94 @@
+{
+  "format": "ablatrix-retrieval-coverage-context-replay-v1",
+  "provenance": "pure_pre_generation_recomputation",
+  "originalPlanSha256": "64998b3eaaac4e043306acd209f540796f976b3c325ac5ff3bcf4bf31f5c4de4",
+  "amendedPlanSha256": "ba737ce27eecfec57e5f9b8289bda14b01f33e63142674eead1a85cee4c355f1",
+  "compatibilityAmendmentFileSha256": "bd1f50680f10fd0bf8a56da013122bd1205058bfcc7b8bc225dfd7d80790b850",
+  "originalArtifactsUnchanged": {
+    "packet": "681544a9e7ea23b1d0cef61106655fafd6736ee26e6228d33389d99c3cc84164",
+    "retrieval": "d5b257be27edaa800e59ff475a18eec830af9cc22af8cc80227b35c436585384",
+    "familyAudit": "6385aaa92cdd44a18ea063793067fcafce4aedba54749a305294205f1c230153",
+    "candidateFreeze": "f54ef0a9f3622439ea53a45c79cf85eb3b25e3c8a31d629c6aa7a6903bee112e",
+    "exposureAudit": "e2cdf0f823893230bef6668bb9c62c81911bace8fd75407b8baaa202a6e07bca",
+    "selectionAudit": "b56d3348bd3bee97e233babd275cbcf962b8fc8a34ea67ea06929b3f1a360b82"
+  },
+  "generationPerformed": false,
+  "newProviderCalls": 0,
+  "modelOutputsInspected": false,
+  "allSixteenRequestBodiesAndBindingsUnchanged": true,
+  "cases": [
+    {
+      "caseId": "retrieval-coverage-train-5918",
+      "baselineContextSha256": "c36ff2599d55e96d67f09080b4a72ea765c5ca1544293d7926fd9dbb9df4728a",
+      "candidateContextSha256": "c36ff2599d55e96d67f09080b4a72ea765c5ca1544293d7926fd9dbb9df4728a",
+      "additionsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "baselineSourceBodies": 5,
+      "candidateSourceBodies": 5,
+      "recomputedExactly": true
+    },
+    {
+      "caseId": "retrieval-coverage-train-13455",
+      "baselineContextSha256": "71c1b702971119a605c696ab46e10d1b45085cda25ca410aac54d24f5364223e",
+      "candidateContextSha256": "b07ea5814d681c7b66e23a6cdabaa23b326cdd9597e45a19040a7fc62ad22f3a",
+      "additionsSha256": "942b82f5245ab56d607114653a3c820687eeba972f71182bc2c6a809998501db",
+      "baselineSourceBodies": 5,
+      "candidateSourceBodies": 6,
+      "recomputedExactly": true
+    },
+    {
+      "caseId": "retrieval-coverage-train-7340",
+      "baselineContextSha256": "6ff7a580ae7c28f54c49d4c8cebe52d5cab0018edfb79e00ad3c2521ec3ea8ee",
+      "candidateContextSha256": "54c9958d860b452523750a41a6270736d734d6f27585199978404a7c216d8b1c",
+      "additionsSha256": "7389485e00f7839bfc38c69cbf6da9abaa58af0b9305b2f2b6b330a27c2c6733",
+      "baselineSourceBodies": 5,
+      "candidateSourceBodies": 6,
+      "recomputedExactly": true
+    },
+    {
+      "caseId": "retrieval-coverage-train-677",
+      "baselineContextSha256": "bd93dd72a5772827e3e6ab9958399b8bf9e45c21375dbdb24fce4a0784143f1d",
+      "candidateContextSha256": "bd93dd72a5772827e3e6ab9958399b8bf9e45c21375dbdb24fce4a0784143f1d",
+      "additionsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "baselineSourceBodies": 5,
+      "candidateSourceBodies": 5,
+      "recomputedExactly": true
+    },
+    {
+      "caseId": "retrieval-coverage-train-3500",
+      "baselineContextSha256": "01df7cf78c086f48ba7913042b395e83a6fb2e3bc0783ad9b36c05d98a9cc07d",
+      "candidateContextSha256": "01df7cf78c086f48ba7913042b395e83a6fb2e3bc0783ad9b36c05d98a9cc07d",
+      "additionsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "baselineSourceBodies": 5,
+      "candidateSourceBodies": 5,
+      "recomputedExactly": true
+    },
+    {
+      "caseId": "retrieval-coverage-train-4621",
+      "baselineContextSha256": "49949c0afca975595bdbf77c6ca629fd70637125acd65f5defa2ba6d7bdd1881",
+      "candidateContextSha256": "49949c0afca975595bdbf77c6ca629fd70637125acd65f5defa2ba6d7bdd1881",
+      "additionsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "baselineSourceBodies": 5,
+      "candidateSourceBodies": 5,
+      "recomputedExactly": true
+    },
+    {
+      "caseId": "retrieval-coverage-train-2032",
+      "baselineContextSha256": "e1bdcf3c1b0a03da0a187f329fdd5fe0c77a10b0be5ac877e890b3cddc82cedc",
+      "candidateContextSha256": "e1bdcf3c1b0a03da0a187f329fdd5fe0c77a10b0be5ac877e890b3cddc82cedc",
+      "additionsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "baselineSourceBodies": 5,
+      "candidateSourceBodies": 5,
+      "recomputedExactly": true
+    },
+    {
+      "caseId": "retrieval-coverage-train-1268",
+      "baselineContextSha256": "df94ac8ddefbd3ac001d0d810c7e6d101db80256a57b5c84440c76b17dab246a",
+      "candidateContextSha256": "df94ac8ddefbd3ac001d0d810c7e6d101db80256a57b5c84440c76b17dab246a",
+      "additionsSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "baselineSourceBodies": 5,
+      "candidateSourceBodies": 5,
+      "recomputedExactly": true
+    }
+  ],
+  "qualityClaimEligible": false
+}

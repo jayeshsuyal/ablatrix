@@ -1,0 +1,282 @@
+{
+  "format": "ablatrix-source-coverage-v2-source-review-v1",
+  "status": "completed",
+  "provenance": "independent_ai_source_gap_review",
+  "deckFileSha256": "e315f8cccbe943acfa205e4c2a3a6f966d41865ec63247214693909be5052a9a",
+  "baselineFileSha256": "d8dfe44845d0b92666fc3fae86a9c52e54ee398606a2736ec37ff9f9ea347005",
+  "candidateContextInspected": false,
+  "modelOutputsInspected": false,
+  "cases": [
+    {
+      "caseId": "source-coverage-v2-train-5688",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "7be9e611504dd3ac6c0df018abe79b544c1399a4424266a4afb01f315f5c10cb",
+      "sourcePoolSha256": "c7d48ec80e533d945db66e55cbc9b2bbf321298d347accb14f2cf51dd6583c3f",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The listing claims 40 total cups, or 10 quarts, after rehydration.",
+          "sourceIds": [
+            "epqa-B0039QW1HM-bullet-ab76e068f2f116cf"
+          ],
+          "quote": "yields 40 total cups (10 quarts) when rehydrated",
+          "qualification": "This is a stated aggregate yield for the supplied product source, not a measured expansion factor for each individual vegetable."
+        },
+        {
+          "fact": "A customer states that each package contains one cup of dehydrated product.",
+          "sourceIds": [
+            "epqa-B0039QW1HM-cqa-cd8a6c276b858564"
+          ],
+          "quote": "there is literally 1 cup of dehydrated product in each package i.e.",
+          "qualification": "The original question explicitly concerns the total 15 cups of dehydrated product; the answer body supports one dehydrated cup per pouch. The product title supplies the 15-count pack."
+        }
+      ],
+      "notes": "The baseline already supplies the dry amount per pouch and aggregate rehydrated yield; the title supplies 15 pouches. Taken together, these support approximately 40/15 = 2.67 times the aggregate dry volume, or about a 167% increase, subject to the listing yield. No full source supplies a distinct per-vegetable factor. The additional 15-one-cup description repeats the same available quantity rather than creating a gap. This is an AI assessment of source coverage, not verification of actual yield."
+    },
+    {
+      "caseId": "source-coverage-v2-train-12870",
+      "sourceGapGroup": "specification_gap",
+      "baselineContextSha256": "ebf40a30f43e3b81e089f206c0dcf218c5b34dad6cfb04c6ec886792598a3177",
+      "sourcePoolSha256": "56fe572186fde13f101c5f5a10d6f9737ad645b89498708f029388abb4672417",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": true,
+      "baselineComplete": false,
+      "designatedFacts": [
+        {
+          "fact": "The description claims more than six hours per fill.",
+          "sourceIds": [
+            "epqa-B0171UWG3A-description-569cd240406155b3"
+          ],
+          "quote": "each fill provides more than 6 hours of ambiance.",
+          "qualification": "This is a product-description claim, not a measured average. The source does not specify fuel, wick setting, weather or test conditions."
+        },
+        {
+          "fact": "One reviewer reports five to six hours after lighting.",
+          "sourceIds": [
+            "epqa-B0171UWG3A-review-260b90ffd4f88981"
+          ],
+          "quote": "it's a good product, it stayed for 5-6 hrs after lighting it up, sturdy and looks cool.",
+          "qualification": "This is one customer report. It does not explicitly establish a full initial fill, test conditions or a population average, and it is shorter than the description claim."
+        },
+        {
+          "fact": "Another reviewer reports nearly eight hours of burning before manually extinguishing the torches.",
+          "sourceIds": [
+            "epqa-B0171UWG3A-review-ae71cc00f4d6a319"
+          ],
+          "quote": "they burned beautifully all night (for nearly eight hours before i blew them out).",
+          "qualification": "The customer extinguished the torches; this is not an eight-hour exhaustion limit or a measured average. Initial fill and operating conditions are not stated."
+        }
+      ],
+      "notes": "Every baseline body and the title lacks a numerical duration for one fill. Baseline statements about durable color, infrequent refilling over summer and burning until extinguished do not semantically provide hours per fill. The full-source duration claims directly help answer the actual question, while their differing source attribution and limitations must remain visible. The canister-capacity number and incidental identity details are not designated as primary missing runtime facts."
+    },
+    {
+      "caseId": "source-coverage-v2-train-13347",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "89e903fd0553b90602525e9cb661314a02daac62efa19d650d3df16f745b9fe3",
+      "sourcePoolSha256": "eefa5b775e9b1f8bef90ef3c8cbf78e95fc47d2d22b9022f7b52b17c6a0cbf0f",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The adjustable strap extends to 65 inches.",
+          "sourceIds": [
+            "epqa-B01DPUYGRY-bullet-88067adbf3707305"
+          ],
+          "quote": "adjustable strap extends to a generous 65 inches",
+          "qualification": "This is the listed extended strap length. It is not a strap drop measurement or a package dimension, and has not been physically verified."
+        }
+      ],
+      "notes": "The exact maximum extension is already literal in an actual baseline body. The remaining full sources describe bag dimensions, mini wristlet, packaging, care and identity; none adds a useful missing maximum-strap-length qualification. Bag or package measurements should not replace the 65-inch strap statement."
+    },
+    {
+      "caseId": "source-coverage-v2-train-4712",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "3f88127c7fb8f9bbca506d21535dcc0da8ee7ac4a271801a05b5a1a27fff5e1c",
+      "sourcePoolSha256": "c28aca0b7509eb98b3cb900ea7427b073630ba610d59d6766818f691c9c00161",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "No useful primary dimensional fact is missing: the baseline already contains the complete comparison CQA with Plus bag dimensions 3.5 inches wide by 19 inches high by 19 inches long, standard Peapod bag dimensions 3 by 16.5 by 16.5 inches, and both unfolded-size descriptions. However, the supplied sources also give an unqualified item dimension of 3.9 by 17.9 by 17.8 inches and question the Plus identity using the smaller unfolded dimensions. The item attribute is not labeled folded or package size. Actual variant and consistent folded measurements remain unresolved, so this is uncertain rather than a forced gap or a claim of complete resolved dimensions. Vague suitcase-fit language adds no missing exact folded measurement."
+    },
+    {
+      "caseId": "source-coverage-v2-train-453",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "07e0cb503c0acf4d9e5d3edbe65092ac04edcbe7daf8cfdb6853079ae7424c66",
+      "sourcePoolSha256": "4d9dd855d7c94d8de71d3f81ce401f4a537f776b1745361ae24049cef18bbe45",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "All explicit full-source hand-length measurements already occur in baseline bodies, but they conflict: one CQA gives center-to-tip hour 2 11/16, minute 3 27/32 and second 3 5/16 inches; another gives hour 57, minute 67 and second 90 mm with no measurement convention; another approximates a 2-inch hour hand and 3 to 3.5-inch minute/second hands. These are not equivalent conversions and cannot be reconciled from the supplied text. The omitted up-to-4-inch-hands statement is phrased as a selectable movement capacity, not the lengths of these supplied hands. No missing useful fact is designated, and the unresolved source conflict warrants uncertainty rather than one asserted size set."
+    },
+    {
+      "caseId": "source-coverage-v2-train-5097",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "a55969fde360188fd95b208125b1976f0bd3332702ffc35d3764ba4d9c979912",
+      "sourcePoolSha256": "8c5b8943cb6d172bd96ebf2201dcd0f1b1a5f5627313595c5da024250734ea61",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The described brackets fit most railings from two to six inches wide.",
+          "sourceIds": [
+            "epqa-B002NKYWJA-description-ca1d34c0a3e90559"
+          ],
+          "quote": "-adjustable brackets to fit most 2\"-6\" wide railings.",
+          "qualification": "The stated range is for railing width. The requested 1.75 inches is below this stated range, but the source does not map width versus thickness or establish an absolute no-fit conclusion."
+        },
+        {
+          "fact": "A reviewer says the holder needs to go over a railing to hang straight.",
+          "sourceIds": [
+            "epqa-B002NKYWJA-review-6b213a84ea24071f"
+          ],
+          "quote": "it has to go over a railing or it won't hang straight.",
+          "qualification": "This is the reviewer installation observation, not proof of compatibility with a particular hook spacing."
+        },
+        {
+          "fact": "The holder is described as expandable from 24 to 36 inches wide.",
+          "sourceIds": [
+            "epqa-B002NKYWJA-description-2b32ae5e149d7db5"
+          ],
+          "quote": "expandable from 24 to 36-inches wide",
+          "qualification": "This is the overall expandable width, not the center-to-center distance between hooks or confirmation of 12- or 18-inch spacing."
+        }
+      ],
+      "notes": "The baseline covers all useful available mounting limits and adjustability for this question. The full-source answer to the exact question merely says it is adjustable and supplies no 1.75-inch clearance or 12/18-inch center spacing; that generic fact is already in the baseline and title. Overall item, packaging and planter dimensions do not establish hook geometry. A complete control here means complete for available useful evidence: exact requested fit remains unestablished by every supplied source, and no fit guarantee is implied."
+    },
+    {
+      "caseId": "source-coverage-v2-train-7953",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "3ac3176ccddb31eb4b04f06c711af22004a6727977b1e5cc5ee45d08a4bbc851",
+      "sourcePoolSha256": "3d9a17ae2499582cf0d23c9ea3ce3e4013d7fc0decc636f4248364ae841c6423",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The listing describes a standard nock claimed to work on any youth bow.",
+          "sourceIds": [
+            "epqa-B001RMUOKG-bullet-ef4a8dc2efd5c9cc"
+          ],
+          "quote": "arrows have a standard nock that can be used on any youth bow",
+          "qualification": "This useful nock description is explicit in an actual baseline body. It is a broad listing claim, not a numeric nock diameter, groove size, or physically verified fit guarantee. No supplied source states a numeric nock size."
+        }
+      ],
+      "notes": "The only useful available nock-specific fact is already in the baseline. The 28-inch title and arrow-length sources, a remembered 20-22-inch arrow length, the item dimensions, and the fragment with 3in. do not establish a nock measurement. The actual numeric-size question remains unanswered without creating a source gap."
+    },
+    {
+      "caseId": "source-coverage-v2-train-8049",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "7603c20a356b9cb6879f53f94a4f2230885261535e2d6ae41a973f9fa8c6fad5",
+      "sourcePoolSha256": "369b2adec6d10f26d56887981f3faa93628ba0657bb7e87a44c71d9c028c2355",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "No useful foot-pedal dimension is absent from the baseline. Its CQA bodies already contain the explicit foot-pad length report of 12 inches and the uncertain statement that the foot pedals seem to be about 15 inches. Their original questions concern pedal peak height and distance between machine feet respectively; the 15-inch axis is unstated, and the reports cannot be reconciled into a reliable pedal dimension pair. No source gives pedal width. Whole-machine dimensions and stride length are distinct. Unresolved measurement scope and conflict prevent a definitive gap or complete control label."
+    },
+    {
+      "caseId": "source-coverage-v2-train-13415",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "d388819a13ebf477aa554d67dc2c810bde16539c56153a2e4c6c1874d7eeadc3",
+      "sourcePoolSha256": "7d8a0409e1facf475bab07af7403ede12759e5012cdc0f15fcacbf1b890bca42",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "The full source pool adds an English spoken/subtitled/original language attribute and customer mentions of Czech and a Spanish version, but none establishes the language tracks on the DVD asked about. The title says 4K UHD and the binding attribute says video_download, leaving delivery-format applicability unresolved. The Czech purchase report does not identify format or edition; the Spanish review does not inventory disc tracks. Baseline song/bonus-language reviews likewise are not a DVD audio/subtitle list. These cannot be designated as supported missing DVD facts or a complete control."
+    },
+    {
+      "caseId": "source-coverage-v2-train-6689",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "ec7d9841f830c325fc2947834a035a39dce4a896a02c3658aba6d6fc148b5d6e",
+      "sourcePoolSha256": "8cb85035e9d8972ea468a76170dc3cc86077b259acdea063760476c170cc2773",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "The baseline already includes both CQA reports that a CD comes with the player, including a kids CD, as well as a customer statement that it should come with a CD, which may imply a different inclusion experience. Full-source baby-song and cheesy-CD comments repeat the already covered included kids-CD information and do not create a useful gap. The supplied reports do not resolve whether every package includes a disc; their inconsistent inclusion experience is retained as uncertainty rather than a definitive complete control."
+    },
+    {
+      "caseId": "source-coverage-v2-train-3571",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "16a1316fad2e1f36e07f207e393df781d4e97a952d9119355fb0ae38e4e26af8",
+      "sourcePoolSha256": "d3ec102d735c4eb8b52724f313d8fb03ffad170daf352c952ee0ab319159b279",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A gift box is included with the album.",
+          "sourceIds": [
+            "epqa-B00A9JFASY-bullet-59e32a4d2fcdab70"
+          ],
+          "quote": "gift box included",
+          "qualification": "This exact inclusion statement occurs in an actual baseline bullet and is also present semantically in the title. Other baseline customers describe presentation and protective storage boxes."
+        },
+        {
+          "fact": "A customer describes the included box as protective and suitable for storage.",
+          "sourceIds": [
+            "epqa-B00A9JFASY-review-f15d5343d4867b0c"
+          ],
+          "quote": "comes in a nice protective box for storage",
+          "qualification": "This is a customer report in an actual baseline body. No supplied source compares its construction or appearance with the seller's other products, so sameness to those other boxes is not established."
+        }
+      ],
+      "notes": "The title and actual baseline already cover the useful available box-inclusion, presentation, and protective-storage facts. The remaining full-source boxed-album review repeats inclusion. No source establishes a comparison with boxes supplied for other products; that remaining question does not create a missing supported fact."
+    },
+    {
+      "caseId": "source-coverage-v2-train-5298",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "1b0afb467c84a6ce6825bd6dcd0b88e3ab287d50c854f5bbddf3d738c0ce1573",
+      "sourcePoolSha256": "b77004911ea1b21bfb5009d01d66e80505d3c690a863fedbb41ee2badd59f589",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The product lists a one-year limited warranty covering manufacturing defects.",
+          "sourceIds": [
+            "epqa-B001652LO6-attribute-5fc3dd747f5dfc24"
+          ],
+          "quote": "1 year limited warranty on manufacturing defects.",
+          "qualification": "This exact warranty statement is in an actual baseline attribute. Preserve the one-year duration, limited nature, and manufacturing-defect scope; it does not establish a satisfaction guarantee, unlimited replacement promise, or coverage of ordinary wear."
+        }
+      ],
+      "notes": "The actual baseline already contains the only supplied warranty or guarantee terms: a one-year limited manufacturing-defect warranty. A customer's concern about service life supplies no alternative warranty terms or contradiction to the stated coverage. Model and extension details are unrelated to the requested guarantee."
+    }
+  ],
+  "limitations": [
+    "Independent AI source assessment; not physical verification or source-checked human judgments.",
+    "Sources may conflict or fail to establish exact requested model/workflow relationships."
+  ]
+}

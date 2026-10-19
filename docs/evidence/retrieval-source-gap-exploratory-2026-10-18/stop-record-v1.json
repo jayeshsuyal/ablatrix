@@ -1,0 +1,122 @@
+{
+  "format": "ablatrix-source-gap-partial-stop-record-v1",
+  "recordedAt": "2026-10-19T01:55:17.388781Z",
+  "status": "stopped_ineligible_before_paid_plan",
+  "experiment": "retrieval_source_gap_partial_v1",
+  "selectionProtocol": "exposed_partial_source_gap_v1",
+  "retrievalContract": "workspace-source-coverage-v1",
+  "candidateCoreFileSha256": "38db63f6c47026ca27732d1e4de73990c445657bc670e9c6b7354c83448f7575",
+  "artifacts": [
+    {
+      "path": "candidate-freeze-v2.json",
+      "fileSha256": "1d6292b41f3a14d18d594bb29ddbc752acde25f8424ccfad077ab3bac19a0fcf"
+    },
+    {
+      "path": "selection-protocol-v2.json",
+      "fileSha256": "2e8b0c9d78bc8c19b276dde94dc0d0bde2d9d2fc622b6ae8200380d144c433b9"
+    },
+    {
+      "path": "analysis-protocol-v1.json",
+      "fileSha256": "f177683a4f38d56734cc852c8d235fb163c37e77ad66148e770be0e2d7532de0"
+    },
+    {
+      "path": "pool-v2.json",
+      "fileSha256": "00506e7875c4a47705f06ff14302de3648b9d9343b5240fe7225706d5c83b737"
+    },
+    {
+      "path": "screening-baseline-v1.json",
+      "fileSha256": "b8230e71cc2e52a25a1507f44dcda9de6f8597d783633e13069ff40d1836b25d"
+    },
+    {
+      "path": "source-gap-review-v1.json",
+      "fileSha256": "18b5186752ca21ad010c9736c1f43878cbdb619052d5bab390f87faf08352089"
+    },
+    {
+      "path": "source-gap-review-provenance-v1.json",
+      "fileSha256": "d8410b58c8364025790c9b14af9a4385f48522858bb8ec7934bcf57f24ad4082"
+    },
+    {
+      "path": "offline-retrieval-diagnostic-v1.json",
+      "fileSha256": "7c100e8035b98d4db88a87bc3a27d220b8f08af69d657597b480d9ff9c17cff6"
+    },
+    {
+      "path": "pre-review-representation-amendment-v1.json",
+      "fileSha256": "f9addc0559abfafbceadf5b8e5b43814ab76dd2185968a7d4e7b959fbb496feb"
+    }
+  ],
+  "selectionProtocolSha256": "eea5208d2f79b80e9376f692a62e013716b445b3c30ed5ff05e7ff303b05e787",
+  "sourceReview": {
+    "provenance": "independent_ai_source_gap_review",
+    "reviewedProducts": 44,
+    "groups": {
+      "specification_gap": 3,
+      "model_detail_gap": 0,
+      "baseline_complete_control": 26,
+      "ineligible_or_uncertain": 15
+    },
+    "requiredMinima": {
+      "specification_gap": 1,
+      "model_detail_gap": 1,
+      "baseline_complete_control": 2
+    },
+    "unmetMinimum": {
+      "group": "model_detail_gap",
+      "required": 1,
+      "observed": 0
+    },
+    "candidateContextInspectedBeforeReview": false,
+    "modelOutputsInspected": false,
+    "caseOrderMatchesPool": true
+  },
+  "finalization": {
+    "status": "stopped",
+    "message": "Insufficient independently supported exploratory gaps/controls; stop without replacement or reseeding.",
+    "selectedCohortCreated": false,
+    "finalSubsetBaselineCreated": false,
+    "caseReplacement": false,
+    "newSeed": false
+  },
+  "offlineDiagnostic": {
+    "status": "diagnostic_only_mixed_benchmark_ineligible",
+    "products": 44,
+    "changedContexts": 10,
+    "gapCases": 3,
+    "gapCasesWithDesignatedFactDelivered": 0,
+    "designatedGapFacts": 4,
+    "designatedGapFactsDelivered": 0,
+    "baselineParentsRetainedByAdditiveContract": true,
+    "selectedCohortQualification": false,
+    "answerQualityComparison": false,
+    "gapCaseIds": [
+      "source-gap-train-12561",
+      "source-gap-train-2472",
+      "source-gap-train-6708"
+    ]
+  },
+  "newProviderCalls": 0,
+  "generatedAnswers": 0,
+  "humanJudgments": 0,
+  "paidExecutionAuthorized": false,
+  "qualityClaimEligible": false,
+  "defaultRetrievalChanged": false,
+  "policyActivated": false,
+  "nextDevelopment": {
+    "preserveFrozenV1": true,
+    "exposedGapCasesAreDevelopmentExamples": true,
+    "directions": [
+      "nested structured item specifications",
+      "conditional load limits in prose",
+      "scoped duration reports"
+    ],
+    "freshProductDisjointValidationRequired": true,
+    "futureExactPaidScopeRequiresReviewAndApproval": true
+  },
+  "limitations": [
+    "The 44-product pool is an observed source-exposed diagnostic prefix from a failed 64-product design, not an unseen-source holdout.",
+    "Source labels are AI assessments of supplied sources, not human gold or physical product verification.",
+    "Four designated gap facts are review units: one unit groups the watch band size and width. They are not an exhaustive atomic claim count.",
+    "A changed context alone does not establish useful retrieval, cited support, answer correctness, or improved human-reviewed quality.",
+    "The all-pool source-delivery diagnostic followed failed mixed-cohort eligibility; it is descriptive and cannot qualify that benchmark.",
+    "No generated answer, latency reduction, token-cost reduction, semantic citation-support gain, or answer-quality gain was measured in this phase."
+  ]
+}

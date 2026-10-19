@@ -190,7 +190,7 @@ def source_family_brands(rows, metadata):
             flat.previous.SOURCE_BRANDS.setdefault(legacy.normalized(title), set()).update(aliases[brand])
 
 
-def select(rows, audit, prior_cohorts=()):
+def select(rows, audit, prior_cohorts=(), seed=SEED, case_prefix='source-calibration-train'):
     rows = sorted(source_only_rows(rows), key=lambda row: (
         row['ASIN'], row['row'], row['qid'], row['source'], row['candidate']))
     by_product, questions = collections.defaultdict(list), {}
@@ -278,7 +278,7 @@ def select(rows, audit, prior_cohorts=()):
         if not strata:
             reject('question', 'outside_frozen_strata', qid=qid, productId=pid)
         for stratum in sorted(strata):
-            eligible[stratum].append((legacy.sha(f'{SEED}:{stratum}:{qid}'), row))
+            eligible[stratum].append((legacy.sha(f'{seed}:{stratum}:{qid}'), row))
     selected, selected_ids, selected_titles, selected_identifiers, selected_fingerprints = [], set(), [], set(), set()
     for stratum, count in STRATA:
         found = 0
@@ -294,7 +294,7 @@ def select(rows, audit, prior_cohorts=()):
                 continue
             sources, origins = pools[pid]
             selected.append({
-                'id': f"source-calibration-train-{row['qid']}", 'stratum': stratum,
+                'id': f"{case_prefix}-{row['qid']}", 'stratum': stratum,
                 'product': {'id': pid, 'title': title}, 'question': row['question'].strip(),
                 'sources': sources, 'sourceOrigins': origins,
                 'sourcePoolSha256': legacy.sha(legacy.compact(sources)),

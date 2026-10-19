@@ -11,7 +11,9 @@ import { claimSupportRequestParts } from './claim-support.ts';
 import { RUNTIME_BASELINE_INSTRUCTIONS, type RuntimeAnswerPolicyStore, type RuntimePolicyBinding } from './runtime-answer-policy.ts';
 import { WORKSPACE_GENERATION_CONTRACT, workspaceGenerationContract, workspaceGenerationParts, replayWorkspaceGenerationReceipt, type WorkspaceGenerationContract, type WorkspaceGenerationInput, type WorkspaceGenerationBinding, type WorkspaceGenerationProvider } from './workspace-generation.ts';
 import { workspaceSourceChunks as sourceChunks, workspaceCompleteSourceContext } from './workspace-retrieval-context.ts';
-import { verifyWorkspaceRunGeneration, workspaceQuestionRequestHash } from './workspace-generation-identity.ts';
+import { WORKSPACE_SOURCE_COVERAGE_CONTRACT, workspaceSourceCoverageContext } from './workspace-source-coverage.ts';
+import { WORKSPACE_SOURCE_COVERAGE_V2_CONTRACT, workspaceSourceCoverageV2Context } from './workspace-source-coverage-v2.ts';
+import { verifyWorkspaceRunGeneration, workspaceQuestionRequestHash, type WorkspaceRetrievalContract } from './workspace-generation-identity.ts';
 export { verifyWorkspaceRunGeneration } from './workspace-generation-identity.ts';
 import type { LoopAnswer, LoopPolicy, LoopProvider, LoopRetriever, LoopUsage, ProductCorpus, RetrievalResult, RetrievedPassage } from './loop-types.ts';
 
@@ -24,8 +26,9 @@ export type WorkspaceGeneration = { contract: WorkspaceGenerationContract; phase
 export type WorkspaceAskOptions = { automaticCheck?: boolean; idempotencyKey?: string; generationContract?: WorkspaceGenerationContract; automaticCheckPreflight?: (context: RevisionContext, runId: string) => void };
 export type WorkspaceFaultBoundary = 'before_dispatch' | 'after_dispatch_intent' | 'after_receipt' | 'after_answer_persist';
 export type WorkspaceRun = { id: string; productId: string; question: string; mode: 'preview' | 'live' | 'synthetic'; generationProtocol?: 'product-answer-v2-context' | 'synthetic-product-answer-v1' | WorkspaceGenerationContract; reviewContext?: RevisionContext;
-  requestIdentity?: { sha256: string; idempotencyKey?: string; generationContract?: WorkspaceGenerationContract }; generation?: WorkspaceGeneration; generationPassages?: RetrievedPassage[]; reviewHandoff?: 'pending' | 'registered';
+  requestIdentity?: { sha256: string; idempotencyKey?: string; generationContract?: WorkspaceGenerationContract; retrievalContract?: WorkspaceRetrievalContract }; generation?: WorkspaceGeneration; generationPassages?: RetrievedPassage[]; reviewHandoff?: 'pending' | 'registered';
   finishedAt?: string; durationMs?: number;
+  sourceCoverage?: { contract: WorkspaceRetrievalContract; additions: { sourceId: string; reasons: string[] }[] };
   runtimePolicy?: RuntimePolicyBinding; runtimePolicyInstructions?: string;
   automaticCheckRequested?: true; automaticCheckHandoff?: 'pending' | 'enqueued' | 'unavailable'; automaticCheckError?: string;
   status: 'retrieving' | 'evidence_ready' | 'completed' | 'failed'; retrieval: RetrievalResult | null; answer: LoopAnswer | null; model: string | null; usage: LoopUsage; error: string | null; createdAt: string };
@@ -36,7 +39,8 @@ export class ProductWorkspace {
   private retrievers = new Map<string, LoopRetriever>();
   private busy = false;
   private policyVerifier?: (binding: RuntimePolicyBinding) => void;
-  constructor(dbPath = '.data/product-workspace.sqlite', private provider: LoopProvider & Partial<WorkspaceGenerationProvider> & { executionMode?: 'live' | 'synthetic' }, private retrieverFactory: (corpus: ProductCorpus) => LoopRetriever = corpus => new ProductRetriever(corpus, dbPath === ':memory:' ? ':memory:' : `${dbPath}.retrieval.sqlite`), private policyStore?: Pick<RuntimeAnswerPolicyStore, 'capture'>, private hooks: { fault?: (boundary: WorkspaceFaultBoundary, run: WorkspaceRun) => void } = {}) {
+  constructor(dbPath = '.data/product-workspace.sqlite', private provider: LoopProvider & Partial<WorkspaceGenerationProvider> & { executionMode?: 'live' | 'synthetic' }, private retrieverFactory: (corpus: ProductCorpus) => LoopRetriever = corpus => new ProductRetriever(corpus, dbPath === ':memory:' ? ':memory:' : `${dbPath}.retrieval.sqlite`), private policyStore?: Pick<RuntimeAnswerPolicyStore, 'capture'>, private hooks: { fault?: (boundary: WorkspaceFaultBoundary, run: WorkspaceRun) => void; sourceCoverage?: true | 'v2' } = {}) {
+    if (hooks.sourceCoverage !== undefined && hooks.sourceCoverage !== true && hooks.sourceCoverage !== 'v2') throw new Error('Workspace: unknown source coverage option.');
     if (dbPath !== ':memory:') mkdirSync(dirname(dbPath), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`CREATE TABLE IF NOT EXISTS workspace_products (id TEXT PRIMARY KEY, created_at TEXT NOT NULL, document TEXT NOT NULL);
@@ -49,6 +53,9 @@ export class ProductWorkspace {
   }
   private products(): WorkspaceProduct[] {
     return (this.db.prepare('SELECT document FROM workspace_products ORDER BY created_at DESC').all() as { document: string }[]).map(row => JSON.parse(row.document) as WorkspaceProduct);
+  }
+  private retrievalContract(): WorkspaceRetrievalContract | undefined {
+    return this.hooks.sourceCoverage === 'v2' ? WORKSPACE_SOURCE_COVERAGE_V2_CONTRACT : this.hooks.sourceCoverage === true ? WORKSPACE_SOURCE_COVERAGE_CONTRACT : undefined;
   }
   private runs(limit?: number): WorkspaceRun[] {
     // Limit interactive history in SQL; recovery and review import read every run.
@@ -144,7 +151,7 @@ export class ProductWorkspace {
     const contract = workspaceGenerationContract(options.generationContract);
     if (options.idempotencyKey === undefined) return undefined;
     const key = z.string().trim().min(1).max(160).parse(options.idempotencyKey), input = questionInput.parse(raw);
-    const requestHash = workspaceQuestionRequestHash(input, options.automaticCheck ?? false, contract);
+    const requestHash = workspaceQuestionRequestHash(input, options.automaticCheck ?? false, contract, this.retrievalContract());
     const prior = this.db.prepare('SELECT request_sha256,run_id FROM workspace_question_requests WHERE idempotency_key=?').get(key) as { request_sha256: string; run_id: string } | undefined;
     if (prior && prior.request_sha256 !== requestHash) throw new Error('Workspace: idempotency key belongs to a different question request.');
     // The immutable request on a saved run remains authoritative if its lookup
@@ -153,7 +160,7 @@ export class ProductWorkspace {
     if (!prior && !retained.length) return undefined;
     if (retained.length > 1) throw new Error('Workspace: idempotency key has conflicting retained runs.');
     const run = prior ? this.getRun(prior.run_id) : JSON.parse(retained[0].document) as WorkspaceRun;
-    if (!run || run.requestIdentity?.sha256 !== requestHash || run.requestIdentity.idempotencyKey !== key || workspaceGenerationContract(run.requestIdentity.generationContract) !== contract) throw new Error('Workspace: saved request identity is inconsistent.');
+    if (!run || run.requestIdentity?.sha256 !== requestHash || run.requestIdentity.idempotencyKey !== key || workspaceGenerationContract(run.requestIdentity.generationContract) !== contract || run.requestIdentity.retrievalContract !== (this.retrievalContract())) throw new Error('Workspace: saved request identity is inconsistent.');
     return run;
   }
   private reconcileGeneration(id: string, recovered = false): WorkspaceRun {
@@ -218,8 +225,9 @@ export class ProductWorkspace {
     const capturedPolicy = input.mode === 'preview' ? undefined : this.capturePolicy(input.mode);
     const modern = input.mode !== 'preview' && typeof this.provider.answerWorkspace === 'function' && typeof this.provider.receipt === 'function';
     if (contract !== WORKSPACE_GENERATION_CONTRACT && !modern) throw new Error('Workspace: provider does not support the selected generation contract.');
+    if (this.hooks.sourceCoverage && !modern) throw new Error('Workspace: source coverage requires receipt-enabled answer generation.');
     const corpus = this.corpus(product);
-    const requestIdentity = { sha256: workspaceQuestionRequestHash(input, options.automaticCheck ?? false, contract), ...(options.idempotencyKey !== undefined ? { idempotencyKey: z.string().trim().min(1).max(160).parse(options.idempotencyKey) } : {}), ...(contract !== WORKSPACE_GENERATION_CONTRACT ? { generationContract: contract } : {}) };
+    const requestIdentity = { sha256: workspaceQuestionRequestHash(input, options.automaticCheck ?? false, contract, this.retrievalContract()), ...(options.idempotencyKey !== undefined ? { idempotencyKey: z.string().trim().min(1).max(160).parse(options.idempotencyKey) } : {}), ...(contract !== WORKSPACE_GENERATION_CONTRACT ? { generationContract: contract } : {}), ...(this.hooks.sourceCoverage ? { retrievalContract: this.retrievalContract()! } : {}) };
     this.busy = true;
     let interrupted = false, persisted = false, returningExisting = false;
     const fault = (boundary: WorkspaceFaultBoundary) => { interrupted = true; this.hooks.fault?.(boundary, structuredClone(run)); interrupted = false; };
@@ -261,7 +269,9 @@ export class ProductWorkspace {
       run.retrieval = await this.retriever(product).retrieve(product.id, input.question);
       if (input.mode === 'preview') run.status = 'evidence_ready';
       else {
-        const passages = modern ? workspaceCompleteSourceContext(product, corpus, run.retrieval) : run.retrieval.passages;
+        const coverage = modern && this.hooks.sourceCoverage ? (this.hooks.sourceCoverage === 'v2' ? workspaceSourceCoverageV2Context : workspaceSourceCoverageContext)(product, corpus, run.retrieval, input.question) : undefined;
+        const passages = coverage?.passages ?? (modern ? workspaceCompleteSourceContext(product, corpus, run.retrieval) : run.retrieval.passages);
+        if (coverage) run.sourceCoverage = { contract: coverage.contract, additions: structuredClone(coverage.additions) };
         if (!passages.length) throw new Error('No product evidence was retrieved.');
         if (passages.some(passage => passage.productId !== product.id || passage.sha256 !== textHash(passage.text) || !run.reviewContext!.sources.some(source => source.id === passage.id && source.text === passage.text && source.originalQuestion === (passage.originalQuestion ?? null)))) throw new Error('Retrieved evidence does not match the saved product snapshot.');
         const generationInput: WorkspaceGenerationInput = { question: input.question, product: { id: product.id, title: product.title, split: 'development' }, policy: capturedPolicy!.policy, passages, runId: run.id, ...(contract !== WORKSPACE_GENERATION_CONTRACT ? { generationContract: contract } : {}) };

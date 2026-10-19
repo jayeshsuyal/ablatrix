@@ -44,11 +44,29 @@ jobs:
           name: offline-reliability
           path: /tmp/ablatrix-reliability.json
           if-no-files-found: error
-      - run: python3 -m unittest scripts/test_prepare_flat_source_cohort.py scripts/test_prepare_source_calibration_cohort.py
+      - run: python3 -m unittest scripts/test_prepare_flat_source_cohort.py scripts/test_prepare_source_calibration_cohort.py scripts/test_prepare_retrieval_coverage_cohort.py scripts/test_prepare_source_gap_cohort.py scripts/test_prepare_source_gap_partial.py scripts/test_prepare_source_coverage_v2_deck.py scripts/test_replay_frozen_v2.py
       - name: First-answer comparison offline CLI and script types
         run: |
           node --import tsx scripts/source-calibration-comparison.ts
-          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/source-calibration-retrieval.ts scripts/source-calibration-comparison.ts
+          node --import tsx scripts/retrieval-coverage-comparison.ts
+          node --import tsx scripts/source-gap-comparison.ts
+          node --import tsx scripts/source-gap-partial-comparison.ts
+          node --import tsx --test scripts/source-gap-retrieval.test.ts
+          node --import tsx --test scripts/source-coverage-v2-retrieval.test.ts
+          node --import tsx scripts/source-coverage-v2-retrieval.ts
+          node --import tsx scripts/source-coverage-v2-live.ts
+          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/source-calibration-retrieval.ts scripts/source-calibration-comparison.ts scripts/retrieval-coverage-retrieval.ts scripts/retrieval-coverage-comparison.ts scripts/source-gap-retrieval.ts scripts/source-gap-comparison.ts scripts/source-gap-partial-comparison.ts scripts/source-gap-retrieval.test.ts scripts/source-coverage-v2-retrieval.ts scripts/source-coverage-v2-retrieval.test.ts scripts/source-coverage-v2-live.ts
+      - name: Retrieval diagnosis offline replay and mocked three-context workflow
+        run: |
+          python3 -m unittest scripts/test_source_packet_disjointness.py
+          npm run diagnosis:replay
+          npm run diagnosis:mock
+          npm run diagnosis:rehearse-v5
+          npm run diagnosis:qualify-v5
+          npm run diagnosis:evaluate
+          npm run diagnosis:v5 -- /tmp/ablatrix-v5-replay.json
+          npm run diagnosis:live
+          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/retrieval-diagnosis.ts scripts/prepare-three-context.ts scripts/prepare-semantic-model.ts scripts/verify-retrieval-diagnosis.ts scripts/three-context-mock.ts scripts/qualify-three-context-v5.ts scripts/rehearse-three-context-v5.ts scripts/three-context-evaluation.ts scripts/retrieval-diagnosis-v4.ts scripts/retrieval-diagnosis-v5.ts scripts/prepare-three-context-v5.ts scripts/three-context-live.ts
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e

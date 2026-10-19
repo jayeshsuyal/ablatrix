@@ -1,0 +1,27 @@
+{
+  "format": "ablatrix-retrieval-coverage-candidate-freeze-v1",
+  "frozen": true,
+  "status": "experimental_not_promoted",
+  "retrievalContract": "workspace-source-coverage-v1",
+  "generationContract": "workspace-answer-flat-sources-v1",
+  "systemInstructionsSha256": "bee83f3637714b8c1d3345689d64b89748f2ba14887a6226ee5de33f53eb8d8f",
+  "selectionSeed": "ablatrix-retrieval-coverage-2026-10-18-v1",
+  "qualityClaimEligible": false,
+  "createdAt": "2026-10-18T18:42:38.014038Z",
+  "implementationSha256": {
+    "package-lock.json": "d9e11ec921fa80c8177ff295a2a19f326ea3b47f33651315434149edbe532204",
+    "scripts/prepare-correction-cohort.py": "b4518d71c302090358c6523b89c7774ad7ca1a7e13d44addd766c21ad35a93d1",
+    "scripts/prepare-flat-source-cohort.py": "3e8d627d143900e661c17c53c67bf65743f8587afef695a9c517e0032f7eb4d9",
+    "scripts/prepare-retrieval-coverage-cohort.py": "d4a7d904245721d1277914a52dff1ace6094e76357999909287d2de8653f3445",
+    "scripts/prepare-source-calibration-cohort.py": "e900cac3c050b6ffc187171ae97f0a14a76d8511dafad3b4e1229e5545add960",
+    "scripts/prepare-source-id-cohort.py": "67d34d46373a16d3af7b80655f7702ebf68c7afc6c193b4a0de43a1824c3c67a",
+    "server/citation-options.ts": "0845b2922b7880de4f641453c307d042a31211948514dc4e57e4f9ad4cb1d93d",
+    "server/feedback-provider.ts": "1a2f67186dd919251891f10a08d1521499df9dcfe6713fdf40f2ace6c0b7720a",
+    "server/loop-types.ts": "0425b27e2d361a74e5aee6d6ab1452f9a0557fb3befb0a0d57c5945b54bb41bf",
+    "server/product-corpus.ts": "27fbc86475c95a33367c459a96bdb345e1249842ba6ea28be5cba3f97ad2d478",
+    "server/product-retrieval.ts": "f07ee0d3c49674aeb9115b84539b2b4a535fdec416eac7c785f612adf58874be",
+    "server/workspace-generation.ts": "218f2ac1e6eaa16b5e343262ede0f31f1397bb139957801e7a4fa1b389e3f130",
+    "server/workspace-retrieval-context.ts": "311567d944c2c4361b10b5c6bf6ea6edcbf3cb863f3a48d97a76408af54689af",
+    "server/workspace-source-coverage.ts": "b85ba8cde947ac995ceb1bb1d09c22c28e8359645c7fbc14d7895b47e8e67750"
+  }
+}

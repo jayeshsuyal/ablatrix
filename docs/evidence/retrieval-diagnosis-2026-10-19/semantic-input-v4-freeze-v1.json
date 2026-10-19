@@ -1,0 +1,45 @@
+{
+  "format": "ablatrix-semantic-input-v4-development-freeze-v1",
+  "candidate": {
+    "contract": "workspace-semantic-reranker-v4-input-dev",
+    "model": "Xenova/ms-marco-MiniLM-L-6-v2",
+    "revision": "a09144355adeed5f58c8ed011d209bf8ee5a1fec",
+    "upstream": "cross-encoder/ms-marco-MiniLM-L6-v2",
+    "license": "Apache-2.0",
+    "dtype": "q8",
+    "maxTokens": 512,
+    "maxParents": 128,
+    "maxSelected": 8,
+    "maxBodyCharacters": 12000,
+    "inputFormat": "question-space-title__literal-body-then-original-question-v1",
+    "inheritsSelection": "workspace-semantic-reranker-v3-dev"
+  },
+  "codeSha256": {
+    "server/semantic-reranker-v4.ts": "3aa05a1f17dc06ab728dde6b2de5e3f0e3f5ea1999fe1ef0c12d022cee96b296",
+    "server/semantic-reranker-v4.test.ts": "4213fdff49410b4ccf49d8fef70cc7cc91e55040eff901d6038ea64f9502fde9",
+    "scripts/retrieval-diagnosis-v4.ts": "a494b70c6d877f1ce93c70884865d46d2cf8b0b460b6a8fb9d1e925d6f08f371",
+    "server/semantic-reranker.ts": "85af0782a44b1b08a439c6945fae7744a46092cd18480b78af2e0619d070649f",
+    "server/product-retrieval.ts": "98698fe2f6942600a2c6cd3615d34047d39ee809ba8791705b17e1d9ee8ff2a1",
+    "server/workspace-retrieval-context.ts": "311567d944c2c4361b10b5c6bf6ea6edcbf3cb863f3a48d97a76408af54689af",
+    "server/product-corpus.ts": "27fbc86475c95a33367c459a96bdb345e1249842ba6ea28be5cba3f97ad2d478",
+    "server/retrieval-diagnosis.ts": "292e803839f56365e2b2a6c79b01bdf98a4592b386540dbe7e70357daa9bf102",
+    "scripts/source-coverage-v2-retrieval.ts": "8569453b9e00cfed12c9e68ba3bfbd01a696367ac3c51ad99de9d8d562ee1fef",
+    "package-lock.json": "d9e11ec921fa80c8177ff295a2a19f326ea3b47f33651315434149edbe532204"
+  },
+  "inputSha256": {
+    "docs/evidence/retrieval-source-coverage-v2-2026-10-18/deck-v1.json": "e315f8cccbe943acfa205e4c2a3a6f966d41865ec63247214693909be5052a9a",
+    "docs/evidence/retrieval-source-coverage-v2-2026-10-18/source-review-v1.json": "cc10964003f98c7ab141f70c69588949802852fc6434761040b34510484efffe",
+    "docs/evidence/retrieval-source-coverage-v2-2026-10-18/baseline-v1.json": "d8dfe44845d0b92666fc3fae86a9c52e54ee398606a2736ec37ff9f9ea347005",
+    "docs/evidence/retrieval-diagnosis-2026-10-19/stage-traces-v3-final.json": "2dfc412f6cf8c308fa3b0bf1323fbb1cd802cdf2b228339cef21017668847e94"
+  },
+  "protocol": {
+    "cases": "All twelve existing v2 cases in original order, no exclusions or replacements.",
+    "format": "Original question, single space, exact product title. Literal source body first; append exact original CQA question only if present. No source labels or none sentinel sent to model.",
+    "selection": "Unchanged v3 bounds, relevance floor max(-5,best-8), MMR penalty3, same-scope duplicate suppression. No threshold tuning.",
+    "inference": "Existing pinned q8 cross encoder on cached local CPU; no downloads or provider calls.",
+    "exposure": "All twelve products previously exposed. Format chosen after a torch-only input probe; not unseen validation.",
+    "analysis": "Report all designated facts delivered, misses, baseline regressions and empty contexts; no answer quality claim."
+  },
+  "providerCalls": 0,
+  "qualityClaimEligible": false
+}

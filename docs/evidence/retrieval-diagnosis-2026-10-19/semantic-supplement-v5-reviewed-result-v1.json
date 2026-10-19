@@ -1,0 +1,36 @@
+{
+  "format": "ablatrix-reviewed-v5-development-result-v1",
+  "result": {
+    "path": "docs/evidence/retrieval-diagnosis-2026-10-19/semantic-supplement-v5-development-v2.json",
+    "fileSha256": "ff3567bb1545843853706e9cf411249df63f81d7f14eae1a95eb1bb33583dd2f"
+  },
+  "freeze": {
+    "path": "docs/evidence/retrieval-diagnosis-2026-10-19/semantic-supplement-v5-freeze-v2.json",
+    "fileSha256": "24f85ef7f659ba52211d3f57fb7a205d702eda4e86c874f186b2abb8dc14a6b9"
+  },
+  "review": {
+    "date": "2026-10-19",
+    "provenance": "Independent local mechanical replay by the parent reviewer and a separate review agent; not human answer-quality review.",
+    "command": "node --import tsx scripts/retrieval-diagnosis-v5.ts docs/evidence/retrieval-diagnosis-2026-10-19/semantic-supplement-v5-freeze-v2.json NEW_TEMP_OUTPUT.json",
+    "comparison": "The whole replayed JSON document equals the saved result after deleting only results[*].candidate.proposal.resources from both documents. No other field is removed, rounded or rewritten.",
+    "verifiedCases": 12,
+    "baselineParentsRetainedCases": 12,
+    "baselineDesignatedFactsDelivered": 10,
+    "candidateDesignatedFactsDelivered": 12,
+    "totalDesignatedFacts": 13,
+    "baselineRegressions": 0,
+    "modelInferenceCalls": 0,
+    "providerCalls": 0,
+    "generatedAnswers": 0
+  },
+  "scope": "The fixed exposed-development preparer accepts only this exact repository path and raw result SHA-256. Changed result bytes require a new independently reviewed record and code change; editing metadata or recomputing input hashes does not authorize different candidate sources.",
+  "limitations": [
+    "All twelve products were already exposed development data.",
+    "Replay verifies deterministic selection from previously saved local scores; it does not authenticate provider origin or recompute model logits.",
+    "Runtime resource observations differ between replays and are excluded from structural equality; the exact original observations remain protected by the raw result SHA-256.",
+    "Literal source-fact delivery does not establish semantic applicability, answer correctness or answer-quality improvement."
+  ],
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false,
+  "activationAllowed": false
+}

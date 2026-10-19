@@ -1,3 +1,4 @@
+import { freezeSourceGapBaseline, assembleSourceGapCandidate } from '../scripts/source-gap-retrieval.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, readFileSync, realpathSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
@@ -8,8 +9,10 @@ import { SapiomFeedbackProvider } from './feedback-provider.ts';
 import { workspaceReviewSourceHash } from './answer-review-source.ts';
 import { contextComparisonHash } from './context-comparison.ts';
 import { metadataFingerprints } from './flat-source-comparison.ts';
-import { workspaceGenerationPromptIdentity, WORKSPACE_SOURCE_CALIBRATION_CONTRACT } from './workspace-generation.ts';
-import { SOURCE_CALIBRATION_CODE_FILES, sourceCalibrationHash as hash, prepareSourceCalibrationComparison, verifySourceCalibrationPlan, verifySourceCalibrationResult, verifySourceCalibrationCheckpoints, executeSourceCalibrationComparison, sourceCalibrationReviewWorksheet, privateSourceCalibrationOutput, readLedgerAnchor, sourceCalibrationComparisonCli, type SourceCalibrationArtifact, type SourceCalibrationPreparation, type SourceCalibrationDependencies, type SourceCalibrationCheckpoint } from './source-calibration-comparison.ts';
+import { workspaceGenerationPromptIdentity, WORKSPACE_GENERATION_CONTRACT, WORKSPACE_SOURCE_CALIBRATION_CONTRACT } from './workspace-generation.ts';
+import { workspaceCompleteSourceContext } from './workspace-retrieval-context.ts';
+import { workspaceSourceCoverageContext, WORKSPACE_SOURCE_COVERAGE_CONTRACT } from './workspace-source-coverage.ts';
+import { SOURCE_CALIBRATION_CODE_FILES, RETRIEVAL_COVERAGE_CODE_FILES, RETRIEVAL_COVERAGE_RETRIEVAL_FILES, RETRIEVAL_COVERAGE_EXPERIMENT, SOURCE_GAP_EXPERIMENT, SOURCE_GAP_PARTIAL_EXPERIMENT, SOURCE_GAP_PARTIAL_PROTOCOL, SOURCE_GAP_PARTIAL_MINIMA, SOURCE_GAP_PARTIAL_ORIGINAL_CORE_SHA, SOURCE_GAP_PARTIAL_CODE_FILES, verifySourceGapCounts, verifySourceGapPartialPool, SOURCE_GAP_SEED, SOURCE_GAP_QUOTAS, SOURCE_GAP_CODE_FILES, SOURCE_GAP_RETRIEVAL_FILES, sourceGapBaselineContextHash, verifySourceGapAssemblyAudit, sourceGapComparisonCli, retrievalCoverageCorpus, retrievalCoverageComparisonCli, sourceCalibrationHash as hash, prepareSourceCalibrationComparison, verifySourceCalibrationPlan, verifySourceCalibrationResult, verifySourceCalibrationCheckpoints, executeSourceCalibrationComparison, sourceCalibrationReviewWorksheet, privateSourceCalibrationOutput, readLedgerAnchor, sourceCalibrationComparisonCli, type SourceCalibrationArtifact, type SourceCalibrationPreparation, type SourceCalibrationDependencies, type SourceCalibrationCheckpoint } from './source-calibration-comparison.ts';
 
 const clone = <T>(value: T): T => structuredClone(value);
 function artifact(path: string, document: Record<string, any>): SourceCalibrationArtifact { return { path: `docs/${path}.json`, document, fileSha256: hash(JSON.stringify(document)) }; }
@@ -35,8 +38,126 @@ function preparation(): SourceCalibrationPreparation {
   const path = '/synthetic/.data/feedback-budget.sqlite';
   return { packet, candidateFreeze, retrieval, familyAudit, exposureAudit, selectionAudit, implementationSha256, historySha256: { 'docs/exposed.md': hash('SYNTHETIC history') }, createdAt: '2026-10-18T12:00:00.000Z', policy: { id: 'synthetic-policy', parentId: null, instructions: 'SYNTHETIC shared answer policy with source attribution and bounded scope.', rationale: 'SYNTHETIC fixture.', feedbackRunIds: [], status: 'baseline', mode: 'live', createdAt: '2026-10-18T00:00:00.000Z' }, ledgerAnchor: { canonicalPath: path, pathSha256: hash(path), historicalRowsSha256: hash('SYNTHETIC historical rows'), attempts: 122, reservedUsd: 12.2, priorSpendUsd: .200281, pending: 0, owners: 0 }, scope: { repositoryPath: '/synthetic', outputDirectory: '/synthetic/.data/fresh-result', workspacePaths: [], comparisonPaths: [] }, exposure: { metadataSha256: fingerprints.sha256, publicExposureSha256: hash('SYNTHETIC public exposure') } };
 }
-function harness(options: { response?: (body: any, index: number) => any; transportFailure?: boolean; changeBody?: boolean; duplicateTransport?: boolean } = {}) {
-  const prep = preparation(), manifest = prepareSourceCalibrationComparison(prep), checkpoints: SourceCalibrationCheckpoint[] = [], bodies: any[] = [];
+function retrievalPreparation(unchangedLast = false, historicalImplementation = false): SourceCalibrationPreparation {
+  const p = preparation(), seed = 'ablatrix-retrieval-coverage-2026-10-18-v1';
+  p.experiment = RETRIEVAL_COVERAGE_EXPERIMENT; p.ledgerAnchor.attempts = 138; p.ledgerAnchor.reservedUsd = 13.8;
+  p.implementationSha256 = Object.fromEntries(RETRIEVAL_COVERAGE_CODE_FILES.map(path => [path, hash(`SYNTHETIC implementation ${path}`)]));
+  if (historicalImplementation) Object.assign(p.implementationSha256, {
+    'server/workspace-source-coverage.ts': 'b85ba8cde947ac995ceb1bb1d09c22c28e8359645c7fbc14d7895b47e8e67750',
+    'server/source-calibration-comparison.ts': 'e903b22150202f1af3128a6168d26dfb00c2e82793079b8028a522c7c0e1b879'
+  });
+  p.candidateFreeze = artifact('retrieval-freeze', { format: 'ablatrix-retrieval-coverage-candidate-freeze-v1', frozen: true, status: 'experimental_not_promoted', retrievalContract: WORKSPACE_SOURCE_COVERAGE_CONTRACT, generationContract: WORKSPACE_GENERATION_CONTRACT, systemInstructionsSha256: workspaceGenerationPromptIdentity().systemInstructionsSha256, selectionSeed: seed, implementationSha256: clone(p.implementationSha256), qualityClaimEligible: false });
+  // The real pre-selection candidate freeze binds the core rules, while the
+  // later retrieval artifact additionally binds the comparison adapter.
+  if (historicalImplementation) { delete p.candidateFreeze.document.implementationSha256['server/source-calibration-comparison.ts']; p.candidateFreeze.fileSha256 = hash(JSON.stringify(p.candidateFreeze.document)); }
+  const consumed = [{ fileSha256: hash('SYNTHETIC consumed cohort'), cohortSha256: hash('SYNTHETIC consumed seal'), sourceReviewFileSha256: hash('SYNTHETIC passed source review'), executionFileSha256: hash('SYNTHETIC execution metadata'), generationPerformed: true, planSha256: hash('SYNTHETIC consumed plan'), newProviderAttempts: 16, attemptScopeSha256: hash('SYNTHETIC consumed slots'), protectionScope: 'entire_cohort_after_any_recorded_provider_attempt', executionMetadataProvenance: 'allowlisted_existing_execution_metadata',
+    productIds: Array.from({ length: 8 }, (_, i) => `SYNTHETIC-CONSUMED-${i}`), canonicalFamilyTitles: ['SYNTHETIC prior family'], modelIdentifiers: ['PRIOR123'], sourcePacketFingerprints: [hash('SYNTHETIC prior source')] }];
+  const immutableHelperSha256 = Object.fromEntries(['scripts/prepare-source-calibration-cohort.py', 'scripts/prepare-flat-source-cohort.py', 'scripts/prepare-correction-cohort.py', 'scripts/prepare-source-id-cohort.py'].map(path => [path, p.implementationSha256[path]]));
+  const priorCohorts = [1, 2].map(i => ({ fileSha256: hash(`SYNTHETIC rejected draft ${i}`) })), priorSourceReviews = priorCohorts.map(c => ({ cohortFileSha256: c.fileSha256, status: 'failed', provenance: 'independent_ai_source_and_family_review' }));
+  const eligibilityAmendment = { rules: 'unchanged_source_calibration_revision_3', generationInstructionsChanged: false, modelOutputsUsed: false, rejectedDraftsRemainProtected: true, consumedCohortsRemainProtected: true };
+  p.scope.workspacePaths = ['/synthetic/workspace-current.sqlite', '/synthetic/workspace-canonical.sqlite']; p.scope.comparisonPaths = ['/synthetic/comparison.sqlite'];
+  const inventoryInputs = { workspaceCount: 2, comparisonCount: 1, canonicalPathSha256: [...p.scope.workspacePaths, ...p.scope.comparisonPaths].map(hash).sort() };
+  const metadata = { workspaces: [1, 2].map(i => ({ inventory: `workspace-${i}`, products: [], runs: [] })), comparisons: [{ inventory: 'comparison-1', cases: [], reservedProducts: [] }] }, fingerprints = metadataFingerprints(metadata);
+  const exposure = { metadata, metadataSha256: fingerprints.sha256, metadataInventorySha256: fingerprints.inventories, metadataOnly: true, generatedAnswersOrJudgmentsRead: false, newProviderCalls: 0, paidExecutionAuthorized: false };
+  p.exposureAudit = artifact('exposure', { ...exposure, auditSha256: contextComparisonHash(exposure) }); p.exposure.metadataSha256 = fingerprints.sha256;
+  Object.assign(p.selectionAudit.document, { format: 'ablatrix-retrieval-coverage-selection-audit-v1', selectionSeed: seed, candidateFreezeFileSha256: p.candidateFreeze.fileSha256, exposureAuditSha256: p.exposureAudit.document.auditSha256, selectionCodeSha256: p.implementationSha256['scripts/prepare-retrieval-coverage-cohort.py'], immutableHelperSha256, consumedCohorts: consumed, priorCohorts, priorSourceReviews, eligibilityAmendment, inventoryInputs, modelOutputsUsed: false });
+  Object.assign(p.packet.document, { format: 'ablatrix-retrieval-coverage-cohort-v1', selectionSeed: seed, candidateFreeze: { fileSha256: p.candidateFreeze.fileSha256, document: p.candidateFreeze.document } });
+  Object.assign(p.packet.document.selection, { selectionCodeSha256: p.selectionAudit.document.selectionCodeSha256, immutableHelperSha256, consumedCohorts: consumed, priorCohorts, priorSourceReviews, eligibilityAmendment, inventoryInputs });
+  p.packet.document.exposureAuditSha256 = p.exposureAudit.document.auditSha256; p.familyAudit.document.exposureAuditFileSha256 = p.exposureAudit.fileSha256;
+  Object.assign(p.packet.document.executionPlan, { generationContract: WORKSPACE_GENERATION_CONTRACT, retrievalCandidateContract: WORKSPACE_SOURCE_COVERAGE_CONTRACT });
+  for (const [i, c] of p.packet.document.cases.entries()) {
+    c.question = unchangedLast && i === 7 ? 'SYNTHETIC What do customers say?' : `SYNTHETIC What are the dimensions for model AB123${i}?`;
+    c.sources.push(...[
+      { id: `dimensions-${i}`, label: 'attribute', text: 'Product Dimensions: 12.3 x 4.5 x 6 inches', originalQuestion: null, reference: `synthetic:dimensions-${i}` },
+      { id: `model-${i}`, label: 'attribute', text: `Item Model Number: AB123${i}`, originalQuestion: null, reference: `synthetic:model-${i}` }
+    ].map(source => ({ ...source, sha256: workspaceReviewSourceHash(source) })));
+    c.sourcePoolSha256 = contextComparisonHash(c.sources);
+  }
+  resealPreparation(p);
+  const corpus = retrievalCoverageCorpus(p.packet);
+  const results = p.packet.document.cases.map((c: any) => {
+    const source = corpus.passages.find(s => s.id === c.sources[0].id)!;
+    const indexRetrieval = { passages: [{ ...source, lexicalRank: 1, semanticRank: 1, score: 1 }], durationMs: 0, method: 'SYNTHETIC baseline ranking', embeddingModel: 'SYNTHETIC', corpusVersion: corpus.version };
+    const product = { ...c.product, sources: c.sources.map((s: any) => ({ ...s, originalQuestion: s.originalQuestion ?? undefined })) };
+    const baseline = workspaceCompleteSourceContext(product, corpus, indexRetrieval), candidate = workspaceSourceCoverageContext(product, corpus, indexRetrieval, c.question);
+    return { caseId: c.id, indexRetrieval, baseline: { ...indexRetrieval, passages: baseline }, candidate: { ...indexRetrieval, passages: candidate.passages }, additions: candidate.additions, contract: candidate.contract };
+  });
+  const body = { format: 'retrieval-coverage-retrieval-v1', cohortFileSha256: p.packet.fileSha256, implementationSha256: Object.fromEntries(RETRIEVAL_COVERAGE_RETRIEVAL_FILES.map(path => [path, p.implementationSha256[path]])), corpusSha256: hash(corpus), results, providerCalls: 0, semanticAssessment: 'not_run', generationPerformed: false };
+  p.retrieval = artifact('paired-retrieval', { ...body, sha256: hash(body) });
+  p.familyAudit.document.retrievalFileSha256 = p.retrieval.fileSha256; p.familyAudit.fileSha256 = hash(JSON.stringify(p.familyAudit.document));
+  return p;
+}
+function amendRetrievalPreparation(p: SourceCalibrationPreparation) {
+  const implementationChanges = {
+    'server/workspace-source-coverage.ts': { from: p.implementationSha256['server/workspace-source-coverage.ts'], to: 'f0caf3c477f7e629f962df3cb38a842d98af71f2e54948e2241fb1a989275e31' },
+    'server/source-calibration-comparison.ts': { from: p.implementationSha256['server/source-calibration-comparison.ts'], to: hash('SYNTHETIC amended comparison adapter') }
+  };
+  for (const [path, change] of Object.entries(implementationChanges)) p.implementationSha256[path] = change.to;
+  p.compatibilityAmendment = artifact('compatibility-amendment', {
+    format: 'ablatrix-retrieval-coverage-compatibility-amendment-v1', reason: 'combined_item_package_dimensions_regression', originalImplementationCommit: '0537436882649ad541b86635288f181a09871989',
+    candidateFreezeFileSha256: p.candidateFreeze.fileSha256, cohortFileSha256: p.packet.fileSha256, retrievalFileSha256: p.retrieval.fileSha256,
+    generationPerformed: false, newProviderCalls: 0, modelOutputsInspected: false, frozenContextsUnchanged: true, implementationChanges
+  });
+  return p;
+}
+function sourceGapPreparation(): SourceCalibrationPreparation {
+  const p = retrievalPreparation(), strata = [{ name: 'capacity_dimensions', count: 2 }, { name: 'appearance_material', count: 2 }, { name: 'model_scope', count: 2 }, { name: 'missing_information', count: 1 }, { name: 'preservation_control', count: 1 }];
+  p.experiment = SOURCE_GAP_EXPERIMENT; p.implementationSha256 = Object.fromEntries(SOURCE_GAP_CODE_FILES.map(path => [path, hash(`SYNTHETIC implementation ${path}`)]));
+  p.candidateFreeze = artifact('source-gap-freeze', { ...p.candidateFreeze.document, format: 'ablatrix-source-gap-candidate-freeze-v1', selectionSeed: SOURCE_GAP_SEED, implementationSha256: clone(p.implementationSha256) });
+  const protocolBody = { format: 'ablatrix-source-gap-selection-protocol-v1', selectionProtocol: 'baseline_source_gap_v1', selectionSeed: SOURCE_GAP_SEED, screeningProducts: 64, rounds: 8, roundStrata: strata, deckStrata: { capacity_dimensions: 16, appearance_material: 16, model_scope: 16, missing_information: 8, preservation_control: 8 }, quotas: clone(SOURCE_GAP_QUOTAS), candidateEligibilityUsed: false, modelOutputsUsed: false, caseReplacement: false, finalBaselineRevalidationRequired: true, maximumNewAnswerAttempts: 16, candidateFreezeFileSha256: p.candidateFreeze.fileSha256 };
+  const protocol = artifact('source-gap-protocol', { ...protocolBody, protocolSha256: contextComparisonHash(protocolBody) });
+  const cases = Array.from({ length: 64 }, (_, i) => {
+    const c = clone(p.packet.document.cases[i % 8]), qid = String(1000 + i), round = Math.floor(i / 8) + 1;
+    c.id = `source-gap-train-${qid}`; c.upstream.qid = qid; c.product = { id: `SYNTHETIC-GAP-${i}`, title: `SYNTHETIC gap product ${i}` }; c.deckRound = round;
+    c.selectionRankSha256 = hash(`${SOURCE_GAP_SEED}:round:${round}:${c.stratum}:${qid}`);
+    c.question = i === 0 ? 'SYNTHETIC What is the encoded specification?' : i >= 3 && i <= 5 ? 'SYNTHETIC What is the item model number?' : 'SYNTHETIC What are the dimensions?';
+    c.sources.forEach((source: any, j: number) => { source.id = `gap-${i}-${j}`; source.reference = `synthetic:gap-${i}-${j}`; });
+    c.sources[0].text = i === 6 || i === 7 ? 'SYNTHETIC Product Dimensions: 12.3 x 4.5 x 6 inches' : `SYNTHETIC baseline statement ${i}.`;
+    c.sources[3].text = `Item Model Number: GAP${i}X`;
+    if (i === 0) c.sources.push({ id: 'gap-0-extra', label: 'customer review', text: 'SYNTHETIC The encoded specification is fifty.', reference: 'synthetic:encoded', originalQuestion: null });
+    c.sources = c.sources.map((source: any) => ({ ...source, sha256: workspaceReviewSourceHash(source) })); c.sourcePoolSha256 = contextComparisonHash(c.sources); return c;
+  });
+  const exposedUnexecutedCohorts = [{ fileSha256: hash('SYNTHETIC exposed natural cohort'), cohortSha256: hash('SYNTHETIC exposed seal'), sourceReviewFileSha256: hash('SYNTHETIC natural source review'), status: 'exposed_unexecuted_cohort', generationPerformed: false, productIds: Array.from({ length: 8 }, (_, i) => `SYNTHETIC-EXPOSED-${i}`) }];
+  const common = { ...clone(p.packet.document.selection), selectionCodeSha256: p.implementationSha256['scripts/prepare-source-gap-deck.py'], immutableHelperSha256: Object.fromEntries(['scripts/prepare-retrieval-coverage-cohort.py', 'scripts/prepare-source-calibration-cohort.py', 'scripts/prepare-flat-source-cohort.py', 'scripts/prepare-correction-cohort.py', 'scripts/prepare-source-id-cohort.py'].map(path => [path, p.implementationSha256[path]])), exposedUnexecutedCohorts };
+  const deckBody = { format: 'ablatrix-source-gap-deck-v1', selectionSeed: SOURCE_GAP_SEED, selectionProtocol: 'baseline_source_gap_v1', protocolFileSha256: protocol.fileSha256, candidateFreeze: { fileSha256: p.candidateFreeze.fileSha256, document: p.candidateFreeze.document }, source: p.packet.document.source, selection: { ...common, generatedAnswersOrJudgmentsRead: false, modelOutputsUsed: false, candidateContextInspected: false }, exposureAuditSha256: p.exposureAudit.document.auditSha256,
+    rounds: Array.from({ length: 8 }, (_, i) => ({ round: i + 1, seed: `${SOURCE_GAP_SEED}:round:${i + 1}`, caseIds: cases.slice(i * 8, i * 8 + 8).map(c => c.id), inventory: { passed: true }, decisions: [] })), status: { generationPerformed: false, paidExecutionAuthorized: false, qualityClaimEligible: false }, cases };
+  const deck = artifact('source-gap-deck', { ...deckBody, deckSha256: contextComparisonHash(deckBody) });
+  const baselineFor = (input: SourceCalibrationArtifact, scope: 'screening_deck' | 'selected_cohort') => {
+    const corpus = retrievalCoverageCorpus(input), rows = input.document.cases.map((c: any, i: number) => {
+      // A selected-cohort baseline may add an irrelevant source after the64-case
+      // screening review. Eligibility is reconfirmed against this own snapshot.
+      const count = scope === 'selected_cohort' && i === 1 ? 2 : 1;
+      const indexRetrieval = { passages: c.sources.slice(0, count).map((s: any, rank: number) => ({ ...corpus.passages.find(source => source.id === s.id)!, lexicalRank: rank + 1, semanticRank: rank + 1, score: 1 / (rank + 1) })), durationMs: 0, method: 'SYNTHETIC', embeddingModel: 'SYNTHETIC', corpusVersion: corpus.version };
+      const product = { ...c.product, sources: c.sources.map((s: any) => ({ ...s, originalQuestion: s.originalQuestion ?? undefined })) }, passages = workspaceCompleteSourceContext(product, corpus, indexRetrieval);
+      return { caseId: c.id, indexRetrieval, baseline: { ...indexRetrieval, passages }, baselineContextSha256: sourceGapBaselineContextHash(c.product, c.question, passages) };
+    });
+    const body = { format: 'ablatrix-source-gap-baseline-v1', scope, inputFileSha256: input.fileSha256, corpusSha256: hash(corpus), implementationSha256: Object.fromEntries(SOURCE_GAP_RETRIEVAL_FILES.map(path => [path, p.implementationSha256[path]])), results: rows, providerCalls: 0, generationPerformed: false, candidateContextInspected: false };
+    return artifact(`source-gap-${scope}-baseline`, { ...body, sha256: hash(body) });
+  };
+  const baseline = baselineFor(deck, 'screening_deck');
+  const gapRows = cases.map((c, i) => {
+    const group = i < 3 ? 'specification_gap' : i < 6 ? 'model_detail_gap' : i < 8 ? 'baseline_complete_control' : 'ineligible_or_uncertain';
+    const source = i === 0 ? c.sources.at(-1) : i < 3 ? c.sources[2] : i < 6 ? c.sources[3] : c.sources[0];
+    return { caseId: c.id, sourceGapGroup: group, baselineContextSha256: baseline.document.results[i].baselineContextSha256, sourcePoolSha256: c.sourcePoolSha256, sourceScopeReviewed: true, baselineAndTitleReviewed: true, originalQuestionsReviewed: true, noEquivalentFactInBaseline: i < 6, baselineComplete: i === 6 || i === 7, designatedFacts: i < 8 ? [{ fact: 'SYNTHETIC predeclared source fact.', sourceIds: [source.id], quote: source.text, qualification: 'SYNTHETIC source-only mechanics fixture.' }] : [], notes: 'SYNTHETIC source-only mechanical label; no quality assessment.' };
+  });
+  const gapReview = artifact('source-gap-review', { format: 'ablatrix-source-gap-review-v1', protocolFileSha256: protocol.fileSha256, deckFileSha256: deck.fileSha256, baselineFileSha256: baseline.fileSha256, provenance: 'independent_ai_source_gap_review', status: 'completed', modelOutputsInspected: false, candidateContextInspected: false, cases: gapRows });
+  const inputArtifacts = { protocol, deck, baseline, gapReview }, selected = cases.slice(0, 8).map((c, i) => ({ ...c, sourceGapGroup: gapRows[i].sourceGapGroup, designatedFacts: gapRows[i].designatedFacts, screeningBaselineContextSha256: gapRows[i].baselineContextSha256 }));
+  const selection = { ...common, inputArtifacts, finalizationCodeSha256: p.implementationSha256['scripts/finalize-source-gap-cohort.py'] };
+  Object.assign(p.packet.document, { format: 'ablatrix-source-gap-cohort-v1', selectionSeed: SOURCE_GAP_SEED, candidateFreeze: deckBody.candidateFreeze, selection, cases: selected });
+  Object.assign(p.selectionAudit.document, { ...selection, format: 'ablatrix-source-gap-selection-audit-v1', selectionSeed: SOURCE_GAP_SEED, candidateFreezeFileSha256: p.candidateFreeze.fileSha256, decisions: selected.map(c => ({ stage: 'ranked_selection', selected: true, qid: c.upstream.qid, productId: c.product.id, stratum: c.stratum, rankSha256: c.selectionRankSha256 })) });
+  resealPreparation(p);
+  const finalBaseline = baselineFor(p.packet, 'selected_cohort');
+  p.familyAudit = artifact('source-gap-final-audit', { format: 'source-gap-source-family-review-v1', status: 'passed', provenance: 'independent_ai_source_and_family_review', cohortFileSha256: p.packet.fileSha256, finalBaselineFileSha256: finalBaseline.fileSha256, exposureAuditFileSha256: p.exposureAudit.fileSha256, generationPerformed: false, newProviderCalls: 0, modelOutputsInspected: false, candidateContextInspected: false, cases: selected.map((c, i) => ({ ...gapRows[i], baselineContextSha256: finalBaseline.document.results[i].baselineContextSha256, familySeparationReviewed: true, designatedFactsSemanticallyRechecked: true, gapOrControlConfirmed: true })) });
+  const corpus = retrievalCoverageCorpus(p.packet), results = finalBaseline.document.results.map((row: any, i: number) => {
+    const c = selected[i], product = { ...c.product, sources: c.sources.map((s: any) => ({ ...s, originalQuestion: s.originalQuestion ?? undefined })) };
+    const candidate = workspaceSourceCoverageContext(product, corpus, row.indexRetrieval, c.question);
+    return { caseId: c.id, indexRetrieval: row.indexRetrieval, baseline: row.baseline, candidate: { ...row.indexRetrieval, passages: candidate.passages }, additions: candidate.additions, contract: candidate.contract };
+  });
+  const body = { format: 'source-gap-retrieval-v1', cohortFileSha256: p.packet.fileSha256, implementationSha256: Object.fromEntries(SOURCE_GAP_RETRIEVAL_FILES.map(path => [path, p.implementationSha256[path]])), corpusSha256: hash(corpus), inputArtifacts: { finalBaseline }, familyAuditFileSha256: p.familyAudit.fileSha256, results, providerCalls: 0, semanticAssessment: 'not_run', generationPerformed: false };
+  p.retrieval = artifact('source-gap-paired-retrieval', { ...body, sha256: hash(body) }); return p;
+}
+function harness(options: { response?: (body: any, index: number) => any; transportFailure?: boolean; changeBody?: boolean; duplicateTransport?: boolean; preparation?: SourceCalibrationPreparation } = {}) {
+  const prep = options.preparation ?? preparation(), manifest = prepareSourceCalibrationComparison(prep), checkpoints: SourceCalibrationCheckpoint[] = [], bodies: any[] = [];
   let provider: SapiomFeedbackProvider | undefined, creations = 0, outputs = 0, finished = 0, changed = false, closed = false;
   const dependencies: SourceCalibrationDependencies = {
     checkFrozenFiles() { assert.equal(changed, false, 'SYNTHETIC code/history/exposure changed.'); },
@@ -57,6 +178,7 @@ function harness(options: { response?: (body: any, index: number) => any; transp
 
 test('two first-answer arms freeze exact shared context, all source pools, alternating order and dynamic ledger ceiling', () => {
   const prep = preparation(), manifest = prepareSourceCalibrationComparison(prep); assert.equal(manifest.plan.cases.length, 8); assert.equal(manifest.plan.slots.length, 16); assert.equal(manifest.plan.budget.absoluteCallLimit, 138); assert.equal(manifest.plan.budget.capUsd, 20);
+  assert.equal(manifest.planSha256, '26a6e90d446b4328328265c8f12347cfe927d3ab83e07e8b4ac4a54aeea90e50', 'The historical prompt-comparison preparation must retain exact bytes.');
   assert.deepEqual(manifest.plan.slots.slice(0, 4).map(s => s.arm), ['baseline', 'candidate', 'candidate', 'baseline']);
   for (let i = 0; i < 16; i += 2) { const [a, b] = manifest.plan.slots.slice(i, i + 2); assert.deepEqual(a.input.passages, b.input.passages); assert.equal(a.binding.responseSchemaSha256, b.binding.responseSchemaSha256); assert.equal(a.binding.sourceContextSha256, b.binding.sourceContextSha256); assert.notEqual(a.binding.requestSha256, b.binding.requestSha256); assert.equal(a.requestBody.model, b.requestBody.model); }
   prep.ledgerAnchor.attempts = 125; prep.ledgerAnchor.reservedUsd = 12.5; assert.equal(prepareSourceCalibrationComparison(prep).plan.budget.absoluteCallLimit, 141);
@@ -183,4 +305,398 @@ test('private output is exclusive and symlink-free, and ledger anchor reads hist
 
 test('CLI defaults offline and rejects approval before reading a credential or shared ledger', async () => {
   const help = await sourceCalibrationComparisonCli([]); assert.ok('mode' in help && help.mode === 'offline'); const root = mkdtempSync(join(tmpdir(), 'source-calibration-cli-')); try { const path = join(root, 'plan.json'); writeFileSync(path, JSON.stringify(prepareSourceCalibrationComparison(preparation()))); const env = new Proxy({ ABLATRIX_LOOP_LIVE: '1' }, { get(target, key) { if (String(key).includes('SAPIOM')) assert.fail('Credential access before approval'); return Reflect.get(target, key); } }); await assert.rejects(sourceCalibrationComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', '0'.repeat(64)], env)); assert.equal(readFileSync(path, 'utf8').includes('planSha256'), true); } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('retrieval protocol freezes appended parent bodies while holding the shipped answer instructions and settings constant', () => {
+  const manifest = prepareSourceCalibrationComparison(retrievalPreparation());
+  assert.equal(manifest.plan.format, 'ablatrix-retrieval-coverage-first-answer-plan-v1'); assert.equal(manifest.plan.budget.absoluteCallLimit, 154);
+  assert.equal(manifest.plan.retrievalContexts?.plannedChangedCases, 8); assert.equal(manifest.plan.retrievalContexts?.plannedUnchangedCases, 0);
+  for (let index = 0; index < 16; index += 2) {
+    const pair = manifest.plan.slots.slice(index, index + 2), baseline = pair.find(s => s.arm === 'baseline')!, candidate = pair.find(s => s.arm === 'candidate')!;
+    assert.equal(baseline.binding.contract, WORKSPACE_GENERATION_CONTRACT); assert.equal(candidate.binding.contract, WORKSPACE_GENERATION_CONTRACT);
+    assert.equal(baseline.binding.systemInstructionsSha256, candidate.binding.systemInstructionsSha256); assert.equal(baseline.requestBody.messages[0].content, workspaceGenerationPromptIdentity().systemInstructions);
+    assert.deepEqual(candidate.input.passages.slice(0, baseline.input.passages.length), baseline.input.passages); assert.equal(candidate.input.passages.length, baseline.input.passages.length + 2);
+    assert.notEqual(baseline.binding.sourceContextSha256, candidate.binding.sourceContextSha256); assert.notEqual(baseline.binding.optionSetSha256, candidate.binding.optionSetSha256); assert.notEqual(baseline.binding.responseSchemaSha256, candidate.binding.responseSchemaSha256);
+    const normalized = (body: typeof baseline.requestBody) => { const copy = clone(body), payload = JSON.parse(copy.messages[1].content); delete payload.evidence; delete payload.quoteOptions; delete payload.operationRunId; copy.messages[1].content = JSON.stringify(payload); (copy.tools[0].function.parameters as any).properties.citations.items.enum = []; return copy; };
+    assert.deepEqual(normalized(baseline.requestBody), normalized(candidate.requestBody));
+  }
+  assert.deepEqual(verifySourceCalibrationPlan(manifest), manifest);
+});
+
+test('retrieval preparation rejects edited selections, detached consumed exposure, prompt drift and stale starting counts even after hashes are rebound', () => {
+  const mutations: ((p: SourceCalibrationPreparation) => void)[] = [
+    p => { p.experiment = 'unrecognized' as any; },
+    p => { p.ledgerAnchor.attempts = 137; }, p => { p.ledgerAnchor.attempts = 139; },
+    p => { p.candidateFreeze.document.generationContract = WORKSPACE_SOURCE_CALIBRATION_CONTRACT; },
+    p => { p.candidateFreeze.document.systemInstructionsSha256 = workspaceGenerationPromptIdentity(WORKSPACE_SOURCE_CALIBRATION_CONTRACT).systemInstructionsSha256; },
+    p => { p.candidateFreeze.document.implementationSha256['server/workspace-source-coverage.ts'] = hash('SYNTHETIC changed rules'); },
+    p => { p.selectionAudit.document.consumedCohorts = []; p.packet.document.selection.consumedCohorts = []; },
+    p => { p.selectionAudit.document.consumedCohorts[0].productIds[0] = p.packet.document.cases[0].product.id; },
+    p => { p.retrieval.document.results[0].baseline.passages = p.retrieval.document.results[0].candidate.passages; },
+    p => { p.retrieval.document.results[0].candidate.passages.reverse(); },
+    p => { p.retrieval.document.results[0].candidate.passages.pop(); },
+    p => { p.retrieval.document.results[0].additions[0].reasons = ['SYNTHETIC unbound rationale']; },
+    p => { p.retrieval.document.results[0].indexRetrieval.passages[0].productId = 'SYNTHETIC foreign product'; },
+    p => { p.retrieval.document.corpusSha256 = hash('SYNTHETIC other corpus'); },
+    p => { p.retrieval.document.implementationSha256['server/workspace-source-coverage.ts'] = hash('SYNTHETIC other code'); }
+  ];
+  for (const mutate of mutations) { const p = retrievalPreparation(); mutate(p); resealPreparation(p); assert.throws(() => prepareSourceCalibrationComparison(p)); }
+  const manifest = prepareSourceCalibrationComparison(retrievalPreparation()); manifest.plan.slots[1].input.generationContract = WORKSPACE_SOURCE_CALIBRATION_CONTRACT; manifest.planSha256 = hash(manifest.plan); assert.throws(() => verifySourceCalibrationPlan(manifest));
+});
+
+test('retrieval comparison dispatches sixteen exact v1 requests and resolves citations from each arm own offered context', async () => {
+  const h = harness({ preparation: retrievalPreparation(true), response: body => { const payload = JSON.parse(body.messages[1].content); return { answer: 'SYNTHETIC literal-source response.', status: 'answered', citations: [payload.quoteOptions.at(-1).id] }; } });
+  const { result, checkpoint } = await h.execute();
+  assert.equal(result.format, 'retrieval-coverage-result-v1'); assert.equal(result.completedAnswers, 16); assert.equal(result.newProviderAttempts, 16); assert.equal(result.networkDispatches, 16); assert.equal(result.qualityClaimEligible, false);
+  assert.equal(result.retrievalContexts?.plannedChangedCases, 7); assert.equal(result.retrievalContexts?.completedChangedPairs, 7); assert.equal(result.retrievalContexts?.plannedUnchangedCases, 1); assert.equal(result.retrievalContexts?.completedUnchangedPairs, 1); assert.deepEqual(result.retrievalContexts?.unchangedCaseIds, ['synthetic-case-7']);
+  assert.deepEqual(verifySourceCalibrationCheckpoints(h.manifest, h.checkpoints), result); assert.deepEqual(verifySourceCalibrationResult(h.manifest, checkpoint), result);
+  for (const [index, body] of h.bodies.entries()) {
+    const slot = h.manifest.plan.slots[index]; assert.deepEqual(body, slot.requestBody); assert.equal(slot.binding.contract, WORKSPACE_GENERATION_CONTRACT);
+    const step = result.steps[index]; assert.equal(step.status, 'completed'); assert.ok(step.status === 'completed'); const output = step.output; assert.deepEqual(output.answer.citations, [{ passageId: slot.input.passages.at(-1)!.id, quote: slot.input.passages.at(-1)!.text }]);
+  }
+  const review = sourceCalibrationReviewWorksheet(h.manifest, checkpoint), worksheet = review.worksheet;
+  for (const label of ['Generation-available', 'generationSourceIds', 'workspace-source-coverage-v1', 'candidate', 'baseline', 'additions']) assert.ok(!worksheet.includes(label), `Anonymous worksheet leaked ${label}.`);
+  assert.deepEqual(worksheet.split('\n').filter(line => /^Source .* — /.test(line)), h.manifest.plan.cases.flatMap(c => c.sources.map(source => `Source ${source.id} — ${source.label}`)), 'Every complete review source is present, with no per-arm availability subset.');
+  for (const c of h.manifest.plan.cases) for (const source of c.sources) assert.ok(worksheet.includes(`Source ${source.id} — ${source.label}\n\n`));
+  for (const item of review.armMapping.mapping) {
+    const c = h.manifest.plan.cases.find(c => c.id === item.caseId)!;
+    assert.deepEqual(item.generationSourceIds, c.generationSourceIdsByArm![item.arm as 'baseline' | 'candidate'], 'Per-arm source availability stays in the separate mapping.');
+  }
+});
+
+test('the narrow retrieval compatibility amendment preserves all frozen artifacts and sixteen original requests', () => {
+  const p = retrievalPreparation(false, true), original = prepareSourceCalibrationComparison(p);
+  const frozen = clone({ packet: p.packet, retrieval: p.retrieval, candidateFreeze: p.candidateFreeze, selectionAudit: p.selectionAudit, familyAudit: p.familyAudit, exposureAudit: p.exposureAudit });
+  amendRetrievalPreparation(p);
+  const amended = prepareSourceCalibrationComparison(p);
+  assert.deepEqual({ packet: p.packet, retrieval: p.retrieval, candidateFreeze: p.candidateFreeze, selectionAudit: p.selectionAudit, familyAudit: p.familyAudit, exposureAudit: p.exposureAudit }, frozen);
+  assert.notEqual(amended.planSha256, original.planSha256, 'The new code and amendment require a new exact approval.');
+  assert.deepEqual(amended.plan.slots.map(slot => slot.binding.requestSha256), original.plan.slots.map(slot => slot.binding.requestSha256));
+  assert.deepEqual(amended.plan.slots, original.plan.slots); assert.deepEqual(amended.plan.cases, original.plan.cases);
+  verifySourceCalibrationPlan(amended);
+  const missing = clone(p); delete missing.compatibilityAmendment;
+  assert.throws(() => prepareSourceCalibrationComparison(missing), /Frozen candidateFreeze implementation changed/);
+  const old = preparation(); old.compatibilityAmendment = p.compatibilityAmendment;
+  assert.throws(() => prepareSourceCalibrationComparison(old), /limited to the retrieval experiment/);
+});
+
+test('compatibility amendments cannot broaden paths, historical bindings, current code or pre-generation claims', () => {
+  const mutations: ((p: SourceCalibrationPreparation, a: any) => void)[] = [
+    (_p, a) => { a.format = 'other-format'; }, (_p, a) => { a.reason = 'general_override'; }, (_p, a) => { a.originalImplementationCommit = '0'.repeat(40); },
+    ...['candidateFreezeFileSha256', 'cohortFileSha256', 'retrievalFileSha256'].map(field => (_p: SourceCalibrationPreparation, a: any) => { a[field] = hash('SYNTHETIC detached artifact'); }),
+    ...['generationPerformed', 'modelOutputsInspected'].map(field => (_p: SourceCalibrationPreparation, a: any) => { a[field] = true; }),
+    (_p, a) => { a.newProviderCalls = 1; }, (_p, a) => { a.frozenContextsUnchanged = false; }, (_p, a) => { a.extraPermission = true; },
+    (_p, a) => { a.implementationChanges['server/feedback-provider.ts'] = { from: hash('old'), to: hash('new') }; },
+    (_p, a) => { delete a.implementationChanges['server/source-calibration-comparison.ts']; },
+    (_p, a) => { a.implementationChanges['server/source-calibration-comparison.ts'].extra = true; },
+    (_p, a) => { a.implementationChanges['server/workspace-source-coverage.ts'].from = hash('SYNTHETIC other historical core'); },
+    (p, a) => { a.implementationChanges['server/workspace-source-coverage.ts'].to = p.implementationSha256['server/workspace-source-coverage.ts'] = hash('SYNTHETIC other new core'); },
+    (_p, a) => { a.implementationChanges['server/source-calibration-comparison.ts'].from = hash('SYNTHETIC other historical adapter'); },
+    (_p, a) => { a.implementationChanges['server/source-calibration-comparison.ts'].to = hash('SYNTHETIC unbound current adapter'); },
+    p => { p.implementationSha256['server/workspace-generation.ts'] = hash('SYNTHETIC changed prompt'); },
+    p => { p.implementationSha256['server/product-retrieval.ts'] = hash('SYNTHETIC changed ranking'); },
+    p => { p.compatibilityAmendment!.path = p.packet.path; },
+    p => { p.compatibilityAmendment!.path = `./${p.packet.path}`; },
+    p => { p.compatibilityAmendment!.path = 'server/workspace-source-coverage.ts'; },
+    p => { p.compatibilityAmendment!.path = Object.keys(p.historySha256)[0]; }
+  ];
+  for (const mutate of mutations) {
+    const p = amendRetrievalPreparation(retrievalPreparation(false, true)); mutate(p, p.compatibilityAmendment!.document);
+    p.compatibilityAmendment!.fileSha256 = hash(JSON.stringify(p.compatibilityAmendment!.document));
+    assert.throws(() => prepareSourceCalibrationComparison(p));
+  }
+});
+
+test('a resealed compatibility amendment cannot accept any changed frozen context or addition', () => {
+  for (const mutate of [
+    (row: any) => { row.baseline.passages = row.candidate.passages; },
+    (row: any) => { row.candidate.passages.reverse(); },
+    (row: any) => { row.candidate.passages.pop(); },
+    (row: any) => { row.additions[0].reasons = ['SYNTHETIC different priority']; }
+  ]) {
+    const p = amendRetrievalPreparation(retrievalPreparation(false, true)); mutate(p.retrieval.document.results[0]);
+    resealPreparation(p); p.compatibilityAmendment!.document.retrievalFileSha256 = p.retrieval.fileSha256;
+    p.compatibilityAmendment!.fileSha256 = hash(JSON.stringify(p.compatibilityAmendment!.document));
+    assert.throws(() => prepareSourceCalibrationComparison(p), /Expected values to be strictly deep-equal/);
+  }
+});
+
+test('retrieval scope shares pre-provider approval, partial-stop, reservation and pre-dispatch history guards', async () => {
+  const options = { execute: true, liveOptIn: true, approvedPlanSha256: 'wrong', transportProvenance: 'mocked_mechanics_only' as const }, unapproved = harness({ preparation: retrievalPreparation() });
+  await assert.rejects(executeSourceCalibrationComparison(unapproved.manifest, options, unapproved.dependencies)); assert.equal(unapproved.counts().creations, 0); assert.equal(unapproved.counts().outputs, 0);
+  const h = harness({ preparation: retrievalPreparation(), response: (body, index) => ({ answer: 'SYNTHETIC response.', status: 'answered', citations: index === 1 ? ['src_unoffered'] : [JSON.parse(body.messages[1].content).quoteOptions[0].id] }) });
+  const { result } = await h.execute(); assert.equal(result.status, 'stopped'); assert.equal(result.completedAnswers, 1); assert.equal(result.newProviderAttempts, 2); assert.equal(result.networkDispatches, 2); assert.equal(result.steps.filter(s => s.status === 'not_attempted').length, 14); assert.deepEqual(result.usage, { inputTokens: 20, outputTokens: 10 });
+  const changed = harness({ preparation: retrievalPreparation() }), read = changed.dependencies.readLedger;
+  changed.dependencies.readLedger = () => { const state = read(); return state.rows.length ? { ...state, historicalRowsSha256: hash('SYNTHETIC altered history') } : state; };
+  const stopped = await changed.execute(); assert.equal(stopped.result.newProviderAttempts, 1); assert.equal(stopped.result.networkDispatches, 0); assert.equal(changed.bodies.length, 0);
+});
+
+test('retrieval CLI cannot accept a historical prompt comparison and rejects missing approval before private state access', async () => {
+  const help = await retrievalCoverageComparisonCli([]); assert.ok('mode' in help && help.mode === 'offline');
+  const root = mkdtempSync(join(tmpdir(), 'retrieval-comparison-cli-'));
+  try {
+    const path = join(root, 'plan.json'), env = new Proxy({ ABLATRIX_LOOP_LIVE: '1' }, { get(target, key) { if (String(key).includes('SAPIOM')) assert.fail('Credential access before approval'); return Reflect.get(target, key); } });
+    const old = prepareSourceCalibrationComparison(preparation()); writeFileSync(path, JSON.stringify(old));
+    await assert.rejects(retrievalCoverageComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', old.planSha256], env), /Wrong comparison CLI/);
+    const current = prepareSourceCalibrationComparison(retrievalPreparation()); writeFileSync(path, JSON.stringify(current));
+    await assert.rejects(retrievalCoverageComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', '0'.repeat(64)], env), /Exact approval/);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test('targeted gaps freeze first-by-deck3/3/2 quotas and keep candidate misses without changing answer instructions', () => {
+  const prep = sourceGapPreparation(), manifest = prepareSourceCalibrationComparison(prep);
+  assert.equal(manifest.plan.format, 'ablatrix-source-gap-first-answer-plan-v1'); assert.equal(manifest.plan.slots.length, 16); assert.equal(manifest.plan.budget.absoluteCallLimit, 154);
+  assert.deepEqual(Object.fromEntries(Object.entries(manifest.plan.sourceGapGroups!).map(([group, value]) => [group, value.plannedCases])), SOURCE_GAP_QUOTAS);
+  assert.ok(manifest.plan.retrievalContexts!.unchangedCaseIds.includes('source-gap-train-1000'), 'The first qualifying gap remains selected even when the frozen candidate misses it.');
+  const screening = prep.packet.document.selection.inputArtifacts.baseline.document.results[1].baseline.passages, final = prep.retrieval.document.inputArtifacts.finalBaseline.document.results[1].baseline.passages;
+  assert.notDeepEqual(final, screening, 'The final8 corpus can legitimately alter baseline source assembly before independent reconfirmation.');
+  for (const slot of manifest.plan.slots) {
+    assert.equal(slot.binding.contract, WORKSPACE_GENERATION_CONTRACT); const payload = JSON.parse(slot.requestBody.messages[1].content);
+    for (const forbidden of ['sourceGapGroup', 'designatedFacts', 'screeningBaselineContextSha256', 'gapReview', 'noEquivalentFactInBaseline']) assert.ok(!Object.hasOwn(payload, forbidden));
+    assert.equal(slot.requestBody.messages[0].content, manifest.plan.slots[0].requestBody.messages[0].content);
+  }
+  verifySourceCalibrationPlan(manifest);
+});
+
+test('targeted source-gap inputs reject detached reviews, changed quotas, candidate-conditioned eligibility and empty controls', () => {
+  const mutations: ((p: SourceCalibrationPreparation) => void)[] = [
+    p => { p.packet.document.selection.inputArtifacts.extra = p.packet; },
+    p => { p.packet.document.selection.inputArtifacts.protocol.document.candidateEligibilityUsed = true; },
+    p => { p.packet.document.selection.inputArtifacts.protocol.document.quotas.specification_gap = 4; },
+    p => { p.packet.document.selection.inputArtifacts.deck.document.cases.pop(); },
+    p => { p.packet.document.selection.inputArtifacts.deck.document.selection.candidateContextInspected = true; },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.candidateContextInspected = true; },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.cases[0].baselineContextSha256 = hash('SYNTHETIC detached context'); },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.cases[0].designatedFacts[0].quote = 'SYNTHETIC fabricated source quote'; },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.cases[6].designatedFacts = []; },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.cases[6].designatedFacts[0] = clone(p.packet.document.selection.inputArtifacts.gapReview.document.cases[3].designatedFacts[0]); },
+    p => { p.packet.document.selection.inputArtifacts.gapReview.document.cases[0].sourceGapGroup = 'ineligible_or_uncertain'; },
+    p => { p.packet.document.selection.exposedUnexecutedCohorts[0].status = 'failed'; },
+    p => { p.packet.document.selection.exposedUnexecutedCohorts[0].productIds[0] = p.packet.document.cases[0].product.id; },
+    p => { p.familyAudit.document.candidateContextInspected = true; },
+    p => { p.familyAudit.document.cases[0].noEquivalentFactInBaseline = false; },
+    p => { p.familyAudit.document.cases[0].designatedFactsSemanticallyRechecked = false; },
+    p => { p.familyAudit.document.cases[6].baselineComplete = false; },
+    p => { p.familyAudit.document.finalBaselineFileSha256 = hash('SYNTHETIC old corpus'); },
+    p => { p.retrieval.document.inputArtifacts.finalBaseline.document.results[0].baseline.passages.pop(); },
+    p => { p.retrieval.document.familyAuditFileSha256 = hash('SYNTHETIC detached final audit'); },
+    p => { p.retrieval.document.inputArtifacts.finalBaseline.path = p.packet.document.selection.inputArtifacts.baseline.path; },
+    p => { p.packet.document.selection.inputArtifacts.protocol.path = './server/workspace-source-coverage.ts'; },
+    p => { p.compatibilityAmendment = amendRetrievalPreparation(retrievalPreparation(false, true)).compatibilityAmendment; }
+  ];
+  for (const mutate of mutations) { const p = sourceGapPreparation(); mutate(p); assert.throws(() => prepareSourceCalibrationComparison(p)); }
+  const reordered = sourceGapPreparation(); reordered.packet.document.cases.reverse(); reordered.selectionAudit.document.decisions.reverse(); resealPreparation(reordered);
+  assert.throws(() => prepareSourceCalibrationComparison(reordered), /first qualifying cases in fixed deck order/);
+});
+
+test('final source-gap review rejects a copied screening hash despite the correct final-baseline file binding', () => {
+  const p = sourceGapPreparation(), finalBaseline = p.retrieval.document.inputArtifacts.finalBaseline;
+  const screeningHash = p.packet.document.selection.inputArtifacts.baseline.document.results[1].baselineContextSha256;
+  const finalHash = finalBaseline.document.results[1].baselineContextSha256;
+  assert.notEqual(screeningHash, finalHash, 'The selected corpus changes this case baseline source context.');
+  assert.equal(p.familyAudit.document.cases[1].baselineContextSha256, finalHash);
+  assert.doesNotThrow(() => verifySourceGapAssemblyAudit(p.packet, finalBaseline, p.familyAudit));
+  assert.doesNotThrow(() => prepareSourceCalibrationComparison(p));
+
+  p.familyAudit.document.cases[1].baselineContextSha256 = screeningHash;
+  p.familyAudit.fileSha256 = hash(JSON.stringify(p.familyAudit.document));
+  p.retrieval.document.familyAuditFileSha256 = p.familyAudit.fileSha256;
+  const { sha256: _sha256, ...retrievalBody } = p.retrieval.document;
+  p.retrieval.document.sha256 = hash(retrievalBody); p.retrieval.fileSha256 = hash(JSON.stringify(p.retrieval.document));
+  assert.equal(p.familyAudit.document.finalBaselineFileSha256, finalBaseline.fileSha256);
+  assert.throws(() => verifySourceGapAssemblyAudit(p.packet, finalBaseline, p.familyAudit), /Final review must bind the selected-cohort baseline context/);
+  assert.throws(() => prepareSourceCalibrationComparison(p), /Final review must bind the selected-cohort baseline context/);
+
+  p.familyAudit.document.cases[1].baselineContextSha256 = finalHash;
+  finalBaseline.document.results.reverse();
+  assert.throws(() => verifySourceGapAssemblyAudit(p.packet, finalBaseline, p.familyAudit), /The final baseline must retain the reviewed case order/);
+});
+
+test('targeted execution retains all groups, changed/unchanged contexts and the full denominator on first failure', async () => {
+  const h = harness({ preparation: sourceGapPreparation() }); const { result } = await h.execute();
+  assert.equal(result.format, 'source-gap-result-v1'); assert.equal(result.completedAnswers, 16); assert.equal(result.newProviderAttempts, 16); assert.equal(result.qualityClaimEligible, false);
+  assert.deepEqual(Object.fromEntries(Object.entries(result.sourceGapGroups!).map(([group, value]) => [group, value.completedPairs])), SOURCE_GAP_QUOTAS);
+  assert.match(result.selectionCaveat!, /not a natural-product sample/); assert.ok(result.retrievalContexts!.completedUnchangedPairs >= 1);
+  const stopped = harness({ preparation: sourceGapPreparation(), response: () => ({ answer: 'SYNTHETIC invalid response.', status: 'answered', citations: ['src_wrong'] }) });
+  const partial = (await stopped.execute()).result; assert.equal(partial.newProviderAttempts, 1); assert.equal(partial.networkDispatches, 1); assert.equal(partial.steps.filter(s => s.status === 'not_attempted').length, 15); assert.equal(partial.plannedCases, 8);
+  assert.deepEqual(Object.fromEntries(Object.entries(partial.sourceGapGroups!).map(([group, value]) => [group, value.plannedCases])), SOURCE_GAP_QUOTAS);
+});
+
+test('both source-gap review stages reject a missing fact already present in that exact cited baseline body', () => {
+  const p = sourceGapPreparation(), inputs = p.packet.document.selection.inputArtifacts;
+  const source = inputs.baseline.document.results[0].baseline.passages[0];
+  const fact = { fact: 'SYNTHETIC incorrectly claimed missing fact.', sourceIds: [source.id], quote: source.text, qualification: 'SYNTHETIC direct same-source contradiction.' };
+  inputs.gapReview.document.cases[0].designatedFacts = [fact]; inputs.gapReview.fileSha256 = hash(JSON.stringify(inputs.gapReview.document));
+  p.selectionAudit.document.inputArtifacts = clone(inputs); resealPreparation(p);
+  assert.throws(() => prepareSourceCalibrationComparison(p), /A missing fact cannot already occur in its cited baseline source body/);
+  const final = sourceGapPreparation(), saved = final.retrieval.document.inputArtifacts.finalBaseline;
+  final.packet.document.cases[0].designatedFacts = [fact]; final.familyAudit.document.cases[0].designatedFacts = [fact];
+  assert.throws(() => verifySourceGapAssemblyAudit(final.packet, saved, final.familyAudit), /A missing fact cannot already occur in its cited baseline source body/);
+  // The same literal under a different cited source remains a scope question
+  // for independent review; do not equate short CQA answers across models.
+  const separate = sourceGapPreparation(), case0 = separate.packet.document.cases[0], row0 = separate.familyAudit.document.cases[0];
+  case0.sources[1].text = source.text; case0.sources[1].originalQuestion = 'SYNTHETIC different model scope?';
+  const separateFact = { ...fact, sourceIds: [case0.sources[1].id] }; case0.designatedFacts = [separateFact]; row0.designatedFacts = [separateFact];
+  assert.doesNotThrow(() => verifySourceGapAssemblyAudit(separate.packet, separate.retrieval.document.inputArtifacts.finalBaseline, separate.familyAudit));
+});
+
+test('targeted CLI retains exact approval and protocol isolation before private access', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'source-gap-comparison-cli-'));
+  try {
+    const path = join(root, 'plan.json'), env = new Proxy({ ABLATRIX_LOOP_LIVE: '1' }, { get(target, key) { if (String(key).includes('SAPIOM')) assert.fail('Credential access before approval'); return Reflect.get(target, key); } });
+    const old = prepareSourceCalibrationComparison(retrievalPreparation()); writeFileSync(path, JSON.stringify(old));
+    await assert.rejects(sourceGapComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', old.planSha256], env), /Wrong comparison CLI/);
+    const current = prepareSourceCalibrationComparison(sourceGapPreparation()); writeFileSync(path, JSON.stringify(current));
+    await assert.rejects(sourceGapComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', '0'.repeat(64)], env), /Exact approval/);
+    await assert.rejects(retrievalCoverageComparisonCli(['--execute', '--plan', path, '--approved-plan-sha256', current.planSha256], env), /Wrong comparison CLI/);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+function partialSourceGapPreparation(n = 8, nonDesignatedGrowth = false): SourceCalibrationPreparation {
+  assert.ok([4, 6, 8].includes(n));
+  const p = sourceGapPreparation(), old = clone(p.packet.document.selection.inputArtifacts), m = 19;
+  const originalFreeze = artifact('SYNTHETIC-original-source-gap-freeze', { ...clone(p.candidateFreeze.document), implementationSha256: { ...p.candidateFreeze.document.implementationSha256, 'server/workspace-source-coverage.ts': SOURCE_GAP_PARTIAL_ORIGINAL_CORE_SHA } });
+  p.experiment = SOURCE_GAP_PARTIAL_EXPERIMENT; p.implementationSha256 = Object.fromEntries(SOURCE_GAP_PARTIAL_CODE_FILES.map(path => [path, hash(`SYNTHETIC implementation ${path}`)])); p.implementationSha256['server/workspace-source-coverage.ts'] = SOURCE_GAP_PARTIAL_ORIGINAL_CORE_SHA;
+  p.candidateFreeze = artifact('partial-freeze', { ...clone(originalFreeze.document), format: 'ablatrix-source-gap-partial-candidate-freeze-v1', createdAt: '2026-10-18T00:00:00Z', implementationSha256: clone(p.implementationSha256) });
+  const historicalSelection = clone(p.packet.document.selection); delete historicalSelection.inputArtifacts; delete historicalSelection.finalizationCodeSha256; const common = { ...historicalSelection, selectionCodeSha256: p.implementationSha256['scripts/prepare-source-gap-partial-pool.py'], immutableHelperSha256: Object.fromEntries(['scripts/prepare-source-gap-deck.py', 'scripts/prepare-retrieval-coverage-cohort.py', 'scripts/prepare-source-calibration-cohort.py', 'scripts/prepare-flat-source-cohort.py', 'scripts/prepare-correction-cohort.py', 'scripts/prepare-source-id-cohort.py'].map(path => [path, p.implementationSha256[path]])) };
+  delete common.inputArtifacts; delete common.finalizationCodeSha256;
+  const rawCases = old.deck.document.cases.slice(0, m).map((c: any) => { const out = clone(c); delete out.deckRound; return out; });
+  const rounds = Array.from({ length: 3 }, (_, i) => artifact(`partial-round-${i + 1}`, { format: 'ablatrix-source-gap-failed-round-observation-v1', round: i + 1, seed: `${SOURCE_GAP_SEED}:round:${i + 1}`, selectedCount: rawCases.slice(i * 8, i * 8 + 8).length, inventory: { passed: i < 2 }, selectedSourceOnlyCases: rawCases.slice(i * 8, i * 8 + 8), candidateContextsInspected: false, modelOutputsInspected: false, generationPerformed: false, newProviderCalls: 0 }));
+  const cases = rounds.flatMap(r => r.document.selectedSourceOnlyCases.map((c: any) => ({ ...c, diagnosticRound: r.document.round })));
+  const partialExposure = artifact('partial-exposure', { format: 'ablatrix-source-gap-partial-failure-exposure-v1', status: 'failed_frozen_deck_not_a_benchmark', selectionSeed: SOURCE_GAP_SEED, selectedProducts: m, cases, generationPerformed: false, candidateContextsInspected: false, modelOutputsInspected: false, newProviderCalls: 0, qualityClaimEligible: false });
+  const diagnostic = { format: 'ablatrix-source-gap-failure-diagnostic-v1', selectorExitCode: 1, unexpectedExceptionType: null, status: 'reproduced_frozen_deck_insufficiency', plannedProducts: 64, completedRounds: 2, roundsObserved: 3, partialSelectedProducts: m,
+    rounds: rounds.map(r => ({ round: r.document.round, seed: r.document.seed, selectedCount: r.document.selectedCount, inventory: r.document.inventory, observationFileSha256: r.fileSha256 })), partialSourceExposureFileSha256: partialExposure.fileSha256,
+    inputArtifactBytesUnchangedDuringReplay: true, frozenCodeUnchangedDuringReplay: true, sourceMetadataUnchangedDuringReplay: true, publicExposureProjectionUnchangedDuringReplay: true, originalFailureLogUnchanged: true, originalPrepareDirectoryAbsent: true,
+    originalAttemptInventoryEquality: 'unknown_original_attempt_wrote_no_source_inventory', newProviderCalls: 0, candidateContextsInspected: false, modelOutputsInspected: false, qualityClaimEligible: false, paidExecutionAuthorized: false };
+  const originalProtocolBody = clone(old.protocol.document); delete originalProtocolBody.protocolSha256; originalProtocolBody.candidateFreezeFileSha256 = originalFreeze.fileSha256;
+  const originalProtocol = artifact('partial-original-protocol', { ...originalProtocolBody, protocolSha256: contextComparisonHash(originalProtocolBody) }), diagnosticArtifact = artifact('partial-diagnostic', clone(diagnostic));
+  const protectionProjection = artifact('partial-protections', { format: 'ablatrix-source-gap-post-failure-protections-v1', provenance: 'post_failure_reconstruction_from_unchanged_original_inputs', originalProcessPrintedThisProjection: false,
+    diagnosticSummaryFileSha256: diagnosticArtifact.fileSha256, replayInputManifestFileSha256: hash('SYNTHETIC replay inputs'), candidateFreezeFileSha256: originalFreeze.fileSha256, protocolFileSha256: originalProtocol.fileSha256, source: clone(p.packet.document.source),
+    ...Object.fromEntries(['selectionCodeSha256', 'immutableHelperSha256', 'eligibilityAmendment', 'priorCohorts', 'priorSourceReviews', 'consumedCohorts', 'exposedUnexecutedCohorts', 'inventoryInputs'].map(key => [key, clone(historicalSelection[key])])), generatedAnswersOrJudgmentsRead: false, modelOutputsUsed: false, candidateContextInspected: false, newSelectionPerformed: false, newCsvReadsPerformed: false, newProviderCalls: 0 });
+  const originalFailure = artifact('partial-origin', { format: 'ablatrix-source-gap-partial-origin-v1', diagnostic: clone(diagnostic), diagnosticFileSha256: diagnosticArtifact.fileSha256, source: clone(p.packet.document.source), selection: historicalSelection, originalCandidateFreezeFileSha256: originalFreeze.fileSha256, originalProtocolFileSha256: originalProtocol.fileSha256, replayInputsFileSha256: hash('SYNTHETIC replay inputs'), sourceProtectionProjectionFileSha256: protectionProjection.fileSha256 });
+  const poolBody = { format: 'ablatrix-source-gap-exposed-pool-v1', selectionSeed: SOURCE_GAP_SEED, selectionProtocol: SOURCE_GAP_PARTIAL_PROTOCOL, candidateFreeze: clone(p.candidateFreeze), source: clone(p.packet.document.source), selection: { ...common, generatedAnswersOrJudgmentsRead: false, modelOutputsUsed: false, candidateContextInspected: false }, exposureAuditSha256: p.exposureAudit.document.auditSha256,
+    inputArtifacts: { originalFailure, partialExposure, originalCandidateFreeze: originalFreeze, originalProtocol, diagnostic: diagnosticArtifact, protectionProjection, rounds }, status: { sourceExposed: true, generationPerformed: false, paidExecutionAuthorized: false, qualityClaimEligible: false }, cases };
+  const pool = artifact('partial-pool', { ...poolBody, poolSha256: contextComparisonHash(poolBody) });
+  const protocolBody = { format: 'ablatrix-source-gap-partial-selection-protocol-v1', selectionProtocol: SOURCE_GAP_PARTIAL_PROTOCOL, selectionSeed: SOURCE_GAP_SEED, poolFileSha256: pool.fileSha256, poolSize: m, candidateFreezeFileSha256: p.candidateFreeze.fileSha256,
+    maxima: clone(SOURCE_GAP_QUOTAS), minima: clone(SOURCE_GAP_PARTIAL_MINIMA), minimumSelectedProducts: 4, maximumSelectedProducts: 8, maximumNewAnswerAttempts: 16, candidateEligibilityUsed: false, modelOutputsUsed: false, caseReplacement: false, finalBaselineRevalidationRequired: true, sourceExposed: true, claimScope: 'exploratory_source_exposed_pool' };
+  const protocol = artifact('partial-protocol', { ...protocolBody, protocolSha256: contextComparisonHash(protocolBody) });
+  const baselineFor = (input: SourceCalibrationArtifact, scope: string) => {
+    const corpus = retrievalCoverageCorpus(input), results = input.document.cases.map((c: any, i: number) => {
+      const passages = [{ ...corpus.passages.find(s => s.id === c.sources[0].id)!, lexicalRank: 1, semanticRank: 1, score: 1 }];
+      const indexRetrieval = { passages, durationMs: 0, method: 'SYNTHETIC', embeddingModel: 'SYNTHETIC', corpusVersion: corpus.version };
+      return { caseId: c.id, indexRetrieval, baseline: { ...indexRetrieval, passages }, baselineContextSha256: sourceGapBaselineContextHash(c.product, c.question, passages) };
+    });
+    const body = { format: 'ablatrix-source-gap-baseline-v1', scope, inputFileSha256: input.fileSha256, corpusSha256: hash(corpus), implementationSha256: clone(p.implementationSha256), results, providerCalls: 0, generationPerformed: false, candidateContextInspected: false };
+    return artifact(`partial-${scope}-baseline`, { ...body, sha256: hash(body) });
+  };
+  const baseline = baselineFor(pool, 'screening_pool'), perGap = (n - 2) / 2;
+  const rows = cases.map((c: any, i: number) => { const row = clone(old.gapReview.document.cases[i]); row.baselineContextSha256 = baseline.document.results[i].baselineContextSha256;
+    if (nonDesignatedGrowth && i < 6) { const source = c.sources[1]; row.designatedFacts = [{ fact: 'SYNTHETIC missing customer detail.', sourceIds: [source.id], quote: source.text, qualification: 'SYNTHETIC source-only mechanics fixture.' }]; }
+    if (!(i < perGap || i >= 3 && i < 3 + perGap || i === 6 || i === 7)) Object.assign(row, { sourceGapGroup: 'ineligible_or_uncertain', noEquivalentFactInBaseline: false, baselineComplete: false, designatedFacts: [] }); return row; });
+  const gapReview = artifact('partial-gap-review', { format: 'ablatrix-source-gap-partial-review-v1', protocolFileSha256: protocol.fileSha256, poolFileSha256: pool.fileSha256, baselineFileSha256: baseline.fileSha256, provenance: 'independent_ai_source_gap_review', status: 'completed', modelOutputsInspected: false, candidateContextInspected: false, cases: rows });
+  const selected = cases.flatMap((c: any, i: number) => rows[i].sourceGapGroup === 'ineligible_or_uncertain' ? [] : [{ ...c, sourceGapGroup: rows[i].sourceGapGroup, designatedFacts: rows[i].designatedFacts, screeningBaselineContextSha256: rows[i].baselineContextSha256 }]);
+  const selection = { ...common, inputArtifacts: { protocol, pool, baseline, gapReview }, finalizationCodeSha256: p.implementationSha256['scripts/finalize-source-gap-partial-cohort.py'] };
+  const inventory = { passed: true, screenedProducts: m, selectedProducts: n };
+  Object.assign(p.packet.document, { format: 'ablatrix-source-gap-partial-cohort-v1', candidateFreeze: clone(p.candidateFreeze), selection, inventory, cases: selected, executionPlan: { ...p.packet.document.executionPlan, caseCount: n, maximumNewAnswerAttempts: n * 2 } });
+  Object.assign(p.selectionAudit.document, { ...selection, format: 'ablatrix-source-gap-partial-selection-audit-v1', candidateFreezeFileSha256: p.candidateFreeze.fileSha256, inventory, decisions: selected.map((c: any) => ({ stage: 'ranked_selection', selected: true, qid: c.upstream.qid, productId: c.product.id, stratum: c.stratum, rankSha256: c.selectionRankSha256 })) });
+  resealPreparation(p); const finalBaseline = baselineFor(p.packet, 'selected_cohort');
+  p.familyAudit = artifact('partial-final-review', { status: 'passed', provenance: 'independent_ai_source_and_family_review', cohortFileSha256: p.packet.fileSha256, finalBaselineFileSha256: finalBaseline.fileSha256, exposureAuditFileSha256: p.exposureAudit.fileSha256, generationPerformed: false, newProviderCalls: 0, modelOutputsInspected: false, candidateContextInspected: false,
+    cases: selected.map((c: any, i: number) => ({ ...clone(rows.find((row: any) => row.caseId === c.id)), baselineContextSha256: finalBaseline.document.results[i].baselineContextSha256, familySeparationReviewed: true, designatedFactsSemanticallyRechecked: true, gapOrControlConfirmed: true })) });
+  const corpus = retrievalCoverageCorpus(p.packet), results = selected.map((c: any, i: number) => { const row = finalBaseline.document.results[i], candidate = workspaceSourceCoverageContext({ ...c.product, sources: c.sources.map((s: any) => ({ ...s, originalQuestion: s.originalQuestion ?? undefined })) }, corpus, row.indexRetrieval, c.question); return { ...row, candidate: { ...row.indexRetrieval, passages: candidate.passages }, additions: candidate.additions, contract: candidate.contract }; });
+  const body = { format: 'source-gap-partial-retrieval-v1', cohortFileSha256: p.packet.fileSha256, implementationSha256: clone(p.implementationSha256), corpusSha256: hash(corpus), inputArtifacts: { finalBaseline }, familyAuditFileSha256: p.familyAudit.fileSha256, results, providerCalls: 0, generationPerformed: false, semanticAssessment: 'not_run' };
+  p.retrieval = artifact('partial-paired', { ...body, sha256: hash(body) }); return p;
+}
+
+test('source-exposed partial pool freezes4/6/8 selected pairs with exact2N budgets and unchanged answer prompt', () => {
+  for (const n of [4, 6, 8]) { const manifest = prepareSourceCalibrationComparison(partialSourceGapPreparation(n)); assert.equal(manifest.plan.cases.length, n); assert.equal(manifest.plan.slots.length, n * 2); assert.equal(manifest.plan.budget.maximumNewAttempts, n * 2); assert.equal(manifest.plan.budget.absoluteCallLimit, 138 + n * 2); assert.equal(manifest.plan.sourceExposure!.poolSize, 19); assert.equal(manifest.plan.sourceExposure!.originalProtocolCompleted, false); assert.ok(manifest.plan.slots.every(s => s.binding.contract === WORKSPACE_GENERATION_CONTRACT)); assert.ok(manifest.plan.retrievalContexts!.unchangedCaseIds.includes('source-gap-train-1000')); }
+});
+test('partial paid preparation requires a delivered designated gap fact and retains the other misses', () => {
+  const valid = partialSourceGapPreparation(4), manifest = prepareSourceCalibrationComparison(valid);
+  assert.deepEqual(manifest.plan.designatedFactDelivery, { caseIds: ['source-gap-train-1003'], deliveredCases: 1, qualityClaimEligible: false });
+  assert.deepEqual(manifest.plan.cases.map(c => c.id), valid.packet.document.cases.map((c: any) => c.id));
+  assert.equal(manifest.plan.slots.length, 8); assert.ok(manifest.plan.retrievalContexts!.unchangedCaseIds.includes('source-gap-train-1000'));
+  const allMisses = partialSourceGapPreparation(4, true);
+  assert.ok(allMisses.retrieval.document.results.some((row: any) => row.additions.length > 0), 'The counterexample has real context growth, but no designated gap delivery.');
+  assert.throws(() => prepareSourceCalibrationComparison(allMisses), /at least one designated missing fact/);
+  for (const field of ['text', 'originalQuestion']) {
+    const altered = clone(valid), row = altered.retrieval.document.results[1], added = row.candidate.passages.find((source: any) => source.id === 'gap-3-3');
+    assert.ok(added); added[field] = field === 'text' ? 'SYNTHETIC changed quote, absent from the frozen source.' : 'SYNTHETIC question for another model?';
+    delete altered.retrieval.document.sha256; altered.retrieval.document.sha256 = hash(altered.retrieval.document); altered.retrieval.fileSha256 = hash(JSON.stringify(altered.retrieval.document));
+    assert.throws(() => prepareSourceCalibrationComparison(altered), `A matching source ID with changed ${field} must not qualify.`);
+  }
+});
+test('partial source pool rejects omitted returned cases, reordered/duplicate returns and changed original candidate before generation', () => {
+  for (const mutate of [
+    (p: SourceCalibrationPreparation) => p.packet.document.selection.inputArtifacts.pool.document.cases.pop(),
+    (p: SourceCalibrationPreparation) => p.packet.document.selection.inputArtifacts.pool.document.inputArtifacts.rounds.reverse(),
+    (p: SourceCalibrationPreparation) => { p.packet.document.selection.inputArtifacts.pool.document.inputArtifacts.originalFailure.document.diagnostic.sourceMetadataUnchangedDuringReplay = false; },
+    (p: SourceCalibrationPreparation) => { p.packet.document.selection.inputArtifacts.pool.document.inputArtifacts.originalFailure.document.diagnostic.originalAttemptInventoryEquality = 'proven_equal'; },
+    (p: SourceCalibrationPreparation) => { p.packet.document.selection.inputArtifacts.pool.document.inputArtifacts.originalCandidateFreeze.document.implementationSha256['server/workspace-source-coverage.ts'] = hash('SYNTHETIC tuned candidate'); },
+    (p: SourceCalibrationPreparation) => p.packet.document.selection.inputArtifacts.gapReview.document.cases.pop(),
+    (p: SourceCalibrationPreparation) => { p.packet.document.selection.inputArtifacts.protocol.document.minima.model_detail_gap = 0; },
+    (p: SourceCalibrationPreparation) => { p.familyAudit.document.cases[0].baselineContextSha256 = hash('SYNTHETIC stale screening baseline'); },
+  ]) { const p = partialSourceGapPreparation(4); mutate(p); assert.throws(() => prepareSourceCalibrationComparison(p)); }
+  for (const groups of [['specification_gap', 'specification_gap', 'baseline_complete_control', 'baseline_complete_control'], ['specification_gap', 'model_detail_gap', 'model_detail_gap', 'baseline_complete_control']]) assert.throws(() => verifySourceGapCounts(groups.map(sourceGapGroup => ({ sourceGapGroup })), true));
+});
+test('partial execution dispatches exact2N once and preserves its smaller denominator after first invalid output', async () => {
+  const good = harness({ preparation: partialSourceGapPreparation(4) }), done = await good.execute(); assert.equal(good.bodies.length, 8); assert.equal(done.result.plannedCases, 4); assert.equal(done.result.plannedAnswers, 8); assert.equal(done.result.newProviderAttempts, 8); assert.equal(done.result.completedAnswers, 8); assert.equal(done.result.format, 'source-gap-partial-result-v1'); assert.equal(done.result.qualityClaimEligible, false);
+  const bad = harness({ preparation: partialSourceGapPreparation(6), response: () => ({ answer: 'SYNTHETIC invalid ID.', status: 'answered', citations: ['src_wrong'] }) }), stopped = await bad.execute(); assert.equal(bad.bodies.length, 1); assert.equal(stopped.result.plannedAnswers, 12); assert.equal(stopped.result.steps.filter(s => s.status === 'not_attempted').length, 11);
+});
+
+test('partial pool provenance contradictions reject after resealing, while final4 baseline and candidate assembly reuse the actual freezer', async () => {
+  const p = partialSourceGapPreparation(4), pool = p.packet.document.selection.inputArtifacts.pool;
+  for (const change of [
+    (document: any) => { document.cases.reverse(); },
+    (document: any) => { document.cases.pop(); },
+    (document: any) => { document.inputArtifacts.originalFailure.document.diagnostic.completedRounds = 3; },
+    (document: any) => { document.inputArtifacts.originalFailure.document.diagnostic.originalAttemptInventoryEquality = 'proven_equal'; },
+    (document: any) => { document.inputArtifacts.rounds[2].document.inventory.passed = true; },
+    (document: any) => { document.inputArtifacts.originalCandidateFreeze.document.implementationSha256['server/workspace-source-coverage.ts'] = hash('SYNTHETIC changed original candidate'); },
+  ]) { const changed = clone(pool); change(changed.document); delete changed.document.poolSha256; changed.document.poolSha256 = contextComparisonHash(changed.document); assert.throws(() => verifySourceGapPartialPool(changed, p.implementationSha256)); }
+  const expected = p.packet.document.selection.inputArtifacts.baseline;
+  const retriever = { async retrieve(productId: string) { const index = pool.document.cases.findIndex((c: any) => c.product.id === productId); return clone(expected.document.results[index].indexRetrieval); } };
+  const frozen = await freezeSourceGapBaseline(pool, 'screening_pool', p.implementationSha256, retriever); assert.equal(frozen.results.length, 19); assert.equal(frozen.candidateContextInspected, false);
+  const final = p.retrieval.document.inputArtifacts.finalBaseline;
+  const assembled = assembleSourceGapCandidate(p.packet, final, p.familyAudit, p.implementationSha256); assert.equal(assembled.results.length, 4); assert.equal(assembled.format, 'source-gap-partial-retrieval-v1');
+  assert.deepEqual(assembled.results.map(row => row.candidate.passages), p.retrieval.document.results.map((row: any) => row.candidate.passages));
+  const invalid = clone(p.familyAudit); invalid.document.cases[0].baselineContextSha256 = hash('SYNTHETIC screening hash after final baseline changed'); assert.throws(() => assembleSourceGapCandidate(p.packet, final, invalid, p.implementationSha256), /Final review/);
+  let rankings = 0; const changedCode = { ...p.implementationSha256, 'server/workspace-source-coverage.ts': hash('SYNTHETIC tuned candidate') };
+  await assert.rejects(freezeSourceGapBaseline(pool, 'screening_pool', changedCode, { async retrieve() { rankings++; throw new Error('SYNTHETIC should not rank'); } })); assert.equal(rankings, 0);
+});
+
+
+test('the bound raw diagnostic and protection projection reject a consistently shortened or reprotected wrapper', () => {
+  const p = partialSourceGapPreparation(4), pool = clone(p.packet.document.selection.inputArtifacts.pool), inputs = pool.document.inputArtifacts;
+  // Forge a mutually consistent two-round story while keeping the actual raw
+  // diagnostic and its SHA. Internal envelope agreement must not authenticate it.
+  inputs.rounds.pop(); const last = inputs.rounds.at(-1); last.document.selectedSourceOnlyCases = last.document.selectedSourceOnlyCases.slice(0, 3); last.document.selectedCount = 3; last.document.inventory.passed = false; last.fileSha256 = hash(JSON.stringify(last.document));
+  const returned = inputs.rounds.flatMap((r: any) => r.document.selectedSourceOnlyCases.map((c: any) => ({ ...c, diagnosticRound: r.document.round })));
+  inputs.partialExposure.document.cases = clone(returned); inputs.partialExposure.document.selectedProducts = returned.length; inputs.partialExposure.fileSha256 = hash(JSON.stringify(inputs.partialExposure.document)); pool.document.cases = clone(returned);
+  const summary = inputs.originalFailure.document.diagnostic; summary.rounds = inputs.rounds.map((r: any) => ({ round: r.document.round, seed: r.document.seed, selectedCount: r.document.selectedCount, inventory: r.document.inventory, observationFileSha256: r.fileSha256 })); summary.completedRounds = 1; summary.roundsObserved = 2; summary.partialSelectedProducts = returned.length; summary.partialSourceExposureFileSha256 = inputs.partialExposure.fileSha256; inputs.originalFailure.fileSha256 = hash(JSON.stringify(inputs.originalFailure.document));
+  delete pool.document.poolSha256; pool.document.poolSha256 = contextComparisonHash(pool.document);
+  assert.throws(() => verifySourceGapPartialPool(pool, p.implementationSha256), /entire bound diagnostic/);
+  const drift = clone(p.packet.document.selection.inputArtifacts.pool); drift.document.inputArtifacts.originalFailure.document.selection.priorCohorts = []; drift.document.selection.priorCohorts = []; delete drift.document.poolSha256; drift.document.poolSha256 = contextComparisonHash(drift.document);
+  assert.throws(() => verifySourceGapPartialPool(drift, p.implementationSha256), /bound source-only projection/);
+});
+
+test('compact round projections retain all selected sources and raw diagnostic commitments without rejected-product records', () => {
+  const p = partialSourceGapPreparation(4), pool = clone(p.packet.document.selection.inputArtifacts.pool), inputs = pool.document.inputArtifacts;
+  const diagnostic = clone(inputs.diagnostic), partialExposure = clone(inputs.partialExposure);
+  inputs.rounds = inputs.rounds.map((raw: SourceCalibrationArtifact, index: number) => artifact(`partial-round-projection-${index + 1}`, {
+    ...clone(raw.document), format: 'ablatrix-source-gap-round-projection-v1', rawObservationFileSha256: raw.fileSha256,
+  }));
+  const reseal = (value: SourceCalibrationArtifact) => { delete value.document.poolSha256; value.document.poolSha256 = contextComparisonHash(value.document); };
+  reseal(pool);
+  assert.deepEqual(verifySourceGapPartialPool(pool, p.implementationSha256), partialExposure.document.cases);
+  assert.deepEqual(inputs.diagnostic, diagnostic); assert.deepEqual(inputs.partialExposure, partialExposure);
+  assert.ok(inputs.rounds.every((round: SourceCalibrationArtifact) => !Object.hasOwn(round.document, 'decisions')));
+  for (const mutate of [
+    (row: any) => { row.rawObservationFileSha256 = hash('SYNTHETIC wrong original observation'); },
+    (row: any) => { row.decisions = [{ productId: 'SYNTHETIC rejected product' }]; },
+    (row: any) => { row.format = 'unknown_round_projection'; },
+    (row: any) => {
+      const selected = row.selectedSourceOnlyCases[0], source = selected.sources[0]; source.text = 'SYNTHETIC altered selected source.';
+      source.sha256 = workspaceReviewSourceHash(source); selected.sourcePoolSha256 = contextComparisonHash(selected.sources);
+    },
+  ]) { const changed = clone(pool); mutate(changed.document.inputArtifacts.rounds[0].document); reseal(changed); assert.throws(() => verifySourceGapPartialPool(changed, p.implementationSha256)); }
 });

@@ -1,0 +1,27 @@
+{
+  "format": "ablatrix-source-gap-feasibility-failure-v1",
+  "status": "failed_before_retrieval_or_generation",
+  "originalProtocolCompleted": false,
+  "plannedProducts": 64,
+  "newProviderCalls": 0,
+  "generationPerformed": false,
+  "candidateContextsInspected": false,
+  "qualityResult": "not_evaluated",
+  "diagnosticReplay": {
+    "products": 44,
+    "sources": 862,
+    "completedRounds": 5,
+    "failedRound": 6,
+    "failedStratum": "model_scope",
+    "remainingEligibleModelProductsAtFailure": 0,
+    "initialEligibleModelProducts": 15,
+    "requiredModelProducts": 16,
+    "diagnosticFileSha256": "a62976197eab297ba38eec2fc149bea57172e7ec9c2d577790ddf009cbd586e3",
+    "originalAttemptInventoryEquality": "unknown_original_attempt_wrote_no_source_inventory"
+  },
+  "originalFailureLogFileSha256": "d2deccbb96eaf9f8cc9edba9a021d3b4ae163954a02b57d2d3473050aa7829d0",
+  "caseReplacement": false,
+  "reseeded": false,
+  "qualityClaimEligible": false,
+  "followUp": "Separate exploratory protocol from the full observed diagnostic partial pool; not completion of this failed protocol."
+}

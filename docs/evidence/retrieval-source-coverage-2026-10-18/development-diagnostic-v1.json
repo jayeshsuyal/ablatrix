@@ -1,0 +1,110 @@
+{
+  "format": "retrieval-source-coverage-development-diagnostic-v1",
+  "provenance": "exposed_development_sources_with_existing_frozen_hybrid_rankings",
+  "candidateSha256": "b85ba8cde947ac995ceb1bb1d09c22c28e8359645c7fbc14d7895b47e8e67750",
+  "originalRankingReused": true,
+  "corpusVersionRetainedFromOriginalRanking": true,
+  "results": [
+    {
+      "caseId": "source-calibration-train-12047",
+      "question": "what are the color of the marbles?",
+      "baselineSourceIds": [
+        "epqa-B0009U7UZE-review-97f522e5267a1866",
+        "epqa-B0009U7UZE-review-ba25c0b3df1b7b75",
+        "epqa-B0009U7UZE-review-d2852eee5bee1476",
+        "epqa-B0009U7UZE-review-504a86573c3b443e",
+        "epqa-B0009U7UZE-review-b394a5dbc1fd1e19"
+      ],
+      "candidateSourceIds": [
+        "epqa-B0009U7UZE-review-97f522e5267a1866",
+        "epqa-B0009U7UZE-review-ba25c0b3df1b7b75",
+        "epqa-B0009U7UZE-review-d2852eee5bee1476",
+        "epqa-B0009U7UZE-review-504a86573c3b443e",
+        "epqa-B0009U7UZE-review-b394a5dbc1fd1e19",
+        "epqa-B0009U7UZE-attribute-f20dd274935ecf54"
+      ],
+      "additions": [
+        {
+          "sourceId": "epqa-B0009U7UZE-attribute-f20dd274935ecf54",
+          "reasons": [
+            "question_intent:color",
+            "structured_field:color"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-195",
+      "question": "i'm comparing 17801-yzz01 to 17801-yzz02. they have slightly different dimensions. which one is better fit for 2014 camry 4-cylinder?",
+      "baselineSourceIds": [
+        "epqa-B0044B30TO-cqa-8e88515f603f6b11",
+        "epqa-B0044B30TO-cqa-4af37e214778af2f",
+        "epqa-B0044B30TO-cqa-75e5ab9285097cfe",
+        "epqa-B0044B30TO-attribute-c101e4e26eea9e88",
+        "epqa-B0044B30TO-cqa-7cfc7dc8cd7b0fdd"
+      ],
+      "candidateSourceIds": [
+        "epqa-B0044B30TO-cqa-8e88515f603f6b11",
+        "epqa-B0044B30TO-cqa-4af37e214778af2f",
+        "epqa-B0044B30TO-cqa-75e5ab9285097cfe",
+        "epqa-B0044B30TO-attribute-c101e4e26eea9e88",
+        "epqa-B0044B30TO-cqa-7cfc7dc8cd7b0fdd",
+        "epqa-B0044B30TO-attribute-d66ebb60a1959c5b",
+        "epqa-B0044B30TO-attribute-e3e39e93dd0872a4"
+      ],
+      "additions": [
+        {
+          "sourceId": "epqa-B0044B30TO-attribute-d66ebb60a1959c5b",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_field:itemdimensions"
+          ]
+        },
+        {
+          "sourceId": "epqa-B0044B30TO-attribute-e3e39e93dd0872a4",
+          "reasons": [
+            "product_identity_context",
+            "structured_field:modelnumber"
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "source-calibration-train-8836",
+      "question": "i have a viking model vgsu1646bbk.  will these fit?",
+      "baselineSourceIds": [
+        "epqa-B0064FCQUM-review-f265a14a65519ebd",
+        "epqa-B0064FCQUM-review-0b85ba5edb6bee28",
+        "epqa-B0064FCQUM-review-124af6fe1f0bc662",
+        "epqa-B0064FCQUM-review-5733434749c292a0",
+        "epqa-B0064FCQUM-review-d89b51b8df648d02"
+      ],
+      "candidateSourceIds": [
+        "epqa-B0064FCQUM-review-f265a14a65519ebd",
+        "epqa-B0064FCQUM-review-0b85ba5edb6bee28",
+        "epqa-B0064FCQUM-review-124af6fe1f0bc662",
+        "epqa-B0064FCQUM-review-5733434749c292a0",
+        "epqa-B0064FCQUM-review-d89b51b8df648d02",
+        "epqa-B0064FCQUM-attribute-9ef516d2dafbee2a",
+        "epqa-B0064FCQUM-bullet-6caabd1e2e05364a"
+      ],
+      "additions": [
+        {
+          "sourceId": "epqa-B0064FCQUM-attribute-9ef516d2dafbee2a",
+          "reasons": [
+            "product_identity_context",
+            "structured_field:partnumber"
+          ]
+        },
+        {
+          "sourceId": "epqa-B0064FCQUM-bullet-6caabd1e2e05364a",
+          "reasons": [
+            "identifier_family_context_only:VGSU"
+          ]
+        }
+      ]
+    }
+  ],
+  "newProviderCalls": 0,
+  "answerQualityAssessed": false
+}

@@ -1,0 +1,20 @@
+{
+  "format": "ablatrix-source-coverage-v2-source-review-provenance-v1",
+  "parts": [
+    {
+      "reviewer": "independent_ai_source_review_a",
+      "reviewFileSha256": "7c8e6c7eaff05062b40835c0f687ef4fe049791d281350446eded49b2b5ca63a",
+      "packetFileSha256": "7f521e3700a63eaf2c02634dd3031e13d9a2a7547b6f31935268c85d7d39313e",
+      "cases": 6
+    },
+    {
+      "reviewer": "independent_ai_source_review_b",
+      "reviewFileSha256": "5a4d273e7096ff3757a6f374014ea6197376ea44439655fabd313abc2b4d7ca7",
+      "packetFileSha256": "200cd29db01de53ea20b424386ebca378113c4ba6ea06941daa5be47b31b563e",
+      "cases": 6
+    }
+  ],
+  "modelOutputsInspected": false,
+  "candidateContextsInspected": false,
+  "newProviderCalls": 0
+}

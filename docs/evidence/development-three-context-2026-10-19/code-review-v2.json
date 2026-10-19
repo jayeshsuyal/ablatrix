@@ -1,0 +1,163 @@
+{
+  "provenance": "independent_agent_code_review",
+  "reviewer": "/root/qualification_review",
+  "reviewedCommit": "e15d0d7725628972db77416ba2eba2e97bfd8582",
+  "outcome": "ready_for_unexecuted_financial_proposal",
+  "reviewedPreparationSha256": "b7649df01e0c793db12750a53204e8d7b6603f5662b22855bb1c2003a941ee67",
+  "reviewedImplementationSha256": {
+    "package-lock.json": "d9e11ec921fa80c8177ff295a2a19f326ea3b47f33651315434149edbe532204",
+    "package.json": "fa45778199771350f187aa78507374b3f2df0e50794821773ee9823fcf998640",
+    "scripts/prepare-three-context-v5.ts": "4ac7252abb9c779296fcdc12c83aeb85bf3606d3fdf671043d08f5e62ac2c9ec",
+    "scripts/qualify-three-context-v5.ts": "38f5dd1201245c28244f04e9bc6a6c5e5e2bf3aab00772051b4af9d5295ac47b",
+    "scripts/rehearse-three-context-v5.ts": "4cc619263cb84ed9fc6d4aa44995466537ce835ca678a36ea7cc02b1e2f788c9",
+    "scripts/retrieval-diagnosis-v4.ts": "a494b70c6d877f1ce93c70884865d46d2cf8b0b460b6a8fb9d1e925d6f08f371",
+    "scripts/retrieval-diagnosis-v5.ts": "e5410ba226a11860743f80c22efb1c93ac4485a5498c2fb2ca5c78e0199c5cdb",
+    "scripts/three-context-evaluation.ts": "e73aa161f4bdd831136442c65a77bd1c9219bc876d53050df3a40996d53b5651",
+    "scripts/three-context-live.ts": "084b65c1658cf329e8cba662dba7ad8091c53baf255a3d9c2b2df6830f73b98b",
+    "server/answer-diagnostic-evaluation.ts": "80140032805e96a32e6ca6ed669b0140102672f983dd444b1e72577bdfa25f95",
+    "server/answer-policy-protocol.ts": "3c506ef59bb1b975fbd53895c88bd4c2eaa2df92e570c560b51bbddab4e33181",
+    "server/answer-review-source.ts": "61fda73dfb35bb198fd8e9f6091f2e269008a8a358c3918754b58169e8396825",
+    "server/citation-options.ts": "0845b2922b7880de4f641453c307d042a31211948514dc4e57e4f9ad4cb1d93d",
+    "server/claim-support-v4.ts": "b083b80f9d9b9127ae3577b5f3991ccd39c012190c674a88cd3520303d98b515",
+    "server/claim-support.ts": "69d4eca7729c1b3e3271cf911a8bc02e0a7f5057b6db09f587ec05d4ff997110",
+    "server/context-comparison.ts": "0071c15dae0e74eb874678df1e4d1d11d11f3783335e2afede91a62a57b995a2",
+    "server/feedback-provider.ts": "1a2f67186dd919251891f10a08d1521499df9dcfe6713fdf40f2ace6c0b7720a",
+    "server/flat-source-comparison.ts": "bede19d5c22ba0b6f08f83d621f4afd98b78ca8657f931693d04d12cc3c2f4c0",
+    "server/loop-types.ts": "0425b27e2d361a74e5aee6d6ab1452f9a0557fb3befb0a0d57c5945b54bb41bf",
+    "server/product-corpus.ts": "27fbc86475c95a33367c459a96bdb345e1249842ba6ea28be5cba3f97ad2d478",
+    "server/product-retrieval.ts": "98698fe2f6942600a2c6cd3615d34047d39ee809ba8791705b17e1d9ee8ff2a1",
+    "server/retrieval-diagnosis.ts": "292e803839f56365e2b2a6c79b01bdf98a4592b386540dbe7e70357daa9bf102",
+    "server/revision-policy.ts": "718c3718e384d83751035e503da874cb72041a6c4a84b65cd3cc482e39d92fb2",
+    "server/runtime-answer-policy.ts": "15a747727aebc7ecfc18063cfa08236405c0014616331d3e6c53e9c1424569ca",
+    "server/runtime-grader.ts": "68bf9c175ad0850d34bd926e509992cca31bf23e83b21adf3360c3fb92c6d3bc",
+    "server/semantic-reranker-v4.ts": "3aa05a1f17dc06ab728dde6b2de5e3f0e3f5ea1999fe1ef0c12d022cee96b296",
+    "server/semantic-reranker.ts": "85af0782a44b1b08a439c6945fae7744a46092cd18480b78af2e0619d070649f",
+    "server/semantic-supplement-v5.ts": "e377c771d06cb60801fc01b10deb797ed3eaa16479657d62fb9a6ac83edda36a",
+    "server/source-calibration-comparison.ts": "1fece7ceb7d7ae2fb1edf2ae270e8036ee65e96056fa850716746b18e050a673",
+    "server/source-id-diagnostic.ts": "50b4d7f11162aaf1497d11b3430f40403d43a37dad1be13446b1a29c1063cd4e",
+    "server/three-context-diagnostic.ts": "7c7e02b35a766358e63e6d8ea3be6676002e63d93f0159a8627521beb6eb9f9d",
+    "server/three-context-evaluation.ts": "785a68e8795511bd90a065639ec0d5620403f4a0cbf9bcc5d28fea11a6adb1e4",
+    "server/three-context-live.ts": "f9437f722b14632d9cd8174335efbb2f1780dc939fea427741ad97fcdb0ea9ff",
+    "server/three-context-qualification.ts": "27519cc080cdf8188cd60a39b3465d982c1bd6548f3fe7edcc0c96e1733aaadc",
+    "server/workspace-generation.ts": "218f2ac1e6eaa16b5e343262ede0f31f1397bb139957801e7a4fa1b389e3f130",
+    "server/workspace-retrieval-context.ts": "311567d944c2c4361b10b5c6bf6ea6edcbf3cb863f3a48d97a76408af54689af",
+    "server/workspace-source-coverage.ts": "38db63f6c47026ca27732d1e4de73990c445657bc670e9c6b7354c83448f7575"
+  },
+  "reviewedArtifactSha256": {
+    "docs/evidence/retrieval-diagnosis-2026-10-19/semantic-input-v4-development-v1.json": "e0432a8e61bc2a680b42d84003c37dcc46ca26f9addd090b973ece787f6fc402",
+    "docs/evidence/retrieval-diagnosis-2026-10-19/semantic-input-v4-freeze-v1.json": "57495e7a03be163b4a117c4a8abdcf2eed01b6a4357f199102f2dd3894e05dc3",
+    "docs/evidence/retrieval-diagnosis-2026-10-19/semantic-supplement-v5-development-v2.json": "ff3567bb1545843853706e9cf411249df63f81d7f14eae1a95eb1bb33583dd2f",
+    "docs/evidence/retrieval-diagnosis-2026-10-19/semantic-supplement-v5-freeze-v2.json": "24f85ef7f659ba52211d3f57fb7a205d702eda4e86c874f186b2abb8dc14a6b9",
+    "docs/evidence/retrieval-diagnosis-2026-10-19/semantic-supplement-v5-reviewed-result-v1.json": "e988b607ec04b9bd70f3687109b98ffe60665bf95bcf5575157ab48ab9889bed",
+    "docs/evidence/retrieval-diagnosis-2026-10-19/stage-traces-v3-final.json": "2dfc412f6cf8c308fa3b0bf1323fbb1cd802cdf2b228339cef21017668847e94",
+    "docs/evidence/retrieval-diagnosis-2026-10-19/three-context-preparation-final.json": "dccc3389cdfbe6e3c0052fd3c996b5664bba37edaa89da79f9b7ee24feb34f4e",
+    "docs/evidence/retrieval-source-coverage-v2-2026-10-18/baseline-v1.json": "d8dfe44845d0b92666fc3fae86a9c52e54ee398606a2736ec37ff9f9ea347005",
+    "docs/evidence/retrieval-source-coverage-v2-2026-10-18/deck-v1.json": "e315f8cccbe943acfa205e4c2a3a6f966d41865ec63247214693909be5052a9a",
+    "docs/evidence/retrieval-source-coverage-v2-2026-10-18/source-review-v1.json": "cc10964003f98c7ab141f70c69588949802852fc6434761040b34510484efffe"
+  },
+  "checks": {
+    "exact_source_and_question_scope": true,
+    "all_gap_cases_retained": true,
+    "generation_contract_parity": true,
+    "durable_reservation_and_no_retry": true,
+    "approval_before_credentials": true,
+    "receipt_and_unknown_accounting": true,
+    "blind_review_privacy": true,
+    "no_default_activation": true
+  },
+  "reviewScope": "Exact v7 exposed-development three-context preparation at e15d0d7, including qualification, bounded execution, anonymous six-axis evaluation and explicit per-case reviewer comparisons. This report is not financial authorization or an answer-quality judgment.",
+  "findingsResolved": [
+    {
+      "issue": "Review certificate/report snapshot drift could bind different bytes after verification.",
+      "resolution": "Report bytes are hashed and parsed once; qualificationReviewBindings compares later reads to the original expected record/report hashes and preserves those expected hashes in the qualified wrapper."
+    },
+    {
+      "issue": "Local transport invocation count could overstate known network dispatches after a failed or ambiguous transport.",
+      "resolution": "transportInvocations explicitly counts local entry; networkDispatches remains null for an unresolved durable intent or intent without a bound completed receipt, with separate remoteOutcomeUnknownAttempts."
+    },
+    {
+      "issue": "Generic codeReviewPassed wrappers could emit a specifically reviewed v5 financial proposal.",
+      "resolution": "Qualified preparation carries exact certificate and unqualified-preparation anchors; proposal generation revalidates the certificate/report and reconstructs the complete pinned v5 cases, policy and byte maps."
+    }
+  ],
+  "testEvidence": [
+    {
+      "command": "node --import tsx --test server/three-context-qualification.test.ts server/three-context-v5-preparation.test.ts server/three-context-diagnostic.test.ts server/three-context-live.test.ts server/three-context-evaluation.test.ts server/three-context-v5-rehearsal.test.ts",
+      "passed": 36,
+      "failed": 0,
+      "skipped": 0,
+      "provenance": "Executed independently against the exact reviewed committed implementation bytes; mocked transports and temporary synthetic ledgers only."
+    },
+    {
+      "check": "Exact-byte preparation and source reconstruction",
+      "implementationFiles": 37,
+      "artifactFiles": 10,
+      "committedImplementationBytesMatch": true,
+      "preparationReconstructedFromPinnedInputs": true,
+      "caseIds": [
+        "source-coverage-v2-train-12870"
+      ],
+      "contextParentCounts": {
+        "current": 5,
+        "semantic": 8,
+        "reference": 3
+      },
+      "generationRoute": "gpt-luna",
+      "generationContractParity": true,
+      "unqualifiedStopReason": "code_review_pending"
+    },
+    {
+      "check": "Explicit anonymous per-case reviewer comparisons",
+      "fourVerdictFormsPreserved": true,
+      "distinctCompletedSameCaseAnswersRequired": true,
+      "bothIndividualSourceCheckedEntriesRequired": true,
+      "duplicateOrReversedPairsReject": true,
+      "reversedOrientationDisagreementsNormalize": true,
+      "comparativeDisagreementsEnterFocusedReview": true,
+      "failedOrUnattemptedAnswersRetainedWithoutScoredLosses": true,
+      "armMappingNeverRead": true,
+      "noPreferenceDerivedFromSixAxes": true
+    },
+    {
+      "check": "Read-only canonical aggregate ledger anchor",
+      "attempts": 138,
+      "reservedPlanningUsd": 13.8,
+      "priorAdjustmentUsd": 0.200281,
+      "combinedPlanningUsd": 14.000281,
+      "pending": 0,
+      "owners": 0,
+      "canonicalAnchorEqualsPreparation": true
+    }
+  ],
+  "sourceObservations": {
+    "scope": "All independently designated eligible exposed-development gap cases, currently the single torch question.",
+    "baselineDesignatedDurationUnitsDelivered": 0,
+    "semanticDesignatedDurationUnitsDelivered": 2,
+    "referenceDesignatedDurationUnitsDelivered": 3,
+    "referenceQualifications": [
+      "Description more-than-six-hour statement is an attributed listing claim, not a measured population average.",
+      "Five-to-six-hour statement is an individual customer report with unspecified initial fill and operating conditions.",
+      "Nearly-eight-hour report ends in manual extinguishing and does not measure fuel exhaustion."
+    ],
+    "unknownPopulationAveragePreserved": true,
+    "sourceReviewProvenance": "source_checked_ai"
+  },
+  "scopeLimits": {
+    "paidExecutionAuthorized": false,
+    "newRealProviderCalls": 0,
+    "credentialsOrEnvironmentFilesRead": false,
+    "humanAnswerQualityJudgments": 0,
+    "qualityClaimEligible": false,
+    "activationAllowed": false,
+    "freshValidationQualified": false,
+    "financialApprovalStillRequired": true,
+    "actualProviderCharges": "unavailable",
+    "localAllowanceIsProviderEnforcedCap": false,
+    "reviewerAuthentication": "This saved independent-agent attestation is integrity-bound, not cryptographic identity authentication."
+  },
+  "supersedes": {
+    "path": "docs/evidence/development-three-context-2026-10-19/code-review-v1.json",
+    "fileSha256": "53bdf92fa3d1c2de6e0396b05a720d5952b65a31de082427ea9525822da95be3",
+    "reason": "Evaluation code added explicit anonymous source-checked per-case comparative verdicts. The v1 report remains historical and must not qualify these changed implementation bytes."
+  }
+}

@@ -1,0 +1,965 @@
+{
+  "format": "ablatrix-source-coverage-v1-offline-diagnostic-v1",
+  "status": "diagnostic_only_mixed_benchmark_ineligible",
+  "poolFileSha256": "00506e7875c4a47705f06ff14302de3648b9d9343b5240fe7225706d5c83b737",
+  "baselineFileSha256": "b8230e71cc2e52a25a1507f44dcda9de6f8597d783633e13069ff40d1836b25d",
+  "sourceReviewFileSha256": "18b5186752ca21ad010c9736c1f43878cbdb619052d5bab390f87faf08352089",
+  "candidateFreezeFileSha256": "1d6292b41f3a14d18d594bb29ddbc752acde25f8424ccfad077ab3bac19a0fcf",
+  "cases": [
+    {
+      "caseId": "source-gap-train-56",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The item-diameter attribute gives 3.5 inches.",
+          "sourceIds": [
+            "epqa-B000THKV4O-attribute-a35dc21824ef10f6"
+          ],
+          "quote": "item_diameter:  { unit:inches, decimal_value:3.5 }",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A customer reports installed dimensions just under 12 1/2 by 3 1/2 inches, with 1 1/2 inches of tubing clearance on either side of the head.",
+          "sourceIds": [
+            "epqa-B000THKV4O-cqa-6fae0ec2e5ab167b"
+          ],
+          "quote": "it's just under 12 1/2 inches by 3 1/2 inches installed but you'll need an inch and a half clearance on either side of the filter head",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A customer says about 13 inches is needed to remove and replace the filter.",
+          "sourceIds": [
+            "epqa-B000THKV4O-cqa-d580e699d0f864ab"
+          ],
+          "quote": "you will need about 13\" to remove and replace filter unless you want to unscrew it from the wall every time.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-12005",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 6,
+      "additions": [
+        {
+          "sourceId": "epqa-B00067TAWG-attribute-3e29d49833e431f5",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_field:itemdimensions"
+          ]
+        }
+      ],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-3889",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The material attribute lists plastic.",
+          "sourceIds": [
+            "epqa-B00D87H0EG-attribute-f2749b42608d90db"
+          ],
+          "quote": "material:  { value:\"plastic\" }",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A customer describes a felt feel and explicitly disputes plastic.",
+          "sourceIds": [
+            "epqa-B00D87H0EG-review-4f1be52e915bf9c5"
+          ],
+          "quote": "it's not plastic but has a felt feel to it.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-3599",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A review says the fabric is similar to terry cloth.",
+          "sourceIds": [
+            "epqa-B000WFQP9S-review-3a0b379778a08dea"
+          ],
+          "quote": "this is very similar to terry cloth.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "The description says it is 100% cotton and less soft than minky.",
+          "sourceIds": [
+            "epqa-B000WFQP9S-description-b3754caf7d70d378"
+          ],
+          "quote": "note: this fabric is not as soft as minky as it is 100% cotton.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A reviewer reports different softness and density between two deliveries.",
+          "sourceIds": [
+            "epqa-B000WFQP9S-review-4d7b9ef10dd0332c"
+          ],
+          "quote": "the first time this fabric came it was more like terry cloth and not as soft and dense as the second time receiving this (both colors where this way).",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-5236",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-4023",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 8,
+      "additions": [
+        {
+          "sourceId": "epqa-B00DR0J718-attribute-1f52dedf791e4736",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_field:size"
+          ]
+        },
+        {
+          "sourceId": "epqa-B00DR0J718-attribute-d58b1a2ca0c6ef05",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_field:itemdimensions"
+          ]
+        },
+        {
+          "sourceId": "epqa-B00DR0J718-attribute-c9665330485e4ba7",
+          "reasons": [
+            "product_identity_context",
+            "structured_field:modelnumber"
+          ]
+        }
+      ],
+      "designatedFacts": [
+        {
+          "fact": "A reviewer with the requested 6-foot-2, 200-pound measurements says Large fits true to size.",
+          "sourceIds": [
+            "epqa-B00DR0J718-review-c9aaef9844212851"
+          ],
+          "quote": "it fits true to size (at least the l, i'm 6'2\", 200lbs).",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "Another customer reports an XL fitting at 6-foot-2 and 180 pounds.",
+          "sourceIds": [
+            "epqa-B00DR0J718-cqa-b0f885619dd83cc6"
+          ],
+          "quote": "i bought an x- large, i'm 6-2 and 180, fits perfectly, so probably a large would be okay",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-3400",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 7,
+      "additions": [
+        {
+          "sourceId": "epqa-B00CFCHSO2-attribute-17f0ce67aae2acba",
+          "reasons": [
+            "product_identity_context",
+            "structured_field:modelname"
+          ]
+        },
+        {
+          "sourceId": "epqa-B00CFCHSO2-attribute-d4fdbc00553bad14",
+          "reasons": [
+            "product_identity_context",
+            "structured_field:modelnumber"
+          ]
+        }
+      ],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-10275",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A review says parts for a standard installation are included.",
+          "sourceIds": [
+            "epqa-B00IWMLEVW-review-8e3159c7ff843c81"
+          ],
+          "quote": "all parts needed to do a standard installation are included with the shade.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A CQA says all mounting hardware is included.",
+          "sourceIds": [
+            "epqa-B00IWMLEVW-cqa-5bf3c4cda37b45cf"
+          ],
+          "quote": "yes, all the mounting hardware is included.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A review says a drill, straight edge and pencil are needed.",
+          "sourceIds": [
+            "epqa-B00IWMLEVW-review-f769c9143d729599"
+          ],
+          "quote": "all you need is a drill, straight edge and pencil.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-3719",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The item-weight attribute lists 3.41 kilograms, normalized to 7.52 pounds.",
+          "sourceIds": [
+            "epqa-B0025TZ30G-attribute-a9d2deeeec95ff13"
+          ],
+          "quote": "item_weight:  { unit:kilograms, normalized_value:{ unit:pounds, value:7.52 }, value:3.41 }",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A reviewer guesses 20 pounds.",
+          "sourceIds": [
+            "epqa-B0025TZ30G-review-4df0d9f580a49d1e"
+          ],
+          "quote": "this book must weigh 20 pounds.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-3712",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The projector has a 7-by-7-inch top-loading glass-covered copy area with a hinged magnetic cover.",
+          "sourceIds": [
+            "epqa-B007VTTJS2-bullet-9b0eb6664a85f07a"
+          ],
+          "quote": "top-loading 7 x 7 in (177.8 x 177.8 mm) glass-covered copy area with adjustable, magnetic, removeable, hinged cover to keep artwork secure.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "The description supports projection of artwork to a vertical surface.",
+          "sourceIds": [
+            "epqa-B007VTTJS2-description-05270abc3511f4e1"
+          ],
+          "quote": "for convenient projection of artwork, designs, patterns, prints, and line drawings to a vertical surface.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A CQA states oversized images can be projected in sections.",
+          "sourceIds": [
+            "epqa-B007VTTJS2-cqa-5a50237165de1e48"
+          ],
+          "quote": "it reads images up to 7\" × 7\" and can project oversize images in sections.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-1859",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The posts are described as cardboard tubes covered in sisal, with plastic ends and metal screw inserts.",
+          "sourceIds": [
+            "epqa-B003BYQ1IM-cqa-974600f8011505e8"
+          ],
+          "quote": "the cylindracal posts are heavy cardboard tubes covered in sisal with robust plastic ends that have metal screw inserts for assembly.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "The description identifies the boards as pressed wood.",
+          "sourceIds": [
+            "epqa-B003BYQ1IM-description-04a60212459dd444"
+          ],
+          "quote": "board material: pressed wood;",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-7041",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A CQA describes an off-white tabletop with putty-grey stem and legs.",
+          "sourceIds": [
+            "epqa-B004GACU0S-cqa-a27ef041c6f7e7f6"
+          ],
+          "quote": "as you see, putty grey stem and legs, off white top",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A review describes the upper part as chrome and the lower part as gunmetal gray.",
+          "sourceIds": [
+            "epqa-B004GACU0S-review-df8773fb4544e892"
+          ],
+          "quote": "the upper part is chrome and the lower part is a gunmetal gray color of a quality finish.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-3376",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 6,
+      "additions": [
+        {
+          "sourceId": "epqa-B00BR4K0CG-attribute-7aa7d968b86c93cb",
+          "reasons": [
+            "product_identity_context",
+            "structured_field:partnumber"
+          ]
+        }
+      ],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-11387",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 6,
+      "additions": [
+        {
+          "sourceId": "epqa-B000ML4KT4-attribute-60293285e360b431",
+          "reasons": [
+            "product_identity_context",
+            "structured_field:modelnumber"
+          ]
+        }
+      ],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-2608",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-10720",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The pictured white cushion is not included.",
+          "sourceIds": [
+            "epqa-B005AUM8U0-cqa-81c6a38f9a75df31"
+          ],
+          "quote": "the \"cushion\" pictured is not included",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "The item comes with a removable, machine washable polyester cover rather than a cushion.",
+          "sourceIds": [
+            "epqa-B005AUM8U0-cqa-f22ff478fd55af54"
+          ],
+          "quote": "this item comes with an easily removable & machine washable polyester coverit does not come with a cushion, only the cover.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-12561",
+      "sourceGapGroup": "specification_gap",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The band is listed with a size of 9 inches and a width of 18 millimeters.",
+          "sourceIds": [
+            "epqa-B00QWK21PY-attribute-fb6497b9607e8db0"
+          ],
+          "quote": "band:  { material:[ { value:\"faux leather\" } ], size:[ { value:\"9 inches\" } ], color:[ { value:\"red\" } ], width:[ { unit:millimeters, value:18. } ] }",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "The case thickness is listed as 11 millimeters.",
+          "sourceIds": [
+            "epqa-B00QWK21PY-attribute-ad11cf15c85b8810"
+          ],
+          "quote": "thickness:[ { unit:millimeters, value:11. } ]",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-6975",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The printer uses 1.75 mm PLA filament.",
+          "sourceIds": [
+            "epqa-B00KJ6BU4K-bullet-7464a7920b2d0b53"
+          ],
+          "quote": "fabricates parts using 1.75 mm pla filament (sold separately)",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-13485",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A reviewer considers the color combinations suitable for casual or semi-formal outings.",
+          "sourceIds": [
+            "epqa-B008T9QG7K-review-52624a5212033223"
+          ],
+          "quote": "the color combinations make these perfect for any outing, casual or semi-formal.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A reviewer describes the navy and yellow band as a casual summer choice.",
+          "sourceIds": [
+            "epqa-B008T9QG7K-review-bff573d4cdf12925"
+          ],
+          "quote": "the navy and yellow band is great for a casual summer look.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "The selected color is listed as gray/orange stripe.",
+          "sourceIds": [
+            "epqa-B008T9QG7K-attribute-845c817490f6e4b0"
+          ],
+          "quote": "color:  { value:\"gray/orange stripe\" }",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-13481",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 6,
+      "additions": [
+        {
+          "sourceId": "epqa-B00J98R4OY-attribute-3b3b0e39b8231f5d",
+          "reasons": [
+            "question_intent:color",
+            "structured_field:color"
+          ]
+        }
+      ],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-3673",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-2733",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-9805",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The listing claims compatibility with Windows in both 32-bit and 64-bit forms.",
+          "sourceIds": [
+            "epqa-B002JAU20W-bullet-9381b85cc930282a"
+          ],
+          "quote": "works on all windows 32/64 bit & mac operating systems",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A customer reports working operation in Windows 10.",
+          "sourceIds": [
+            "epqa-B002JAU20W-review-469d8a92735394e9"
+          ],
+          "quote": "working just fine in windows 10, android and probably any system out there.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-6296",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The suite contains 1-2-3, identified as a spreadsheet.",
+          "sourceIds": [
+            "epqa-B00007E6Y5-cqa-d03073c53e567038"
+          ],
+          "quote": "the suite contains 1-2-3 (a spreadsheet)",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-8216",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 6,
+      "additions": [
+        {
+          "sourceId": "epqa-B00B7N6R0Q-attribute-20b2e6771e765259",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_field:itemdimensions"
+          ]
+        }
+      ],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-13301",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 7,
+      "additions": [
+        {
+          "sourceId": "epqa-B07JJYV9GT-attribute-2acb721fe220c374",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_field:size"
+          ]
+        },
+        {
+          "sourceId": "epqa-B07JJYV9GT-attribute-7711c788362ffc22",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_field:itemdimensions"
+          ]
+        }
+      ],
+      "designatedFacts": [
+        {
+          "fact": "The supplied listing describes 4x6 cards with double-sided printing.",
+          "sourceIds": [
+            "epqa-B07JJYV9GT-description-09fe204f53df25d0"
+          ],
+          "quote": "table number cards 1-25  or  1-40  double sidedreal gold foil printing!4x6 sizing makes perfect for a standard 4x6 frame",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-7443",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-10844",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The listing assigns stainless steel hardware to black collars and solid brass hardware to brown collars.",
+          "sourceIds": [
+            "epqa-B006WLRMHK-bullet-5559de04f4ee6264"
+          ],
+          "quote": "black collar has stainless steel hardware, brown collar has solid brass hardware",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A CQA says the hardware on all black collars is chrome.",
+          "sourceIds": [
+            "epqa-B006WLRMHK-cqa-a557ae6b042f871b"
+          ],
+          "quote": "the hardware on all black collars is chrome.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A customer reports ordering black/pink with silver hardware.",
+          "sourceIds": [
+            "epqa-B006WLRMHK-review-28a093f16a858779"
+          ],
+          "quote": "ordered black/pink with silver hardware, was sent brown/pink with brass hardware.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-5021",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A CQA claims the forks fit any JD loader using the JD quick attach system.",
+          "sourceIds": [
+            "epqa-B00A1D103W-cqa-d50f35bb277aa4ae"
+          ],
+          "quote": "they will fit any jd loader that uses the jd quick attach system.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "The compatibility claim excludes Global/Euro and skid steer style quick tach mounts.",
+          "sourceIds": [
+            "epqa-B00A1D103W-cqa-fd27f0c6ee85ff66"
+          ],
+          "quote": "this jd fork attachment is universal to the 200, 300, 400 and 500 series jd quick attach style loaders, not including the global/euro style mount or skid steer style quick tach.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-6814",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 6,
+      "additions": [
+        {
+          "sourceId": "epqa-B008LDSYDI-attribute-9afc30aeb59b5f48",
+          "reasons": [
+            "product_identity_context",
+            "structured_field:partnumber"
+          ]
+        }
+      ],
+      "designatedFacts": [
+        {
+          "fact": "A customer explicitly reports that these cartridges are compatible with a Brother MFC-J435W.",
+          "sourceIds": [
+            "epqa-B008LDSYDI-review-b49ee68767d9671b"
+          ],
+          "quote": "my printer is a brother mfc-j435w and these ink cartriages are compatible.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-3460",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-14565",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A reviewer reports that their pack included Penguins cards.",
+          "sourceIds": [
+            "epqa-B009SUI3RU-review-9bb099361072f1c8"
+          ],
+          "quote": "the pack includes cards from a lot of teams like the penguins, the kings, the rangers and it even had wayne gretzky and mario lemieux.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-13808",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "One reviewer reports fitting 11 names on the necklace.",
+          "sourceIds": [
+            "epqa-B016061P06-review-ba089ac239991e39"
+          ],
+          "quote": "other than that i fit 11 names on it,",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A CQA respondent states that the bottom disc can fit up to 35 characters.",
+          "sourceIds": [
+            "epqa-B016061P06-cqa-d6569b016f151cb0"
+          ],
+          "quote": "hi, yes, we can fit up to 35 characters on the bottom disc of this necklace!",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-2472",
+      "sourceGapGroup": "specification_gap",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The description specifies support for most microphones weighing between 700 g (1.5 lb) and 1.1 kg (2.4 lb) when combined with a shock mount.",
+          "sourceIds": [
+            "epqa-B001D7UYBO-description-bff778ba770ef1fb"
+          ],
+          "quote": "supports  most microphones weighing between 700g  (1.5lb) and 1.1kg (2.4lb) when  combined with shock mount",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-4592",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A reviewer observed both grayish and cream-colored portions in their shea butter.",
+          "sourceIds": [
+            "epqa-B008LEQENE-review-c073b7cc8b60f90b"
+          ],
+          "quote": "i examined the shea and it was not all the same color, some was grayish and other parts were a cream color but this didn't bother me at all.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-10986",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A reviewer describes the shades as dark beige instead of the white they expected.",
+          "sourceIds": [
+            "epqa-B006R0PBI8-review-26fa37938edf6d1c"
+          ],
+          "quote": "the big issue is that i expected white shades and they are a dark beige.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "Another reviewer says the shades are definitely off-white despite looking white in the picture.",
+          "sourceIds": [
+            "epqa-B006R0PBI8-review-cfa682b4d3e78657"
+          ],
+          "quote": "also, the lamp shades look white in the picture, but they are definitely off-white.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-3924",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 6,
+      "additions": [
+        {
+          "sourceId": "epqa-B004FV7MHE-attribute-82c9490d59637c00",
+          "reasons": [
+            "product_identity_context",
+            "structured_field:modelnumber"
+          ]
+        }
+      ],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-2001",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The CQA explicitly states that the C100 Washlet fits the UltraMax II.",
+          "sourceIds": [
+            "epqa-B001BYS5RE-cqa-43b6ae04c7eb618c"
+          ],
+          "quote": "hi amazon customer, yes, the c100 washlet will fit nicely on the ultramax ii.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-2391",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-4007",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A reviewer reports that cleats and bolts are not included but backing plates needed to mount cleats are included.",
+          "sourceIds": [
+            "epqa-B008K3Q6ZM-review-716d32fb5daf0e7f"
+          ],
+          "quote": "suggest keeping an allen wrench with you first couple of outings so you can make fine adjustments if necessary.it does not come with the cleats or bolts (no surprise here), but it does come with the backing plates necessary to mount the cleats.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "A CQA respondent reports that their pedals supplied compatible two-bolt SH-51 cleats that they attached to the shoes.",
+          "sourceIds": [
+            "epqa-B008K3Q6ZM-cqa-8c97f5b92c80abac"
+          ],
+          "quote": "the pedals came with compatible cleats,  two-bolt sh-51 cleats, that i attached to the shoe.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-6708",
+      "sourceGapGroup": "specification_gap",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A reviewer reports that the front-button quick-scan option produces a 2400 dpi scan of a 35 mm slide in about half a minute.",
+          "sourceIds": [
+            "epqa-B009PHCWL4-review-1c750981757db819"
+          ],
+          "quote": "there is a quick scan option operated by a button on the front of the scanner and it will produce a 2400 dpi scan of a 35mm slide in about a half a minute.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-9083",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-gap-train-990",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A Windows 7 reviewer reports inconsistent startup color retention: sometimes the last selected color returns, and sometimes the default red returns.",
+          "sourceIds": [
+            "epqa-B00292OW1U-review-ea2cf77619720243"
+          ],
+          "quote": "sometimes my w7 pc will boot with the last color i switched it to (red, blue, magenta), sometimes it'll go back to the default red.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "The description lists blue, red, and purple illumination with subtle, ambient, intense, and off modes.",
+          "sourceIds": [
+            "epqa-B00292OW1U-description-2cb80b741e531af6"
+          ],
+          "quote": "the keyboard features 3 different illumination colors (blue, red and purple), which can be set to 4 different illumination modes (subtle, ambient, intense and off).  gaming terrain keys are ergonomic and comfortable, even during long gaming sessions merc stealth features 34 gaming keys at a natural tilt to match your wrist position  steelseries merc stealth supports simultaneous keystrokes and features a number of hotkeys for multimedia, navigation and other one-click controls.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-5727",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineSourceCount": 5,
+      "candidateSourceCount": 5,
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The color attribute lists beige or brown.",
+          "sourceIds": [
+            "epqa-B0002DK29E-attribute-8662fc72a42c6d6e"
+          ],
+          "quote": "color:  { standardized_values:[ \"beige or brown\" ], value:\"beige or brown\" }",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "One reviewer reports receiving two beige mats.",
+          "sourceIds": [
+            "epqa-B0002DK29E-review-a3f61573c649ab88"
+          ],
+          "quote": "i got 2 and they were both the beige color.",
+          "deliveredByAddedParent": false
+        },
+        {
+          "fact": "Another reviewer reports a grey/pebble mat described as pearly greyish silver.",
+          "sourceIds": [
+            "epqa-B0002DK29E-review-0255e5e68092a59e"
+          ],
+          "quote": "just as any tables, chairs or humans in his path would similarly be repositioned!i got the grey/pebble color, which is basically a sort of pearly greyish silver color.",
+          "deliveredByAddedParent": false
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "products": 44,
+    "changedContexts": 10,
+    "gapCases": 3,
+    "gapCasesWithDesignatedFactDelivered": 0,
+    "designatedGapFacts": 4,
+    "designatedGapFactsDelivered": 0
+  },
+  "providerCalls": 0,
+  "generationPerformed": false,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false,
+  "limitations": [
+    "The mixed benchmark failed its model-gap minimum; this all-pool source-delivery diagnostic is not a qualification or answer-quality comparison.",
+    "No source contexts were used to replace cases or tune the frozen candidate before this diagnostic.",
+    "Independent references are AI judgments; no human answer-quality judgments or physical product verification exist."
+  ],
+  "sha256": "fcff4c8bdb3578c64d30a09a44a7685e95dd23467455985a6d6003a75b5fdb64"
+}

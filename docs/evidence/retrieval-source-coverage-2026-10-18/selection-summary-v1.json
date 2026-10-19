@@ -1,0 +1,40 @@
+{
+  "format": "ablatrix-retrieval-coverage-selection-summary-v1",
+  "candidateInstructionsChanged": false,
+  "generationInstructionsChanged": false,
+  "cases": 8,
+  "reviewerSourceParents": 154,
+  "baselineSourceBodies": 40,
+  "candidateSourceBodies": 42,
+  "changedCaseIds": [
+    "retrieval-coverage-train-13455",
+    "retrieval-coverage-train-7340"
+  ],
+  "unchangedCaseIds": [
+    "retrieval-coverage-train-5918",
+    "retrieval-coverage-train-677",
+    "retrieval-coverage-train-3500",
+    "retrieval-coverage-train-4621",
+    "retrieval-coverage-train-2032",
+    "retrieval-coverage-train-1268"
+  ],
+  "sourceFamilyReview": "passed",
+  "reviewProvenance": "independent_ai_source_and_family_review",
+  "protectedRejectedCohorts": 2,
+  "protectedConsumedCohorts": 1,
+  "sourceOnly": true,
+  "generatedAnswersObserved": 0,
+  "providerCalls": 0,
+  "paidExecutionAuthorized": false,
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "files": {
+    "cohort-v1.json": "681544a9e7ea23b1d0cef61106655fafd6736ee26e6228d33389d99c3cc84164",
+    "retrieval-v1.json": "d5b257be27edaa800e59ff475a18eec830af9cc22af8cc80227b35c436585384",
+    "source-family-review-v1.json": "6385aaa92cdd44a18ea063793067fcafce4aedba54749a305294205f1c230153"
+  },
+  "privatePreparationSha256": {
+    "selection-audit.json": "b56d3348bd3bee97e233babd275cbcf962b8fc8a34ea67ea06929b3f1a360b82",
+    "exposure-audit.json": "e2cdf0f823893230bef6668bb9c62c81911bace8fd75407b8baaa202a6e07bca"
+  }
+}

@@ -1,0 +1,1558 @@
+{
+  "format": "ablatrix-source-gap-round-projection-v1",
+  "rawObservationFileSha256": "5c2aedd9cd82ec1203718f3c5ec912af56d3d67e9db3d328ffcea29fa68ca19f",
+  "round": 6,
+  "seed": "ablatrix-source-gap-2026-10-18-v1:round:6",
+  "selectedCount": 4,
+  "inventory": {
+    "passed": false,
+    "trainRows": 121750,
+    "trainProducts": 5393,
+    "trainQuestions": 12175,
+    "eligibleFullPools": 670,
+    "eligibleQuestionCounts": {
+      "capacity_dimensions": 25,
+      "appearance_material": 3,
+      "model_scope": 0,
+      "missing_information": 6,
+      "preservation_control": 38
+    },
+    "rejectedCounts": {
+      "empty_source": 29,
+      "full_source_parent_exceeds_1500": 7,
+      "outside_consumer_demo_domain": 490,
+      "outside_consumer_demo_question_scope": 9,
+      "outside_consumer_demo_source_scope": 1972,
+      "outside_frozen_strata": 1097,
+      "previously_exposed_or_reserved": 162,
+      "protected_brand_family_or_near_title": 314,
+      "protected_full_source_identifier_or_near_model": 160,
+      "protected_prior_source_packet": 1115,
+      "unsupported_product_or_title": 472,
+      "unsupported_source_context": 2
+    },
+    "stopReason": "Insufficient disjoint cases for model_scope; no seed, strata or case replacement."
+  },
+  "selectedSourceOnlyCases": [
+    {
+      "stratum": "capacity_dimensions",
+      "sources": [
+        {
+          "id": "epqa-B009PHCWL4-review-237aef392bc10dc7",
+          "label": "review",
+          "text": "normally, at 3600dpi, it takes about 2 minutes for a full scan.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42962&qa_pair_id=65630&chars=0-63",
+          "sha256": "3afe158f3a9f889f13e0a6ed070a2f438395c6f4e29ffd4b71c1e71b49dd3591"
+        },
+        {
+          "id": "epqa-B009PHCWL4-review-f0cfd95910258cff",
+          "label": "review",
+          "text": "with scan resolution set at 3600dpi, it takes 2-3 minutes to complete each scan plus the file generation.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42963&qa_pair_id=65631&chars=0-105",
+          "sha256": "3d26dc02901d4ee4b1f89945147c7f0769c80125af1df177390c6905aac5d863"
+        },
+        {
+          "id": "epqa-B009PHCWL4-cqa-9371ed29ba109a24",
+          "label": "cqa",
+          "text": "hi dmh529   scan speed also depend your computer spec,  we use inter i5 cpu with 6g ram, scan 2400 dpi with multi expo , each film need 60 seconds plustek",
+          "originalQuestion": "how long does it take to scan a full 35mm negative at 2400dpi?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42964&qa_pair_id=65632&chars=0-154",
+          "sha256": "346866a414bf9ea8e7fc07644434836274ff6a65584d845cab6fe4a1b051357b"
+        },
+        {
+          "id": "epqa-B009PHCWL4-review-1c750981757db819",
+          "label": "review",
+          "text": "there is a quick scan option operated by a button on the front of the scanner and it will produce a 2400 dpi scan of a 35mm slide in about a half a minute.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42965&qa_pair_id=65633&chars=0-155",
+          "sha256": "c6041e6c9d78dd3ca352154b3d8958c1d43acfd5544c9edadcbfba57123873f5"
+        },
+        {
+          "id": "epqa-B009PHCWL4-review-7db6eb184dd8cdad",
+          "label": "review",
+          "text": "the \"one-touch\" scan button takes about a minute per slide to do an initial quick scan, suggest color, brightness and contrast settings, perform final scan (1800 dpi!",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42966&qa_pair_id=65634&chars=0-166",
+          "sha256": "5fe4cfdc78edb45b3e028d588e4748f65cc2252759069789f98224e604c63eaf"
+        },
+        {
+          "id": "epqa-B009PHCWL4-description-a2df12ec07808645",
+          "label": "description",
+          "text": "scanning – proven - optimized",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42967&qa_pair_id=65635&chars=0-29",
+          "sha256": "0501f597ec63959ff61b2532e2d55f1edaedbf67272fa557058eca745e88b911"
+        },
+        {
+          "id": "epqa-B009PHCWL4-description-8b1c51da50a1475a",
+          "label": "description",
+          "text": "a scanner with a larger dynamic range can capture more shadow and highlight details.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42968&qa_pair_id=65636&chars=0-84",
+          "sha256": "8a424f50bcb4ac70448e10f5ef050eb21d6975d16a50a289754051ad7924f0c1"
+        },
+        {
+          "id": "epqa-B009PHCWL4-description-9205b7c6005437ae",
+          "label": "description",
+          "text": "silverfast software, using a dual interface, is designed for both professionals and beginners who digitize their analog images.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42969&qa_pair_id=65637&chars=0-127",
+          "sha256": "a9e0b48a0b9b066caecd8623839afaac26eadb82867a330b4c89818be99be4e8"
+        },
+        {
+          "id": "epqa-B009PHCWL4-review-476c7209dab8b535",
+          "label": "review",
+          "text": "i have 3d positives that do not fir into the supplied holders so i still have this to work out.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42970&qa_pair_id=65638&chars=0-95",
+          "sha256": "0c392de964d231b4ca35383bf9445dcc924b53bda455c66fa68ac82995f3f445"
+        },
+        {
+          "id": "epqa-B009PHCWL4-review-5450b50d28ffd2c3",
+          "label": "review",
+          "text": "it's impossible for me to know because their web page makes it impossible to actually download and install any update.it takes a lot for me to write  negative review like this.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42971&qa_pair_id=65639&chars=0-176",
+          "sha256": "5cd95e7011f509faa16efca13f592b21e8cee69b69df7fac0ca0cd3cac294ab3"
+        },
+        {
+          "id": "epqa-B009PHCWL4-bullet-b6eee66c4873d18a",
+          "label": "bullet",
+          "text": "support your pc and mac - supports windows 7/8/10 and mac os x 10.12 to 11.x (big sur)",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42972&qa_pair_id=65640&chars=0-86",
+          "sha256": "33da382537df001cb49d0d32c77d7229381736d8d437c81dadec9e8243bc58cc"
+        },
+        {
+          "id": "epqa-B009PHCWL4-cqa-9a19b96a7cf81185",
+          "label": "cqa",
+          "text": "the plustek opticfilm 8100 will work with intel-based mac os x 10.5 / 10.6 / 10.7 /10.8 spec requirements:mac 2 ghz processor or faster (intel based processor, no powerpc )2 gb ram main memory (4 gb ram recommended)10 gb free space on hard disk drivedvd drive or internet connection;the bundled silverfast 8 software supports mac os x 10.7 lion but i cannot state definitively that the se version supplied does (although i would think that it would.",
+          "originalQuestion": "does this work with a mac?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42973&qa_pair_id=65641&chars=0-449",
+          "sha256": "41e847e415372ed07a1ee1fd6d079a507f760585f80b349b0d1cf9aae572a317"
+        },
+        {
+          "id": "epqa-B009PHCWL4-review-a2d69080e4aff695",
+          "label": "review",
+          "text": "this thing works really well on my older imac.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42974&qa_pair_id=65642&chars=0-46",
+          "sha256": "ce58f1590a48ef5324089fbe7dd23587dd088294b3761302fd5a630e1c8b9510"
+        },
+        {
+          "id": "epqa-B009PHCWL4-description-c2ac8c33a9e38e7a",
+          "label": "description",
+          "text": "silverfast software is available for both mac and windows platforms, and also includes a native adobe photoshop plug-in.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42975&qa_pair_id=65643&chars=0-120",
+          "sha256": "c6598e947e1e886a997d41aeab5e7636623df1c5778285d3a42f9131cb89f0e4"
+        },
+        {
+          "id": "epqa-B009PHCWL4-attribute-28178d8185aa6cc2",
+          "label": "attribute",
+          "text": "operating_system:  { value:\"windows xp,vista,7 and 8\" }; { value:\"mac 10.5, 10.6, 10.7, and 10.8\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42976&qa_pair_id=65644&chars=0-99",
+          "sha256": "b6141776b1be5a068d65cf8f2c3f62c625b3c701fd39fbef2efd2d157bf4a343"
+        },
+        {
+          "id": "epqa-B009PHCWL4-attribute-3efa65a2f31d2b8f",
+          "label": "attribute",
+          "text": "part_number:  { value:\"783064365321\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42977&qa_pair_id=65645&chars=0-38",
+          "sha256": "5cc12a1b7f7303437d7b1926c710d517c6900234ca3d0924ff6ce359d1aefdd2"
+        },
+        {
+          "id": "epqa-B009PHCWL4-bullet-e52b553b8fc567f7",
+          "label": "bullet",
+          "text": "high resolution detail - digitizes 35mm negatives and slides at high quality 7200 dpi 69 mp resolution, equally full-frame dslr 69 megapixels image files, capable of reproducing professional prints up to 20|\" x 24|\" or larger.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42978&qa_pair_id=65646&chars=0-226",
+          "sha256": "07e102af546659a116ddc290171cc4265316dbd9b3e58dcbe4407272b1924bab"
+        },
+        {
+          "id": "epqa-B009PHCWL4-cqa-91aec746cd7b3567",
+          "label": "cqa",
+          "text": "hi paula  sorry , 8100 model only fit 35mm .",
+          "originalQuestion": "hi! i would like to know if it fits for pathology slides 26x76mm? thank you!",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42980&qa_pair_id=65648&chars=0-44",
+          "sha256": "7a4ecabd3065ca6f88c36e0704e773d5d75246b86cb368245e42afeed4cb597f"
+        },
+        {
+          "id": "epqa-B009PHCWL4-review-d93d2dbc15fbdab8",
+          "label": "review",
+          "text": "for years i used a flat bed scanner with a slide holder to make digital copies of my slides, but it was cumbersome and had little flexibility.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=42981&qa_pair_id=65649&chars=0-142",
+          "sha256": "5d4f2c2813e8865c255cc7649cb0228a699575166228c17261a742f0c06432cb"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "00f4a65b80cefae2dcea9f55041386899f0a85b8c0b3f852dc9eaf5cba84bc8e",
+      "product": {
+        "id": "B009PHCWL4",
+        "title": "Plustek OpticFilm 8100-35mm Negative Film/Slide Scanner with 7200 DPI and 48-bit Output. Bundle Silverfast SE Plus 8.8, Support Mac and Windows"
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "6708",
+        "questionRow": 42962
+      },
+      "id": "source-gap-train-6708",
+      "sourceOrigins": {
+        "epqa-B009PHCWL4-review-237aef392bc10dc7": [
+          {
+            "row": 42962,
+            "qaPairId": "65630",
+            "qid": "6708",
+            "bodyStart": 0,
+            "bodyEnd": 63,
+            "rawCandidateSha256": "6e6da2b054ed581777c060ae20bb880356b62efaaea7cff6e6990dead2052c64"
+          }
+        ],
+        "epqa-B009PHCWL4-review-f0cfd95910258cff": [
+          {
+            "row": 42963,
+            "qaPairId": "65631",
+            "qid": "6708",
+            "bodyStart": 0,
+            "bodyEnd": 105,
+            "rawCandidateSha256": "8b3b2e0151b621ee117f4f77ac6d65cbf0a54b709d17a37ae6a08a300ff24631"
+          }
+        ],
+        "epqa-B009PHCWL4-cqa-9371ed29ba109a24": [
+          {
+            "row": 42964,
+            "qaPairId": "65632",
+            "qid": "6708",
+            "bodyStart": 0,
+            "bodyEnd": 154,
+            "rawCandidateSha256": "40c26444040a55d74ea1d0aa410a9a821158dc2b83819bfd50606dab321ed6aa"
+          }
+        ],
+        "epqa-B009PHCWL4-review-1c750981757db819": [
+          {
+            "row": 42965,
+            "qaPairId": "65633",
+            "qid": "6708",
+            "bodyStart": 0,
+            "bodyEnd": 155,
+            "rawCandidateSha256": "2c2f9b7967df763b143bf144a3479813c5cdc41e12af5a1e35915f941001884c"
+          }
+        ],
+        "epqa-B009PHCWL4-review-7db6eb184dd8cdad": [
+          {
+            "row": 42966,
+            "qaPairId": "65634",
+            "qid": "6708",
+            "bodyStart": 0,
+            "bodyEnd": 166,
+            "rawCandidateSha256": "567c4cd2b55f6b83e2312781056110702dff12815c253a879be82d563326ff58"
+          }
+        ],
+        "epqa-B009PHCWL4-description-a2df12ec07808645": [
+          {
+            "row": 42967,
+            "qaPairId": "65635",
+            "qid": "6708",
+            "bodyStart": 0,
+            "bodyEnd": 29,
+            "rawCandidateSha256": "60c8baa1c865b640a1d754a38dff298c75d0e577313794b8fa3db9a44fd8a816"
+          }
+        ],
+        "epqa-B009PHCWL4-description-8b1c51da50a1475a": [
+          {
+            "row": 42968,
+            "qaPairId": "65636",
+            "qid": "6708",
+            "bodyStart": 0,
+            "bodyEnd": 84,
+            "rawCandidateSha256": "1d718e6e1d52083c7aa38689d78f806e6ea906db445f9c9bfab026edb526d383"
+          },
+          {
+            "row": 42979,
+            "qaPairId": "65647",
+            "qid": "6709",
+            "bodyStart": 0,
+            "bodyEnd": 84,
+            "rawCandidateSha256": "1d718e6e1d52083c7aa38689d78f806e6ea906db445f9c9bfab026edb526d383"
+          }
+        ],
+        "epqa-B009PHCWL4-description-9205b7c6005437ae": [
+          {
+            "row": 42969,
+            "qaPairId": "65637",
+            "qid": "6708",
+            "bodyStart": 0,
+            "bodyEnd": 127,
+            "rawCandidateSha256": "2918592cc18d2c125308bb7728f0a963fb43e207fb2036de8607549bb2d29ce9"
+          }
+        ],
+        "epqa-B009PHCWL4-review-476c7209dab8b535": [
+          {
+            "row": 42970,
+            "qaPairId": "65638",
+            "qid": "6708",
+            "bodyStart": 0,
+            "bodyEnd": 95,
+            "rawCandidateSha256": "30a6b35c3426472586c2cb864312bbb71f057d8850525e6d7527f5187c978f65"
+          }
+        ],
+        "epqa-B009PHCWL4-review-5450b50d28ffd2c3": [
+          {
+            "row": 42971,
+            "qaPairId": "65639",
+            "qid": "6708",
+            "bodyStart": 0,
+            "bodyEnd": 176,
+            "rawCandidateSha256": "23b3c9b658f26a582d21d6ea118180161d6b691b1fac18a7221938ed9064fc1f"
+          }
+        ],
+        "epqa-B009PHCWL4-bullet-b6eee66c4873d18a": [
+          {
+            "row": 42972,
+            "qaPairId": "65640",
+            "qid": "6709",
+            "bodyStart": 0,
+            "bodyEnd": 86,
+            "rawCandidateSha256": "7f0b4d14d76244f4ca680cb94e20b69cf985f19fd18ac42ad0b1bada6fd0c74d"
+          }
+        ],
+        "epqa-B009PHCWL4-cqa-9a19b96a7cf81185": [
+          {
+            "row": 42973,
+            "qaPairId": "65641",
+            "qid": "6709",
+            "bodyStart": 0,
+            "bodyEnd": 449,
+            "rawCandidateSha256": "f08f27647b5a963294487f67fac81aaf8b4c5456a216a37ecfce41ad283395e7"
+          }
+        ],
+        "epqa-B009PHCWL4-review-a2d69080e4aff695": [
+          {
+            "row": 42974,
+            "qaPairId": "65642",
+            "qid": "6709",
+            "bodyStart": 0,
+            "bodyEnd": 46,
+            "rawCandidateSha256": "9758444aaaa29414d10edba4c58bac946bc445ff476f34d66138ea9467a8e3f4"
+          }
+        ],
+        "epqa-B009PHCWL4-description-c2ac8c33a9e38e7a": [
+          {
+            "row": 42975,
+            "qaPairId": "65643",
+            "qid": "6709",
+            "bodyStart": 0,
+            "bodyEnd": 120,
+            "rawCandidateSha256": "eb60387211b292f78f07080ed20038c3657d3469410baafe4f811a47cad8cc40"
+          }
+        ],
+        "epqa-B009PHCWL4-attribute-28178d8185aa6cc2": [
+          {
+            "row": 42976,
+            "qaPairId": "65644",
+            "qid": "6709",
+            "bodyStart": 0,
+            "bodyEnd": 99,
+            "rawCandidateSha256": "755059036747098ee69cff4df7755c4c132acab535c8feef891abd23724acaad"
+          }
+        ],
+        "epqa-B009PHCWL4-attribute-3efa65a2f31d2b8f": [
+          {
+            "row": 42977,
+            "qaPairId": "65645",
+            "qid": "6709",
+            "bodyStart": 0,
+            "bodyEnd": 38,
+            "rawCandidateSha256": "3440a18d8aa4451b0ec78a6c0c421d078ef1cbc29bf0dbfa0034e19c9efc622a"
+          }
+        ],
+        "epqa-B009PHCWL4-bullet-e52b553b8fc567f7": [
+          {
+            "row": 42978,
+            "qaPairId": "65646",
+            "qid": "6709",
+            "bodyStart": 0,
+            "bodyEnd": 226,
+            "rawCandidateSha256": "db711fdf809f5c270bf29ee754305f0de826ef2fdd5d1f380d96032bd618a31b"
+          }
+        ],
+        "epqa-B009PHCWL4-cqa-91aec746cd7b3567": [
+          {
+            "row": 42980,
+            "qaPairId": "65648",
+            "qid": "6709",
+            "bodyStart": 0,
+            "bodyEnd": 44,
+            "rawCandidateSha256": "b2310c9035db98176cf558ad1b92811e0ea95cef76385f4b723bdf01ce2c3bbd"
+          }
+        ],
+        "epqa-B009PHCWL4-review-d93d2dbc15fbdab8": [
+          {
+            "row": 42981,
+            "qaPairId": "65649",
+            "qid": "6709",
+            "bodyStart": 0,
+            "bodyEnd": 142,
+            "rawCandidateSha256": "ae0ccfec10f05a307b94c8cf5c9aeb0e000517956d772247f2e493ec9755f020"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "a106f1fd45585d5bcca6b3e63ab72c4554b270a2b63e756f983ac8e9074b0d66",
+      "sourcePoolSha256": "4471a8a5d3e9157728552d9e88dcc41524a4132db149a2d0a4df2bfc35262330",
+      "question": "how long does it take to scan one 35mm film with best resolution and lowest resolution?"
+    },
+    {
+      "stratum": "capacity_dimensions",
+      "sources": [
+        {
+          "id": "epqa-B00DI3DV6G-review-c3a750b1bb4eedd1",
+          "label": "review",
+          "text": "i also have used it to keep watermelon from rolling all over the trunk as well as wine bottles as the length is perfect for them if you lay them down on their side.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59572&qa_pair_id=89040&chars=0-164",
+          "sha256": "6249627af21fc0ea8479a9daf090923c0117c742adb6587ef2e7f3d09f1f81ae"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-d1ab56bd11808710",
+          "label": "review",
+          "text": "after a month, the seams in the corners split and it no longer would hold a anything.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59573&qa_pair_id=89041&chars=0-85",
+          "sha256": "558f24fb38fac1efa102dd3bb9085e4e58932b825e85feb77d1344c0e9b4206b"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-18b1370018ad9ec7",
+          "label": "review",
+          "text": "won't hold much of a load",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59574&qa_pair_id=89042&chars=0-25",
+          "sha256": "54c5bac1c0acb71e3ef0505b7e3bcb31def00b5b94377d0c041ca01901f229e3"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-ff0035125dc8e8f0",
+          "label": "review",
+          "text": "the pockets are wide and big enough to hold all items and none of it rolls around or turns over when driving or turning curves.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59575&qa_pair_id=89043&chars=0-127",
+          "sha256": "2b78b68f496ae4cbaac7c4d4d2702d6be677f6bb89ec5787f1dbe40b63ea6e39"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-7b5deee59872663c",
+          "label": "review",
+          "text": "the other features to hold smaller items are obvious perks.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59576&qa_pair_id=89044&chars=0-59",
+          "sha256": "5f035b9f37d81f7e3aa6795b8d40e9a52cafee64eb000ddfdcca8bf90cb0e924"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-attribute-40fba9a54a206ab3",
+          "label": "attribute",
+          "text": "part_number:  { value:\"frafd9300663474257\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59577&qa_pair_id=89045&chars=0-44",
+          "sha256": "ec6c9d97410e76992ec494afde82750e8144f7ce278b205727db276a1eed670e"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-bullet-d749370253f1de12",
+          "label": "bullet",
+          "text": "collapsible folds flat to half an inch for easy storage when not in use",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59578&qa_pair_id=89046&chars=0-71",
+          "sha256": "f6127b0d284d2a45cbcdf92b2c66a241ab7fd36f59d163146d10226898b245a7"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-attribute-10b8af7a14aec38b",
+          "label": "attribute",
+          "text": "size:  { value:\"one size\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59579&qa_pair_id=89047&chars=0-27",
+          "sha256": "a358fe8df87b539926a60744e4bd88a8b202ad9f47022aa5fec70fae73228a4f"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-71f0d8da5c1c788f",
+          "label": "review",
+          "text": "it was a great deal during cyber monday sale this year.i like the pockets & compartments!",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59580&qa_pair_id=89048&chars=0-89",
+          "sha256": "3ce08973ac14aebea1b78dd68ddcc6652dff0c3f07b6b8b83182fb47574696ed"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-ca8a922d5515d640",
+          "label": "review",
+          "text": "worked out very well and it wasn't that expensive.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59581&qa_pair_id=89049&chars=0-50",
+          "sha256": "4c55c64710b245e69995a80b2ee5350264f458c194747928d2e4abc18181aea5"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-ba9d1089ad7ab2d5",
+          "label": "review",
+          "text": "i thought the clasps would work to keep the section in if not needed, but they only work if you collapse the whole thing (?",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59582&qa_pair_id=89050&chars=0-123",
+          "sha256": "c38fcc9b9ff9cdd07c945667d55fd0372b7b65966374c2293d137bc1a71d4051"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-c4daf6164bd6501f",
+          "label": "review",
+          "text": "what worked better was a storage container with the prickly side of velcro taped to the underside.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59583&qa_pair_id=89051&chars=0-98",
+          "sha256": "7b2a368ef2da733fd579a322463089dd524bc4f10ea72249c3c976103eb3cb1f"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-773adf43e3e884e1",
+          "label": "review",
+          "text": "they should put velcro closer so you can pull it shut and it will be like a stiff end to the smaller box.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59584&qa_pair_id=89052&chars=0-105",
+          "sha256": "23a5251fc37fa92a36a39c33743af563521524f48ab11b708224c48fad04e1d8"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-353ea95c6a639285",
+          "label": "review",
+          "text": "there are two big compartments, one of which is divided by a removable (velcro) divider.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59585&qa_pair_id=89053&chars=0-88",
+          "sha256": "a935f151b3aeff08dc8b501bee6f0ee8e69c92af4e169dee2d55a647976c1457"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-b4e9f6ee00f47af8",
+          "label": "review",
+          "text": "there are velcro tabs to make the compartments seperate and that's a plus but you should only buy this if everything you want to put in it is small and not long-like an umbrella that folds becuase the sides will collapse.i would buy something stronger next time but i needed something quickly to replace the laundry basket i was using.you get what you pay for so look for something that matches how you'll use this, in and out of the car or moving it around often won't work for this.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59586&qa_pair_id=89054&chars=0-484",
+          "sha256": "f64beb9b5258ea5e6ebd3695906dfe6aebc0c1476e3487a4a99b3fdbf530172d"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-description-dc77f90394eeeef9",
+          "label": "description",
+          "text": "): l 23.6\" x w 15.7\" x h 10.2\" (60cm x 40cm x 26cm) color: black material: high quality oxford fabric.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59587&qa_pair_id=89055&chars=0-102",
+          "sha256": "918a1d5626f057c14ebe88f2a35902612757f33682257c8863e8cd9ec29e303f"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-attribute-7a2faa31309c177c",
+          "label": "attribute",
+          "text": "item_weight:  { unit:pounds, normalized_value:{ unit:pounds, value:1.35 }, value:1.35 }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59588&qa_pair_id=89056&chars=0-87",
+          "sha256": "8365277a505e09aa2be4881818017972d7ad11b54b1e6f113d5eeed1d16debc3"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-attribute-ca52e633914c4104",
+          "label": "attribute",
+          "text": "brand:  { value:\"astra depot\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59589&qa_pair_id=89057&chars=0-31",
+          "sha256": "40642d4a4b2f9ad39b420e26ba7e97a0fef39853f63145ce07fcd081559c6f86"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-d4a4e67d0c84a2d1",
+          "label": "review",
+          "text": "would have liked it bigger.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59590&qa_pair_id=89058&chars=0-27",
+          "sha256": "359c2ff246d86dfbcb68f9db54285e0929368b194d506165b5849aef85a900e2"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-72f2e56e8ec81b25",
+          "label": "review",
+          "text": "the corner of the right side handle broke the first time it was lifted.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59591&qa_pair_id=89059&chars=0-71",
+          "sha256": "5f92c13b40a2ff9d9ddd1c90dca08e6bfbfa33e543a020f3b31825b2e1dac7d3"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-08d2bf34ff63eac0",
+          "label": "review",
+          "text": "when open it is about 24 inches long x 15 inches wide x 11 inches high.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59592&qa_pair_id=89060&chars=0-71",
+          "sha256": "614fa6e667831ad921f284b1932c52c1d13825275a2b32fbad4f02477472c336"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-cqa-59ab9d7ec3c29299",
+          "label": "cqa",
+          "text": "): l 23.6\" x w 15.7\" x h 10.2\" (60cm x 40cm x 26cm) looking forward to your soonest business.thank you!astra depot",
+          "originalQuestion": "what are the real dimentions? it states l 23.6\" x w 15.7\" x h 10.2\" in specification, but 16.6 x 12.5 x 1.6 in. in technical details of this product",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59593&qa_pair_id=89061&chars=0-114",
+          "sha256": "a053ceebb7b329abca72f365e77a6fb2d931bba1f4a5967b7840365e85404837"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-attribute-c75b4ca4b37f0130",
+          "label": "attribute",
+          "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:1.6 }, value:1.6 }, length:{ unit:inches, normalized_value:{ unit:inches, value:16.6 }, value:16.6 }, height:{ unit:inches, normalized_value:{ unit:inches, value:12.5 }, value:12.5 } }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59594&qa_pair_id=89062&chars=0-263",
+          "sha256": "6975c591cab727c949143371b0deac57c19728bfd83bd41ea3e221657f73a8b5"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-description-a8c36ce8a51cc115",
+          "label": "description",
+          "text": "please read all description & measurement before ordering the product.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59596&qa_pair_id=89064&chars=0-70",
+          "sha256": "361b5d91fb6c01f7e26530d570b829e5b3e47b48b0dc0090f7860e34a63edb6c"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-description-2d7d933f7a85b445",
+          "label": "description",
+          "text": "with tpu strap for tightly folded.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59597&qa_pair_id=89065&chars=0-34",
+          "sha256": "fa4c2a5efe09d9af91ec1c0453f81df961974dd97a840fe8b6832c8d51aa3733"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-bullet-a3d88c32feaef768",
+          "label": "bullet",
+          "text": "3 large main compartments and 4 side mesh pockets, 2 side pockets with velcro closure",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59598&qa_pair_id=89066&chars=0-85",
+          "sha256": "b8b0d9313e1561be818b1cef0c14eb1ec49ecd9323051a0feadadec78c447b4e"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-description-25d0aa14308f572b",
+          "label": "description",
+          "text": "great for your trunk or back seat.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59599&qa_pair_id=89067&chars=0-34",
+          "sha256": "46cfe8930bd85148cd741211d6d1f6be2af3b854317dadf62e95d823391fbb80"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-045315844e916fe1",
+          "label": "review",
+          "text": "great for organization.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59600&qa_pair_id=89068&chars=0-23",
+          "sha256": "42f1e1b4ea3c723fe81cc4cb92ccf8317d8ff8bf458e300e87799fc930e9134b"
+        },
+        {
+          "id": "epqa-B00DI3DV6G-review-8410e1f5728b1e8f",
+          "label": "review",
+          "text": "don't know why it took so long for me to search out this product.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=59601&qa_pair_id=89069&chars=0-65",
+          "sha256": "aacfae872711961933e741ae51fb450901418995c56a345bb1df5534b2dbe349"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "02c31995022df6c21b91574b69907c7d715d2ea55ce4631706315ff71e0c00c4",
+      "product": {
+        "id": "B00DI3DV6G",
+        "title": "Astra Depot M25-025-1 Foldable Cargo Storage Box with Rope Handles, 60 x 40 x 26cm, Black"
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "9083",
+        "questionRow": 59572
+      },
+      "id": "source-gap-train-9083",
+      "sourceOrigins": {
+        "epqa-B00DI3DV6G-review-c3a750b1bb4eedd1": [
+          {
+            "row": 59572,
+            "qaPairId": "89040",
+            "qid": "9083",
+            "bodyStart": 0,
+            "bodyEnd": 164,
+            "rawCandidateSha256": "0f47edb98a7f6929476339c5afdfa08398d90646fa0520ac3dfb6a5cfb044721"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-d1ab56bd11808710": [
+          {
+            "row": 59573,
+            "qaPairId": "89041",
+            "qid": "9083",
+            "bodyStart": 0,
+            "bodyEnd": 85,
+            "rawCandidateSha256": "436aa649327dcd66bb845663756b1c834e5c702634ec0d6578ae98045de182ab"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-18b1370018ad9ec7": [
+          {
+            "row": 59574,
+            "qaPairId": "89042",
+            "qid": "9083",
+            "bodyStart": 0,
+            "bodyEnd": 25,
+            "rawCandidateSha256": "50aefb7d326c78b8806a560d0383c68550340eaa73bbde4059875210e01bdd50"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-ff0035125dc8e8f0": [
+          {
+            "row": 59575,
+            "qaPairId": "89043",
+            "qid": "9083",
+            "bodyStart": 0,
+            "bodyEnd": 127,
+            "rawCandidateSha256": "c5fd8fd78e92779b3cff875c9a5cb1b32352ca3bc2147bd159a91643ed7a5d01"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-7b5deee59872663c": [
+          {
+            "row": 59576,
+            "qaPairId": "89044",
+            "qid": "9083",
+            "bodyStart": 0,
+            "bodyEnd": 59,
+            "rawCandidateSha256": "b9a3901f4fb268d0be1126532fe1ac14e98e7422af0031b650440d2edfe50798"
+          }
+        ],
+        "epqa-B00DI3DV6G-attribute-40fba9a54a206ab3": [
+          {
+            "row": 59577,
+            "qaPairId": "89045",
+            "qid": "9083",
+            "bodyStart": 0,
+            "bodyEnd": 44,
+            "rawCandidateSha256": "44b8d36a837892d8e5316457bbc9278b630e1215b8e38e5b56c2d487f76260f6"
+          }
+        ],
+        "epqa-B00DI3DV6G-bullet-d749370253f1de12": [
+          {
+            "row": 59578,
+            "qaPairId": "89046",
+            "qid": "9083",
+            "bodyStart": 0,
+            "bodyEnd": 71,
+            "rawCandidateSha256": "0b99a8e8a9de6507518fa27cd7bb1ba0dda7e5f74251d4b79b76836363f4023b"
+          }
+        ],
+        "epqa-B00DI3DV6G-attribute-10b8af7a14aec38b": [
+          {
+            "row": 59579,
+            "qaPairId": "89047",
+            "qid": "9083",
+            "bodyStart": 0,
+            "bodyEnd": 27,
+            "rawCandidateSha256": "8be9d7f2218bffd5a0094503b499e1c76a62537ccabd723ded19ebea868af17b"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-71f0d8da5c1c788f": [
+          {
+            "row": 59580,
+            "qaPairId": "89048",
+            "qid": "9083",
+            "bodyStart": 0,
+            "bodyEnd": 89,
+            "rawCandidateSha256": "b41612d094554abadf9aa7b5a4c8b3cbee751054d8ceee1d0224a1f35bfbc7f7"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-ca8a922d5515d640": [
+          {
+            "row": 59581,
+            "qaPairId": "89049",
+            "qid": "9083",
+            "bodyStart": 0,
+            "bodyEnd": 50,
+            "rawCandidateSha256": "cc6129e3b1288ac826f367d59f38351c374d6b4dc62796a1e3f82381e5825a78"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-ba9d1089ad7ab2d5": [
+          {
+            "row": 59582,
+            "qaPairId": "89050",
+            "qid": "9084",
+            "bodyStart": 0,
+            "bodyEnd": 123,
+            "rawCandidateSha256": "d6c4069f36285abb8ab1de9357070589e392b6ac280b2861c9561b43d9e8ecb3"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-c4daf6164bd6501f": [
+          {
+            "row": 59583,
+            "qaPairId": "89051",
+            "qid": "9084",
+            "bodyStart": 0,
+            "bodyEnd": 98,
+            "rawCandidateSha256": "c2ba143b27af8e04772d6d7f8d9ce9eb89dde240dc83a4d58159bdadfd306fff"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-773adf43e3e884e1": [
+          {
+            "row": 59584,
+            "qaPairId": "89052",
+            "qid": "9084",
+            "bodyStart": 0,
+            "bodyEnd": 105,
+            "rawCandidateSha256": "406b6f19747e53f658b0b39e24a0efd3563688b5326b7e507d5a70d39f1e3e11"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-353ea95c6a639285": [
+          {
+            "row": 59585,
+            "qaPairId": "89053",
+            "qid": "9084",
+            "bodyStart": 0,
+            "bodyEnd": 88,
+            "rawCandidateSha256": "0854286d899f85017de2a6ab3d8b7082a0ad693483f207cae61c587e423186da"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-b4e9f6ee00f47af8": [
+          {
+            "row": 59586,
+            "qaPairId": "89054",
+            "qid": "9084",
+            "bodyStart": 0,
+            "bodyEnd": 484,
+            "rawCandidateSha256": "b52b264fbcb379ff8b24cad2d3f9241605e5943c8ae1799fbfe9ba9d358a1630"
+          }
+        ],
+        "epqa-B00DI3DV6G-description-dc77f90394eeeef9": [
+          {
+            "row": 59587,
+            "qaPairId": "89055",
+            "qid": "9084",
+            "bodyStart": 0,
+            "bodyEnd": 102,
+            "rawCandidateSha256": "377a44b339eda5d8d88fb1600555b788e2549459da8d02dbb568e39dca50df0d"
+          },
+          {
+            "row": 59595,
+            "qaPairId": "89063",
+            "qid": "9085",
+            "bodyStart": 0,
+            "bodyEnd": 102,
+            "rawCandidateSha256": "377a44b339eda5d8d88fb1600555b788e2549459da8d02dbb568e39dca50df0d"
+          }
+        ],
+        "epqa-B00DI3DV6G-attribute-7a2faa31309c177c": [
+          {
+            "row": 59588,
+            "qaPairId": "89056",
+            "qid": "9084",
+            "bodyStart": 0,
+            "bodyEnd": 87,
+            "rawCandidateSha256": "bcd3ac7c65edd7e354f3de7f293a158ad4489af121b409b997733a8fb52c2f44"
+          }
+        ],
+        "epqa-B00DI3DV6G-attribute-ca52e633914c4104": [
+          {
+            "row": 59589,
+            "qaPairId": "89057",
+            "qid": "9084",
+            "bodyStart": 0,
+            "bodyEnd": 31,
+            "rawCandidateSha256": "2324cb35d71f11dbc236661ffde16b5b6810b6fb0a041929de75ccff4034c961"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-d4a4e67d0c84a2d1": [
+          {
+            "row": 59590,
+            "qaPairId": "89058",
+            "qid": "9084",
+            "bodyStart": 0,
+            "bodyEnd": 27,
+            "rawCandidateSha256": "f334d9e6702ff76941c993684335a22e723f5616d24f4f2d0d9d988485e24029"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-72f2e56e8ec81b25": [
+          {
+            "row": 59591,
+            "qaPairId": "89059",
+            "qid": "9084",
+            "bodyStart": 0,
+            "bodyEnd": 71,
+            "rawCandidateSha256": "0dcc18f2c6798a35f81e5aeb962643da0358706d31893b590076b3dc331dabd3"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-08d2bf34ff63eac0": [
+          {
+            "row": 59592,
+            "qaPairId": "89060",
+            "qid": "9085",
+            "bodyStart": 0,
+            "bodyEnd": 71,
+            "rawCandidateSha256": "89f84b120f65418f7ee3f3f6bfb0dded548c7ece0a758eafec496b45948e954b"
+          }
+        ],
+        "epqa-B00DI3DV6G-cqa-59ab9d7ec3c29299": [
+          {
+            "row": 59593,
+            "qaPairId": "89061",
+            "qid": "9085",
+            "bodyStart": 0,
+            "bodyEnd": 114,
+            "rawCandidateSha256": "e9ad46c27bf843907bc6e6f001a135023c0c5589f5db6d6dac36687018288305"
+          }
+        ],
+        "epqa-B00DI3DV6G-attribute-c75b4ca4b37f0130": [
+          {
+            "row": 59594,
+            "qaPairId": "89062",
+            "qid": "9085",
+            "bodyStart": 0,
+            "bodyEnd": 263,
+            "rawCandidateSha256": "ac3abc1fd4b0388438f355f73a76d0bcc9816a5b4b994ca25709e330b908d0a2"
+          }
+        ],
+        "epqa-B00DI3DV6G-description-a8c36ce8a51cc115": [
+          {
+            "row": 59596,
+            "qaPairId": "89064",
+            "qid": "9085",
+            "bodyStart": 0,
+            "bodyEnd": 70,
+            "rawCandidateSha256": "a5144e1f4fc84b33c85e5f38172125946cc2b9c4a44c9769aeeb558b145d1fcd"
+          }
+        ],
+        "epqa-B00DI3DV6G-description-2d7d933f7a85b445": [
+          {
+            "row": 59597,
+            "qaPairId": "89065",
+            "qid": "9085",
+            "bodyStart": 0,
+            "bodyEnd": 34,
+            "rawCandidateSha256": "efbbd6cc712cd2a8034b4ac1fcbe2c61853d83c3a6797fcbd59f4e146a6c2fb3"
+          }
+        ],
+        "epqa-B00DI3DV6G-bullet-a3d88c32feaef768": [
+          {
+            "row": 59598,
+            "qaPairId": "89066",
+            "qid": "9085",
+            "bodyStart": 0,
+            "bodyEnd": 85,
+            "rawCandidateSha256": "655e35acd3d8bb0ef0ec7ee08bc4611bb43c655e74900838f4ce0874fc05c345"
+          }
+        ],
+        "epqa-B00DI3DV6G-description-25d0aa14308f572b": [
+          {
+            "row": 59599,
+            "qaPairId": "89067",
+            "qid": "9085",
+            "bodyStart": 0,
+            "bodyEnd": 34,
+            "rawCandidateSha256": "a1ad3a2d9a00079f90992b77bc68f8ef2fd00c9c865f538db26f2d1f99414e10"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-045315844e916fe1": [
+          {
+            "row": 59600,
+            "qaPairId": "89068",
+            "qid": "9085",
+            "bodyStart": 0,
+            "bodyEnd": 23,
+            "rawCandidateSha256": "9e38a7f0b8a63820fe3886c0f7056c800928117a6485a553533260fca57bd6d0"
+          }
+        ],
+        "epqa-B00DI3DV6G-review-8410e1f5728b1e8f": [
+          {
+            "row": 59601,
+            "qaPairId": "89069",
+            "qid": "9085",
+            "bodyStart": 0,
+            "bodyEnd": 65,
+            "rawCandidateSha256": "c3a1cde5fc960a2131eb4ca01eab9fee92c4b346f710edb3297adfa3d0fd4c96"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "7f7673d22278d70b3d2f8a7596c0821e83d70a4b56aa2ff7305475dc4f4f3058",
+      "sourcePoolSha256": "6d79bd702d7ce7d0cfa79cd30fda2875eff27ff829ffe2d3e7517fb50166cc39",
+      "question": "will it hold a watermelon?"
+    },
+    {
+      "stratum": "appearance_material",
+      "sources": [
+        {
+          "id": "epqa-B00292OW1U-review-ea2cf77619720243",
+          "label": "review",
+          "text": "sometimes my w7 pc will boot with the last color i switched it to (red, blue, magenta), sometimes it'll go back to the default red.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6462&qa_pair_id=9760&chars=0-131",
+          "sha256": "9517aba99b3baa2a42d3bad48dcebd3abdd5aea00625b3676514b1cf8d517dc9"
+        },
+        {
+          "id": "epqa-B00292OW1U-attribute-c575abd39af645e4",
+          "label": "attribute",
+          "text": "color:  { value:\"black with 3 color illumination options- blue, purple and red\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6463&qa_pair_id=9761&chars=0-81",
+          "sha256": "1683f2ab28d8d3d27fe8b9a5396c5e0c68a09a89906add868ac761a484b4158c"
+        },
+        {
+          "id": "epqa-B00292OW1U-description-fe00ee94f3015aa7",
+          "label": "description",
+          "text": "the keyboard features 3 different illumination colors (blue, red and purple), which can be set to 4 different illumination modes (subtle, ambient, intense and off).",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6464&qa_pair_id=9762&chars=0-164",
+          "sha256": "04037164ab37cf7371f8734eb55fad4b6c6a95eb8c118fa89640e275a65b552d"
+        },
+        {
+          "id": "epqa-B00292OW1U-review-650f241fb8daa751",
+          "label": "review",
+          "text": "the light can be changed to different colors (blue, pink, or red - i wish there was a green one) as well as 2 levels of brightness & off.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6465&qa_pair_id=9763&chars=0-137",
+          "sha256": "3d06f791af865700b4c0cb09d5f2297cca70e9fcefc50f7d8281e253839d71c0"
+        },
+        {
+          "id": "epqa-B00292OW1U-review-6ba0bbaef5497a84",
+          "label": "review",
+          "text": "it comes with media buttons along the top next to some customizable lights control buttons complete with three color settings (blue, red and purple) and three brightness settings along with an option to turn the lights off and on.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6466&qa_pair_id=9764&chars=0-230",
+          "sha256": "a9a44eefcf88fd4646a129fe02221782c2a23b0f7b2e14a3bdb6dcbfea5638f9"
+        },
+        {
+          "id": "epqa-B00292OW1U-attribute-95e084876ba9cc65",
+          "label": "attribute",
+          "text": "manufacturer:  { value:\"steelseries\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6467&qa_pair_id=9765&chars=0-38",
+          "sha256": "a242473ac9ff6b256c9ba8858faa5a45dab17f4b655ac4be6b7987efd21a0dcb"
+        },
+        {
+          "id": "epqa-B00292OW1U-description-3e99457e2cb882d7",
+          "label": "description",
+          "text": "choose your level of brightness (subtle, ambient, intense, off).",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6468&qa_pair_id=9766&chars=0-64",
+          "sha256": "3e9aba6c317686dda4c7bc108dc6a806e680341e327f0c9ca28bb66dcbe2637a"
+        },
+        {
+          "id": "epqa-B00292OW1U-description-53c2f59b90e6dd51",
+          "label": "description",
+          "text": "\"--hardware heaven  technical specifications  usb hub: two (2) usb 2.0 prots gold-plated microphone and headset jacks cable length: 1.8 m / 6 ft connection options: usb dimensions: 21.1\" x 7.9\" x 1.1\"",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6469&qa_pair_id=9767&chars=0-200",
+          "sha256": "7a08355cda9720934755652539c067b5f3669cbe0bb3e2ce1b10224f353d4c1e"
+        },
+        {
+          "id": "epqa-B00292OW1U-review-93e5d6bc9e010cd8",
+          "label": "review",
+          "text": "i don't know anything about gaming keyboards since i do not play games.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6470&qa_pair_id=9768&chars=0-71",
+          "sha256": "f356e66e16708cbe5e532f7d1e96964fcfb080cbd9bd6540c307b667223b1545"
+        },
+        {
+          "id": "epqa-B00292OW1U-review-3fc5aca87291b699",
+          "label": "review",
+          "text": "i have had this keyboard for several years now and it is still going strong.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6471&qa_pair_id=9769&chars=0-76",
+          "sha256": "3f7fd6d3ed3158d5cbae1b02a89887d66dd53bc4c8dc2d462f5356d036ef4d5f"
+        },
+        {
+          "id": "epqa-B00292OW1U-description-012c5a10c0fcce87",
+          "label": "description",
+          "text": "cable length: 1.8 m / 6 ft",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6472&qa_pair_id=9770&chars=0-26",
+          "sha256": "2732d420e63e86a1e9f9f174e880cb599f2111108167501d3e4ce0d79fe86b5b"
+        },
+        {
+          "id": "epqa-B00292OW1U-attribute-8a4d56a0f109b2ff",
+          "label": "attribute",
+          "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:9.2 }, value:9.2 }, length:{ unit:inches, normalized_value:{ unit:inches, value:22.3 }, value:22.3 }, height:{ unit:inches, normalized_value:{ unit:inches, value:1.9 }, value:1.9 } }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6473&qa_pair_id=9771&chars=0-261",
+          "sha256": "9faf205a46465530adca18414380615c440d3715b311b7c5648af0ae78ee9e13"
+        },
+        {
+          "id": "epqa-B00292OW1U-description-c9114679e4a6d314",
+          "label": "description",
+          "text": "dimensions: 21.1\" x 7.9\" x 1.1\"",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6474&qa_pair_id=9772&chars=0-31",
+          "sha256": "15b57594c29d3bc5a93879c4813dcd38f32a6710063e388420afc4ef077e35bb"
+        },
+        {
+          "id": "epqa-B00292OW1U-attribute-394e5414ed1df261",
+          "label": "attribute",
+          "text": "item_package_dimensions:  { length:{ unit:centimeters, normalized_value:{ unit:inches, value:24 }, value:12.7 }, width:{ unit:centimeters, normalized_value:{ unit:inches, value:16 }, value:40.64 }, height:{ unit:centimeters, normalized_value:{ unit:inches, value:5 }, value:60.96 } }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6475&qa_pair_id=9773&chars=0-283",
+          "sha256": "a9511ecfc087625b28b9366dd397982c156ce3b761615b5ee79038b2281aa2d0"
+        },
+        {
+          "id": "epqa-B00292OW1U-review-8f75c0d83e29658b",
+          "label": "review",
+          "text": "the drivers are excellent for it, when it first came out they were pretty crappy, but have definitely excelled.one of the things i really like with it is that it is the same length as a standard keyboard.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6476&qa_pair_id=9774&chars=0-204",
+          "sha256": "5bc109d92b12cd7dccc3267c4a6f9892d91d21100d62959dd09d36bb7e6532c5"
+        },
+        {
+          "id": "epqa-B00292OW1U-description-2cb80b741e531af6",
+          "label": "description",
+          "text": "the keyboard features 3 different illumination colors (blue, red and purple), which can be set to 4 different illumination modes (subtle, ambient, intense and off).  gaming terrain keys are ergonomic and comfortable, even during long gaming sessions merc stealth features 34 gaming keys at a natural tilt to match your wrist position  steelseries merc stealth supports simultaneous keystrokes and features a number of hotkeys for multimedia, navigation and other one-click controls.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6477&qa_pair_id=9775&chars=0-482",
+          "sha256": "4465a1fcf55b52f239b0db7a62990baa3e1e868bae38045bc56f914a6e2f3293"
+        },
+        {
+          "id": "epqa-B00292OW1U-description-ee27ef2228e07cf4",
+          "label": "description",
+          "text": "all keys on the keyboard can be programmed with the powerful steelseries z engine software, allowing for programmable keys and easy to use drag-and-drop macro creation.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6478&qa_pair_id=9776&chars=0-168",
+          "sha256": "d10927a2ae7c456b43b86f00987e63fc3ef98b1d7405a83eaeba75eaf719ddf8"
+        },
+        {
+          "id": "epqa-B00292OW1U-attribute-31cfbbe003d9aded",
+          "label": "attribute",
+          "text": "part_number:  { value:\"64049\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6479&qa_pair_id=9777&chars=0-31",
+          "sha256": "1c57767b853c2fcc71b2daaa899d443e8573ea0e8dee36fe4b0025152ea12fd6"
+        },
+        {
+          "id": "epqa-B00292OW1U-review-3e593e50137ebf09",
+          "label": "review",
+          "text": "this keyboard has a great feel to it and appears to be the only one available with the left side keys in this configuration.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6480&qa_pair_id=9778&chars=0-124",
+          "sha256": "0e6d98f74a21a63d36c34e73a34cf0c894457bbccf6295afa4a399c0d9e22525"
+        },
+        {
+          "id": "epqa-B00292OW1U-review-79c08f33cc4dceab",
+          "label": "review",
+          "text": "so far so good.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=6481&qa_pair_id=9779&chars=0-15",
+          "sha256": "d781ebe71ba809ebe6fdef9e355764ae488cb075e8e2d66bd242d993a5520ec3"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "3a0d21c1699fb8d7c9c0cb1f1f369939d4a52fa2a032b71f3c337e90d3efadeb",
+      "product": {
+        "id": "B00292OW1U",
+        "title": "SteelSeries Merc Stealth Gaming Keyboard"
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "990",
+        "questionRow": 6462
+      },
+      "id": "source-gap-train-990",
+      "sourceOrigins": {
+        "epqa-B00292OW1U-review-ea2cf77619720243": [
+          {
+            "row": 6462,
+            "qaPairId": "9760",
+            "qid": "990",
+            "bodyStart": 0,
+            "bodyEnd": 131,
+            "rawCandidateSha256": "037034b6aead726615fcba57a9a6f70d5da2a3d04eade82f4e896a70aac3b3be"
+          }
+        ],
+        "epqa-B00292OW1U-attribute-c575abd39af645e4": [
+          {
+            "row": 6463,
+            "qaPairId": "9761",
+            "qid": "990",
+            "bodyStart": 0,
+            "bodyEnd": 81,
+            "rawCandidateSha256": "f76cd9f469e5350da583c7333b9e66a22dadae4e600d2ec92c72244371fe8587"
+          }
+        ],
+        "epqa-B00292OW1U-description-fe00ee94f3015aa7": [
+          {
+            "row": 6464,
+            "qaPairId": "9762",
+            "qid": "990",
+            "bodyStart": 0,
+            "bodyEnd": 164,
+            "rawCandidateSha256": "8b50ac8fd1dcadaeeeabf53e2a5af169c359494f39b26374d7da0018eb0dffbf"
+          }
+        ],
+        "epqa-B00292OW1U-review-650f241fb8daa751": [
+          {
+            "row": 6465,
+            "qaPairId": "9763",
+            "qid": "990",
+            "bodyStart": 0,
+            "bodyEnd": 137,
+            "rawCandidateSha256": "af30af672db7c552bb94138e881649f57b07722d59345e0a86262f838dcc1991"
+          }
+        ],
+        "epqa-B00292OW1U-review-6ba0bbaef5497a84": [
+          {
+            "row": 6466,
+            "qaPairId": "9764",
+            "qid": "990",
+            "bodyStart": 0,
+            "bodyEnd": 230,
+            "rawCandidateSha256": "ab0d39960780106e00589afa9e3b4e955d695383f98e7014e6df03c99a8aa0b3"
+          }
+        ],
+        "epqa-B00292OW1U-attribute-95e084876ba9cc65": [
+          {
+            "row": 6467,
+            "qaPairId": "9765",
+            "qid": "990",
+            "bodyStart": 0,
+            "bodyEnd": 38,
+            "rawCandidateSha256": "4b21c562ddfceaacf47849c7af6065d97428261b9cfc5c4695fc7e0a278f003d"
+          }
+        ],
+        "epqa-B00292OW1U-description-3e99457e2cb882d7": [
+          {
+            "row": 6468,
+            "qaPairId": "9766",
+            "qid": "990",
+            "bodyStart": 0,
+            "bodyEnd": 64,
+            "rawCandidateSha256": "3ebf906891fe7a3807b8c43d29f01646faf3685c5681650745aab929b46966fa"
+          }
+        ],
+        "epqa-B00292OW1U-description-53c2f59b90e6dd51": [
+          {
+            "row": 6469,
+            "qaPairId": "9767",
+            "qid": "990",
+            "bodyStart": 0,
+            "bodyEnd": 200,
+            "rawCandidateSha256": "fccca0577174be53ba13aa474a3144b97c17db3424713e4055e01f9f4ce18bcc"
+          }
+        ],
+        "epqa-B00292OW1U-review-93e5d6bc9e010cd8": [
+          {
+            "row": 6470,
+            "qaPairId": "9768",
+            "qid": "990",
+            "bodyStart": 0,
+            "bodyEnd": 71,
+            "rawCandidateSha256": "81935923f76947f0b5a5a06a27fbf731ade882c6817acb1a1fbd997d95f43c83"
+          }
+        ],
+        "epqa-B00292OW1U-review-3fc5aca87291b699": [
+          {
+            "row": 6471,
+            "qaPairId": "9769",
+            "qid": "990",
+            "bodyStart": 0,
+            "bodyEnd": 76,
+            "rawCandidateSha256": "29769f00e9346340ab3f2b7b559045b7fe3c76e030c83920d6efa493ba7f32d9"
+          }
+        ],
+        "epqa-B00292OW1U-description-012c5a10c0fcce87": [
+          {
+            "row": 6472,
+            "qaPairId": "9770",
+            "qid": "991",
+            "bodyStart": 0,
+            "bodyEnd": 26,
+            "rawCandidateSha256": "b76fc4c60d169da49d9da1cb824adb59420cd6516ffd948bd30eb359ca22c5f0"
+          }
+        ],
+        "epqa-B00292OW1U-attribute-8a4d56a0f109b2ff": [
+          {
+            "row": 6473,
+            "qaPairId": "9771",
+            "qid": "991",
+            "bodyStart": 0,
+            "bodyEnd": 261,
+            "rawCandidateSha256": "56a59f070df508afe6876438bcd5ba90c1702d7cf1e5ca6fc8f85b39a76ac299"
+          }
+        ],
+        "epqa-B00292OW1U-description-c9114679e4a6d314": [
+          {
+            "row": 6474,
+            "qaPairId": "9772",
+            "qid": "991",
+            "bodyStart": 0,
+            "bodyEnd": 31,
+            "rawCandidateSha256": "59c80d4f7cc857cfd136ddd254fc8c6a391cfab22fd25361ed62eed642bad199"
+          }
+        ],
+        "epqa-B00292OW1U-attribute-394e5414ed1df261": [
+          {
+            "row": 6475,
+            "qaPairId": "9773",
+            "qid": "991",
+            "bodyStart": 0,
+            "bodyEnd": 283,
+            "rawCandidateSha256": "c1676cd953300f8d3297a4f5e711508547235e0d23472613707ac1b612b268f4"
+          }
+        ],
+        "epqa-B00292OW1U-review-8f75c0d83e29658b": [
+          {
+            "row": 6476,
+            "qaPairId": "9774",
+            "qid": "991",
+            "bodyStart": 0,
+            "bodyEnd": 204,
+            "rawCandidateSha256": "cc9a40aa98d3047bee9699b1ef2b8f793997d147090befe3eed22bde16b4b547"
+          }
+        ],
+        "epqa-B00292OW1U-description-2cb80b741e531af6": [
+          {
+            "row": 6477,
+            "qaPairId": "9775",
+            "qid": "991",
+            "bodyStart": 0,
+            "bodyEnd": 482,
+            "rawCandidateSha256": "ff4f3a1fdf8ca603d11b17868f2ecdc3fd90efa56b22922adce38d723b0ae612"
+          }
+        ],
+        "epqa-B00292OW1U-description-ee27ef2228e07cf4": [
+          {
+            "row": 6478,
+            "qaPairId": "9776",
+            "qid": "991",
+            "bodyStart": 0,
+            "bodyEnd": 168,
+            "rawCandidateSha256": "fba1045db4c483fb389eb1d41ac8cc5684ceb3c809a3e88950ebe86694fefa8b"
+          }
+        ],
+        "epqa-B00292OW1U-attribute-31cfbbe003d9aded": [
+          {
+            "row": 6479,
+            "qaPairId": "9777",
+            "qid": "991",
+            "bodyStart": 0,
+            "bodyEnd": 31,
+            "rawCandidateSha256": "6415790aaf61450f03529c5ecc5017df61a4319a9117c70e09a10f7cdea94f53"
+          }
+        ],
+        "epqa-B00292OW1U-review-3e593e50137ebf09": [
+          {
+            "row": 6480,
+            "qaPairId": "9778",
+            "qid": "991",
+            "bodyStart": 0,
+            "bodyEnd": 124,
+            "rawCandidateSha256": "59d7eb20bb10473b6bc8ba88774724dcb269243d1b31f5430042ce99ed945cc9"
+          }
+        ],
+        "epqa-B00292OW1U-review-79c08f33cc4dceab": [
+          {
+            "row": 6481,
+            "qaPairId": "9779",
+            "qid": "991",
+            "bodyStart": 0,
+            "bodyEnd": 15,
+            "rawCandidateSha256": "8ab7a788a84d8e1d7923dd5d6cec4601569dac0eb8dd35ded8d1d41bfe550524"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "6580ff38cdd9e0c496d704ae594149a79c55b79d7978b334b38b8cc04c605e95",
+      "sourcePoolSha256": "e40ec6fa888708ddf01dd26f332ad02fc4f5cea4fe0d9facd1b22b2fe8e3b3f8",
+      "question": "is there a way to change which color led automatically comes on at startup?"
+    },
+    {
+      "stratum": "appearance_material",
+      "sources": [
+        {
+          "id": "epqa-B0002DK29E-review-0255e5e68092a59e",
+          "label": "review",
+          "text": "just as any tables, chairs or humans in his path would similarly be repositioned!i got the grey/pebble color, which is basically a sort of pearly greyish silver color.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=36642&qa_pair_id=56110&chars=0-167",
+          "sha256": "d4cc0316dcb6f577b23a6162a55e6d1cc4f347847e05aaaba6f268eb61f9a82b"
+        },
+        {
+          "id": "epqa-B0002DK29E-attribute-8662fc72a42c6d6e",
+          "label": "attribute",
+          "text": "color:  { standardized_values:[ \"beige or brown\" ], value:\"beige or brown\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=36643&qa_pair_id=56111&chars=0-76",
+          "sha256": "20c24d81696f1c3a16d8ae09adf93e17cc4427b5fd76654c2f1d355d88d36b11"
+        },
+        {
+          "id": "epqa-B0002DK29E-review-8b5a745c71db32fe",
+          "label": "review",
+          "text": "it is a dingy grey color.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=36644&qa_pair_id=56112&chars=0-25",
+          "sha256": "2b25073a70205f153b7b8abb0d467aa213e86eb2bdb68c06616aba77914d160a"
+        },
+        {
+          "id": "epqa-B0002DK29E-review-a3f61573c649ab88",
+          "label": "review",
+          "text": "i got 2 and they were both the beige color.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=36645&qa_pair_id=56113&chars=0-43",
+          "sha256": "bad9634eeb6ec1c0040e2eb4ed15611bc9c747e79f65cd6fad0bb493e4bb4a36"
+        },
+        {
+          "id": "epqa-B0002DK29E-review-7e13d7bc4fb31a4c",
+          "label": "review",
+          "text": "if you look at the picture, i received the kinda light gray/odd color mat.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=36646&qa_pair_id=56114&chars=0-74",
+          "sha256": "6ee3a15941bc4588ea9231491c210ae2b006c52ec33e9e313fbdfc3757d39ba2"
+        },
+        {
+          "id": "epqa-B0002DK29E-attribute-42b3c73415c1215e",
+          "label": "attribute",
+          "text": "model_number:  { value:\"hpm - pearilized pebble\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=36647&qa_pair_id=56115&chars=0-50",
+          "sha256": "3b3b8a26168bd792e9ce4bfd94f25a694606ea10fcfc34b4b7ea44ec0ae340d9"
+        },
+        {
+          "id": "epqa-B0002DK29E-bullet-d59c375aa20a5676",
+          "label": "bullet",
+          "text": "the mats are made of a non-slip material",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=36648&qa_pair_id=56116&chars=0-40",
+          "sha256": "4f85ba0e810b854871682faf05a93ecda39c8c7383e6920907860c1e54577fc1"
+        },
+        {
+          "id": "epqa-B0002DK29E-attribute-1a8b55e219720217",
+          "label": "attribute",
+          "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:0.7 }, value:0.7 }, length:{ unit:inches, normalized_value:{ unit:inches, value:19. }, value:19. }, height:{ unit:inches, normalized_value:{ unit:inches, value:13. }, value:13. } }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=36649&qa_pair_id=56117&chars=0-259",
+          "sha256": "7fbb3bf19f2d15aa0a4441a8b73b4dec34379955489d346646a1b7280bbdf766"
+        },
+        {
+          "id": "epqa-B0002DK29E-review-7531edbed5f3d6f8",
+          "label": "review",
+          "text": "it also has a raised lip to prevent water from spilling onto the floor in case a water bowl is tipped over.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=36650&qa_pair_id=56118&chars=0-107",
+          "sha256": "6dc0190ed2a1f443224e1a272c4b9eb529f032c54d63d82b2176e189a7b59736"
+        },
+        {
+          "id": "epqa-B0002DK29E-review-5338f817156eb2ab",
+          "label": "review",
+          "text": "just the right size",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=36651&qa_pair_id=56119&chars=0-19",
+          "sha256": "76a6f0e30d7f04ce98d2734b58ef5b16550fb320770ef5b5820550b5b30c618b"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "905ccfc14ff7a276e30bf585d81737b5d2f0cc2312fbadeac83edafadfe5f2e0",
+      "product": {
+        "id": "B0002DK29E",
+        "title": "Omega Paw Pearilized Pebble Hungry Pet Mat"
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "5727",
+        "questionRow": 36642
+      },
+      "id": "source-gap-train-5727",
+      "sourceOrigins": {
+        "epqa-B0002DK29E-review-0255e5e68092a59e": [
+          {
+            "row": 36642,
+            "qaPairId": "56110",
+            "qid": "5727",
+            "bodyStart": 0,
+            "bodyEnd": 167,
+            "rawCandidateSha256": "cf07f91e4352122e99575e45541e561bd761086ed0667c0129d910f52a894c90"
+          }
+        ],
+        "epqa-B0002DK29E-attribute-8662fc72a42c6d6e": [
+          {
+            "row": 36643,
+            "qaPairId": "56111",
+            "qid": "5727",
+            "bodyStart": 0,
+            "bodyEnd": 76,
+            "rawCandidateSha256": "e476d2070bda1d10732608d8bcd8dda2d2a99e3265504ff1b773143cb1f154c4"
+          }
+        ],
+        "epqa-B0002DK29E-review-8b5a745c71db32fe": [
+          {
+            "row": 36644,
+            "qaPairId": "56112",
+            "qid": "5727",
+            "bodyStart": 0,
+            "bodyEnd": 25,
+            "rawCandidateSha256": "0f46875c706046228b69ec5faf636972845d113b71899d48304a7c1c273b7796"
+          }
+        ],
+        "epqa-B0002DK29E-review-a3f61573c649ab88": [
+          {
+            "row": 36645,
+            "qaPairId": "56113",
+            "qid": "5727",
+            "bodyStart": 0,
+            "bodyEnd": 43,
+            "rawCandidateSha256": "a4ceeb6baf36b3d984d461678917a7c207710586c1a2118a0ca5266e0c918114"
+          }
+        ],
+        "epqa-B0002DK29E-review-7e13d7bc4fb31a4c": [
+          {
+            "row": 36646,
+            "qaPairId": "56114",
+            "qid": "5727",
+            "bodyStart": 0,
+            "bodyEnd": 74,
+            "rawCandidateSha256": "c6e0bac663d2ed72d75ef7c5f0c735ce35045ef2b419c2216f6fbdec63713b95"
+          }
+        ],
+        "epqa-B0002DK29E-attribute-42b3c73415c1215e": [
+          {
+            "row": 36647,
+            "qaPairId": "56115",
+            "qid": "5727",
+            "bodyStart": 0,
+            "bodyEnd": 50,
+            "rawCandidateSha256": "50e954bf6082a1f235e55fd76457a712533f8807af39effe3cba6ac7428a5377"
+          }
+        ],
+        "epqa-B0002DK29E-bullet-d59c375aa20a5676": [
+          {
+            "row": 36648,
+            "qaPairId": "56116",
+            "qid": "5727",
+            "bodyStart": 0,
+            "bodyEnd": 40,
+            "rawCandidateSha256": "31042891266ef9639b3d202913f5f51ea2fc946d140246ae79ab0258eb889a10"
+          }
+        ],
+        "epqa-B0002DK29E-attribute-1a8b55e219720217": [
+          {
+            "row": 36649,
+            "qaPairId": "56117",
+            "qid": "5727",
+            "bodyStart": 0,
+            "bodyEnd": 259,
+            "rawCandidateSha256": "a0b66057f8ebcf249bcab85610649d84bc780e7ddc9def4de652a65c9c477ffa"
+          }
+        ],
+        "epqa-B0002DK29E-review-7531edbed5f3d6f8": [
+          {
+            "row": 36650,
+            "qaPairId": "56118",
+            "qid": "5727",
+            "bodyStart": 0,
+            "bodyEnd": 107,
+            "rawCandidateSha256": "c99c7421f69fdc1ecc183d9dc570c8f761d639b76a0096c0fad5a0c438f212ae"
+          }
+        ],
+        "epqa-B0002DK29E-review-5338f817156eb2ab": [
+          {
+            "row": 36651,
+            "qaPairId": "56119",
+            "qid": "5727",
+            "bodyStart": 0,
+            "bodyEnd": 19,
+            "rawCandidateSha256": "feaea93a0aaf7b531cd8c3013cdc23c44624d558ed389c28525d7ce58b7dd296"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "274b9dd8c570dabe054fbf81285252f740e912c269ec8ead4e378c2686e11333",
+      "sourcePoolSha256": "ea1bfeff15dc30b1d5b11334a243fbdd364a9b2e91838ec231688e4d70df1531",
+      "question": "what color  will i receive?"
+    }
+  ],
+  "candidateContextsInspected": false,
+  "modelOutputsInspected": false,
+  "generationPerformed": false,
+  "newProviderCalls": 0
+}

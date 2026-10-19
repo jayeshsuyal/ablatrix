@@ -1,0 +1,48 @@
+{
+  "format": "ablatrix-source-gap-selection-protocol-v1",
+  "selectionProtocol": "baseline_source_gap_v1",
+  "selectionSeed": "ablatrix-source-gap-2026-10-18-v1",
+  "screeningProducts": 64,
+  "rounds": 8,
+  "roundStrata": [
+    {
+      "name": "capacity_dimensions",
+      "count": 2
+    },
+    {
+      "name": "appearance_material",
+      "count": 2
+    },
+    {
+      "name": "model_scope",
+      "count": 2
+    },
+    {
+      "name": "missing_information",
+      "count": 1
+    },
+    {
+      "name": "preservation_control",
+      "count": 1
+    }
+  ],
+  "deckStrata": {
+    "capacity_dimensions": 16,
+    "appearance_material": 16,
+    "model_scope": 16,
+    "missing_information": 8,
+    "preservation_control": 8
+  },
+  "quotas": {
+    "specification_gap": 3,
+    "model_detail_gap": 3,
+    "baseline_complete_control": 2
+  },
+  "candidateEligibilityUsed": false,
+  "modelOutputsUsed": false,
+  "caseReplacement": false,
+  "finalBaselineRevalidationRequired": true,
+  "maximumNewAnswerAttempts": 16,
+  "candidateFreezeFileSha256": "c44cb17c2fec835fe7cf4c8f406c785cfae23f5f7e310c61a7294ed2905e401d",
+  "protocolSha256": "6e4b1463cb55af8be35ee33b135f7c2df879145edd2c8aa26b8deb5feca6f1e9"
+}

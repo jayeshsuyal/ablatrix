@@ -1,0 +1,931 @@
+{
+  "format": "retrieval-coverage-source-family-review-v1",
+  "cohortFileSha256": "681544a9e7ea23b1d0cef61106655fafd6736ee26e6228d33389d99c3cc84164",
+  "retrievalFileSha256": "d5b257be27edaa800e59ff475a18eec830af9cc22af8cc80227b35c436585384",
+  "exposureAuditFileSha256": "e2cdf0f823893230bef6668bb9c62c81911bace8fd75407b8baaa202a6e07bca",
+  "status": "passed",
+  "provenance": "independent_ai_source_and_family_review",
+  "humanJudgments": 0,
+  "qualityClaimEligible": false,
+  "cases": [
+    {
+      "caseId": "retrieval-coverage-train-5918",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "Reviewed all 19 source parents; none has a separate original CQA question. Domestic pet feeding bowl is consumer eligible. Product, family, model/target identifiers, and scoped text packets are separate from supplied prior, consumed, and exposure protections and the other seven cases. The concrete breed match is an owner report about a 20 lb Shetland sheepdog; unspecified-dog dissatisfaction has a different scope.",
+      "requiredSupportedFacts": [
+        {
+          "fact": "The selected bowl is medium (pack of 1), and the listing states a 1 cup capacity.",
+          "sourceIds": [
+            "epqa-B00251EPL2-attribute-76c1d623020c4e07",
+            "epqa-B00251EPL2-bullet-fbb5723f389efca6"
+          ],
+          "qualification": "Listing attributes and bullet; capacity is bowl volume, not a prescribed meal or dog-weight limit."
+        },
+        {
+          "fact": "One owner bought medium for a 20 lb Shetland sheepdog and called it a perfect fit.",
+          "sourceIds": [
+            "epqa-B00251EPL2-review-0acbdf3cca5a86a5"
+          ],
+          "qualification": "Directly relevant breed and weight anecdote; supports medium as an evidence-based starting suggestion for a similar dog, without guaranteeing every Shetland sheepdog."
+        },
+        {
+          "fact": "Other owners recommend this medium bowl for small to medium dogs; one describes about a scoop of food for an animal weighing 20 lb or less.",
+          "sourceIds": [
+            "epqa-B00251EPL2-review-0df39fb0015b6686",
+            "epqa-B00251EPL2-review-8b0a87c4ce568415",
+            "epqa-B00251EPL2-review-285e086201831659"
+          ],
+          "qualification": "Customer judgments, with an undefined scoop and no manufacturer weight cutoff."
+        },
+        {
+          "fact": "Another owner called the bowl very small and unusable for their dog.",
+          "sourceIds": [
+            "epqa-B00251EPL2-review-1a6dd7e5d37a9429"
+          ],
+          "qualification": "The dog breed, weight, and portion are absent, so this is a sizing caution rather than a contradiction of the 20 lb Shetland report."
+        }
+      ],
+      "unresolvedRelationships": [
+        {
+          "relationship": "Whether medium is best for the particular user’s dog and meal portion.",
+          "reason": "The question gives breed only. The closest owner example supplies weight, while the listing gives volume; the user’s weight and serving volume are not saved.",
+          "sourceIds": [
+            "epqa-B00251EPL2-review-0acbdf3cca5a86a5",
+            "epqa-B00251EPL2-attribute-76c1d623020c4e07",
+            "epqa-B00251EPL2-bullet-fbb5723f389efca6",
+            "epqa-B00251EPL2-review-285e086201831659"
+          ]
+        },
+        {
+          "relationship": "Exact bowl dimensions or a comparison with large and other sizes.",
+          "reason": "The complete supplied attributes and bullet give medium and 1 cup but no physical measurements or other-size capacity chart.",
+          "sourceIds": [
+            "epqa-B00251EPL2-attribute-76c1d623020c4e07",
+            "epqa-B00251EPL2-bullet-fbb5723f389efca6"
+          ]
+        }
+      ],
+      "prohibitedInferences": [
+        {
+          "inference": "Medium is guaranteed to fit every Shetland sheepdog, or 20 lb is an official maximum.",
+          "reason": "The breed and weight match is one owner’s experience, and the other weight statement is another customer estimate.",
+          "sourceIds": [
+            "epqa-B00251EPL2-review-0acbdf3cca5a86a5",
+            "epqa-B00251EPL2-review-285e086201831659"
+          ]
+        },
+        {
+          "inference": "A scoop is exactly 1 cup or a specific mass of food.",
+          "reason": "The scoop is undefined, and the 1 cup listing is a separate capacity statement.",
+          "sourceIds": [
+            "epqa-B00251EPL2-review-285e086201831659",
+            "epqa-B00251EPL2-bullet-fbb5723f389efca6"
+          ]
+        },
+        {
+          "inference": "The unspecified small-bowl complaint proves medium cannot fit a 20 lb Shetland sheepdog.",
+          "reason": "The dissatisfied owner does not identify their dog or meal size.",
+          "sourceIds": [
+            "epqa-B00251EPL2-review-1a6dd7e5d37a9429",
+            "epqa-B00251EPL2-review-0acbdf3cca5a86a5"
+          ]
+        }
+      ],
+      "sourceIds": [
+        "epqa-B00251EPL2-attribute-0dfd0ce9738d550a",
+        "epqa-B00251EPL2-attribute-5e45fc9a50c90021",
+        "epqa-B00251EPL2-review-d233d31659ca7422",
+        "epqa-B00251EPL2-attribute-930882f72497431c",
+        "epqa-B00251EPL2-review-1a6dd7e5d37a9429",
+        "epqa-B00251EPL2-attribute-875387b0d258dcdb",
+        "epqa-B00251EPL2-attribute-100c8815441820cf",
+        "epqa-B00251EPL2-bullet-fbb5723f389efca6",
+        "epqa-B00251EPL2-review-659a45ef5e67dd6f",
+        "epqa-B00251EPL2-review-207c44fa6b17f84b",
+        "epqa-B00251EPL2-review-0acbdf3cca5a86a5",
+        "epqa-B00251EPL2-review-0df39fb0015b6686",
+        "epqa-B00251EPL2-review-8b0a87c4ce568415",
+        "epqa-B00251EPL2-attribute-76c1d623020c4e07",
+        "epqa-B00251EPL2-review-285e086201831659",
+        "epqa-B00251EPL2-bullet-1c9896b74ea9e910",
+        "epqa-B00251EPL2-attribute-3f6e16019150d8f4",
+        "epqa-B00251EPL2-review-ff20245e0db01aed",
+        "epqa-B00251EPL2-review-540501b8ab780c41"
+      ]
+    },
+    {
+      "caseId": "retrieval-coverage-train-13455",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "Reviewed all 25 source parents and all 3 original CQA questions. Consumer fashion boot is eligible and separate from protected product/family/model/source packets. The saved selection is 8 wide; foot width, shaft circumference, shaft width, reviewer calf size, and elastic stretch are distinct quantities. The original 10W/average-calf bagginess question is separate from the actual circumference question.",
+      "requiredSupportedFacts": [
+        {
+          "fact": "The listing states a boot shaft circumference of 14.17 inches.",
+          "sourceIds": [
+            "epqa-B0782338VH-bullet-da7df3eae9611758"
+          ],
+          "qualification": "This is the saved listed circumference. It is useful to answer directly, while preserving uncertainty about a separately defined wide-calf version or size-dependent measurement."
+        },
+        {
+          "fact": "A different listing bullet gives boot shaft width of 7.08 inches.",
+          "sourceIds": [
+            "epqa-B0782338VH-bullet-6e2f3f28f10fc6ad"
+          ],
+          "qualification": "Width is labeled separately; it must not replace the explicit circumference or be relabeled as diameter."
+        },
+        {
+          "fact": "The selected size attribute is 8 wide; the shaft attribute says diameter large and height knee-high.",
+          "sourceIds": [
+            "epqa-B0782338VH-attribute-7c8d97450d13e31a",
+            "epqa-B0782338VH-attribute-678820f30956415b"
+          ],
+          "qualification": "The saved labels do not define a numeric wide-calf circumference or equate shoe width with calf width."
+        },
+        {
+          "fact": "Customers describe elastic or stretchy material at the back or side of the calf. The CQA answer to the same circumference question says not overly wide and comfortable with elastic; a separate 10W/average-calf answer says elastic back and fairly stiff leather should prevent bagginess.",
+          "sourceIds": [
+            "epqa-B0782338VH-review-5afedbcb08ec1cba",
+            "epqa-B0782338VH-cqa-d2db78f5ea3945e8",
+            "epqa-B0782338VH-review-1b1394aa636310a7",
+            "epqa-B0782338VH-cqa-96b38e7f9f6e961e"
+          ],
+          "qualification": "These are wearer observations and one prediction in distinct original-question scopes; they supply no maximum stretched circumference."
+        }
+      ],
+      "unresolvedRelationships": [
+        {
+          "relationship": "Whether 14.17 inches is a measurement specifically for a separately designated wide-calf option or every shoe size.",
+          "reason": "The selected size says 8 wide, and no supplied attribute defines a wide-calf option or measurement method/size table.",
+          "sourceIds": [
+            "epqa-B0782338VH-bullet-da7df3eae9611758",
+            "epqa-B0782338VH-attribute-7c8d97450d13e31a",
+            "epqa-B0782338VH-attribute-678820f30956415b"
+          ]
+        },
+        {
+          "relationship": "Maximum stretched circumference and fit on the user’s calf.",
+          "reason": "Elastic is described without stretch measurements; reviewer calf sizes are personal body measurements, not boot dimensions.",
+          "sourceIds": [
+            "epqa-B0782338VH-review-5afedbcb08ec1cba",
+            "epqa-B0782338VH-cqa-d2db78f5ea3945e8",
+            "epqa-B0782338VH-review-1b1394aa636310a7",
+            "epqa-B0782338VH-cqa-96b38e7f9f6e961e",
+            "epqa-B0782338VH-review-2a3e533ba10492fb",
+            "epqa-B0782338VH-review-639c021ead47ed18"
+          ]
+        }
+      ],
+      "prohibitedInferences": [
+        {
+          "inference": "Wide in 8 wide proves a separate wide-calf construction or wider shaft.",
+          "reason": "The size and shaft labels do not establish that relationship.",
+          "sourceIds": [
+            "epqa-B0782338VH-attribute-7c8d97450d13e31a",
+            "epqa-B0782338VH-attribute-678820f30956415b"
+          ]
+        },
+        {
+          "inference": "The boot circumference is 12.5 or 15.5 inches.",
+          "reason": "Those numbers describe two reviewers’ calves, with no saved measured boot circumference or fit result in those snippets.",
+          "sourceIds": [
+            "epqa-B0782338VH-review-2a3e533ba10492fb",
+            "epqa-B0782338VH-review-639c021ead47ed18"
+          ]
+        },
+        {
+          "inference": "7.08 inches is the circumference or can displace 14.17 inches through an assumed shape calculation.",
+          "reason": "The source explicitly distinguishes shaft width from circumference and supplies no circular-shaft model.",
+          "sourceIds": [
+            "epqa-B0782338VH-bullet-6e2f3f28f10fc6ad",
+            "epqa-B0782338VH-bullet-da7df3eae9611758"
+          ]
+        },
+        {
+          "inference": "Roomy, not overly wide, and potentially not baggy are a controlled same-size contradiction or a fit guarantee.",
+          "reason": "The reports concern different bodies and partially unspecified shoe sizes; one CQA is a prediction for 10W/average calves.",
+          "sourceIds": [
+            "epqa-B0782338VH-cqa-d2db78f5ea3945e8",
+            "epqa-B0782338VH-cqa-96b38e7f9f6e961e",
+            "epqa-B0782338VH-review-c4868aafa9ff5f5d",
+            "epqa-B0782338VH-review-0293d94a5f3d8f1b",
+            "epqa-B0782338VH-review-ced837960da9ce0e"
+          ]
+        }
+      ],
+      "sourceIds": [
+        "epqa-B0782338VH-bullet-da7df3eae9611758",
+        "epqa-B0782338VH-attribute-678820f30956415b",
+        "epqa-B0782338VH-bullet-6e2f3f28f10fc6ad",
+        "epqa-B0782338VH-review-2a3e533ba10492fb",
+        "epqa-B0782338VH-review-639c021ead47ed18",
+        "epqa-B0782338VH-description-07f24306889521e4",
+        "epqa-B0782338VH-attribute-aa0af3e04916a871",
+        "epqa-B0782338VH-description-f306a852e2ded192",
+        "epqa-B0782338VH-review-9679db9c2a547c8b",
+        "epqa-B0782338VH-review-fd039fd61f57c85a",
+        "epqa-B0782338VH-review-5afedbcb08ec1cba",
+        "epqa-B0782338VH-cqa-d2db78f5ea3945e8",
+        "epqa-B0782338VH-review-1b1394aa636310a7",
+        "epqa-B0782338VH-cqa-96b38e7f9f6e961e",
+        "epqa-B0782338VH-attribute-13e3bc7a76edff4f",
+        "epqa-B0782338VH-attribute-7c8d97450d13e31a",
+        "epqa-B0782338VH-review-ced837960da9ce0e",
+        "epqa-B0782338VH-cqa-3736cf6cd080c05b",
+        "epqa-B0782338VH-review-714819fd33e1082a",
+        "epqa-B0782338VH-review-c4868aafa9ff5f5d",
+        "epqa-B0782338VH-review-0293d94a5f3d8f1b",
+        "epqa-B0782338VH-description-40d9c50462faff45",
+        "epqa-B0782338VH-attribute-011271d578052742",
+        "epqa-B0782338VH-review-97f9c0c5dd72f06c",
+        "epqa-B0782338VH-review-7799b32de417323c"
+      ]
+    },
+    {
+      "caseId": "retrieval-coverage-train-7340",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "Reviewed all 20 source parents and all 4 original CQA questions. Household kitchen utility cart is consumer eligible. The protected Home Styles Biscayne outdoor dining set shares a brand but is a different product family; no product, model, or scoped packet overlap was found. The saved CQA questions concern dimensions, assembly, and shelf clearance, not botanical species. General hardwood descriptions and component-level plywood/laminate reports do not establish a species or a necessary logical contradiction.",
+      "requiredSupportedFacts": [
+        {
+          "fact": "The listing describes sustainable hardwood, and the material attribute says hardwood.",
+          "sourceIds": [
+            "epqa-B002PNL41Y-description-ec31bcc8d78088c0",
+            "epqa-B002PNL41Y-bullet-04cb231ae189581f",
+            "epqa-B002PNL41Y-attribute-332e8a7ec8961b94"
+          ],
+          "qualification": "Hardwood is a broad material category, not a botanical species."
+        },
+        {
+          "fact": "The description gives a natural finish and clear coat intended to protect against marring from normal use.",
+          "sourceIds": [
+            "epqa-B002PNL41Y-description-ec31bcc8d78088c0",
+            "epqa-B002PNL41Y-attribute-17e73c3654bb5292"
+          ],
+          "qualification": "Finish and natural color describe treatment/appearance, not wood species."
+        },
+        {
+          "fact": "One reviewer calls the wood some type of laminate; another reports solid wood on the body except a plywood top and bottom shelf.",
+          "sourceIds": [
+            "epqa-B002PNL41Y-review-947dd7e37d58dbf9",
+            "epqa-B002PNL41Y-review-43098ad741eb22e2"
+          ],
+          "qualification": "Customer descriptions of construction, with uncertainty in some type of laminate. These may concern different components; do not turn them into verified species identification or an unavoidable conflict with the general hardwood listing."
+        }
+      ],
+      "unresolvedRelationships": [
+        {
+          "relationship": "The botanical wood species used in the cart or its components.",
+          "reason": "No supplied source names a species. Hardwood, natural finish, laminate, and plywood are not species names.",
+          "sourceIds": [
+            "epqa-B002PNL41Y-description-ec31bcc8d78088c0",
+            "epqa-B002PNL41Y-bullet-04cb231ae189581f",
+            "epqa-B002PNL41Y-review-947dd7e37d58dbf9",
+            "epqa-B002PNL41Y-attribute-332e8a7ec8961b94",
+            "epqa-B002PNL41Y-review-43098ad741eb22e2",
+            "epqa-B002PNL41Y-attribute-17e73c3654bb5292"
+          ]
+        },
+        {
+          "relationship": "The exact verified construction and species of every component.",
+          "reason": "The listing is general and the detailed component observations are customer reports; plywood or laminate construction does not resolve the species of constituent layers or veneers.",
+          "sourceIds": [
+            "epqa-B002PNL41Y-description-ec31bcc8d78088c0",
+            "epqa-B002PNL41Y-review-947dd7e37d58dbf9",
+            "epqa-B002PNL41Y-attribute-332e8a7ec8961b94",
+            "epqa-B002PNL41Y-review-43098ad741eb22e2"
+          ]
+        }
+      ],
+      "prohibitedInferences": [
+        {
+          "inference": "The cart is a particular species such as maple, birch, oak, rubberwood, or bamboo.",
+          "reason": "None of those species is identified in the saved evidence.",
+          "sourceIds": [
+            "epqa-B002PNL41Y-description-ec31bcc8d78088c0",
+            "epqa-B002PNL41Y-bullet-04cb231ae189581f",
+            "epqa-B002PNL41Y-review-947dd7e37d58dbf9",
+            "epqa-B002PNL41Y-attribute-332e8a7ec8961b94",
+            "epqa-B002PNL41Y-review-43098ad741eb22e2"
+          ]
+        },
+        {
+          "inference": "Hardwood or natural means the whole cart is solid wood with no plywood or laminate.",
+          "reason": "The listing does not make that component-wide promise, and a reviewer distinguishes the body from the top and bottom shelf.",
+          "sourceIds": [
+            "epqa-B002PNL41Y-description-ec31bcc8d78088c0",
+            "epqa-B002PNL41Y-attribute-332e8a7ec8961b94",
+            "epqa-B002PNL41Y-review-43098ad741eb22e2"
+          ]
+        },
+        {
+          "inference": "The general hardwood listing and a plywood top necessarily contradict one another.",
+          "reason": "A broad wood category and a component’s layered construction can both be true; the sources do not specify mutually exclusive species.",
+          "sourceIds": [
+            "epqa-B002PNL41Y-description-ec31bcc8d78088c0",
+            "epqa-B002PNL41Y-bullet-04cb231ae189581f",
+            "epqa-B002PNL41Y-attribute-332e8a7ec8961b94",
+            "epqa-B002PNL41Y-review-43098ad741eb22e2"
+          ]
+        },
+        {
+          "inference": "Dimension, mobility, or sturdiness CQA answers establish the wood species.",
+          "reason": "Their original questions and answer bodies address different properties.",
+          "sourceIds": [
+            "epqa-B002PNL41Y-cqa-91f4c652067bf79d",
+            "epqa-B002PNL41Y-cqa-ec869277f909df2f",
+            "epqa-B002PNL41Y-cqa-8e5d8ed69821c3d6",
+            "epqa-B002PNL41Y-cqa-b9768e76b53bf263"
+          ]
+        }
+      ],
+      "sourceIds": [
+        "epqa-B002PNL41Y-description-ec31bcc8d78088c0",
+        "epqa-B002PNL41Y-bullet-04cb231ae189581f",
+        "epqa-B002PNL41Y-review-947dd7e37d58dbf9",
+        "epqa-B002PNL41Y-attribute-332e8a7ec8961b94",
+        "epqa-B002PNL41Y-review-43098ad741eb22e2",
+        "epqa-B002PNL41Y-bullet-1cb2781665ac5fcb",
+        "epqa-B002PNL41Y-attribute-59394f2610d63910",
+        "epqa-B002PNL41Y-attribute-17e73c3654bb5292",
+        "epqa-B002PNL41Y-review-f29e3af86d5e2443",
+        "epqa-B002PNL41Y-review-13a6ba33e95c59f8",
+        "epqa-B002PNL41Y-attribute-d9ef5b5b7b0262ad",
+        "epqa-B002PNL41Y-bullet-b98b61387c02350a",
+        "epqa-B002PNL41Y-cqa-91f4c652067bf79d",
+        "epqa-B002PNL41Y-cqa-ec869277f909df2f",
+        "epqa-B002PNL41Y-review-9ec2c89d8c5341dc",
+        "epqa-B002PNL41Y-attribute-15a1610a51542d7b",
+        "epqa-B002PNL41Y-attribute-86c854182f7f5b84",
+        "epqa-B002PNL41Y-description-907506d064894f91",
+        "epqa-B002PNL41Y-cqa-8e5d8ed69821c3d6",
+        "epqa-B002PNL41Y-cqa-b9768e76b53bf263"
+      ]
+    },
+    {
+      "caseId": "retrieval-coverage-train-677",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "Reviewed all 30 source parents and all 4 original CQA questions. Child costume is consumer eligible and separate from all supplied protected product/family/model/source packets. The actual question’s white & black / white labels are ambiguous. The relevant saved comparison CQA instead asks white versus multi (including whether multi is white or orange); its tentative picture-based equivalence cannot be silently remapped to the actual labels. Sizing CQA has a separate scope.",
+      "requiredSupportedFacts": [
+        {
+          "fact": "The saved color attribute is white.",
+          "sourceIds": [
+            "epqa-B000FGKC34-attribute-b30d7d85b15a0e2e"
+          ],
+          "qualification": "A listing color label alone does not certify equality between two selectable labels."
+        },
+        {
+          "fact": "A customer answering the white-versus-multi color question describes white as white with black stripes and colored space patches.",
+          "sourceIds": [
+            "epqa-B000FGKC34-cqa-83bc333f22834090"
+          ],
+          "qualification": "Direct description of the white option in the original comparison question, without direct confirmation of the actual white & black label."
+        },
+        {
+          "fact": "The product description lists NASA, USA flag, commander, and space shuttle patches; a reviewer also describes NASA patches and a faux leather collar.",
+          "sourceIds": [
+            "epqa-B000FGKC34-description-fb7abae50505335f",
+            "epqa-B000FGKC34-review-ad2988825bc968a9"
+          ],
+          "qualification": "Supports useful appearance details of the described suit; does not prove every selectable variant is identical."
+        },
+        {
+          "fact": "Another respondent thinks multi is the same as white because the displayed pictures look identical when either is selected.",
+          "sourceIds": [
+            "epqa-B000FGKC34-cqa-8fee29e9e6571e04"
+          ],
+          "qualification": "Explicitly tentative and image-based; preserve I think and the original white-versus-multi scope."
+        }
+      ],
+      "unresolvedRelationships": [
+        {
+          "relationship": "Whether the actual white & black and white options are the same physical costume.",
+          "reason": "No saved answer directly compares that exact pair of labels or maps white & black to multi.",
+          "sourceIds": [
+            "epqa-B000FGKC34-attribute-b30d7d85b15a0e2e",
+            "epqa-B000FGKC34-cqa-83bc333f22834090",
+            "epqa-B000FGKC34-cqa-8fee29e9e6571e04"
+          ]
+        },
+        {
+          "relationship": "Whether identical selector pictures establish identical delivered white and multi variants.",
+          "reason": "The relevant respondent offers a belief based on pictures, without a physical side-by-side comparison or verified variant mapping.",
+          "sourceIds": [
+            "epqa-B000FGKC34-cqa-8fee29e9e6571e04"
+          ]
+        }
+      ],
+      "prohibitedInferences": [
+        {
+          "inference": "The actual two options are definitely identical.",
+          "reason": "The relevant comparison concerns white and multi, and the equivalence report is tentative.",
+          "sourceIds": [
+            "epqa-B000FGKC34-cqa-83bc333f22834090",
+            "epqa-B000FGKC34-cqa-8fee29e9e6571e04"
+          ]
+        },
+        {
+          "inference": "Multi is definitely white, definitely orange, or necessarily the same label as white & black.",
+          "reason": "The original question asks about these possibilities; its presence is not evidence that an alternative is true, and the answer only speculates from pictures.",
+          "sourceIds": [
+            "epqa-B000FGKC34-cqa-83bc333f22834090",
+            "epqa-B000FGKC34-cqa-8fee29e9e6571e04"
+          ]
+        },
+        {
+          "inference": "White means an entirely plain white suit without black details or colored patches.",
+          "reason": "The relevant CQA explicitly describes black stripes and colored space patches.",
+          "sourceIds": [
+            "epqa-B000FGKC34-cqa-83bc333f22834090",
+            "epqa-B000FGKC34-description-fb7abae50505335f"
+          ]
+        },
+        {
+          "inference": "Size 6/12 month pocket details, other sizing questions, or a price comparison resolve color-option equivalence.",
+          "reason": "Those saved statements have different size or pricing scopes and do not compare the actual labels.",
+          "sourceIds": [
+            "epqa-B000FGKC34-cqa-f174e0949366a708",
+            "epqa-B000FGKC34-description-d5dbba81940bdff3",
+            "epqa-B000FGKC34-review-c3765d45d232ddc9",
+            "epqa-B000FGKC34-cqa-3b1e1053e4d4d75f"
+          ]
+        }
+      ],
+      "sourceIds": [
+        "epqa-B000FGKC34-cqa-f174e0949366a708",
+        "epqa-B000FGKC34-review-743cc5417051fa62",
+        "epqa-B000FGKC34-review-6fb8c814684fcc32",
+        "epqa-B000FGKC34-review-0d9b9ecd8055be70",
+        "epqa-B000FGKC34-review-4b7affa41bf49f1f",
+        "epqa-B000FGKC34-description-9f24181c0b193686",
+        "epqa-B000FGKC34-attribute-48119d34b07b8e6d",
+        "epqa-B000FGKC34-description-d5dbba81940bdff3",
+        "epqa-B000FGKC34-review-ad2988825bc968a9",
+        "epqa-B000FGKC34-review-7be8b98a46c9c826",
+        "epqa-B000FGKC34-attribute-b30d7d85b15a0e2e",
+        "epqa-B000FGKC34-cqa-83bc333f22834090",
+        "epqa-B000FGKC34-review-a7246d43d8e19308",
+        "epqa-B000FGKC34-cqa-8fee29e9e6571e04",
+        "epqa-B000FGKC34-review-c3765d45d232ddc9",
+        "epqa-B000FGKC34-description-705eb83773f8c598",
+        "epqa-B000FGKC34-description-fb7abae50505335f",
+        "epqa-B000FGKC34-description-2b708c1308f4b7df",
+        "epqa-B000FGKC34-review-ac8a2bb043c0443a",
+        "epqa-B000FGKC34-review-ab589ba83bd53151",
+        "epqa-B000FGKC34-attribute-50b7e4d0d698df1c",
+        "epqa-B000FGKC34-cqa-3b1e1053e4d4d75f",
+        "epqa-B000FGKC34-attribute-e3a3d39bf4e87793",
+        "epqa-B000FGKC34-review-859488c970055f82",
+        "epqa-B000FGKC34-review-69526953cb25efde",
+        "epqa-B000FGKC34-bullet-d84a9fbfe1533f6e",
+        "epqa-B000FGKC34-bullet-a0aba9d663f41d92",
+        "epqa-B000FGKC34-bullet-8b84ccbe509a6946",
+        "epqa-B000FGKC34-review-b4d0f7b77a12df49",
+        "epqa-B000FGKC34-review-94522a80bf9558f3"
+      ]
+    },
+    {
+      "caseId": "retrieval-coverage-train-3500",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "Reviewed all 20 source parents and all 10 original CQA questions. Aftermarket consumer automotive shifter is eligible and separate from protected product/family/model/source packets. No original CQA asks about a 1967 Dodge D100. Transmission application statements are more precise than universal customer language from floor-mount, Wrangler, or Camaro questions. Cable inclusion has a genuine tentative opposing report, but that packaging issue does not by itself decide vehicle compatibility.",
+      "requiredSupportedFacts": [
+        {
+          "fact": "The description presents the shifter for most popular 3-speed automatic transmissions and says the console can be trimmed for custom fit.",
+          "sourceIds": [
+            "epqa-B000CIN02K-description-42a888d99ed80f3c"
+          ],
+          "qualification": "Most is limited scope; trimming a console is not proof of a particular transmission linkage or vehicle fit."
+        },
+        {
+          "fact": "The application bullet lists GM TH400, TH350, TH250, and TH200 automatic transmissions as fitting.",
+          "sourceIds": [
+            "epqa-B000CIN02K-bullet-45ec9ae61155a45e"
+          ],
+          "qualification": "Positive transmission applications, not a statement identifying the transmission in the user’s Dodge."
+        },
+        {
+          "fact": "A separate bullet explicitly excludes TH700R4, TH2004R, and AOD automatic transmissions.",
+          "sourceIds": [
+            "epqa-B000CIN02K-bullet-e714eaef69fd5a85"
+          ],
+          "qualification": "These exclusions constrain broad universal customer claims and the separate 3-/4-speed comment."
+        },
+        {
+          "fact": "A CQA answer specifically reports included cable and bracketry for a Ford C4.",
+          "sourceIds": [
+            "epqa-B000CIN02K-cqa-0bc7f056d1b99849"
+          ],
+          "qualification": "Its original question is C4 compatibility without additional adapters or parts. That model-specific report cannot confirm a Dodge D100."
+        }
+      ],
+      "unresolvedRelationships": [
+        {
+          "relationship": "Whether this shifter works with the user’s 1967 Dodge D100 transmission and installation.",
+          "reason": "The vehicle’s actual transmission and linkage/configuration are not given, and no saved source directly names this Dodge application.",
+          "sourceIds": [
+            "epqa-B000CIN02K-bullet-45ec9ae61155a45e",
+            "epqa-B000CIN02K-description-42a888d99ed80f3c",
+            "epqa-B000CIN02K-bullet-e714eaef69fd5a85",
+            "epqa-B000CIN02K-cqa-0bc7f056d1b99849"
+          ]
+        },
+        {
+          "relationship": "Cable inclusion in every supplied package.",
+          "reason": "Several CQA answers say cable and brackets are included, while one says the cable does not come with it I believe. The latter is tentative, and neither scope nor itemized kit manifest resolves all bundles.",
+          "sourceIds": [
+            "epqa-B000CIN02K-cqa-077a103b6760f70e",
+            "epqa-B000CIN02K-cqa-dc057e53a5f37a4a",
+            "epqa-B000CIN02K-cqa-0bc7f056d1b99849",
+            "epqa-B000CIN02K-cqa-bfc0888d379ec096"
+          ]
+        }
+      ],
+      "prohibitedInferences": [
+        {
+          "inference": "Universal, any American car, or any auto tranny confirms a 1967 Dodge D100.",
+          "reason": "Those assertions answer floor-mount, 1994 Wrangler, and 2002 Camaro questions; the same packet has specific exclusions and no Dodge application.",
+          "sourceIds": [
+            "epqa-B000CIN02K-cqa-62196dd10781a934",
+            "epqa-B000CIN02K-cqa-c3bf88362c00d32f",
+            "epqa-B000CIN02K-cqa-9212ea694bde015f",
+            "epqa-B000CIN02K-bullet-e714eaef69fd5a85"
+          ]
+        },
+        {
+          "inference": "A 1967 Dodge D100 has a particular transmission, or the listed GM/C4 applications prove its fit.",
+          "reason": "The saved question provides no transmission identity or conversion details.",
+          "sourceIds": [
+            "epqa-B000CIN02K-bullet-45ec9ae61155a45e",
+            "epqa-B000CIN02K-cqa-0bc7f056d1b99849",
+            "epqa-B000CIN02K-description-42a888d99ed80f3c"
+          ]
+        },
+        {
+          "inference": "The shifter fits every 4-speed automatic.",
+          "reason": "A CQA reply to a 1972 Camaro Z28/3-speed question broadly mentions 3 and 4 speeds, but named transmissions are explicitly excluded.",
+          "sourceIds": [
+            "epqa-B000CIN02K-cqa-e7dd1bee52ede6f5",
+            "epqa-B000CIN02K-bullet-e714eaef69fd5a85"
+          ]
+        },
+        {
+          "inference": "The speculative BW35 answer is verified compatibility or transferable confirmation for the Dodge.",
+          "reason": "I do not see why not is tentative and originally asks about adapting a cable plate to a BW35.",
+          "sourceIds": [
+            "epqa-B000CIN02K-cqa-46b17c526a12f8c5"
+          ]
+        },
+        {
+          "inference": "The uncertain no-cable answer and repeated inclusion answers are equally certain or resolve transmission fit.",
+          "reason": "The no-cable respondent says I believe; package contents and transmission compatibility are separate claims.",
+          "sourceIds": [
+            "epqa-B000CIN02K-cqa-077a103b6760f70e",
+            "epqa-B000CIN02K-cqa-dc057e53a5f37a4a",
+            "epqa-B000CIN02K-cqa-0bc7f056d1b99849",
+            "epqa-B000CIN02K-cqa-bfc0888d379ec096"
+          ]
+        }
+      ],
+      "sourceIds": [
+        "epqa-B000CIN02K-cqa-077a103b6760f70e",
+        "epqa-B000CIN02K-cqa-dc057e53a5f37a4a",
+        "epqa-B000CIN02K-cqa-0bc7f056d1b99849",
+        "epqa-B000CIN02K-review-8186e5cb255b5047",
+        "epqa-B000CIN02K-cqa-bfc0888d379ec096",
+        "epqa-B000CIN02K-attribute-d595d27f63cf39f0",
+        "epqa-B000CIN02K-description-dd0ec259241577f8",
+        "epqa-B000CIN02K-attribute-7ca8fa3a99c50bed",
+        "epqa-B000CIN02K-review-eee0599de899f060",
+        "epqa-B000CIN02K-review-fc11249d6bd06fa0",
+        "epqa-B000CIN02K-bullet-45ec9ae61155a45e",
+        "epqa-B000CIN02K-cqa-62196dd10781a934",
+        "epqa-B000CIN02K-cqa-d2362b2306615822",
+        "epqa-B000CIN02K-cqa-c3bf88362c00d32f",
+        "epqa-B000CIN02K-cqa-9212ea694bde015f",
+        "epqa-B000CIN02K-description-42a888d99ed80f3c",
+        "epqa-B000CIN02K-bullet-e714eaef69fd5a85",
+        "epqa-B000CIN02K-attribute-0391e599f283efb6",
+        "epqa-B000CIN02K-cqa-46b17c526a12f8c5",
+        "epqa-B000CIN02K-cqa-e7dd1bee52ede6f5"
+      ]
+    },
+    {
+      "caseId": "retrieval-coverage-train-4621",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "Reviewed all 10 source parents and all 7 original CQA questions. Lamps for a home tanning bed are consumer eligible; a salon-oriented quality complaint does not change the target home-product domain. Product/family/model/source packets are separate from supplied protections. The strongest fit report is attached to the exact Sunquest Pro 16SE original question even though its answer abbreviates the name to Pro 16. Unknown answers for other beds and a quality complaint for a 24 SF are differently scoped, not contradictory no-fit reports for the 16SE.",
+      "requiredSupportedFacts": [
+        {
+          "fact": "A customer answered yes to compatibility with Sunquest Pro 16SE, saying these will work in the Sunquest Pro 16.",
+          "sourceIds": [
+            "epqa-B00805EAI0-cqa-93baf8391daae606"
+          ],
+          "qualification": "The saved original question explicitly names Pro 16SE, so this is a directly relevant positive customer report. Attribute it as a report; technical or physical verification was not performed."
+        },
+        {
+          "fact": "A separate answer says the lamps will work in most Sunquest beds when responding to a Pro 22 RS fit question.",
+          "sourceIds": [
+            "epqa-B00805EAI0-cqa-1101c9d7eb7ecf44"
+          ],
+          "qualification": "Broad customer assertion in a different model scope; it is secondary context, not a necessary bridge to the exact-model report."
+        }
+      ],
+      "unresolvedRelationships": [
+        {
+          "relationship": "Independent technical/manufacturer verification for the user’s particular bed configuration.",
+          "reason": "The direct compatibility answer supplies no installation or socket/ballast requirements. This limitation does not negate the useful exact-question customer report or make the case ineligible.",
+          "sourceIds": [
+            "epqa-B00805EAI0-cqa-93baf8391daae606",
+            "epqa-B00805EAI0-cqa-1101c9d7eb7ecf44"
+          ]
+        }
+      ],
+      "prohibitedInferences": [
+        {
+          "inference": "A shared Sunquest family name or the most-beds assertion proves fit for every Sunquest model.",
+          "reason": "The broad report is not a model-by-model verified application list.",
+          "sourceIds": [
+            "epqa-B00805EAI0-cqa-1101c9d7eb7ecf44"
+          ]
+        },
+        {
+          "inference": "The do-not-know replies contradict the positive 16SE report.",
+          "reason": "Their original questions concern Wolff N-24XPH, ProSun 2400, and Sunquest Pro 20 S respectively.",
+          "sourceIds": [
+            "epqa-B00805EAI0-cqa-3de278cb283b42c6",
+            "epqa-B00805EAI0-cqa-53cd029db031b6f4",
+            "epqa-B00805EAI0-cqa-a0fb3f1364e075b3",
+            "epqa-B00805EAI0-cqa-93baf8391daae606"
+          ]
+        },
+        {
+          "inference": "The negative salon/home quality complaint is an explicit report that the lamps do not fit a Sunquest Pro 16SE.",
+          "reason": "Its original question names Sunquest 24 SF, and its answer criticizes product quality without stating a fit result.",
+          "sourceIds": [
+            "epqa-B00805EAI0-cqa-af3e85d8e44e6685"
+          ]
+        },
+        {
+          "inference": "These Dark Tan II lamps have 2.6% UVB or the alternative lamp recommendation proves 16SE compatibility.",
+          "reason": "The 2.6% remark describes a Sol Soft lamp in an original ERS Sol Soft AH3 24 100W replacement question; the suggested Super Sun Deep Tan F71 5000 is another named lamp.",
+          "sourceIds": [
+            "epqa-B00805EAI0-cqa-a50ea7247fc2825b"
+          ]
+        },
+        {
+          "inference": "A consumer yes report establishes safe exposure schedules, equivalent UV output, or medical/skin safety.",
+          "reason": "The compatibility answer supplies no such evidence.",
+          "sourceIds": [
+            "epqa-B00805EAI0-cqa-93baf8391daae606"
+          ]
+        }
+      ],
+      "sourceIds": [
+        "epqa-B00805EAI0-cqa-93baf8391daae606",
+        "epqa-B00805EAI0-cqa-1101c9d7eb7ecf44",
+        "epqa-B00805EAI0-cqa-3de278cb283b42c6",
+        "epqa-B00805EAI0-cqa-53cd029db031b6f4",
+        "epqa-B00805EAI0-cqa-a0fb3f1364e075b3",
+        "epqa-B00805EAI0-description-00340de0f33b2694",
+        "epqa-B00805EAI0-attribute-5e6a8f30f0125321",
+        "epqa-B00805EAI0-attribute-f07cb93b42059f83",
+        "epqa-B00805EAI0-cqa-a50ea7247fc2825b",
+        "epqa-B00805EAI0-cqa-af3e85d8e44e6685"
+      ]
+    },
+    {
+      "caseId": "retrieval-coverage-train-2032",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "Reviewed all 10 source parents and the 1 original CQA question. A domestic garage-door wired control panel is consumer eligible. The protected LiftMaster 828LM Internet Gateway is a different product family from this 41A5273-1 wired wall panel; shared brand/system use alone does not make them variants. No protected product, exact model/target identifier, or scoped packet overlap was found. The actual 378LM replacement relation is not explicitly answered. Package dimensions are not installed item dimensions or electrical compatibility evidence.",
+      "requiredSupportedFacts": [
+        {
+          "fact": "Customers describe replacement use for older 2-wire LiftMaster/Chamberlain garage-door openers and say Chamberlain and LiftMaster versions of this switch are interchangeable.",
+          "sourceIds": [
+            "epqa-B000F5KF1O-review-04dbb513b21d4091",
+            "epqa-B000F5KF1O-review-ee0d36f085d19a41"
+          ],
+          "qualification": "Generic customer replacement/interchange reports, without naming 378LM."
+        },
+        {
+          "fact": "A reviewer reports replacing a nine-year-old Raynor control panel and describes the unit as shared across multiple brands.",
+          "sourceIds": [
+            "epqa-B000F5KF1O-review-9e223ed98c2a4367"
+          ],
+          "qualification": "A specific successful replacement anecdote, with no part-number equivalence to 378LM."
+        },
+        {
+          "fact": "The saved CQA says it will work on any LiftMaster opener as long as it does not have a yellow learn button.",
+          "sourceIds": [
+            "epqa-B000F5KF1O-cqa-b195d662cc937848"
+          ],
+          "qualification": "Customer assertion originally answering a Chamberlain Whisper Drive question. Preserve the yellow-button condition and the original scope; it does not independently prove 378LM interchangeability."
+        }
+      ],
+      "unresolvedRelationships": [
+        {
+          "relationship": "Compatibility with or replacement of the LiftMaster 378LM wall control.",
+          "reason": "No supplied source names 378LM. Same-brand and broad older-2-wire reports do not establish this exact part-to-part relation.",
+          "sourceIds": [
+            "epqa-B000F5KF1O-review-a1a5768f2c8765fd",
+            "epqa-B000F5KF1O-review-ee0d36f085d19a41",
+            "epqa-B000F5KF1O-review-04dbb513b21d4091",
+            "epqa-B000F5KF1O-review-9e223ed98c2a4367",
+            "epqa-B000F5KF1O-cqa-b195d662cc937848",
+            "epqa-B000F5KF1O-review-8c552af825df8e8c"
+          ]
+        },
+        {
+          "relationship": "Whether the user’s opener meets the condition in the saved compatibility CQA.",
+          "reason": "The question identifies a wall-control number, with no opener model or learn-button information.",
+          "sourceIds": [
+            "epqa-B000F5KF1O-cqa-b195d662cc937848"
+          ]
+        }
+      ],
+      "prohibitedInferences": [
+        {
+          "inference": "This is a confirmed direct 378LM replacement because both are LiftMaster or have broadly similar functions.",
+          "reason": "The necessary model-specific relationship is absent.",
+          "sourceIds": [
+            "epqa-B000F5KF1O-review-a1a5768f2c8765fd",
+            "epqa-B000F5KF1O-review-ee0d36f085d19a41",
+            "epqa-B000F5KF1O-review-04dbb513b21d4091",
+            "epqa-B000F5KF1O-cqa-b195d662cc937848"
+          ]
+        },
+        {
+          "inference": "The yellow-learn-button condition is an official guarantee for every opener without that button.",
+          "reason": "It is a customer CQA assertion made in a Whisper Drive question, without a manufacturer application list.",
+          "sourceIds": [
+            "epqa-B000F5KF1O-cqa-b195d662cc937848"
+          ]
+        },
+        {
+          "inference": "The 3280 fragment proves successful use of this panel on a 3280 opener or with 378LM.",
+          "reason": "The snippet only says an installer used an old Genie wall button when installing a LiftMaster 3280; it does not describe the outcome of installing this panel.",
+          "sourceIds": [
+            "epqa-B000F5KF1O-review-8c552af825df8e8c"
+          ]
+        },
+        {
+          "inference": "The saved package dimensions prove installed fit, electrical/protocol compatibility, or physical correctness of the numeric values.",
+          "reason": "The attribute is item_package_dimensions, and its raw units/values and normalized inch values include inconsistencies. It is neither a verified item measurement nor a compatibility specification.",
+          "sourceIds": [
+            "epqa-B000F5KF1O-attribute-7983dd422ac4ac92"
+          ]
+        }
+      ],
+      "sourceIds": [
+        "epqa-B000F5KF1O-review-a1a5768f2c8765fd",
+        "epqa-B000F5KF1O-review-ee0d36f085d19a41",
+        "epqa-B000F5KF1O-review-04dbb513b21d4091",
+        "epqa-B000F5KF1O-review-9e223ed98c2a4367",
+        "epqa-B000F5KF1O-cqa-b195d662cc937848",
+        "epqa-B000F5KF1O-attribute-a4ca7f424cbd4f67",
+        "epqa-B000F5KF1O-bullet-64a662a51cb5c7ab",
+        "epqa-B000F5KF1O-attribute-7983dd422ac4ac92",
+        "epqa-B000F5KF1O-review-adba2690d746d273",
+        "epqa-B000F5KF1O-review-8c552af825df8e8c"
+      ]
+    },
+    {
+      "caseId": "retrieval-coverage-train-1268",
+      "sourceScopeReviewed": true,
+      "familySeparationReviewed": true,
+      "notes": "Reviewed all 20 source parents and all 7 original CQA questions. Consumer stroller standing board is eligible and separate from protected product/family/model/source packets. Multiple sources support supplied attachment adapters. Three hook-top sizes and six grabber fittings describe differently named components and are not necessarily a contradiction. The Quinny answer recommends a different named Englacha 2-in-1 Cozy X Rider; that product’s universal connectors must not be attributed to this board.",
+      "requiredSupportedFacts": [
+        {
+          "fact": "The board is reported to include multiple attachment adapters or fittings rather than requiring the standard supplied attachment pieces to be purchased separately.",
+          "sourceIds": [
+            "epqa-B0045Y1F4W-review-18c57c3a4feda886",
+            "epqa-B0045Y1F4W-review-8666022bb1d08f74",
+            "epqa-B0045Y1F4W-cqa-37822c1567302ac8",
+            "epqa-B0045Y1F4W-cqa-3d9601a678afb216",
+            "epqa-B0045Y1F4W-cqa-7632bbb45950dda3"
+          ],
+          "qualification": "Repeated owner/CQA descriptions support inclusion; none is a complete itemized manifest for every future seller bundle."
+        },
+        {
+          "fact": "One reviewer reports three different hook-top sizes, while a CQA answer reports six fittings for the grabbers that hook onto a stroller.",
+          "sourceIds": [
+            "epqa-B0045Y1F4W-review-8666022bb1d08f74",
+            "epqa-B0045Y1F4W-cqa-37822c1567302ac8"
+          ],
+          "qualification": "Keep the component names and counts separate. The six-fittings answer originally concerns a Bumbleride Indie Twin; these counts do not by themselves conflict or establish that nine pieces are included."
+        },
+        {
+          "fact": "The description says the Junior Rider Plus HDPE attaches to almost any carriage with one horizontal tube/axle in the rear structure.",
+          "sourceIds": [
+            "epqa-B0045Y1F4W-description-738ac4e874b285f6",
+            "epqa-B0045Y1F4W-description-f74971dce72d67de"
+          ],
+          "qualification": "Design condition and almost-any scope, not universal stroller fit."
+        },
+        {
+          "fact": "A customer says attachments came with the board but none truly matched that stroller’s rear crossbar.",
+          "sourceIds": [
+            "epqa-B0045Y1F4W-review-fd3c337b543ae693"
+          ],
+          "qualification": "Demonstrates that supplied attachments do not guarantee fit for every stroller; the stroller model is absent in the snippet."
+        }
+      ],
+      "unresolvedRelationships": [
+        {
+          "relationship": "Whether the included connectors fit the particular user’s stroller or a custom adapter would be needed.",
+          "reason": "No stroller model is given; the rear-horizontal-bar condition and a reported mismatch prevent a universal assurance.",
+          "sourceIds": [
+            "epqa-B0045Y1F4W-description-738ac4e874b285f6",
+            "epqa-B0045Y1F4W-description-f74971dce72d67de",
+            "epqa-B0045Y1F4W-review-fd3c337b543ae693"
+          ]
+        },
+        {
+          "relationship": "The complete count and identity of every supplied component in the user’s seller bundle.",
+          "reason": "Sources describe lots of adapter pieces, three hook-top sizes, and six grabber fittings, rather than a single component inventory.",
+          "sourceIds": [
+            "epqa-B0045Y1F4W-review-18c57c3a4feda886",
+            "epqa-B0045Y1F4W-review-8666022bb1d08f74",
+            "epqa-B0045Y1F4W-cqa-37822c1567302ac8"
+          ]
+        }
+      ],
+      "prohibitedInferences": [
+        {
+          "inference": "All connectors for every stroller are guaranteed included or every stroller will fit.",
+          "reason": "Broad fit predictions are limited by the horizontal-rear-bar design requirement and an owner’s actual attachment mismatch.",
+          "sourceIds": [
+            "epqa-B0045Y1F4W-cqa-3d9601a678afb216",
+            "epqa-B0045Y1F4W-review-0e324c245a25e697",
+            "epqa-B0045Y1F4W-cqa-7632bbb45950dda3",
+            "epqa-B0045Y1F4W-cqa-5e527e59827242d4",
+            "epqa-B0045Y1F4W-description-738ac4e874b285f6",
+            "epqa-B0045Y1F4W-review-fd3c337b543ae693"
+          ]
+        },
+        {
+          "inference": "The 2-in-1 Cozy X Rider’s universal frame connectors are included with this Plastic Board Rider.",
+          "reason": "That CQA recommends a differently named product for a Quinny Zapp Xtra 2; it does not describe this board’s box contents.",
+          "sourceIds": [
+            "epqa-B0045Y1F4W-cqa-e4933f9af5a68331"
+          ]
+        },
+        {
+          "inference": "Three hook-top sizes and six grabber fittings are a direct factual conflict or prove a nine-piece kit.",
+          "reason": "The descriptions identify different component categories and give no combined manifest.",
+          "sourceIds": [
+            "epqa-B0045Y1F4W-review-8666022bb1d08f74",
+            "epqa-B0045Y1F4W-cqa-37822c1567302ac8"
+          ]
+        },
+        {
+          "inference": "The planned bungee cord for holding the board when folded is a supplied attachment.",
+          "reason": "The reviewer says they plan to use a bungee cord of some sort for travel, rather than reporting one in the box.",
+          "sourceIds": [
+            "epqa-B0045Y1F4W-review-18c57c3a4feda886"
+          ]
+        },
+        {
+          "inference": "The follow-up about a Phil & Teds Navigator is a successful compatibility report.",
+          "reason": "The saved answer only asks whether the original asker tried it; it supplies no result.",
+          "sourceIds": [
+            "epqa-B0045Y1F4W-cqa-75699c40b13f064d"
+          ]
+        }
+      ],
+      "sourceIds": [
+        "epqa-B0045Y1F4W-cqa-3d9601a678afb216",
+        "epqa-B0045Y1F4W-review-0e324c245a25e697",
+        "epqa-B0045Y1F4W-cqa-7632bbb45950dda3",
+        "epqa-B0045Y1F4W-cqa-e27b2e963f6ae473",
+        "epqa-B0045Y1F4W-cqa-5e527e59827242d4",
+        "epqa-B0045Y1F4W-description-738ac4e874b285f6",
+        "epqa-B0045Y1F4W-bullet-795a1a697204423d",
+        "epqa-B0045Y1F4W-attribute-f861fad3fb88d8ca",
+        "epqa-B0045Y1F4W-review-d7d2f5930bca11ca",
+        "epqa-B0045Y1F4W-cqa-75699c40b13f064d",
+        "epqa-B0045Y1F4W-review-18c57c3a4feda886",
+        "epqa-B0045Y1F4W-review-8666022bb1d08f74",
+        "epqa-B0045Y1F4W-review-fd3c337b543ae693",
+        "epqa-B0045Y1F4W-cqa-37822c1567302ac8",
+        "epqa-B0045Y1F4W-cqa-e4933f9af5a68331",
+        "epqa-B0045Y1F4W-description-900b8c35305f708f",
+        "epqa-B0045Y1F4W-attribute-7d1f1c82d60f3778",
+        "epqa-B0045Y1F4W-description-f74971dce72d67de",
+        "epqa-B0045Y1F4W-review-fab4471ee1a85c70",
+        "epqa-B0045Y1F4W-review-1f1d03d9181457fc"
+      ]
+    }
+  ],
+  "limitations": [
+    "Independent AI source and family review only; humanJudgments=0 and qualityClaimEligible=false. This file creates pre-generation source references and supplies no generated-answer quality claim.",
+    "Semantic review used the eight actual questions, their product identity metadata, all 154 complete saved source parents, all 36 separate original CQA question scopes, and supplied protected prior/consumed/exposure projections. No model answer, generated outcome, grading result, provider API, or web source was used. Retrieval-v1.json was handled as raw bytes solely for SHA256 binding; retrieval arm selections and contexts were not inspected.",
+    "All eight products have ordinary consumer uses in the saved descriptions/questions, including automotive DIY, a home tanning bed, and a domestic garage-door control. Commercial wording in individual customer comments does not establish a consumer-domain blocker.",
+    "Protection audit: no current product ID overlaps the 115 protected IDs. No exact normalized current model/part/target identifier matched the 515 protected target identifiers or supplied prior/consumed model projections. Semantic family review found no current product variant or same product family in the supplied protection titles; shared Home Styles and LiftMaster brands were checked as distinct functional product families, not assumed equivalent.",
+    "Scoped-packet audit: no current parent matched the 545 unique protected prior/consumed packet fingerprints or the two additional unique exposure workspace packets, and no packet was duplicated across the current eight cases. Fingerprints use SHA256 of compact UTF-8 JSON [NFKC/casefold/whitespace-normalized text, identically normalized originalQuestion or empty string], with ensure_ascii=false. ID, label, reference, and product identity are excluded from that comparison.",
+    "Separation can be established only against the protections supplied in cohort.json and exposure-audit.json; those inventories were not independently expanded by reading historical files, chats, generated results, or external data.",
+    "Listing attributes, descriptions, bullets, reviews, and CQA are saved assertions. No external physical, electrical, botanical, mechanical, or manufacturer verification was performed. This is a factual-evidence limitation, not a reason to reject ordinary consumer source facts. Tentative reports, component/variant scope, item versus package dimensions, and direct exact-model reports remain explicitly qualified."
+  ]
+}

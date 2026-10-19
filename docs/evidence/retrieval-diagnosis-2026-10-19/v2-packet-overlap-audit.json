@@ -1,0 +1,7 @@
+{
+  "format": "source-packet-disjointness-v3",
+  "passed": true,
+  "overlaps": [],
+  "casesRetained": 12,
+  "historicalResultsChanged": false
+}
