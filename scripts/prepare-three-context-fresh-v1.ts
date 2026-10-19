@@ -1,3 +1,4 @@
+import type { ThreeContextManifest } from '../server/three-context-diagnostic.ts';
 /** Future fresh wrapper around the existing actual adapter. No execution or credential path. */
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
@@ -8,7 +9,7 @@ import { textHash } from '../server/product-corpus.ts';
 import { prepareThreeContext, verifyDiagnosticCheckpoint, DIAGNOSTIC_LEDGER, type DiagnosticPreparation, type DiagnosticCheckpoint } from '../server/three-context-diagnostic.ts';
 import { requiredThreeContextLiveFiles, verifyThreeContextLiveCheckpoints, type ThreeContextLivePreparation } from '../server/three-context-live.ts';
 import { prepareThreeContextEvaluation, reportThreeContextEvaluation } from '../server/three-context-evaluation.ts';
-import { readLedgerAnchor } from '../server/source-calibration-comparison.ts';
+import { readLedgerAnchor, readSourceCalibrationLedgerState, type SourceCalibrationLedgerState } from '../server/source-calibration-comparison.ts';
 import { replayFreshValidationContexts } from '../server/fresh-validation-v1.ts';
 import { assertFreshSnapshotBindings } from './fresh-validation-contexts-v1.ts';
 
@@ -46,6 +47,13 @@ export function verifyFreshDevelopmentOutcome(record: Json, actual: { planSha256
   assert.equal(actual.report.transportProvenance, 'live_router'); assert.equal(actual.report.scope, 'exposed_development_only');
   assert.equal(actual.report.focusedReview.length, 3);
   for (const row of actual.report.focusedReview) { assert.ok(row.reviewers.length > 0, 'Review all three development diagnostic answers before choosing whether validation is warranted.'); if (row.disagreementAxes.length) assert.equal(row.humanSourceChecked, true, 'Source-check substantive reviewer disagreements before a fresh paid proposal.'); }
+  for (const comparison of actual.report.caseComparisons ?? []) if (comparison.disagreements?.length) {
+    assert.equal(record.provenance, 'source_checked_human', 'Comparative reviewer disagreement needs a source-checked human outcome resolution.');
+    assert.ok(record.comparativeDisagreementResolution?.trim(), 'Preserve an explicit human rationale resolving comparative disagreement.');
+    for (const disagreement of comparison.disagreements) {
+      assert.ok(comparison.reviewerVerdicts.some((v: Json) => v.provenance === 'source_checked_human' && disagreement.labels.every((label: string) => [v.firstLabel, v.secondLabel].includes(label))), 'Save the focused human comparison rather than borrowing unrelated human axis checks.');
+    }
+  }
   assert.deepEqual(record.armLabels, actual.labels, 'Outcome review must use the exact private mapping after anonymous judgments are saved.');
   const pair = actual.report.caseComparisons?.flatMap((c: Json) => c.reviewerVerdicts).filter((v: Json) => new Set([v.firstLabel, v.secondLabel]).has(actual.labels.current) && new Set([v.firstLabel, v.secondLabel]).has(actual.labels.semantic)) ?? [];
   assert.ok(pair.length, 'Source-axis reviews alone do not establish a current-versus-candidate preference; save explicit anonymous comparisons.');
@@ -66,6 +74,19 @@ export function verifyFreshDevelopmentOutcome(record: Json, actual: { planSha256
   } else assert.equal(record.decision, 'allow_prospective_validation_preparation');
   assert.equal(record.qualityClaimEligible, false); assert.equal(record.paidExecutionAuthorized, false);
   return record;
+}
+/** Verify canonical local occurrence, not cryptographic provider authenticity. */
+export function verifyActualDevelopmentLedger(diagnostic: ThreeContextManifest, checkpoint: DiagnosticCheckpoint, state: SourceCalibrationLedgerState) {
+  assert.equal(checkpoint.provenance, 'live_router'); const observed = verifyDiagnosticCheckpoint(diagnostic, checkpoint); assert.equal(observed.completedAnswers, 3); assert.equal(diagnostic.document.scope, 'exposed_development_only');
+  const anchor = diagnostic.document.preparation.ledger; assert.equal(state.canonicalPath, DIAGNOSTIC_LEDGER); assert.equal(state.priorSpendUsd, .200281); assert.equal(state.pending, 0); assert.equal(state.owners, 0);
+  assert.equal(state.historicalRowsSha256, anchor.historicalRowsSha256, 'Changed non-development ledger history needs separate read-only reconciliation, never rerun the diagnostic.');
+  assert.equal(state.rows.length, diagnostic.document.slots.length, 'Every actual development attempt must occur in the canonical shared ledger.'); assert.equal(state.attempts, anchor.attempts + state.rows.length); assert.ok(Math.abs(state.reservedUsd - anchor.reservedUsd - state.rows.length * .1) < 1e-8);
+  for (const [index, slot] of diagnostic.document.slots.entries()) {
+    const step = checkpoint.steps[index]!, rows = state.rows.filter(row => row.run_id === slot.input.runId); assert.equal(rows.length, 1); const row = rows[0]!; assert.ok(step.receipt && row.status === 'completed' && !row.error_code);
+    for (const key of ['id', 'kind', 'status', 'error_code', 'receipt_json', 'model', 'input_tokens', 'output_tokens', 'allowance_usd'] as const) assert.equal(row[key], step.receipt[key], 'Saved development receipt must equal its actual canonical ledger row.');
+    assert.equal(row.id, step.attemptId);
+  }
+  return { verifiedActualDevelopmentAttempts: state.rows.length, canonicalLocalOccurrenceVerified: true, providerOriginIndependentlyAuthenticated: false };
 }
 export function mergeFreshBindings(...maps: Record<string, string>[]) {
   const result: Record<string, string> = {};
@@ -103,6 +124,7 @@ export async function prepareFreshThreeContext(inputsPath: string, output: strin
   const checkpoints = journal.bytes.trim().split('\n').map(line => JSON.parse(line) as DiagnosticCheckpoint);
   const actualResult = verifyThreeContextLiveCheckpoints(plan.document as any, checkpoints); assert.deepEqual(result.document, actualResult);
   assert.equal(plan.document.diagnostic.document.scope, 'exposed_development_only');
+  verifyActualDevelopmentLedger(plan.document.diagnostic, checkpoints.at(-1)!, readSourceCalibrationLedgerState(DIAGNOSTIC_LEDGER, .200281, plan.document.diagnostic.document.slots.map((s: Json) => s.input.runId)));
   const expectedEvaluation = prepareThreeContextEvaluation(plan.document as any, checkpoints, actualResult, anonymous.document as any); assert.deepEqual(evaluation.document, expectedEvaluation);
   const report = reportThreeContextEvaluation(evaluation.document as any, imported.map(v => v.document) as any);
   const observed = verifyDiagnosticCheckpoint(plan.document.diagnostic, checkpoints.at(-1)!);

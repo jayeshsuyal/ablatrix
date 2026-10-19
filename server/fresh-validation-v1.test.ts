@@ -1,9 +1,10 @@
+import { mockedThreeContext } from '../scripts/three-context-mock.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { freshValidationContexts, freshSeal, replayFreshValidationContexts, freshValidationCorpus } from './fresh-validation-v1.ts';
 import { mockedFreshValidation, syntheticFreshContexts } from '../scripts/fresh-validation-mock.ts';
 import { freshValidationCli, assertFreshSnapshotBindings } from '../scripts/fresh-validation-contexts-v1.ts';
-import { bindReviewedFreshContexts, verifyFreshDevelopmentOutcome, mergeFreshBindings } from '../scripts/prepare-three-context-fresh-v1.ts';
+import { bindReviewedFreshContexts, verifyFreshDevelopmentOutcome, verifyActualDevelopmentLedger, mergeFreshBindings } from '../scripts/prepare-three-context-fresh-v1.ts';
 
 test('fresh baseline/source-reference/candidate bridge preserves validation scope, eight misses and all24 screening rows', async () => {
   const f = await syntheticFreshContexts();
@@ -102,4 +103,17 @@ test('development preference gate retains ties and regressions and requires an e
   actual.report.caseComparisons[0].reviewerVerdicts[0] = { firstLabel: labels.current, secondLabel: labels.semantic, outcome: 'first_preferred', preferredLabel: labels.current };
   record.candidateVsCurrentVerdict = 'regression';
   assert.throws(() => verifyFreshDevelopmentOutcome(record, actual), /preferred baseline stops/);
+});
+
+test('opposing comparative preferences cannot bypass focused human resolution when source axes agree', () => {
+  const labels = { current: 'Answer 1', semantic: 'Answer 2', reference: 'Answer 3' }, record: any = { format: 'ablatrix-development-outcome-for-fresh-validation-v1', status: 'supports_prospective_validation_preparation', planSha256: 'a', resultFileSha256: 'b', evaluationPacketSha256: 'c', importedReviewFileSha256: ['d'], reviewer: 'SYNTHETIC', rationale: 'SYNTHETIC', provenance: 'independent_source_review_ai', armLabels: labels, noUnresolvedMaterialRegression: true, candidateVsCurrentVerdict: 'uncertain', decision: 'allow_bounded_exploratory_validation', exploratoryRationale: 'SYNTHETIC', qualityClaimEligible: false, paidExecutionAuthorized: false };
+  const actual: any = { planSha256:'a',resultFileSha256:'b',evaluationPacketSha256:'c',importedReviewFileSha256:['d'],labels,result:{transportProvenance:'live_router',plannedAnswers:3,completedAnswers:3,failedOrUnknownAnswers:0,unattemptedAnswers:0,retries:0},report:{transportProvenance:'live_router',scope:'exposed_development_only',focusedReview:Object.values(labels).map(label=>({label,reviewers:[{}],disagreementAxes:[]})),reviewRecords:[],caseComparisons:[{disagreements:[{labels:[labels.current,labels.semantic]}],reviewerVerdicts:[{firstLabel:labels.current,secondLabel:labels.semantic,outcome:'first_preferred',preferredLabel:labels.current,provenance:'ai_provisional'},{firstLabel:labels.current,secondLabel:labels.semantic,outcome:'second_preferred',preferredLabel:labels.semantic,provenance:'ai_provisional'}]}]}};
+  assert.throws(()=>verifyFreshDevelopmentOutcome(record,actual),/human outcome resolution/); record.provenance='source_checked_human'; record.comparativeDisagreementResolution='SYNTHETIC actual review required'; assert.throws(()=>verifyFreshDevelopmentOutcome(record,actual),/focused human comparison/);
+});
+test('relabeled mocked development receipts cannot qualify actual outcome without exact canonical occurrence', async () => {
+  const r=await mockedThreeContext(), checkpoint=structuredClone(r.checkpoint); checkpoint.provenance='live_router';
+  const anchor=r.manifest.document.preparation.ledger, state:any={...anchor,attempts:141,reservedUsd:14.1,rows:checkpoint.steps.map((s,i)=>({...s.receipt,run_id:r.manifest.document.slots[i]!.input.runId})),ownerRows:[]};
+  assert.equal(verifyActualDevelopmentLedger(r.manifest,checkpoint,state).verifiedActualDevelopmentAttempts,3);
+  const absent=structuredClone(state); absent.rows=[]; absent.attempts=138; absent.reservedUsd=13.8; assert.throws(()=>verifyActualDevelopmentLedger(r.manifest,checkpoint,absent),/canonical shared ledger/);
+  const changed=structuredClone(state); changed.rows[0].receipt_json += ' '; assert.throws(()=>verifyActualDevelopmentLedger(r.manifest,checkpoint,changed),/actual canonical ledger row/);
 });
