@@ -3,9 +3,10 @@ import assert from 'node:assert/strict';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { fileURLToPath } from 'node:url';
 import { textHash } from './product-corpus.ts';
 import { SEMANTIC_SUPPLEMENT_V5 } from './semantic-supplement-v5.ts';
-import { loadV5DevelopmentPreparationInputs } from '../scripts/prepare-three-context-v5.ts';
+import { bindReviewedV5DevelopmentResult, loadV5DevelopmentPreparationInputs, REVIEWED_V5_RESULT, verifyReviewedV5DevelopmentResult } from '../scripts/prepare-three-context-v5.ts';
 type Json = Record<string, any>;
 const encode = (value: unknown) => `${JSON.stringify(value, null, 2)}\n`;
 function fixture() {
@@ -65,4 +66,38 @@ test('v5 preparation rejects changed candidate, freeze format and paid/generated
     const f = fixture(); try { mutate(f); f.save(); assert.throws(f.load); assert.equal(existsSync(f.output), false); }
     finally { f.cleanup(); }
   }
+});
+test('fixed v5 result review rejects an arbitrary literal source append despite unchanged valid freeze/input hashes', () => {
+  const f = fixture(), repository = realpathSync(fileURLToPath(new URL('../', import.meta.url)));
+  try {
+    const officialBytes = readFileSync(join(repository, REVIEWED_V5_RESULT.path), 'utf8'), reviewBytes = readFileSync(join(repository, REVIEWED_V5_RESULT.reviewPath), 'utf8');
+    f.write(REVIEWED_V5_RESULT.path, officialBytes); f.write(REVIEWED_V5_RESULT.reviewPath, reviewBytes);
+    const pinned = verifyReviewedV5DevelopmentResult(REVIEWED_V5_RESULT.path, f.root); assert.equal(pinned.reviewRecord.review.verifiedCases, 12); assert.equal(pinned.reviewRecord.qualityClaimEligible, false);
+    const original = JSON.parse(officialBytes), changed = structuredClone(original), frozen = JSON.parse(readFileSync(join(repository, original.freeze.path), 'utf8'));
+    for (const map of [frozen.codeSha256, frozen.inputSha256]) for (const [path, sha] of Object.entries(map)) assert.equal(textHash(readFileSync(join(repository, path), 'utf8')), sha, 'All original frozen code and non-result inputs stay valid.');
+    const deck = JSON.parse(readFileSync(join(repository, 'docs/evidence/retrieval-source-coverage-v2-2026-10-18/deck-v1.json'), 'utf8'));
+    const row = changed.results[0], item = deck.cases.find((c: Json) => c.id === row.caseId), source = item.sources.find((s: Json) => !row.candidate.passages.some((p: Json) => p.id === s.id));
+    assert.ok(source && row.candidate.passages.length < 8);
+    row.candidate.passages.push({ id: source.id, productId: item.product.id, source: source.label, reference: source.label, text: source.text, sha256: textHash(source.text), ...(source.originalQuestion !== null ? { originalQuestion: source.originalQuestion } : {}), lexicalRank: null, semanticRank: null, score: 0 });
+    assert.ok(row.candidate.passages.length <= 8 && row.candidate.passages.reduce((n: number, p: Json) => n + p.text.length, 0) <= 12000);
+    assert.deepEqual(changed.freeze, original.freeze); assert.deepEqual(changed.candidate, original.candidate); assert.deepEqual(changed.summary, original.summary);
+    f.write(REVIEWED_V5_RESULT.path, encode(changed));
+    assert.throws(() => verifyReviewedV5DevelopmentResult(REVIEWED_V5_RESULT.path, f.root), /Unreviewed v5 result bytes/);
+    f.write('another-result.json', officialBytes); assert.throws(() => verifyReviewedV5DevelopmentResult('another-result.json', f.root), /reviewed result path/);
+    f.write(REVIEWED_V5_RESULT.path, officialBytes); f.write(REVIEWED_V5_RESULT.reviewPath, `${reviewBytes}\n`);
+    assert.throws(() => verifyReviewedV5DevelopmentResult(REVIEWED_V5_RESULT.path, f.root), /review record changed/);
+  } finally { f.cleanup(); }
+});
+test('context preparation rejects a changed first parsed snapshot even when later official bytes match the review pin', () => {
+  const f = fixture(), repository = realpathSync(fileURLToPath(new URL('../', import.meta.url)));
+  try {
+    const officialBytes = readFileSync(join(repository, REVIEWED_V5_RESULT.path), 'utf8'), original = JSON.parse(officialBytes);
+    f.write(REVIEWED_V5_RESULT.path, officialBytes); f.write(REVIEWED_V5_RESULT.reviewPath, readFileSync(join(repository, REVIEWED_V5_RESULT.reviewPath), 'utf8'));
+    assert.deepEqual(bindReviewedV5DevelopmentResult(structuredClone(original), REVIEWED_V5_RESULT.path, f.root), original);
+    const changedFirstSnapshot = structuredClone(original); changedFirstSnapshot.results[0].candidate.passages[0].originalQuestion = 'SYNTHETIC wrong question scope';
+    assert.deepEqual(changedFirstSnapshot.freeze, original.freeze);
+    assert.throws(() => bindReviewedV5DevelopmentResult(changedFirstSnapshot, REVIEWED_V5_RESULT.path, f.root), /Loaded v5 result snapshot differs/);
+    assert.equal(readFileSync(join(f.root, REVIEWED_V5_RESULT.path), 'utf8'), officialBytes, 'Later on-disk result is still the exact independently reviewed file.');
+    assert.equal(existsSync(f.output), false);
+  } finally { f.cleanup(); }
 });

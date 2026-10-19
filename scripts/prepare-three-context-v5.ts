@@ -12,6 +12,14 @@ import { SEMANTIC_SUPPLEMENT_V5 } from '../server/semantic-supplement-v5.ts';
 
 const directory = 'docs/evidence/retrieval-diagnosis-2026-10-19', source = 'docs/evidence/retrieval-source-coverage-v2-2026-10-18';
 const repository = realpathSync(fileURLToPath(new URL('../', import.meta.url)));
+/** Fixed-scope mechanical review pin. This is deliberately not a hash supplied
+ * by the comparison being checked: changing its candidate output must stop. */
+export const REVIEWED_V5_RESULT = Object.freeze({
+  path: `${directory}/semantic-supplement-v5-development-v2.json`,
+  fileSha256: 'ff3567bb1545843853706e9cf411249df63f81d7f14eae1a95eb1bb33583dd2f',
+  reviewPath: `${directory}/semantic-supplement-v5-reviewed-result-v1.json`,
+  reviewFileSha256: 'e988b607ec04b9bd70f3687109b98ffe60665bf95bcf5575157ab48ab9889bed'
+});
 function canonicalFile(root: string, path: string) {
   assert.ok(path && !isAbsolute(path) && !path.split(/[\\/]/).some(part => part === '..' || part === '.') && !path.includes('\\'), 'Use a canonical repository-relative input path.');
   const absolute = resolve(root, path);
@@ -23,6 +31,22 @@ function privateOutput(root: string, path: string) {
   assert.ok(rel.startsWith('.data/') && !isAbsolute(rel) && !rel.split('/').includes('..') && !existsSync(path), 'Use a new repository .data preparation path.');
   assert.equal(realpathSync(dirname(path)), dirname(path), 'Output parent must already exist and be canonical; preparation creates no directories.');
 }
+export function verifyReviewedV5DevelopmentResult(input: string, root = repository) {
+  const inputRelative = relative(root, resolve(root, input));
+  assert.equal(inputRelative, REVIEWED_V5_RESULT.path, 'This fixed development preparer requires the independently reviewed result path.');
+  const reviewBytes = readFileSync(canonicalFile(root, REVIEWED_V5_RESULT.reviewPath), 'utf8');
+  assert.equal(textHash(reviewBytes), REVIEWED_V5_RESULT.reviewFileSha256, 'The independent mechanical review record changed.');
+  const resultBytes = readFileSync(canonicalFile(root, inputRelative), 'utf8');
+  assert.equal(textHash(resultBytes), REVIEWED_V5_RESULT.fileSha256, 'Unreviewed v5 result bytes: replay/review every candidate row before preparing different contexts.');
+  return { reviewRecord: JSON.parse(reviewBytes), result: JSON.parse(resultBytes) };
+}
+/** Pin the parsed snapshot actually used for contexts, not a later disk read
+ * whose bytes may differ from the snapshot previously inspected by the loader. */
+export function bindReviewedV5DevelopmentResult(saved: unknown, input: string, root = repository) {
+  const pinned = verifyReviewedV5DevelopmentResult(input, root);
+  assert.deepEqual(saved, pinned.result, 'Loaded v5 result snapshot differs from the exact independently reviewed bytes.');
+  return pinned.result;
+}
 /** Pure file preparation boundary, separately testable without a ledger, model,
  * provider or credential. The actual CLI always supplies its own repository. */
 export function loadV5DevelopmentPreparationInputs(input: string, output: string, root = repository) {
@@ -33,7 +57,8 @@ export function loadV5DevelopmentPreparationInputs(input: string, output: string
   const saved = read(inputRelative); assert.equal(saved.format, 'ablatrix-semantic-supplement-v5-development-comparison-v1'); assert.deepEqual(saved.candidate, SEMANTIC_SUPPLEMENT_V5);
   assert.equal(saved.providerCalls, 0); assert.equal(saved.generatedAnswers, 0); assert.equal(saved.qualityClaimEligible, false);
   for (const key of ['paidExecutionAuthorized', 'activationAllowed']) if (key in saved) assert.equal(saved[key], false);
-  const freeze = read(saved.freeze.path); assert.equal(digest(saved.freeze.path), saved.freeze.fileSha256);
+  const freezeBytes = readFileSync(canonicalFile(root, saved.freeze.path), 'utf8'); assert.equal(textHash(freezeBytes), saved.freeze.fileSha256);
+  const freeze = JSON.parse(freezeBytes);
   assert.equal(freeze.format, 'ablatrix-semantic-supplement-v5-development-freeze-v1'); assert.deepEqual(freeze.candidate, SEMANTIC_SUPPLEMENT_V5);
   assert.equal(freeze.providerCalls, 0); assert.equal(freeze.qualityClaimEligible, false);
   for (const key of ['paidExecutionAuthorized', 'activationAllowed']) if (key in freeze) assert.equal(freeze[key], false);
@@ -49,7 +74,8 @@ export function loadV5DevelopmentPreparationInputs(input: string, output: string
 }
 export function prepareV5Development(input: string, output: string) {
 assert.ok(input && output, 'Usage: prepare-three-context-v5.ts V5_DEVELOPMENT_JSON NEW_PRIVATE_PREPARATION_JSON');
-const { root, path, inputRelative, saved, freeze, read, digest } = loadV5DevelopmentPreparationInputs(input, output);
+const { root, path, inputRelative, saved: loadedSnapshot, freeze, read, digest } = loadV5DevelopmentPreparationInputs(input, output);
+const saved = bindReviewedV5DevelopmentResult(loadedSnapshot, input, root);
 const deckPath = `${source}/deck-v1.json`, reviewPath = `${source}/source-review-v1.json`, baselinePath = `${source}/baseline-v1.json`;
 const deck = read(deckPath), review = read(reviewPath), baseline = read(baselinePath), originalPath = `${directory}/three-context-preparation-final.json`, original = read(originalPath);
 assert.equal(review.deckFileSha256, digest(deckPath)); assert.equal(review.baselineFileSha256, digest(baselinePath));
@@ -70,7 +96,7 @@ const cases: DiagnosticCase[] = gaps.map((assessed: any) => {
     designatedFacts: assessed.designatedFacts, referenceReview: { ...existing.referenceReview, sourcePoolSha256: diagnosticHash(completeSources) } };
 });
 const codeFiles = [...new Set([...requiredThreeContextLiveFiles(root), 'server/semantic-reranker-v4.ts', 'server/semantic-supplement-v5.ts', 'scripts/prepare-three-context-v5.ts', 'scripts/retrieval-diagnosis-v4.ts', 'scripts/retrieval-diagnosis-v5.ts', 'server/answer-diagnostic-evaluation.ts'])].sort();
-const artifactPaths = [...new Set([inputRelative, saved.freeze.path, ...Object.keys(freeze.inputSha256), deckPath, reviewPath, baselinePath, originalPath])].sort();
+const artifactPaths = [...new Set([inputRelative, REVIEWED_V5_RESULT.reviewPath, saved.freeze.path, ...Object.keys(freeze.inputSha256), deckPath, reviewPath, baselinePath, originalPath])].sort();
 const ledger = readLedgerAnchor(DIAGNOSTIC_LEDGER, .200281);
 const anchor = { canonicalPath: ledger.canonicalPath, historicalRowsSha256: ledger.historicalRowsSha256, attempts: ledger.attempts, reservedUsd: ledger.reservedUsd, priorSpendUsd: ledger.priorSpendUsd, pending: ledger.pending, owners: ledger.owners };
 const diagnostic = { cases, policy: original.document.preparation.policy,

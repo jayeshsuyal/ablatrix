@@ -11,6 +11,25 @@ type Json = Record<string, any>;
 const json = (value: unknown) => JSON.parse(JSON.stringify(value));
 const close = (actual: number, expected: number) => assert.ok(Number.isFinite(actual) && Math.abs(actual - expected) <= 1e-12, 'Saved dense score differs from replayed cosine.');
 
+/** FTS5's log/arithmetic can round differently across CPU/libm builds. The
+ * observed macOS/Linux differences are one or two binary64 steps. Permit at
+ * most four steps in raw BM25 observations only; IDs, ordering, ranks and every
+ * decision remain exact. This cannot bless a changed ranking or fusion. */
+export function verifySavedBm25Rows(actual: RetrievalStageTrace['bm25Raw'], expected: RetrievalStageTrace['bm25Raw']) {
+  assert.deepEqual(actual.map(({ score: _score, ...row }) => row), expected.map(({ score: _score, ...row }) => row));
+  const bits = (value: number) => {
+    const bytes = new DataView(new ArrayBuffer(8)); bytes.setFloat64(0, Math.abs(value)); return bytes.getBigUint64(0);
+  };
+  for (const [index, row] of actual.entries()) {
+    const saved = expected[index]!.score;
+    assert.ok(Number.isFinite(row.score) && Number.isFinite(saved), 'BM25 observations must be finite.');
+    if (row.score === saved) continue;
+    assert.equal(Math.sign(row.score), Math.sign(saved), 'BM25 score sign changed.');
+    const difference = bits(row.score) - bits(saved);
+    assert.ok(difference >= -4n && difference <= 4n, 'BM25 score differs by more than four binary64 steps.');
+  }
+}
+
 /** Saved dense cosines are inputs, not authenticated BGE outputs. Re-embed them
  * in two dimensions to rerun genuine FTS5, exact scope promotion, fusion and
  * selection. Only floating point normalization error (1e-12) is tolerated. */
@@ -38,11 +57,12 @@ export async function replaySavedStages(corpus: ProductCorpus, productId: string
   }) });
   try {
     const replayed = await retriever.diagnose(productId, question);
+    verifySavedBm25Rows(replayed.trace.bm25Raw, trace.bm25Raw);
     assert.deepEqual(replayed.trace.denseRaw.map(({ score: _s, ...row }) => row), trace.denseRaw.map(({ score: _s, ...row }) => row));
     replayed.trace.denseRaw.forEach((row, index) => close(row.score, trace.denseRaw[index]!.score));
     // All other scores, exact scope flags, candidates, fusion and skip reasons
     // must derive from the indexed corpus, query and saved dense inputs.
-    assert.deepEqual({ ...replayed.trace, denseRaw: trace.denseRaw }, trace);
+    assert.deepEqual({ ...replayed.trace, bm25Raw: trace.bm25Raw, denseRaw: trace.denseRaw }, trace);
     return replayed.result;
   } finally { retriever.close(); }
 }
