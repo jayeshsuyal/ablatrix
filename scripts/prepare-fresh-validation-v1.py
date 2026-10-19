@@ -44,6 +44,11 @@ ASIN = re.compile(r'\bB[A-Z0-9]{9}\b')
 DIGEST = re.compile(r'[a-f0-9]{64}')
 TAGS = {'supported_gap', 'baseline_complete_control', 'conflicting_reports', 'insufficient_evidence', 'uncertain'}
 MINIMA = {'supported_gap': 1, 'baseline_complete_control': 2, 'conflicting_reports': 1, 'insufficient_evidence': 1}
+IDENTIFIER_ARRAYS = ('protectedTargetIdentifiers', 'modelIdentifiers', 'manuallyConsideredIdentifiers',
+                     'fullContextModelIdentifiers', 'questionTargetIdentifiers', 'titleModelIdentifiers',
+                     'requestedIdentifiers', 'sourceManufacturerBrandIdentifiers', 'protectedExactIdentifierMatches',
+                     'protectedExactIdentifierConflicts', 'protectedNearIdentifierConflicts',
+                     'protectedExactOrNearIdentifierConflicts', 'selectedPeerIdentifierConflicts')
 
 def compact(value):
     return json.dumps(value, ensure_ascii=False, separators=(',', ':'))
@@ -141,9 +146,19 @@ def inventory(root, paths):
         elif isinstance(value, dict):
             # Exact old inventory projections are retained, including models that
             # cannot be rederived from the smaller source packets now published.
-            for key in ('protectedTargetIdentifiers', 'modelIdentifiers'):
+            for key in IDENTIFIER_ARRAYS:
                 if isinstance(value.get(key), list):
-                    identifiers.update(x for x in value[key] if isinstance(x, str))
+                    for identifier in value[key]:
+                        if isinstance(identifier, str) and identifier.strip():
+                            identifiers.add(re.sub(r'[^a-z0-9]', '', norm(identifier)))
+                            identifiers.update(models(identifier))
+            # Explicit digit-free audited lines and manufacturer vocabularies
+            # cannot match models(), so retain them as family exclusions too.
+            for key in ('manuallyConsideredIdentifiers', 'sourceManufacturerBrandIdentifiers',
+                        'sourceEstablishedApplianceBrandVocabulary'):
+                if isinstance(value.get(key), list):
+                    titles.update(family(x) for x in value[key] if isinstance(x, str) and x.strip()
+                                  and (key != 'manuallyConsideredIdentifiers' or not any(c.isdigit() for c in x)))
             for key in ('sourcePacketFingerprints',):
                 if isinstance(value.get(key), list):
                     fingerprints.update(x for x in value[key] if isinstance(x, str) and DIGEST.fullmatch(x))
@@ -151,9 +166,10 @@ def inventory(root, paths):
             for key in ('canonicalFamilyTitles', 'extraTitles'):
                 if isinstance(value.get(key), list):
                     titles.update(family(x) for x in value[key] if isinstance(x, str) and x.strip())
-            title = value.get('title', value.get('productTitle'))
-            if isinstance(title, str) and title.strip():
-                titles.add(family(title)); identifiers.update(models(title))
+            for key in ('title', 'productTitle', 'productFamily'):
+                title = value.get(key)
+                if isinstance(title, str) and title.strip():
+                    titles.add(family(title)); identifiers.update(models(title))
             if isinstance(value.get('text'), str) and value['text'] and any(k in value for k in ('source', 'label', 'originalQuestion')):
                 source = {'text': value['text'], 'originalQuestion': value.get('originalQuestion')}
                 fingerprints.update((packet.fingerprint(source), scoped_fingerprint(source))); packet_count += 1

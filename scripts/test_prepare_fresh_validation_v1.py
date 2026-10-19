@@ -74,6 +74,45 @@ class FreshValidationTests(unittest.TestCase):
         row = next(r for r in screen(p, {'modelIdentifiers': ['zx90001']})['decisions'] if r['caseId'] == target['id'])
         self.assertIn('historical_or_within_pool_model', row['reasons'])
 
+    def test_explicit_historical_identifier_projections_reject_unrelated_title_packets(self):
+        fields = ('protectedTargetIdentifiers', 'modelIdentifiers', 'manuallyConsideredIdentifiers',
+                  'fullContextModelIdentifiers', 'questionTargetIdentifiers', 'titleModelIdentifiers',
+                  'requestedIdentifiers', 'sourceManufacturerBrandIdentifiers')
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp).resolve()
+            for field in fields:
+                with self.subTest(field=field):
+                    (root/'audit.json').write_text(json.dumps({'checks': {field: ['ＷＫ-500']}}))
+                    history = m.inventory(root, ['audit.json'])
+                    candidate = pool(); candidate['cases'][0]['question'] = 'Does this work with WK-500?'
+                    row = next(r for r in screen(candidate, history)['decisions'] if r['caseId'] == 'SYNTHETIC-0')
+                    self.assertFalse(row['eligible'])
+                    self.assertIn('historical_or_within_pool_model', row['reasons'])
+
+    def test_explicit_digit_free_family_and_brand_aliases_are_family_exclusions(self):
+        aliases = {'manuallyConsideredIdentifiers': 'Under Armour Reflex',
+                   'sourceManufacturerBrandIdentifiers': 'Brita',
+                   'sourceEstablishedApplianceBrandVocabulary': 'Maytag'}
+        with tempfile.TemporaryDirectory() as tmp:
+            root = pathlib.Path(tmp).resolve()
+            for field, alias in aliases.items():
+                with self.subTest(field=field):
+                    (root/'audit.json').write_text(json.dumps({field: [alias]}))
+                    history = m.inventory(root, ['audit.json'])
+                    candidate = pool(); candidate['cases'][0]['product']['title'] = alias + ' novel fixture'
+                    row = next(r for r in screen(candidate, history)['decisions'] if r['caseId'] == 'SYNTHETIC-0')
+                    self.assertFalse(row['eligible'])
+                    self.assertIn('historical_or_within_pool_family', row['reasons'])
+
+    def test_real_saved_manual_family_audit_protects_wk500_and_family_projection(self):
+        history = m.inventory(m.ROOT, ['docs/evidence/flat-source-quality-2026-10-11/manual-family-audit.json'])
+        self.assertIn('wk500', history['modelIdentifiers'])
+        self.assertIn(m.family('Casio SP-20 sustain pedal with WK-110 target'), history['canonicalFamilyTitles'])
+        candidate = pool(); candidate['cases'][0]['question'] = 'Does this work with WK-500?'
+        row = next(r for r in screen(candidate, history)['decisions'] if r['caseId'] == 'SYNTHETIC-0')
+        self.assertFalse(row['eligible'])
+        self.assertIn('historical_or_within_pool_model', row['reasons'])
+
     def test_pool_rejects_answers_extra_fields_scope_hash_changes_and_unbounded_denominator(self):
         for mutate in [lambda p: p['cases'][0].update(answer='outcome'), lambda p: p['cases'].pop(), lambda p: p['cases'][0]['sources'][0].update(originalQuestion='wrong scope')]:
             p = pool(); mutate(p)
