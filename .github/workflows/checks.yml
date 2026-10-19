@@ -44,14 +44,15 @@ jobs:
           name: offline-reliability
           path: /tmp/ablatrix-reliability.json
           if-no-files-found: error
-      - run: python3 -m unittest scripts/test_prepare_flat_source_cohort.py scripts/test_prepare_source_calibration_cohort.py scripts/test_prepare_retrieval_coverage_cohort.py scripts/test_prepare_source_gap_cohort.py
+      - run: python3 -m unittest scripts/test_prepare_flat_source_cohort.py scripts/test_prepare_source_calibration_cohort.py scripts/test_prepare_retrieval_coverage_cohort.py scripts/test_prepare_source_gap_cohort.py scripts/test_prepare_source_gap_partial.py
       - name: First-answer comparison offline CLI and script types
         run: |
           node --import tsx scripts/source-calibration-comparison.ts
           node --import tsx scripts/retrieval-coverage-comparison.ts
           node --import tsx scripts/source-gap-comparison.ts
+          node --import tsx scripts/source-gap-partial-comparison.ts
           node --import tsx --test scripts/source-gap-retrieval.test.ts
-          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/source-calibration-retrieval.ts scripts/source-calibration-comparison.ts scripts/retrieval-coverage-retrieval.ts scripts/retrieval-coverage-comparison.ts scripts/source-gap-retrieval.ts scripts/source-gap-comparison.ts scripts/source-gap-retrieval.test.ts
+          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/source-calibration-retrieval.ts scripts/source-calibration-comparison.ts scripts/retrieval-coverage-retrieval.ts scripts/retrieval-coverage-comparison.ts scripts/source-gap-retrieval.ts scripts/source-gap-comparison.ts scripts/source-gap-partial-comparison.ts scripts/source-gap-retrieval.test.ts
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e

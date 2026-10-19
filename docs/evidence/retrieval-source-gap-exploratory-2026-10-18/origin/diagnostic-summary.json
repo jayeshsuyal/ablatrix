@@ -1,0 +1,298 @@
+{
+  "format": "ablatrix-source-gap-failure-diagnostic-v1",
+  "selectorExitCode": 1,
+  "unexpectedExceptionType": null,
+  "status": "reproduced_frozen_deck_insufficiency",
+  "plannedProducts": 64,
+  "completedRounds": 5,
+  "roundsObserved": 6,
+  "partialSelectedProducts": 44,
+  "rounds": [
+    {
+      "round": 1,
+      "seed": "ablatrix-source-gap-2026-10-18-v1:round:1",
+      "selectedCount": 8,
+      "inventory": {
+        "passed": true,
+        "trainRows": 121750,
+        "trainProducts": 5393,
+        "trainQuestions": 12175,
+        "eligibleFullPools": 905,
+        "eligibleQuestionCounts": {
+          "capacity_dimensions": 48,
+          "appearance_material": 18,
+          "model_scope": 15,
+          "missing_information": 22,
+          "preservation_control": 69
+        },
+        "rejectedCounts": {
+          "empty_source": 35,
+          "full_source_parent_exceeds_1500": 10,
+          "outside_consumer_demo_domain": 490,
+          "outside_consumer_demo_question_scope": 10,
+          "outside_consumer_demo_source_scope": 1972,
+          "outside_frozen_strata": 1495,
+          "previously_exposed_or_reserved": 122,
+          "protected_brand_family_or_near_title": 248,
+          "protected_full_source_identifier_or_near_model": 122,
+          "protected_prior_source_packet": 1015,
+          "unsupported_product_or_title": 472,
+          "unsupported_source_context": 2
+        }
+      },
+      "eligibleDistinctProductsByStratum": {
+        "preservation_control": 65,
+        "capacity_dimensions": 45,
+        "appearance_material": 18,
+        "missing_information": 22,
+        "model_scope": 15
+      },
+      "lastStratumVisited": "preservation_control",
+      "lastStratumSelectedCount": 1,
+      "elapsedSeconds": 74.629,
+      "observationFile": "round-01.json",
+      "observationFileSha256": "dba8b1cbb7bf76d2e8ce1ad56b3ded01a7e7e38c409a488bf0be7844faf7c082"
+    },
+    {
+      "round": 2,
+      "seed": "ablatrix-source-gap-2026-10-18-v1:round:2",
+      "selectedCount": 8,
+      "inventory": {
+        "passed": true,
+        "trainRows": 121750,
+        "trainProducts": 5393,
+        "trainQuestions": 12175,
+        "eligibleFullPools": 829,
+        "eligibleQuestionCounts": {
+          "capacity_dimensions": 45,
+          "appearance_material": 14,
+          "model_scope": 10,
+          "missing_information": 19,
+          "preservation_control": 58
+        },
+        "rejectedCounts": {
+          "empty_source": 34,
+          "full_source_parent_exceeds_1500": 9,
+          "outside_consumer_demo_domain": 490,
+          "outside_consumer_demo_question_scope": 10,
+          "outside_consumer_demo_source_scope": 1972,
+          "outside_frozen_strata": 1357,
+          "previously_exposed_or_reserved": 130,
+          "protected_brand_family_or_near_title": 281,
+          "protected_full_source_identifier_or_near_model": 122,
+          "protected_prior_source_packet": 1052,
+          "selected_product_overlap": 1,
+          "unsupported_product_or_title": 472,
+          "unsupported_source_context": 2
+        }
+      },
+      "eligibleDistinctProductsByStratum": {
+        "preservation_control": 54,
+        "capacity_dimensions": 42,
+        "appearance_material": 14,
+        "missing_information": 19,
+        "model_scope": 10
+      },
+      "lastStratumVisited": "preservation_control",
+      "lastStratumSelectedCount": 1,
+      "elapsedSeconds": 73.089,
+      "observationFile": "round-02.json",
+      "observationFileSha256": "57c5d6748a375e2b9f9763546c1170eb7b7c9566ff8d8403f6a2078c0df5fb86"
+    },
+    {
+      "round": 3,
+      "seed": "ablatrix-source-gap-2026-10-18-v1:round:3",
+      "selectedCount": 8,
+      "inventory": {
+        "passed": true,
+        "trainRows": 121750,
+        "trainProducts": 5393,
+        "trainQuestions": 12175,
+        "eligibleFullPools": 793,
+        "eligibleQuestionCounts": {
+          "capacity_dimensions": 40,
+          "appearance_material": 11,
+          "model_scope": 7,
+          "missing_information": 16,
+          "preservation_control": 55
+        },
+        "rejectedCounts": {
+          "empty_source": 34,
+          "full_source_parent_exceeds_1500": 9,
+          "outside_consumer_demo_domain": 490,
+          "outside_consumer_demo_question_scope": 9,
+          "outside_consumer_demo_source_scope": 1972,
+          "outside_frozen_strata": 1298,
+          "previously_exposed_or_reserved": 138,
+          "protected_brand_family_or_near_title": 288,
+          "protected_full_source_identifier_or_near_model": 121,
+          "protected_prior_source_packet": 1074,
+          "unsupported_product_or_title": 472,
+          "unsupported_source_context": 2
+        }
+      },
+      "eligibleDistinctProductsByStratum": {
+        "preservation_control": 51,
+        "capacity_dimensions": 37,
+        "appearance_material": 11,
+        "missing_information": 16,
+        "model_scope": 7
+      },
+      "lastStratumVisited": "preservation_control",
+      "lastStratumSelectedCount": 1,
+      "elapsedSeconds": 75.926,
+      "observationFile": "round-03.json",
+      "observationFileSha256": "5a508de4fbf5da783d11ab33a89bd648a58e807f75fbde07c2defaff8f52fc67"
+    },
+    {
+      "round": 4,
+      "seed": "ablatrix-source-gap-2026-10-18-v1:round:4",
+      "selectedCount": 8,
+      "inventory": {
+        "passed": true,
+        "trainRows": 121750,
+        "trainProducts": 5393,
+        "trainQuestions": 12175,
+        "eligibleFullPools": 706,
+        "eligibleQuestionCounts": {
+          "capacity_dimensions": 29,
+          "appearance_material": 7,
+          "model_scope": 5,
+          "missing_information": 10,
+          "preservation_control": 43
+        },
+        "rejectedCounts": {
+          "empty_source": 30,
+          "full_source_parent_exceeds_1500": 7,
+          "outside_consumer_demo_domain": 490,
+          "outside_consumer_demo_question_scope": 9,
+          "outside_consumer_demo_source_scope": 1972,
+          "outside_frozen_strata": 1148,
+          "previously_exposed_or_reserved": 146,
+          "protected_brand_family_or_near_title": 301,
+          "protected_full_source_identifier_or_near_model": 158,
+          "protected_prior_source_packet": 1109,
+          "unsupported_product_or_title": 472,
+          "unsupported_source_context": 2
+        }
+      },
+      "eligibleDistinctProductsByStratum": {
+        "preservation_control": 39,
+        "appearance_material": 7,
+        "capacity_dimensions": 29,
+        "missing_information": 10,
+        "model_scope": 5
+      },
+      "lastStratumVisited": "preservation_control",
+      "lastStratumSelectedCount": 1,
+      "elapsedSeconds": 73.967,
+      "observationFile": "round-04.json",
+      "observationFileSha256": "692664bb62c4c8bff41590868db4cf43c5d0b2f98ff7990384209d695ce50f9e"
+    },
+    {
+      "round": 5,
+      "seed": "ablatrix-source-gap-2026-10-18-v1:round:5",
+      "selectedCount": 8,
+      "inventory": {
+        "passed": true,
+        "trainRows": 121750,
+        "trainProducts": 5393,
+        "trainQuestions": 12175,
+        "eligibleFullPools": 690,
+        "eligibleQuestionCounts": {
+          "capacity_dimensions": 27,
+          "appearance_material": 5,
+          "model_scope": 2,
+          "missing_information": 8,
+          "preservation_control": 40
+        },
+        "rejectedCounts": {
+          "empty_source": 30,
+          "full_source_parent_exceeds_1500": 7,
+          "outside_consumer_demo_domain": 490,
+          "outside_consumer_demo_question_scope": 9,
+          "outside_consumer_demo_source_scope": 1972,
+          "outside_frozen_strata": 1125,
+          "previously_exposed_or_reserved": 154,
+          "protected_brand_family_or_near_title": 304,
+          "protected_full_source_identifier_or_near_model": 160,
+          "protected_prior_source_packet": 1112,
+          "unsupported_product_or_title": 472,
+          "unsupported_source_context": 2
+        }
+      },
+      "eligibleDistinctProductsByStratum": {
+        "appearance_material": 5,
+        "capacity_dimensions": 27,
+        "preservation_control": 36,
+        "missing_information": 8,
+        "model_scope": 2
+      },
+      "lastStratumVisited": "preservation_control",
+      "lastStratumSelectedCount": 1,
+      "elapsedSeconds": 75.37,
+      "observationFile": "round-05.json",
+      "observationFileSha256": "c9fd72c978b25f9775e3ef8307d0e406b08c4c594c48a1621975fc2daecfcdc8"
+    },
+    {
+      "round": 6,
+      "seed": "ablatrix-source-gap-2026-10-18-v1:round:6",
+      "selectedCount": 4,
+      "inventory": {
+        "passed": false,
+        "trainRows": 121750,
+        "trainProducts": 5393,
+        "trainQuestions": 12175,
+        "eligibleFullPools": 670,
+        "eligibleQuestionCounts": {
+          "capacity_dimensions": 25,
+          "appearance_material": 3,
+          "model_scope": 0,
+          "missing_information": 6,
+          "preservation_control": 38
+        },
+        "rejectedCounts": {
+          "empty_source": 29,
+          "full_source_parent_exceeds_1500": 7,
+          "outside_consumer_demo_domain": 490,
+          "outside_consumer_demo_question_scope": 9,
+          "outside_consumer_demo_source_scope": 1972,
+          "outside_frozen_strata": 1097,
+          "previously_exposed_or_reserved": 162,
+          "protected_brand_family_or_near_title": 314,
+          "protected_full_source_identifier_or_near_model": 160,
+          "protected_prior_source_packet": 1115,
+          "unsupported_product_or_title": 472,
+          "unsupported_source_context": 2
+        },
+        "stopReason": "Insufficient disjoint cases for model_scope; no seed, strata or case replacement."
+      },
+      "eligibleDistinctProductsByStratum": {
+        "capacity_dimensions": 25,
+        "preservation_control": 34,
+        "missing_information": 6,
+        "appearance_material": 3,
+        "model_scope": 0
+      },
+      "lastStratumVisited": "model_scope",
+      "lastStratumSelectedCount": 0,
+      "elapsedSeconds": 77.052,
+      "observationFile": "round-06.json",
+      "observationFileSha256": "5c2aedd9cd82ec1203718f3c5ec912af56d3d67e9db3d328ffcea29fa68ca19f"
+    }
+  ],
+  "partialSourceExposureFileSha256": "0b55dba03090f90a8bbd40c252f530f71c860aae636bb70794c8eaa374a69cef",
+  "inputArtifactBytesUnchangedDuringReplay": true,
+  "frozenCodeUnchangedDuringReplay": true,
+  "sourceMetadataUnchangedDuringReplay": true,
+  "publicExposureProjectionUnchangedDuringReplay": true,
+  "originalFailureLogUnchanged": true,
+  "originalPrepareDirectoryAbsent": true,
+  "originalAttemptInventoryEquality": "unknown_original_attempt_wrote_no_source_inventory",
+  "elapsedSeconds": 456.365,
+  "newProviderCalls": 0,
+  "candidateContextsInspected": false,
+  "modelOutputsInspected": false,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false
+}
