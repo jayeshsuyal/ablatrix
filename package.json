@@ -37,7 +37,11 @@
     "diagnosis:live": "node --import tsx scripts/three-context-live.ts",
     "diagnosis:qualify-v5": "node --import tsx scripts/qualify-three-context-v5.ts",
     "diagnosis:rehearse-v5": "node --import tsx scripts/rehearse-three-context-v5.ts",
-    "diagnosis:evaluate": "node --import tsx scripts/three-context-evaluation.ts"
+    "diagnosis:evaluate": "node --import tsx scripts/three-context-evaluation.ts",
+    "validation:prospective": "python3 scripts/prepare-fresh-validation-v1.py",
+    "validation:contexts": "node --import tsx scripts/fresh-validation-contexts-v1.ts",
+    "validation:prepare": "node --import tsx scripts/prepare-three-context-fresh-v1.ts",
+    "validation:mock": "node --import tsx scripts/fresh-validation-mock.ts"
   },
   "dependencies": {
     "@huggingface/transformers": "4.3.0",
