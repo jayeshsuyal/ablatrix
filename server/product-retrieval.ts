@@ -13,9 +13,10 @@ const RRF_K = 60;
 const CANDIDATES_PER_METHOD = 20;
 const MAX_PASSAGES = 5;
 const CONTEXT_CHAR_BUDGET = 6000;
-const modelCachePath = fileURLToPath(new URL('../.data/models', import.meta.url));
+export const modelCachePath = fileURLToPath(new URL('../.data/models', import.meta.url));
 export type EmbeddingFunction = (texts: string[], kind: 'passage' | 'query') => Promise<number[][]>;
-export type RetrieverOptions = { embed?: EmbeddingFunction; modelId?: string; modelRevision?: string; cqaAnswerOnly?: boolean };
+export type RetrievalStageTrace = { definitions: Record<string, string>; bm25Raw: { id: string; score: number; rank: number }[]; bm25Candidates: { id: string; rank: number; scopePromoted: boolean }[]; denseRaw: { id: string; score: number; rank: number }[]; denseCandidates: { id: string; rank: number; scopePromoted: boolean }[]; fusion: { id: string; lexicalRank: number | null; semanticRank: number | null; score: number; rank: number }[]; selection: { id: string; selected: boolean; reason: string }[] };
+export type RetrieverOptions = { embed?: EmbeddingFunction; modelId?: string; modelRevision?: string; cachedOnly?: boolean; cqaAnswerOnly?: boolean };
 
 /** The ePQA CQA corpus appends the upstream question after the answer. */
 export function cqaAnswerText(passage: Passage): string {
@@ -106,7 +107,7 @@ function normalized(vector: number[]): number[] {
 }
 
 /** Lazy local model loading. Errors stay visible; there is no pretend-semantic fallback. */
-function localBgeEmbedding(modelId: string, revision: string): EmbeddingFunction {
+function localBgeEmbedding(modelId: string, revision: string, cachedOnly = false): EmbeddingFunction {
   let extractorPromise: Promise<import('@huggingface/transformers').FeatureExtractionPipeline> | undefined;
   return async (texts, kind) => {
     extractorPromise ??= (async () => {
@@ -118,6 +119,7 @@ function localBgeEmbedding(modelId: string, revision: string): EmbeddingFunction
       for (const file of ['tokenizer.json', 'tokenizer_config.json', 'config.json', 'onnx/model_quantized.onnx']) {
         const destination = resolve(localPath, file);
         if (existsSync(destination)) continue;
+        if (cachedOnly) throw new Error(`Cached BGE asset missing: ${destination}. Prepare embeddings explicitly before offline diagnosis.`);
         const response = await fetch(`https://huggingface.co/${modelId}/resolve/${revision}/${file}`, { signal: AbortSignal.timeout(120_000) });
         if (!response.ok) throw new Error(`Embedding asset download failed (${response.status}): ${file}.`);
         mkdirSync(dirname(destination), { recursive: true });
@@ -147,11 +149,11 @@ function localBgeEmbedding(modelId: string, revision: string): EmbeddingFunction
 }
 
 const sharedLocalEmbeddings = new Map<string, EmbeddingFunction>();
-function sharedLocalBgeEmbedding(modelId: string, revision: string): EmbeddingFunction {
-  const key = `${modelId}@${revision}`;
+function sharedLocalBgeEmbedding(modelId: string, revision: string, cachedOnly = false): EmbeddingFunction {
+  const key = `${modelId}@${revision}:${cachedOnly}`;
   let embed = sharedLocalEmbeddings.get(key);
   if (!embed) {
-    const run = localBgeEmbedding(modelId, revision);
+    const run = localBgeEmbedding(modelId, revision, cachedOnly);
     let queue: Promise<unknown> = Promise.resolve();
     embed = (texts, kind) => {
       const result = queue.then(() => run(texts, kind));
@@ -179,7 +181,7 @@ export class ProductRetriever implements LoopRetriever {
     this.modelId = options.modelId ?? (options.embed ? 'injected-test-embedding' : EMBEDDING_MODEL);
     this.revision = options.modelRevision ?? (options.embed ? 'test-only' : EMBEDDING_REVISION);
     this.indexText = options.cqaAnswerOnly === false ? passage => passage.text : cqaAnswerText;
-    this.embed = options.embed ?? sharedLocalBgeEmbedding(this.modelId, this.revision);
+    this.embed = options.embed ?? sharedLocalBgeEmbedding(this.modelId, this.revision, options.cachedOnly);
     if (dbPath !== ':memory:') mkdirSync(dirname(resolve(dbPath)), { recursive: true });
     this.db = new DatabaseSync(dbPath);
     this.db.exec(`PRAGMA busy_timeout=5000;
@@ -240,10 +242,16 @@ export class ProductRetriever implements LoopRetriever {
   compareRankings(productId: string, question: string): Promise<{ result: RetrievalResult; rankings: { bm25: string[]; dense: string[]; hybrid: string[] } }> {
     const result = this.queue.then(() => this.performRetrieval(productId, question, true));
     this.queue = result.catch(() => undefined);
-    return result.then(({ rankings, ...retrieval }) => ({ result: retrieval, rankings: rankings! }));
+    return result.then(({ rankings, trace: _trace, ...retrieval }) => ({ result: retrieval, rankings: rankings! }));
   }
 
-  private async performRetrieval(productId: string, question: string, compare = false): Promise<RetrievalResult & { rankings?: { bm25: string[]; dense: string[]; hybrid: string[] } }> {
+  diagnose(productId: string, question: string): Promise<{ result: RetrievalResult; trace: RetrievalStageTrace }> {
+    const pending = this.queue.then(() => this.performRetrieval(productId, question, true));
+    this.queue = pending.catch(() => undefined);
+    return pending.then(({ trace, rankings: _r, ...result }) => ({ result, trace: trace! }));
+  }
+
+  private async performRetrieval(productId: string, question: string, compare = false): Promise<RetrievalResult & { rankings?: { bm25: string[]; dense: string[]; hybrid: string[] }; trace?: RetrievalStageTrace }> {
     if (this.closed) throw new Error('Product retriever is closed.');
     if (!question.trim()) throw new Error('A nonempty question is required.');
     const pool = this.byProduct.get(productId);
@@ -253,42 +261,47 @@ export class ProductRetriever implements LoopRetriever {
     const scopeOrder = (a: string, b: string) => Number(scoped.has(b)) - Number(scoped.has(a));
     const terms = [...new Set(question.toLowerCase().match(/[\p{L}\p{N}]+/gu) ?? [])].slice(0, 80);
     const match = terms.map(term => `"${term.replaceAll('"', '""')}"`).join(' OR ');
-    const lexicalQuery = 'SELECT passage_id FROM product_passages_fts WHERE product_passages_fts MATCH ? AND corpus=? AND product_id=?';
+    const lexicalQuery = 'SELECT passage_id, bm25(product_passages_fts) AS score FROM product_passages_fts WHERE product_passages_fts MATCH ? AND corpus=? AND product_id=?';
     const lexicalOrder = ' ORDER BY bm25(product_passages_fts), passage_id LIMIT ?';
-    const lexicalRows = match ? (this.db.prepare(lexicalQuery + lexicalOrder).all(match, this.corpus.version, productId, CANDIDATES_PER_METHOD) as { passage_id: string }[]) : [];
+    const lexicalRows = match ? (this.db.prepare(lexicalQuery + lexicalOrder).all(match, this.corpus.version, productId, CANDIDATES_PER_METHOD) as { passage_id: string; score: number }[]) : [];
     // Rescue matching scope before truncation without returning every FTS row.
     // json_each avoids one SQL bind per source; each query returns at most 20.
-    const scopedRows = match && scoped.size ? (this.db.prepare(lexicalQuery + ' AND passage_id IN (SELECT value FROM json_each(?))' + lexicalOrder).all(match, this.corpus.version, productId, JSON.stringify([...scoped]), CANDIDATES_PER_METHOD) as { passage_id: string }[]) : [];
+    const scopedRows = match && scoped.size ? (this.db.prepare(lexicalQuery + ' AND passage_id IN (SELECT value FROM json_each(?))' + lexicalOrder).all(match, this.corpus.version, productId, JSON.stringify([...scoped]), CANDIDATES_PER_METHOD) as { passage_id: string; score: number }[]) : [];
     const lexical = [...new Set([...scopedRows, ...lexicalRows].map(row => row.passage_id))].slice(0, CANDIDATES_PER_METHOD);
     const vectors = await this.vectors(productId);
     const queries = await this.embed([question], 'query');
     if (queries.length !== 1) throw new Error('Query embedding length mismatch.');
     const query = normalized(queries[0]);
-    const semantic = pool.map(passage => {
+    const denseRaw = pool.map(passage => {
       const vector = vectors.get(passage.id)!;
       if (vector.length !== query.length) throw new Error('Embedding dimensions differ; invalidate the model cache.');
       return { id: passage.id, score: vector.reduce((sum, value, index) => sum + value * query[index], 0) };
-    }).sort((a, b) => scopeOrder(a.id, b.id) || b.score - a.score || a.id.localeCompare(b.id)).slice(0, CANDIDATES_PER_METHOD).map(entry => entry.id);
+    }).sort((a, b) => b.score - a.score || a.id.localeCompare(b.id));
+    const semantic = [...denseRaw].sort((a, b) => scopeOrder(a.id, b.id) || b.score - a.score || a.id.localeCompare(b.id)).slice(0, CANDIDATES_PER_METHOD).map(entry => entry.id);
     const byId = new Map(pool.map(passage => [passage.id, passage]));
     const fused = reciprocalRankFusion(lexical, semantic).sort((a, b) => scopeOrder(a.id, b.id));
-    const select = (ids: string[]) => {
+    const selection: RetrievalStageTrace['selection'] = [];
+    const select = (ids: string[], record = false) => {
       const chosen: string[] = [], seenText = new Set<string>(); let chars = 0;
       for (const id of ids) {
         const passage = byId.get(id)!;
         // Identical answers can describe different models in their parent questions.
         const contextKey = JSON.stringify([passage.sha256, passage.originalQuestion ?? null]);
         const contextLength = passage.text.length + (passage.originalQuestion?.length ?? 0);
-        if (seenText.has(contextKey) || chars + contextLength > CONTEXT_CHAR_BUDGET) continue;
+        const reason = seenText.has(contextKey) ? 'duplicate_text_and_scope' : chosen.length >= MAX_PASSAGES ? 'five_chunk_limit' : chars + contextLength > CONTEXT_CHAR_BUDGET ? 'character_budget' : 'selected';
+        if (record) selection.push({ id, selected: reason === 'selected', reason });
+        if (reason !== 'selected') continue;
         chosen.push(id); seenText.add(contextKey); chars += contextLength;
-        if (chosen.length === MAX_PASSAGES) break;
+        if (!record && chosen.length === MAX_PASSAGES) break;
       }
       return chosen;
     };
-    const hybrid = select(fused.map(item => item.id));
+    const hybrid = select(fused.map(item => item.id), compare);
     const byRank = new Map(fused.map(item => [item.id, item]));
     const passages: RetrievedPassage[] = hybrid.map(id => ({ ...byId.get(id)!, ...byRank.get(id)! }));
     const result = { passages, durationMs: performance.now() - start, method: `hybrid:fts5-bm25+bge-cosine+rrf(k=60)${this.indexText === cqaAnswerText ? '+cqa-answer-index' : ''}+parent-id-scope`, embeddingModel: `${this.modelId}@${this.revision}`, corpusVersion: this.corpus.version };
-    return compare ? { ...result, rankings: { bm25: select(lexical), dense: select(semantic), hybrid } } : result;
+    const trace: RetrievalStageTrace = { definitions: { bm25: 'SQLite FTS5 bm25; lower is better; raw top 20 before exact-parent-scope promotion', dense: 'L2-normalized BGE dot product (cosine); higher is better; raw all product chunks', candidates: 'One-based input ranks after exact-parent-scope promotion; maximum 20 per method', fusion: 'Sum 1/(60+candidate rank), then stable exact-parent-scope promotion; one-based final order', selection: 'At most five chunks, 6000 characters including original question; deduplicate text hash plus original question' }, bm25Raw: lexicalRows.map((r, i) => ({ id: r.passage_id, score: r.score, rank: i + 1 })), bm25Candidates: lexical.map((id, i) => ({ id, rank: i + 1, scopePromoted: scoped.has(id) })), denseRaw: denseRaw.map((r, i) => ({ ...r, rank: i + 1 })), denseCandidates: semantic.map((id, i) => ({ id, rank: i + 1, scopePromoted: scoped.has(id) })), fusion: fused.map((r, i) => ({ ...r, rank: i + 1 })), selection };
+    return compare ? { ...result, trace, rankings: { bm25: select(lexical), dense: select(semantic), hybrid } } : result;
   }
 
   close(): void { if (!this.closed) { this.closed = true; this.db.close(); } }

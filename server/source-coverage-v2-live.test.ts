@@ -1,3 +1,4 @@
+import { verifySourceCoverageV2Result } from './source-coverage-v2-live.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, readFileSync, realpathSync, rmSync, statSync, symlinkSync, writeFileSync } from 'node:fs';
@@ -199,4 +200,14 @@ test('offline CLI exposes no execution through duplicate/unknown flags and rejec
     const env = new Proxy({ ABLATRIX_LOOP_LIVE: '1' } as NodeJS.ProcessEnv, { get(target, key) { if (String(key).startsWith('SAPIOM_')) throw new Error('Credential accessed too early'); return target[String(key)]; } });
     await assert.rejects(sourceCoverageV2LiveCli(['--execute', '--plan', path, '--approved-plan-sha256', '0'.repeat(64)], env), /approval and live opt-in/);
   } finally { rmSync(directory, { recursive: true, force: true }); }
+});
+
+test('SYNTHETIC interrupted durable dispatch intent reports unknown total, never definitive zero', async () => {
+  const h = await harness();
+  try {
+    await h.execute();
+    const checkpoint = clone(h.checkpoints.find(c => c.steps[0].dispatchIntent && !c.steps[0].dispatched)!);
+    assert.ok(checkpoint); const result = verifySourceCoverageV2Result(h.manifest, checkpoint);
+    assert.equal(result.networkDispatches, null); assert.equal(result.observedNetworkDispatches, 0); assert.equal(result.unresolvedDispatchIntents, 1); assert.equal(result.newProviderAttempts, 1);
+  } finally { h.cleanup(); }
 });

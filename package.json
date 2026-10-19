@@ -28,7 +28,10 @@
     "feedback:retrieval-audit": "node --import tsx scripts/evaluate_product_retrieval.ts",
     "feedback:import-validation": "node --import tsx scripts/import_validation_packet.ts",
     "demo:backup": "node --import tsx scripts/demo-backup.ts backup",
-    "demo:restore": "node --import tsx scripts/demo-backup.ts restore"
+    "demo:restore": "node --import tsx scripts/demo-backup.ts restore",
+    "diagnosis:replay": "python3 scripts/replay-frozen-v2.py && node --import tsx scripts/verify-retrieval-diagnosis.ts",
+    "diagnosis:mock": "node --import tsx scripts/three-context-mock.ts",
+    "diagnosis:run": "node --import tsx scripts/retrieval-diagnosis.ts"
   },
   "dependencies": {
     "@huggingface/transformers": "4.3.0",

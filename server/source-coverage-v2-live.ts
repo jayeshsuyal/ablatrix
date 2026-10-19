@@ -155,7 +155,8 @@ export function verifySourceCoverageV2Result(manifest: SourceCoverageV2Manifest,
   const knownUsageSubtotal = usages.reduce((sum, usage) => ({ inputTokens: sum.inputTokens + usage.inputTokens, outputTokens: sum.outputTokens + usage.outputTokens }), { inputTokens: 0, outputTokens: 0 });
   assert.ok(Number.isSafeInteger(knownUsageSubtotal.inputTokens) && Number.isSafeInteger(knownUsageSubtotal.outputTokens));
   return { format: 'source-coverage-v2-result-v1', planSha256: manifest.planSha256, status: steps.every(step => step.status === 'completed') && !checkpoint.stopReason ? 'awaiting_independent_review' : 'stopped',
-    transportProvenance: checkpoint.transportProvenance, plannedCases: 12, plannedAnswers: 24, newProviderAttempts: attempts, networkDispatches: checkpoint.steps.filter(step => step.dispatched).length,
+    transportProvenance: checkpoint.transportProvenance, plannedCases: 12, plannedAnswers: 24, newProviderAttempts: attempts, networkDispatches: checkpoint.steps.some(step => step.dispatchIntent && !step.dispatched) ? null : checkpoint.steps.filter(step => step.dispatched).length,
+    observedNetworkDispatches: checkpoint.steps.filter(step => step.dispatched).length, unresolvedDispatchIntents: checkpoint.steps.filter(step => step.dispatchIntent && !step.dispatched).length,
     planningAllowanceReservedUsd: rounded(attempts * .1), allowanceIsProviderCharge: false, actualProviderCharges: 'unavailable', completedAnswers: steps.filter(step => step.status === 'completed').length,
     usage: usages.length === attempts ? knownUsageSubtotal : null, knownUsageSubtotal, attemptsWithKnownUsage: usages.length,
     completedPairs: manifest.plan.retainedCases.filter((item: Json) => steps.filter(step => step.caseId === item.caseId && step.status === 'completed').length === 2).length,
