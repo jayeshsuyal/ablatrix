@@ -55,6 +55,13 @@ function review(packet: ThreeContextEvaluationPacket, provenance: ThreeContextRe
       unsupportedClaims: [], exactApplicability: structuredClone(axis), appropriateUncertainty: structuredClone(axis), directRelevance: structuredClone(axis),
       unknowns: item.unknowns.map(unknown => ({ unknown, status: 'preserved', rationale: 'SYNTHETIC unknown average is preserved.' })) }] };
 }
+function comparedReview(packet: ThreeContextEvaluationPacket, outcome: NonNullable<ThreeContextReviewImport['comparisons']>[number]['outcome'] = 'first_preferred', provenance: ThreeContextReviewImport['provenance'] = 'ai_provisional') {
+  const result = review(packet, provenance), completed = packet.answers.filter(a => a.status === 'completed'), template = result.entries[0]!;
+  result.entries = completed.map(a => ({ ...structuredClone(template), label: a.label, sourcePoolSha256: a.sourcePoolSha256, answerSha256: a.answerSha256 }));
+  result.comparisons = [{ caseId: completed[0]!.caseId, firstLabel: completed[0]!.label, secondLabel: completed[1]!.label, outcome,
+    rationale: 'SYNTHETIC source-checked verdict: compare preserved duration conditions and unknown population average.' }];
+  return result;
+}
 test('evaluation packet binds replayed live receipts/results and retains full sources without arm identities', () => {
   const f = fixture({ unknownUsage: true });
   try {
@@ -137,6 +144,49 @@ test('focused review and small human calibration remain separate from mechanical
     const sameReviewer = structuredClone(ai); sameReviewer.entries[0]!.appropriateUncertainty.judgment = 'pass';
     assert.throws(() => reportThreeContextEvaluation(f.packet, [a, importThreeContextReview(f.packet, sameReviewer)]), /consolidated record/);
     assert.equal(reportThreeContextEvaluation(f.packet, [a]).reviewRecords[0]!.aiCalibration, 'uncalibrated');
+  } finally { f.cleanup(); }
+});
+test('optional reviewer comparisons retain explicit anonymous per-case wins, losses, ties and uncertainty without deriving a winner from axes', () => {
+  const f = fixture();
+  try {
+    assert.equal(reportThreeContextEvaluation(f.packet, [importThreeContextReview(f.packet, review(f.packet))]).caseComparisons[0]!.reviewerVerdicts.length, 0);
+    for (const [outcome, first, second] of [['first_preferred', 'win', 'loss'], ['second_preferred', 'loss', 'win'], ['tie', 'tie', 'tie'], ['uncertain', 'uncertain', 'uncertain']] as const) {
+      const record = importThreeContextReview(f.packet, comparedReview(f.packet, outcome)), report = reportThreeContextEvaluation(f.packet, [record]), verdict = report.caseComparisons[0]!.reviewerVerdicts[0]!;
+      assert.equal(verdict.outcome, outcome); assert.equal(verdict.firstAnswerOutcome, first); assert.equal(verdict.secondAnswerOutcome, second); assert.match(verdict.rationale, /duration conditions/);
+      assert.equal(report.caseComparisons[0]!.answers.length, 3); assert.equal(report.reviewRecords[0]!.answers[0]!.exactApplicability, 'pass');
+      assert.equal(report.qualityClaimEligible, false); assert.equal(report.activationAllowed, false); assert.ok(!JSON.stringify(report).includes('operationRunId'));
+    }
+  } finally { f.cleanup(); }
+});
+test('comparative imports reject duplicate/reversed pairs, uninspected answers, wrong-case labels and insufficient rationale', () => {
+  const f = fixture(), failed = fixture({ failed: true });
+  try {
+    const valid = comparedReview(f.packet);
+    for (const mutate of [
+      (r: typeof valid) => { r.comparisons![0]!.secondLabel = r.comparisons![0]!.firstLabel; },
+      (r: typeof valid) => { r.entries = r.entries.slice(0, 1); },
+      (r: typeof valid) => { r.comparisons![0]!.caseId = 'another-case'; },
+      (r: typeof valid) => { const pair = r.comparisons![0]!; r.comparisons!.push({ ...pair, firstLabel: pair.secondLabel, secondLabel: pair.firstLabel }); },
+      (r: typeof valid) => { r.comparisons![0]!.rationale = 'better'; },
+      (r: typeof valid) => { Object.assign(r.comparisons![0]!, { arm: 'semantic' }); }
+    ]) { const changed = structuredClone(valid); mutate(changed); assert.throws(() => importThreeContextReview(f.packet, changed)); }
+    const incomplete = review(failed.packet), complete = failed.packet.answers.find(a => a.status === 'completed')!, unknown = failed.packet.answers.find(a => a.status === 'failed_or_unknown')!;
+    incomplete.comparisons = [{ caseId: complete.caseId, firstLabel: complete.label, secondLabel: unknown.label, outcome: 'uncertain', rationale: 'SYNTHETIC failure is preserved rather than scored as an inferior answer.' }];
+    assert.throws(() => importThreeContextReview(failed.packet, incomplete), /only completed/);
+  } finally { f.cleanup(); failed.cleanup(); }
+});
+test('comparative disagreements normalize reversed pair orientation and preserve each reviewer preference independently of six-axis agreement', () => {
+  const f = fixture();
+  try {
+    const ai = comparedReview(f.packet), human = comparedReview(f.packet, 'second_preferred', 'source_checked_human'), pair = human.comparisons![0]!;
+    [pair.firstLabel, pair.secondLabel] = [pair.secondLabel, pair.firstLabel];
+    const agree = reportThreeContextEvaluation(f.packet, [importThreeContextReview(f.packet, ai), importThreeContextReview(f.packet, human)]);
+    assert.equal(agree.caseComparisons[0]!.disagreements.length, 0); assert.equal(agree.caseComparisons[0]!.reviewerVerdicts.length, 2);
+    pair.outcome = 'first_preferred';
+    const disagree = reportThreeContextEvaluation(f.packet, [importThreeContextReview(f.packet, ai), importThreeContextReview(f.packet, human)]);
+    assert.equal(disagree.caseComparisons[0]!.disagreements.length, 1); assert.equal(disagree.caseComparisons[0]!.reviewerVerdicts.length, 2);
+    assert.equal(disagree.focusedReview.filter(r => r.needsFocusedHumanReview).length, 2); assert.ok(disagree.focusedReview.every(r => r.disagreementAxes.length === 0));
+    assert.equal(disagree.humanSourceCheckedActualAnswers, 0); assert.equal(disagree.qualityClaimEligible, false);
   } finally { f.cleanup(); }
 });
 test('offline evaluation CLI prepares, imports and reports with exclusive output and no credentials or ledger', () => {

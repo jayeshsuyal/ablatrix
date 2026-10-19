@@ -60,6 +60,20 @@ node --import tsx scripts/three-context-evaluation.ts report \
 
 Repeat `--import FILE` to compare independent reviewers. Use one consolidated record per reviewer. Outputs are exclusive, mode `0600`; a new filename is required for revisions. All six measures remain separate: useful fact completeness, unsupported claims, exact applicability, appropriate uncertainty, direct relevance and mechanical citation matching. The last measure verifies offered IDs and literal body equality, never semantic support. Reports retain each reviewer's measurements, incomplete review coverage and disagreements, with no composite winner.
 
+A record may additionally include explicit anonymous pairwise `comparisons`. Both distinct labels must be completed answers from `caseId`, with individual source-checked entries in that same record. Supply a substantive source/answer-based rationale (at least 20 characters). Example:
+
+```json
+"comparisons": [{
+  "caseId": "PACKET_CASE_ID",
+  "firstLabel": "Answer 1",
+  "secondLabel": "Answer 2",
+  "outcome": "tie",
+  "rationale": "Both preserve the scoped reports and the unknown population average."
+}]
+```
+
+Outcomes are `first_preferred`, `second_preferred`, `tie`, `uncertain`; each reviewer may judge an unordered pair only once. Per-case reports retain every reviewer's verdict/rationale and translate that explicit verdict to anonymous win/loss/tie/uncertain outcomes for the pair. Reversed label order is normalized when detecting reviewer disagreement. Missing comparisons remain missing, and failures remain in the denominator without being scored as losses. Comparative disagreements join the focused human-review queue even if all six individual axes agree. No preference is calculated from the axes, no arm mapping is read, and no combined gain or promotion conclusion is produced.
+
 For a small independently source-checked calibration set, save a human record with `provenance: source_checked_human` and `purpose: calibration_reference`; AI records always use `ai_provisional`. Only overlapping, hash-bound answers are compared. Reports label uncalibrated AI judgments and preserve disagreement axes for focused human review. `focused_disagreement` is available as a review purpose. A human provenance value is a saved reviewer attestation, not automatic identity verification. Synthetic fixture attestations never count as human review of actual answers.
 
 AI agreement, receipt validity and scripted tests do not establish ground truth or answer improvement. Both `qualityClaimEligible` and `activationAllowed` remain false. AGENTS.md still requires source-checked human review and gains on fresh product-disjoint validation for final quality claims or promotion.

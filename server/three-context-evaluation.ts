@@ -62,7 +62,9 @@ const reviewSchema = z.object({ format: z.literal('ablatrix-source-checked-revie
     unsupportedClaims: z.array(z.object({ claim: nonempty, severity: z.enum(['material', 'minor']), rationale: nonempty }).strict()),
     exactApplicability: axisSchema, appropriateUncertainty: axisSchema, directRelevance: axisSchema,
     unknowns: z.array(z.object({ unknown: nonempty, status: z.enum(['preserved', 'missing', 'contradicted', 'not_relevant']), rationale: nonempty }).strict())
-  }).strict()).min(1)
+  }).strict()).min(1),
+  comparisons: z.array(z.object({ caseId: nonempty, firstLabel: nonempty, secondLabel: nonempty,
+    outcome: z.enum(['first_preferred', 'second_preferred', 'tie', 'uncertain']), rationale: z.string().trim().min(20) }).strict()).optional()
 }).strict();
 export type ThreeContextReviewImport = z.infer<typeof reviewSchema>;
 export type ImportedThreeContextReview = { format: 'ablatrix-imported-source-review-v1'; packetSha256: string; reviewSha256: string; review: ThreeContextReviewImport };
@@ -119,6 +121,16 @@ export function importThreeContextReview(packet: ThreeContextEvaluationPacket, r
     assert.equal(new Set(entry.unsupportedClaims.map(c => c.claim)).size, entry.unsupportedClaims.length);
     for (const claim of entry.unsupportedClaims) assert.ok(answer.output.answer.includes(claim.claim), 'Unsupported claim text must occur literally in this answer.');
   }
+  const compared = new Set<string>();
+  for (const comparison of review.comparisons ?? []) {
+    assert.notEqual(comparison.firstLabel, comparison.secondLabel, 'A comparison requires distinct answers.');
+    for (const label of [comparison.firstLabel, comparison.secondLabel]) {
+      assert.ok(packet.answers.some(a => a.label === label && a.caseId === comparison.caseId && a.status === 'completed'), 'Compare only completed answers from the same case.');
+      assert.ok(review.entries.some(entry => entry.label === label), 'Both compared answers must have individual source-checked judgments.');
+    }
+    const pair = JSON.stringify([comparison.caseId, ...[comparison.firstLabel, comparison.secondLabel].sort()]);
+    assert.ok(!compared.has(pair), 'Each reviewer may judge an unordered pair only once.'); compared.add(pair);
+  }
   return { format: 'ablatrix-imported-source-review-v1', packetSha256: packet.sha256, reviewSha256: diagnosticHash(review), review };
 }
 
@@ -134,11 +146,23 @@ export function reportThreeContextEvaluation(packet: ThreeContextEvaluationPacke
   const reviews = imports.map(record => { const verified = importThreeContextReview(packet, record.review); assert.deepEqual(record, verified); return verified; });
   assert.equal(new Set(reviews.map(r => r.reviewSha256)).size, reviews.length, 'Duplicate imports cannot inflate review counts.');
   assert.equal(new Set(reviews.map(r => r.review.reviewer)).size, reviews.length, 'Use one consolidated record per reviewer; do not double-count revisions.');
+  // These outcomes translate explicit reviewer preferences; no scores or axis
+  // aggregation manufacture a preference. Reversed pairs compare consistently.
+  const comparisons = reviews.flatMap(r => (r.review.comparisons ?? []).map(c => ({ ...c, reviewer: r.review.reviewer, provenance: r.review.provenance,
+    firstAnswerOutcome: c.outcome === 'first_preferred' ? 'win' : c.outcome === 'second_preferred' ? 'loss' : c.outcome,
+    secondAnswerOutcome: c.outcome === 'second_preferred' ? 'win' : c.outcome === 'first_preferred' ? 'loss' : c.outcome,
+    preferredLabel: c.outcome === 'first_preferred' ? c.firstLabel : c.outcome === 'second_preferred' ? c.secondLabel : null })));
+  const pairs = new Map<string, typeof comparisons>();
+  for (const comparison of comparisons) {
+    const pair = JSON.stringify([comparison.caseId, ...[comparison.firstLabel, comparison.secondLabel].sort()]); pairs.set(pair, [...pairs.get(pair) ?? [], comparison]);
+  }
+  const comparisonDisagreements = [...pairs.values()].filter(verdicts => new Set(verdicts.map(v => v.preferredLabel ? `preferred:${v.preferredLabel}` : v.outcome)).size > 1)
+    .map(verdicts => ({ caseId: verdicts[0]!.caseId, labels: [verdicts[0]!.firstLabel, verdicts[0]!.secondLabel].sort(), reviewers: verdicts.map(v => v.reviewer), needsFocusedHumanReview: true }));
   const focusedReview = packet.answers.map(answer => {
     const judgments = reviews.flatMap(r => r.review.entries.filter(e => e.label === answer.label).map(e => ({ reviewer: r.review.reviewer, provenance: r.review.provenance, axes: axes(e) })));
     const differences = judgments.length < 2 ? [] : Object.keys(judgments[0]!.axes).filter(axis => new Set(judgments.map(j => j.axes[axis as keyof typeof j.axes])).size > 1);
     return { label: answer.label, caseId: answer.caseId, status: answer.status, reviewers: judgments.map(j => ({ reviewer: j.reviewer, provenance: j.provenance })), disagreementAxes: differences,
-      humanSourceChecked: judgments.some(j => j.provenance === 'source_checked_human'), needsFocusedHumanReview: answer.status === 'completed' && (differences.length > 0 || !judgments.length) };
+      humanSourceChecked: judgments.some(j => j.provenance === 'source_checked_human'), needsFocusedHumanReview: answer.status === 'completed' && (differences.length > 0 || !judgments.length || comparisonDisagreements.some(c => c.labels.includes(answer.label))) };
   });
   const calibration = reviews.filter(r => r.review.purpose === 'calibration_reference').flatMap(human => reviews.filter(r => r.review.provenance === 'ai_provisional').flatMap(ai => {
     const common = human.review.entries.filter(h => ai.review.entries.some(a => a.label === h.label)); if (!common.length) return [];
@@ -148,6 +172,8 @@ export function reportThreeContextEvaluation(packet: ThreeContextEvaluationPacke
   return { format: 'ablatrix-three-context-evaluation-report-v1', packetSha256: packet.sha256, scope: packet.scope, transportProvenance: packet.transportProvenance,
     denominator: { plannedAnswers: packet.answers.length, completed: packet.answers.filter(a => a.status === 'completed').length, failedOrUnknown: packet.answers.filter(a => a.status === 'failed_or_unknown').length, unattempted: packet.answers.filter(a => a.status === 'not_attempted').length },
     humanSourceCheckedActualAnswers: packet.transportProvenance === 'live_router' ? focusedReview.filter(r => r.humanSourceChecked).length : 0,
+    caseComparisons: packet.cases.map(c => ({ caseId: c.id, answers: packet.answers.filter(a => a.caseId === c.id).map(a => ({ label: a.label, status: a.status })),
+      reviewerVerdicts: comparisons.filter(v => v.caseId === c.id), disagreements: comparisonDisagreements.filter(v => v.caseId === c.id) })),
     reviewRecords: reviews.map(r => ({ reviewer: r.review.reviewer, provenance: r.review.provenance, purpose: r.review.purpose, reviewSha256: r.reviewSha256,
       sourceCheckedAttestation: true, aiCalibration: r.review.provenance === 'ai_provisional' ? calibration.some(c => c.aiReviewer === r.review.reviewer) ? 'small_bound_reference_only' : 'uncalibrated' : 'not_applicable',
       answers: r.review.entries.map(e => ({ label: e.label, usefulFactCompleteness: { covered: e.facts.filter(f => f.status === 'covered').length, total: e.facts.length, facts: e.facts.map(f => ({ factId: f.factId, status: f.status })) },
