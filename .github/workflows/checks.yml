@@ -56,6 +56,12 @@ jobs:
           node --import tsx scripts/source-coverage-v2-retrieval.ts
           node --import tsx scripts/source-coverage-v2-live.ts
           npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/source-calibration-retrieval.ts scripts/source-calibration-comparison.ts scripts/retrieval-coverage-retrieval.ts scripts/retrieval-coverage-comparison.ts scripts/source-gap-retrieval.ts scripts/source-gap-comparison.ts scripts/source-gap-partial-comparison.ts scripts/source-gap-retrieval.test.ts scripts/source-coverage-v2-retrieval.ts scripts/source-coverage-v2-retrieval.test.ts scripts/source-coverage-v2-live.ts
+      - name: Retrieval diagnosis offline replay and mocked three-context workflow
+        run: |
+          python3 -m unittest scripts/test_source_packet_disjointness.py
+          npm run diagnosis:replay
+          npm run diagnosis:mock
+          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/retrieval-diagnosis.ts scripts/prepare-three-context.ts scripts/prepare-semantic-model.ts scripts/verify-retrieval-diagnosis.ts scripts/three-context-mock.ts
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
