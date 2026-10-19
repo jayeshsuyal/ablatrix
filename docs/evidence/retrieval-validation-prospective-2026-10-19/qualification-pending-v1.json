@@ -1,0 +1,14 @@
+{
+  "format": "ablatrix-fresh-validation-source-screening-qualification-v1",
+  "status": "review_pending",
+  "protocolFileSha256": "54dc6122fc641448c9e190ca5dac21ee7a33ad79be2fc1d2e7b1202579d0b062",
+  "historyInventoryFileSha256": "d2d4bb28fce604e2a979691a84125a00c00f6f56dc4ad9857f21a9a25bf84858",
+  "candidateFreezeFileSha256": "37f4bdf7af6947704b913bf19df10bf727277afcc9ccbded4130fd73470cb752",
+  "poolFileSha256": null,
+  "reviewer": null,
+  "reviewedAt": null,
+  "freshInputsInspectedBeforeReview": false,
+  "reason": "No fresh pool may be read until exact code/protocol/history review plus finite pool byte commitment is independently saved.",
+  "providerCalls": 0,
+  "paidExecutionAuthorized": false
+}

@@ -67,6 +67,14 @@ jobs:
           npm run diagnosis:v5 -- /tmp/ablatrix-v5-replay.json
           npm run diagnosis:live
           npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/retrieval-diagnosis.ts scripts/prepare-three-context.ts scripts/prepare-semantic-model.ts scripts/verify-retrieval-diagnosis.ts scripts/three-context-mock.ts scripts/qualify-three-context-v5.ts scripts/rehearse-three-context-v5.ts scripts/three-context-evaluation.ts scripts/retrieval-diagnosis-v4.ts scripts/retrieval-diagnosis-v5.ts scripts/prepare-three-context-v5.ts scripts/three-context-live.ts
+      - name: Prospective validation source and review gates (synthetic fixtures only)
+        run: |
+          python3 -m unittest discover -s scripts -p 'test_prepare_fresh_validation_v1.py'
+          npm run validation:prospective -- verify --freeze-dir docs/evidence/retrieval-validation-prospective-2026-10-19/freeze-v2
+          npm run validation:mock
+          npm run validation:contexts
+          npm run validation:prepare
+          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/fresh-validation-contexts-v1.ts scripts/fresh-validation-mock.ts scripts/prepare-three-context-fresh-v1.ts server/fresh-validation-v1.ts
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
