@@ -1,0 +1,1078 @@
+{
+  "format": "ablatrix-source-gap-partial-review-v1",
+  "status": "completed",
+  "provenance": "independent_ai_source_gap_review",
+  "protocolFileSha256": "2e8b0c9d78bc8c19b276dde94dc0d0bde2d9d2fc622b6ae8200380d144c433b9",
+  "poolFileSha256": "00506e7875c4a47705f06ff14302de3648b9d9343b5240fe7225706d5c83b737",
+  "baselineFileSha256": "b8230e71cc2e52a25a1507f44dcda9de6f8597d783633e13069ff40d1836b25d",
+  "modelOutputsInspected": false,
+  "candidateContextInspected": false,
+  "cases": [
+    {
+      "caseId": "source-gap-train-56",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "916c54826be935fb5b2a83103412ae2adfc3d810f3e3070c9a5d04867be84c16",
+      "sourcePoolSha256": "dac5e41fd6caf25235fb8570ffae36f3a10caeecbeea4758558a6eb768940615",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The item-diameter attribute gives 3.5 inches.",
+          "sourceIds": [
+            "epqa-B000THKV4O-attribute-a35dc21824ef10f6"
+          ],
+          "quote": "item_diameter:  { unit:inches, decimal_value:3.5 }",
+          "qualification": "This is an item diameter, not package width or a claim that every part of the head has this diameter."
+        },
+        {
+          "fact": "A customer reports installed dimensions just under 12 1/2 by 3 1/2 inches, with 1 1/2 inches of tubing clearance on either side of the head.",
+          "sourceIds": [
+            "epqa-B000THKV4O-cqa-6fae0ec2e5ab167b"
+          ],
+          "quote": "it's just under 12 1/2 inches by 3 1/2 inches installed but you'll need an inch and a half clearance on either side of the filter head",
+          "qualification": "The original customer question asks for dimensions. This is a customer report; the baseline separately lists item dimensions 4 by 4 by 12.5 inches, so head dimensions and filter diameter must remain distinct."
+        },
+        {
+          "fact": "A customer says about 13 inches is needed to remove and replace the filter.",
+          "sourceIds": [
+            "epqa-B000THKV4O-cqa-d580e699d0f864ab"
+          ],
+          "quote": "you will need about 13\" to remove and replace filter unless you want to unscrew it from the wall every time.",
+          "qualification": "This is service clearance in a sideways-cabinet discussion, not the physical total length."
+        }
+      ],
+      "notes": "The baseline already contains item diameter, item dimensions, installed dimensions and relevant installation/service clearances. The omitted head-only 4-by-4-inch statement adds no primary requested outside-diameter or total-length fact. Package dimensions are separately labeled and are not substituted for item dimensions."
+    },
+    {
+      "caseId": "source-gap-train-12005",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "52fa7fc1426d1512b476e5c42d18f64b370223fea517e0307b26aec5378aa514",
+      "sourcePoolSha256": "441122271eb52574fdba9cf3dbad1253c1a3feb340acb41994ac63bb788161b0",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "The title and actual baseline explicitly say 46 inches tall, with a nearly 4-foot customer description. However, the full source also labels an item height of 2.7 inches, with 9.2-inch width and 8.6-inch length. Its physical state is not supplied; calling it packaging or folded dimensions would be an inference. This unexplained height conflict prevents treating the baseline as complete, and the unscoped 2.7-inch value is not a reliable useful standing-height gap."
+    },
+    {
+      "caseId": "source-gap-train-3889",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "6d6792910d599e3c3f18d905840273c905ef7ba0520cd2d46499502451bb853c",
+      "sourcePoolSha256": "ba8b43051393c2cb0ba6a2b6f9ca21497c19258deff5e5230bd85cc1aa409094",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The material attribute lists plastic.",
+          "sourceIds": [
+            "epqa-B00D87H0EG-attribute-f2749b42608d90db"
+          ],
+          "quote": "material:  { value:\"plastic\" }",
+          "qualification": "The attribute is already in the baseline; customer descriptions conflict with or describe a different surface feel."
+        },
+        {
+          "fact": "A customer describes a felt feel and explicitly disputes plastic.",
+          "sourceIds": [
+            "epqa-B00D87H0EG-review-4f1be52e915bf9c5"
+          ],
+          "quote": "it's not plastic but has a felt feel to it.",
+          "qualification": "This is a customer statement, not a verified material composition. Other baseline reviews say velvet-like material; the disagreement must be retained."
+        }
+      ],
+      "notes": "All useful material alternatives in the full sources are already represented by baseline bodies: plastic and velvet/felt-like descriptions. The additional brittle-plastic review repeats the plastic material rather than establishing a missing composition. Do not resolve the source disagreement by asserting one uniform material."
+    },
+    {
+      "caseId": "source-gap-train-3599",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "bbdac1464bd9893020c04f6ed664617de56d679e5fb1ffb6dea05fab8bd413ea",
+      "sourcePoolSha256": "8dd22907cfc8b692b220f3f0071965eaecadd4fbd2b7ebccb828e69b68b196a4",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A review says the fabric is similar to terry cloth.",
+          "sourceIds": [
+            "epqa-B000WFQP9S-review-3a0b379778a08dea"
+          ],
+          "quote": "this is very similar to terry cloth.",
+          "qualification": "This is a customer tactile comparison rather than physical verification."
+        },
+        {
+          "fact": "The description says it is 100% cotton and less soft than minky.",
+          "sourceIds": [
+            "epqa-B000WFQP9S-description-b3754caf7d70d378"
+          ],
+          "quote": "note: this fabric is not as soft as minky as it is 100% cotton.",
+          "qualification": "Both requested comparison and composition already occur in the baseline."
+        },
+        {
+          "fact": "A reviewer reports different softness and density between two deliveries.",
+          "sourceIds": [
+            "epqa-B000WFQP9S-review-4d7b9ef10dd0332c"
+          ],
+          "quote": "the first time this fabric came it was more like terry cloth and not as soft and dense as the second time receiving this (both colors where this way).",
+          "qualification": "This indicates customer-reported variation; it does not establish a universal feel for every delivery."
+        }
+      ],
+      "notes": "The baseline covers the useful terry-versus-minky comparison, cotton composition and reported variation. The omitted curtains CQA repeats the terrycloth comparison. The unscoped smaller-wales observation and generic sewing recommendations do not establish a missing primary answer to the requested feel comparison."
+    },
+    {
+      "caseId": "source-gap-train-5236",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "63fdeefbd5f05f91385462fcdd4596c94024171a4703617eec909a4ce0b47fdf",
+      "sourcePoolSha256": "66c0078366d2427d665b80daee9e515328f7455a2b2d6db06549ff6e672571f3",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "No supplied source establishes whether Costco Brio 312t belongs to a compatible generation, or whether the consumer can perform setup. Baseline and pool contain the same useful general first-through-third-generation compatibility and Venture exclusion, but those do not prove Brio applicability. The Bluetooth/ComPilot answer and US-versus-UK answer retain their own original-question scopes. No useful primary missing compatibility or setup fact is supported."
+    },
+    {
+      "caseId": "source-gap-train-4023",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "92b26273a6bd784a5ac03f06f8dfcf0e2642f9a7a62140a3b97e79a3be32a515",
+      "sourcePoolSha256": "a4039f8ab667815b1acd45aea50575e1c617725ebc7e8808e0528f2e120e2ddc",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A reviewer with the requested 6-foot-2, 200-pound measurements says Large fits true to size.",
+          "sourceIds": [
+            "epqa-B00DR0J718-review-c9aaef9844212851"
+          ],
+          "quote": "it fits true to size (at least the l, i'm 6'2\", 200lbs).",
+          "qualification": "This is one customer fit report, not a size guarantee; it directly matches the questioner measurements."
+        },
+        {
+          "fact": "Another customer reports an XL fitting at 6-foot-2 and 180 pounds.",
+          "sourceIds": [
+            "epqa-B00DR0J718-cqa-b0f885619dd83cc6"
+          ],
+          "quote": "i bought an x- large, i'm 6-2 and 180, fits perfectly, so probably a large would be okay",
+          "qualification": "The Large recommendation answers the original 177-cm, 164-pound question. Only the speaker own XL/6-foot-2/180-pound experience can be carried to this assessment; customer fit preferences vary."
+        }
+      ],
+      "notes": "The actual baseline contains the exact requested body-measurement match and relevant contrasting fit anecdotes, including XL on a lighter person of the same height. Other smaller-body anecdotes do not add a primary useful size fact for the requested 6-foot-2, 200-pound person. The listing Large size is also in the title; its incidental model number does not answer fit."
+    },
+    {
+      "caseId": "source-gap-train-3400",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "4e69e6b340f22e11dd314bdc1d2fb902b42d54ab678a2f93aa2b9d26ed4b6d08",
+      "sourcePoolSha256": "154947daf0a63c6975538d6fbac5080f67a91b70bdd81e5be38b923cc1a0b9cd",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "No source confirms fit for a 2015 Lexus NX 200t or supplies measurements to assess that fit. Universal-fit wording adds no proven NX relationship, and baseline not-a-custom-fit wording already conveys the same useful limitation. The Lexus ES350 CQA applies to a different vehicle; reviews of Malibu, Chrysler, Range Rover or unspecified cars cannot be transferred. The listing model number is already in the title and does not establish compatibility."
+    },
+    {
+      "caseId": "source-gap-train-10275",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "aaecb49ffc532a71ced2252623083f5800a49a9d2521a05e2db93cd514eed3f1",
+      "sourcePoolSha256": "5b1cec5ab9e7fb924471b933d0ec2949b6866b58e0d505917ed61287c06e0eab",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A review says parts for a standard installation are included.",
+          "sourceIds": [
+            "epqa-B00IWMLEVW-review-8e3159c7ff843c81"
+          ],
+          "quote": "all parts needed to do a standard installation are included with the shade.",
+          "qualification": "The source explicitly limits the inclusion claim to a standard installation; unusual mounting surfaces are not covered."
+        },
+        {
+          "fact": "A CQA says all mounting hardware is included.",
+          "sourceIds": [
+            "epqa-B00IWMLEVW-cqa-5bf3c4cda37b45cf"
+          ],
+          "quote": "yes, all the mounting hardware is included.",
+          "qualification": "Its original question asks about hanging hardware such as screws, matching the current request."
+        },
+        {
+          "fact": "A review says a drill, straight edge and pencil are needed.",
+          "sourceIds": [
+            "epqa-B00IWMLEVW-review-f769c9143d729599"
+          ],
+          "quote": "all you need is a drill, straight edge and pencil.",
+          "qualification": "These are user-supplied tools according to the reviewer, distinct from included mounting parts."
+        }
+      ],
+      "notes": "All useful available mounting-parts facts and tool qualifications occur literally in the baseline. Full-pool dimensions, differing shade-size reports and material facts do not establish a missing answer to whether standard mounting parts are included."
+    },
+    {
+      "caseId": "source-gap-train-3719",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "1a633f521b842e63417bd2209330665e3ea81157905942176287629e3bb12526",
+      "sourcePoolSha256": "aeffc3f73c3daa95bb5463ece1df3cc954bf75eabfeb7d1b2b7cbb7ab470b689",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The item-weight attribute lists 3.41 kilograms, normalized to 7.52 pounds.",
+          "sourceIds": [
+            "epqa-B0025TZ30G-attribute-a9d2deeeec95ff13"
+          ],
+          "quote": "item_weight:  { unit:kilograms, normalized_value:{ unit:pounds, value:7.52 }, value:3.41 }",
+          "qualification": "This is listed item weight, not a measured or independently verified weight."
+        },
+        {
+          "fact": "A reviewer guesses 20 pounds.",
+          "sourceIds": [
+            "epqa-B0025TZ30G-review-4df0d9f580a49d1e"
+          ],
+          "quote": "this book must weigh 20 pounds.",
+          "qualification": "The wording is speculative and conflicts with the listed item weight; it must not replace the attribute or be presented as an exact measurement."
+        }
+      ],
+      "notes": "The baseline includes the numerical item weight, the conflicting speculative review and qualitative heavy/bulky reports. The isolated description fragment of 75 lb. does not establish book weight or scope and is not a useful missing mass fact. No primary requested weight is absent."
+    },
+    {
+      "caseId": "source-gap-train-3712",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "be8dc31a65528797046d7d8263dd2c0510e123674e6dc4174fb7066dd052c97e",
+      "sourcePoolSha256": "242579df333f5412d9763dbad82ca5c46cfca0c9473bbf4b1f0090edb590ed54",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The projector has a 7-by-7-inch top-loading glass-covered copy area with a hinged magnetic cover.",
+          "sourceIds": [
+            "epqa-B007VTTJS2-bullet-9b0eb6664a85f07a"
+          ],
+          "quote": "top-loading 7 x 7 in (177.8 x 177.8 mm) glass-covered copy area with adjustable, magnetic, removeable, hinged cover to keep artwork secure.",
+          "qualification": "This describes an opaque copy area and artwork retention. It does not establish a dedicated transparency-slide holder."
+        },
+        {
+          "fact": "The description supports projection of artwork to a vertical surface.",
+          "sourceIds": [
+            "epqa-B007VTTJS2-description-05270abc3511f4e1"
+          ],
+          "quote": "for convenient projection of artwork, designs, patterns, prints, and line drawings to a vertical surface.",
+          "qualification": "This supports upright projection; no supplied source gives a specific 22-by-30-inch output limit or slide suitability."
+        },
+        {
+          "fact": "A CQA states oversized images can be projected in sections.",
+          "sourceIds": [
+            "epqa-B007VTTJS2-cqa-5a50237165de1e48"
+          ],
+          "quote": "it reads images up to 7\" × 7\" and can project oversize images in sections.",
+          "qualification": "The original question concerns laptop connection. The explicit image-area and sectioning statements are usable, but they do not prove transparency-slide support or exact output dimensions."
+        }
+      ],
+      "notes": "The baseline contains every useful available fact about holding originals, the 7-inch copy area, vertical projection and sectioning. The product title and source identity say opaque projector; slide format and exact 22-by-30 output remain unestablished in the full pool as well. Incidental part number, body dimensions and lens length do not supply the requested missing capability."
+    },
+    {
+      "caseId": "source-gap-train-1859",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "45e141fd4250b61d9cb14e71517c10d7e8b10654e4c41fc4ee003292299f51c4",
+      "sourcePoolSha256": "25c7c13992694f032ccafbbf63714ab7034bc0514db700442708ee17f18a8d68",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The posts are described as cardboard tubes covered in sisal, with plastic ends and metal screw inserts.",
+          "sourceIds": [
+            "epqa-B003BYQ1IM-cqa-974600f8011505e8"
+          ],
+          "quote": "the cylindracal posts are heavy cardboard tubes covered in sisal with robust plastic ends that have metal screw inserts for assembly.",
+          "qualification": "The original question asks about solid wood. This explicitly describes the posts, but does not independently establish that the cardboard is corrugated."
+        },
+        {
+          "fact": "The description identifies the boards as pressed wood.",
+          "sourceIds": [
+            "epqa-B003BYQ1IM-description-04a60212459dd444"
+          ],
+          "quote": "board material: pressed wood;",
+          "qualification": "Board material must remain distinct from post cores. A broad real-wood customer review in the baseline does not override the explicit cardboard-post descriptions."
+        }
+      ],
+      "notes": "The actual baseline contains the explicit cardboard-post construction, sisal covering, end hardware, board material and broader real-wood wording. All primary useful requested material facts are present; no corrugation detail is supported anywhere in the pool. Preserve the distinction between boards and cylindrical posts."
+    },
+    {
+      "caseId": "source-gap-train-7041",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "4ec1ad02f2493ad106cd68c058fac4816727de53ca2b44a006e56ae3ebc9a5e8",
+      "sourcePoolSha256": "1168d88a6bf4022a16ef8f9646e9798ed7a86e5119236a2cec9fda1e897580ce",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A CQA describes an off-white tabletop with putty-grey stem and legs.",
+          "sourceIds": [
+            "epqa-B004GACU0S-cqa-a27ef041c6f7e7f6"
+          ],
+          "quote": "as you see, putty grey stem and legs, off white top",
+          "qualification": "The original question asks for tabletop color. This supports an off-white top, not an all-white table."
+        },
+        {
+          "fact": "A review describes the upper part as chrome and the lower part as gunmetal gray.",
+          "sourceIds": [
+            "epqa-B004GACU0S-review-df8773fb4544e892"
+          ],
+          "quote": "the upper part is chrome and the lower part is a gunmetal gray color of a quality finish.",
+          "qualification": "The reviewer does not precisely identify the upper component; retain that scope and the different descriptions rather than calling the entire table white."
+        }
+      ],
+      "notes": "The baseline already contains all useful component-color descriptions for the white question, including off-white top, grey legs/stem and chrome/gunmetal review wording. The pool color-code attribute has no component scope and does not establish a missing useful white-versus-nonwhite fact beyond those descriptions."
+    },
+    {
+      "caseId": "source-gap-train-3376",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "1e227a84c244b0ab82a80fdfcedbd8f242e6308de98b403d2f2a3488e4d0e615",
+      "sourcePoolSha256": "6b6ae9e59adae05322695e4dca3de7a41de316a32f991e7604ec8fa0c8162b7c",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "No full source establishes fit for the requested European E60 525i N52B25. Positive CQA statements are scoped to a 2006 325i and a 2009 E93 328i; neither can be transferred. The OEM number in the 325i answer is already in the baseline. The additional FBA listing part number is incidental and does not prove the requested engine/vehicle relationship. No supported primary gap or meaningful exact-fit control is established."
+    },
+    {
+      "caseId": "source-gap-train-11387",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "9d4d1f70eb1b6a640fcd767c94c19e289863ab6e2c4fefe2422bed9eb23b3426",
+      "sourcePoolSha256": "13d68d3a26e3859599e2bddf3e432cdd9df2291e38f5a2d7d6c029d300a2be73",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "The original RT81 CQA says only that this is a replacement for several Ortofon cartridges; it does not identify the cartridge on the Fluance RT81 or confirm fit. The omitted Concorde Pro S/OM Pro S bullet names supported cartridges, but there is no source bridge to RT81 and the baseline already says only Pro S type plus an OM installation report. Cartridge names and the unrelated Stanton yes answer cannot establish RT81 fit. Conflicting or qualified cartridge advice remains unresolved, so no primary requested compatibility gap is designated."
+    },
+    {
+      "caseId": "source-gap-train-2608",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "ac7860607e720ab9247cbc685be6d65953c685bfeef7ae6a5c2f9671f21ed6b9",
+      "sourcePoolSha256": "b9e1cccdf89bf80e13b22fcf0aedbb11be925296676036ed05267d364205cbf1",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "The title and baseline already identify the listed deskset and required SynJ base models. Multiple CQA incompatibility answers explicitly concern an SB67128 repeater rather than the titled SB67148 deskset, so their no answers cannot be transferred to CL83201. The omitted generic GAP-protocol review does not establish this deskset or CL83201 support for that protocol and conflicts in scope with the explicit base requirement. Exact CL83201 applicability is unsupported; no useful missing model relationship can be designated confidently."
+    },
+    {
+      "caseId": "source-gap-train-10720",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "6b5f36361843a10bde6c5431c9c1def38c9aead4bceda409e22993851c22f2cb",
+      "sourcePoolSha256": "702502ea76edcc571e7b320815a50881636ad76abc598fa3cacdad450a1fb45d",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The pictured white cushion is not included.",
+          "sourceIds": [
+            "epqa-B005AUM8U0-cqa-81c6a38f9a75df31"
+          ],
+          "quote": "the \"cushion\" pictured is not included",
+          "qualification": "This actual baseline CQA answers whether the white cushion is included; it reports exclusion rather than identifying a separate purchase source."
+        },
+        {
+          "fact": "The item comes with a removable, machine washable polyester cover rather than a cushion.",
+          "sourceIds": [
+            "epqa-B005AUM8U0-cqa-f22ff478fd55af54"
+          ],
+          "quote": "this item comes with an easily removable & machine washable polyester coverit does not come with a cushion, only the cover.",
+          "qualification": "This actual baseline body explicitly distinguishes the included cover from the absent cushion. No supplied source establishes where to buy the cushion."
+        }
+      ],
+      "notes": "All useful supplied inclusion facts are already explicit in the baseline: the cover is included and the pictured cushion is excluded. Other source IDs repeat that answer; no separate cushion supplier is established."
+    },
+    {
+      "caseId": "source-gap-train-12561",
+      "sourceGapGroup": "specification_gap",
+      "baselineContextSha256": "f50df730148a6094ddfac5947447778ec33c41c804a7cd16184b8e6f9211baac",
+      "sourcePoolSha256": "a8bf666cb3be964f6e9aa3de8e7204b80b9d9cefe8cfc2e4e53098056847086b",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": true,
+      "baselineComplete": false,
+      "designatedFacts": [
+        {
+          "fact": "The band is listed with a size of 9 inches and a width of 18 millimeters.",
+          "sourceIds": [
+            "epqa-B00QWK21PY-attribute-fb6497b9607e8db0"
+          ],
+          "quote": "band:  { material:[ { value:\"faux leather\" } ], size:[ { value:\"9 inches\" } ], color:[ { value:\"red\" } ], width:[ { unit:millimeters, value:18. } ] }",
+          "qualification": "These are band specifications for the scoped watch. The source calls 9 inches its band size; it does not establish a usable wrist circumference. Neither dimension occurs in any baseline body or the title."
+        },
+        {
+          "fact": "The case thickness is listed as 11 millimeters.",
+          "sourceIds": [
+            "epqa-B00QWK21PY-attribute-ad11cf15c85b8810"
+          ],
+          "quote": "thickness:[ { unit:millimeters, value:11. } ]",
+          "qualification": "This is the watch case thickness, distinct from package dimensions. The case diameter of 38 millimeters is already semantically present in the baseline and is therefore excluded from the designated missing facts."
+        }
+      ],
+      "notes": "The requested item dimensions gain useful missing band size, band width, and case thickness. Baseline already reports 38mm and contains package dimensions, so those are not gaps. The package attribute has inconsistent raw centimeter and normalized inch axis values; it must not be treated as watch dimensions or silently repaired."
+    },
+    {
+      "caseId": "source-gap-train-6975",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "e0e59c5971e3d2cd22452a66bc5575d6d6a237debb2dd0db8fa8cf3b24ea72f0",
+      "sourcePoolSha256": "9c9f2177bce5e9f9a7ceae4264dbc360af99d51031cc9622bd705e08cd3a38d6",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The printer uses 1.75 mm PLA filament.",
+          "sourceIds": [
+            "epqa-B00KJ6BU4K-bullet-7464a7920b2d0b53"
+          ],
+          "quote": "fabricates parts using 1.75 mm pla filament (sold separately)",
+          "qualification": "This actual baseline bullet directly specifies both filament diameter and material, also stated in the product title. The other baseline descriptions repeat these specifications; bulk filament is sold separately while a sample is described as included."
+        }
+      ],
+      "notes": "The title and multiple actual baseline bodies already answer the requested filament size and material. Additional source wording and IDs do not add a useful missing filament specification."
+    },
+    {
+      "caseId": "source-gap-train-13485",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "c1da1cd260a91334e7e9e550f86f6dcbde413a7e33270cb026a2f48cdde7d8fc",
+      "sourcePoolSha256": "d233d1f02d6c438284d19d615ece1745aca0ed9668a51378ddfaad1a4f2ed33b",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A reviewer considers the color combinations suitable for casual or semi-formal outings.",
+          "sourceIds": [
+            "epqa-B008T9QG7K-review-52624a5212033223"
+          ],
+          "quote": "the color combinations make these perfect for any outing, casual or semi-formal.",
+          "qualification": "This is an opinion in an actual baseline body, not an objective ranking of colors or proof that a particular variant is best."
+        },
+        {
+          "fact": "A reviewer describes the navy and yellow band as a casual summer choice.",
+          "sourceIds": [
+            "epqa-B008T9QG7K-review-bff573d4cdf12925"
+          ],
+          "quote": "the navy and yellow band is great for a casual summer look.",
+          "qualification": "This actual baseline review discusses navy/yellow, whereas the selected title and baseline color attribute are gray/orange stripe. Preserve that variant distinction."
+        },
+        {
+          "fact": "The selected color is listed as gray/orange stripe.",
+          "sourceIds": [
+            "epqa-B008T9QG7K-attribute-845c817490f6e4b0"
+          ],
+          "quote": "color:  { value:\"gray/orange stripe\" }",
+          "qualification": "This actual baseline attribute matches the selected title. It establishes the listed variant, not which color the user will prefer."
+        }
+      ],
+      "notes": "All useful available color and dress-style opinions are represented in the baseline, including the selected gray/orange variant and the separate navy/yellow summer opinion. No source establishes a uniquely best color. Strap interchangeability adds general styling flexibility rather than a missing requested color comparison."
+    },
+    {
+      "caseId": "source-gap-train-13481",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "985405fd8d1d691402f6ce765af3b7e46301283db3daea734f1224e121da5b20",
+      "sourcePoolSha256": "2a588d6df4c2e5c6233c34bd9be4cf6493130cf1e18e0388c3daabf546fe74e4",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "No scoped body establishes the difference between black li and black. The matching CQA already in baseline says the writer purchased black and did not see black li, so its personal impression is not a supported comparison. Chestnut attributes and incidental part numbers do not resolve the requested variants."
+    },
+    {
+      "caseId": "source-gap-train-3673",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "62b1197a230bb6d6dddb42b411621fdea05bbcbcbf83bea57dd57062d0537f9c",
+      "sourcePoolSha256": "82f1272ec076883a358b101ff21bfd4bb0b9b8fa8b36954d1a92581126fe6948",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "No supplied source establishes PE770 compatibility or that PE770 uses a size L bobbin. The title and baseline already identify size L; yes applies to Viking Designer Ruby, and the PR1000E report does not prove fit for PE770. The generic size-L condition cannot resolve the missing machine relationship."
+    },
+    {
+      "caseId": "source-gap-train-2733",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "01e135eea043fc98874fb385e841e6bedf5e9acc5396efe52d8fa47dff37b17d",
+      "sourcePoolSha256": "0b1eaca748c86ff924c4e6b57a35c90973920739faee0331cc0a20de56a8aa34",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "The full source list names Oreck 100 and other series, but does not establish that Halo100 belongs to the compatible 100 series. Baseline XL9100 experience and Endurolife-belt exclusions have other original-question scopes. Neither nearby identifiers nor generic Oreck upright wording supports the requested exact fit."
+    },
+    {
+      "caseId": "source-gap-train-9805",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "02a52e56f12f9d9e89aa3525853958da65d906a98d39883d654911add18eeda5",
+      "sourcePoolSha256": "9ac6301c560a1f50d60356b56dc6365ef60699c31f23202760702a00e9790787",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The listing claims compatibility with Windows in both 32-bit and 64-bit forms.",
+          "sourceIds": [
+            "epqa-B002JAU20W-bullet-9381b85cc930282a"
+          ],
+          "quote": "works on all windows 32/64 bit & mac operating systems",
+          "qualification": "This actual baseline bullet supplies the architecture coverage. Treat it as a listing claim rather than a physically verified guarantee."
+        },
+        {
+          "fact": "A customer reports working operation in Windows 10.",
+          "sourceIds": [
+            "epqa-B002JAU20W-review-469d8a92735394e9"
+          ],
+          "quote": "working just fine in windows 10, android and probably any system out there.",
+          "qualification": "The Windows 10 report is in an actual baseline body, but it does not state that customer's architecture. Together with the baseline 32/64-bit listing claim it covers the useful requested compatibility evidence; the broad speculation about other systems is not verification."
+        }
+      ],
+      "notes": "Baseline already supplies both the Windows 10 experience and the Windows 32/64-bit listing claim. Other full-source operating-system descriptions do not add a missing requested Windows 10 or 64-bit fact. Reports about macOS conflicts have a different requested-system scope."
+    },
+    {
+      "caseId": "source-gap-train-6296",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "36e987e5078df79c23e0f4952e96f6ec03b15c286cfdf31701f27f8bf36574ef",
+      "sourcePoolSha256": "e294e01a9d718f0c16c7100a094f0cefc268a515b18b49306ade873c6209a4ae",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The suite contains 1-2-3, identified as a spreadsheet.",
+          "sourceIds": [
+            "epqa-B00007E6Y5-cqa-d03073c53e567038"
+          ],
+          "quote": "the suite contains 1-2-3 (a spreadsheet)",
+          "qualification": "This explicit statement appears in an actual baseline CQA body; its original question concerns 9.8.2. It is not merely a spreadsheet identifier mentioned in a question."
+        }
+      ],
+      "notes": "The requested 1-2-3 inclusion is explicit in baseline CQA and is corroborated by baseline description and reviews. The 9.8 description and 9.8.2 CQA should retain their source version wording; neither creates a missing inclusion fact."
+    },
+    {
+      "caseId": "source-gap-train-8216",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "e11bc9f101ef8a47c0ff4822d0f6f540c3f265f21055b8122c1e52c5ad59901b",
+      "sourcePoolSha256": "94855ec5c7f4c0d8212f3d7c1bf30720849369ec8a9edc586b3180bd8c5c1e74",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "No supplied source gives the total assembled length of either pole. Pole diameter of 11 mm, tent footprint, packed size, and the model number cannot answer the requested replacement-rod length. The baseline contains pole material but no useful supported length fact, so a complete control or specification gap cannot be established."
+    },
+    {
+      "caseId": "source-gap-train-13301",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "1c451dba3f05bf37307599090335fb1bc8993418244a0f859af0ef5edfdaf2ec",
+      "sourcePoolSha256": "94c8246cf4735a714ca6a73a89b07c7ef0b03d96128d5dc72b2a5563218ada85",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The supplied listing describes 4x6 cards with double-sided printing.",
+          "sourceIds": [
+            "epqa-B07JJYV9GT-description-09fe204f53df25d0"
+          ],
+          "quote": "table number cards 1-25  or  1-40  double sidedreal gold foil printing!4x6 sizing makes perfect for a standard 4x6 frame",
+          "qualification": "This actual baseline body supplies the useful available size and printing facts, also reflected in the title. It does not establish whether a separate 5x7 offering exists; 4x6 is the listed card size, not a package-size inference."
+        }
+      ],
+      "notes": "The useful available size and double-sided facts are already in the baseline and title. No full source offers 5x7, but absence of such an offer does not prove unavailability. The custom 26-50 response concerns number ranges only, and package dimensions or incidental model IDs do not establish a 5x7 alternative."
+    },
+    {
+      "caseId": "source-gap-train-7443",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "51436cfdd4217d9416e95cc3ec7a727d5e10eec7a3e65dcc9ac50880ac1350d5",
+      "sourcePoolSha256": "6efebf0dc9a4be1b751279cbf920e95f91386cd80a2274dc41cc8f6847f7b676",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "The title and all relevant baseline sources already name a bronze finish. No supplied source describes its darkness or whether it appears black, which is the primary requested fact. Repeated bronze material or finish attributes cannot establish that visual appearance or form a meaningful complete control for this question."
+    },
+    {
+      "caseId": "source-gap-train-10844",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "8babe121cfcf627f30adfae54b5f2f9fd331c58f3717c0a0402103ae15a16aed",
+      "sourcePoolSha256": "bb6a3abb92cfececf6a1f06cb529fde0ac36648dba8e46983c1301224728a4f2",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The listing assigns stainless steel hardware to black collars and solid brass hardware to brown collars.",
+          "sourceIds": [
+            "epqa-B006WLRMHK-bullet-5559de04f4ee6264"
+          ],
+          "quote": "black collar has stainless steel hardware, brown collar has solid brass hardware",
+          "qualification": "This actual baseline bullet gives a general black-versus-brown relationship. The selected title is Havana/Hunter Green, while the question asks black/blue; applicability to black/blue rests on the explicit general black-collar claim, not on assuming the title variant is black."
+        },
+        {
+          "fact": "A CQA says the hardware on all black collars is chrome.",
+          "sourceIds": [
+            "epqa-B006WLRMHK-cqa-a557ae6b042f871b"
+          ],
+          "quote": "the hardware on all black collars is chrome.",
+          "qualification": "This actual baseline CQA was asked about black/purple but its answer explicitly covers all black collars. Preserve its chrome wording alongside the listing's stainless steel wording rather than silently treating those as identical material claims."
+        },
+        {
+          "fact": "A customer reports ordering black/pink with silver hardware.",
+          "sourceIds": [
+            "epqa-B006WLRMHK-review-28a093f16a858779"
+          ],
+          "quote": "ordered black/pink with silver hardware, was sent brown/pink with brass hardware.",
+          "qualification": "This actual baseline review supports silver-colored hardware on the reported black/pink order; it is not direct physical verification of black/blue. The reported shipment was a different brown/pink variant."
+        }
+      ],
+      "notes": "Baseline already contains all useful available hardware-color/material relationships and their source differences. Black/blue is not directly observed, but the explicit general black-collar claims provide qualified relevant evidence. Retain stainless steel versus chrome wording and distinguish other variant reports from exact black/blue verification."
+    },
+    {
+      "caseId": "source-gap-train-5021",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "88846b0f465a583c8ddbb2a85d2c181d109aa4a5076e6c509b61624056a91431",
+      "sourcePoolSha256": "d9c9ca82ec930a52fa87ac449f5ff78847f99b738b11f840b3f77f898763bc7e",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A CQA claims the forks fit any JD loader using the JD quick attach system.",
+          "sourceIds": [
+            "epqa-B00A1D103W-cqa-d50f35bb277aa4ae"
+          ],
+          "quote": "they will fit any jd loader that uses the jd quick attach system.",
+          "qualification": "This actual baseline answer was originally asked about H165. Its explicit interface-wide claim is relevant conditionally to the user's stated JD quick tach setup; it does not constitute an H180-specific fit test or establish that every connection called quick tach is identical."
+        },
+        {
+          "fact": "The compatibility claim excludes Global/Euro and skid steer style quick tach mounts.",
+          "sourceIds": [
+            "epqa-B00A1D103W-cqa-fd27f0c6ee85ff66"
+          ],
+          "quote": "this jd fork attachment is universal to the 200, 300, 400 and 500 series jd quick attach style loaders, not including the global/euro style mount or skid steer style quick tach.",
+          "qualification": "This actual baseline body states both the series claim and interface exclusions in response to a standard 300-loader question. The exclusions must accompany the conditional JD quick attach claim; neighboring model lists do not independently prove H180 fit."
+        }
+      ],
+      "notes": "The useful available conditional JD quick attach relationship and excluded mount types are already in baseline. No supplied body explicitly confirms H180 fit, and the additional top-pin and bottom-pin model lists do not include H180. Baseline completeness here concerns the available conditional evidence, not a definitive H180 compatibility conclusion."
+    },
+    {
+      "caseId": "source-gap-train-6814",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "5e94b84aac251663cd14cd99f2c5af42010cb8e407a95c555a751929119b879b",
+      "sourcePoolSha256": "fef39a8a7cb94204fea0b34424a372dae7c83777f9f53e88acf6c998f3d787b9",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A customer explicitly reports that these cartridges are compatible with a Brother MFC-J435W.",
+          "sourceIds": [
+            "epqa-B008LDSYDI-review-b49ee68767d9671b"
+          ],
+          "quote": "my printer is a brother mfc-j435w and these ink cartriages are compatible.",
+          "qualification": "This exact model compatibility report appears in an actual baseline body, and another baseline reviewer reports the ink working fine with MFC-J435W. It remains customer-reported experience, not physical verification."
+        }
+      ],
+      "notes": "The baseline already includes exact MFC-J435W compatibility and working-use reports. The title's LC-71/LC-75 designation and the separate LC41ADC attribute do not add a useful missing relationship or override those scoped reports. Questions and reports about other printer models are not needed to infer this fit."
+    },
+    {
+      "caseId": "source-gap-train-3460",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "eab914bcfdb1dc4daa90b80c6250ff032990129999453422c96883a09e87ba40",
+      "sourcePoolSha256": "c29816df223a6dc9584db8d3651340850e90a9c796285ce203113f1195f95683",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "The baseline and title already give the cover size, including 186-inch length and the 15-foot-5-inch limit. The UD-3 recommendation is scoped to a 2012 Lexus RX350, and U-2 to a 2012 Kia Soul. Neither establishes the requested medium-versus-large fit for a 2013 Lexus RX450h. No exact requested model relationship is supported, so a useful gap or complete compatibility control is not established."
+    },
+    {
+      "caseId": "source-gap-train-14565",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "a4fa970422219c9632773d3979c54243e1d9aaa3fa3e3c8f80a221b719d24eab",
+      "sourcePoolSha256": "e1090ef194acf682e180f46a6c93a86ed5a03c44aad1ed70652cfbe09c226f9d",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A reviewer reports that their pack included Penguins cards.",
+          "sourceIds": [
+            "epqa-B009SUI3RU-review-9bb099361072f1c8"
+          ],
+          "quote": "the pack includes cards from a lot of teams like the penguins, the kings, the rangers and it even had wayne gretzky and mario lemieux.",
+          "qualification": "This is a customer report about the received assortment; it supports the presence of Penguins cards in that pack and does not guarantee every future assortment."
+        }
+      ],
+      "notes": "The actual baseline contains the direct Penguins inclusion report and the other relevant assorted-player context. The remaining sources supply no useful missing fact about Penguins inclusion. The answer should retain the received-pack scope."
+    },
+    {
+      "caseId": "source-gap-train-13808",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "e7e519251e909b760b75ea50a43cecae5348633b31a211ffaeb44fc66160ee1b",
+      "sourcePoolSha256": "7875319d53cd107a235e897778e8cc7c4901411d13d8a4bc89278f0de272a7de",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "One reviewer reports fitting 11 names on the necklace.",
+          "sourceIds": [
+            "epqa-B016061P06-review-ba089ac239991e39"
+          ],
+          "quote": "other than that i fit 11 names on it,",
+          "qualification": "An individual engraving outcome, not a universal maximum; name lengths and placement are unspecified."
+        },
+        {
+          "fact": "A CQA respondent states that the bottom disc can fit up to 35 characters.",
+          "sourceIds": [
+            "epqa-B016061P06-cqa-d6569b016f151cb0"
+          ],
+          "quote": "hi, yes, we can fit up to 35 characters on the bottom disc of this necklace!",
+          "qualification": "The original question asks about three discs with 35 characters on the last disc. The supported limit applies to the bottom disc, not 35 names or a total-necklace character limit."
+        }
+      ],
+      "notes": "The baseline includes all supplied name-count examples (6, 7, 9, and 11 names) and the 35-character bottom-disc qualification. Disc sizes are already in the title. The sources do not establish one guaranteed maximum name count."
+    },
+    {
+      "caseId": "source-gap-train-2472",
+      "sourceGapGroup": "specification_gap",
+      "baselineContextSha256": "59e6e7f19cbd7e60fe5840665d76959f04a92e2cd7cc979cb3506fac6a8a8732",
+      "sourcePoolSha256": "d7ffb15317a72a18a4e43378d634c404bbe6c282889b85161ed22b15884e0228",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": true,
+      "baselineComplete": false,
+      "designatedFacts": [
+        {
+          "fact": "The description specifies support for most microphones weighing between 700 g (1.5 lb) and 1.1 kg (2.4 lb) when combined with a shock mount.",
+          "sourceIds": [
+            "epqa-B001D7UYBO-description-bff778ba770ef1fb"
+          ],
+          "quote": "supports  most microphones weighing between 700g  (1.5lb) and 1.1kg (2.4lb) when  combined with shock mount",
+          "qualification": "This is the source-stated supported weight range with its shock-mount condition. The supplied sources do not establish the requested AT2020 setup weight or prove that every configuration falls in that range. Exact AT2020 fit reports already occur in the baseline."
+        }
+      ],
+      "notes": "The requested ability to hold the AT2020 makes the specified supported load range a useful primary qualification. No baseline body or title gives an equivalent minimum, maximum, or shock-mount weight condition. This is a specification gap; the already-covered AT2020 fit and adapter reports are not model-detail gaps."
+    },
+    {
+      "caseId": "source-gap-train-4592",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "0f05b8673b3cccc046ed16a37029049bf2ffdb7bf23a0965a0851b2715ea4960",
+      "sourcePoolSha256": "df379855e022b88dce0fd55a238f911e332d906518c121f9847532b978bd35b6",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A reviewer observed both grayish and cream-colored portions in their shea butter.",
+          "sourceIds": [
+            "epqa-B008LEQENE-review-c073b7cc8b60f90b"
+          ],
+          "quote": "i examined the shea and it was not all the same color, some was grayish and other parts were a cream color but this didn't bother me at all.",
+          "qualification": "A customer observation of color variation and personal acceptance; it does not establish that the questioner's butter is safe, uncontaminated, or of acceptable quality."
+        }
+      ],
+      "notes": "The baseline contains the useful reports of mixed shades, ivory appearance, and a light-cream finished body butter, together with the ivory/white attribute; the title also says ivory. No supplied source establishes whether this particular two-shade batch is acceptable. Unrelated contamination anecdotes and test-report availability do not establish a color-based quality determination."
+    },
+    {
+      "caseId": "source-gap-train-10986",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "b5a1a2a6a2bdaaba58e3573942c101c0ad044dbef26197e7b5d9e566a05ecd0b",
+      "sourcePoolSha256": "230434cdb8d42ffc75be1cc24d11eab76ebd6527581a4d9c675472299f3766bb",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A reviewer describes the shades as dark beige instead of the white they expected.",
+          "sourceIds": [
+            "epqa-B006R0PBI8-review-26fa37938edf6d1c"
+          ],
+          "quote": "the big issue is that i expected white shades and they are a dark beige.",
+          "qualification": "Customer color perception; other customers use beige or off-white, so retain the variation in descriptions rather than promising one exact shade."
+        },
+        {
+          "fact": "Another reviewer says the shades are definitely off-white despite looking white in the picture.",
+          "sourceIds": [
+            "epqa-B006R0PBI8-review-cfa682b4d3e78657"
+          ],
+          "quote": "also, the lamp shades look white in the picture, but they are definitely off-white.",
+          "qualification": "A customer report about the shade color; it corroborates that the photographed white appearance may differ from the received shades."
+        }
+      ],
+      "notes": "All supplied color reports are actual baseline passages, including beige, dark beige, off-white, and not bleached white. Additional lamp and shade dimensions are not the requested color fact. The baseline covers the useful available color evidence."
+    },
+    {
+      "caseId": "source-gap-train-3924",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "a4ed5455a95bfe441409bb61cd39ef1ef4222eca4e238a201428d5657cda1693",
+      "sourcePoolSha256": "2b6a07bee4552ff34c181adc349e1cad67addffe26845fa8dffe676717a01610",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "No supplied source establishes the Yealink-to-Arama A600 combination, its wiring, or the required phone model. The baseline CQA yes is scoped to listen-only use of single-plug 3.5 mm headphones, not this headset and microphone setup. Additional OMTP and CTIA restrictions are product conditions, but applicability to the requested combination remains unsupported; neither a model-fit gap nor a complete control is established."
+    },
+    {
+      "caseId": "source-gap-train-2001",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "bdfdbed2911069d6cf248771f02c5b10439805266d60af90cc5f126008344fad",
+      "sourcePoolSha256": "d835affcec97cde77b3f004e6dd66da83aee70ad00f8788ce37b9917074651f3",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The CQA explicitly states that the C100 Washlet fits the UltraMax II.",
+          "sourceIds": [
+            "epqa-B001BYS5RE-cqa-43b6ae04c7eb618c"
+          ],
+          "quote": "hi amazon customer, yes, the c100 washlet will fit nicely on the ultramax ii.",
+          "qualification": "The original question asks about installing the Toto C100 on this toilet. This directly supports the listed UltraMax II; retain that model scope instead of generalizing to every UltraMax variant."
+        }
+      ],
+      "notes": "The actual baseline already contains the exact C100-to-UltraMax-II fit statement, the product identity, and broader seat-fit statements. Other-model questions and seat-inclusion details do not supply a missing requested compatibility fact. The source phrase current Toto models is relative to the answer time, not independently verified current compatibility."
+    },
+    {
+      "caseId": "source-gap-train-2391",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "a46222e39c0432e277ca5f685177431369138fbf4fb5651f6057f0fb6ccd2b09",
+      "sourcePoolSha256": "106ddaa3d5db1ac09ba9ad72895dd44554ddc24a5170767aea582710c93f894c",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "The title identifies a C-2901 five-string resonator banjo case, while CQA bodies discuss a Carrion 000 guitar case, a dreadnaught-like hollow-body fit, and separately C-1502/C-1512 cases. The left-handed answer concerns a Deering banjo only. The extra dimensions and alternate-model recommendations do not establish this listed case's fit for a left-handed Martin 000-15; source applicability is unresolved."
+    },
+    {
+      "caseId": "source-gap-train-4007",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "5c0406b32daee399a87e1bcad3ea4cd4fa71727173201c0234c80dd996d50490",
+      "sourcePoolSha256": "929299cacbeb177ee1b761fa5ce2ac5fb99d4398f75dad1c46bcf109d0e8ab09",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A reviewer reports that cleats and bolts are not included but backing plates needed to mount cleats are included.",
+          "sourceIds": [
+            "epqa-B008K3Q6ZM-review-716d32fb5daf0e7f"
+          ],
+          "quote": "suggest keeping an allen wrench with you first couple of outings so you can make fine adjustments if necessary.it does not come with the cleats or bolts (no surprise here), but it does come with the backing plates necessary to mount the cleats.",
+          "qualification": "This is a received-product report. Backing plates are distinct from cleats and bolts; the supplied CQA answers also report no cleats."
+        },
+        {
+          "fact": "A CQA respondent reports that their pedals supplied compatible two-bolt SH-51 cleats that they attached to the shoes.",
+          "sourceIds": [
+            "epqa-B008K3Q6ZM-cqa-8c97f5b92c80abac"
+          ],
+          "quote": "the pedals came with compatible cleats,  two-bolt sh-51 cleats, that i attached to the shoe.",
+          "qualification": "The original question concerns Shimano Click'r pedals. This describes the respondent's pedal package and mounting experience, not a guarantee that all pedal purchases include cleats."
+        }
+      ],
+      "notes": "The actual baseline covers every useful supplied inclusion fact: shoes do not include cleats, the report also excludes bolts and includes backing plates, and the relevant pedal example supplies cleats separately. Model labels and sizing information do not create a missing inclusion fact."
+    },
+    {
+      "caseId": "source-gap-train-6708",
+      "sourceGapGroup": "specification_gap",
+      "baselineContextSha256": "1c6c21584be3d61c065ee8e66f91e6b48f4d698de0886b50e15dad440807c32c",
+      "sourcePoolSha256": "4471a8a5d3e9157728552d9e88dcc41524a4132db149a2d0a4df2bfc35262330",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": true,
+      "baselineComplete": false,
+      "designatedFacts": [
+        {
+          "fact": "A reviewer reports that the front-button quick-scan option produces a 2400 dpi scan of a 35 mm slide in about half a minute.",
+          "sourceIds": [
+            "epqa-B009PHCWL4-review-1c750981757db819"
+          ],
+          "quote": "there is a quick scan option operated by a button on the front of the scanner and it will produce a 2400 dpi scan of a 35mm slide in about a half a minute.",
+          "qualification": "This estimate is for a 35 mm slide using that quick-scan workflow. It is distinct from the baseline 2400 dpi multi-exposure estimate of 60 seconds on an i5/6 GB system. It does not establish 35 mm negative or full-roll timing, nor timing at the highest 7200 dpi setting or the actual minimum resolution."
+        }
+      ],
+      "notes": "The primary requested fact is scan duration by resolution. The approximately 30-second 2400 dpi quick-scan estimate is absent from all baseline bodies and the title. Baseline timings of about 2 to 3 minutes at 3600 dpi, 60 seconds at 2400 dpi with multi-exposure, and about a minute for the 1800 dpi one-touch workflow are not equivalent settings and durations. Exact highest/lowest endpoint timings remain unestablished."
+    },
+    {
+      "caseId": "source-gap-train-9083",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baselineContextSha256": "7935fab0f675aebdefccdbd9123686ced3769d1b91c81bbaeb44a80280d95a70",
+      "sourcePoolSha256": "6d79bd702d7ce7d0cfa79cd30fda2875eff27ff829ffe2d3e7517fb50166cc39",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": false,
+      "designatedFacts": [],
+      "notes": "The baseline already contains the watermelon-containment report and load/side-collapse cautions; the title contains the overall 60 x 40 x 26 cm size, semantically repeated in the description and CQA. Extra sources mix an approximate open 24 x 15 x 11 inch report with an item_dimensions attribute of length 16.6, width 1.6, height 12.5 inches and conflicting two/three compartment descriptions. No interior compartment dimensions, watermelon size, or supported carrying load resolves applicability. No primary missing fit fact is established, and the unresolved useful configuration/measurement conflicts prevent certifying a complete control."
+    },
+    {
+      "caseId": "source-gap-train-990",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "a47e17296540ef3d534e2c2dfd806eadcef757254a91cf36c79d11a85077750f",
+      "sourcePoolSha256": "e40ec6fa888708ddf01dd26f332ad02fc4f5cea4fe0d9facd1b22b2fe8e3b3f8",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "A Windows 7 reviewer reports inconsistent startup color retention: sometimes the last selected color returns, and sometimes the default red returns.",
+          "sourceIds": [
+            "epqa-B00292OW1U-review-ea2cf77619720243"
+          ],
+          "quote": "sometimes my w7 pc will boot with the last color i switched it to (red, blue, magenta), sometimes it'll go back to the default red.",
+          "qualification": "An individual Windows 7 experience, not a confirmed configurable startup-color setting or a reliable procedure for changing the default."
+        },
+        {
+          "fact": "The description lists blue, red, and purple illumination with subtle, ambient, intense, and off modes.",
+          "sourceIds": [
+            "epqa-B00292OW1U-description-2cb80b741e531af6"
+          ],
+          "quote": "the keyboard features 3 different illumination colors (blue, red and purple), which can be set to 4 different illumination modes (subtle, ambient, intense and off).  gaming terrain keys are ergonomic and comfortable, even during long gaming sessions merc stealth features 34 gaming keys at a natural tilt to match your wrist position  steelseries merc stealth supports simultaneous keystrokes and features a number of hotkeys for multimedia, navigation and other one-click controls.",
+          "qualification": "These are selectable illumination colors and modes. The text does not say that these controls determine the startup default; customer wording for colors and brightness differs in other baseline reports."
+        }
+      ],
+      "notes": "The baseline contains the only direct startup-behavior report plus all relevant illumination color/control information. The full sources provide no supported procedure to set a persistent startup color; programmable-key software does not by itself establish LED startup control. No missing requested fact is supported."
+    },
+    {
+      "caseId": "source-gap-train-5727",
+      "sourceGapGroup": "baseline_complete_control",
+      "baselineContextSha256": "198210097be3889da48c2da65aeff2013b1efc45ec4959481591cee2b5b3349f",
+      "sourcePoolSha256": "ea1bfeff15dc30b1d5b11334a243fbdd364a9b2e91838ec231688e4d70df1531",
+      "sourceScopeReviewed": true,
+      "baselineAndTitleReviewed": true,
+      "originalQuestionsReviewed": true,
+      "noEquivalentFactInBaseline": false,
+      "baselineComplete": true,
+      "designatedFacts": [
+        {
+          "fact": "The color attribute lists beige or brown.",
+          "sourceIds": [
+            "epqa-B0002DK29E-attribute-8662fc72a42c6d6e"
+          ],
+          "quote": "color:  { standardized_values:[ \"beige or brown\" ], value:\"beige or brown\" }",
+          "qualification": "Listing metadata, which conflicts with gray received-product reports and the Pearilized Pebble title; it cannot guarantee a particular shipment color."
+        },
+        {
+          "fact": "One reviewer reports receiving two beige mats.",
+          "sourceIds": [
+            "epqa-B0002DK29E-review-a3f61573c649ab88"
+          ],
+          "quote": "i got 2 and they were both the beige color.",
+          "qualification": "A received-order observation, not a promise about the questioner's future shipment."
+        },
+        {
+          "fact": "Another reviewer reports a grey/pebble mat described as pearly greyish silver.",
+          "sourceIds": [
+            "epqa-B0002DK29E-review-0255e5e68092a59e"
+          ],
+          "quote": "just as any tables, chairs or humans in his path would similarly be repositioned!i got the grey/pebble color, which is basically a sort of pearly greyish silver color.",
+          "qualification": "A different received-product observation; preserve the disagreement with beige/brown instead of choosing one certain shipment color."
+        }
+      ],
+      "notes": "Every supplied useful color fact and the conflicting received-color reports are already in actual baseline bodies. The model-number attribute repeats the title's Pearilized Pebble identity and does not resolve the shipment color. The baseline supports an uncertain color answer, not a guaranteed selection."
+    }
+  ],
+  "limitations": [
+    "These are AI source assessments of the supplied packet, not physical product verification or human gold labels.",
+    "Only packet-a.json was used as evidence. No candidate implementation, generated answers, repository source, other experiment documents, provider calls or internet evidence were inspected.",
+    "Source claims remain attributed and sometimes conflict. In particular, Bozo has an unexplained 2.7-inch item-height attribute versus 46-inch inflated-height statements; sketchbook item weight conflicts with a speculative review; material and table-component descriptions vary.",
+    "Exact Brio 312t, Lexus NX 200t, European E60 525i N52B25, Fluance RT81 and CL83201 applicability cannot be established from the supplied source scopes. Neighboring models, generic families, listing identifiers and original-question mentions were not treated as proof.",
+    "Complete-control labels mean the baseline covers the useful requested facts available within this packet. They do not certify product truth or resolve capabilities absent from the entire pool, such as exact projector slide format or 22-by-30-inch output.",
+    "These are AI source assessments of the supplied packet only, not physical verification or human gold labels.",
+    "CQA answers were interpreted with their supplied original-question scopes; bare identifiers, nearby models, and unverified variant relationships were not treated as fit evidence.",
+    "Listed package dimensions were kept distinct from item dimensions, including inconsistent raw and normalized dimensional values in the watch source.",
+    "Several controls support only qualified source claims or reported experience: no uniquely best watch color, separate 5x7 availability, exact black/blue hardware inspection, or H180-specific mechanical fit is established.",
+    "These are AI assessments of the supplied packet text, not physical verification or human gold labels. No external sources, candidate implementation, candidate contexts, or generated answers were consulted.",
+    "CQA claims retain their supplied original-question scope. Missing exact vehicle/headset relationships and mixed case-model identities were left ineligible or uncertain rather than inferred from neighbors, families, or listing identifiers.",
+    "The load-range gap does not establish the AT2020 setup weight. The scan-time gap is a slide quick-scan estimate and does not establish timings at the requested highest and lowest resolution endpoints.",
+    "The cargo-box case was left uncertain because the title already covers the overall dimensions and the extra measurement/configuration claims do not resolve usable compartment size or carrying capacity. Color and startup controls retain source disagreements and remaining uncertainty.",
+    "Three independent source-only AI sessions reviewed disjoint packets. These judgments are not human gold or physical product verification.",
+    "Candidate implementation, enriched contexts and generated answers were withheld throughout the source-gap reviews."
+  ]
+}

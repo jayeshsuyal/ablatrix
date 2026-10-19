@@ -1,0 +1,24 @@
+{
+  "format": "ablatrix-source-gap-review-provenance-v1",
+  "parts": [
+    {
+      "part": "a",
+      "fileSha256": "a6000a308d09a95c1185e289035a3f7e8188c5ac219c492ea5db75f08f57252d",
+      "cases": 15
+    },
+    {
+      "part": "b",
+      "fileSha256": "70b0c99894f68de59c4327eef5b2a5d929ebd1011b16be4ca741b8887e56c3a0",
+      "cases": 15
+    },
+    {
+      "part": "c",
+      "fileSha256": "0e0013ccad1ece5c9b4b5daffacad8aa18618010cc4e6276f47ff8a3f20dacd0",
+      "cases": 14
+    }
+  ],
+  "caseOrderExactlyReproduced": true,
+  "allCasesReviewed": 44,
+  "providerCalls": 0,
+  "humanJudgments": 0
+}
