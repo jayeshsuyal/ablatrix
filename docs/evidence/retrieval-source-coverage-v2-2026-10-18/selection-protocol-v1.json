@@ -1,0 +1,46 @@
+{
+  "format": "ablatrix-source-coverage-v2-selection-protocol-v1",
+  "selectionProtocol": "fresh_source_coverage_v2_v1",
+  "selectionSeed": "ablatrix-source-coverage-v2-2026-10-18-v1",
+  "screeningProducts": 12,
+  "strata": [
+    {
+      "name": "capacity_dimensions",
+      "count": 8
+    },
+    {
+      "name": "preservation_control",
+      "count": 4
+    }
+  ],
+  "historyFileSha256": {
+    "work/source-calibration-2026-10-18-preparation/cohort.json": "800addd39722f6717312d81eca706ac02085bf30f65358c133db4a86c9e03b9d",
+    "work/source-calibration-2026-10-18-preparation-v2/cohort.json": "0aeb9892647fe8f9501a94d4b4b4a2012805c613bee319768efeaac02cf3fc04",
+    "work/source-calibration-2026-10-18-preparation/source-family-review-v1.json": "a5355d9ecdce007a2fb00a3bc30691a8bf060e7da3ee4f8e61bb2ab164253b94",
+    "work/source-calibration-2026-10-18-preparation-v2/source-family-review-v1.json": "9e2dd517b86b656eaae9e9225957ad63009ba2362e584c0798d60bfa62a7c8db",
+    "docs/evidence/answer-quality-source-calibration-2026-10-18/cohort-v1.json": "658b9e2ab6e2cec0904da67b31980b4e4d6bd0f1e2dadb8181e5f4ec31869934",
+    "docs/evidence/answer-quality-source-calibration-2026-10-18/source-family-review-v1.json": "948391ed5a5a31b4a3e86e867d374a5ff7a1ca3628ae5d8fafce7626dec9cfbe",
+    "work/retrieval-coverage-2026-10-18-metadata/consumed-cohort-execution-v1.json": "70887bb1f0d967327175bbde1280f97592663683e99ae9a37d0045ec77615faa",
+    "docs/evidence/retrieval-source-coverage-2026-10-18/cohort-v1.json": "681544a9e7ea23b1d0cef61106655fafd6736ee26e6228d33389d99c3cc84164",
+    "docs/evidence/retrieval-source-coverage-2026-10-18/source-family-review-v1.json": "6385aaa92cdd44a18ea063793067fcafce4aedba54749a305294205f1c230153"
+  },
+  "developmentPoolFileSha256": "00506e7875c4a47705f06ff14302de3648b9d9343b5240fe7225706d5c83b737",
+  "developmentProductsProtected": 44,
+  "candidateEligibilityUsed": false,
+  "modelOutputsUsed": false,
+  "caseReplacement": false,
+  "reseeding": false,
+  "evaluateAllScreenedProducts": true,
+  "sameTwelveProductCorpus": true,
+  "sourceReviewBeforeCandidateContexts": true,
+  "paidEligibilityMinima": {
+    "supported_gap": 1,
+    "baseline_complete_control": 2
+  },
+  "modelDetailGapRequired": false,
+  "candidateMissesRetained": true,
+  "zeroDesignatedFactDeliveryBlocksPaidPlan": true,
+  "maximumNewAnswerAttempts": 24,
+  "candidateFreezeFileSha256": "eb4b84c1b96e3a19e8f8892c657fb468a09c3901b431d47931b8ff71b0ed6e1b",
+  "protocolSha256": "8225305825a0ca0d2c3b7c729df66707c9fa7443890f328db161a970b0246cce"
+}
