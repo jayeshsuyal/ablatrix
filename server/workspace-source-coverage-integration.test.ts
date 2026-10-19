@@ -9,6 +9,7 @@ import { WORKSPACE_GENERATION_CONTRACT, workspaceGenerationPromptIdentity } from
 import { workspaceQuestionRequestHash } from './workspace-generation-identity.ts';
 import { DatabaseSync } from 'node:sqlite';
 import { WORKSPACE_SOURCE_COVERAGE_CONTRACT } from './workspace-source-coverage.ts';
+import { WORKSPACE_SOURCE_COVERAGE_V2_CONTRACT } from './workspace-source-coverage-v2.ts';
 import type { ProductCorpus, LoopRetriever } from './loop-types.ts';
 
 // Injected ranking/transport establish the actual workspace receipt boundary,
@@ -17,7 +18,8 @@ const oneParent = (corpus: ProductCorpus): LoopRetriever => ({ close() {}, async
   return { passages: [{ ...corpus.passages[0], lexicalRank: 1, semanticRank: 1, score: 1 }], durationMs: 0, method: 'SYNTHETIC one-parent fixture', embeddingModel: 'none', corpusVersion: corpus.version };
 } });
 
-test('opt-in source coverage reaches the actual generation request, preserves v1 instructions and survives receipt recovery', async () => {
+for (const option of [true, 'v2'] as const) test(`opt-in source coverage ${option} reaches generation and survives receipt recovery`, async () => {
+  const selectedContract = option === 'v2' ? WORKSPACE_SOURCE_COVERAGE_V2_CONTRACT : WORKSPACE_SOURCE_COVERAGE_CONTRACT;
   const directory = mkdtempSync(join(tmpdir(), 'workspace-source-coverage-')), dbPath = join(directory, 'workspace.sqlite');
   const bodies: any[] = [];
   const provider = new SapiomFeedbackProvider({ enabled: true, apiKey: 'SYNTHETIC-TEST-ONLY', credentialsFile: '', dbPath: join(directory, 'ledger.sqlite'), capUsd: 2, callLimit: 10,
@@ -38,11 +40,11 @@ test('opt-in source coverage reaches the actual generation request, preserves v1
     const original = await workspace.ask(input, undefined, { idempotencyKey: 'baseline' });
     assert.equal(original.status, 'completed'); assert.equal(original.sourceCoverage, undefined); assert.equal(original.generationPassages!.length, 1);
     workspace.close();
-    workspace = new ProductWorkspace(dbPath, provider, oneParent, undefined, { sourceCoverage: true, fault(boundary) { if (boundary === 'after_receipt') throw new Error('SYNTHETIC receipt interruption'); } });
+    workspace = new ProductWorkspace(dbPath, provider, oneParent, undefined, { sourceCoverage: option, fault(boundary) { if (boundary === 'after_receipt') throw new Error('SYNTHETIC receipt interruption'); } });
     await assert.rejects(workspace.ask({ ...input, mode: 'preview' }), /source coverage requires/);
     await assert.rejects(workspace.ask(input, undefined, { idempotencyKey: 'candidate' }), /SYNTHETIC receipt interruption/);
     const interrupted = workspace.proofRuns().find(run => run.requestIdentity?.idempotencyKey === 'candidate')!;
-    assert.equal(interrupted.sourceCoverage?.contract, WORKSPACE_SOURCE_COVERAGE_CONTRACT); assert.equal(interrupted.generationPassages!.length, 4);
+    assert.equal(interrupted.sourceCoverage?.contract, selectedContract); assert.equal(interrupted.generationPassages!.length, 4);
     assert.deepEqual(interrupted.generationPassages![0], original.generationPassages![0]);
     assert.equal(interrupted.generationProtocol, WORKSPACE_GENERATION_CONTRACT);
     const payload = JSON.parse(bodies[1].messages[1].content);
@@ -53,10 +55,13 @@ test('opt-in source coverage reaches the actual generation request, preserves v1
     workspace.close(); workspace = new ProductWorkspace(dbPath, provider, oneParent);
     await assert.rejects(workspace.ask(input, undefined, { idempotencyKey: 'candidate' }), /different question request/);
     const recovered = workspace.proofRuns().find(run => run.id === interrupted.id)!;
-    workspace.close(); workspace = new ProductWorkspace(dbPath, provider, oneParent, undefined, { sourceCoverage: true });
+    workspace.close(); workspace = new ProductWorkspace(dbPath, provider, oneParent, undefined, { sourceCoverage: option });
     assert.equal((await workspace.ask(input, undefined, { idempotencyKey: 'candidate' })).id, recovered.id);
     await assert.rejects(workspace.ask(input, undefined, { idempotencyKey: 'baseline' }), /different question request/);
-    assert.equal(recovered.requestIdentity?.retrievalContract, WORKSPACE_SOURCE_COVERAGE_CONTRACT);
+    workspace.close(); workspace = new ProductWorkspace(dbPath, provider, oneParent, undefined, { sourceCoverage: option === 'v2' ? true : 'v2' });
+    await assert.rejects(workspace.ask(input, undefined, { idempotencyKey: 'candidate' }), /different question request/);
+    workspace.close(); workspace = new ProductWorkspace(dbPath, provider, oneParent, undefined, { sourceCoverage: option });
+    assert.equal(recovered.requestIdentity?.retrievalContract, selectedContract);
     assert.equal(recovered.id, interrupted.id); assert.equal(recovered.status, 'completed'); assert.equal(recovered.generation?.recovered, true);
     assert.equal(provider.receipt(recovered.id)?.id, receiptId); assert.equal(bodies.length, 2); verifyWorkspaceRunGeneration(recovered);
     assert.deepEqual(recovered.sourceCoverage, interrupted.sourceCoverage); assert.deepEqual(recovered.generationPassages, interrupted.generationPassages);
@@ -77,5 +82,8 @@ test('retrieval contract identity is additive, strict and cannot alter historica
   const plain = workspaceQuestionRequestHash(input);
   assert.equal(plain, workspaceQuestionRequestHash(input, false, WORKSPACE_GENERATION_CONTRACT));
   assert.notEqual(plain, workspaceQuestionRequestHash(input, false, WORKSPACE_GENERATION_CONTRACT, WORKSPACE_SOURCE_COVERAGE_CONTRACT));
+  const v2 = workspaceQuestionRequestHash(input, false, WORKSPACE_GENERATION_CONTRACT, WORKSPACE_SOURCE_COVERAGE_V2_CONTRACT);
+  assert.notEqual(plain, v2);
+  assert.notEqual(v2, workspaceQuestionRequestHash(input, false, WORKSPACE_GENERATION_CONTRACT, WORKSPACE_SOURCE_COVERAGE_CONTRACT));
   assert.throws(() => workspaceQuestionRequestHash(input, false, WORKSPACE_GENERATION_CONTRACT, 'unknown' as typeof WORKSPACE_SOURCE_COVERAGE_CONTRACT), /Unknown workspace retrieval/);
 });

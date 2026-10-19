@@ -1,0 +1,67 @@
+{
+  "format": "ablatrix-source-coverage-v2-analysis-protocol-v1",
+  "createdBeforeFreshSelection": true,
+  "status": "prospective_not_executed",
+  "hypothesis": "Adding bounded literal source parents relevant to the question improves answer completeness while preserving correctness and source scope.",
+  "population": "Pinned ePQA train questions on fresh products outside all protected historical and 44 exposed development source pools.",
+  "deck": {
+    "products": 12,
+    "capacity_dimensions": 8,
+    "preservation_control": 4,
+    "seed": "ablatrix-source-coverage-v2-2026-10-18-v1",
+    "evaluateAllTwelve": true,
+    "replacement": false,
+    "reseeding": false,
+    "candidateSuccessUsedForSelection": false
+  },
+  "comparison": {
+    "baseline": "unchanged hybrid retrieval restored to complete source parents",
+    "candidate": "workspace-source-coverage-v2, same baseline parents plus at most three bounded literal parents",
+    "answerContract": "workspace-answer-flat-sources-v1",
+    "sameModelPolicyInstructionsSettingsAndCitationInterface": true,
+    "armDifferences": [
+      "supplied source parents",
+      "derived citation options",
+      "operation run identity"
+    ],
+    "pairedOrder": "alternate baseline-first and candidate-first by saved case index"
+  },
+  "offlineMeasures": [
+    "source-review-designated missing fact units delivered by an added parent with literal body and original-question scope preserved",
+    "all baseline parents retained exactly",
+    "context additions and unchanged cases; these are not answer-quality gains"
+  ],
+  "paidEligibility": {
+    "supportedGapCasesAtLeast": 1,
+    "baselineCompleteControlsAtLeast": 2,
+    "designatedMissingFactUnitsDeliveredAtLeast": 1,
+    "allCandidateMissesAndUncertainCasesRetained": true,
+    "maximumAnswerCalls": 24,
+    "noPaidCallsUntilExactFreshFinancialApproval": true
+  },
+  "answerMeasures": {
+    "primary": "source-supported completeness of the answer to the actual question",
+    "separate": [
+      "factual correctness against available source packet",
+      "claim support and correct product/model/question/workflow scope",
+      "adequacy or justified partial answer/abstention",
+      "literal citation matching",
+      "wording and directness"
+    ],
+    "blindReview": "Neutral version IDs, complete sources including original customer questions, no arm map or retrieval addition reasons; two independent AI assessments, disagreement reported separately.",
+    "referenceLimit": "A customer report is a scoped report, not physical verification or universal compatibility. Unsupported exact model relationships and absent spec/timing endpoints remain unknown.",
+    "denominator": "All twelve frozen pairs including unchanged retrieval, failed calls and disagreements.",
+    "smallSample": "Descriptive paired outcomes only; no population-wide or statistical-significance claim.",
+    "humanReview": "Pending until actual source-checked human judgments are saved; AI assessments alone do not establish final quality improvement."
+  },
+  "stops": [
+    "Any frozen code/input drift or selection insufficiency: preserve failure; do not replace cases or reseed.",
+    "Zero delivered designated missing fact units: do not prepare or run paid answer calls.",
+    "Any live failure or uncertain dispatch: stop; no automatic retries."
+  ],
+  "activation": "No default retrieval change, answer-policy promotion, deployment or autonomous activation.",
+  "newProviderCalls": 0,
+  "answerQualityMeasured": false,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false
+}

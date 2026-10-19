@@ -2,13 +2,16 @@ import { textHash } from './product-corpus.ts';
 import { workspaceReviewSourceHash } from './answer-review-source.ts';
 import { WORKSPACE_GENERATION_CONTRACT, workspaceGenerationContract, workspaceGenerationParts, type WorkspaceGenerationContract } from './workspace-generation.ts';
 import { WORKSPACE_SOURCE_COVERAGE_CONTRACT } from './workspace-source-coverage.ts';
+import { WORKSPACE_SOURCE_COVERAGE_V2_CONTRACT } from './workspace-source-coverage-v2.ts';
 import type { WorkspaceRun } from './product-workspace.ts';
+
+export type WorkspaceRetrievalContract = typeof WORKSPACE_SOURCE_COVERAGE_CONTRACT | typeof WORKSPACE_SOURCE_COVERAGE_V2_CONTRACT;
 
 /** Default/explicit v1 keep the historical identity bytes. Experimental
  * requests add their contract so a retry cannot change its generation policy. */
-export function workspaceQuestionRequestHash(input: Pick<WorkspaceRun, 'productId' | 'question' | 'mode'>, automaticCheck = false, selected?: WorkspaceGenerationContract, retrievalContract?: typeof WORKSPACE_SOURCE_COVERAGE_CONTRACT) {
+export function workspaceQuestionRequestHash(input: Pick<WorkspaceRun, 'productId' | 'question' | 'mode'>, automaticCheck = false, selected?: WorkspaceGenerationContract, retrievalContract?: WorkspaceRetrievalContract) {
   const contract = workspaceGenerationContract(selected);
-  if (retrievalContract !== undefined && retrievalContract !== WORKSPACE_SOURCE_COVERAGE_CONTRACT) throw new Error('Unknown workspace retrieval contract.');
+  if (retrievalContract !== undefined && retrievalContract !== WORKSPACE_SOURCE_COVERAGE_CONTRACT && retrievalContract !== WORKSPACE_SOURCE_COVERAGE_V2_CONTRACT) throw new Error('Unknown workspace retrieval contract.');
   return textHash(JSON.stringify({ productId: input.productId, question: input.question, mode: input.mode, automaticCheck,
     ...(contract !== WORKSPACE_GENERATION_CONTRACT ? { generationContract: contract } : {}), ...(retrievalContract ? { retrievalContract } : {}) }));
 }
@@ -22,7 +25,7 @@ export function verifyWorkspaceRunGeneration(run: WorkspaceRun): void {
   const retrievalContract = run.requestIdentity?.retrievalContract;
   const requestSha256 = workspaceQuestionRequestHash(run, run.automaticCheckRequested ?? false, contract, retrievalContract);
   if (run.requestIdentity && run.requestIdentity.sha256 !== requestSha256) throw new Error('Saved generation request identity is inconsistent.');
-  if (run.sourceCoverage && retrievalContract !== WORKSPACE_SOURCE_COVERAGE_CONTRACT || run.generation && retrievalContract === WORKSPACE_SOURCE_COVERAGE_CONTRACT && run.sourceCoverage?.contract !== retrievalContract) throw new Error('Saved retrieval contract is inconsistent.');
+  if (run.sourceCoverage && run.sourceCoverage.contract !== retrievalContract || run.generation && retrievalContract !== undefined && run.sourceCoverage?.contract !== retrievalContract) throw new Error('Saved retrieval contract is inconsistent.');
   const generation = run.generation;
   if (!generation) return;
   const parts = workspaceGenerationParts(generation.input), sources = run.reviewContext?.sources;

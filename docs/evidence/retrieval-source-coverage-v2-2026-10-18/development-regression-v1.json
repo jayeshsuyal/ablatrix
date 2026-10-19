@@ -1,0 +1,102 @@
+{
+  "format": "ablatrix-source-coverage-v2-development-regression-v1",
+  "implementationFileSha256": "c087fa3d0f3866a0d0caf308f74de1467fdf995f163c7ecd3ce02bd5692aa744",
+  "inputFileSha256": {
+    "pool": "00506e7875c4a47705f06ff14302de3648b9d9343b5240fe7225706d5c83b737",
+    "baseline": "b8230e71cc2e52a25a1507f44dcda9de6f8597d783633e13069ff40d1836b25d",
+    "review": "18b5186752ca21ad010c9736c1f43878cbdb619052d5bab390f87faf08352089"
+  },
+  "scope": "exposed_development_regression",
+  "generationPerformed": false,
+  "newProviderCalls": 0,
+  "qualityClaimEligible": false,
+  "results": [
+    {
+      "caseId": "source-gap-train-12561",
+      "baselinePreserved": true,
+      "additions": [
+        {
+          "sourceId": "epqa-B00QWK21PY-attribute-ad11cf15c85b8810",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_path:case.diameter",
+            "structured_path:case.thickness"
+          ]
+        },
+        {
+          "sourceId": "epqa-B00QWK21PY-attribute-fb6497b9607e8db0",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_path:band.size",
+            "structured_path:band.width"
+          ]
+        }
+      ],
+      "designatedFacts": [
+        {
+          "quote": "band:  { material:[ { value:\"faux leather\" } ], size:[ { value:\"9 inches\" } ], color:[ { value:\"red\" } ], width:[ { unit:millimeters, value:18. } ] }",
+          "sourceIds": [
+            "epqa-B00QWK21PY-attribute-fb6497b9607e8db0"
+          ],
+          "delivered": true
+        },
+        {
+          "quote": "thickness:[ { unit:millimeters, value:11. } ]",
+          "sourceIds": [
+            "epqa-B00QWK21PY-attribute-ad11cf15c85b8810"
+          ],
+          "delivered": true
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-2472",
+      "baselinePreserved": true,
+      "additions": [
+        {
+          "sourceId": "epqa-B001D7UYBO-description-bff778ba770ef1fb",
+          "reasons": [
+            "literal_numeric_capacity_context",
+            "question_intent:capacity"
+          ]
+        }
+      ],
+      "designatedFacts": [
+        {
+          "quote": "supports  most microphones weighing between 700g  (1.5lb) and 1.1kg (2.4lb) when  combined with shock mount",
+          "sourceIds": [
+            "epqa-B001D7UYBO-description-bff778ba770ef1fb"
+          ],
+          "delivered": true
+        }
+      ]
+    },
+    {
+      "caseId": "source-gap-train-6708",
+      "baselinePreserved": true,
+      "additions": [
+        {
+          "sourceId": "epqa-B009PHCWL4-review-1c750981757db819",
+          "reasons": [
+            "literal_duration_report_context",
+            "shared_operation:scan"
+          ]
+        }
+      ],
+      "designatedFacts": [
+        {
+          "quote": "there is a quick scan option operated by a button on the front of the scanner and it will produce a 2400 dpi scan of a 35mm slide in about a half a minute.",
+          "sourceIds": [
+            "epqa-B009PHCWL4-review-1c750981757db819"
+          ],
+          "delivered": true
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Exposed development cases were used to design the matcher; this is not fresh validation.",
+    "Four denotes the independent source review units, not every atomic fact in those sources.",
+    "Literal source delivery does not measure generated-answer correctness or human-reviewed quality."
+  ]
+}
