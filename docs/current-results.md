@@ -1,8 +1,8 @@
 # Current results
 
-Latest retrieval check: v2 fixes 4/4 exposed development fact units, but a frozen fresh twelve-product source test delivers 0/3 independently designated missing units. Its paid-test gate rejects the packet; zero new answers and no quality gain. [Full result and offline replay](evidence/retrieval-source-coverage-v2-2026-10-18/RESULTS.md).
+Latest retrieval development check: additive v5 delivers **12/13 designated source units versus baseline 10/13**, retaining baseline context in all twelve exposed cases. Only the torch case gains designated units; no new answers or answer-quality gain are measured. The earlier fresh v2 failure is preserved, and those twelve products are now development data. [Parent review, full denominator and replay](retrieval-diagnosis-parent-review-2026-10-19.md).
 
-Updated October 18, 2026. This index distinguishes implementation checks, scripted demonstrations and recorded live observations. The full chronology remains in the [build and evidence ledger](build-plan.md).
+Updated October 19, 2026. This index distinguishes implementation checks, scripted demonstrations and recorded live observations. The full chronology remains in the [build and evidence ledger](build-plan.md).
 
 ## Current release status
 

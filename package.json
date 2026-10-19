@@ -31,7 +31,10 @@
     "demo:restore": "node --import tsx scripts/demo-backup.ts restore",
     "diagnosis:replay": "python3 scripts/replay-frozen-v2.py && node --import tsx scripts/verify-retrieval-diagnosis.ts",
     "diagnosis:mock": "node --import tsx scripts/three-context-mock.ts",
-    "diagnosis:run": "node --import tsx scripts/retrieval-diagnosis.ts"
+    "diagnosis:run": "node --import tsx scripts/retrieval-diagnosis.ts",
+    "diagnosis:v5": "node --import tsx scripts/retrieval-diagnosis-v5.ts docs/evidence/retrieval-diagnosis-2026-10-19/semantic-supplement-v5-freeze-v2.json",
+    "diagnosis:prepare-v5": "node --import tsx scripts/prepare-three-context-v5.ts",
+    "diagnosis:live": "node --import tsx scripts/three-context-live.ts"
   },
   "dependencies": {
     "@huggingface/transformers": "4.3.0",

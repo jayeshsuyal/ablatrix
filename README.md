@@ -36,7 +36,7 @@ The current release makes the actual flat-source generation and v4 check contrac
 
 A separate first-answer comparison completed **16 live calls across eight products**. Two blind AI source reviews agreed on one substantive candidate preference and six ties, with one disputed benefit; both preferred the candidate's wording on six of eight. All 39 citation occurrences matched offered text, which is a separate mechanical check. Saved human source-checked judgments remain 0/16; the candidate is experimental. [Answers, disagreements and reproducible results](docs/evidence/answer-quality-source-calibration-2026-10-18/RESULTS.md).
 
-The latest retrieval v2 candidate fixes four development fact units but recovers **0/3 missing-fact units on a fixed fresh twelve-product deck**. Its paid-test gate rejects the packet; no fresh answers or quality gain are claimed. [Saved sources, negative result and offline replay](docs/evidence/retrieval-source-coverage-v2-2026-10-18/RESULTS.md).
+The latest additive retrieval candidate delivers **12/13 designated source units versus baseline 10/13** on twelve exposed development products, preserving baseline context in every case. No new answers or answer-quality gain are measured. The original failed v2 test remains preserved. [Review, full results and offline replay](docs/retrieval-diagnosis-parent-review-2026-10-19.md).
 
 ## The product path
 

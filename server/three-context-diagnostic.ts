@@ -29,8 +29,13 @@ export function prepareThreeContext(preparation: DiagnosticPreparation) {
     for (const fact of item.designatedFacts) {
       assert.ok(fact.quote.trim().length >= 5 && fact.fact.trim());
       assert.ok(fact.sourceIds.length && fact.sourceIds.every(id => item.completeSources.some(s => s.id === id && s.text.includes(fact.quote))));
-      assert.ok(item.contexts.reference.some(s => fact.sourceIds.includes(s.id) && s.text.includes(fact.quote)), 'Curated reference must contain every designated fact.');
-      if (!item.contexts.current.some(s => s.text.includes(fact.quote)) && item.contexts.semantic.some(s => fact.sourceIds.includes(s.id) && s.text.includes(fact.quote))) deliveries.push(item.id);
+      const deliversFact = (context: RetrievedPassage[]) => context.some(source => {
+        const reviewed = item.completeSources.find(s => s.id === source.id);
+        return fact.sourceIds.includes(source.id) && source.text.includes(fact.quote)
+          && reviewed && (source.originalQuestion ?? null) === (reviewed.originalQuestion ?? null);
+      });
+      assert.ok(deliversFact(item.contexts.reference), 'Curated reference must contain every designated fact.');
+      if (!deliversFact(item.contexts.current) && deliversFact(item.contexts.semantic)) deliveries.push(item.id);
     }
     const arms = ['current', 'semantic', 'reference'] as const;
     const order = [...arms.slice(caseIndex % 3), ...arms.slice(0, caseIndex % 3)];
@@ -42,7 +47,7 @@ export function prepareThreeContext(preparation: DiagnosticPreparation) {
     assert.deepEqual(neutral(rows[0]!), neutral(rows[1]!)); assert.deepEqual(neutral(rows[0]!), neutral(rows[2]!)); return rows;
   });
   const sourceBenefit = deliveries.length > 0, emptyContext = p.cases.some(c => Object.values(c.contexts).some(context => !context.length)), eligible = sourceBenefit && p.codeReviewPassed && !emptyContext;
-  const allowance = slots.length * .1, combined = Math.round((p.ledger.reservedUsd + p.ledger.priorSpendUsd + allowance) * 1e6) / 1e6;
+  const allowance = Math.round(slots.length * 10) / 100, combined = Math.round((p.ledger.reservedUsd + p.ledger.priorSpendUsd + allowance) * 1e6) / 1e6;
   assert.ok(combined <= 20);
   const document = { format: 'ablatrix-three-context-diagnostic-v1', preparation: p, slots, scope: 'exposed_development_only', sourceBenefit, deliveredCaseIds: [...new Set(deliveries)],
     paidPlan: eligible ? { maximumNewAttempts: slots.length, planningAllowanceUsd: allowance, allowancePerCallUsd: .1, absoluteCallLimit: p.ledger.attempts + slots.length, cumulativePlanningLimitUsd: combined, localCapUsd: 20, actualProviderCharges: 'unavailable', providerEnforcedCap: false } : null,
@@ -51,13 +56,15 @@ export function prepareThreeContext(preparation: DiagnosticPreparation) {
 }
 export type ThreeContextManifest = ReturnType<typeof prepareThreeContext>;
 export function verifyThreeContext(manifest: ThreeContextManifest) { assert.equal(manifest.sha256, diagnosticHash(manifest.document)); assert.deepEqual(manifest, prepareThreeContext(manifest.document.preparation)); return manifest; }
-export type DiagnosticStep = { index: number; started: boolean; attemptId?: string; dispatchIntent?: true; dispatched: boolean; receipt?: WorkspaceGenerationReceipt };
+export type DiagnosticStep = { index: number; started: boolean; startedAt?: string; observedAt?: string; attemptId?: string; dispatchIntent?: true; dispatched: boolean; receipt?: WorkspaceGenerationReceipt };
 export type DiagnosticCheckpoint = { planSha256: string; provenance: 'mocked_mechanics_only' | 'live_router'; steps: DiagnosticStep[]; stopReason: string | null };
 export function verifyDiagnosticCheckpoint(manifest: ThreeContextManifest, checkpoint: DiagnosticCheckpoint) {
   verifyThreeContext(manifest); assert.equal(checkpoint.planSha256, manifest.sha256); assert.equal(checkpoint.steps.length, manifest.document.slots.length); assert.ok(['live_router', 'mocked_mechanics_only'].includes(checkpoint.provenance));
   let stopped = false, model: string | undefined;
   const outputs = checkpoint.steps.map((step, i) => {
     assert.equal(step.index, i); assert.ok(!step.attemptId || step.started); assert.ok(!step.dispatchIntent || step.started && step.attemptId); assert.ok(!step.dispatched || step.dispatchIntent);
+    if (step.startedAt !== undefined) assert.ok(step.started && Number.isFinite(Date.parse(step.startedAt)));
+    if (step.observedAt !== undefined) assert.ok(step.startedAt !== undefined && Number.isFinite(Date.parse(step.observedAt)) && Date.parse(step.observedAt) >= Date.parse(step.startedAt));
     if (stopped) assert.equal(step.started, false);
     if (!step.started) { assert.ok(!step.receipt && !step.dispatched); stopped = true; return { status: 'not_attempted', output: null }; }
     if (!step.receipt) { stopped = true; return { status: 'failed_or_unknown', output: null }; }
@@ -74,12 +81,13 @@ export function verifyDiagnosticCheckpoint(manifest: ThreeContextManifest, check
 /** Adapter owns no credentials. Production wiring must supply the existing durable ledger/provider and exact file guards. */
 export async function executeThreeContext(manifest: ThreeContextManifest, approval: { execute: boolean; liveOptIn: boolean; approvedSha256: string; provenance: DiagnosticCheckpoint['provenance'] }, deps: {
   checkBindings(): { implementationSha256: Record<string, string>; artifactSha256: Record<string, string> }; checkLedger(steps: DiagnosticStep[]): SourceCalibrationLedgerState; create(): void; checkpoint(value: DiagnosticCheckpoint): void;
-  createProvider(hooks: { operationGuard: (operation: { phase: string; kind: string; runId?: string; requestSha256: string; attemptId?: string }) => Promise<void>; fetchImpl: typeof fetch }): { answerWorkspace(input: WorkspaceGenerationInput): Promise<unknown>; receipt(runId: string): WorkspaceGenerationReceipt | undefined; close(): void };
+  createProvider(hooks: { operationGuard: (operation: { phase: string; kind: string; runId?: string; requestSha256: string; attemptId?: string }) => Promise<void>; fetchImpl: typeof fetch }): { answerWorkspace(input: WorkspaceGenerationInput): Promise<unknown>; receipt(runId: string): WorkspaceGenerationReceipt | undefined; close(): void; executionMode: string; capacity(requests: number): { ready: boolean } };
   transport: typeof fetch;
 }) {
   verifyThreeContext(manifest); assert.ok(manifest.document.paidPlan, 'No-benefit or unreviewed packet cannot execute.');
   assert.ok(approval.execute && approval.liveOptIn && approval.approvedSha256 === manifest.sha256, 'Exact fresh financial approval and explicit live opt-in required.');
   const checkpoint: DiagnosticCheckpoint = { planSha256: manifest.sha256, provenance: approval.provenance, steps: manifest.document.slots.map((_, index) => ({ index, started: false, dispatched: false })), stopReason: null };
+  let ownerToken: string | undefined;
   const inspect = () => {
     verifyThreeContext(manifest);
     assert.deepEqual(deps.checkBindings(), { implementationSha256: manifest.document.preparation.implementationSha256, artifactSha256: manifest.document.preparation.artifactSha256 });
@@ -95,28 +103,32 @@ export async function executeThreeContext(manifest: ThreeContextManifest, approv
     }
     assert.equal(state.owners, state.ownerRows.length);
     if (!reserved.length) assert.equal(state.owners, 0);
-    else { assert.equal(state.owners, 1); assert.equal(state.ownerRows[0]!.pid, process.pid); assert.ok(state.ownerRows[0]!.expires_at > Date.now()); }
+    else { assert.equal(state.owners, 1); assert.equal(state.ownerRows[0]!.pid, process.pid); assert.ok(state.ownerRows[0]!.expires_at > Date.now()); ownerToken ??= state.ownerRows[0]!.token; assert.equal(state.ownerRows[0]!.token, ownerToken); }
   };
   const save = () => deps.checkpoint(structuredClone(checkpoint));
   inspect(); deps.create(); save(); let active = -1, before = false;
-  const provider = deps.createProvider({ operationGuard: async operation => {
-    const slot = manifest.document.slots[active], step = checkpoint.steps[active]; assert.ok(slot && step && operation.kind === workspaceGenerationParts(slot.input).tool && operation.runId === slot.input.runId && operation.requestSha256 === slot.binding.requestSha256);
-    if (operation.phase === 'before_reservation') { assert.ok(!before && !step.attemptId); inspect(); before = true; }
-    else { assert.equal(operation.phase, 'after_reservation'); assert.ok(before && !step.attemptId && operation.attemptId); step.attemptId = operation.attemptId; save(); inspect(); }
-  }, fetchImpl: async (url, init) => {
-    const slot = manifest.document.slots[active]!, step = checkpoint.steps[active]!;
-    assert.ok(before && step.attemptId && !step.dispatchIntent && String(url) === 'https://router.sapiom.ai/v1/chat/completions' && init?.method === 'POST' && init.body === JSON.stringify(slot.body));
-    inspect(); step.dispatchIntent = true; save(); step.dispatched = true;
-    return deps.transport(url, { ...init, redirect: 'error', signal: AbortSignal.timeout(45000) });
-  } });
+  let provider: ReturnType<typeof deps.createProvider> | undefined;
   try {
+    provider = deps.createProvider({ operationGuard: async operation => {
+      const slot = manifest.document.slots[active], step = checkpoint.steps[active]; assert.ok(slot && step && operation.kind === workspaceGenerationParts(slot.input).tool && operation.runId === slot.input.runId && operation.requestSha256 === slot.binding.requestSha256);
+      if (operation.phase === 'before_reservation') { assert.ok(!before && !step.attemptId); inspect(); before = true; }
+      else { assert.equal(operation.phase, 'after_reservation'); assert.ok(before && !step.attemptId && operation.attemptId); step.attemptId = operation.attemptId; save(); inspect(); }
+    }, fetchImpl: async (url, init) => {
+      const slot = manifest.document.slots[active]!, step = checkpoint.steps[active]!;
+      assert.ok(before && step.attemptId && !step.dispatchIntent && String(url) === 'https://router.sapiom.ai/v1/chat/completions' && init?.method === 'POST' && init.body === JSON.stringify(slot.body));
+      inspect(); step.dispatchIntent = true; save(); step.dispatched = true;
+      return deps.transport(url, { ...init, redirect: 'error', signal: AbortSignal.timeout(45000) });
+    } });
+    assert.equal(provider.executionMode, 'live'); assert.ok(provider.capacity(manifest.document.slots.length).ready, 'The whole approved batch must fit the shared ledger.');
     for (const [i, slot] of manifest.document.slots.entries()) {
-      active = i; before = false; const step = checkpoint.steps[i]!; inspect(); step.started = true; save();
+      active = i; before = false; const step = checkpoint.steps[i]!; inspect(); step.started = true; step.startedAt = new Date().toISOString(); save();
       try { await provider.answerWorkspace(structuredClone(slot.input)); } catch { /* Receipt recovery never redispatches. */ }
-      inspect(); step.receipt = provider.receipt(slot.input.runId); save();
+      step.observedAt = new Date().toISOString(); step.receipt = provider.receipt(slot.input.runId); save(); inspect();
       const observed = verifyDiagnosticCheckpoint(manifest, checkpoint); if (observed.outputs[i]?.status !== 'completed') { checkpoint.stopReason = 'failed_or_unknown_no_retry'; save(); break; }
     }
-  } finally { provider.close(); }
+  } catch { checkpoint.stopReason = 'frozen_boundary_or_execution_failed'; }
+  finally { try { provider?.close(); } catch { checkpoint.stopReason = 'provider_close_failed'; } }
+  save();
   return { checkpoint, result: verifyDiagnosticCheckpoint(manifest, checkpoint) };
 }
 
@@ -124,8 +136,13 @@ export async function executeThreeContext(manifest: ThreeContextManifest, approv
 export function anonymousDiagnosticReview(manifest: ThreeContextManifest, checkpoint: DiagnosticCheckpoint, secret: string) {
   assert.ok(secret.length >= 16); const result = verifyDiagnosticCheckpoint(manifest, checkpoint);
   const ordered = manifest.document.slots.map((slot, i) => ({ slot, i, key: diagnosticHash([secret, slot.input.runId]) })).sort((a, b) => a.key.localeCompare(b.key));
-  const mapping = ordered.map((r, i) => ({ label: `Answer ${i + 1}`, caseId: r.slot.caseId, arm: r.slot.arm }));
-  const answers = ordered.map((r, i) => ({ label: `Answer ${i + 1}`, caseId: r.slot.caseId, ...result.outputs[r.i] }));
+  const mapping = ordered.map((r, i) => ({ label: `Answer ${i + 1}`, caseId: r.slot.caseId, arm: r.slot.arm, operationRunId: r.slot.input.runId, attemptId: checkpoint.steps[r.i]!.attemptId ?? null }));
+  // Receipt bindings include an operation ID ending in the arm name. Keep every
+  // execution field private, and expose only the actual source-checking content.
+  const answers = ordered.map((r, i) => {
+    const observed = result.outputs[r.i]!;
+    return { label: `Answer ${i + 1}`, caseId: r.slot.caseId, status: observed.status, output: observed.output ? structuredClone(observed.output.answer) : null };
+  });
   return { review: { format: 'anonymous-three-context-review-v1', reviewerInstruction: 'Score each axis against complete sources and prewritten fact qualifications. AI review is provisional; agreement is not ground truth.', cases: manifest.document.preparation.cases.map(c => ({ id: c.id, product: c.product, question: c.question, completeSources: c.completeSources, designatedFacts: c.designatedFacts, unknowns: c.referenceReview.unknowns })), answers, qualityClaimEligible: false }, mapping };
 }
 
