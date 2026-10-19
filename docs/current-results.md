@@ -1,5 +1,7 @@
 # Current results
 
+Latest retrieval check: v2 fixes 4/4 exposed development fact units, but a frozen fresh twelve-product source test delivers 0/3 independently designated missing units. Its paid-test gate rejects the packet; zero new answers and no quality gain. [Full result and offline replay](evidence/retrieval-source-coverage-v2-2026-10-18/RESULTS.md).
+
 Updated October 18, 2026. This index distinguishes implementation checks, scripted demonstrations and recorded live observations. The full chronology remains in the [build and evidence ledger](build-plan.md).
 
 ## Current release status

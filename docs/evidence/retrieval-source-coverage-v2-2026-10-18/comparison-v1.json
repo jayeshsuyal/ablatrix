@@ -1,0 +1,2598 @@
+{
+  "format": "ablatrix-source-coverage-v2-comparison-v1",
+  "deckFileSha256": "e315f8cccbe943acfa205e4c2a3a6f966d41865ec63247214693909be5052a9a",
+  "baselineFileSha256": "d8dfe44845d0b92666fc3fae86a9c52e54ee398606a2736ec37ff9f9ea347005",
+  "reviewFileSha256": "cc10964003f98c7ab141f70c69588949802852fc6434761040b34510484efffe",
+  "contract": "workspace-source-coverage-v2",
+  "corpusSha256": "3b548ec2545e70bfa4c2b737bc219d1f412b47b9db1ae076f1014716cc394e2f",
+  "results": [
+    {
+      "caseId": "source-coverage-v2-train-5688",
+      "sourceGapGroup": "baseline_complete_control",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B0039QW1HM-cqa-12031a7c21b64c51",
+            "productId": "B0039QW1HM",
+            "source": "cqa",
+            "text": "there is about a cup of volume in each pouch.",
+            "reference": "cqa",
+            "sha256": "ab6f7f7523c974476c0fba0d55f0e33ff222bf3f5e8223fafeb021ba872740eb",
+            "originalQuestion": "how many servings are in each pouch?",
+            "lexicalRank": 1,
+            "semanticRank": 2,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B0039QW1HM-bullet-ab76e068f2f116cf",
+            "productId": "B0039QW1HM",
+            "source": "bullet",
+            "text": "buy in bulk: yields 40 total cups (10 quarts) when rehydrated; can be stored in your cupboard for years",
+            "reference": "bullet",
+            "sha256": "1023b466bd8d67daa395c92c49cbf0011742178a016efc12a2f08c00d6a02995",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B0039QW1HM-review-b718143cf0e18062",
+            "productId": "B0039QW1HM",
+            "source": "review",
+            "text": "note: equivalents to fresh veggies is only by cup or ounce; therefore, for example, if your recipe calls for 2 carrots, you have to figure out how much in weight or cups that is to convert to the dried/dehydrated amount.",
+            "reference": "review",
+            "sha256": "2dd71c074a145545d38f3a69dcd73f310d6fdcf2ee32805d8bdd3d3e153ba061",
+            "lexicalRank": 3,
+            "semanticRank": 5,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B0039QW1HM-description-2865f061ad3b3ebb",
+            "productId": "B0039QW1HM",
+            "source": "description",
+            "text": "if using directly in a cooked dish, be sure to add additional water to allow for absorption.",
+            "reference": "description",
+            "sha256": "324d72b6eb442f08b7cfb1666934e5d3804014a57cc7ad32bac46c9528c3416a",
+            "lexicalRank": 7,
+            "semanticRank": 4,
+            "score": 0.03055037313432836
+          },
+          {
+            "id": "epqa-B0039QW1HM-cqa-cd8a6c276b858564",
+            "productId": "B0039QW1HM",
+            "source": "cqa",
+            "text": "there is literally 1 cup of dehydrated product in each package i.e.",
+            "reference": "cqa",
+            "sha256": "f229b6bb2aad0bd3fcf6f26ab30da1336e7e0004857c3e95fe980f84347e4eba",
+            "originalQuestion": "follow up question. in total is there 15 cups of dehydrated product? it says \"raw\" but not sure what that means..",
+            "lexicalRank": 6,
+            "semanticRank": 6,
+            "score": 0.030303030303030304
+          }
+        ],
+        "durationMs": 925.8109999999999,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B0039QW1HM-cqa-12031a7c21b64c51",
+            "productId": "B0039QW1HM",
+            "source": "cqa",
+            "text": "there is about a cup of volume in each pouch.",
+            "reference": "cqa",
+            "sha256": "ab6f7f7523c974476c0fba0d55f0e33ff222bf3f5e8223fafeb021ba872740eb",
+            "originalQuestion": "how many servings are in each pouch?",
+            "lexicalRank": 1,
+            "semanticRank": 2,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B0039QW1HM-bullet-ab76e068f2f116cf",
+            "productId": "B0039QW1HM",
+            "source": "bullet",
+            "text": "buy in bulk: yields 40 total cups (10 quarts) when rehydrated; can be stored in your cupboard for years",
+            "reference": "bullet",
+            "sha256": "1023b466bd8d67daa395c92c49cbf0011742178a016efc12a2f08c00d6a02995",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B0039QW1HM-review-b718143cf0e18062",
+            "productId": "B0039QW1HM",
+            "source": "review",
+            "text": "note: equivalents to fresh veggies is only by cup or ounce; therefore, for example, if your recipe calls for 2 carrots, you have to figure out how much in weight or cups that is to convert to the dried/dehydrated amount.",
+            "reference": "review",
+            "sha256": "2dd71c074a145545d38f3a69dcd73f310d6fdcf2ee32805d8bdd3d3e153ba061",
+            "lexicalRank": 3,
+            "semanticRank": 5,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B0039QW1HM-description-2865f061ad3b3ebb",
+            "productId": "B0039QW1HM",
+            "source": "description",
+            "text": "if using directly in a cooked dish, be sure to add additional water to allow for absorption.",
+            "reference": "description",
+            "sha256": "324d72b6eb442f08b7cfb1666934e5d3804014a57cc7ad32bac46c9528c3416a",
+            "lexicalRank": 7,
+            "semanticRank": 4,
+            "score": 0.03055037313432836
+          },
+          {
+            "id": "epqa-B0039QW1HM-cqa-cd8a6c276b858564",
+            "productId": "B0039QW1HM",
+            "source": "cqa",
+            "text": "there is literally 1 cup of dehydrated product in each package i.e.",
+            "reference": "cqa",
+            "sha256": "f229b6bb2aad0bd3fcf6f26ab30da1336e7e0004857c3e95fe980f84347e4eba",
+            "originalQuestion": "follow up question. in total is there 15 cups of dehydrated product? it says \"raw\" but not sure what that means..",
+            "lexicalRank": 6,
+            "semanticRank": 6,
+            "score": 0.030303030303030304
+          }
+        ],
+        "durationMs": 925.8109999999999,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B0039QW1HM-cqa-12031a7c21b64c51",
+            "productId": "B0039QW1HM",
+            "source": "cqa",
+            "text": "there is about a cup of volume in each pouch.",
+            "reference": "cqa",
+            "sha256": "ab6f7f7523c974476c0fba0d55f0e33ff222bf3f5e8223fafeb021ba872740eb",
+            "originalQuestion": "how many servings are in each pouch?",
+            "lexicalRank": 1,
+            "semanticRank": 2,
+            "score": 0.03252247488101534
+          },
+          {
+            "id": "epqa-B0039QW1HM-bullet-ab76e068f2f116cf",
+            "productId": "B0039QW1HM",
+            "source": "bullet",
+            "text": "buy in bulk: yields 40 total cups (10 quarts) when rehydrated; can be stored in your cupboard for years",
+            "reference": "bullet",
+            "sha256": "1023b466bd8d67daa395c92c49cbf0011742178a016efc12a2f08c00d6a02995",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B0039QW1HM-review-b718143cf0e18062",
+            "productId": "B0039QW1HM",
+            "source": "review",
+            "text": "note: equivalents to fresh veggies is only by cup or ounce; therefore, for example, if your recipe calls for 2 carrots, you have to figure out how much in weight or cups that is to convert to the dried/dehydrated amount.",
+            "reference": "review",
+            "sha256": "2dd71c074a145545d38f3a69dcd73f310d6fdcf2ee32805d8bdd3d3e153ba061",
+            "lexicalRank": 3,
+            "semanticRank": 5,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B0039QW1HM-description-2865f061ad3b3ebb",
+            "productId": "B0039QW1HM",
+            "source": "description",
+            "text": "if using directly in a cooked dish, be sure to add additional water to allow for absorption.",
+            "reference": "description",
+            "sha256": "324d72b6eb442f08b7cfb1666934e5d3804014a57cc7ad32bac46c9528c3416a",
+            "lexicalRank": 7,
+            "semanticRank": 4,
+            "score": 0.03055037313432836
+          },
+          {
+            "id": "epqa-B0039QW1HM-cqa-cd8a6c276b858564",
+            "productId": "B0039QW1HM",
+            "source": "cqa",
+            "text": "there is literally 1 cup of dehydrated product in each package i.e.",
+            "reference": "cqa",
+            "sha256": "f229b6bb2aad0bd3fcf6f26ab30da1336e7e0004857c3e95fe980f84347e4eba",
+            "originalQuestion": "follow up question. in total is there 15 cups of dehydrated product? it says \"raw\" but not sure what that means..",
+            "lexicalRank": 6,
+            "semanticRank": 6,
+            "score": 0.030303030303030304
+          }
+        ],
+        "durationMs": 925.8109999999999,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The listing claims 40 total cups, or 10 quarts, after rehydration.",
+          "sourceIds": [
+            "epqa-B0039QW1HM-bullet-ab76e068f2f116cf"
+          ],
+          "quote": "yields 40 total cups (10 quarts) when rehydrated",
+          "qualification": "This is a stated aggregate yield for the supplied product source, not a measured expansion factor for each individual vegetable.",
+          "deliveredByAddedSource": false
+        },
+        {
+          "fact": "A customer states that each package contains one cup of dehydrated product.",
+          "sourceIds": [
+            "epqa-B0039QW1HM-cqa-cd8a6c276b858564"
+          ],
+          "quote": "there is literally 1 cup of dehydrated product in each package i.e.",
+          "qualification": "The original question explicitly concerns the total 15 cups of dehydrated product; the answer body supports one dehydrated cup per pouch. The product title supplies the 15-count pack.",
+          "deliveredByAddedSource": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-coverage-v2-train-12870",
+      "sourceGapGroup": "specification_gap",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B0171UWG3A-review-5eb484f784921b0d",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "color seems durable enough to last at least a couple of season, fairly easy to refill; contains all attachments for table ground and deck mount, very good value for the price.",
+            "reference": "review",
+            "sha256": "6c29396318effbeb52c73be8289d117bf0b45be01cf89c4077ba2327f2284864",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B0171UWG3A-review-e4236cd2d3c6d3fd",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "they hold quite a bit of the tiki fuel, i was able to use them alot over the summer without refilling a whole bunch.",
+            "reference": "review",
+            "sha256": "fcad128674018e384ee3bbdbf1bf7ff9426db04105e58fa8c8c1f93db7fe35d5",
+            "lexicalRank": 7,
+            "semanticRank": 3,
+            "score": 0.030798389007344232
+          },
+          {
+            "id": "epqa-B0171UWG3A-review-e1976eee36e7e4a5",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "they hold a good amount of fuel, light easily, and stay lighted until we extinguish them.",
+            "reference": "review",
+            "sha256": "53d3cda79ae99638d3225e6edf412c3af7549856d633b799acdac459ddd06047",
+            "lexicalRank": 5,
+            "semanticRank": 5,
+            "score": 0.03076923076923077
+          },
+          {
+            "id": "epqa-B0171UWG3A-bullet-cc593d83eeb55872",
+            "productId": "B0171UWG3A",
+            "source": "bullet",
+            "text": "how to fill oil: use funnel or make a cone of plastic sheet and fill the oil in the torch.",
+            "reference": "bullet",
+            "sha256": "7c5cb3491b483ac8fe5042ed9d3d6a09c5caf98534464336e1b149a8a5c61b94",
+            "lexicalRank": 2,
+            "semanticRank": 9,
+            "score": 0.030621785881252923
+          },
+          {
+            "id": "epqa-B0171UWG3A-review-04cdd7b67bdf1a36",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "they look really nice.",
+            "reference": "review",
+            "sha256": "92e5a4be4ff21329deb31571483b00e3dd2de2867f6095d2ac8def11a523ab8d",
+            "lexicalRank": 1,
+            "semanticRank": 12,
+            "score": 0.03028233151183971
+          }
+        ],
+        "durationMs": 221.42737499999976,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B0171UWG3A-review-5eb484f784921b0d",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "color seems durable enough to last at least a couple of season, fairly easy to refill; contains all attachments for table ground and deck mount, very good value for the price.",
+            "reference": "review",
+            "sha256": "6c29396318effbeb52c73be8289d117bf0b45be01cf89c4077ba2327f2284864",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B0171UWG3A-review-e4236cd2d3c6d3fd",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "they hold quite a bit of the tiki fuel, i was able to use them alot over the summer without refilling a whole bunch.",
+            "reference": "review",
+            "sha256": "fcad128674018e384ee3bbdbf1bf7ff9426db04105e58fa8c8c1f93db7fe35d5",
+            "lexicalRank": 7,
+            "semanticRank": 3,
+            "score": 0.030798389007344232
+          },
+          {
+            "id": "epqa-B0171UWG3A-review-e1976eee36e7e4a5",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "they hold a good amount of fuel, light easily, and stay lighted until we extinguish them.",
+            "reference": "review",
+            "sha256": "53d3cda79ae99638d3225e6edf412c3af7549856d633b799acdac459ddd06047",
+            "lexicalRank": 5,
+            "semanticRank": 5,
+            "score": 0.03076923076923077
+          },
+          {
+            "id": "epqa-B0171UWG3A-bullet-cc593d83eeb55872",
+            "productId": "B0171UWG3A",
+            "source": "bullet",
+            "text": "how to fill oil: use funnel or make a cone of plastic sheet and fill the oil in the torch.",
+            "reference": "bullet",
+            "sha256": "7c5cb3491b483ac8fe5042ed9d3d6a09c5caf98534464336e1b149a8a5c61b94",
+            "lexicalRank": 2,
+            "semanticRank": 9,
+            "score": 0.030621785881252923
+          },
+          {
+            "id": "epqa-B0171UWG3A-review-04cdd7b67bdf1a36",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "they look really nice.",
+            "reference": "review",
+            "sha256": "92e5a4be4ff21329deb31571483b00e3dd2de2867f6095d2ac8def11a523ab8d",
+            "lexicalRank": 1,
+            "semanticRank": 12,
+            "score": 0.03028233151183971
+          }
+        ],
+        "durationMs": 221.42737499999976,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B0171UWG3A-review-5eb484f784921b0d",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "color seems durable enough to last at least a couple of season, fairly easy to refill; contains all attachments for table ground and deck mount, very good value for the price.",
+            "reference": "review",
+            "sha256": "6c29396318effbeb52c73be8289d117bf0b45be01cf89c4077ba2327f2284864",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B0171UWG3A-review-e4236cd2d3c6d3fd",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "they hold quite a bit of the tiki fuel, i was able to use them alot over the summer without refilling a whole bunch.",
+            "reference": "review",
+            "sha256": "fcad128674018e384ee3bbdbf1bf7ff9426db04105e58fa8c8c1f93db7fe35d5",
+            "lexicalRank": 7,
+            "semanticRank": 3,
+            "score": 0.030798389007344232
+          },
+          {
+            "id": "epqa-B0171UWG3A-review-e1976eee36e7e4a5",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "they hold a good amount of fuel, light easily, and stay lighted until we extinguish them.",
+            "reference": "review",
+            "sha256": "53d3cda79ae99638d3225e6edf412c3af7549856d633b799acdac459ddd06047",
+            "lexicalRank": 5,
+            "semanticRank": 5,
+            "score": 0.03076923076923077
+          },
+          {
+            "id": "epqa-B0171UWG3A-bullet-cc593d83eeb55872",
+            "productId": "B0171UWG3A",
+            "source": "bullet",
+            "text": "how to fill oil: use funnel or make a cone of plastic sheet and fill the oil in the torch.",
+            "reference": "bullet",
+            "sha256": "7c5cb3491b483ac8fe5042ed9d3d6a09c5caf98534464336e1b149a8a5c61b94",
+            "lexicalRank": 2,
+            "semanticRank": 9,
+            "score": 0.030621785881252923
+          },
+          {
+            "id": "epqa-B0171UWG3A-review-04cdd7b67bdf1a36",
+            "productId": "B0171UWG3A",
+            "source": "review",
+            "text": "they look really nice.",
+            "reference": "review",
+            "sha256": "92e5a4be4ff21329deb31571483b00e3dd2de2867f6095d2ac8def11a523ab8d",
+            "lexicalRank": 1,
+            "semanticRank": 12,
+            "score": 0.03028233151183971
+          }
+        ],
+        "durationMs": 221.42737499999976,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The description claims more than six hours per fill.",
+          "sourceIds": [
+            "epqa-B0171UWG3A-description-569cd240406155b3"
+          ],
+          "quote": "each fill provides more than 6 hours of ambiance.",
+          "qualification": "This is a product-description claim, not a measured average. The source does not specify fuel, wick setting, weather or test conditions.",
+          "deliveredByAddedSource": false
+        },
+        {
+          "fact": "One reviewer reports five to six hours after lighting.",
+          "sourceIds": [
+            "epqa-B0171UWG3A-review-260b90ffd4f88981"
+          ],
+          "quote": "it's a good product, it stayed for 5-6 hrs after lighting it up, sturdy and looks cool.",
+          "qualification": "This is one customer report. It does not explicitly establish a full initial fill, test conditions or a population average, and it is shorter than the description claim.",
+          "deliveredByAddedSource": false
+        },
+        {
+          "fact": "Another reviewer reports nearly eight hours of burning before manually extinguishing the torches.",
+          "sourceIds": [
+            "epqa-B0171UWG3A-review-ae71cc00f4d6a319"
+          ],
+          "quote": "they burned beautifully all night (for nearly eight hours before i blew them out).",
+          "qualification": "The customer extinguished the torches; this is not an eight-hour exhaustion limit or a measured average. Initial fill and operating conditions are not stated.",
+          "deliveredByAddedSource": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-coverage-v2-train-13347",
+      "sourceGapGroup": "baseline_complete_control",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B01DPUYGRY-bullet-88067adbf3707305",
+            "productId": "B01DPUYGRY",
+            "source": "bullet",
+            "text": "adjustable strap extends to a generous 65 inches",
+            "reference": "bullet",
+            "sha256": "e7fde48458351a7613e70af44d6d38599ff662e2d868821f2469bb5a0ca44e04",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B01DPUYGRY-description-c22fd783604aae3a",
+            "productId": "B01DPUYGRY",
+            "source": "description",
+            "text": "this must have bag also features an adjustable cross body strap for comfort, and a 6.5-inch by 4.5-inch snap-out mini wristlet.",
+            "reference": "description",
+            "sha256": "e9c84f8f2fc19dca1f3be5d7efa10e71dbc2d2240c603342015d76bf2a7f7858",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B01DPUYGRY-attribute-16317b2e602a91b8",
+            "productId": "B01DPUYGRY",
+            "source": "attribute",
+            "text": "item_package_dimensions:  { length:{ unit:centimeters, normalized_value:{ unit:inches, value:13.31 }, value:2.3 }, width:{ unit:centimeters, normalized_value:{ unit:inches, value:10.31 }, value:26.2 }, height:{ unit:centimeters, normalized_value:{ unit:inches, value:0.91 }, value:33.8 } }",
+            "reference": "attribute",
+            "sha256": "56c19aced766d728941404bfbeb255d928029324c0c4124f780d0350aa32e374",
+            "lexicalRank": 4,
+            "semanticRank": 3,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B01DPUYGRY-review-d6e4e5f84c235283",
+            "productId": "B01DPUYGRY",
+            "source": "review",
+            "text": "the inside extra pouch that pops out is super cheap.",
+            "reference": "review",
+            "sha256": "d187f711c11c465fa630e5569b0242dedb55a24427eef00ae4e403875f03d7f7",
+            "lexicalRank": 3,
+            "semanticRank": 10,
+            "score": 0.030158730158730156
+          },
+          {
+            "id": "epqa-B01DPUYGRY-attribute-9ce042f436fe3264",
+            "productId": "B01DPUYGRY",
+            "source": "attribute",
+            "text": "model_name:  { value:\"ncaa stadium friendly clear carryall crossbody bag with team logo\" }",
+            "reference": "attribute",
+            "sha256": "b8279432cfa17f3bae37a2b5760e259b25ab1063f3c2a88d0818ec4bbb2906d8",
+            "lexicalRank": null,
+            "semanticRank": 4,
+            "score": 0.015625
+          }
+        ],
+        "durationMs": 166.29020899999978,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B01DPUYGRY-bullet-88067adbf3707305",
+            "productId": "B01DPUYGRY",
+            "source": "bullet",
+            "text": "adjustable strap extends to a generous 65 inches",
+            "reference": "bullet",
+            "sha256": "e7fde48458351a7613e70af44d6d38599ff662e2d868821f2469bb5a0ca44e04",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B01DPUYGRY-description-c22fd783604aae3a",
+            "productId": "B01DPUYGRY",
+            "source": "description",
+            "text": "this must have bag also features an adjustable cross body strap for comfort, and a 6.5-inch by 4.5-inch snap-out mini wristlet.",
+            "reference": "description",
+            "sha256": "e9c84f8f2fc19dca1f3be5d7efa10e71dbc2d2240c603342015d76bf2a7f7858",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B01DPUYGRY-attribute-16317b2e602a91b8",
+            "productId": "B01DPUYGRY",
+            "source": "attribute",
+            "text": "item_package_dimensions:  { length:{ unit:centimeters, normalized_value:{ unit:inches, value:13.31 }, value:2.3 }, width:{ unit:centimeters, normalized_value:{ unit:inches, value:10.31 }, value:26.2 }, height:{ unit:centimeters, normalized_value:{ unit:inches, value:0.91 }, value:33.8 } }",
+            "reference": "attribute",
+            "sha256": "56c19aced766d728941404bfbeb255d928029324c0c4124f780d0350aa32e374",
+            "lexicalRank": 4,
+            "semanticRank": 3,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B01DPUYGRY-review-d6e4e5f84c235283",
+            "productId": "B01DPUYGRY",
+            "source": "review",
+            "text": "the inside extra pouch that pops out is super cheap.",
+            "reference": "review",
+            "sha256": "d187f711c11c465fa630e5569b0242dedb55a24427eef00ae4e403875f03d7f7",
+            "lexicalRank": 3,
+            "semanticRank": 10,
+            "score": 0.030158730158730156
+          },
+          {
+            "id": "epqa-B01DPUYGRY-attribute-9ce042f436fe3264",
+            "productId": "B01DPUYGRY",
+            "source": "attribute",
+            "text": "model_name:  { value:\"ncaa stadium friendly clear carryall crossbody bag with team logo\" }",
+            "reference": "attribute",
+            "sha256": "b8279432cfa17f3bae37a2b5760e259b25ab1063f3c2a88d0818ec4bbb2906d8",
+            "lexicalRank": null,
+            "semanticRank": 4,
+            "score": 0.015625
+          }
+        ],
+        "durationMs": 166.29020899999978,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B01DPUYGRY-bullet-88067adbf3707305",
+            "productId": "B01DPUYGRY",
+            "source": "bullet",
+            "text": "adjustable strap extends to a generous 65 inches",
+            "reference": "bullet",
+            "sha256": "e7fde48458351a7613e70af44d6d38599ff662e2d868821f2469bb5a0ca44e04",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B01DPUYGRY-description-c22fd783604aae3a",
+            "productId": "B01DPUYGRY",
+            "source": "description",
+            "text": "this must have bag also features an adjustable cross body strap for comfort, and a 6.5-inch by 4.5-inch snap-out mini wristlet.",
+            "reference": "description",
+            "sha256": "e9c84f8f2fc19dca1f3be5d7efa10e71dbc2d2240c603342015d76bf2a7f7858",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B01DPUYGRY-attribute-16317b2e602a91b8",
+            "productId": "B01DPUYGRY",
+            "source": "attribute",
+            "text": "item_package_dimensions:  { length:{ unit:centimeters, normalized_value:{ unit:inches, value:13.31 }, value:2.3 }, width:{ unit:centimeters, normalized_value:{ unit:inches, value:10.31 }, value:26.2 }, height:{ unit:centimeters, normalized_value:{ unit:inches, value:0.91 }, value:33.8 } }",
+            "reference": "attribute",
+            "sha256": "56c19aced766d728941404bfbeb255d928029324c0c4124f780d0350aa32e374",
+            "lexicalRank": 4,
+            "semanticRank": 3,
+            "score": 0.03149801587301587
+          },
+          {
+            "id": "epqa-B01DPUYGRY-review-d6e4e5f84c235283",
+            "productId": "B01DPUYGRY",
+            "source": "review",
+            "text": "the inside extra pouch that pops out is super cheap.",
+            "reference": "review",
+            "sha256": "d187f711c11c465fa630e5569b0242dedb55a24427eef00ae4e403875f03d7f7",
+            "lexicalRank": 3,
+            "semanticRank": 10,
+            "score": 0.030158730158730156
+          },
+          {
+            "id": "epqa-B01DPUYGRY-attribute-9ce042f436fe3264",
+            "productId": "B01DPUYGRY",
+            "source": "attribute",
+            "text": "model_name:  { value:\"ncaa stadium friendly clear carryall crossbody bag with team logo\" }",
+            "reference": "attribute",
+            "sha256": "b8279432cfa17f3bae37a2b5760e259b25ab1063f3c2a88d0818ec4bbb2906d8",
+            "lexicalRank": null,
+            "semanticRank": 4,
+            "score": 0.015625
+          }
+        ],
+        "durationMs": 166.29020899999978,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The adjustable strap extends to 65 inches.",
+          "sourceIds": [
+            "epqa-B01DPUYGRY-bullet-88067adbf3707305"
+          ],
+          "quote": "adjustable strap extends to a generous 65 inches",
+          "qualification": "This is the listed extended strap length. It is not a strap drop measurement or a package dimension, and has not been physically verified.",
+          "deliveredByAddedSource": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-coverage-v2-train-4712",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B00BWIPC6G-cqa-4c9638a670afadc1",
+            "productId": "B00BWIPC6G",
+            "source": "cqa",
+            "text": "the plus is: bag dimensions: 3.5\"w x 19\"h x 19\"lunfolded dimensions: 34\"w x 25\"h x 52.5\"land is for ages: 1 to 5 years oldthe peapod is:bag dimensions: 3\"w x 16.5\"h x 16.5\"lunfolded dimensions: 28\"w x 18\"h x 46\"land is for ages: 1 to 3 years old",
+            "reference": "cqa",
+            "sha256": "09bbf564fecd1762dd665b0490c5aa1d5721ef067b1a65fbed91c90559f34e55",
+            "originalQuestion": "what is the difference in the peapod and the peapod plus?",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00BWIPC6G-cqa-cf16e2a7fea04c9d",
+            "productId": "B00BWIPC6G",
+            "source": "cqa",
+            "text": "not taking into account the fact that the sides slope towards the \"roof\", the approximate dimensions are as follows: 54\" length x 32\"width x23\" height.",
+            "reference": "cqa",
+            "sha256": "712912b3807e019f6c974a32fca2bd6fa032dc7ef4da3c6cb4e7f6d6a071e145",
+            "originalQuestion": "what is the size of this? my son is a little over 3 feet tall, would this be long enough inside so he can sleep comfortably?",
+            "lexicalRank": 1,
+            "semanticRank": 4,
+            "score": 0.032018442622950824
+          },
+          {
+            "id": "epqa-B00BWIPC6G-attribute-22d404b43a12d5f9",
+            "productId": "B00BWIPC6G",
+            "source": "attribute",
+            "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:3.9 }, value:3.9 }, length:{ unit:inches, normalized_value:{ unit:inches, value:17.9 }, value:17.9 }, height:{ unit:inches, normalized_value:{ unit:inches, value:17.8 }, value:17.8 } }",
+            "reference": "attribute",
+            "sha256": "2d7991da7b95ca4a17f066d0aa532a6f05dcb1145f15592e246c7e8cab65db55",
+            "lexicalRank": 3,
+            "semanticRank": 3,
+            "score": 0.031746031746031744
+          },
+          {
+            "id": "epqa-B00BWIPC6G-cqa-8b976eb2baa58973",
+            "productId": "B00BWIPC6G",
+            "source": "cqa",
+            "text": "the amazon website says this s 28 x 46 x 18 ... same as it said on every other color i checked.",
+            "reference": "cqa",
+            "sha256": "9e80706121c440ac8587f5525c5d5fbc1df4dfe647b4862427e272a0dc2b0c86",
+            "originalQuestion": "is this the peapod plus? it does not list it as plus in the description and it is priced similarly to the plus models? please advise. thank you.",
+            "lexicalRank": 11,
+            "semanticRank": 1,
+            "score": 0.03047794966520434
+          },
+          {
+            "id": "epqa-B00BWIPC6G-review-d8dac6d436b7e295",
+            "productId": "B00BWIPC6G",
+            "source": "review",
+            "text": "i am going to custom make a pad for the inside and attach velcro to hold it down.",
+            "reference": "review",
+            "sha256": "8fdd0c14914afa5d03833af6ed9e88d652220bc69bf2ce70e308da5154b2fec8",
+            "lexicalRank": 10,
+            "semanticRank": 7,
+            "score": 0.029211087420042643
+          }
+        ],
+        "durationMs": 222.4345000000003,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B00BWIPC6G-cqa-4c9638a670afadc1",
+            "productId": "B00BWIPC6G",
+            "source": "cqa",
+            "text": "the plus is: bag dimensions: 3.5\"w x 19\"h x 19\"lunfolded dimensions: 34\"w x 25\"h x 52.5\"land is for ages: 1 to 5 years oldthe peapod is:bag dimensions: 3\"w x 16.5\"h x 16.5\"lunfolded dimensions: 28\"w x 18\"h x 46\"land is for ages: 1 to 3 years old",
+            "reference": "cqa",
+            "sha256": "09bbf564fecd1762dd665b0490c5aa1d5721ef067b1a65fbed91c90559f34e55",
+            "originalQuestion": "what is the difference in the peapod and the peapod plus?",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00BWIPC6G-cqa-cf16e2a7fea04c9d",
+            "productId": "B00BWIPC6G",
+            "source": "cqa",
+            "text": "not taking into account the fact that the sides slope towards the \"roof\", the approximate dimensions are as follows: 54\" length x 32\"width x23\" height.",
+            "reference": "cqa",
+            "sha256": "712912b3807e019f6c974a32fca2bd6fa032dc7ef4da3c6cb4e7f6d6a071e145",
+            "originalQuestion": "what is the size of this? my son is a little over 3 feet tall, would this be long enough inside so he can sleep comfortably?",
+            "lexicalRank": 1,
+            "semanticRank": 4,
+            "score": 0.032018442622950824
+          },
+          {
+            "id": "epqa-B00BWIPC6G-attribute-22d404b43a12d5f9",
+            "productId": "B00BWIPC6G",
+            "source": "attribute",
+            "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:3.9 }, value:3.9 }, length:{ unit:inches, normalized_value:{ unit:inches, value:17.9 }, value:17.9 }, height:{ unit:inches, normalized_value:{ unit:inches, value:17.8 }, value:17.8 } }",
+            "reference": "attribute",
+            "sha256": "2d7991da7b95ca4a17f066d0aa532a6f05dcb1145f15592e246c7e8cab65db55",
+            "lexicalRank": 3,
+            "semanticRank": 3,
+            "score": 0.031746031746031744
+          },
+          {
+            "id": "epqa-B00BWIPC6G-cqa-8b976eb2baa58973",
+            "productId": "B00BWIPC6G",
+            "source": "cqa",
+            "text": "the amazon website says this s 28 x 46 x 18 ... same as it said on every other color i checked.",
+            "reference": "cqa",
+            "sha256": "9e80706121c440ac8587f5525c5d5fbc1df4dfe647b4862427e272a0dc2b0c86",
+            "originalQuestion": "is this the peapod plus? it does not list it as plus in the description and it is priced similarly to the plus models? please advise. thank you.",
+            "lexicalRank": 11,
+            "semanticRank": 1,
+            "score": 0.03047794966520434
+          },
+          {
+            "id": "epqa-B00BWIPC6G-review-d8dac6d436b7e295",
+            "productId": "B00BWIPC6G",
+            "source": "review",
+            "text": "i am going to custom make a pad for the inside and attach velcro to hold it down.",
+            "reference": "review",
+            "sha256": "8fdd0c14914afa5d03833af6ed9e88d652220bc69bf2ce70e308da5154b2fec8",
+            "lexicalRank": 10,
+            "semanticRank": 7,
+            "score": 0.029211087420042643
+          }
+        ],
+        "durationMs": 222.4345000000003,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B00BWIPC6G-cqa-4c9638a670afadc1",
+            "productId": "B00BWIPC6G",
+            "source": "cqa",
+            "text": "the plus is: bag dimensions: 3.5\"w x 19\"h x 19\"lunfolded dimensions: 34\"w x 25\"h x 52.5\"land is for ages: 1 to 5 years oldthe peapod is:bag dimensions: 3\"w x 16.5\"h x 16.5\"lunfolded dimensions: 28\"w x 18\"h x 46\"land is for ages: 1 to 3 years old",
+            "reference": "cqa",
+            "sha256": "09bbf564fecd1762dd665b0490c5aa1d5721ef067b1a65fbed91c90559f34e55",
+            "originalQuestion": "what is the difference in the peapod and the peapod plus?",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00BWIPC6G-cqa-cf16e2a7fea04c9d",
+            "productId": "B00BWIPC6G",
+            "source": "cqa",
+            "text": "not taking into account the fact that the sides slope towards the \"roof\", the approximate dimensions are as follows: 54\" length x 32\"width x23\" height.",
+            "reference": "cqa",
+            "sha256": "712912b3807e019f6c974a32fca2bd6fa032dc7ef4da3c6cb4e7f6d6a071e145",
+            "originalQuestion": "what is the size of this? my son is a little over 3 feet tall, would this be long enough inside so he can sleep comfortably?",
+            "lexicalRank": 1,
+            "semanticRank": 4,
+            "score": 0.032018442622950824
+          },
+          {
+            "id": "epqa-B00BWIPC6G-attribute-22d404b43a12d5f9",
+            "productId": "B00BWIPC6G",
+            "source": "attribute",
+            "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:3.9 }, value:3.9 }, length:{ unit:inches, normalized_value:{ unit:inches, value:17.9 }, value:17.9 }, height:{ unit:inches, normalized_value:{ unit:inches, value:17.8 }, value:17.8 } }",
+            "reference": "attribute",
+            "sha256": "2d7991da7b95ca4a17f066d0aa532a6f05dcb1145f15592e246c7e8cab65db55",
+            "lexicalRank": 3,
+            "semanticRank": 3,
+            "score": 0.031746031746031744
+          },
+          {
+            "id": "epqa-B00BWIPC6G-cqa-8b976eb2baa58973",
+            "productId": "B00BWIPC6G",
+            "source": "cqa",
+            "text": "the amazon website says this s 28 x 46 x 18 ... same as it said on every other color i checked.",
+            "reference": "cqa",
+            "sha256": "9e80706121c440ac8587f5525c5d5fbc1df4dfe647b4862427e272a0dc2b0c86",
+            "originalQuestion": "is this the peapod plus? it does not list it as plus in the description and it is priced similarly to the plus models? please advise. thank you.",
+            "lexicalRank": 11,
+            "semanticRank": 1,
+            "score": 0.03047794966520434
+          },
+          {
+            "id": "epqa-B00BWIPC6G-review-d8dac6d436b7e295",
+            "productId": "B00BWIPC6G",
+            "source": "review",
+            "text": "i am going to custom make a pad for the inside and attach velcro to hold it down.",
+            "reference": "review",
+            "sha256": "8fdd0c14914afa5d03833af6ed9e88d652220bc69bf2ce70e308da5154b2fec8",
+            "lexicalRank": 10,
+            "semanticRank": 7,
+            "score": 0.029211087420042643
+          }
+        ],
+        "durationMs": 222.4345000000003,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-coverage-v2-train-453",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B00APVP3GU-cqa-4ac623e4867894c7",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "2\" hour hand & 3\"-3 1/2\" minute & second hand.",
+            "reference": "cqa",
+            "sha256": "dd8a53ec5943408a8b06456d842ca6aebb02615bb271d7df4f15dc4925e4c32b",
+            "originalQuestion": "how long are the hands?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B00APVP3GU-cqa-b638f71c7d14be59",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "from the middle of the stem/post to the longest end:  second hand is 3 5/16\", minute hand is 3 27/32\", hour hand is 2 11/16\"",
+            "reference": "cqa",
+            "sha256": "41c3994345d0ead0c666a21c6848551e09f18641ba70951e0d1834cd64438972",
+            "originalQuestion": "how long are the clock hands ?",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B00APVP3GU-review-01f107e1ddb8745c",
+            "productId": "B00APVP3GU",
+            "source": "review",
+            "text": "(the hands are long, as for a 10\" or so diameter clock.",
+            "reference": "review",
+            "sha256": "1516dcc7dfb57223ab6be7cc0133f8838804398a6b1a554e196ddab1a9ebc6cc",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B00APVP3GU-cqa-b6f354667e49e91b",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "dear customer,thank you for your email.here is some information of the item.spindle diameter: 8mm hour hand length: 57 mm minute hand length: 67 mm second hand length: 90 mmif you hava any question,please contact with us.thank you.have a nice day.",
+            "reference": "cqa",
+            "sha256": "ba4a38acdd3d4fd4df51289692dccb619b258054fdb107f6fdf9a5030647fb76",
+            "originalQuestion": "how long are the hands of this movement?",
+            "lexicalRank": 5,
+            "semanticRank": 3,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B00APVP3GU-cqa-032ae2cbb5385405",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "since its mounted in the clock face i tried measuring it and the body of the unit is approximately 2-5/16\" by 2-3/8\" i would recommend this part however a previous review of mine criticized the movement was inadequate to move the second hand but worked well with the hour and minute  hand.",
+            "reference": "cqa",
+            "sha256": "3623c895bef94c9446710d8bd1a321007582814470248236ba5db10279294d96",
+            "originalQuestion": "what size is the quartz replacement part by full dream?",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          }
+        ],
+        "durationMs": 149.35000000000036,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B00APVP3GU-cqa-4ac623e4867894c7",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "2\" hour hand & 3\"-3 1/2\" minute & second hand.",
+            "reference": "cqa",
+            "sha256": "dd8a53ec5943408a8b06456d842ca6aebb02615bb271d7df4f15dc4925e4c32b",
+            "originalQuestion": "how long are the hands?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B00APVP3GU-cqa-b638f71c7d14be59",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "from the middle of the stem/post to the longest end:  second hand is 3 5/16\", minute hand is 3 27/32\", hour hand is 2 11/16\"",
+            "reference": "cqa",
+            "sha256": "41c3994345d0ead0c666a21c6848551e09f18641ba70951e0d1834cd64438972",
+            "originalQuestion": "how long are the clock hands ?",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B00APVP3GU-review-01f107e1ddb8745c",
+            "productId": "B00APVP3GU",
+            "source": "review",
+            "text": "(the hands are long, as for a 10\" or so diameter clock.",
+            "reference": "review",
+            "sha256": "1516dcc7dfb57223ab6be7cc0133f8838804398a6b1a554e196ddab1a9ebc6cc",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B00APVP3GU-cqa-b6f354667e49e91b",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "dear customer,thank you for your email.here is some information of the item.spindle diameter: 8mm hour hand length: 57 mm minute hand length: 67 mm second hand length: 90 mmif you hava any question,please contact with us.thank you.have a nice day.",
+            "reference": "cqa",
+            "sha256": "ba4a38acdd3d4fd4df51289692dccb619b258054fdb107f6fdf9a5030647fb76",
+            "originalQuestion": "how long are the hands of this movement?",
+            "lexicalRank": 5,
+            "semanticRank": 3,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B00APVP3GU-cqa-032ae2cbb5385405",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "since its mounted in the clock face i tried measuring it and the body of the unit is approximately 2-5/16\" by 2-3/8\" i would recommend this part however a previous review of mine criticized the movement was inadequate to move the second hand but worked well with the hour and minute  hand.",
+            "reference": "cqa",
+            "sha256": "3623c895bef94c9446710d8bd1a321007582814470248236ba5db10279294d96",
+            "originalQuestion": "what size is the quartz replacement part by full dream?",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          }
+        ],
+        "durationMs": 149.35000000000036,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B00APVP3GU-cqa-4ac623e4867894c7",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "2\" hour hand & 3\"-3 1/2\" minute & second hand.",
+            "reference": "cqa",
+            "sha256": "dd8a53ec5943408a8b06456d842ca6aebb02615bb271d7df4f15dc4925e4c32b",
+            "originalQuestion": "how long are the hands?",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B00APVP3GU-cqa-b638f71c7d14be59",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "from the middle of the stem/post to the longest end:  second hand is 3 5/16\", minute hand is 3 27/32\", hour hand is 2 11/16\"",
+            "reference": "cqa",
+            "sha256": "41c3994345d0ead0c666a21c6848551e09f18641ba70951e0d1834cd64438972",
+            "originalQuestion": "how long are the clock hands ?",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B00APVP3GU-review-01f107e1ddb8745c",
+            "productId": "B00APVP3GU",
+            "source": "review",
+            "text": "(the hands are long, as for a 10\" or so diameter clock.",
+            "reference": "review",
+            "sha256": "1516dcc7dfb57223ab6be7cc0133f8838804398a6b1a554e196ddab1a9ebc6cc",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B00APVP3GU-cqa-b6f354667e49e91b",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "dear customer,thank you for your email.here is some information of the item.spindle diameter: 8mm hour hand length: 57 mm minute hand length: 67 mm second hand length: 90 mmif you hava any question,please contact with us.thank you.have a nice day.",
+            "reference": "cqa",
+            "sha256": "ba4a38acdd3d4fd4df51289692dccb619b258054fdb107f6fdf9a5030647fb76",
+            "originalQuestion": "how long are the hands of this movement?",
+            "lexicalRank": 5,
+            "semanticRank": 3,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B00APVP3GU-cqa-032ae2cbb5385405",
+            "productId": "B00APVP3GU",
+            "source": "cqa",
+            "text": "since its mounted in the clock face i tried measuring it and the body of the unit is approximately 2-5/16\" by 2-3/8\" i would recommend this part however a previous review of mine criticized the movement was inadequate to move the second hand but worked well with the hour and minute  hand.",
+            "reference": "cqa",
+            "sha256": "3623c895bef94c9446710d8bd1a321007582814470248236ba5db10279294d96",
+            "originalQuestion": "what size is the quartz replacement part by full dream?",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          }
+        ],
+        "durationMs": 149.35000000000036,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-coverage-v2-train-5097",
+      "sourceGapGroup": "baseline_complete_control",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B002NKYWJA-review-6b213a84ea24071f",
+            "productId": "B002NKYWJA",
+            "source": "review",
+            "text": "the description says, \"adjustable brackets to fit most 2-inch- 6-inch wide railings\" and they mean it--it has to go over a railing or it won't hang straight.",
+            "reference": "review",
+            "sha256": "b9901de8b54c305985d9e57ce5b6acc1688b2134afda61519d68feccc0cdcf1b",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B002NKYWJA-description-2b32ae5e149d7db5",
+            "productId": "B002NKYWJA",
+            "source": "description",
+            "text": "expandable from 24 to 36-inches wide",
+            "reference": "description",
+            "sha256": "cc642dc8c62b1e624d34254c12a162844363fe944cb5c336ce7f954ba3d4753d",
+            "lexicalRank": 6,
+            "semanticRank": 1,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B002NKYWJA-review-0036b725db42d38e",
+            "productId": "B002NKYWJA",
+            "source": "review",
+            "text": "i do like the sturdy design and the adjust-ability, as well as being able to hang it on my deck or my fence.i haven't seen any rust yet, but based on the sliding design i question the long-term ability of this unit to resist rust.i will update as i go through the summer and fall months.",
+            "reference": "review",
+            "sha256": "b73e7431b4f0f862f4d779b13e112072eb3248c56e92e17657cadafb4c4fd19d",
+            "lexicalRank": 4,
+            "semanticRank": 6,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B002NKYWJA-description-ca1d34c0a3e90559",
+            "productId": "B002NKYWJA",
+            "source": "description",
+            "text": "-adjustable brackets to fit most 2\"-6\" wide railings.",
+            "reference": "description",
+            "sha256": "c8251658c49751520ed1bb1c04f5379158f3a7a7be261a418a23a2b9fa743e14",
+            "lexicalRank": 8,
+            "semanticRank": 3,
+            "score": 0.03057889822595705
+          },
+          {
+            "id": "epqa-B002NKYWJA-review-c926e4a47fa47653",
+            "productId": "B002NKYWJA",
+            "source": "review",
+            "text": "it accommodates planters up to 6 inches wide.",
+            "reference": "review",
+            "sha256": "2bc26ae7861b25cde9d117164737c7d0146da0417a8c340b9404c94621beb584",
+            "lexicalRank": 7,
+            "semanticRank": 4,
+            "score": 0.03055037313432836
+          }
+        ],
+        "durationMs": 439.7848750000003,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B002NKYWJA-review-6b213a84ea24071f",
+            "productId": "B002NKYWJA",
+            "source": "review",
+            "text": "the description says, \"adjustable brackets to fit most 2-inch- 6-inch wide railings\" and they mean it--it has to go over a railing or it won't hang straight.",
+            "reference": "review",
+            "sha256": "b9901de8b54c305985d9e57ce5b6acc1688b2134afda61519d68feccc0cdcf1b",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B002NKYWJA-description-2b32ae5e149d7db5",
+            "productId": "B002NKYWJA",
+            "source": "description",
+            "text": "expandable from 24 to 36-inches wide",
+            "reference": "description",
+            "sha256": "cc642dc8c62b1e624d34254c12a162844363fe944cb5c336ce7f954ba3d4753d",
+            "lexicalRank": 6,
+            "semanticRank": 1,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B002NKYWJA-review-0036b725db42d38e",
+            "productId": "B002NKYWJA",
+            "source": "review",
+            "text": "i do like the sturdy design and the adjust-ability, as well as being able to hang it on my deck or my fence.i haven't seen any rust yet, but based on the sliding design i question the long-term ability of this unit to resist rust.i will update as i go through the summer and fall months.",
+            "reference": "review",
+            "sha256": "b73e7431b4f0f862f4d779b13e112072eb3248c56e92e17657cadafb4c4fd19d",
+            "lexicalRank": 4,
+            "semanticRank": 6,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B002NKYWJA-description-ca1d34c0a3e90559",
+            "productId": "B002NKYWJA",
+            "source": "description",
+            "text": "-adjustable brackets to fit most 2\"-6\" wide railings.",
+            "reference": "description",
+            "sha256": "c8251658c49751520ed1bb1c04f5379158f3a7a7be261a418a23a2b9fa743e14",
+            "lexicalRank": 8,
+            "semanticRank": 3,
+            "score": 0.03057889822595705
+          },
+          {
+            "id": "epqa-B002NKYWJA-review-c926e4a47fa47653",
+            "productId": "B002NKYWJA",
+            "source": "review",
+            "text": "it accommodates planters up to 6 inches wide.",
+            "reference": "review",
+            "sha256": "2bc26ae7861b25cde9d117164737c7d0146da0417a8c340b9404c94621beb584",
+            "lexicalRank": 7,
+            "semanticRank": 4,
+            "score": 0.03055037313432836
+          }
+        ],
+        "durationMs": 439.7848750000003,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B002NKYWJA-review-6b213a84ea24071f",
+            "productId": "B002NKYWJA",
+            "source": "review",
+            "text": "the description says, \"adjustable brackets to fit most 2-inch- 6-inch wide railings\" and they mean it--it has to go over a railing or it won't hang straight.",
+            "reference": "review",
+            "sha256": "b9901de8b54c305985d9e57ce5b6acc1688b2134afda61519d68feccc0cdcf1b",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B002NKYWJA-description-2b32ae5e149d7db5",
+            "productId": "B002NKYWJA",
+            "source": "description",
+            "text": "expandable from 24 to 36-inches wide",
+            "reference": "description",
+            "sha256": "cc642dc8c62b1e624d34254c12a162844363fe944cb5c336ce7f954ba3d4753d",
+            "lexicalRank": 6,
+            "semanticRank": 1,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B002NKYWJA-review-0036b725db42d38e",
+            "productId": "B002NKYWJA",
+            "source": "review",
+            "text": "i do like the sturdy design and the adjust-ability, as well as being able to hang it on my deck or my fence.i haven't seen any rust yet, but based on the sliding design i question the long-term ability of this unit to resist rust.i will update as i go through the summer and fall months.",
+            "reference": "review",
+            "sha256": "b73e7431b4f0f862f4d779b13e112072eb3248c56e92e17657cadafb4c4fd19d",
+            "lexicalRank": 4,
+            "semanticRank": 6,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B002NKYWJA-description-ca1d34c0a3e90559",
+            "productId": "B002NKYWJA",
+            "source": "description",
+            "text": "-adjustable brackets to fit most 2\"-6\" wide railings.",
+            "reference": "description",
+            "sha256": "c8251658c49751520ed1bb1c04f5379158f3a7a7be261a418a23a2b9fa743e14",
+            "lexicalRank": 8,
+            "semanticRank": 3,
+            "score": 0.03057889822595705
+          },
+          {
+            "id": "epqa-B002NKYWJA-review-c926e4a47fa47653",
+            "productId": "B002NKYWJA",
+            "source": "review",
+            "text": "it accommodates planters up to 6 inches wide.",
+            "reference": "review",
+            "sha256": "2bc26ae7861b25cde9d117164737c7d0146da0417a8c340b9404c94621beb584",
+            "lexicalRank": 7,
+            "semanticRank": 4,
+            "score": 0.03055037313432836
+          },
+          {
+            "id": "epqa-B002NKYWJA-attribute-7cc53eb05af380cb",
+            "productId": "B002NKYWJA",
+            "source": "attribute",
+            "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:13 }, value:13 }, length:{ unit:inches, normalized_value:{ unit:inches, value:24 }, value:24 }, height:{ unit:inches, normalized_value:{ unit:inches, value:6 }, value:6 } }",
+            "reference": "attribute",
+            "sha256": "f5ef00145acfb4899b2a877710db7b3fa16b9be9ebe0205ee70d01f92f4c06df",
+            "lexicalRank": null,
+            "semanticRank": null,
+            "score": 0
+          }
+        ],
+        "durationMs": 439.7848750000003,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [
+        {
+          "sourceId": "epqa-B002NKYWJA-attribute-7cc53eb05af380cb",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_path:itemdimensions",
+            "structured_path:itemdimensions.height",
+            "structured_path:itemdimensions.length",
+            "structured_path:itemdimensions.width"
+          ]
+        }
+      ],
+      "designatedFacts": [
+        {
+          "fact": "The described brackets fit most railings from two to six inches wide.",
+          "sourceIds": [
+            "epqa-B002NKYWJA-description-ca1d34c0a3e90559"
+          ],
+          "quote": "-adjustable brackets to fit most 2\"-6\" wide railings.",
+          "qualification": "The stated range is for railing width. The requested 1.75 inches is below this stated range, but the source does not map width versus thickness or establish an absolute no-fit conclusion.",
+          "deliveredByAddedSource": false
+        },
+        {
+          "fact": "A reviewer says the holder needs to go over a railing to hang straight.",
+          "sourceIds": [
+            "epqa-B002NKYWJA-review-6b213a84ea24071f"
+          ],
+          "quote": "it has to go over a railing or it won't hang straight.",
+          "qualification": "This is the reviewer installation observation, not proof of compatibility with a particular hook spacing.",
+          "deliveredByAddedSource": false
+        },
+        {
+          "fact": "The holder is described as expandable from 24 to 36 inches wide.",
+          "sourceIds": [
+            "epqa-B002NKYWJA-description-2b32ae5e149d7db5"
+          ],
+          "quote": "expandable from 24 to 36-inches wide",
+          "qualification": "This is the overall expandable width, not the center-to-center distance between hooks or confirmation of 12- or 18-inch spacing.",
+          "deliveredByAddedSource": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-coverage-v2-train-7953",
+      "sourceGapGroup": "baseline_complete_control",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B001RMUOKG-attribute-5235f20ad1fd63c6",
+            "productId": "B001RMUOKG",
+            "source": "attribute",
+            "text": "display:  { size:[ { unit:inches, value:28 } ] }",
+            "reference": "attribute",
+            "sha256": "7d6f90bf5a7313322522c0a4acb2210f84975f48260e37a4449f647984534684",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B001RMUOKG-bullet-ef4a8dc2efd5c9cc",
+            "productId": "B001RMUOKG",
+            "source": "bullet",
+            "text": "arrows have a standard nock that can be used on any youth bow",
+            "reference": "bullet",
+            "sha256": "926da6a6095729911b6f2fa77fad719cd5c83cfef6610cf18a1459b2e716be0c",
+            "lexicalRank": null,
+            "semanticRank": 1,
+            "score": 0.01639344262295082
+          },
+          {
+            "id": "epqa-B001RMUOKG-bullet-ae5d6aa3ef52054d",
+            "productId": "B001RMUOKG",
+            "source": "bullet",
+            "text": "28 inches length arrows",
+            "reference": "bullet",
+            "sha256": "2986e1ada74725deaf3103300bc7eedce00f4179bde2beb91065bff5cc1729d2",
+            "lexicalRank": null,
+            "semanticRank": 2,
+            "score": 0.016129032258064516
+          },
+          {
+            "id": "epqa-B001RMUOKG-description-b83b30110c9cd776",
+            "productId": "B001RMUOKG",
+            "source": "description",
+            "text": "- barnett junior fiberglass arrows- engineered for accuracy - compatible to shoot with banshee intermediate compound jr. phantom youth crossbow package lil' banshee and lil' sioux - 28in.",
+            "reference": "description",
+            "sha256": "61580d343099820c3518c1d72566cc01385c9aab6060b4ff008a777aeb25f7eb",
+            "lexicalRank": null,
+            "semanticRank": 4,
+            "score": 0.015625
+          },
+          {
+            "id": "epqa-B001RMUOKG-cqa-8da04dc81dba82fd",
+            "productId": "B001RMUOKG",
+            "source": "cqa",
+            "text": "they are about 20-22 inches, if i remember correctly",
+            "reference": "cqa",
+            "sha256": "66301ae1f3ef32adfab22e92777ddc5c422080e1b14149b061c76b8519a93349",
+            "originalQuestion": "how long are they",
+            "lexicalRank": null,
+            "semanticRank": 5,
+            "score": 0.015384615384615385
+          }
+        ],
+        "durationMs": 224.12004100000013,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B001RMUOKG-attribute-5235f20ad1fd63c6",
+            "productId": "B001RMUOKG",
+            "source": "attribute",
+            "text": "display:  { size:[ { unit:inches, value:28 } ] }",
+            "reference": "attribute",
+            "sha256": "7d6f90bf5a7313322522c0a4acb2210f84975f48260e37a4449f647984534684",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B001RMUOKG-bullet-ef4a8dc2efd5c9cc",
+            "productId": "B001RMUOKG",
+            "source": "bullet",
+            "text": "arrows have a standard nock that can be used on any youth bow",
+            "reference": "bullet",
+            "sha256": "926da6a6095729911b6f2fa77fad719cd5c83cfef6610cf18a1459b2e716be0c",
+            "lexicalRank": null,
+            "semanticRank": 1,
+            "score": 0.01639344262295082
+          },
+          {
+            "id": "epqa-B001RMUOKG-bullet-ae5d6aa3ef52054d",
+            "productId": "B001RMUOKG",
+            "source": "bullet",
+            "text": "28 inches length arrows",
+            "reference": "bullet",
+            "sha256": "2986e1ada74725deaf3103300bc7eedce00f4179bde2beb91065bff5cc1729d2",
+            "lexicalRank": null,
+            "semanticRank": 2,
+            "score": 0.016129032258064516
+          },
+          {
+            "id": "epqa-B001RMUOKG-description-b83b30110c9cd776",
+            "productId": "B001RMUOKG",
+            "source": "description",
+            "text": "- barnett junior fiberglass arrows- engineered for accuracy - compatible to shoot with banshee intermediate compound jr. phantom youth crossbow package lil' banshee and lil' sioux - 28in.",
+            "reference": "description",
+            "sha256": "61580d343099820c3518c1d72566cc01385c9aab6060b4ff008a777aeb25f7eb",
+            "lexicalRank": null,
+            "semanticRank": 4,
+            "score": 0.015625
+          },
+          {
+            "id": "epqa-B001RMUOKG-cqa-8da04dc81dba82fd",
+            "productId": "B001RMUOKG",
+            "source": "cqa",
+            "text": "they are about 20-22 inches, if i remember correctly",
+            "reference": "cqa",
+            "sha256": "66301ae1f3ef32adfab22e92777ddc5c422080e1b14149b061c76b8519a93349",
+            "originalQuestion": "how long are they",
+            "lexicalRank": null,
+            "semanticRank": 5,
+            "score": 0.015384615384615385
+          }
+        ],
+        "durationMs": 224.12004100000013,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B001RMUOKG-attribute-5235f20ad1fd63c6",
+            "productId": "B001RMUOKG",
+            "source": "attribute",
+            "text": "display:  { size:[ { unit:inches, value:28 } ] }",
+            "reference": "attribute",
+            "sha256": "7d6f90bf5a7313322522c0a4acb2210f84975f48260e37a4449f647984534684",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B001RMUOKG-bullet-ef4a8dc2efd5c9cc",
+            "productId": "B001RMUOKG",
+            "source": "bullet",
+            "text": "arrows have a standard nock that can be used on any youth bow",
+            "reference": "bullet",
+            "sha256": "926da6a6095729911b6f2fa77fad719cd5c83cfef6610cf18a1459b2e716be0c",
+            "lexicalRank": null,
+            "semanticRank": 1,
+            "score": 0.01639344262295082
+          },
+          {
+            "id": "epqa-B001RMUOKG-bullet-ae5d6aa3ef52054d",
+            "productId": "B001RMUOKG",
+            "source": "bullet",
+            "text": "28 inches length arrows",
+            "reference": "bullet",
+            "sha256": "2986e1ada74725deaf3103300bc7eedce00f4179bde2beb91065bff5cc1729d2",
+            "lexicalRank": null,
+            "semanticRank": 2,
+            "score": 0.016129032258064516
+          },
+          {
+            "id": "epqa-B001RMUOKG-description-b83b30110c9cd776",
+            "productId": "B001RMUOKG",
+            "source": "description",
+            "text": "- barnett junior fiberglass arrows- engineered for accuracy - compatible to shoot with banshee intermediate compound jr. phantom youth crossbow package lil' banshee and lil' sioux - 28in.",
+            "reference": "description",
+            "sha256": "61580d343099820c3518c1d72566cc01385c9aab6060b4ff008a777aeb25f7eb",
+            "lexicalRank": null,
+            "semanticRank": 4,
+            "score": 0.015625
+          },
+          {
+            "id": "epqa-B001RMUOKG-cqa-8da04dc81dba82fd",
+            "productId": "B001RMUOKG",
+            "source": "cqa",
+            "text": "they are about 20-22 inches, if i remember correctly",
+            "reference": "cqa",
+            "sha256": "66301ae1f3ef32adfab22e92777ddc5c422080e1b14149b061c76b8519a93349",
+            "originalQuestion": "how long are they",
+            "lexicalRank": null,
+            "semanticRank": 5,
+            "score": 0.015384615384615385
+          },
+          {
+            "id": "epqa-B001RMUOKG-attribute-9c737eb18b920905",
+            "productId": "B001RMUOKG",
+            "source": "attribute",
+            "text": "item_dimensions:  { width:{ unit:centimeters, normalized_value:{ unit:inches, value:1 }, value:2.54 }, length:{ unit:centimeters, normalized_value:{ unit:inches, value:5 }, value:12.7 }, height:{ unit:centimeters, normalized_value:{ unit:inches, value:30.5 }, value:77.47 } }",
+            "reference": "attribute",
+            "sha256": "b34638e2ffc50f583644575861273711294f7fc948fb587731b46e6e7e1e1661",
+            "lexicalRank": null,
+            "semanticRank": null,
+            "score": 0
+          }
+        ],
+        "durationMs": 224.12004100000013,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [
+        {
+          "sourceId": "epqa-B001RMUOKG-attribute-9c737eb18b920905",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_path:itemdimensions",
+            "structured_path:itemdimensions.height",
+            "structured_path:itemdimensions.length",
+            "structured_path:itemdimensions.width"
+          ]
+        }
+      ],
+      "designatedFacts": [
+        {
+          "fact": "The listing describes a standard nock claimed to work on any youth bow.",
+          "sourceIds": [
+            "epqa-B001RMUOKG-bullet-ef4a8dc2efd5c9cc"
+          ],
+          "quote": "arrows have a standard nock that can be used on any youth bow",
+          "qualification": "This useful nock description is explicit in an actual baseline body. It is a broad listing claim, not a numeric nock diameter, groove size, or physically verified fit guarantee. No supplied source states a numeric nock size.",
+          "deliveredByAddedSource": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-coverage-v2-train-8049",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B005OU4E62-cqa-7da12b15043e03cc",
+            "productId": "B005OU4E62",
+            "source": "cqa",
+            "text": "i don't understand quite what you're asking but the foot pedals seem to be about 15 in.",
+            "reference": "cqa",
+            "sha256": "fb9a7a6152cde8b7a58eeecefce7f7629f210e3aa99cc8afb60638855d79bca2",
+            "originalQuestion": "what is the distance from the front feet to the back feet.",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B005OU4E62-cqa-1f0d127928efd56c",
+            "productId": "B005OU4E62",
+            "source": "cqa",
+            "text": "the foot pad is 12\" long.",
+            "reference": "cqa",
+            "sha256": "84609a34ab4aa9aa37863c96802d6834cae9aa91154c3b946aa736e711989edb",
+            "originalQuestion": "i'm wanting to put this in my basement, what is the measured point when the peddle is at it's highest?",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B005OU4E62-review-e248b23f9b305603",
+            "productId": "B005OU4E62",
+            "source": "review",
+            "text": "the foot plates are long and wide enough where you can adjust the stride rotation by positioning your feet more towards the front or the back.",
+            "reference": "review",
+            "sha256": "a9f2df19b7a1f8c4ac5e3067bac5ff87143a844c23182d0b9568aad2c7eac778",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B005OU4E62-bullet-a252a2876a67721c",
+            "productId": "B005OU4E62",
+            "source": "bullet",
+            "text": "elliptical dimensions – 23|\" w x 54|\" l x 76|\" h; item weight – 76 pounds; weight capacity – 300 pounds; stride length – 13”; ceiling height clearance – consider the height of the tallest potential user, and add 21 inches minimum",
+            "reference": "bullet",
+            "sha256": "b709c42dc95f5e7c574e0a4cebeb36428aa02fa93b20a95d07aa6c786dd676bc",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B005OU4E62-review-28f47a0b64261801",
+            "productId": "B005OU4E62",
+            "source": "review",
+            "text": "if you are a shorter person and need a compact piece of equipment this might work for you.",
+            "reference": "review",
+            "sha256": "0fdd6779f011ca4578a712450cd462c6d767889db78173937658bb60a6726446",
+            "lexicalRank": 5,
+            "semanticRank": 5,
+            "score": 0.03076923076923077
+          }
+        ],
+        "durationMs": 217.166291,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B005OU4E62-cqa-7da12b15043e03cc",
+            "productId": "B005OU4E62",
+            "source": "cqa",
+            "text": "i don't understand quite what you're asking but the foot pedals seem to be about 15 in.",
+            "reference": "cqa",
+            "sha256": "fb9a7a6152cde8b7a58eeecefce7f7629f210e3aa99cc8afb60638855d79bca2",
+            "originalQuestion": "what is the distance from the front feet to the back feet.",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B005OU4E62-cqa-1f0d127928efd56c",
+            "productId": "B005OU4E62",
+            "source": "cqa",
+            "text": "the foot pad is 12\" long.",
+            "reference": "cqa",
+            "sha256": "84609a34ab4aa9aa37863c96802d6834cae9aa91154c3b946aa736e711989edb",
+            "originalQuestion": "i'm wanting to put this in my basement, what is the measured point when the peddle is at it's highest?",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B005OU4E62-review-e248b23f9b305603",
+            "productId": "B005OU4E62",
+            "source": "review",
+            "text": "the foot plates are long and wide enough where you can adjust the stride rotation by positioning your feet more towards the front or the back.",
+            "reference": "review",
+            "sha256": "a9f2df19b7a1f8c4ac5e3067bac5ff87143a844c23182d0b9568aad2c7eac778",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B005OU4E62-bullet-a252a2876a67721c",
+            "productId": "B005OU4E62",
+            "source": "bullet",
+            "text": "elliptical dimensions – 23|\" w x 54|\" l x 76|\" h; item weight – 76 pounds; weight capacity – 300 pounds; stride length – 13”; ceiling height clearance – consider the height of the tallest potential user, and add 21 inches minimum",
+            "reference": "bullet",
+            "sha256": "b709c42dc95f5e7c574e0a4cebeb36428aa02fa93b20a95d07aa6c786dd676bc",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B005OU4E62-review-28f47a0b64261801",
+            "productId": "B005OU4E62",
+            "source": "review",
+            "text": "if you are a shorter person and need a compact piece of equipment this might work for you.",
+            "reference": "review",
+            "sha256": "0fdd6779f011ca4578a712450cd462c6d767889db78173937658bb60a6726446",
+            "lexicalRank": 5,
+            "semanticRank": 5,
+            "score": 0.03076923076923077
+          }
+        ],
+        "durationMs": 217.166291,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B005OU4E62-cqa-7da12b15043e03cc",
+            "productId": "B005OU4E62",
+            "source": "cqa",
+            "text": "i don't understand quite what you're asking but the foot pedals seem to be about 15 in.",
+            "reference": "cqa",
+            "sha256": "fb9a7a6152cde8b7a58eeecefce7f7629f210e3aa99cc8afb60638855d79bca2",
+            "originalQuestion": "what is the distance from the front feet to the back feet.",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B005OU4E62-cqa-1f0d127928efd56c",
+            "productId": "B005OU4E62",
+            "source": "cqa",
+            "text": "the foot pad is 12\" long.",
+            "reference": "cqa",
+            "sha256": "84609a34ab4aa9aa37863c96802d6834cae9aa91154c3b946aa736e711989edb",
+            "originalQuestion": "i'm wanting to put this in my basement, what is the measured point when the peddle is at it's highest?",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B005OU4E62-review-e248b23f9b305603",
+            "productId": "B005OU4E62",
+            "source": "review",
+            "text": "the foot plates are long and wide enough where you can adjust the stride rotation by positioning your feet more towards the front or the back.",
+            "reference": "review",
+            "sha256": "a9f2df19b7a1f8c4ac5e3067bac5ff87143a844c23182d0b9568aad2c7eac778",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B005OU4E62-bullet-a252a2876a67721c",
+            "productId": "B005OU4E62",
+            "source": "bullet",
+            "text": "elliptical dimensions – 23|\" w x 54|\" l x 76|\" h; item weight – 76 pounds; weight capacity – 300 pounds; stride length – 13”; ceiling height clearance – consider the height of the tallest potential user, and add 21 inches minimum",
+            "reference": "bullet",
+            "sha256": "b709c42dc95f5e7c574e0a4cebeb36428aa02fa93b20a95d07aa6c786dd676bc",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B005OU4E62-review-28f47a0b64261801",
+            "productId": "B005OU4E62",
+            "source": "review",
+            "text": "if you are a shorter person and need a compact piece of equipment this might work for you.",
+            "reference": "review",
+            "sha256": "0fdd6779f011ca4578a712450cd462c6d767889db78173937658bb60a6726446",
+            "lexicalRank": 5,
+            "semanticRank": 5,
+            "score": 0.03076923076923077
+          },
+          {
+            "id": "epqa-B005OU4E62-attribute-fb4937fb3fd0fac2",
+            "productId": "B005OU4E62",
+            "source": "attribute",
+            "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:23. }, value:23. }, length:{ unit:inches, normalized_value:{ unit:inches, value:54. }, value:54. }, height:{ unit:inches, normalized_value:{ unit:inches, value:63. }, value:63. } }",
+            "reference": "attribute",
+            "sha256": "9188eb0a46c53d1d4d3feffc24208bc7f4594e4aefe5331deeb53b2e2c646f72",
+            "lexicalRank": null,
+            "semanticRank": null,
+            "score": 0
+          }
+        ],
+        "durationMs": 217.166291,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [
+        {
+          "sourceId": "epqa-B005OU4E62-attribute-fb4937fb3fd0fac2",
+          "reasons": [
+            "question_intent:item_dimensions",
+            "structured_path:itemdimensions",
+            "structured_path:itemdimensions.height",
+            "structured_path:itemdimensions.length",
+            "structured_path:itemdimensions.width"
+          ]
+        }
+      ],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-coverage-v2-train-13415",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B07ZWWZQRY-review-643d8828489792fa",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "great movie...my only comment are the many languages that this film has been translated into.",
+            "reference": "review",
+            "sha256": "edc5817ff24196a5b16ddd2c7cc07a496837329c23ecf6ba39fdfd6ffe0cb12a",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-afe12dc141be2673",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "the final episode shows many of the languages except for 1 - tagalog.",
+            "reference": "review",
+            "sha256": "35803f16c22a9e93a197d9bfb7a751ec2aed363f19ea0d78aab50ea38e5a7f1f",
+            "lexicalRank": 5,
+            "semanticRank": 3,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-101f49b59c59f560",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "the bonus content is mere access to the song tracks used and access in different languages.",
+            "reference": "review",
+            "sha256": "ecdc73d41d0c77dd3d7b0d1e39fbc0868049a4079e511acebaadc1fd4d06db9a",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-4f8babac05f1ab89",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "honestly, though, all the songs were really awesome and my daughter loves singing any and all of them, even the ones in other languages where she doesn't know what she's saying.",
+            "reference": "review",
+            "sha256": "02d0a14a70a9a3f62ccbb1f0da99418b9677821defa4a32a28dca63a1d63c9b6",
+            "lexicalRank": 2,
+            "semanticRank": 8,
+            "score": 0.030834914611005692
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-3c7a422a42819c88",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "my kids love this movie.",
+            "reference": "review",
+            "sha256": "ca4b10e97bc738970d45fd69ae5b878475785c9c876900e9e66e8e152924ec93",
+            "lexicalRank": 6,
+            "semanticRank": 13,
+            "score": 0.028850145288501453
+          }
+        ],
+        "durationMs": 337.83875000000035,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B07ZWWZQRY-review-643d8828489792fa",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "great movie...my only comment are the many languages that this film has been translated into.",
+            "reference": "review",
+            "sha256": "edc5817ff24196a5b16ddd2c7cc07a496837329c23ecf6ba39fdfd6ffe0cb12a",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-afe12dc141be2673",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "the final episode shows many of the languages except for 1 - tagalog.",
+            "reference": "review",
+            "sha256": "35803f16c22a9e93a197d9bfb7a751ec2aed363f19ea0d78aab50ea38e5a7f1f",
+            "lexicalRank": 5,
+            "semanticRank": 3,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-101f49b59c59f560",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "the bonus content is mere access to the song tracks used and access in different languages.",
+            "reference": "review",
+            "sha256": "ecdc73d41d0c77dd3d7b0d1e39fbc0868049a4079e511acebaadc1fd4d06db9a",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-4f8babac05f1ab89",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "honestly, though, all the songs were really awesome and my daughter loves singing any and all of them, even the ones in other languages where she doesn't know what she's saying.",
+            "reference": "review",
+            "sha256": "02d0a14a70a9a3f62ccbb1f0da99418b9677821defa4a32a28dca63a1d63c9b6",
+            "lexicalRank": 2,
+            "semanticRank": 8,
+            "score": 0.030834914611005692
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-3c7a422a42819c88",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "my kids love this movie.",
+            "reference": "review",
+            "sha256": "ca4b10e97bc738970d45fd69ae5b878475785c9c876900e9e66e8e152924ec93",
+            "lexicalRank": 6,
+            "semanticRank": 13,
+            "score": 0.028850145288501453
+          }
+        ],
+        "durationMs": 337.83875000000035,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B07ZWWZQRY-review-643d8828489792fa",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "great movie...my only comment are the many languages that this film has been translated into.",
+            "reference": "review",
+            "sha256": "edc5817ff24196a5b16ddd2c7cc07a496837329c23ecf6ba39fdfd6ffe0cb12a",
+            "lexicalRank": 1,
+            "semanticRank": 1,
+            "score": 0.03278688524590164
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-afe12dc141be2673",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "the final episode shows many of the languages except for 1 - tagalog.",
+            "reference": "review",
+            "sha256": "35803f16c22a9e93a197d9bfb7a751ec2aed363f19ea0d78aab50ea38e5a7f1f",
+            "lexicalRank": 5,
+            "semanticRank": 3,
+            "score": 0.03125763125763126
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-101f49b59c59f560",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "the bonus content is mere access to the song tracks used and access in different languages.",
+            "reference": "review",
+            "sha256": "ecdc73d41d0c77dd3d7b0d1e39fbc0868049a4079e511acebaadc1fd4d06db9a",
+            "lexicalRank": 4,
+            "semanticRank": 4,
+            "score": 0.03125
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-4f8babac05f1ab89",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "honestly, though, all the songs were really awesome and my daughter loves singing any and all of them, even the ones in other languages where she doesn't know what she's saying.",
+            "reference": "review",
+            "sha256": "02d0a14a70a9a3f62ccbb1f0da99418b9677821defa4a32a28dca63a1d63c9b6",
+            "lexicalRank": 2,
+            "semanticRank": 8,
+            "score": 0.030834914611005692
+          },
+          {
+            "id": "epqa-B07ZWWZQRY-review-3c7a422a42819c88",
+            "productId": "B07ZWWZQRY",
+            "source": "review",
+            "text": "my kids love this movie.",
+            "reference": "review",
+            "sha256": "ca4b10e97bc738970d45fd69ae5b878475785c9c876900e9e66e8e152924ec93",
+            "lexicalRank": 6,
+            "semanticRank": 13,
+            "score": 0.028850145288501453
+          }
+        ],
+        "durationMs": 337.83875000000035,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-coverage-v2-train-6689",
+      "sourceGapGroup": "ineligible_or_uncertain",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B003H3EC1A-cqa-2bf8c68f3fcf891d",
+            "productId": "B003H3EC1A",
+            "source": "cqa",
+            "text": "it came with a cd, but you will definitely want to use/obtain your own karaoke music",
+            "reference": "cqa",
+            "sha256": "44cbe52badfceafbf147368fd5a19fb82e0ed7a2865faf4a8814ea4b1fdaf36f",
+            "originalQuestion": "does it comes with a music cd or do you have to use your own cd",
+            "lexicalRank": 4,
+            "semanticRank": 1,
+            "score": 0.032018442622950824
+          },
+          {
+            "id": "epqa-B003H3EC1A-cqa-924fe9e9bbc363f7",
+            "productId": "B003H3EC1A",
+            "source": "cqa",
+            "text": "it comes with a kids cd but you can get anything in cd-g.  musicals, rock and roll, ballads.",
+            "reference": "cqa",
+            "sha256": "709982999ae0b142948f01bebdc75f48bbd5215b9617c5b9dedb3aa2a0120328",
+            "originalQuestion": "does it come with a cd?",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B003H3EC1A-review-60fdc895176e9618",
+            "productId": "B003H3EC1A",
+            "source": "review",
+            "text": "wish it came with a more updated cd.",
+            "reference": "review",
+            "sha256": "0732b8ebb724285d223768b00d30b766ce1df9323521309c232906c608226bde",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B003H3EC1A-review-13f92d10091c8903",
+            "productId": "B003H3EC1A",
+            "source": "review",
+            "text": "she is having a blast but i think it should come with a cd",
+            "reference": "review",
+            "sha256": "814cc72136088eb5a69e90053c5567b92378676a86d26a3eefb00be57eb35146",
+            "lexicalRank": 1,
+            "semanticRank": 6,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B003H3EC1A-review-7933a3e2e98c3deb",
+            "productId": "B003H3EC1A",
+            "source": "review",
+            "text": "when accompanied by cd+g discs (also available on amazon) it displays the song lyrics along with the instrumental music track.",
+            "reference": "review",
+            "sha256": "9569c300d350a5bddc417ccff2e180c6eaad7e111e9f476f345da3626207eac2",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          }
+        ],
+        "durationMs": 256.0778330000003,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B003H3EC1A-cqa-2bf8c68f3fcf891d",
+            "productId": "B003H3EC1A",
+            "source": "cqa",
+            "text": "it came with a cd, but you will definitely want to use/obtain your own karaoke music",
+            "reference": "cqa",
+            "sha256": "44cbe52badfceafbf147368fd5a19fb82e0ed7a2865faf4a8814ea4b1fdaf36f",
+            "originalQuestion": "does it comes with a music cd or do you have to use your own cd",
+            "lexicalRank": 4,
+            "semanticRank": 1,
+            "score": 0.032018442622950824
+          },
+          {
+            "id": "epqa-B003H3EC1A-cqa-924fe9e9bbc363f7",
+            "productId": "B003H3EC1A",
+            "source": "cqa",
+            "text": "it comes with a kids cd but you can get anything in cd-g.  musicals, rock and roll, ballads.",
+            "reference": "cqa",
+            "sha256": "709982999ae0b142948f01bebdc75f48bbd5215b9617c5b9dedb3aa2a0120328",
+            "originalQuestion": "does it come with a cd?",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B003H3EC1A-review-60fdc895176e9618",
+            "productId": "B003H3EC1A",
+            "source": "review",
+            "text": "wish it came with a more updated cd.",
+            "reference": "review",
+            "sha256": "0732b8ebb724285d223768b00d30b766ce1df9323521309c232906c608226bde",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B003H3EC1A-review-13f92d10091c8903",
+            "productId": "B003H3EC1A",
+            "source": "review",
+            "text": "she is having a blast but i think it should come with a cd",
+            "reference": "review",
+            "sha256": "814cc72136088eb5a69e90053c5567b92378676a86d26a3eefb00be57eb35146",
+            "lexicalRank": 1,
+            "semanticRank": 6,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B003H3EC1A-review-7933a3e2e98c3deb",
+            "productId": "B003H3EC1A",
+            "source": "review",
+            "text": "when accompanied by cd+g discs (also available on amazon) it displays the song lyrics along with the instrumental music track.",
+            "reference": "review",
+            "sha256": "9569c300d350a5bddc417ccff2e180c6eaad7e111e9f476f345da3626207eac2",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          }
+        ],
+        "durationMs": 256.0778330000003,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B003H3EC1A-cqa-2bf8c68f3fcf891d",
+            "productId": "B003H3EC1A",
+            "source": "cqa",
+            "text": "it came with a cd, but you will definitely want to use/obtain your own karaoke music",
+            "reference": "cqa",
+            "sha256": "44cbe52badfceafbf147368fd5a19fb82e0ed7a2865faf4a8814ea4b1fdaf36f",
+            "originalQuestion": "does it comes with a music cd or do you have to use your own cd",
+            "lexicalRank": 4,
+            "semanticRank": 1,
+            "score": 0.032018442622950824
+          },
+          {
+            "id": "epqa-B003H3EC1A-cqa-924fe9e9bbc363f7",
+            "productId": "B003H3EC1A",
+            "source": "cqa",
+            "text": "it comes with a kids cd but you can get anything in cd-g.  musicals, rock and roll, ballads.",
+            "reference": "cqa",
+            "sha256": "709982999ae0b142948f01bebdc75f48bbd5215b9617c5b9dedb3aa2a0120328",
+            "originalQuestion": "does it come with a cd?",
+            "lexicalRank": 3,
+            "semanticRank": 2,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B003H3EC1A-review-60fdc895176e9618",
+            "productId": "B003H3EC1A",
+            "source": "review",
+            "text": "wish it came with a more updated cd.",
+            "reference": "review",
+            "sha256": "0732b8ebb724285d223768b00d30b766ce1df9323521309c232906c608226bde",
+            "lexicalRank": 2,
+            "semanticRank": 3,
+            "score": 0.03200204813108039
+          },
+          {
+            "id": "epqa-B003H3EC1A-review-13f92d10091c8903",
+            "productId": "B003H3EC1A",
+            "source": "review",
+            "text": "she is having a blast but i think it should come with a cd",
+            "reference": "review",
+            "sha256": "814cc72136088eb5a69e90053c5567b92378676a86d26a3eefb00be57eb35146",
+            "lexicalRank": 1,
+            "semanticRank": 6,
+            "score": 0.031544957774465976
+          },
+          {
+            "id": "epqa-B003H3EC1A-review-7933a3e2e98c3deb",
+            "productId": "B003H3EC1A",
+            "source": "review",
+            "text": "when accompanied by cd+g discs (also available on amazon) it displays the song lyrics along with the instrumental music track.",
+            "reference": "review",
+            "sha256": "9569c300d350a5bddc417ccff2e180c6eaad7e111e9f476f345da3626207eac2",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          }
+        ],
+        "durationMs": 256.0778330000003,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [],
+      "designatedFacts": []
+    },
+    {
+      "caseId": "source-coverage-v2-train-3571",
+      "sourceGapGroup": "baseline_complete_control",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B00A9JFASY-review-0fd1b6f5f50bdc21",
+            "productId": "B00A9JFASY",
+            "source": "review",
+            "text": "the album came in a very nice presentation box, and the album itself looks wonderful.",
+            "reference": "review",
+            "sha256": "d0d112879aeaa8d27ac164fb0a34571dfb9f3c01f3cffc63506963b92ad841e7",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B00A9JFASY-review-a820ca3040547ff5",
+            "productId": "B00A9JFASY",
+            "source": "review",
+            "text": "high quality, box included, just looks and feels elegant!",
+            "reference": "review",
+            "sha256": "58c6d6ba30eff456de2745450dbd0bdbd45cd11d7fd1f6833aca42d8b61d500c",
+            "lexicalRank": 3,
+            "semanticRank": 1,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B00A9JFASY-review-f15d5343d4867b0c",
+            "productId": "B00A9JFASY",
+            "source": "review",
+            "text": "comes in a nice protective box for storage and was very reasonable for the price.",
+            "reference": "review",
+            "sha256": "9ee22b25b4754398a5333f5313c9177d34725ee8d1bcc20074870931cb8bacca",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00A9JFASY-bullet-59e32a4d2fcdab70",
+            "productId": "B00A9JFASY",
+            "source": "bullet",
+            "text": "album size: 13.25|\"l x 10|\"w - page size: 12.5|\"l x 9.5|\"w - gift box included",
+            "reference": "bullet",
+            "sha256": "9cb9f4ec4ef3ff57174bd6e7f0bed3ce96f7d55e6f07c2a78f96be4fae08cd03",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B00A9JFASY-bullet-1cfc4bb6e080c32f",
+            "productId": "B00A9JFASY",
+            "source": "bullet",
+            "text": "very stylish and classy way to store and present your photos.",
+            "reference": "bullet",
+            "sha256": "f324868746452cb8e790b421792a3ed0926748ae89b48eedc14fb22cc51a2121",
+            "lexicalRank": 5,
+            "semanticRank": 5,
+            "score": 0.03076923076923077
+          }
+        ],
+        "durationMs": 62.25483299999996,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B00A9JFASY-review-0fd1b6f5f50bdc21",
+            "productId": "B00A9JFASY",
+            "source": "review",
+            "text": "the album came in a very nice presentation box, and the album itself looks wonderful.",
+            "reference": "review",
+            "sha256": "d0d112879aeaa8d27ac164fb0a34571dfb9f3c01f3cffc63506963b92ad841e7",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B00A9JFASY-review-a820ca3040547ff5",
+            "productId": "B00A9JFASY",
+            "source": "review",
+            "text": "high quality, box included, just looks and feels elegant!",
+            "reference": "review",
+            "sha256": "58c6d6ba30eff456de2745450dbd0bdbd45cd11d7fd1f6833aca42d8b61d500c",
+            "lexicalRank": 3,
+            "semanticRank": 1,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B00A9JFASY-review-f15d5343d4867b0c",
+            "productId": "B00A9JFASY",
+            "source": "review",
+            "text": "comes in a nice protective box for storage and was very reasonable for the price.",
+            "reference": "review",
+            "sha256": "9ee22b25b4754398a5333f5313c9177d34725ee8d1bcc20074870931cb8bacca",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00A9JFASY-bullet-59e32a4d2fcdab70",
+            "productId": "B00A9JFASY",
+            "source": "bullet",
+            "text": "album size: 13.25|\"l x 10|\"w - page size: 12.5|\"l x 9.5|\"w - gift box included",
+            "reference": "bullet",
+            "sha256": "9cb9f4ec4ef3ff57174bd6e7f0bed3ce96f7d55e6f07c2a78f96be4fae08cd03",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B00A9JFASY-bullet-1cfc4bb6e080c32f",
+            "productId": "B00A9JFASY",
+            "source": "bullet",
+            "text": "very stylish and classy way to store and present your photos.",
+            "reference": "bullet",
+            "sha256": "f324868746452cb8e790b421792a3ed0926748ae89b48eedc14fb22cc51a2121",
+            "lexicalRank": 5,
+            "semanticRank": 5,
+            "score": 0.03076923076923077
+          }
+        ],
+        "durationMs": 62.25483299999996,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B00A9JFASY-review-0fd1b6f5f50bdc21",
+            "productId": "B00A9JFASY",
+            "source": "review",
+            "text": "the album came in a very nice presentation box, and the album itself looks wonderful.",
+            "reference": "review",
+            "sha256": "d0d112879aeaa8d27ac164fb0a34571dfb9f3c01f3cffc63506963b92ad841e7",
+            "lexicalRank": 1,
+            "semanticRank": 3,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B00A9JFASY-review-a820ca3040547ff5",
+            "productId": "B00A9JFASY",
+            "source": "review",
+            "text": "high quality, box included, just looks and feels elegant!",
+            "reference": "review",
+            "sha256": "58c6d6ba30eff456de2745450dbd0bdbd45cd11d7fd1f6833aca42d8b61d500c",
+            "lexicalRank": 3,
+            "semanticRank": 1,
+            "score": 0.032266458495966696
+          },
+          {
+            "id": "epqa-B00A9JFASY-review-f15d5343d4867b0c",
+            "productId": "B00A9JFASY",
+            "source": "review",
+            "text": "comes in a nice protective box for storage and was very reasonable for the price.",
+            "reference": "review",
+            "sha256": "9ee22b25b4754398a5333f5313c9177d34725ee8d1bcc20074870931cb8bacca",
+            "lexicalRank": 2,
+            "semanticRank": 2,
+            "score": 0.03225806451612903
+          },
+          {
+            "id": "epqa-B00A9JFASY-bullet-59e32a4d2fcdab70",
+            "productId": "B00A9JFASY",
+            "source": "bullet",
+            "text": "album size: 13.25|\"l x 10|\"w - page size: 12.5|\"l x 9.5|\"w - gift box included",
+            "reference": "bullet",
+            "sha256": "9cb9f4ec4ef3ff57174bd6e7f0bed3ce96f7d55e6f07c2a78f96be4fae08cd03",
+            "lexicalRank": 6,
+            "semanticRank": 4,
+            "score": 0.030776515151515152
+          },
+          {
+            "id": "epqa-B00A9JFASY-bullet-1cfc4bb6e080c32f",
+            "productId": "B00A9JFASY",
+            "source": "bullet",
+            "text": "very stylish and classy way to store and present your photos.",
+            "reference": "bullet",
+            "sha256": "f324868746452cb8e790b421792a3ed0926748ae89b48eedc14fb22cc51a2121",
+            "lexicalRank": 5,
+            "semanticRank": 5,
+            "score": 0.03076923076923077
+          }
+        ],
+        "durationMs": 62.25483299999996,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "A gift box is included with the album.",
+          "sourceIds": [
+            "epqa-B00A9JFASY-bullet-59e32a4d2fcdab70"
+          ],
+          "quote": "gift box included",
+          "qualification": "This exact inclusion statement occurs in an actual baseline bullet and is also present semantically in the title. Other baseline customers describe presentation and protective storage boxes.",
+          "deliveredByAddedSource": false
+        },
+        {
+          "fact": "A customer describes the included box as protective and suitable for storage.",
+          "sourceIds": [
+            "epqa-B00A9JFASY-review-f15d5343d4867b0c"
+          ],
+          "quote": "comes in a nice protective box for storage",
+          "qualification": "This is a customer report in an actual baseline body. No supplied source compares its construction or appearance with the seller's other products, so sameness to those other boxes is not established.",
+          "deliveredByAddedSource": false
+        }
+      ]
+    },
+    {
+      "caseId": "source-coverage-v2-train-5298",
+      "sourceGapGroup": "baseline_complete_control",
+      "baseline": {
+        "passages": [
+          {
+            "id": "epqa-B001652LO6-review-56333abe6febcdad",
+            "productId": "B001652LO6",
+            "source": "review",
+            "text": "i also used itbe sure to follow the instructions, especially having to screw one rod at a time so that you don't end up with a tangled mess of flexible rods.",
+            "reference": "review",
+            "sha256": "bfa19965bc5a3cb891acf4d266fc1980fef4a1881a6adf1b099194db991dc5db",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B001652LO6-review-7dd4c47f8daf72c9",
+            "productId": "B001652LO6",
+            "source": "review",
+            "text": "i had purchased one 12 foot extension to go along with the 12 feet that come with the base cleaning system.",
+            "reference": "review",
+            "sha256": "a72a859f1b17e6a8d3ff37119c1dacde041946a411c142c983045de874232c51",
+            "lexicalRank": 1,
+            "semanticRank": 7,
+            "score": 0.03131881575727918
+          },
+          {
+            "id": "epqa-B001652LO6-review-152df841a92b7c0a",
+            "productId": "B001652LO6",
+            "source": "review",
+            "text": "i'm afraid they will only have a small service life.",
+            "reference": "review",
+            "sha256": "b00da6783bf272d7b0a3eddfc4dc59eba5b54661363542a423f503793227f333",
+            "lexicalRank": 3,
+            "semanticRank": 6,
+            "score": 0.031024531024531024
+          },
+          {
+            "id": "epqa-B001652LO6-attribute-5fc3dd747f5dfc24",
+            "productId": "B001652LO6",
+            "source": "attribute",
+            "text": "warranty_description:  { value:\"1 year limited warranty on manufacturing defects.\" }",
+            "reference": "attribute",
+            "sha256": "5aa86984fae7f7e89d21c06840d02667a9a66eb699429dd718df93a3c27c47f3",
+            "lexicalRank": null,
+            "semanticRank": 1,
+            "score": 0.01639344262295082
+          },
+          {
+            "id": "epqa-B001652LO6-bullet-2a8461dd9617a6dc",
+            "productId": "B001652LO6",
+            "source": "bullet",
+            "text": "includes: 4 qty.",
+            "reference": "bullet",
+            "sha256": "1e138f5bb03053d665fc926f9859c1ee9f21a8b56ca7b37894d22a39fbca0def",
+            "lexicalRank": null,
+            "semanticRank": 2,
+            "score": 0.016129032258064516
+          }
+        ],
+        "durationMs": 62.36058300000059,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "indexRetrieval": {
+        "passages": [
+          {
+            "id": "epqa-B001652LO6-review-56333abe6febcdad",
+            "productId": "B001652LO6",
+            "source": "review",
+            "text": "i also used itbe sure to follow the instructions, especially having to screw one rod at a time so that you don't end up with a tangled mess of flexible rods.",
+            "reference": "review",
+            "sha256": "bfa19965bc5a3cb891acf4d266fc1980fef4a1881a6adf1b099194db991dc5db",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B001652LO6-review-7dd4c47f8daf72c9",
+            "productId": "B001652LO6",
+            "source": "review",
+            "text": "i had purchased one 12 foot extension to go along with the 12 feet that come with the base cleaning system.",
+            "reference": "review",
+            "sha256": "a72a859f1b17e6a8d3ff37119c1dacde041946a411c142c983045de874232c51",
+            "lexicalRank": 1,
+            "semanticRank": 7,
+            "score": 0.03131881575727918
+          },
+          {
+            "id": "epqa-B001652LO6-review-152df841a92b7c0a",
+            "productId": "B001652LO6",
+            "source": "review",
+            "text": "i'm afraid they will only have a small service life.",
+            "reference": "review",
+            "sha256": "b00da6783bf272d7b0a3eddfc4dc59eba5b54661363542a423f503793227f333",
+            "lexicalRank": 3,
+            "semanticRank": 6,
+            "score": 0.031024531024531024
+          },
+          {
+            "id": "epqa-B001652LO6-attribute-5fc3dd747f5dfc24",
+            "productId": "B001652LO6",
+            "source": "attribute",
+            "text": "warranty_description:  { value:\"1 year limited warranty on manufacturing defects.\" }",
+            "reference": "attribute",
+            "sha256": "5aa86984fae7f7e89d21c06840d02667a9a66eb699429dd718df93a3c27c47f3",
+            "lexicalRank": null,
+            "semanticRank": 1,
+            "score": 0.01639344262295082
+          },
+          {
+            "id": "epqa-B001652LO6-bullet-2a8461dd9617a6dc",
+            "productId": "B001652LO6",
+            "source": "bullet",
+            "text": "includes: 4 qty.",
+            "reference": "bullet",
+            "sha256": "1e138f5bb03053d665fc926f9859c1ee9f21a8b56ca7b37894d22a39fbca0def",
+            "lexicalRank": null,
+            "semanticRank": 2,
+            "score": 0.016129032258064516
+          }
+        ],
+        "durationMs": 62.36058300000059,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "candidate": {
+        "passages": [
+          {
+            "id": "epqa-B001652LO6-review-56333abe6febcdad",
+            "productId": "B001652LO6",
+            "source": "review",
+            "text": "i also used itbe sure to follow the instructions, especially having to screw one rod at a time so that you don't end up with a tangled mess of flexible rods.",
+            "reference": "review",
+            "sha256": "bfa19965bc5a3cb891acf4d266fc1980fef4a1881a6adf1b099194db991dc5db",
+            "lexicalRank": 2,
+            "semanticRank": 5,
+            "score": 0.0315136476426799
+          },
+          {
+            "id": "epqa-B001652LO6-review-7dd4c47f8daf72c9",
+            "productId": "B001652LO6",
+            "source": "review",
+            "text": "i had purchased one 12 foot extension to go along with the 12 feet that come with the base cleaning system.",
+            "reference": "review",
+            "sha256": "a72a859f1b17e6a8d3ff37119c1dacde041946a411c142c983045de874232c51",
+            "lexicalRank": 1,
+            "semanticRank": 7,
+            "score": 0.03131881575727918
+          },
+          {
+            "id": "epqa-B001652LO6-review-152df841a92b7c0a",
+            "productId": "B001652LO6",
+            "source": "review",
+            "text": "i'm afraid they will only have a small service life.",
+            "reference": "review",
+            "sha256": "b00da6783bf272d7b0a3eddfc4dc59eba5b54661363542a423f503793227f333",
+            "lexicalRank": 3,
+            "semanticRank": 6,
+            "score": 0.031024531024531024
+          },
+          {
+            "id": "epqa-B001652LO6-attribute-5fc3dd747f5dfc24",
+            "productId": "B001652LO6",
+            "source": "attribute",
+            "text": "warranty_description:  { value:\"1 year limited warranty on manufacturing defects.\" }",
+            "reference": "attribute",
+            "sha256": "5aa86984fae7f7e89d21c06840d02667a9a66eb699429dd718df93a3c27c47f3",
+            "lexicalRank": null,
+            "semanticRank": 1,
+            "score": 0.01639344262295082
+          },
+          {
+            "id": "epqa-B001652LO6-bullet-2a8461dd9617a6dc",
+            "productId": "B001652LO6",
+            "source": "bullet",
+            "text": "includes: 4 qty.",
+            "reference": "bullet",
+            "sha256": "1e138f5bb03053d665fc926f9859c1ee9f21a8b56ca7b37894d22a39fbca0def",
+            "lexicalRank": null,
+            "semanticRank": 2,
+            "score": 0.016129032258064516
+          }
+        ],
+        "durationMs": 62.36058300000059,
+        "method": "hybrid:fts5-bm25+bge-cosine+rrf(k=60)+cqa-answer-index+parent-id-scope",
+        "embeddingModel": "Xenova/bge-small-en-v1.5@ea104dacec62c0de699686887e3f920caeb4f3e3",
+        "corpusVersion": "source-coverage-v2-e315f8cccbe943acfa205e4c"
+      },
+      "additions": [],
+      "designatedFacts": [
+        {
+          "fact": "The product lists a one-year limited warranty covering manufacturing defects.",
+          "sourceIds": [
+            "epqa-B001652LO6-attribute-5fc3dd747f5dfc24"
+          ],
+          "quote": "1 year limited warranty on manufacturing defects.",
+          "qualification": "This exact warranty statement is in an actual baseline attribute. Preserve the one-year duration, limited nature, and manufacturing-defect scope; it does not establish a satisfaction guarantee, unlimited replacement promise, or coverage of ordinary wear.",
+          "deliveredByAddedSource": false
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "products": 12,
+    "changedContexts": 3,
+    "gapCases": 1,
+    "completeControls": 6,
+    "designatedMissingFacts": 3,
+    "deliveredMissingFacts": 0,
+    "gapCasesWithFactDelivered": 0,
+    "sourceOnlyPaidEligibility": false
+  },
+  "providerCalls": 0,
+  "generationPerformed": false,
+  "answerQualityMeasured": false,
+  "qualityClaimEligible": false,
+  "paidExecutionAuthorized": false,
+  "sha256": "1e01869d59165c528e6b0c8584ea759c41176c025993cf06fa7e1fd5c4eaba79"
+}

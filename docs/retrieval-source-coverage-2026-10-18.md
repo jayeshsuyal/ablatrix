@@ -2,6 +2,10 @@
 
 October 18, 2026. **The v1 source-delivery test is negative: zero of four designated missing-fact units reached the candidate context in the three independently identified gap cases.** The mixed 44-product benchmark also failed its model-detail minimum and stopped before paid testing. No fresh answers or answer-quality gain exist. The natural eight-case packet remains unexecuted; the original 64-product protocol remains failed. See the [complete result and stop record](evidence/retrieval-source-gap-exploratory-2026-10-18/RESULTS.md).
 
+## Latest v2 outcome
+
+The separately versioned candidate delivers all four designated development units, but its frozen fresh twelve-product test delivers zero of three useful missing-fact units. Independent AI source review finds one gap case, six complete controls and five uncertain cases; all twelve remain in the denominator. Three contexts grow without recovering the torch runtime gap. Actual paid preparation rejects the packet, and the ledger stays at 138 attempts/$14.000281 combined planning usage. No fresh answers, quality gain or default activation follow. These twelve cases are now exposed; a future revision requires separate questions. See the [complete v2 result and reproducible saved comparison](evidence/retrieval-source-coverage-v2-2026-10-18/RESULTS.md).
+
 ## Observed gap
 
 The prior eight-product first-answer comparison exposed useful saved sources absent from generation. Toyota item dimensions and model number, Viking part/family identifiers, and a marble color attribute were short enough to index in full. The five selected indexed sources and restored parents were identical in those examples: the loss occurred in selection, not source restoration. Toyota's title/model-name qualification was already available, so interpretation also contributed; no source established the missing YZZ01 dimensional comparison.

@@ -1,0 +1,22 @@
+{
+  "format": "ablatrix-source-coverage-v2-paid-gate-stop-v1",
+  "status": "blocked_before_paid_plan",
+  "comparisonFileSha256": "030683046f8b47b2d74ea2587d5e1163076f08b56f1af7f0d799ba1fe1209863",
+  "sourceOnlyPaidEligibility": false,
+  "reason": "zero designated useful missing facts delivered on the fixed fresh twelve-product deck",
+  "observedPreparationFailure": "Paid preparation needs a supported gap, two complete controls and a designated missing fact delivered by an added literal source.\n\nfalse !== true\n",
+  "planCreated": false,
+  "providerConstructed": false,
+  "credentialsAccessed": false,
+  "newProviderCalls": 0,
+  "ledgerUnchanged": true,
+  "attempts": 138,
+  "combinedPlanningUsageUsd": 14.000281,
+  "answerQualityMeasured": false,
+  "qualityClaimEligible": false,
+  "adapterImplementationSha256": {
+    "server/source-coverage-v2-live.ts": "c85a388ce89dcd2a6b3b96dd0a3bcab448317b95ab52619a496baa9cd32dc22e",
+    "server/source-coverage-v2-live.test.ts": "7490c9865f2363b7c99ffeb13182f3c42e0d2009dfd0f7497da6afbe9eab0bbe",
+    "scripts/source-coverage-v2-live.ts": "ee10e2d2b96112fd02459861c16cf363bf74b1e4db0c4d6d3010f5bca644a934"
+  }
+}
