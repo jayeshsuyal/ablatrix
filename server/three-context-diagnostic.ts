@@ -8,15 +8,23 @@ import type { DesignatedFact } from './retrieval-diagnosis.ts';
 export const DIAGNOSTIC_LEDGER = '/Users/jayeshsuyal/Documents/ChatGPT/Ablatrix/repo/.data/feedback-budget.sqlite';
 export const diagnosticHash = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 export type DiagnosticCase = { id: string; product: Product; question: string; completeSources: RetrievedPassage[]; contexts: { current: RetrievedPassage[]; semantic: RetrievedPassage[]; reference: RetrievedPassage[] }; designatedFacts: DesignatedFact[]; referenceReview: { provenance: 'source_checked_human' | 'source_checked_ai'; reviewer: string; sufficientFor: string; unknowns: string[]; sourcePoolSha256: string } };
-export type DiagnosticPreparation = { cases: DiagnosticCase[]; policy: LoopPolicy; implementationSha256: Record<string, string>; artifactSha256: Record<string, string>; ledger: { canonicalPath: string; historicalRowsSha256: string; attempts: number; reservedUsd: number; priorSpendUsd: number; pending: number; owners: number }; codeReviewPassed: boolean };
+export type FreshValidationQualification = { contract: 'ablatrix-fresh-validation-v1'; protocolSha256: string; candidateFreezeSha256: string; historyInventorySha256: string; sourceReviewSha256: string; developmentOutcomeReviewSha256: string | null; selectedDenominator: number; screeningDenominator: number; qualificationPassed: boolean };
+export type DiagnosticPreparation = { cases: DiagnosticCase[]; policy: LoopPolicy; implementationSha256: Record<string, string>; artifactSha256: Record<string, string>; ledger: { canonicalPath: string; historicalRowsSha256: string; attempts: number; reservedUsd: number; priorSpendUsd: number; pending: number; owners: number }; codeReviewPassed: boolean; validation?: FreshValidationQualification };
 export function prepareThreeContext(preparation: DiagnosticPreparation) {
   const p = structuredClone(preparation); assert.ok(p.cases.length > 0 && p.cases.length <= 8); assert.equal(new Set(p.cases.map(c => c.id)).size, p.cases.length);
   assert.equal(p.ledger.canonicalPath, DIAGNOSTIC_LEDGER); assert.equal(p.ledger.pending, 0); assert.equal(p.ledger.owners, 0); assert.ok(p.ledger.attempts >= 138 && p.ledger.reservedUsd + p.ledger.priorSpendUsd >= 14.00028);
   assert.ok(p.policy.mode === 'live' && p.policy.instructions.length >= 40);
   for (const bindings of [p.implementationSha256, p.artifactSha256]) { assert.ok(Object.keys(bindings).length); for (const [path, hash] of Object.entries(bindings)) { assert.ok(!path.startsWith('/') && !path.split('/').includes('..')); assert.match(hash, /^[a-f0-9]{64}$/); } }
+  if (p.validation) {
+    const v = p.validation; assert.equal(v.contract, 'ablatrix-fresh-validation-v1');
+    assert.equal(v.selectedDenominator, 8); assert.equal(v.screeningDenominator, 24); assert.equal(p.cases.length, v.selectedDenominator); assert.equal(new Set(p.cases.map(c => c.product.id)).size, v.selectedDenominator, 'Fresh selected products must remain distinct.'); assert.equal(typeof v.qualificationPassed, 'boolean');
+    for (const sha of [v.protocolSha256, v.candidateFreezeSha256, v.historyInventorySha256, v.sourceReviewSha256]) { assert.match(sha, /^[a-f0-9]{64}$/); assert.ok(Object.values(p.artifactSha256).includes(sha), 'Fresh qualification proofs must remain byte-bound artifacts.'); }
+    if (v.developmentOutcomeReviewSha256 !== null) { assert.match(v.developmentOutcomeReviewSha256, /^[a-f0-9]{64}$/); assert.ok(Object.values(p.artifactSha256).includes(v.developmentOutcomeReviewSha256)); }
+    if (v.qualificationPassed) assert.ok(v.developmentOutcomeReviewSha256, 'Fresh paid preparation needs the independently reviewed development answer outcome.');
+  }
   const identity = diagnosticHash(p), deliveries: string[] = [];
   const slots = p.cases.flatMap((item, caseIndex) => {
-    assert.ok(item.id && item.question.trim() && item.product.split === 'development');
+    assert.ok(item.id && item.question.trim() && item.product.split === (p.validation ? 'validation' : 'development'));
     assert.equal(new Set(item.completeSources.map(s => s.id)).size, item.completeSources.length);
     assert.equal(item.referenceReview.sourcePoolSha256, diagnosticHash(item.completeSources));
     assert.ok(item.referenceReview.reviewer.trim() && item.referenceReview.sufficientFor.trim() && item.designatedFacts.length);
@@ -46,12 +54,12 @@ export function prepareThreeContext(preparation: DiagnosticPreparation) {
     const neutral = (row: typeof rows[number]) => { const body = structuredClone(row.body), payload = JSON.parse(body.messages[1]!.content); delete payload.operationRunId; delete payload.evidence; delete payload.quoteOptions; body.messages[1]!.content = JSON.stringify(payload); (body.tools[0]!.function.parameters as any).properties.citations.items.enum = []; return body; };
     assert.deepEqual(neutral(rows[0]!), neutral(rows[1]!)); assert.deepEqual(neutral(rows[0]!), neutral(rows[2]!)); return rows;
   });
-  const sourceBenefit = deliveries.length > 0, emptyContext = p.cases.some(c => Object.values(c.contexts).some(context => !context.length)), eligible = sourceBenefit && p.codeReviewPassed && !emptyContext;
+  const sourceBenefit = deliveries.length > 0, emptyContext = p.cases.some(c => Object.values(c.contexts).some(context => !context.length)), eligible = sourceBenefit && p.codeReviewPassed && !emptyContext && (!p.validation || p.validation.qualificationPassed);
   const allowance = Math.round(slots.length * 10) / 100, combined = Math.round((p.ledger.reservedUsd + p.ledger.priorSpendUsd + allowance) * 1e6) / 1e6;
   assert.ok(combined <= 20);
-  const document = { format: 'ablatrix-three-context-diagnostic-v1', preparation: p, slots, scope: 'exposed_development_only', sourceBenefit, deliveredCaseIds: [...new Set(deliveries)],
+  const document = { format: p.validation ? 'ablatrix-three-context-fresh-validation-v1' : 'ablatrix-three-context-diagnostic-v1', preparation: p, slots, scope: p.validation ? 'prospective_fresh_validation' : 'exposed_development_only', sourceBenefit, deliveredCaseIds: [...new Set(deliveries)],
     paidPlan: eligible ? { maximumNewAttempts: slots.length, planningAllowanceUsd: allowance, allowancePerCallUsd: .1, absoluteCallLimit: p.ledger.attempts + slots.length, cumulativePlanningLimitUsd: combined, localCapUsd: 20, actualProviderCharges: 'unavailable', providerEnforcedCap: false } : null,
-    stopReason: !sourceBenefit ? 'no_designated_missing_fact_delivered_by_semantic_context' : !p.codeReviewPassed ? 'code_review_pending' : emptyContext ? 'empty_context_requires_review' : null, retries: 0, webCalls: 0, graderCalls: 0, activationAllowed: false, qualityClaimEligible: false, paidExecutionAuthorized: false };
+    stopReason: !sourceBenefit ? 'no_designated_missing_fact_delivered_by_semantic_context' : !p.codeReviewPassed ? 'code_review_pending' : emptyContext ? 'empty_context_requires_review' : p.validation && !p.validation.qualificationPassed ? 'fresh_validation_qualification_pending' : null, retries: 0, webCalls: 0, graderCalls: 0, activationAllowed: false, qualityClaimEligible: false, paidExecutionAuthorized: false };
   return { document, sha256: diagnosticHash(document) };
 }
 export type ThreeContextManifest = ReturnType<typeof prepareThreeContext>;
@@ -76,7 +84,16 @@ export function verifyDiagnosticCheckpoint(manifest: ThreeContextManifest, check
     } catch { stopped = true; return { status: 'failed_or_unknown', output: null }; }
   });
   const unresolvedDispatchIntents = checkpoint.steps.filter(s => s.dispatchIntent && !s.dispatched).length;
-  return { outputs, completedAnswers: outputs.filter(o => o.status === 'completed').length, observedDispatches: checkpoint.steps.filter(s => s.dispatched).length, unresolvedDispatchIntents, networkDispatches: unresolvedDispatchIntents ? null : checkpoint.steps.filter(s => s.dispatched).length, retries: 0, qualityClaimEligible: false };
+  const remoteOutcomeUnknownAttempts = checkpoint.steps.filter((step, index) => {
+    if (!step.dispatchIntent) return false;
+    try {
+      assert.ok(step.receipt?.status === 'completed' && step.receipt.receipt_json); const receipt = JSON.parse(step.receipt.receipt_json);
+      for (const [key, value] of Object.entries(manifest.document.slots[index]!.binding)) assert.equal(receipt[key], value);
+      assert.equal(receipt.mode, 'live'); assert.equal(receipt.accounting, 'local_planning_allowance'); assert.equal(receipt.model, step.receipt.model); return false;
+    } catch { return true; }
+  }).length;
+  const transportInvocations = checkpoint.steps.filter(s => s.dispatched).length;
+  return { outputs, completedAnswers: outputs.filter(o => o.status === 'completed').length, observedDispatches: transportInvocations, transportInvocations, unresolvedDispatchIntents, remoteOutcomeUnknownAttempts, networkDispatches: unresolvedDispatchIntents || remoteOutcomeUnknownAttempts ? null : transportInvocations, retries: 0, qualityClaimEligible: false };
 }
 /** Adapter owns no credentials. Production wiring must supply the existing durable ledger/provider and exact file guards. */
 export async function executeThreeContext(manifest: ThreeContextManifest, approval: { execute: boolean; liveOptIn: boolean; approvedSha256: string; provenance: DiagnosticCheckpoint['provenance'] }, deps: {

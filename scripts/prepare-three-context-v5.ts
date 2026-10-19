@@ -72,9 +72,9 @@ export function loadV5DevelopmentPreparationInputs(input: string, output: string
   for (const [p, sha] of bindings) assert.equal(digest(p), sha, `Frozen candidate changed: ${p}`);
   return { root, path, inputRelative, saved, freeze, read, digest };
 }
-export function prepareV5Development(input: string, output: string) {
+export function buildV5DevelopmentPreparation(input: string, output: string, repositoryRoot = repository) {
 assert.ok(input && output, 'Usage: prepare-three-context-v5.ts V5_DEVELOPMENT_JSON NEW_PRIVATE_PREPARATION_JSON');
-const { root, path, inputRelative, saved: loadedSnapshot, freeze, read, digest } = loadV5DevelopmentPreparationInputs(input, output);
+const { root, path, inputRelative, saved: loadedSnapshot, freeze, read, digest } = loadV5DevelopmentPreparationInputs(input, output, repositoryRoot);
 const saved = bindReviewedV5DevelopmentResult(loadedSnapshot, input, root);
 const deckPath = `${source}/deck-v1.json`, reviewPath = `${source}/source-review-v1.json`, baselinePath = `${source}/baseline-v1.json`;
 const deck = read(deckPath), review = read(reviewPath), baseline = read(baselinePath), originalPath = `${directory}/three-context-preparation-final.json`, original = read(originalPath);
@@ -97,9 +97,13 @@ const cases: DiagnosticCase[] = gaps.map((assessed: any) => {
 });
 const codeFiles = [...new Set([...requiredThreeContextLiveFiles(root), 'server/semantic-reranker-v4.ts', 'server/semantic-supplement-v5.ts', 'scripts/prepare-three-context-v5.ts', 'scripts/retrieval-diagnosis-v4.ts', 'scripts/retrieval-diagnosis-v5.ts', 'server/answer-diagnostic-evaluation.ts'])].sort();
 const artifactPaths = [...new Set([inputRelative, REVIEWED_V5_RESULT.reviewPath, saved.freeze.path, ...Object.keys(freeze.inputSha256), deckPath, reviewPath, baselinePath, originalPath])].sort();
+return { root, path, cases, codeFiles, artifactPaths, policy: original.document.preparation.policy, digest };
+}
+export function prepareV5Development(input: string, output: string) {
+const { root, path, cases, codeFiles, artifactPaths, policy, digest } = buildV5DevelopmentPreparation(input, output);
 const ledger = readLedgerAnchor(DIAGNOSTIC_LEDGER, .200281);
 const anchor = { canonicalPath: ledger.canonicalPath, historicalRowsSha256: ledger.historicalRowsSha256, attempts: ledger.attempts, reservedUsd: ledger.reservedUsd, priorSpendUsd: ledger.priorSpendUsd, pending: ledger.pending, owners: ledger.owners };
-const diagnostic = { cases, policy: original.document.preparation.policy,
+const diagnostic = { cases, policy,
   implementationSha256: Object.fromEntries(codeFiles.map(p => [p, digest(p)])),
   artifactSha256: Object.fromEntries(artifactPaths.map(p => [p, digest(p)])), ledger: anchor,
   codeReviewPassed: false };

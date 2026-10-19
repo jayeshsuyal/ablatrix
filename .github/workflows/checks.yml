@@ -61,9 +61,12 @@ jobs:
           python3 -m unittest scripts/test_source_packet_disjointness.py
           npm run diagnosis:replay
           npm run diagnosis:mock
+          npm run diagnosis:rehearse-v5
+          npm run diagnosis:qualify-v5
+          npm run diagnosis:evaluate
           npm run diagnosis:v5 -- /tmp/ablatrix-v5-replay.json
           npm run diagnosis:live
-          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/retrieval-diagnosis.ts scripts/prepare-three-context.ts scripts/prepare-semantic-model.ts scripts/verify-retrieval-diagnosis.ts scripts/three-context-mock.ts scripts/retrieval-diagnosis-v4.ts scripts/retrieval-diagnosis-v5.ts scripts/prepare-three-context-v5.ts scripts/three-context-live.ts
+          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/retrieval-diagnosis.ts scripts/prepare-three-context.ts scripts/prepare-semantic-model.ts scripts/verify-retrieval-diagnosis.ts scripts/three-context-mock.ts scripts/qualify-three-context-v5.ts scripts/rehearse-three-context-v5.ts scripts/three-context-evaluation.ts scripts/retrieval-diagnosis-v4.ts scripts/retrieval-diagnosis-v5.ts scripts/prepare-three-context-v5.ts scripts/three-context-live.ts
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
