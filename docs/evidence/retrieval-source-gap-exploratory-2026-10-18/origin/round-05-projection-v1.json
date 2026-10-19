@@ -1,0 +1,2713 @@
+{
+  "format": "ablatrix-source-gap-round-projection-v1",
+  "rawObservationFileSha256": "c9fd72c978b25f9775e3ef8307d0e406b08c4c594c48a1621975fc2daecfcdc8",
+  "round": 5,
+  "seed": "ablatrix-source-gap-2026-10-18-v1:round:5",
+  "selectedCount": 8,
+  "inventory": {
+    "passed": true,
+    "trainRows": 121750,
+    "trainProducts": 5393,
+    "trainQuestions": 12175,
+    "eligibleFullPools": 690,
+    "eligibleQuestionCounts": {
+      "capacity_dimensions": 27,
+      "appearance_material": 5,
+      "model_scope": 2,
+      "missing_information": 8,
+      "preservation_control": 40
+    },
+    "rejectedCounts": {
+      "empty_source": 30,
+      "full_source_parent_exceeds_1500": 7,
+      "outside_consumer_demo_domain": 490,
+      "outside_consumer_demo_question_scope": 9,
+      "outside_consumer_demo_source_scope": 1972,
+      "outside_frozen_strata": 1125,
+      "previously_exposed_or_reserved": 154,
+      "protected_brand_family_or_near_title": 304,
+      "protected_full_source_identifier_or_near_model": 160,
+      "protected_prior_source_packet": 1112,
+      "unsupported_product_or_title": 472,
+      "unsupported_source_context": 2
+    }
+  },
+  "selectedSourceOnlyCases": [
+    {
+      "stratum": "capacity_dimensions",
+      "sources": [
+        {
+          "id": "epqa-B016061P06-attribute-4f2786e9da636f23",
+          "label": "attribute",
+          "text": "metal_type:  { value:\"stainless-steel\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105902&qa_pair_id=135370&chars=0-40",
+          "sha256": "0223be59ca3f252f95efae3775583d6c4abcac05cebdc77cdc5824c225f1444d"
+        },
+        {
+          "id": "epqa-B016061P06-description-98488ec6ebac42d3",
+          "label": "description",
+          "text": "purchase of this item comes with 15mm, 20mm, and 25mm stainless steel engraved cupped discs, freshwater pearl, and chain.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105903&qa_pair_id=135371&chars=0-121",
+          "sha256": "c0188aa70462d7fe046441584e426526a82a6a9697df77758ad90bf0a39b6bb6"
+        },
+        {
+          "id": "epqa-B016061P06-review-c153a0dc5bf0bef4",
+          "label": "review",
+          "text": "chain possibly silver-plated at best and will be replaced.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105904&qa_pair_id=135372&chars=0-58",
+          "sha256": "3eb3bcecc9409d7e6c8a725b6c0484ebf447c9c086b2d07fecdfe9904767a133"
+        },
+        {
+          "id": "epqa-B016061P06-description-bf9a677fe34364be",
+          "label": "description",
+          "text": "these stainless steel materials are a wonderful, affordable way to add elegance, with the look of real gold, rose gold, and silver.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105905&qa_pair_id=135373&chars=0-131",
+          "sha256": "2df8508eaab8f7861b319fa303bbaaaf13976a984c14fade274a4a6b11bd3fa8"
+        },
+        {
+          "id": "epqa-B016061P06-review-22021f7ef38c8ccf",
+          "label": "review",
+          "text": "love the concept and design but not sterling.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105906&qa_pair_id=135374&chars=0-45",
+          "sha256": "3d429c2d3409fbfd796b6fd332a191cb04b009cdb4c2755dc52a42431e55c3f5"
+        },
+        {
+          "id": "epqa-B016061P06-description-ca9531bd1756beb0",
+          "label": "description",
+          "text": "this elegant necklace is stacked and cupped for a beautiful jewelry piece.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105907&qa_pair_id=135375&chars=0-74",
+          "sha256": "aa266f5142aa631c199efad2619ea266bfbb30eb8a361ee6164bbcfc20addda1"
+        },
+        {
+          "id": "epqa-B016061P06-attribute-2bf0aa7c8cdc315c",
+          "label": "attribute",
+          "text": "pearl:  { type:[ { value:\"freshwater-cultured\" } ] }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105908&qa_pair_id=135376&chars=0-52",
+          "sha256": "e0dab69ef89f038751583a773c1ef772b508cfa4240b1519b1c0916e4c9cca23"
+        },
+        {
+          "id": "epqa-B016061P06-attribute-f4594e19e3516324",
+          "label": "attribute",
+          "text": "clasp_type:  { value:\"lobster-claw\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105909&qa_pair_id=135377&chars=0-37",
+          "sha256": "088c362037343cba2f2c7843883b9343b459b78049408f50f65827e78d2cee2a"
+        },
+        {
+          "id": "epqa-B016061P06-review-d67a2f589662f6fe",
+          "label": "review",
+          "text": "so thrilled with everything.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105910&qa_pair_id=135378&chars=0-28",
+          "sha256": "820433c6dfa1d704c1eb60b64aab1fdfb12cb042296a9e536b842fc377ee589f"
+        },
+        {
+          "id": "epqa-B016061P06-review-3fc45d7b9984410b",
+          "label": "review",
+          "text": "product is not at all what i was expecting.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105911&qa_pair_id=135379&chars=0-43",
+          "sha256": "9a5811ba95c2ad57678c8dc5c541a6ea02317abed1d8c4063343facd37d2024d"
+        },
+        {
+          "id": "epqa-B016061P06-review-c1f9f64a3301f17b",
+          "label": "review",
+          "text": "we were able to fit all 4 of us siblings' names & the 3 grandchildren's name on it.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105912&qa_pair_id=135380&chars=0-83",
+          "sha256": "3f90b8827d000f44f5abdf657f15b0bd8b9f0065b270f048214a1e3c17eb7a78"
+        },
+        {
+          "id": "epqa-B016061P06-review-002f39040fb62843",
+          "label": "review",
+          "text": "was able to fit two children, three grandchildren, and four great-grandchildrens names on this.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105913&qa_pair_id=135381&chars=0-95",
+          "sha256": "984402afa895f3adeb417569d87b167b8d13014568211c38e5f40661e4a00a1e"
+        },
+        {
+          "id": "epqa-B016061P06-review-514cfc92ad9857f4",
+          "label": "review",
+          "text": "fit all 6 grand kids names and my mother loves it.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105914&qa_pair_id=135382&chars=0-50",
+          "sha256": "880b7fbe53f6a45f0a613bb7282a9714ef0936abe606ca961504beadfe15ce15"
+        },
+        {
+          "id": "epqa-B016061P06-review-ba089ac239991e39",
+          "label": "review",
+          "text": "other than that i fit 11 names on it,",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105915&qa_pair_id=135383&chars=0-37",
+          "sha256": "889c87e37364a3e062e32aa4a1c9fc47d7b10a9d2e9c5ffad31206fa2f0102be"
+        },
+        {
+          "id": "epqa-B016061P06-cqa-d6569b016f151cb0",
+          "label": "cqa",
+          "text": "hi, yes, we can fit up to 35 characters on the bottom disc of this necklace!",
+          "originalQuestion": "do you make any thing that has 3 disces but can fit 35 charachters on the last one?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105916&qa_pair_id=135384&chars=0-76",
+          "sha256": "7eafaf3b3867e23205bf4bbc103f18af048cd4ba6db5d81a2f432ec8d19af019"
+        },
+        {
+          "id": "epqa-B016061P06-attribute-25c3786839e5bdb2",
+          "label": "attribute",
+          "text": "chain_type:  { value:\"cable\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105919&qa_pair_id=135387&chars=0-30",
+          "sha256": "1c6636c4a78fc7b79552f076bf98a17238394a762db9454c375455c269ac0c9a"
+        },
+        {
+          "id": "epqa-B016061P06-review-af0c8253782f87a5",
+          "label": "review",
+          "text": "the chain is very flimsy as well.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105920&qa_pair_id=135388&chars=0-33",
+          "sha256": "7c7b8e9a6f57ea0f303711333ea1f0ac7c6ed51f77f303d012c3a50eb2d866f4"
+        },
+        {
+          "id": "epqa-B016061P06-review-9bea729c25808aa9",
+          "label": "review",
+          "text": "i ordered it for my mil and she loves it!",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=105921&qa_pair_id=135389&chars=0-41",
+          "sha256": "694cd6c70252ef870636139c33b1f532644ed6fd75ca9f00799f5c4e688e386e"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "1d134114e491f1a9b44c3ae5a9d8ca8f4eaf0144540901d86714e471734656c9",
+      "product": {
+        "id": "B016061P06",
+        "title": "Personalized Grandmother Necklace - Engraved Mom Gift - 15 20 25mm Cupped Discs - Custom Names, Pearl - DGR-152025MM"
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "13808",
+        "questionRow": 105912
+      },
+      "id": "source-gap-train-13808",
+      "sourceOrigins": {
+        "epqa-B016061P06-attribute-4f2786e9da636f23": [
+          {
+            "row": 105902,
+            "qaPairId": "135370",
+            "qid": "13807",
+            "bodyStart": 0,
+            "bodyEnd": 40,
+            "rawCandidateSha256": "90bf6dd3f26e31e2ae4ebac9ae92eec54e50fdec4bf46d83af28ef325f83a25b"
+          }
+        ],
+        "epqa-B016061P06-description-98488ec6ebac42d3": [
+          {
+            "row": 105903,
+            "qaPairId": "135371",
+            "qid": "13807",
+            "bodyStart": 0,
+            "bodyEnd": 121,
+            "rawCandidateSha256": "55f273176aab7c8df1a8ce9a3594205a1843d6a345326983248fb9608f81ff63"
+          }
+        ],
+        "epqa-B016061P06-review-c153a0dc5bf0bef4": [
+          {
+            "row": 105904,
+            "qaPairId": "135372",
+            "qid": "13807",
+            "bodyStart": 0,
+            "bodyEnd": 58,
+            "rawCandidateSha256": "bade83cd6ace8788a263c98eb8b1125ace7b28c3ac1b0fbe45caedac1675e353"
+          }
+        ],
+        "epqa-B016061P06-description-bf9a677fe34364be": [
+          {
+            "row": 105905,
+            "qaPairId": "135373",
+            "qid": "13807",
+            "bodyStart": 0,
+            "bodyEnd": 131,
+            "rawCandidateSha256": "17da2eae7197bdfa82c5796daf170c96d1894547cd01b46269a77ab4ea17d815"
+          }
+        ],
+        "epqa-B016061P06-review-22021f7ef38c8ccf": [
+          {
+            "row": 105906,
+            "qaPairId": "135374",
+            "qid": "13807",
+            "bodyStart": 0,
+            "bodyEnd": 45,
+            "rawCandidateSha256": "8cef7ada504c6c6dd656601eb17b537d5de5665d9ec96a0a9269e97b2e2ce345"
+          }
+        ],
+        "epqa-B016061P06-description-ca9531bd1756beb0": [
+          {
+            "row": 105907,
+            "qaPairId": "135375",
+            "qid": "13807",
+            "bodyStart": 0,
+            "bodyEnd": 74,
+            "rawCandidateSha256": "2e492fa95e7b361d27387341434d84dda50a5be3e41ef777c84746f5b3f986c0"
+          },
+          {
+            "row": 105917,
+            "qaPairId": "135385",
+            "qid": "13808",
+            "bodyStart": 0,
+            "bodyEnd": 74,
+            "rawCandidateSha256": "2e492fa95e7b361d27387341434d84dda50a5be3e41ef777c84746f5b3f986c0"
+          }
+        ],
+        "epqa-B016061P06-attribute-2bf0aa7c8cdc315c": [
+          {
+            "row": 105908,
+            "qaPairId": "135376",
+            "qid": "13807",
+            "bodyStart": 0,
+            "bodyEnd": 52,
+            "rawCandidateSha256": "a702dd07b01f7ae4f80897f6e3cc244f33c63ffb8c0415212f9ca042155ec0f3"
+          }
+        ],
+        "epqa-B016061P06-attribute-f4594e19e3516324": [
+          {
+            "row": 105909,
+            "qaPairId": "135377",
+            "qid": "13807",
+            "bodyStart": 0,
+            "bodyEnd": 37,
+            "rawCandidateSha256": "faf032ea3d07e682f828764b5b1d258eb2ea8ad1d68759764ab6cc4d1945be0a"
+          },
+          {
+            "row": 105918,
+            "qaPairId": "135386",
+            "qid": "13808",
+            "bodyStart": 0,
+            "bodyEnd": 37,
+            "rawCandidateSha256": "faf032ea3d07e682f828764b5b1d258eb2ea8ad1d68759764ab6cc4d1945be0a"
+          }
+        ],
+        "epqa-B016061P06-review-d67a2f589662f6fe": [
+          {
+            "row": 105910,
+            "qaPairId": "135378",
+            "qid": "13807",
+            "bodyStart": 0,
+            "bodyEnd": 28,
+            "rawCandidateSha256": "3e8cc8bdc28b32dc1d03d3e27003825ece1f1f52476d6912f761af4d8a30f2bd"
+          }
+        ],
+        "epqa-B016061P06-review-3fc45d7b9984410b": [
+          {
+            "row": 105911,
+            "qaPairId": "135379",
+            "qid": "13807",
+            "bodyStart": 0,
+            "bodyEnd": 43,
+            "rawCandidateSha256": "10dd783ae7a4ec9710deb3668984b40b6398ea1d1ed84ed6926fd6bee6aa5b14"
+          }
+        ],
+        "epqa-B016061P06-review-c1f9f64a3301f17b": [
+          {
+            "row": 105912,
+            "qaPairId": "135380",
+            "qid": "13808",
+            "bodyStart": 0,
+            "bodyEnd": 83,
+            "rawCandidateSha256": "d1792d83a9a4cfbe1e3426a676a9e2e4d2acf20eb3d3a6f9f16bf8e95f812476"
+          }
+        ],
+        "epqa-B016061P06-review-002f39040fb62843": [
+          {
+            "row": 105913,
+            "qaPairId": "135381",
+            "qid": "13808",
+            "bodyStart": 0,
+            "bodyEnd": 95,
+            "rawCandidateSha256": "8e55ca0d07854acbc5e8d7aba3471e17e3188e640b9c043b25446ffa6c457ada"
+          }
+        ],
+        "epqa-B016061P06-review-514cfc92ad9857f4": [
+          {
+            "row": 105914,
+            "qaPairId": "135382",
+            "qid": "13808",
+            "bodyStart": 0,
+            "bodyEnd": 50,
+            "rawCandidateSha256": "1cfe1ca5fb649fbea26f05ef2f179000228810e3b97b0243c35b2dc5972a7e0e"
+          }
+        ],
+        "epqa-B016061P06-review-ba089ac239991e39": [
+          {
+            "row": 105915,
+            "qaPairId": "135383",
+            "qid": "13808",
+            "bodyStart": 0,
+            "bodyEnd": 37,
+            "rawCandidateSha256": "1ac221dbeb04e2a7f3ccdb2aa908fe8ec61c98966e974e09de54977d23731cc2"
+          }
+        ],
+        "epqa-B016061P06-cqa-d6569b016f151cb0": [
+          {
+            "row": 105916,
+            "qaPairId": "135384",
+            "qid": "13808",
+            "bodyStart": 0,
+            "bodyEnd": 76,
+            "rawCandidateSha256": "14b980330f4fd5c93bf9bbdd6d8baba6e7287298072b9d9c2577981f9644dcd8"
+          }
+        ],
+        "epqa-B016061P06-attribute-25c3786839e5bdb2": [
+          {
+            "row": 105919,
+            "qaPairId": "135387",
+            "qid": "13808",
+            "bodyStart": 0,
+            "bodyEnd": 30,
+            "rawCandidateSha256": "5954b766f402f1448625b8acf7c011b7d741438bbbc591cf367993c0abf0040e"
+          }
+        ],
+        "epqa-B016061P06-review-af0c8253782f87a5": [
+          {
+            "row": 105920,
+            "qaPairId": "135388",
+            "qid": "13808",
+            "bodyStart": 0,
+            "bodyEnd": 33,
+            "rawCandidateSha256": "3e7fe11a43edeeb2a260362c36027fc58ffd580f171d1a205c96c7d22026558e"
+          }
+        ],
+        "epqa-B016061P06-review-9bea729c25808aa9": [
+          {
+            "row": 105921,
+            "qaPairId": "135389",
+            "qid": "13808",
+            "bodyStart": 0,
+            "bodyEnd": 41,
+            "rawCandidateSha256": "38305830bcda80989cbc1a4798983b7d76f6f7d5e423cc8c837f50a0464099a6"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "0963f48d0105837608908f1b9f61ccb80a7b6f8563abd924dffa4c1f11423e31",
+      "sourcePoolSha256": "7875319d53cd107a235e897778e8cc7c4901411d13d8a4bc89278f0de272a7de",
+      "question": "how many names will this hold?"
+    },
+    {
+      "stratum": "capacity_dimensions",
+      "sources": [
+        {
+          "id": "epqa-B001D7UYBO-review-50ffb2e410791bb5",
+          "label": "review",
+          "text": "fit my audio technica at2020 perfectly",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15662&qa_pair_id=24210&chars=0-38",
+          "sha256": "efb4e8e26ed3e7458025751ec275388a800ca260de1d559984d0f0e44e882b72"
+        },
+        {
+          "id": "epqa-B001D7UYBO-review-9655660d567b7162",
+          "label": "review",
+          "text": "great for my audio-technica at2020usb+ cardioid condenser usb microphone, black.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15663&qa_pair_id=24211&chars=0-80",
+          "sha256": "b67cbeb63cbcd753743090fcf9986e0e07ed23c44d3f97215085505afe8c1744"
+        },
+        {
+          "id": "epqa-B001D7UYBO-cqa-ee311ba4db53ec06",
+          "label": "cqa",
+          "text": "but according to the at2020 description it comes with the adapter.",
+          "originalQuestion": "is this compatible with the audio technica at2020",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15664&qa_pair_id=24212&chars=0-66",
+          "sha256": "bec0688c4202161707c396fc10ffd9a6fb0e467b250733493ad1bf0e6c3eacc8"
+        },
+        {
+          "id": "epqa-B001D7UYBO-description-bff778ba770ef1fb",
+          "label": "description",
+          "text": "supports  most microphones weighing between 700g  (1.5lb) and 1.1kg (2.4lb) when  combined with shock mount",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15665&qa_pair_id=24213&chars=0-107",
+          "sha256": "82b2d0a1bbd0e43f3dea126955796f661329fa7bee60a63d2eb81e5d9da2cc31"
+        },
+        {
+          "id": "epqa-B001D7UYBO-review-2cde47642f0a7c7b",
+          "label": "review",
+          "text": "the blue snowball is too light for this stand, which is meant to hold up mics like the at2020.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15666&qa_pair_id=24214&chars=0-94",
+          "sha256": "4ae7ff2a629fdf177dd2b42b511085554f70a76d70ac7bb57bb0f0d17ce89692"
+        },
+        {
+          "id": "epqa-B001D7UYBO-description-e30418253997e850",
+          "label": "description",
+          "text": "weight: 1.74kg (3.84lbs)",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15667&qa_pair_id=24215&chars=0-24",
+          "sha256": "8358c5b69c4e589cf5a4af3bdbe96667f80146962c6f0ffee7b8d0c8cc836002"
+        },
+        {
+          "id": "epqa-B001D7UYBO-attribute-e9b0517aecc025a5",
+          "label": "attribute",
+          "text": "manufacturer:  { value:\"rode\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15668&qa_pair_id=24216&chars=0-31",
+          "sha256": "0412626a906040e94e7c22ad41c3a7e2dcf1aa2d8a62eac401facd87c83a1714"
+        },
+        {
+          "id": "epqa-B001D7UYBO-description-49a7d902a7653467",
+          "label": "description",
+          "text": "vertical reach: 33\"",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15669&qa_pair_id=24217&chars=0-19",
+          "sha256": "b68b627b83a873a6ae34489d4cee6948a101243b9b23bcbd88108e655855ad7c"
+        },
+        {
+          "id": "epqa-B001D7UYBO-review-241ac72b2a205727",
+          "label": "review",
+          "text": "this one from rode holds up my snowball with a shock mount and filter with no issue.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15670&qa_pair_id=24218&chars=0-84",
+          "sha256": "3afaf64bb27c9ef9338318202ce2420590760832565b8b34f948aa37434d2a8a"
+        },
+        {
+          "id": "epqa-B001D7UYBO-review-58f170cc53ca12b6",
+          "label": "review",
+          "text": "it has done everything i've wanted it to do, hasn't been flimsy due to weight after long periods of time, it is a required piece of equipment for me.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15671&qa_pair_id=24219&chars=0-149",
+          "sha256": "eeb4d760321bc201023b179441d7682a0958980d1ca5176e5dc5131b3eccd5e8"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "25ed1d357e5820d9da6f9968c71aff6d54efc579199691b5378cc709ec183257",
+      "product": {
+        "id": "B001D7UYBO",
+        "title": "RODE PSA 1 Swivel Mount Studio Microphone Boom Arm"
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "2472",
+        "questionRow": 15662
+      },
+      "id": "source-gap-train-2472",
+      "sourceOrigins": {
+        "epqa-B001D7UYBO-review-50ffb2e410791bb5": [
+          {
+            "row": 15662,
+            "qaPairId": "24210",
+            "qid": "2472",
+            "bodyStart": 0,
+            "bodyEnd": 38,
+            "rawCandidateSha256": "932309c3ffe16d7c599769f301f052ad58810080dd9e2c2c73fcb26cf884b8dd"
+          }
+        ],
+        "epqa-B001D7UYBO-review-9655660d567b7162": [
+          {
+            "row": 15663,
+            "qaPairId": "24211",
+            "qid": "2472",
+            "bodyStart": 0,
+            "bodyEnd": 80,
+            "rawCandidateSha256": "3a1224729ec5e50dedab0f70f688a9fc097652c9e3082a70b4ad388d099dc5bd"
+          }
+        ],
+        "epqa-B001D7UYBO-cqa-ee311ba4db53ec06": [
+          {
+            "row": 15664,
+            "qaPairId": "24212",
+            "qid": "2472",
+            "bodyStart": 0,
+            "bodyEnd": 66,
+            "rawCandidateSha256": "ac1152c6e93e4b0ad444e438dfef51e8608d665cfeab5b8bd8122f1c8508ddcb"
+          }
+        ],
+        "epqa-B001D7UYBO-description-bff778ba770ef1fb": [
+          {
+            "row": 15665,
+            "qaPairId": "24213",
+            "qid": "2472",
+            "bodyStart": 0,
+            "bodyEnd": 107,
+            "rawCandidateSha256": "e21da4c82e4ea28d8a763da9dba7c99d77e5d3a37283b3a00f82e06972a8d7d0"
+          }
+        ],
+        "epqa-B001D7UYBO-review-2cde47642f0a7c7b": [
+          {
+            "row": 15666,
+            "qaPairId": "24214",
+            "qid": "2472",
+            "bodyStart": 0,
+            "bodyEnd": 94,
+            "rawCandidateSha256": "9f4b887014ad17b66add45997567a1fad0a1f974429127dc571adec9e63507dd"
+          }
+        ],
+        "epqa-B001D7UYBO-description-e30418253997e850": [
+          {
+            "row": 15667,
+            "qaPairId": "24215",
+            "qid": "2472",
+            "bodyStart": 0,
+            "bodyEnd": 24,
+            "rawCandidateSha256": "5e0c93ff333aec43fb7d8cb0db41d1dbe4c0b1736b46eabf60eb2011fd6b1391"
+          }
+        ],
+        "epqa-B001D7UYBO-attribute-e9b0517aecc025a5": [
+          {
+            "row": 15668,
+            "qaPairId": "24216",
+            "qid": "2472",
+            "bodyStart": 0,
+            "bodyEnd": 31,
+            "rawCandidateSha256": "ea93fff9668633fadadca260303965c811262de595669fa533e9af3e185f208a"
+          }
+        ],
+        "epqa-B001D7UYBO-description-49a7d902a7653467": [
+          {
+            "row": 15669,
+            "qaPairId": "24217",
+            "qid": "2472",
+            "bodyStart": 0,
+            "bodyEnd": 19,
+            "rawCandidateSha256": "4c197776cd42e0ffd2392cf23295d152c6e8c8abbd7e0136a50a17a2f4df4eae"
+          }
+        ],
+        "epqa-B001D7UYBO-review-241ac72b2a205727": [
+          {
+            "row": 15670,
+            "qaPairId": "24218",
+            "qid": "2472",
+            "bodyStart": 0,
+            "bodyEnd": 84,
+            "rawCandidateSha256": "b636f03beeb180244b1c70c251991b1efd78be5ed6cd60651f43fa998fd43a6d"
+          }
+        ],
+        "epqa-B001D7UYBO-review-58f170cc53ca12b6": [
+          {
+            "row": 15671,
+            "qaPairId": "24219",
+            "qid": "2472",
+            "bodyStart": 0,
+            "bodyEnd": 149,
+            "rawCandidateSha256": "00d145780c2781650b22d049c741d1d981509430ee88ed317642fc1cbe444fb7"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "f697adc3ed70f073143d9acc03902dc896f43af7172e1c27cfad097281a7094f",
+      "sourcePoolSha256": "d7ffb15317a72a18a4e43378d634c404bbe6c282889b85161ed22b15884e0228",
+      "question": "will this microphone hold a audio-technica at2020 cardioid condenser studio microphone?"
+    },
+    {
+      "stratum": "appearance_material",
+      "sources": [
+        {
+          "id": "epqa-B008LEQENE-attribute-440ef37c4f677fa1",
+          "label": "attribute",
+          "text": "color:  { value:\"ivory\\\\white\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=29242&qa_pair_id=44960&chars=0-32",
+          "sha256": "bfe1630a0f27ff854c4d81881100d0f6d0b6363785389091ccb730a24bcc5196"
+        },
+        {
+          "id": "epqa-B008LEQENE-review-c073b7cc8b60f90b",
+          "label": "review",
+          "text": "i examined the shea and it was not all the same color, some was grayish and other parts were a cream color but this didn't bother me at all.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=29243&qa_pair_id=44961&chars=0-140",
+          "sha256": "fbc60ca2f14fcea543f7ae0540b12146700151f84e55b59af47ce3db390d863b"
+        },
+        {
+          "id": "epqa-B008LEQENE-review-3a560d886dbd59c9",
+          "label": "review",
+          "text": "plus my body butter came out as a light cream color.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=29244&qa_pair_id=44962&chars=0-52",
+          "sha256": "6076c8cd82004b11b81a4a9abb6cdcdbed657e827e0d14cbb2848345772d71ce"
+        },
+        {
+          "id": "epqa-B008LEQENE-review-d3b36cea5f297370",
+          "label": "review",
+          "text": "the shea butter is a nice ivory shade , has a fresh shea scent and the texture is creamy.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=29245&qa_pair_id=44963&chars=0-89",
+          "sha256": "fe7e466f3f9c0f62b8054fb95156495580faec273a3dddbfca7215e9fe756266"
+        },
+        {
+          "id": "epqa-B008LEQENE-review-9299c9a40a355934",
+          "label": "review",
+          "text": "love this butter, it smooth and creamy and a beautiful ivory color with mild shea butter scent.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=29246&qa_pair_id=44964&chars=0-95",
+          "sha256": "3f003aabc540eb70f55e33b0e1edf3aecd3146e606e91a73976048a635e1799c"
+        },
+        {
+          "id": "epqa-B008LEQENE-attribute-53f75951026efe85",
+          "label": "attribute",
+          "text": "model_number:  { value:\"4c-w3em-fxuo\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=29247&qa_pair_id=44965&chars=0-39",
+          "sha256": "80e2d4cb8ab4da5b2b58f38ca5940d928a54d696185cba8a3e858b1991046444"
+        },
+        {
+          "id": "epqa-B008LEQENE-description-3bc51f3a9986cf2b",
+          "label": "description",
+          "text": "feel free to contact us for test report of the current inventory.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=29248&qa_pair_id=44966&chars=0-65",
+          "sha256": "112b1bd711950cc8485d2d95284f5388bb9ccda618ea586b39ed6c39b4f3a2cd"
+        },
+        {
+          "id": "epqa-B008LEQENE-attribute-22e42df446d21678",
+          "label": "attribute",
+          "text": "skin_type:  { value:\"rough\" }; { value:\"dry\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=29249&qa_pair_id=44967&chars=0-46",
+          "sha256": "7339db3d203f991b521288618bf7e23e37bb8f4cf096c601549f9d039a1fc6cc"
+        },
+        {
+          "id": "epqa-B008LEQENE-review-00557ed07543bdb8",
+          "label": "review",
+          "text": "melted the shea butter and was appalled to see huge bugs in the melted butter.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=29250&qa_pair_id=44968&chars=0-78",
+          "sha256": "e84a5f7c887be83289a063af52e700a4d46b15b44918936a0287a1d14ca7ebf7"
+        },
+        {
+          "id": "epqa-B008LEQENE-review-56d54c5039116be2",
+          "label": "review",
+          "text": "kind of frustrating when every ounce counts in making product.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=29251&qa_pair_id=44969&chars=0-62",
+          "sha256": "d4a2060c99e41d4259ae7fd6d013cb9f18a0d4b889c86d877e5710e6d2903df9"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "61635c4232374b19bfdc7dafa85f706539ce9a292332c2c477fd9968f2cd9cbe",
+      "product": {
+        "id": "B008LEQENE",
+        "title": "Raw Unrefined Ivory Shea Butter TOP GRADE Ghana 10 LBS"
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "4592",
+        "questionRow": 29242
+      },
+      "id": "source-gap-train-4592",
+      "sourceOrigins": {
+        "epqa-B008LEQENE-attribute-440ef37c4f677fa1": [
+          {
+            "row": 29242,
+            "qaPairId": "44960",
+            "qid": "4592",
+            "bodyStart": 0,
+            "bodyEnd": 32,
+            "rawCandidateSha256": "45dabe2a5745ae6877ac175df926e40e8698a9ee256623f2a670ef45b75cd9b3"
+          }
+        ],
+        "epqa-B008LEQENE-review-c073b7cc8b60f90b": [
+          {
+            "row": 29243,
+            "qaPairId": "44961",
+            "qid": "4592",
+            "bodyStart": 0,
+            "bodyEnd": 140,
+            "rawCandidateSha256": "03cc579a1c63fd0d6224504a38e2ada6d5561fabb8e972f3775eac4cdf5712df"
+          }
+        ],
+        "epqa-B008LEQENE-review-3a560d886dbd59c9": [
+          {
+            "row": 29244,
+            "qaPairId": "44962",
+            "qid": "4592",
+            "bodyStart": 0,
+            "bodyEnd": 52,
+            "rawCandidateSha256": "ca4e28a881c58c99e58e27d4ac841dcc8d3693a09361f64fd118999ebd19ca79"
+          }
+        ],
+        "epqa-B008LEQENE-review-d3b36cea5f297370": [
+          {
+            "row": 29245,
+            "qaPairId": "44963",
+            "qid": "4592",
+            "bodyStart": 0,
+            "bodyEnd": 89,
+            "rawCandidateSha256": "10e28444403eb680a2faa3cfeb06f66fceda597945a7b6fcd4a6108879793ff8"
+          }
+        ],
+        "epqa-B008LEQENE-review-9299c9a40a355934": [
+          {
+            "row": 29246,
+            "qaPairId": "44964",
+            "qid": "4592",
+            "bodyStart": 0,
+            "bodyEnd": 95,
+            "rawCandidateSha256": "1398f46efd039742156c197acafcc4084d2854c1009b975960f9e7e194550a85"
+          }
+        ],
+        "epqa-B008LEQENE-attribute-53f75951026efe85": [
+          {
+            "row": 29247,
+            "qaPairId": "44965",
+            "qid": "4592",
+            "bodyStart": 0,
+            "bodyEnd": 39,
+            "rawCandidateSha256": "a81378687f3046cc7b3cd5b533d3e42298633d2798cae6ea15df8b1c06f8bf63"
+          }
+        ],
+        "epqa-B008LEQENE-description-3bc51f3a9986cf2b": [
+          {
+            "row": 29248,
+            "qaPairId": "44966",
+            "qid": "4592",
+            "bodyStart": 0,
+            "bodyEnd": 65,
+            "rawCandidateSha256": "684e6d68a6b324bac18bdaa8d45470415221e31e1537f0ee666e6eecd8c3b895"
+          }
+        ],
+        "epqa-B008LEQENE-attribute-22e42df446d21678": [
+          {
+            "row": 29249,
+            "qaPairId": "44967",
+            "qid": "4592",
+            "bodyStart": 0,
+            "bodyEnd": 46,
+            "rawCandidateSha256": "abf37377207bda3747865ea4b04a3b46e9bad51a6c9b460408a568b9fd86b87a"
+          }
+        ],
+        "epqa-B008LEQENE-review-00557ed07543bdb8": [
+          {
+            "row": 29250,
+            "qaPairId": "44968",
+            "qid": "4592",
+            "bodyStart": 0,
+            "bodyEnd": 78,
+            "rawCandidateSha256": "e8699916c610d67e79741ac9032ed9cf946f66bbb905d0cd2e8e151cedc53cf0"
+          }
+        ],
+        "epqa-B008LEQENE-review-56d54c5039116be2": [
+          {
+            "row": 29251,
+            "qaPairId": "44969",
+            "qid": "4592",
+            "bodyStart": 0,
+            "bodyEnd": 62,
+            "rawCandidateSha256": "adcd6c76d24d1436087c8e7cd88646e535076438fb724e0e4a8fdc20b35b6af9"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "de13fbabb1d9e7851a59fdac6a5abe813e1d9b62e36425114326316ef64749f0",
+      "sourcePoolSha256": "df379855e022b88dce0fd55a238f911e332d906518c121f9847532b978bd35b6",
+      "question": "my shea butter from smellgood has 2 color shades. cream color and a lighter cream color.  is this o.k.?"
+    },
+    {
+      "stratum": "appearance_material",
+      "sources": [
+        {
+          "id": "epqa-B006R0PBI8-review-4ec6740a620b22e5",
+          "label": "review",
+          "text": "the shades could be a little more off-white, but they can be changed to your liking.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78272&qa_pair_id=107740&chars=0-84",
+          "sha256": "4b05c489e49b49a51487be5c6125cb9ab1dc43d32e27590a35f8a7d6b430c6e6"
+        },
+        {
+          "id": "epqa-B006R0PBI8-review-7fd98693cee00685",
+          "label": "review",
+          "text": "these lamps are almost exactly as described, but the shades are not a bleached white color.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78273&qa_pair_id=107741&chars=0-91",
+          "sha256": "5b3746e8343d45fedabea8ee483d298b38187a3033eebfb953fda91de1da54a5"
+        },
+        {
+          "id": "epqa-B006R0PBI8-review-2568d13d7900c239",
+          "label": "review",
+          "text": "the shades look white in the picture, they are beige ......",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78274&qa_pair_id=107742&chars=0-59",
+          "sha256": "a04d6120d0d20d5127b7594cdfd0aaf377a28f46a230088ecb038b500749052e"
+        },
+        {
+          "id": "epqa-B006R0PBI8-review-26fa37938edf6d1c",
+          "label": "review",
+          "text": "the big issue is that i expected white shades and they are a dark beige.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78275&qa_pair_id=107743&chars=0-72",
+          "sha256": "67a9133c55d86648acd047a960588a0d0284d5bc4398ce7eddd07d1724c4563c"
+        },
+        {
+          "id": "epqa-B006R0PBI8-review-cfa682b4d3e78657",
+          "label": "review",
+          "text": "also, the lamp shades look white in the picture, but they are definitely off-white.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78276&qa_pair_id=107744&chars=0-83",
+          "sha256": "0c29ce76bc0c45f506004477df059234b679eea7ed468698c95299d31673953c"
+        },
+        {
+          "id": "epqa-B006R0PBI8-attribute-f62c8d04c7f6da43",
+          "label": "attribute",
+          "text": "unit_count:  { value:2. }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78277&qa_pair_id=107745&chars=0-25",
+          "sha256": "c1d39dba47b2ee0b1ceef4038d4759204bc46bb1b49f408998e5124c6a412ce2"
+        },
+        {
+          "id": "epqa-B006R0PBI8-attribute-72088b45ab398503",
+          "label": "attribute",
+          "text": "number_of_light_sources:  { value:2 }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78278&qa_pair_id=107746&chars=0-37",
+          "sha256": "7590a71a8104b70105d685c378d6ec004c31f393ae231745ae2eb4b599ab3464"
+        },
+        {
+          "id": "epqa-B006R0PBI8-bullet-a64acfcf088d1596",
+          "label": "bullet",
+          "text": "black metal base easily adjust the height",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78279&qa_pair_id=107747&chars=0-41",
+          "sha256": "8b59dc77feaa4d36db153421177c4ec4b57a8e806355c73517cf4f3765617d21"
+        },
+        {
+          "id": "epqa-B006R0PBI8-review-4fd8c0d54c143588",
+          "label": "review",
+          "text": "would not recommend.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78280&qa_pair_id=107748&chars=0-20",
+          "sha256": "0df20e121205f5d262c9a18d59040a5c73568c9f3c3927ef466747167751090e"
+        },
+        {
+          "id": "epqa-B006R0PBI8-review-0b52a7d25d756676",
+          "label": "review",
+          "text": "omg!",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78281&qa_pair_id=107749&chars=0-4",
+          "sha256": "711c7345e9d198b052c79ad50e049fd5ce2bf7f8c42d61873bf62c5ffc6ae4db"
+        },
+        {
+          "id": "epqa-B006R0PBI8-description-65762d419376de20",
+          "label": "description",
+          "text": "black metal lamp measures 32-1/2\" x 18-1/2\" x 10\" overall and includes 2 screws for mounting the 6\" dia.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78282&qa_pair_id=107750&chars=0-104",
+          "sha256": "9470f291828397b53dabddb5027df336ac710fbb0cb9f96f8e9939a6fa1ea907"
+        },
+        {
+          "id": "epqa-B006R0PBI8-attribute-86d0271a723f345c",
+          "label": "attribute",
+          "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:18.5 }, value:18.5 }, length:{ unit:inches, normalized_value:{ unit:inches, value:32.5 }, value:32.5 }, height:{ unit:inches, normalized_value:{ unit:inches, value:10 }, value:10 } }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78283&qa_pair_id=107751&chars=0-261",
+          "sha256": "8f4ee896ed2b627b0c5a7564539bdaa7794e8fa67e5bf5b9cce79b389bf8fb0e"
+        },
+        {
+          "id": "epqa-B006R0PBI8-cqa-112cf3a615a613c2",
+          "label": "cqa",
+          "text": "my shades are 10\" i diameter and 6 1/2 \"eep",
+          "originalQuestion": "what size are the lampshades?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78284&qa_pair_id=107752&chars=0-43",
+          "sha256": "0a6d138b2f284699f926bf147e837e42e184e879fd536716be384cd77acbb77a"
+        },
+        {
+          "id": "epqa-B006R0PBI8-cqa-a37cfcf9be3af115",
+          "label": "cqa",
+          "text": "using the headboard as your guide measure for the plate or lamp holder.",
+          "originalQuestion": "how do you install these lamps? i got mine as a gift and no instructions.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78285&qa_pair_id=107753&chars=0-71",
+          "sha256": "f12d3c7161fad7859e759688ee933e5e48a59c45a30759ade8d2577a6bf7f50d"
+        },
+        {
+          "id": "epqa-B006R0PBI8-description-dc241b9192007b4c",
+          "label": "description",
+          "text": "x 6\").",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78286&qa_pair_id=107754&chars=0-6",
+          "sha256": "ef26c7b214eaf8d18e7844fd004bd2a0db18831f3277a03eea742f6fcdbed9cf"
+        },
+        {
+          "id": "epqa-B006R0PBI8-attribute-83a6c5f401de90da",
+          "label": "attribute",
+          "text": "style:  { value:\"mission\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78287&qa_pair_id=107755&chars=0-27",
+          "sha256": "f0f572779f3004d5a907a091696d18a0afa48406d70524f3dbcd4cea32725dc4"
+        },
+        {
+          "id": "epqa-B006R0PBI8-attribute-a40d1046b711d542",
+          "label": "attribute",
+          "text": "manufacturer:  { value:\"cai\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78288&qa_pair_id=107756&chars=0-30",
+          "sha256": "6a2eaefa5199a54881789da0a2462100b53e212b90d2da1154343d0caa997f85"
+        },
+        {
+          "id": "epqa-B006R0PBI8-review-55064f010b860a3f",
+          "label": "review",
+          "text": "box was wraped nice and items were packed professional.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78290&qa_pair_id=107758&chars=0-55",
+          "sha256": "c22e16f76f3c9be074340b91de292145ccde2d17988e11069a8e6205bc43f689"
+        },
+        {
+          "id": "epqa-B006R0PBI8-review-e10e0f3bc9792d10",
+          "label": "review",
+          "text": "great lamps for the price!",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=78291&qa_pair_id=107759&chars=0-26",
+          "sha256": "2b6e322ca579e2489e3cc7a6f3ed329366d36e34c61551b811e9bd2ede3225d0"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "6490517a25d8e196febeaf3059fdf24d336367a8d2c2eeb70ea0ee8d501dc272",
+      "product": {
+        "id": "B006R0PBI8",
+        "title": "Adjustable Wall Lamps (Set of 2)"
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "10986",
+        "questionRow": 78272
+      },
+      "id": "source-gap-train-10986",
+      "sourceOrigins": {
+        "epqa-B006R0PBI8-review-4ec6740a620b22e5": [
+          {
+            "row": 78272,
+            "qaPairId": "107740",
+            "qid": "10986",
+            "bodyStart": 0,
+            "bodyEnd": 84,
+            "rawCandidateSha256": "c366f3a7c8a02b7a2000fcffc55a17f91081820815078973b682bd7446c6dd4c"
+          }
+        ],
+        "epqa-B006R0PBI8-review-7fd98693cee00685": [
+          {
+            "row": 78273,
+            "qaPairId": "107741",
+            "qid": "10986",
+            "bodyStart": 0,
+            "bodyEnd": 91,
+            "rawCandidateSha256": "27c078a0ab1a79bf3d3480d67e3ace5e5c220ec97dd01e0499ebb5fe0c80b24a"
+          }
+        ],
+        "epqa-B006R0PBI8-review-2568d13d7900c239": [
+          {
+            "row": 78274,
+            "qaPairId": "107742",
+            "qid": "10986",
+            "bodyStart": 0,
+            "bodyEnd": 59,
+            "rawCandidateSha256": "a98517b4be7fca026a9b811ac143046e585210566fb30ca07ca9a23a21e400a9"
+          }
+        ],
+        "epqa-B006R0PBI8-review-26fa37938edf6d1c": [
+          {
+            "row": 78275,
+            "qaPairId": "107743",
+            "qid": "10986",
+            "bodyStart": 0,
+            "bodyEnd": 72,
+            "rawCandidateSha256": "556f961c4ba39d8b7079b057e22e10eb5d50707aea89b6ec8773f520155c0928"
+          }
+        ],
+        "epqa-B006R0PBI8-review-cfa682b4d3e78657": [
+          {
+            "row": 78276,
+            "qaPairId": "107744",
+            "qid": "10986",
+            "bodyStart": 0,
+            "bodyEnd": 83,
+            "rawCandidateSha256": "556c2bde9cc1146cf175e122e70979223b4db237b6ad16fd909ef13ef85a5df8"
+          }
+        ],
+        "epqa-B006R0PBI8-attribute-f62c8d04c7f6da43": [
+          {
+            "row": 78277,
+            "qaPairId": "107745",
+            "qid": "10986",
+            "bodyStart": 0,
+            "bodyEnd": 25,
+            "rawCandidateSha256": "db551553bfb50733a4f353881e8ebc8542e0c201a781aad99a9720c28e0a380f"
+          }
+        ],
+        "epqa-B006R0PBI8-attribute-72088b45ab398503": [
+          {
+            "row": 78278,
+            "qaPairId": "107746",
+            "qid": "10986",
+            "bodyStart": 0,
+            "bodyEnd": 37,
+            "rawCandidateSha256": "086dd0f62aec396dd86368e09dca72bb955f101d2aedc1c2806a60cdcfeea49f"
+          },
+          {
+            "row": 78289,
+            "qaPairId": "107757",
+            "qid": "10987",
+            "bodyStart": 0,
+            "bodyEnd": 37,
+            "rawCandidateSha256": "086dd0f62aec396dd86368e09dca72bb955f101d2aedc1c2806a60cdcfeea49f"
+          }
+        ],
+        "epqa-B006R0PBI8-bullet-a64acfcf088d1596": [
+          {
+            "row": 78279,
+            "qaPairId": "107747",
+            "qid": "10986",
+            "bodyStart": 0,
+            "bodyEnd": 41,
+            "rawCandidateSha256": "bd26d83e7b1a01f21d39dd00fd28d6e37dc4f2f3d595b2a479ea0ba778ed1368"
+          }
+        ],
+        "epqa-B006R0PBI8-review-4fd8c0d54c143588": [
+          {
+            "row": 78280,
+            "qaPairId": "107748",
+            "qid": "10986",
+            "bodyStart": 0,
+            "bodyEnd": 20,
+            "rawCandidateSha256": "2b4a91c511c86c6f2b062963a5cfc43168aed5c0d1ce2a0595ad7fa9809b8523"
+          }
+        ],
+        "epqa-B006R0PBI8-review-0b52a7d25d756676": [
+          {
+            "row": 78281,
+            "qaPairId": "107749",
+            "qid": "10986",
+            "bodyStart": 0,
+            "bodyEnd": 4,
+            "rawCandidateSha256": "b961eac00b39bb22bc5f004009f3d89b7acac529f59c3986eea8653e06ea1e15"
+          }
+        ],
+        "epqa-B006R0PBI8-description-65762d419376de20": [
+          {
+            "row": 78282,
+            "qaPairId": "107750",
+            "qid": "10987",
+            "bodyStart": 0,
+            "bodyEnd": 104,
+            "rawCandidateSha256": "d52dfee1936c80a1223f7b4ad6cc12015d64f61064b25cdc13e2df309b9fb030"
+          }
+        ],
+        "epqa-B006R0PBI8-attribute-86d0271a723f345c": [
+          {
+            "row": 78283,
+            "qaPairId": "107751",
+            "qid": "10987",
+            "bodyStart": 0,
+            "bodyEnd": 261,
+            "rawCandidateSha256": "347cdb18078b8de0801e6f147d1c770c529add318e8905a86daec08dcb5ad9d5"
+          }
+        ],
+        "epqa-B006R0PBI8-cqa-112cf3a615a613c2": [
+          {
+            "row": 78284,
+            "qaPairId": "107752",
+            "qid": "10987",
+            "bodyStart": 0,
+            "bodyEnd": 43,
+            "rawCandidateSha256": "e9573757a3d69dec4ea06ac161ab1ef3da7e1862832ef0f1391ec8e095faa859"
+          }
+        ],
+        "epqa-B006R0PBI8-cqa-a37cfcf9be3af115": [
+          {
+            "row": 78285,
+            "qaPairId": "107753",
+            "qid": "10987",
+            "bodyStart": 0,
+            "bodyEnd": 71,
+            "rawCandidateSha256": "e794ed039d1f84a1dcf89fffacce5de7f235ebd95505875ea68f04187a456de2"
+          }
+        ],
+        "epqa-B006R0PBI8-description-dc241b9192007b4c": [
+          {
+            "row": 78286,
+            "qaPairId": "107754",
+            "qid": "10987",
+            "bodyStart": 0,
+            "bodyEnd": 6,
+            "rawCandidateSha256": "4b6f2c5a20fb171b7101699e078b3ce055d1d37d8b1fe85e2a1a5698ba9c463e"
+          }
+        ],
+        "epqa-B006R0PBI8-attribute-83a6c5f401de90da": [
+          {
+            "row": 78287,
+            "qaPairId": "107755",
+            "qid": "10987",
+            "bodyStart": 0,
+            "bodyEnd": 27,
+            "rawCandidateSha256": "4e0c1f65cccdd26f39c33aa5b457af84736aff86eddbd149989ff934f4bed297"
+          }
+        ],
+        "epqa-B006R0PBI8-attribute-a40d1046b711d542": [
+          {
+            "row": 78288,
+            "qaPairId": "107756",
+            "qid": "10987",
+            "bodyStart": 0,
+            "bodyEnd": 30,
+            "rawCandidateSha256": "9209114fbdc6bcdd47707236a021a2a678cb01bd7b3c1a112519cfe977d5716b"
+          }
+        ],
+        "epqa-B006R0PBI8-review-55064f010b860a3f": [
+          {
+            "row": 78290,
+            "qaPairId": "107758",
+            "qid": "10987",
+            "bodyStart": 0,
+            "bodyEnd": 55,
+            "rawCandidateSha256": "2113ea4165e700e0b6d83fcc483e66c2b98aaaac22379debfddbf90603e347f7"
+          }
+        ],
+        "epqa-B006R0PBI8-review-e10e0f3bc9792d10": [
+          {
+            "row": 78291,
+            "qaPairId": "107759",
+            "qid": "10987",
+            "bodyStart": 0,
+            "bodyEnd": 26,
+            "rawCandidateSha256": "9e149747ad5aaebcab977e7b5426015cc2097adab9324be60e88d00b59cc8ce9"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "fac8640c09b34d541ce8f9c96b2d2ba7442e7537c18842605f08664645bcc6ec",
+      "sourcePoolSha256": "230434cdb8d42ffc75be1cc24d11eab76ebd6527581a4d9c675472299f3766bb",
+      "question": "are the shades white?"
+    },
+    {
+      "stratum": "model_scope",
+      "sources": [
+        {
+          "id": "epqa-B004FV7MHE-review-8b9ad5a4d7735c5a",
+          "label": "review",
+          "text": "didn't work with the headset i tried to use with it.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24852&qa_pair_id=38390&chars=0-52",
+          "sha256": "6030eb898a0095add540f49d0f2b897e8634d2e99e2b310b428d8f8bea0dd4ec"
+        },
+        {
+          "id": "epqa-B004FV7MHE-cqa-e8b2c2ff1a020c77",
+          "label": "cqa",
+          "text": "yes, this will work with any 3.5mm headphones.",
+          "originalQuestion": "can this be used to connect any brand of headphones that normally connect to a pc with one 3.5 mm connector to an analog office desk phone - just for listening to dial-in teleconferences? i only need to listhen and my headphones only have one plug. if i have to speak i will reattach the telephone handset.",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24853&qa_pair_id=38391&chars=0-46",
+          "sha256": "48ea59fdf7aaa5f1492bcb15c784e0d2b54682a426530dbe258407bba2a270bf"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-cfe1c527fae5c221",
+          "label": "review",
+          "text": "not sure what the manufacturer can do here other than list supported headsets along with the supported phones.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24854&qa_pair_id=38392&chars=0-110",
+          "sha256": "b9c8c77d9b2e3eb8500a657c12a0f13a1da2ce3102ce41df4bb5d7ba3f76d12f"
+        },
+        {
+          "id": "epqa-B004FV7MHE-bullet-8ebf597987e210f7",
+          "label": "bullet",
+          "text": "this adapter is not compatible with iphone / apple earpods and other ctia based headsets.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24855&qa_pair_id=38393&chars=0-89",
+          "sha256": "3f011fff2f377336f43b4c65b2b0b4c89621ac89023a0d06cd558a531c9cca2f"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-b01eb20f200e289b",
+          "label": "review",
+          "text": "it may work as intended with other headsets and phone combinations but with mine and was hit or miss",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24856&qa_pair_id=38394&chars=0-100",
+          "sha256": "78c05e0555f6c91035b0b06b28be58c442137bfb30d5cfa6e3317a0842208855"
+        },
+        {
+          "id": "epqa-B004FV7MHE-description-d60eea494095eb45",
+          "label": "description",
+          "text": "our story",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24857&qa_pair_id=38395&chars=0-9",
+          "sha256": "ebda62640a9f1f76e18b87893be450f88cdcdb56617583544b01e20677e420d1"
+        },
+        {
+          "id": "epqa-B004FV7MHE-attribute-134630bb084404fe",
+          "label": "attribute",
+          "text": "includes_rechargable_battery:  { value:false }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24858&qa_pair_id=38396&chars=0-46",
+          "sha256": "ca63dbd518c481418dcbf025a80ed7143e17965d2dd71178dc7e1f86b121a01e"
+        },
+        {
+          "id": "epqa-B004FV7MHE-description-5707b1f8a29219bd",
+          "label": "description",
+          "text": "soon after i ordered a thousand units and started selling them from the spare bedroom of my apartment.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24859&qa_pair_id=38397&chars=0-102",
+          "sha256": "cf441e3fae2e340ac88ba0709dfd730abe3f09704c0ff14ae872898bf45bb396"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-b08541226421288c",
+          "label": "review",
+          "text": "this adapter worked with the cisco voip phone i use for work in the rj9/11 headset port, but the microphone output from the tested 3.5 mm port headset to the other caller was too low to be usable.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24860&qa_pair_id=38398&chars=0-196",
+          "sha256": "cbf8adddff8925b1b2b30fdeae540329657078a1f727ad8da2c2d2cde591bfad"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-a1ac7d75e68d9a58",
+          "label": "review",
+          "text": "only rj11 pass through existed",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24861&qa_pair_id=38399&chars=0-30",
+          "sha256": "469fcded3f5141d011b10648a8f9d741b22890e46e9c219bcd6bea589baa4356"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-9dc7fecb4c557a45",
+          "label": "review",
+          "text": "it was unfortunately not 100% consistent, which makes me weary to continue testing to make this product work.switching to the standard handset during a call immediately removed the echo, indicating it was directly linked to the adapter, not our voip service having disruptions or anomalies.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24862&qa_pair_id=38400&chars=0-290",
+          "sha256": "7006aaf2dd4f4bb38cd1a4509c260114afee710845b85ea1742f23692cc1071b"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-9192fdfadba272ad",
+          "label": "review",
+          "text": "using a jabra headset connected to a polycom 335 headset buddy created echo and feedback which basically renders this useless.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24863&qa_pair_id=38401&chars=0-126",
+          "sha256": "bae3c288f7828eda297f1d23978e6c49ec13d6566ae2d836384182c903fe89f5"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-919453acd7152ce3",
+          "label": "review",
+          "text": "this adapter has a terrible echo which makes it unusable.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24864&qa_pair_id=38402&chars=0-57",
+          "sha256": "dbad19979c8711ea56d7296e98c364fe261faee55ab750e9dc84d489219a6244"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-e32fe15ef126d9c4",
+          "label": "review",
+          "text": "the website listed this product as supported, so we purchased two of them to use higher quality headsets with a couple ip-335 phones in our office.there is a loud echo on the other line that makes this product unusable.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24865&qa_pair_id=38403&chars=0-219",
+          "sha256": "27d3c17408476af059bb560c60d9402a82bf1eee6912bc8637da6e4565983d5e"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-0ab319003ee05ed6",
+          "label": "review",
+          "text": "the  level of echo at both ends of the conversation was extremely high and made for an unusable product :(",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24866&qa_pair_id=38404&chars=0-106",
+          "sha256": "1774d4f5c16dd6129bbf9a784d7c134962fd34350c83a07aed4bdfc3c0b22263"
+        },
+        {
+          "id": "epqa-B004FV7MHE-attribute-86196a81add0aca1",
+          "label": "attribute",
+          "text": "item_dimensions:  { width:{ unit:inches, normalized_value:{ unit:inches, value:4.33 }, value:4.33 }, length:{ unit:inches, normalized_value:{ unit:inches, value:1.34 }, value:1.34 }, height:{ unit:inches, normalized_value:{ unit:inches, value:5.91 }, value:5.91 } }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24867&qa_pair_id=38405&chars=0-265",
+          "sha256": "09fe144ef59d416775fdade6e3baf2997452715d518faa1d73637ca91424a80c"
+        },
+        {
+          "id": "epqa-B004FV7MHE-description-3ffe35782743634f",
+          "label": "description",
+          "text": "this ph35-rj9a converts the standard 3.5mm smartphone plug to an aastra rj9, rj10, or rj22 handset plug, allowing you to use your favorite smartphone headset with your aastra office phone.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24868&qa_pair_id=38406&chars=0-188",
+          "sha256": "a572648786dc82030183fdece9d027a5d9cb871965a654202cf18478a48473c6"
+        },
+        {
+          "id": "epqa-B004FV7MHE-description-99626c23bce8de84",
+          "label": "description",
+          "text": "the adapter outputs binaural sound for stereo headsets, meaning you will hear sound out of both ears.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24869&qa_pair_id=38407&chars=0-101",
+          "sha256": "e641f3ddbc322c6fa886f05af7d03541eddbb15851ab1128721bf13054af2f74"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-89ac26f84262c910",
+          "label": "review",
+          "text": "quality of unit is good.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24870&qa_pair_id=38408&chars=0-24",
+          "sha256": "530a4d661c4e3ca7b9ba81764a9983be6b8c44a9be66c7f960505a77a79b2e1e"
+        },
+        {
+          "id": "epqa-B004FV7MHE-cqa-7b6db3a38311b34b",
+          "label": "cqa",
+          "text": "i have to get info off the phone, it is all electronic, and it works great for confidentiality since no one else can hear the responses.",
+          "originalQuestion": "does this work with cisco 7960 series?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24871&qa_pair_id=38409&chars=0-136",
+          "sha256": "3bb28bc7002671d80ac65111e88fc075fa53d10b34dff30ccf070108827565d9"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-780c74835d7eef0b",
+          "label": "review",
+          "text": "company makes a 2.5 mm that is also advertised to work with phones that apparently does work, but can not be adapted to work with the boom microphone.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24872&qa_pair_id=38410&chars=0-150",
+          "sha256": "9006d239af17c40680e2d74f79472b256490fe946dd9c82468e1da2c389901bf"
+        },
+        {
+          "id": "epqa-B004FV7MHE-cqa-86b11070abea7c78",
+          "label": "cqa",
+          "text": "there is another adapter that takes a two 3.5mm connection (pc style separate mic and speaker plugs) that does work, though it only works with the pc connection - you'll get terrible feedback from the mic if you try using another adapter (like a single-to-dual 3.5mm adapter) with it.",
+          "originalQuestion": "will this work with any avaya 96xx series? including the 9608?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24873&qa_pair_id=38411&chars=0-284",
+          "sha256": "bba8b34a3a149cf456421ebeba25177e882f1df19956e29b0d19f164abbbd81e"
+        },
+        {
+          "id": "epqa-B004FV7MHE-bullet-5575feef9ae39fa7",
+          "label": "bullet",
+          "text": "convert 3.5mm omtp smartphone plug to single 4p4c rj9/rj10 handset/headset plug",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24874&qa_pair_id=38412&chars=0-79",
+          "sha256": "592ba35bd64266f4d217783f6ecb62fb97ff0ba70570851eafb1a159f5e89e43"
+        },
+        {
+          "id": "epqa-B004FV7MHE-description-e8f5e1f24e4a032f",
+          "label": "description",
+          "text": "convert 3.5mm smartphone plug to single 4p4c rj9/rj10 handset plug.save money by buying a smartphone headset, or using your existing one with your aastra phone's handset jack.reduce clutter with single headset.does not work with rj11 jack, which is wider than your handset or headset jack (6 positions vs. 4).",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24875&qa_pair_id=38413&chars=0-309",
+          "sha256": "2ca4b18add81e73a053ed92a3a24d9d01e239df4d74769b1bf7383e9f87e563d"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-93595b3a6d9838fc",
+          "label": "review",
+          "text": "received a 2.5mm to rj9 adapter.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24876&qa_pair_id=38414&chars=0-32",
+          "sha256": "24b526e9f1f85afca7312dbea2bfc7327d418cf5e095d2023e1bf12f7e2eb88e"
+        },
+        {
+          "id": "epqa-B004FV7MHE-attribute-82c9490d59637c00",
+          "label": "attribute",
+          "text": "model_number:  { value:\"01-ph35-rj9a\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24877&qa_pair_id=38415&chars=0-39",
+          "sha256": "522dd4d2393bdb8ec01d62315d2304ed8f362b51af17742681ed4f05cd6e9464"
+        },
+        {
+          "id": "epqa-B004FV7MHE-bullet-0532c02f31306f28",
+          "label": "bullet",
+          "text": "contact us before returning your product as we may be able to resolve your issue.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24878&qa_pair_id=38416&chars=0-81",
+          "sha256": "6f2672f78384a56632cc125e289cb3d9346083028c2ada042cbcd761545bb61e"
+        },
+        {
+          "id": "epqa-B004FV7MHE-attribute-d06538014886c6d4",
+          "label": "attribute",
+          "text": "has_caller_identification:  { value:false }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24879&qa_pair_id=38417&chars=0-43",
+          "sha256": "df089fa3ded25d091f1227e8e753afd52b3cf26656e99d6ccad4d619ad7b8190"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-c6692e31f3e1f525",
+          "label": "review",
+          "text": "since i may get a 4 pin 3.5mm to pc converter anyway that would have been the better option.the price of this item hardly justifies returning it, so i may cut it apart a re-wire it for cisco phones.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24880&qa_pair_id=38418&chars=0-198",
+          "sha256": "c6fd91f881c587fc7948f0549216d27843e00ca0ef786b42090366448ae73d4f"
+        },
+        {
+          "id": "epqa-B004FV7MHE-review-793329aab049e8e9",
+          "label": "review",
+          "text": "just fyi: does not work with zultys 2x2.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=24881&qa_pair_id=38419&chars=0-40",
+          "sha256": "866718c45e7a4bcc4e5afdc42fb23a4e49869cb7767c7ad8e0f4bb29bfde65a5"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "9229bc2b51685d796eda0ac132bd8068732aae67f6238bd57b5f564295c7021d",
+      "product": {
+        "id": "B004FV7MHE",
+        "title": "Headset Buddy Female 3.5mm Smartphone Headset to Male RJ9 Telephone Plug Adapter (PH35-RJ9a)"
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "3924",
+        "questionRow": 24852
+      },
+      "id": "source-gap-train-3924",
+      "sourceOrigins": {
+        "epqa-B004FV7MHE-review-8b9ad5a4d7735c5a": [
+          {
+            "row": 24852,
+            "qaPairId": "38390",
+            "qid": "3924",
+            "bodyStart": 0,
+            "bodyEnd": 52,
+            "rawCandidateSha256": "28185136126028acf3f1d164e74eec35e763cb41fc9adf19dcc46d5f35ebcce5"
+          }
+        ],
+        "epqa-B004FV7MHE-cqa-e8b2c2ff1a020c77": [
+          {
+            "row": 24853,
+            "qaPairId": "38391",
+            "qid": "3924",
+            "bodyStart": 0,
+            "bodyEnd": 46,
+            "rawCandidateSha256": "e25db2ab33db8e0b58920ca75f6a389bf6fe15177daa44233ded511942aebf4b"
+          }
+        ],
+        "epqa-B004FV7MHE-review-cfe1c527fae5c221": [
+          {
+            "row": 24854,
+            "qaPairId": "38392",
+            "qid": "3924",
+            "bodyStart": 0,
+            "bodyEnd": 110,
+            "rawCandidateSha256": "f96a37c5ff8093e2e4b84de5537b5e7f7844b93f27c2c38e4d5ae95219cf2bc8"
+          }
+        ],
+        "epqa-B004FV7MHE-bullet-8ebf597987e210f7": [
+          {
+            "row": 24855,
+            "qaPairId": "38393",
+            "qid": "3924",
+            "bodyStart": 0,
+            "bodyEnd": 89,
+            "rawCandidateSha256": "c55d4bfe95d19ae351a53982a258dd74d4b86295fea62bbf1306cd1e630fd7db"
+          }
+        ],
+        "epqa-B004FV7MHE-review-b01eb20f200e289b": [
+          {
+            "row": 24856,
+            "qaPairId": "38394",
+            "qid": "3924",
+            "bodyStart": 0,
+            "bodyEnd": 100,
+            "rawCandidateSha256": "769901487746d5985e38860560b6d82453840dab66f5fd11c7f3cfca65794450"
+          }
+        ],
+        "epqa-B004FV7MHE-description-d60eea494095eb45": [
+          {
+            "row": 24857,
+            "qaPairId": "38395",
+            "qid": "3924",
+            "bodyStart": 0,
+            "bodyEnd": 9,
+            "rawCandidateSha256": "ddee616efba91854cf72400aa439c7b5d8adba6ffc91d6b99370bc896c0d1ac7"
+          }
+        ],
+        "epqa-B004FV7MHE-attribute-134630bb084404fe": [
+          {
+            "row": 24858,
+            "qaPairId": "38396",
+            "qid": "3924",
+            "bodyStart": 0,
+            "bodyEnd": 46,
+            "rawCandidateSha256": "f1140b19107d7732eb4ae8962e63c7da67853f5b5ee2adc4b68510355bf0b448"
+          }
+        ],
+        "epqa-B004FV7MHE-description-5707b1f8a29219bd": [
+          {
+            "row": 24859,
+            "qaPairId": "38397",
+            "qid": "3924",
+            "bodyStart": 0,
+            "bodyEnd": 102,
+            "rawCandidateSha256": "34be9c5a398aeed72146ccc1c89a352ad0c3fb901e5b7f44ec16839f6fb5bb6e"
+          }
+        ],
+        "epqa-B004FV7MHE-review-b08541226421288c": [
+          {
+            "row": 24860,
+            "qaPairId": "38398",
+            "qid": "3924",
+            "bodyStart": 0,
+            "bodyEnd": 196,
+            "rawCandidateSha256": "952dcbdb0092f487e6d7c638d3855023c219f9ac87599b4a51a59b31b524f6db"
+          }
+        ],
+        "epqa-B004FV7MHE-review-a1ac7d75e68d9a58": [
+          {
+            "row": 24861,
+            "qaPairId": "38399",
+            "qid": "3924",
+            "bodyStart": 0,
+            "bodyEnd": 30,
+            "rawCandidateSha256": "234e133a71ecc65afdcad0c71a7338b16c8a87d7bbb6f8808ac8a133c8b0906e"
+          }
+        ],
+        "epqa-B004FV7MHE-review-9dc7fecb4c557a45": [
+          {
+            "row": 24862,
+            "qaPairId": "38400",
+            "qid": "3925",
+            "bodyStart": 0,
+            "bodyEnd": 290,
+            "rawCandidateSha256": "6e21b62e5fc6ccceca45a5f13c61fea4dfffd99e5247260fc94bb65b424fa07a"
+          }
+        ],
+        "epqa-B004FV7MHE-review-9192fdfadba272ad": [
+          {
+            "row": 24863,
+            "qaPairId": "38401",
+            "qid": "3925",
+            "bodyStart": 0,
+            "bodyEnd": 126,
+            "rawCandidateSha256": "73cef6f5ae637315d01c6082eff47b43343767e0577361be3aca4878677bb439"
+          }
+        ],
+        "epqa-B004FV7MHE-review-919453acd7152ce3": [
+          {
+            "row": 24864,
+            "qaPairId": "38402",
+            "qid": "3925",
+            "bodyStart": 0,
+            "bodyEnd": 57,
+            "rawCandidateSha256": "e2b0e0d390862fe27707ed88a7cf236e019392aa0c7ef91a1648a6fd0b47a426"
+          }
+        ],
+        "epqa-B004FV7MHE-review-e32fe15ef126d9c4": [
+          {
+            "row": 24865,
+            "qaPairId": "38403",
+            "qid": "3925",
+            "bodyStart": 0,
+            "bodyEnd": 219,
+            "rawCandidateSha256": "232c0a79d8839aca50b085e0367557f297c42cd3c2ae6a25ae475de519d0a404"
+          }
+        ],
+        "epqa-B004FV7MHE-review-0ab319003ee05ed6": [
+          {
+            "row": 24866,
+            "qaPairId": "38404",
+            "qid": "3925",
+            "bodyStart": 0,
+            "bodyEnd": 106,
+            "rawCandidateSha256": "3608e769ef5ca7f95186b2b7885fe6ff9ad4a3ba6ce4d60e6b8175184f845f64"
+          }
+        ],
+        "epqa-B004FV7MHE-attribute-86196a81add0aca1": [
+          {
+            "row": 24867,
+            "qaPairId": "38405",
+            "qid": "3925",
+            "bodyStart": 0,
+            "bodyEnd": 265,
+            "rawCandidateSha256": "d7cae2c1ed6fd161cc573d5e049154210cc707e937e22cc8a0316947e83c03b2"
+          }
+        ],
+        "epqa-B004FV7MHE-description-3ffe35782743634f": [
+          {
+            "row": 24868,
+            "qaPairId": "38406",
+            "qid": "3925",
+            "bodyStart": 0,
+            "bodyEnd": 188,
+            "rawCandidateSha256": "05d4fb6855d12fda9d1b1e0a6bc5b1799c8fa0aade629ebcfeb833decca98817"
+          }
+        ],
+        "epqa-B004FV7MHE-description-99626c23bce8de84": [
+          {
+            "row": 24869,
+            "qaPairId": "38407",
+            "qid": "3925",
+            "bodyStart": 0,
+            "bodyEnd": 101,
+            "rawCandidateSha256": "70b8e21264e8b80adfb1e5c1213656eb21b0ea151cd57fa10f00337d225244c6"
+          }
+        ],
+        "epqa-B004FV7MHE-review-89ac26f84262c910": [
+          {
+            "row": 24870,
+            "qaPairId": "38408",
+            "qid": "3925",
+            "bodyStart": 0,
+            "bodyEnd": 24,
+            "rawCandidateSha256": "fc55466cabd79224d0019cd6131ab01ff4ac69e151aa59df0c8b67d234e43a89"
+          }
+        ],
+        "epqa-B004FV7MHE-cqa-7b6db3a38311b34b": [
+          {
+            "row": 24871,
+            "qaPairId": "38409",
+            "qid": "3925",
+            "bodyStart": 0,
+            "bodyEnd": 136,
+            "rawCandidateSha256": "3df38e9f464f1bdcc84dbf33a79946b833d15766a6366327df122e49f88ef8d4"
+          }
+        ],
+        "epqa-B004FV7MHE-review-780c74835d7eef0b": [
+          {
+            "row": 24872,
+            "qaPairId": "38410",
+            "qid": "3926",
+            "bodyStart": 0,
+            "bodyEnd": 150,
+            "rawCandidateSha256": "31444d1bf9d47727dbef93efe3a6584d3254607c04ba86850b1bb8031d962dea"
+          }
+        ],
+        "epqa-B004FV7MHE-cqa-86b11070abea7c78": [
+          {
+            "row": 24873,
+            "qaPairId": "38411",
+            "qid": "3926",
+            "bodyStart": 0,
+            "bodyEnd": 284,
+            "rawCandidateSha256": "183c80bf5e5ccf58343c48f9bb09c0ddf4fff5375cc0162d9bd93ff8fc6e1162"
+          }
+        ],
+        "epqa-B004FV7MHE-bullet-5575feef9ae39fa7": [
+          {
+            "row": 24874,
+            "qaPairId": "38412",
+            "qid": "3926",
+            "bodyStart": 0,
+            "bodyEnd": 79,
+            "rawCandidateSha256": "cb59df5b095bc701abde2e338b9432acbd71dcfd7c1593cfa280dcc271fc1aba"
+          }
+        ],
+        "epqa-B004FV7MHE-description-e8f5e1f24e4a032f": [
+          {
+            "row": 24875,
+            "qaPairId": "38413",
+            "qid": "3926",
+            "bodyStart": 0,
+            "bodyEnd": 309,
+            "rawCandidateSha256": "e07903106464a86b7fff8ba450e472587e7c245905517d6e80f8eacb833148d3"
+          }
+        ],
+        "epqa-B004FV7MHE-review-93595b3a6d9838fc": [
+          {
+            "row": 24876,
+            "qaPairId": "38414",
+            "qid": "3926",
+            "bodyStart": 0,
+            "bodyEnd": 32,
+            "rawCandidateSha256": "ba41d93b22838b2ddc845b95701905e86f46ff61976503f0737a33ca2e90767f"
+          }
+        ],
+        "epqa-B004FV7MHE-attribute-82c9490d59637c00": [
+          {
+            "row": 24877,
+            "qaPairId": "38415",
+            "qid": "3926",
+            "bodyStart": 0,
+            "bodyEnd": 39,
+            "rawCandidateSha256": "ea77e184d2d43b2ccec4e10af32cd292298f6e075b59e773621d44012c3403c6"
+          }
+        ],
+        "epqa-B004FV7MHE-bullet-0532c02f31306f28": [
+          {
+            "row": 24878,
+            "qaPairId": "38416",
+            "qid": "3926",
+            "bodyStart": 0,
+            "bodyEnd": 81,
+            "rawCandidateSha256": "446985da1de56d8d947f20861dbd09647d0bd81f4cae489dc65cba3340c64648"
+          }
+        ],
+        "epqa-B004FV7MHE-attribute-d06538014886c6d4": [
+          {
+            "row": 24879,
+            "qaPairId": "38417",
+            "qid": "3926",
+            "bodyStart": 0,
+            "bodyEnd": 43,
+            "rawCandidateSha256": "280bd7906b6d5bb0c96347fd8b9e0996abae52b654d09255a92910a4e94f1dd7"
+          }
+        ],
+        "epqa-B004FV7MHE-review-c6692e31f3e1f525": [
+          {
+            "row": 24880,
+            "qaPairId": "38418",
+            "qid": "3926",
+            "bodyStart": 0,
+            "bodyEnd": 198,
+            "rawCandidateSha256": "9b580324925c8b01cc71fcc4d420195e30c31e2d0036abc4fc93a1ccb4c61e0b"
+          }
+        ],
+        "epqa-B004FV7MHE-review-793329aab049e8e9": [
+          {
+            "row": 24881,
+            "qaPairId": "38419",
+            "qid": "3926",
+            "bodyStart": 0,
+            "bodyEnd": 40,
+            "rawCandidateSha256": "8b222cc3744d7954deb3fa77f9c0f48b5c41edb1cb6f7e1bdf6a4fbe8938a729"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "73d7a27fdfa72ae20400e63245fc1933d6498d6e7a0baae21b297c73d9d76f99",
+      "sourcePoolSha256": "2b6a07bee4552ff34c181adc349e1cad67addffe26845fa8dffe676717a01610",
+      "question": "will this work with yealink to arama model a600 headset?"
+    },
+    {
+      "stratum": "model_scope",
+      "sources": [
+        {
+          "id": "epqa-B001BYS5RE-cqa-e92e596cf6050e4c",
+          "label": "cqa",
+          "text": "yes, it does come with the seat.",
+          "originalQuestion": "does this come with the seat?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12812&qa_pair_id=19590&chars=0-32",
+          "sha256": "ac63bbe7043fbaac19d65d7e24060a3bfb0d3ce753551d37cdeb0394d16f4b27"
+        },
+        {
+          "id": "epqa-B001BYS5RE-cqa-b9667e099d97f342",
+          "label": "cqa",
+          "text": "yes, the seat comes with the toilet and is a soft close type so you can close every time a person flushes it.",
+          "originalQuestion": "does the seat come with this toilet?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12813&qa_pair_id=19591&chars=0-109",
+          "sha256": "55f307105397c0ec7012815fa8a518de01123b353a4e48ee02d9219778f98807"
+        },
+        {
+          "id": "epqa-B001BYS5RE-cqa-896fac0babf508bc",
+          "label": "cqa",
+          "text": "the seat came with the toilet.",
+          "originalQuestion": "does it require a different than standard toilet seat if replaced?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12814&qa_pair_id=19592&chars=0-30",
+          "sha256": "66afba16f606e9b7967ac374c4a319183a950dc03078861850b6defc4feebf30"
+        },
+        {
+          "id": "epqa-B001BYS5RE-cqa-b002cb1f0e69fb66",
+          "label": "cqa",
+          "text": "yes, it comes with a soft close toilet seat.",
+          "originalQuestion": "does this come with a toilet seat?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12815&qa_pair_id=19593&chars=0-44",
+          "sha256": "6227dd514aecbd1a870b05d37d42bae66df1639e254e22f7ef6bf6f5b5b2f935"
+        },
+        {
+          "id": "epqa-B001BYS5RE-review-19981eaa66274423",
+          "label": "review",
+          "text": "one nice - though expensive - unit installed in my house, and i admit the device is great.let's start with some of the positive features:* this toilet comes complete with seat, etc.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12816&qa_pair_id=19594&chars=0-181",
+          "sha256": "f1ef38bd6cf2e9201143769d712232b65961cfb1845bb07e0d78621a6a16d15a"
+        },
+        {
+          "id": "epqa-B001BYS5RE-attribute-54e5c1d59959a4ce",
+          "label": "attribute",
+          "text": "specification_met:  { value:\"watersense\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12817&qa_pair_id=19595&chars=0-42",
+          "sha256": "77e3891399bf9a4501384fb45ec9a1cf1a3dfdfc88036d1e1ccd2ba68e6c038d"
+        },
+        {
+          "id": "epqa-B001BYS5RE-attribute-30f5b9e093c90750",
+          "label": "attribute",
+          "text": "included_components:  { value:\"one-piece elongated toilet\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12818&qa_pair_id=19596&chars=0-60",
+          "sha256": "333a9f73278cbef69834bd843b8f45c20aa3eaaec107040d1211a6de5631d93c"
+        },
+        {
+          "id": "epqa-B001BYS5RE-attribute-d658141a54580ebb",
+          "label": "attribute",
+          "text": "color:  { value:\"cotton white\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12819&qa_pair_id=19597&chars=0-32",
+          "sha256": "e017848989dab53a1aa43412db1ae6e809088f706ad6787daaade8f0c1a480c3"
+        },
+        {
+          "id": "epqa-B001BYS5RE-review-b1fa9943595e759f",
+          "label": "review",
+          "text": "he said it was the easiest toilet installation he has ever done.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12820&qa_pair_id=19598&chars=0-64",
+          "sha256": "fa27130cd1968e3907a759dc3504a678e52c6ddc7fab2c2a9256e49fb78e1102"
+        },
+        {
+          "id": "epqa-B001BYS5RE-review-b70f411f48831b98",
+          "label": "review",
+          "text": "it magically flushes everything with very little water.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12821&qa_pair_id=19599&chars=0-55",
+          "sha256": "900407e41f18a220e91be848365447c2d8765ca5b4688ff98243e3f0b68e8464"
+        },
+        {
+          "id": "epqa-B001BYS5RE-cqa-43b6ae04c7eb618c",
+          "label": "cqa",
+          "text": "hi amazon customer, yes, the c100 washlet will fit nicely on the ultramax ii.",
+          "originalQuestion": "can toto washlet c100 be installed in this toilet",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12822&qa_pair_id=19600&chars=0-77",
+          "sha256": "676498634b6d706334cd03a42f8fa8dd837ed98f81aa3a3e9cddc127d0accaf0"
+        },
+        {
+          "id": "epqa-B001BYS5RE-cqa-f73ad5adbfbd305f",
+          "label": "cqa",
+          "text": "the ultramax ii is compatible with any of the current toto washlet models.",
+          "originalQuestion": "will a washlet/bidet fit easily upon this toilet in place of their seat?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12823&qa_pair_id=19601&chars=0-74",
+          "sha256": "9d15a30b2f619fcbb1a6b8c5a2deab5c93ede8cc82a73444a01edf1e6fa09df8"
+        },
+        {
+          "id": "epqa-B001BYS5RE-cqa-e47363d1ec62ad34",
+          "label": "cqa",
+          "text": "the ultramax accepts all toto washlet bidet seats; therefore, is it very likely to accept bidet seats of other manufacturer's as well.",
+          "originalQuestion": "anyone put a brondell swash 1400 bidet on this?  does it fit well?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12824&qa_pair_id=19602&chars=0-134",
+          "sha256": "3a0903bfeaf23c57f72323f49a2550ac72a221de613b7d8515be227e211d576a"
+        },
+        {
+          "id": "epqa-B001BYS5RE-cqa-81d8a9b9e5d3ce3b",
+          "label": "cqa",
+          "text": "hello, the ultramax will accept any elongated toilet seat of standard design.",
+          "originalQuestion": "will this toilet work with a cascade 3000 bidet seat?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12825&qa_pair_id=19603&chars=0-77",
+          "sha256": "f328259fe0263238dcec61c162fc7a2ea8ea81feb6de18248472b25ec972a0ce"
+        },
+        {
+          "id": "epqa-B001BYS5RE-cqa-a820609e1bfa2c4a",
+          "label": "cqa",
+          "text": "i would call the manufacture to confer with on the if they go together.",
+          "originalQuestion": "hi could you please confirm that this toilet fits with the toto s350e washlet bidet seat elongated. thank you",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12826&qa_pair_id=19604&chars=0-71",
+          "sha256": "2fb0bdfadbbbc8a25a2960d2ff25324d84b7d56db7fbc996d0e02d99e3cf23a0"
+        },
+        {
+          "id": "epqa-B001BYS5RE-description-8e13079850eaa85a",
+          "label": "description",
+          "text": "toto ms604114cefg#01 ultramax ii toilet, 1.28 gpf with sanagloss, cotton whitetoto is the world's largest plumbing products manufacturer.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12827&qa_pair_id=19605&chars=0-137",
+          "sha256": "8d4f013f1a30fca4090bf1a242a62c2437570125b1015910542ba9fb0ccb47ae"
+        },
+        {
+          "id": "epqa-B001BYS5RE-bullet-49b4e7c64a1961f3",
+          "label": "bullet",
+          "text": "high efficiency 1.28 gallons per flush with powerful toto tornado flush system",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12828&qa_pair_id=19606&chars=0-78",
+          "sha256": "2901a990c7702b30f796f939e229707c3e3530e68a43d3adec091c66c138daf8"
+        },
+        {
+          "id": "epqa-B001BYS5RE-bullet-a5ae1c0b23dfb489",
+          "label": "bullet",
+          "text": "universal height allows for a more comfortable seat position across a wide range of users",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12829&qa_pair_id=19607&chars=0-89",
+          "sha256": "9d5cb055a2e76239a360b2386b27d6a5ab63123044b64315fd17efc4e663f3da"
+        },
+        {
+          "id": "epqa-B001BYS5RE-review-4d8fde9dedeb094e",
+          "label": "review",
+          "text": "expensive, but well worth it.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12830&qa_pair_id=19608&chars=0-29",
+          "sha256": "e579a3896e0f3db21745800c7ee4ad54965e85ded908c0c34f3dd606d9919b96"
+        },
+        {
+          "id": "epqa-B001BYS5RE-review-0af02847ad6dea6b",
+          "label": "review",
+          "text": "the round one is 15\" off the floor for us short people.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=12831&qa_pair_id=19609&chars=0-55",
+          "sha256": "0bd6e70c117c5d090c132b075b93ddd1cac66614e521380e40d95399510850a9"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "e8c6835cd7e3cb95b8543edd99ffc78a7f82277db057cefdd2fbcd0f0a632ae7",
+      "product": {
+        "id": "B001BYS5RE",
+        "title": "Toto MS604114CEFG#01 UltraMax II One-Piece Elongated 1.28 GPF Universal Height Toilet with CEFIONTECT, Cotton White, L 28 3/8\\\" x W 16 1/2\\\" x H 28 3/4\\\""
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "2001",
+        "questionRow": 12822
+      },
+      "id": "source-gap-train-2001",
+      "sourceOrigins": {
+        "epqa-B001BYS5RE-cqa-e92e596cf6050e4c": [
+          {
+            "row": 12812,
+            "qaPairId": "19590",
+            "qid": "2000",
+            "bodyStart": 0,
+            "bodyEnd": 32,
+            "rawCandidateSha256": "6ee7f2e55457b4ca57f73868d74b42f318506c66fa24d75682c901cb7f6a0eb4"
+          }
+        ],
+        "epqa-B001BYS5RE-cqa-b9667e099d97f342": [
+          {
+            "row": 12813,
+            "qaPairId": "19591",
+            "qid": "2000",
+            "bodyStart": 0,
+            "bodyEnd": 109,
+            "rawCandidateSha256": "a5a9f3dda7fa0efb2f8d83964554355a18244de23c04c9924d756f9de321146e"
+          }
+        ],
+        "epqa-B001BYS5RE-cqa-896fac0babf508bc": [
+          {
+            "row": 12814,
+            "qaPairId": "19592",
+            "qid": "2000",
+            "bodyStart": 0,
+            "bodyEnd": 30,
+            "rawCandidateSha256": "95f465aa38c5150e03eee8299a65bfece1e9831861027bba88293c08b7874bea"
+          }
+        ],
+        "epqa-B001BYS5RE-cqa-b002cb1f0e69fb66": [
+          {
+            "row": 12815,
+            "qaPairId": "19593",
+            "qid": "2000",
+            "bodyStart": 0,
+            "bodyEnd": 44,
+            "rawCandidateSha256": "915cdeedf981e27ba9f85e55c18d87be9bd7f706f0ab4d3237f958b460b232ca"
+          }
+        ],
+        "epqa-B001BYS5RE-review-19981eaa66274423": [
+          {
+            "row": 12816,
+            "qaPairId": "19594",
+            "qid": "2000",
+            "bodyStart": 0,
+            "bodyEnd": 181,
+            "rawCandidateSha256": "5390b940af259bd71ce8575f8e7afd62adec1206655aac23187a172e0946e224"
+          }
+        ],
+        "epqa-B001BYS5RE-attribute-54e5c1d59959a4ce": [
+          {
+            "row": 12817,
+            "qaPairId": "19595",
+            "qid": "2000",
+            "bodyStart": 0,
+            "bodyEnd": 42,
+            "rawCandidateSha256": "28a7c44951e69903b1ff386d2ce3bf54e89d4a59f5bd91e3f57eddf4cb385b75"
+          }
+        ],
+        "epqa-B001BYS5RE-attribute-30f5b9e093c90750": [
+          {
+            "row": 12818,
+            "qaPairId": "19596",
+            "qid": "2000",
+            "bodyStart": 0,
+            "bodyEnd": 60,
+            "rawCandidateSha256": "3526b742b572840ebb5b19b791df4fc9f37d7c8e539abb36ff3ea56a91e9d713"
+          }
+        ],
+        "epqa-B001BYS5RE-attribute-d658141a54580ebb": [
+          {
+            "row": 12819,
+            "qaPairId": "19597",
+            "qid": "2000",
+            "bodyStart": 0,
+            "bodyEnd": 32,
+            "rawCandidateSha256": "019827ed22a4b10421063e9521579540253ccaeb63c892c61108aaa0541e6799"
+          }
+        ],
+        "epqa-B001BYS5RE-review-b1fa9943595e759f": [
+          {
+            "row": 12820,
+            "qaPairId": "19598",
+            "qid": "2000",
+            "bodyStart": 0,
+            "bodyEnd": 64,
+            "rawCandidateSha256": "1db2b8f01ff02701a84101159751b96ca1fd6202c77131a405f25052a3763359"
+          }
+        ],
+        "epqa-B001BYS5RE-review-b70f411f48831b98": [
+          {
+            "row": 12821,
+            "qaPairId": "19599",
+            "qid": "2000",
+            "bodyStart": 0,
+            "bodyEnd": 55,
+            "rawCandidateSha256": "6e4e7247715ae9f9de4526f020324f3c59860c0f675405a6af0be7df79dda122"
+          }
+        ],
+        "epqa-B001BYS5RE-cqa-43b6ae04c7eb618c": [
+          {
+            "row": 12822,
+            "qaPairId": "19600",
+            "qid": "2001",
+            "bodyStart": 0,
+            "bodyEnd": 77,
+            "rawCandidateSha256": "0e877e9db17722b4d9e4f701f186172e914237d1a23c7877f0779e93dc7b6f8b"
+          }
+        ],
+        "epqa-B001BYS5RE-cqa-f73ad5adbfbd305f": [
+          {
+            "row": 12823,
+            "qaPairId": "19601",
+            "qid": "2001",
+            "bodyStart": 0,
+            "bodyEnd": 74,
+            "rawCandidateSha256": "1450265e31e2bd50ddc554e88b4f7bf6f2e5e83ee7bd01f9701a92ff8a5e8303"
+          }
+        ],
+        "epqa-B001BYS5RE-cqa-e47363d1ec62ad34": [
+          {
+            "row": 12824,
+            "qaPairId": "19602",
+            "qid": "2001",
+            "bodyStart": 0,
+            "bodyEnd": 134,
+            "rawCandidateSha256": "25b3f758688754b6bd0e009fbbaa4915a53ca525c833c6f63b626b8a1eb8b364"
+          }
+        ],
+        "epqa-B001BYS5RE-cqa-81d8a9b9e5d3ce3b": [
+          {
+            "row": 12825,
+            "qaPairId": "19603",
+            "qid": "2001",
+            "bodyStart": 0,
+            "bodyEnd": 77,
+            "rawCandidateSha256": "71edef2a0a97bf9de02f0e2a882a417d9c7c35589b377896ea6c3e27d749f228"
+          }
+        ],
+        "epqa-B001BYS5RE-cqa-a820609e1bfa2c4a": [
+          {
+            "row": 12826,
+            "qaPairId": "19604",
+            "qid": "2001",
+            "bodyStart": 0,
+            "bodyEnd": 71,
+            "rawCandidateSha256": "d59b531ffa011b8a681d477c9c19564fb3d090f79c4689fe872d3c06034db1ff"
+          }
+        ],
+        "epqa-B001BYS5RE-description-8e13079850eaa85a": [
+          {
+            "row": 12827,
+            "qaPairId": "19605",
+            "qid": "2001",
+            "bodyStart": 0,
+            "bodyEnd": 137,
+            "rawCandidateSha256": "05b86cd22d455256d5a76577f7189af230cce0dcdc291f25745fca83f6372ed4"
+          }
+        ],
+        "epqa-B001BYS5RE-bullet-49b4e7c64a1961f3": [
+          {
+            "row": 12828,
+            "qaPairId": "19606",
+            "qid": "2001",
+            "bodyStart": 0,
+            "bodyEnd": 78,
+            "rawCandidateSha256": "1f1309045342e631b4a4c11d6caa8157caa4722ac2348ee66c17dd0e31ecf933"
+          }
+        ],
+        "epqa-B001BYS5RE-bullet-a5ae1c0b23dfb489": [
+          {
+            "row": 12829,
+            "qaPairId": "19607",
+            "qid": "2001",
+            "bodyStart": 0,
+            "bodyEnd": 89,
+            "rawCandidateSha256": "a5d717ed522446e5f3579f90f11bc4955788e1aca13a787398a4d8b68356eeb7"
+          }
+        ],
+        "epqa-B001BYS5RE-review-4d8fde9dedeb094e": [
+          {
+            "row": 12830,
+            "qaPairId": "19608",
+            "qid": "2001",
+            "bodyStart": 0,
+            "bodyEnd": 29,
+            "rawCandidateSha256": "41bbf2a637fecaf8968177204680ac1f88b44e410da55854d9ae530dee9f6d89"
+          }
+        ],
+        "epqa-B001BYS5RE-review-0af02847ad6dea6b": [
+          {
+            "row": 12831,
+            "qaPairId": "19609",
+            "qid": "2001",
+            "bodyStart": 0,
+            "bodyEnd": 55,
+            "rawCandidateSha256": "6f6f3b78c172686a26ea50556bbf46b200756408c2a5e0a8e6939496936a4f03"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "413589ca154e91cecc49650a737a392bd899e05ff8e7443ae449cf532413bbfb",
+      "sourcePoolSha256": "d835affcec97cde77b3f004e6dd66da83aee70ad00f8788ce37b9917074651f3",
+      "question": "will the toto c100 fit on the ultramax?"
+    },
+    {
+      "stratum": "missing_information",
+      "sources": [
+        {
+          "id": "epqa-B001FB5Z4O-cqa-380af3e7122f33a9",
+          "label": "cqa",
+          "text": "it should, most five string banjos are about the same length and being right or left handed does not make a difference since it's only the 5th string tuner we are talking about.",
+          "originalQuestion": "i have a deering 2 left hand banjo will this fit",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15172&qa_pair_id=23400&chars=0-177",
+          "sha256": "19fc0bef5fbcf48a7240e2e30d80dc0a3761823f06860e74d0ba24422dfb9ab0"
+        },
+        {
+          "id": "epqa-B001FB5Z4O-cqa-2019a51be5c5d323",
+          "label": "cqa",
+          "text": "if your particular hollow-body guitar shares similar dimensions to a typical dreadnaught guitar, it will fit.",
+          "originalQuestion": "can this fit a hollow body",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15173&qa_pair_id=23401&chars=0-109",
+          "sha256": "1faa971fa9d96a0d0c637ee7c0c0f39d6c253b8d11eb956c2411fb83f1f6c406"
+        },
+        {
+          "id": "epqa-B001FB5Z4O-cqa-466dda8ba9b7bfb6",
+          "label": "cqa",
+          "text": "rest assured that a carrion 000 case is designed to fit all om or 000 sized guitars.",
+          "originalQuestion": "are the demensions listed for the inside of the case?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15174&qa_pair_id=23402&chars=0-84",
+          "sha256": "8099d2daa17ea813f834f700a33085b90005efbaf511e920cbbead40511956f9"
+        },
+        {
+          "id": "epqa-B001FB5Z4O-cqa-9f1b7d465839252a",
+          "label": "cqa",
+          "text": "i don't know if it will or not",
+          "originalQuestion": "will this work for me? i need this case to fit a bouzouki that is length: 38.5”  body width 15”  body length 15.5”  body depth 4.5”",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15175&qa_pair_id=23403&chars=0-30",
+          "sha256": "b0b3897df76867bcb1b858234fd0c7bad29705942de4b5e02add356cfccec79b"
+        },
+        {
+          "id": "epqa-B001FB5Z4O-cqa-f92b89985629a512",
+          "label": "cqa",
+          "text": "does not fit squarenecks due to the neck heel, but our golden gate c-1512 will fit our regal rd-52 squareneck resonator guitar.here are the interior dimensions of the c-1502:total length: 41\"body length: 21 1/2\"heel plus pocket: 8 1/2”width, lower bout: 14 3/4\"width, upper bout: 12 1/2\"peg/tuners area, length: 10 3/4\"case height: 4\"lid height: 1\"tom molyneauxsaga musical instruments",
+          "originalQuestion": "will this fit a savannah chicago blues resonator?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15176&qa_pair_id=23404&chars=0-385",
+          "sha256": "9446f1533ea6dba82961525c7bcf535eebe4ff254649214654336cd399445eb0"
+        },
+        {
+          "id": "epqa-B001FB5Z4O-attribute-6f62a8a3c18d0d46",
+          "label": "attribute",
+          "text": "brand:  { value:\"carrion\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15177&qa_pair_id=23405&chars=0-27",
+          "sha256": "b49b183820cac7b6974f977e2ac42baa36b632d8a19f40584fbd281a1b5b8adf"
+        },
+        {
+          "id": "epqa-B001FB5Z4O-description-860c4e7669a0e744",
+          "label": "description",
+          "text": "each carrion case was designed to withstand the rigors of the road with combined features that make one tough case that not only protects your investment, but is a good investment.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15178&qa_pair_id=23406&chars=0-180",
+          "sha256": "a689c26fe73af4d99152e9e16f278724056a149d3f3a942300486c1b2913b07d"
+        },
+        {
+          "id": "epqa-B001FB5Z4O-description-dc6fe036537a7637",
+          "label": "description",
+          "text": "durable black tolex outer shell covers a multi-ply wood core to provide your instrument the protection it needs to survive life on the road.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15179&qa_pair_id=23407&chars=0-140",
+          "sha256": "56ff87d98bd5e62f4d24c030b95a24b4096da460e751d3030cc25d510d478f5f"
+        },
+        {
+          "id": "epqa-B001FB5Z4O-review-3afb3757dd169920",
+          "label": "review",
+          "text": "instrument fit case with no sliding around!",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15180&qa_pair_id=23408&chars=0-43",
+          "sha256": "a62845cf3beca0ea61ff22ce47af9005ff0bcf4e786e08447c2fcc01cfbe712f"
+        },
+        {
+          "id": "epqa-B001FB5Z4O-review-01cd6d8e17bca8bf",
+          "label": "review",
+          "text": "i ordered this case through amazon to replace the old one.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=15181&qa_pair_id=23409&chars=0-58",
+          "sha256": "c9b10cacd7f32792d3404e4bb7808ad6a4366cc822fb4a3a21a279c07312385b"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "23ef5e28a2a5a8d0d125794ff2af9e7dd5cf481d46e029bf1277fd4c1cad6b8c",
+      "product": {
+        "id": "B001FB5Z4O",
+        "title": "Carrion C-2901 Black Hardshell 5-string Resonator Banjo Case,Natural"
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "2391",
+        "questionRow": 15172
+      },
+      "id": "source-gap-train-2391",
+      "sourceOrigins": {
+        "epqa-B001FB5Z4O-cqa-380af3e7122f33a9": [
+          {
+            "row": 15172,
+            "qaPairId": "23400",
+            "qid": "2391",
+            "bodyStart": 0,
+            "bodyEnd": 177,
+            "rawCandidateSha256": "2cfa179277562cb9a3ff68eaed3c651199c8e5984bae62939cf4bc8b6dceb297"
+          }
+        ],
+        "epqa-B001FB5Z4O-cqa-2019a51be5c5d323": [
+          {
+            "row": 15173,
+            "qaPairId": "23401",
+            "qid": "2391",
+            "bodyStart": 0,
+            "bodyEnd": 109,
+            "rawCandidateSha256": "9d55d0efb0e79d6a83e3a88824f011f1f7e5754fba2fcd029b5c20970d90e52c"
+          }
+        ],
+        "epqa-B001FB5Z4O-cqa-466dda8ba9b7bfb6": [
+          {
+            "row": 15174,
+            "qaPairId": "23402",
+            "qid": "2391",
+            "bodyStart": 0,
+            "bodyEnd": 84,
+            "rawCandidateSha256": "3372b8c06ff7fd644d5774261035a69d11c878d0a7025b438d350716fc3dc834"
+          }
+        ],
+        "epqa-B001FB5Z4O-cqa-9f1b7d465839252a": [
+          {
+            "row": 15175,
+            "qaPairId": "23403",
+            "qid": "2391",
+            "bodyStart": 0,
+            "bodyEnd": 30,
+            "rawCandidateSha256": "819bfc67dfaf42a399e3fe82241f17d4a80dd6f45dceff6fb68e6e8a19a44967"
+          }
+        ],
+        "epqa-B001FB5Z4O-cqa-f92b89985629a512": [
+          {
+            "row": 15176,
+            "qaPairId": "23404",
+            "qid": "2391",
+            "bodyStart": 0,
+            "bodyEnd": 385,
+            "rawCandidateSha256": "570e52ca0dab92ed0a80110ed963745bd557bc4cce19701471975cc872f639be"
+          }
+        ],
+        "epqa-B001FB5Z4O-attribute-6f62a8a3c18d0d46": [
+          {
+            "row": 15177,
+            "qaPairId": "23405",
+            "qid": "2391",
+            "bodyStart": 0,
+            "bodyEnd": 27,
+            "rawCandidateSha256": "7933f504efc4a736db7f18f2d61fa54ffce5c26c6e41a7bb591096a8e6083085"
+          }
+        ],
+        "epqa-B001FB5Z4O-description-860c4e7669a0e744": [
+          {
+            "row": 15178,
+            "qaPairId": "23406",
+            "qid": "2391",
+            "bodyStart": 0,
+            "bodyEnd": 180,
+            "rawCandidateSha256": "015eeb5288d437c722f9cd60239a5db64b5267bef860d43c29e51b4a43b82771"
+          }
+        ],
+        "epqa-B001FB5Z4O-description-dc6fe036537a7637": [
+          {
+            "row": 15179,
+            "qaPairId": "23407",
+            "qid": "2391",
+            "bodyStart": 0,
+            "bodyEnd": 140,
+            "rawCandidateSha256": "f766ae127fd4547de2313089f7de1aa584395b468ab65699c2daecc703007321"
+          }
+        ],
+        "epqa-B001FB5Z4O-review-3afb3757dd169920": [
+          {
+            "row": 15180,
+            "qaPairId": "23408",
+            "qid": "2391",
+            "bodyStart": 0,
+            "bodyEnd": 43,
+            "rawCandidateSha256": "4749b072bd42348265a83ad47ff9ad8411e92c1bbb9d5b5727eb4ec91ad55fc7"
+          }
+        ],
+        "epqa-B001FB5Z4O-review-01cd6d8e17bca8bf": [
+          {
+            "row": 15181,
+            "qaPairId": "23409",
+            "qid": "2391",
+            "bodyStart": 0,
+            "bodyEnd": 58,
+            "rawCandidateSha256": "43448218f95173d4e97a30379dc866a304a95a1e32b9351e5f1704ff0e84c9b5"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "27e0e52a84c3663670bcefb29f796818e314a7b7cf90329a30fcedc940e84c80",
+      "sourcePoolSha256": "106ddaa3d5db1ac09ba9ad72895dd44554ddc24a5170767aea582710c93f894c",
+      "question": "i have a left handed martin 000-15, will that fit?"
+    },
+    {
+      "stratum": "preservation_control",
+      "sources": [
+        {
+          "id": "epqa-B008K3Q6ZM-cqa-9e2dc5af363324f0",
+          "label": "cqa",
+          "text": "shoes do not come with cleats",
+          "originalQuestion": "i buy a ref. sh-m088l, but arrived without cleat set. hese are no elements?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25382&qa_pair_id=39180&chars=0-29",
+          "sha256": "7362828eaf3130b7474c97edf499c65d162c6f65b9ac5954d8dbacbba869956f"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-cqa-aa61dc1c71612ab6",
+          "label": "cqa",
+          "text": "mine did not come with the cleats.",
+          "originalQuestion": "do these shoes come with the cleats? or do those need to be purchased separately?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25383&qa_pair_id=39181&chars=0-34",
+          "sha256": "cd1e7af6f82d0573e2149bfb613703fe4a8824a57af45cf9a8457aa6bc4d3246"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-cqa-8c97f5b92c80abac",
+          "label": "cqa",
+          "text": "the pedals came with compatible cleats,  two-bolt sh-51 cleats, that i attached to the shoe.",
+          "originalQuestion": "will these work with shimano click'r pedals?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25384&qa_pair_id=39182&chars=0-92",
+          "sha256": "23b64bff99df7f5a28349c065cf4a52aaa81d6ed534854c93807ec3800ea65ac"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-review-716d32fb5daf0e7f",
+          "label": "review",
+          "text": "suggest keeping an allen wrench with you first couple of outings so you can make fine adjustments if necessary.it does not come with the cleats or bolts (no surprise here), but it does come with the backing plates necessary to mount the cleats.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25385&qa_pair_id=39183&chars=0-244",
+          "sha256": "f8d1d1fa245d4bed0f7d6c4787e72c0aad62ba1165374d59e43488f240249cb9"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-cqa-eda3dbae4ebd2add",
+          "label": "cqa",
+          "text": "no, pedals come with the cleats",
+          "originalQuestion": "do these come with cleats?",
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25386&qa_pair_id=39184&chars=0-31",
+          "sha256": "ef194df9ccaa1729feb6c94e4bea8d3b1041d9a592a11d878f116bc20f46c7ae"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-description-ce0abca55ecd2b4a",
+          "label": "description",
+          "text": "the m088 shoes have a fiberglass-reinforced, polyamide sole that's stiff, yet it flexes enough for comfortable walking.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25387&qa_pair_id=39185&chars=0-119",
+          "sha256": "f3df370bfaf3a41370f299c4fe7c2cbea20d6a226b0fd46c78467ef1165d4c8f"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-description-29a16c8e48d2ec34",
+          "label": "description",
+          "text": "the durable rubber tread also provides plenty of traction for hikes over hellish terrain or to escort your beyond-trail-repair rig out of the woods.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25388&qa_pair_id=39186&chars=0-148",
+          "sha256": "141a4a76a5fba8f96f76fd75968a0471fc677034372a2f77db1db6d1c9eed25c"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-bullet-b5cc82599aeeda82",
+          "label": "bullet",
+          "text": "last - volume+ last for a more accommodating toe box",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25389&qa_pair_id=39187&chars=0-52",
+          "sha256": "0262a2a64a7178393b68985a40425408985606c8f3bc605cc6b81577ea7f6b57"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-review-d19b6953ad29f74e",
+          "label": "review",
+          "text": "thanks for making this size available for us \"hobbit-footed\" folks.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25390&qa_pair_id=39188&chars=0-67",
+          "sha256": "ed5b9f079c8e1dca0a60d9761ffd104358ba727706b4e8fe2b24e977710b36cb"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-review-69d35aec5053bb36",
+          "label": "review",
+          "text": "true to size and excellent quality.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25391&qa_pair_id=39189&chars=0-35",
+          "sha256": "ef8b28f08bbbe9a73ae599ce1d473f2f2781de0fb022872c0923e1aaa680dd2f"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-attribute-085e1c7ad233daf8",
+          "label": "attribute",
+          "text": "size:  { value:\"49 (us men's 13.2) e - wide\" }",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25392&qa_pair_id=39190&chars=0-46",
+          "sha256": "45f7c35168b837559f0a2ec3f06dd8d7b24d5202af6155a68cf464848bbe03e8"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-review-075d42a97f3e00f9",
+          "label": "review",
+          "text": "normal shoe size is between 10.5-11 and these 45's seem to be the right fit.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25393&qa_pair_id=39191&chars=0-76",
+          "sha256": "ab8a8cbe117b51441a5f5fff16af774cb4bd2ff0ccc0689cf410c139bb469152"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-review-3d9a68a6dd921ffa",
+          "label": "review",
+          "text": "i typically wear a 10.5 or 11 us size and purchased size 45, they fit perfect.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25394&qa_pair_id=39192&chars=0-78",
+          "sha256": "b3d36fe65327da6faf4224ba49539fafd05220bae84e08eaf2a6478e0c8aeb5d"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-review-df5b3967ab3a8a4d",
+          "label": "review",
+          "text": "i wear a us size 10 in nike running shoes and the eu size 44 is a good fit for me.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25395&qa_pair_id=39193&chars=0-82",
+          "sha256": "3d8ae4be20292cd0dc24933620c7aaf6653ba393bef4896e9fbeaaf3535443ac"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-review-782a444a38699e40",
+          "label": "review",
+          "text": "i have a rather large foot and need a size 52 biking shoe.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25396&qa_pair_id=39194&chars=0-58",
+          "sha256": "77adf07662179110ba8b1df08898e0b6ab5e101d228e504d8cb099fb9d0f4dfd"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-bullet-4c9bccebf162005d",
+          "label": "bullet",
+          "text": "upper - tough, stretch-resistant synthetic leather and mesh",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25397&qa_pair_id=39195&chars=0-59",
+          "sha256": "757af43838d4e256300b741789d447ded01c2e733ea4b56c760c10ae02611174"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-description-0af361578cbb7579",
+          "label": "description",
+          "text": "the shimano sh-m088 shoes are available in the color black and in 17 whole sizes from 36 to 52. please note that these shoes are also being offered in both a high and low volume option.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25399&qa_pair_id=39197&chars=0-185",
+          "sha256": "de8bffda6cd12b78d3447253bfaa70bc3be97769c77ae88fb83fb588379c91fc"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-review-ad13cddfad931f6d",
+          "label": "review",
+          "text": "comfortable fit, good walk-ability, like the ratchet adjustment and adequate stiffness are all benefits.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25400&qa_pair_id=39198&chars=0-104",
+          "sha256": "d2d43f95083b9991b720a07d66bbcf18b6ac063d8700cbf431a328c4e176f917"
+        },
+        {
+          "id": "epqa-B008K3Q6ZM-review-8fc4750db59872ab",
+          "label": "review",
+          "text": "i wear a regular size 13 shoe - never had a need for special wide sizing, but after reading many reviews of shimano shoes' typically smaller sizing, i opted for the wide version.",
+          "originalQuestion": null,
+          "reference": "https://raw.githubusercontent.com/amazon-science/contextual-product-qa/cec976cc2f2218aa76e562ecc9c7d79f1f3271bc/ePQA/train.csv#row=25401&qa_pair_id=39199&chars=0-178",
+          "sha256": "1cc6d01f85cedc010a11f1e69d1c7374096a6beb018ead9163de7e0e9062166e"
+        }
+      ],
+      "familyAudit": {
+        "status": "pending_independent_source_and_family_review"
+      },
+      "selectionRankSha256": "024cec5de18796b9531f03222696e752a42dfcbaa21f534647f5a7400e5aebdb",
+      "product": {
+        "id": "B008K3Q6ZM",
+        "title": "SHIMANO Off-Road Sport Shoe Wide Black-49.0"
+      },
+      "upstream": {
+        "split": "train",
+        "qid": "4007",
+        "questionRow": 25382
+      },
+      "id": "source-gap-train-4007",
+      "sourceOrigins": {
+        "epqa-B008K3Q6ZM-cqa-9e2dc5af363324f0": [
+          {
+            "row": 25382,
+            "qaPairId": "39180",
+            "qid": "4007",
+            "bodyStart": 0,
+            "bodyEnd": 29,
+            "rawCandidateSha256": "c2dd992a534a2a3b97a3f8df5f21ad63297dfb4071ab9ecdc89b4576daae14d0"
+          }
+        ],
+        "epqa-B008K3Q6ZM-cqa-aa61dc1c71612ab6": [
+          {
+            "row": 25383,
+            "qaPairId": "39181",
+            "qid": "4007",
+            "bodyStart": 0,
+            "bodyEnd": 34,
+            "rawCandidateSha256": "82e29ae7e6250ce893d4c05ca81632947ab4b5e4bbb1037b53e7b37c1595c8cc"
+          }
+        ],
+        "epqa-B008K3Q6ZM-cqa-8c97f5b92c80abac": [
+          {
+            "row": 25384,
+            "qaPairId": "39182",
+            "qid": "4007",
+            "bodyStart": 0,
+            "bodyEnd": 92,
+            "rawCandidateSha256": "3c853a66f54197b2998776f3faba5adc43d449ac35c7981c99a94dc0425882a6"
+          }
+        ],
+        "epqa-B008K3Q6ZM-review-716d32fb5daf0e7f": [
+          {
+            "row": 25385,
+            "qaPairId": "39183",
+            "qid": "4007",
+            "bodyStart": 0,
+            "bodyEnd": 244,
+            "rawCandidateSha256": "a5019ba3fefc2e5ac344009c45d824d40ebd006e55ec8d65280b0e655dbf7696"
+          }
+        ],
+        "epqa-B008K3Q6ZM-cqa-eda3dbae4ebd2add": [
+          {
+            "row": 25386,
+            "qaPairId": "39184",
+            "qid": "4007",
+            "bodyStart": 0,
+            "bodyEnd": 31,
+            "rawCandidateSha256": "0226162901bf8a40f552a45d1b27403144a9029bed107b677fb9610cbcc54a82"
+          }
+        ],
+        "epqa-B008K3Q6ZM-description-ce0abca55ecd2b4a": [
+          {
+            "row": 25387,
+            "qaPairId": "39185",
+            "qid": "4007",
+            "bodyStart": 0,
+            "bodyEnd": 119,
+            "rawCandidateSha256": "75a9f4811f970d021a870dda68bb25394c085feb5edf1e97fbdc7ca5fe8726ae"
+          }
+        ],
+        "epqa-B008K3Q6ZM-description-29a16c8e48d2ec34": [
+          {
+            "row": 25388,
+            "qaPairId": "39186",
+            "qid": "4007",
+            "bodyStart": 0,
+            "bodyEnd": 148,
+            "rawCandidateSha256": "865362e7377c529b00f7796fe414b893679bd444dc5ee8f04a81c7b399f8e9c1"
+          },
+          {
+            "row": 25398,
+            "qaPairId": "39196",
+            "qid": "4008",
+            "bodyStart": 0,
+            "bodyEnd": 148,
+            "rawCandidateSha256": "865362e7377c529b00f7796fe414b893679bd444dc5ee8f04a81c7b399f8e9c1"
+          }
+        ],
+        "epqa-B008K3Q6ZM-bullet-b5cc82599aeeda82": [
+          {
+            "row": 25389,
+            "qaPairId": "39187",
+            "qid": "4007",
+            "bodyStart": 0,
+            "bodyEnd": 52,
+            "rawCandidateSha256": "c7d9b585fc7ab145e663f675e94087a06f0cdd7eb74e6f279e2edb190eb829f1"
+          }
+        ],
+        "epqa-B008K3Q6ZM-review-d19b6953ad29f74e": [
+          {
+            "row": 25390,
+            "qaPairId": "39188",
+            "qid": "4007",
+            "bodyStart": 0,
+            "bodyEnd": 67,
+            "rawCandidateSha256": "83e0161f7a1165c18cafe57dfc6144833a511cbfc30512b03c418994defdc085"
+          }
+        ],
+        "epqa-B008K3Q6ZM-review-69d35aec5053bb36": [
+          {
+            "row": 25391,
+            "qaPairId": "39189",
+            "qid": "4007",
+            "bodyStart": 0,
+            "bodyEnd": 35,
+            "rawCandidateSha256": "0ce38a31711e47bf5fcdab47267f3d71c7f08c51e6544e1dcce1231f3cc7031a"
+          }
+        ],
+        "epqa-B008K3Q6ZM-attribute-085e1c7ad233daf8": [
+          {
+            "row": 25392,
+            "qaPairId": "39190",
+            "qid": "4008",
+            "bodyStart": 0,
+            "bodyEnd": 46,
+            "rawCandidateSha256": "1e7b2843000e91cd91b93dd413331948ee35e4f850a8b2af9a1aa386b4dbae0b"
+          }
+        ],
+        "epqa-B008K3Q6ZM-review-075d42a97f3e00f9": [
+          {
+            "row": 25393,
+            "qaPairId": "39191",
+            "qid": "4008",
+            "bodyStart": 0,
+            "bodyEnd": 76,
+            "rawCandidateSha256": "f6f6a141203daf98713f0a136b2304c7fb49b7bdaf93b58c568456a7fc8bdb0e"
+          }
+        ],
+        "epqa-B008K3Q6ZM-review-3d9a68a6dd921ffa": [
+          {
+            "row": 25394,
+            "qaPairId": "39192",
+            "qid": "4008",
+            "bodyStart": 0,
+            "bodyEnd": 78,
+            "rawCandidateSha256": "d5cecda8b2840f6dac24346f819ffe17593196d88e322073cdfa7d44374a856d"
+          }
+        ],
+        "epqa-B008K3Q6ZM-review-df5b3967ab3a8a4d": [
+          {
+            "row": 25395,
+            "qaPairId": "39193",
+            "qid": "4008",
+            "bodyStart": 0,
+            "bodyEnd": 82,
+            "rawCandidateSha256": "ad9b7dd14d3c416f403f50a7537c2b6f5dd8197bab559a6beeaa6034ae50fffd"
+          }
+        ],
+        "epqa-B008K3Q6ZM-review-782a444a38699e40": [
+          {
+            "row": 25396,
+            "qaPairId": "39194",
+            "qid": "4008",
+            "bodyStart": 0,
+            "bodyEnd": 58,
+            "rawCandidateSha256": "3e0c60171e1f80c25bb0137e9ec1360c80956876f3e1d252ba5bcf78c82be375"
+          }
+        ],
+        "epqa-B008K3Q6ZM-bullet-4c9bccebf162005d": [
+          {
+            "row": 25397,
+            "qaPairId": "39195",
+            "qid": "4008",
+            "bodyStart": 0,
+            "bodyEnd": 59,
+            "rawCandidateSha256": "ffe4851bd62cc41a8e03283fff6a1f1031fe32a0f09e3446493fc79a041f0a08"
+          }
+        ],
+        "epqa-B008K3Q6ZM-description-0af361578cbb7579": [
+          {
+            "row": 25399,
+            "qaPairId": "39197",
+            "qid": "4008",
+            "bodyStart": 0,
+            "bodyEnd": 185,
+            "rawCandidateSha256": "7fe9e02df81f29aa6f01d375fafe78511ba7d28d671b1b77f508c9715e23129d"
+          }
+        ],
+        "epqa-B008K3Q6ZM-review-ad13cddfad931f6d": [
+          {
+            "row": 25400,
+            "qaPairId": "39198",
+            "qid": "4008",
+            "bodyStart": 0,
+            "bodyEnd": 104,
+            "rawCandidateSha256": "fea41ed6e3bf55e7afb8efad58f497c882d06a8409e1393c720e54c9b8cc1c65"
+          }
+        ],
+        "epqa-B008K3Q6ZM-review-8fc4750db59872ab": [
+          {
+            "row": 25401,
+            "qaPairId": "39199",
+            "qid": "4008",
+            "bodyStart": 0,
+            "bodyEnd": 178,
+            "rawCandidateSha256": "fa7516f07f44c4268c8e104d80f0331610b8420e95c26dec0dd0274398af7108"
+          }
+        ]
+      },
+      "sourceSnapshotFingerprint": "2c56f0558c2fca4f17c765236f453e09a8c3f925cbdbc18ecd738f0d85ec0c01",
+      "sourcePoolSha256": "929299cacbeb177ee1b761fa5ce2ac5fb99d4398f75dad1c46bcf109d0e8ab09",
+      "question": "does it come with initial set of cleats?"
+    }
+  ],
+  "candidateContextsInspected": false,
+  "modelOutputsInspected": false,
+  "generationPerformed": false,
+  "newProviderCalls": 0
+}

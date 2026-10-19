@@ -301,8 +301,14 @@ export function verifySourceGapPartialPool(pool: SourceCalibrationArtifact, impl
   const returned: Json[] = [], expectedStrata = gapStrata.flatMap(s => Array(s.count).fill(s.name));
   for (const [index, artifact] of inputs.rounds.entries()) {
     const row = artifact.document, summary = diagnostic.rounds[index], cases = row.selectedSourceOnlyCases as Json[];
+    const projected = row.format === 'ablatrix-source-gap-round-projection-v1';
+    assert.ok(projected || row.format === 'ablatrix-source-gap-failed-round-observation-v1', 'Unknown diagnostic round representation.');
+    if (projected) {
+      assert.deepEqual(Object.keys(row).sort(), ['format', 'rawObservationFileSha256', 'round', 'seed', 'selectedCount', 'inventory', 'selectedSourceOnlyCases', 'candidateContextsInspected', 'modelOutputsInspected', 'generationPerformed', 'newProviderCalls'].sort());
+      digest(row.rawObservationFileSha256);
+    }
     assert.equal(row.round, index + 1); assert.equal(row.seed, `${SOURCE_GAP_SEED}:round:${index + 1}`); assert.equal(row.selectedCount, cases.length);
-    assert.equal(summary.round, row.round); assert.equal(summary.seed, row.seed); assert.equal(summary.selectedCount, row.selectedCount); assert.equal(summary.observationFileSha256, artifact.fileSha256); assert.deepEqual(summary.inventory, row.inventory);
+    assert.equal(summary.round, row.round); assert.equal(summary.seed, row.seed); assert.equal(summary.selectedCount, row.selectedCount); assert.equal(summary.observationFileSha256, projected ? row.rawObservationFileSha256 : artifact.fileSha256); assert.deepEqual(summary.inventory, row.inventory);
     assert.equal(row.inventory.passed, index < inputs.rounds.length - 1); assert.ok(index < inputs.rounds.length - 1 ? cases.length === 8 : cases.length < 8);
     assert.deepEqual(cases.map(c => c.stratum), expectedStrata.slice(0, cases.length));
     for (const key of ['candidateContextsInspected', 'modelOutputsInspected', 'generationPerformed']) assert.equal(row[key], false); assert.equal(row.newProviderCalls, 0);
@@ -414,6 +420,7 @@ export function prepareSourceCalibrationComparison(preparation: SourceCalibratio
   const experimentId = sourceCalibrationHash({ packet: p.packet.fileSha256, freeze: p.candidateFreeze.fileSha256, anchor, createdAt: p.createdAt }).slice(0, 24);
   const reviewCases: { id: string; question: string; product: { id: string; title: string }; sources: Source[]; generationSourceIds: string[]; generationSourceIdsByArm?: Record<Arm, string[]>; sourceGapGroup?: SourceGapGroup }[] = [];
   const slots: Slot[] = [];
+  const designatedFactDeliveryCaseIds: string[] = [];
   for (const [index, c] of cases.entries()) {
     assert.match(c.id, /^[A-Za-z0-9_-]{1,120}$/); assert.ok(c.question.length > 0 && c.question.length <= 500); assert.ok(c.sources.length > 0 && c.sources.length <= 256);
     assert.equal(c.sourcePoolSha256, contextComparisonHash(c.sources)); assert.equal(new Set(c.sources.map((s: Source) => s.id)).size, c.sources.length);
@@ -432,6 +439,14 @@ export function prepareSourceCalibrationComparison(preparation: SourceCalibratio
       assert.deepEqual(row.baseline, { ...row.indexRetrieval, passages: restored });
       assert.deepEqual(row.candidate, { ...row.indexRetrieval, passages: augmented.passages }); assert.deepEqual(row.additions, augmented.additions); assert.equal(row.contract, augmented.contract);
       assert.ok(augmented.passages.length <= 8 && augmented.passages.length - restored.length <= 3); assert.deepEqual(augmented.passages.slice(0, restored.length), restored);
+      if (partial && (c.sourceGapGroup === 'specification_gap' || c.sourceGapGroup === 'model_detail_gap')) {
+        const added = augmented.passages.slice(restored.length);
+        if (c.designatedFacts.some((fact: Json) => added.some(passage => {
+          const source = (c.sources as Source[]).find(source => source.id === passage.id);
+          return source && fact.sourceIds.includes(passage.id) && passage.text.includes(fact.quote)
+            && (passage.originalQuestion ?? null) === (source.originalQuestion ?? null);
+        }))) designatedFactDeliveryCaseIds.push(c.id);
+      }
     }
     reviewCases.push({ id: c.id, question: c.question, product: c.product, sources: c.sources, generationSourceIds: selected.map(s => s.id), ...(coverage ? { generationSourceIdsByArm: { baseline: selected.map(s => s.id), candidate: byArm.candidate.map(s => s.id) } } : {}), ...(gap ? { sourceGapGroup: c.sourceGapGroup as SourceGapGroup } : {}) });
     const pair: Slot[] = [];
@@ -451,12 +466,13 @@ export function prepareSourceCalibrationComparison(preparation: SourceCalibratio
     } else assert.deepEqual(neutral(pair[0]), neutral(pair[1]), 'Arms may differ only in contract, instructions, tool and operation identity.');
     slots.push(...pair);
   }
+  if (partial) assert.ok(designatedFactDeliveryCaseIds.length > 0, 'Exploratory paid preparation requires at least one designated missing fact in an added candidate source with its original question scope preserved.');
   const changedCaseIds = coverage ? reviewCases.filter(c => c.generationSourceIdsByArm!.candidate.length > c.generationSourceIdsByArm!.baseline.length).map(c => c.id) : [];
   const unchangedCaseIds = coverage ? reviewCases.filter(c => !changedCaseIds.includes(c.id)).map(c => c.id) : [];
   const plan = { format: partial ? 'ablatrix-source-gap-partial-first-answer-plan-v1' : gap ? 'ablatrix-source-gap-first-answer-plan-v1' : coverage ? 'ablatrix-retrieval-coverage-first-answer-plan-v1' : 'ablatrix-source-calibration-first-answer-plan-v1', preparation: p, cases: reviewCases, slots,
     ...(coverage ? { retrievalContexts: { changedCaseIds, unchangedCaseIds, plannedChangedCases: changedCaseIds.length, plannedUnchangedCases: unchangedCaseIds.length } } : {}),
     ...(gap ? { sourceGapGroups: Object.fromEntries((Object.keys(SOURCE_GAP_QUOTAS) as SourceGapGroup[]).map(group => [group, { caseIds: reviewCases.filter(c => c.sourceGapGroup === group).map(c => c.id), plannedCases: reviewCases.filter(c => c.sourceGapGroup === group).length }])) } : {}),
-    ...(partial ? { sourceExposure: { statusAtSelection: 'source_exposed_ungenerated', claimScope: 'exploratory_source_exposed_pool', poolSize: p.packet.document.selection.inputArtifacts.pool.document.cases.length, originalProtocolCompleted: false } } : {}),
+    ...(partial ? { sourceExposure: { statusAtSelection: 'source_exposed_ungenerated', claimScope: 'exploratory_source_exposed_pool', poolSize: p.packet.document.selection.inputArtifacts.pool.document.cases.length, originalProtocolCompleted: false }, designatedFactDelivery: { caseIds: designatedFactDeliveryCaseIds, deliveredCases: designatedFactDeliveryCaseIds.length, qualityClaimEligible: false } } : {}),
     budget: { maximumNewAttempts: plannedCalls, absoluteCallLimit: anchor.attempts + plannedCalls, capUsd: 20, allowancePerCallUsd: .1, priorSpendUsd: anchor.priorSpendUsd }, provenance: 'local_exploratory_comparison', revisions: 0, retries: 0, graderCalls: 0, webCalls: 0, humanJudgments: 0, qualityClaimEligible: false, paidExecutionAuthorized: false } as const;
   return { plan, planSha256: sourceCalibrationHash(plan) };
 }

@@ -29,7 +29,7 @@ def save(root, name, document):
     return {'path': name, 'fileSha256': m.legacy.sha(path.read_bytes()), 'document': document}
 
 
-def origin_fixture(root):
+def origin_fixture(root, projected=False):
     """Two fictional returns: eight complete cases, then four before failure."""
     code = {path: m.legacy.sha((m.ROOT / path).read_bytes()) for path in m.REQUIRED_CODE}
     old_freeze = save(root, 'old-freeze.json', {**m.original.FROZEN_FIELDS,
@@ -108,9 +108,15 @@ def origin_fixture(root):
     inputs = {'originalFailure': origin, 'partialExposure': partial, 'originalCandidateFreeze': old_freeze,
               'originalProtocol': old_protocol, 'diagnostic': diagnostic, 'protectionProjection': protection,
               'rounds': rounds}
+    if projected:
+        inputs['rounds'] = [save(root, f'public/round-{index + 1:02d}-projection.json', {
+            'format': 'ablatrix-source-gap-round-projection-v1', 'rawObservationFileSha256': row['fileSha256'],
+            **{key: row['document'][key] for key in ('round', 'seed', 'selectedCount', 'inventory',
+                'selectedSourceOnlyCases', 'candidateContextsInspected', 'modelOutputsInspected',
+                'generationPerformed', 'newProviderCalls')}}) for index, row in enumerate(rounds)]
     args = argparse.Namespace(candidate_freeze=str(root / 'freeze.json'), prepare_dir=str(root / 'prepared'),
         **{flag: str(root / inputs[key]['path']) for key, flag in m.INPUT_FLAGS.items()},
-        round=[str(root / row['path']) for row in rounds])
+        round=[str(root / row['path']) for row in inputs['rounds']])
     return args, freeze, inputs
 
 
@@ -142,6 +148,50 @@ def preparation(root, groups=None):
 
 
 class PartialSourceGapTests(unittest.TestCase):
+    def test_public_round_projections_preserve_every_case_and_cross_language_contract(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = pathlib.Path(folder).resolve()
+            args, freeze, inputs = origin_fixture(root, projected=True)
+            with patch.object(m, 'ROOT', root), patch.object(m, 'candidate_freeze', return_value=freeze):
+                m.prepare(args)
+                pool = m.artifact(root / 'prepared/pool.json')
+                self.assertEqual(m.verify_pool(pool, freeze), inputs['partialExposure']['document']['cases'])
+                self.assertTrue(all('decisions' not in row['document'] for row in inputs['rounds']))
+                self.assertNotEqual(inputs['rounds'][0]['fileSha256'],
+                                    inputs['diagnostic']['document']['rounds'][0]['observationFileSha256'])
+            consumer = """
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {verifySourceGapPartialPool,sourceCalibrationHash} from './server/source-calibration-comparison.ts';
+const raw=readFileSync(process.argv[1]);
+const pool={path:'synthetic/pool.json',fileSha256:sourceCalibrationHash(raw),document:JSON.parse(raw)};
+assert.equal(verifySourceGapPartialPool(pool,pool.document.candidateFreeze.document.implementationSha256).length,12);
+assert.ok(pool.document.inputArtifacts.rounds.every(r=>!Object.hasOwn(r.document,'decisions')));
+console.log('verified compact Python producer');
+"""
+            checked = subprocess.run(['node', '--import', 'tsx', '--input-type=module', '-e', consumer,
+                str(root / 'prepared/pool.json')], cwd=m.ROOT, check=True, capture_output=True, text=True, timeout=30)
+            self.assertEqual(checked.stdout.strip(), 'verified compact Python producer')
+
+    def test_public_projection_rejects_wrong_case_range_raw_hash_or_decision_disclosure(self):
+        mutations = [
+            lambda row: row.update(rawObservationFileSha256='0' * 64),
+            lambda row: row.update(round=2),
+            lambda row: row['selectedSourceOnlyCases'].reverse(),
+            lambda row: row['selectedSourceOnlyCases'].pop(),
+            lambda row: row['selectedSourceOnlyCases'][0].update(question='SYNTHETIC changed question'),
+            lambda row: row.update(decisions=[]),
+        ]
+        for mutate in mutations:
+            with tempfile.TemporaryDirectory() as folder:
+                root = pathlib.Path(folder).resolve()
+                _, freeze, inputs = origin_fixture(root, projected=True)
+                row = copy.deepcopy(inputs['rounds'][0]['document'])
+                mutate(row)
+                inputs['rounds'][0] = save(root, inputs['rounds'][0]['path'], row)
+                with patch.object(m, 'ROOT', root), self.assertRaises(ValueError):
+                    m.original_cases(inputs, freeze)
+
     def test_producer_preserves_complete_failed_prefix_without_inventory_or_selection_reads(self):
         with tempfile.TemporaryDirectory() as folder:
             root = pathlib.Path(folder).resolve()

@@ -1,0 +1,28 @@
+{
+  "format": "ablatrix-source-gap-partial-selection-protocol-v1",
+  "selectionProtocol": "exposed_partial_source_gap_v1",
+  "selectionSeed": "ablatrix-source-gap-2026-10-18-v1",
+  "poolFileSha256": "00506e7875c4a47705f06ff14302de3648b9d9343b5240fe7225706d5c83b737",
+  "poolSize": 44,
+  "candidateFreezeFileSha256": "1d6292b41f3a14d18d594bb29ddbc752acde25f8424ccfad077ab3bac19a0fcf",
+  "maxima": {
+    "specification_gap": 3,
+    "model_detail_gap": 3,
+    "baseline_complete_control": 2
+  },
+  "minima": {
+    "specification_gap": 1,
+    "model_detail_gap": 1,
+    "baseline_complete_control": 2
+  },
+  "minimumSelectedProducts": 4,
+  "maximumSelectedProducts": 8,
+  "maximumNewAnswerAttempts": 16,
+  "candidateEligibilityUsed": false,
+  "modelOutputsUsed": false,
+  "caseReplacement": false,
+  "finalBaselineRevalidationRequired": true,
+  "sourceExposed": true,
+  "claimScope": "exploratory_source_exposed_pool",
+  "protocolSha256": "eea5208d2f79b80e9376f692a62e013716b445b3c30ed5ff05e7ff303b05e787"
+}

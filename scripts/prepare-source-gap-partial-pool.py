@@ -194,14 +194,26 @@ def original_cases(inputs, freeze):
         row = value['document']
         selected = row['selectedSourceOnlyCases']
         passed = number < len(inputs['rounds'])
-        if (row.get('format') != 'ablatrix-source-gap-failed-round-observation-v1' or
+        projected = row.get('format') == 'ablatrix-source-gap-round-projection-v1'
+        if projected:
+            if set(row) != {'format', 'rawObservationFileSha256', 'round', 'seed', 'selectedCount',
+                    'inventory', 'selectedSourceOnlyCases', 'candidateContextsInspected',
+                    'modelOutputsInspected', 'generationPerformed', 'newProviderCalls'}:
+                raise ValueError('Public round projections retain selected cases and aggregate inventory only.')
+            coverage.require_digest(row['rawObservationFileSha256'])
+            summary_matches = (summary['observationFileSha256'] == row['rawObservationFileSha256'] and
+                all(row[key] == summary[key] for key in ('round', 'seed', 'selectedCount', 'inventory')))
+        elif row.get('format') == 'ablatrix-source-gap-failed-round-observation-v1':
+            summary_matches = (summary['observationFileSha256'] == value['fileSha256'] and
+                pathlib.PurePosixPath(value['path']).name == summary['observationFile'] and
+                all(row.get(key) == expected for key, expected in summary.items()
+                    if key not in {'observationFile', 'observationFileSha256'}))
+        else:
+            raise ValueError('Unknown source-only round representation.')
+        if (not summary_matches or
                 row['round'] != number or row['seed'] != f'{SEED}:round:{number}' or
                 row['selectedCount'] != len(selected) or row['inventory']['passed'] is not passed or
                 (len(selected) != 8 if passed else not 0 <= len(selected) < 8) or
-                summary['observationFileSha256'] != value['fileSha256'] or
-                pathlib.PurePosixPath(value['path']).name != summary['observationFile'] or
-                any(row.get(key) != value for key, value in summary.items()
-                    if key not in {'observationFile', 'observationFileSha256'}) or
                 [case['stratum'] for case in selected] != strata[:len(selected)] or
                 any(row.get(key) is not False for key in
                     ('candidateContextsInspected', 'modelOutputsInspected', 'generationPerformed')) or
