@@ -1,0 +1,21 @@
+{
+  "format": "ablatrix-fresh-validation-pending-stop-v1",
+  "createdAt": "2026-10-19T21:35:29.464459+00:00",
+  "provenance": "offline_guarded_pending_gate_invocation_no_source_pool",
+  "executableCommit": "9da668426581b8412398946ca0d96b33361d140e",
+  "commandMode": "screen",
+  "qualificationStatus": "review_pending",
+  "poolReadCalls": 0,
+  "freshInputReads": 0,
+  "providerCalls": 0,
+  "paidExecutionAuthorized": false,
+  "screeningQualified": false,
+  "stopError": "Fresh selection stopped: exact protocol/code/history review is pending; fresh packet not read.",
+  "artifactSha256": {
+    "docs/evidence/retrieval-validation-prospective-2026-10-19/protocol-v1.json": "54dc6122fc641448c9e190ca5dac21ee7a33ad79be2fc1d2e7b1202579d0b062",
+    "docs/evidence/retrieval-validation-prospective-2026-10-19/candidate-freeze-v1.json": "37f4bdf7af6947704b913bf19df10bf727277afcc9ccbded4130fd73470cb752",
+    "docs/evidence/retrieval-validation-prospective-2026-10-19/history-inventory-v1.json": "d2d4bb28fce604e2a979691a84125a00c00f6f56dc4ad9857f21a9a25bf84858",
+    "docs/evidence/retrieval-validation-prospective-2026-10-19/qualification-pending-v1.json": "cb0ced50a7fa14ec21c4d881583167bd07499ef919cb77506bad3c782dc11b1d"
+  },
+  "limitation": "Uses an unread sentinel path, not a fresh pool. Static gate ordering and unit tests additionally verify qualification precedes pool path access."
+}

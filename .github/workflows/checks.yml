@@ -70,6 +70,7 @@ jobs:
       - name: Prospective validation source and review gates (synthetic fixtures only)
         run: |
           python3 -m unittest discover -s scripts -p 'test_prepare_fresh_validation_v1.py'
+          npm run validation:prospective -- verify --freeze-dir docs/evidence/retrieval-validation-prospective-2026-10-19
           npm run validation:mock
           npm run validation:contexts
           npm run validation:prepare
