@@ -20,6 +20,8 @@ The fixed replay retains all twelve older products and all sixteen now-exposed A
 
 All 28 full v6 prefixes remain exact. Fourteen APQA packets fit completion; nine contexts change, appending thirteen parents and 840 body UTF-16 units in total. The other two APQA cases and all twelve older cases retain exact v6 passages. The unchanged strict source matcher counts the redundant size bullet described above. These are source-delivery counts, not answer accuracy, and not a résumé percentage for fresh answer improvement.
 
+Five older uncertain cases have no complete designated-fact label and remain in the deck. The 37-unit denominator does not label their whole answers or turn them into successful cases.
+
 The [aggregate result](results/bounded-source-completion-v7-2026-10-20/development-report-v2.json) and [development freeze](results/bounded-source-completion-v7-2026-10-20/development-freeze-v2.json) bind the exact implementation and input artifacts. Version 2 retains every older source-review assessment, including uncertain-case notes, alongside all APQA unknowns and applicability qualifications; contexts and counts are unchanged from the preserved first replay. Full source-aware rows stay private. Source-checked human answers, generated answers and new paid provider calls are zero; quality and activation flags are false.
 
 ```sh
@@ -29,9 +31,9 @@ node --import tsx scripts/retrieval-development-v7.ts --verify PRIVATE_FREEZE PR
 node --import tsx --test server/semantic-supplement-v7.test.ts
 ```
 
-## Next untouched-product protocol
+## Frozen fresh-product protocol
 
-The next version fixes v6 versus v7 before source access. It protects both consumed 16 MiB frames, maps every complete previously consumed row into exclusion history, and resolves the next transport-boundary row for exclusion only. The next 32–48 MiB interval of the same immutable official object is the sole acquisition; no source, range expansion, replacement or reseeding follows an outcome.
+The new version fixed v6 versus v7 before source access. It protected both consumed 16 MiB frames, mapped every complete previously consumed row into exclusion history, and resolved the next transport-boundary row for exclusion only. The fixed 32–48 MiB interval of the same immutable official object was the sole acquisition; no source, range expansion, replacement or reseeding followed an outcome.
 
 The fixed screen inspects at most 4,096 complete question records, seeks the first 32 mechanically eligible product-disjoint packets, and selects the first sixteen source-eligible unique products after two independent automatic source reviews and third adjudication. All designated facts and retained unknowns precede contexts. Customer reports, source conflicts, complete controls, candidate misses and packets where v7 cannot complete remain eligible under the same source rules; selection never filters on v7 applicability or gain. A short pool stops without replacement. Retrieval alone cannot authorize paid answers or establish generated-answer improvement.
 
@@ -43,4 +45,28 @@ The versioned implementation has three separate entry points:
 
 All three CLIs are offline except the separately reviewed acquisition command. No provider execution mode is exposed by the v4 validation CLI. Existing v1/v2/v3 source, runtime and report files remain byte-identical.
 
-The actual consumed-frame mapping covers **9,151 complete rows**, including 5,055 beyond the original screen, and unions 8,481 protected products. The remaining 1,748-byte trailing fragment is explicitly unresolved until reviewed adjacent-row exclusion. This mapping creates history only, with zero fresh cases. Local verification passes 824 server tests with one platform skip, all eighteen focused selector/history/validation tests, 33 acquisition/history Python tests, strict script TypeScript and the production build. The next frame has not been decoded into fresh cases at this checkpoint.
+The actual consumed-frame mapping covers **9,151 complete rows**, including 5,055 beyond the original screen, and unions 8,481 protected products. Reviewed boundary exclusion joined the old 1,748-byte fragment with 1,231 leading bytes, reconstructing one old row and zero new complete rows. One anonymous GET sealed exactly 16 MiB. Three source-access reviews bound the resolved history and exact implementation before the fixed fresh screen.
+
+## Fresh result: no v7 gain
+
+The actual screen inspected **4,096 records across 734 products**, producing the fixed 32-packet pool with 226 parents. Two independent source reviews and adjudication left 18 eligible packets, 13 source-review rejects and one uncertain packet. The first sixteen eligible products were selected in source order; the later heater and watch remained unselected. The indoor/outdoor placement disagreement stays uncertain, the hair-snag target paraphrase is excluded, and the unsupported, overlapping price-comparison packet is excluded. Every mechanical exclusion and independent unknown remains recorded.
+
+A source-only unit audit removed duplicate or peripheral designations before either context or model score was available. The preliminary same-product 55-unit selection and original reviews are preserved privately; the final selection freezes **47 distinct attributed source units**. All sixteen selected cases retain unknowns. Different released customer response slots do not establish independent authors or verified real-world tests.
+
+| Fresh measure | v6 | v7 |
+|---|---:|---:|
+| Predesignated source units delivered | 38/47 | 38/47 |
+| Cases delivering every designated unit | 12/16 | 12/16 |
+| Recovered / lost units | — | 0 / 0 |
+
+Actual cached BGE/MiniLM inference used the pinned local assets with network dispatch disabled. V7 preserved every full v6 prefix. Eight packets were already complete; four more fit completion, adding five parents and 600 body UTF-16 units across four cases already delivering every designated unit in v6. The four oversized packets retained exact v6, including all nine missed units. Thus twelve cases have exact v6 passages: eight already complete and four oversized fallbacks. None was removed from the result.
+
+This experiment shows **no fresh designated-source delivery gain**. It does not measure answer accuracy: the 32 answer slots are unexecuted design counts, generated answers and new provider calls are zero, human source-checked answers remain zero, and quality/activation flags remain false. The no-benefit stop leaves the paid plan null. V7 stays experimental; the old development recovery and the original v5/v6 negative result remain separate.
+
+The [fresh aggregate report](results/bounded-source-completion-v7-2026-10-20/fresh-report-v1.json), [prospective freeze](results/bounded-source-completion-v7-2026-10-20/fresh-freeze-v1.json) and [replay provenance](results/bounded-source-completion-v7-2026-10-20/fresh-provenance-v1.json) bind the exact private artifacts. The entire third frame, its rejected rows and unparsed tail are now consumed and cannot be reused as fresh validation.
+
+```sh
+node --import tsx scripts/amazon-pqa-validation-v4.ts --verify --input PRIVATE_FINAL_INPUT
+```
+
+Implementation verification passes 824 server tests with one platform skip, eighteen focused selector/history/validation tests, 33 acquisition/history Python tests, strict script TypeScript and the production build. The frozen implementation commit is `3a455ffccba424ade5af5a7722fa8e94d7ccb70e`; its exact CI passed. All 74 code pins, nine cached assets, 68 older runtime pins and 269 protected historical files remain unchanged.

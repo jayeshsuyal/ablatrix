@@ -1,8 +1,10 @@
 # Current results
 
-Latest retrieval development check: additive v5 delivers **12/13 designated source units versus baseline 10/13**, retaining baseline context in all twelve exposed cases. Only the torch case gains designated units; no new answers or answer-quality gain are measured. The earlier fresh v2 failure is preserved, and those twelve products are now development data. [Parent review, full denominator and replay](retrieval-diagnosis-parent-review-2026-10-19.md).
+Latest fresh retrieval check: **v6 and v7 both deliver 38/47 designated source units** on sixteen new product-disjoint packets, with zero recovered or lost units. The fixed source screen inspected 4,096 records across 734 products; all sixteen selected cases retain unknowns. The no-benefit stop leaves paid execution unqualified. [Frozen protocol, complete denominators and limitations](bounded-source-completion-v7.md).
 
-Updated October 19, 2026. This index distinguishes implementation checks, scripted demonstrations and recorded live observations. The full chronology remains in the [build and evidence ledger](build-plan.md).
+The separate exposed-development replay changes APQA source delivery from 20/24 to 24/24 and retains 13/13 older units across all 28 cases. One recovered unit repeats information already delivered elsewhere. This development recovery did not carry to the fresh cohort; neither result measures generated-answer accuracy. The original v5/v6 fresh APQA result remains 20/24 in both arms. [Original result](amazon-pqa-validation.md).
+
+Updated October 20, 2026. This index distinguishes implementation checks, scripted demonstrations and recorded live observations. The full chronology remains in the [build and evidence ledger](build-plan.md).
 
 ## Current release status
 
@@ -12,11 +14,11 @@ The current work adds a versioned flat-source generation contract and a v4 grade
 
 An [experimental source-calibrated first-answer contract](answer-quality-sprint-2026-10-18.md) targets interpretation defects found in saved answers. Its instructions were frozen before separate question selection; the approved 16-call comparison is complete. The ordinary workspace default is unchanged. Two independent blind AI reviews agree on one substantive candidate preference and six ties, with one disputed benefit. This is limited exploratory evidence, not human-reviewed or general correctness gain. [Full outputs, review disagreements and reproduction](evidence/answer-quality-source-calibration-2026-10-18/RESULTS.md).
 
-## Latest first-answer comparison
+## October 18 first-answer comparison
 
 Eight separate products received one baseline and one source-calibrated answer with the same model, retrieval and source context. All 16 calls completed; 39/39 citation occurrences matched offered source bodies. Both AI reviewers preferred the candidate's wording on six of eight; wording and citation membership are separate from substantive correctness. Useful structured facts remained outside retrieval, and AI source references themselves needed explicit corrections.
 
-The shared ledger now records **138 attempts**, zero pending/owners, and **$13.80 reserved + $0.200281 prior adjustment = $14.000281** combined planning usage. The experiment added exactly $1.60 local planning allowance. Actual charges are unavailable. Saved human source-checked judgments remain **0/16** for this comparison, and no default or policy was activated. [Inspectable live comparison](evidence/answer-quality-source-calibration-2026-10-18/RESULTS.md).
+At completion of that comparison, the shared ledger recorded **138 attempts**, zero pending/owners, and **$13.80 reserved + $0.200281 prior adjustment = $14.000281** combined planning usage. The experiment added exactly $1.60 local planning allowance. Actual charges are unavailable. Saved human source-checked judgments remain **0/16** for this comparison, and no default or policy was activated. [Inspectable live comparison](evidence/answer-quality-source-calibration-2026-10-18/RESULTS.md).
 
 ## Latest recorded live qualification
 
