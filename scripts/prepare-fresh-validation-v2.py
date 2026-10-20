@@ -95,7 +95,9 @@ def exposure_projection(plan, checkpoint, evaluation_report, rows, summary):
             'ledgerAtProjection': summary,
             'caseIds': [case['id'] for case in cases], 'productIds': sorted(case['product']['id'] for case in cases),
             'canonicalFamilyTitles': sorted(v1.family(case['product']['title']) for case in cases),
-            'sourcePacketFingerprints': sorted({v1.scoped_fingerprint(source) for case in cases for source in case['completeSources']}),
+            'modelIdentifiers': sorted({model for case in cases for model in v1.models(case['product']['title']+' '+case['question']+' '+' '.join(source['text']+' '+(source.get('originalQuestion') or '') for source in case['completeSources']))}),
+            'sourcePacketFingerprints': sorted({fingerprint for case in cases for source in case['completeSources'] for fingerprint in (v1.packet.fingerprint(source),v1.scoped_fingerprint(source))}),
+            'sourceFingerprintForms': ['body_v1','body_and_original_question_v1'],
             'sourcePoolSha256': sorted(sha(compact(case['completeSources'])) for case in cases),
             'humanSourceCheckedOldAnswers': report['humanSourceCheckedActualAnswers'], 'unresolvedHumanAxes': unresolved,
             'humanGatePassed': not unresolved, 'newV6DevelopmentQualified': False,
@@ -117,7 +119,7 @@ def protected_inventory(root, projection):
     document = {**base, 'format': 'ablatrix-v6-protected-history-inventory-v2',
                 'oldLiveProjectionFileSha256': projection['fileSha256']}
     prior = projection['document']
-    for key in ('productIds', 'canonicalFamilyTitles', 'sourcePacketFingerprints'):
+    for key in ('productIds', 'canonicalFamilyTitles', 'modelIdentifiers', 'sourcePacketFingerprints'):
         document[key] = sorted(set(document[key]) | set(prior[key]))
     document.pop('inventorySha256', None)
     document['inventorySha256'] = seal(document)
@@ -138,6 +140,8 @@ def contract_artifacts(root, candidate_path, policy_path, projection_path, devel
             'The old3 exposure projection cannot become v6 evidence.')
     require(old.get('actualAnswersPublished') is False and old.get('privateArmMappingPublished') is False and old.get('paidPlan') is None,
             'Only source-free old-study metadata may enter the public freeze.')
+    require(isinstance(old.get('modelIdentifiers'),list) and all(isinstance(m,str) and m for m in old['modelIdentifiers']) and old.get('sourceFingerprintForms')==['body_v1','body_and_original_question_v1'],
+            'Old private exposure must retain model identifiers and both body-only/original-question-scoped fingerprints.')
     body = dict(old); digest = body.pop('projectionSha256', None)
     require(digest == seal(body), 'Old exposure projection seal mismatch.')
     design = development['document']

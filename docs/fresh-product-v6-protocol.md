@@ -12,7 +12,7 @@ The proposed new development design is two predeclared exposed cases (`source-co
 
 The next prospective candidate is `workspace-semantic-supplement-v6-quantified-peer-dev`. Its descriptor comes from the exact new candidate freeze, including its same-unit/exact-original-question peer conditions, model/scoring inputs and bounds. The shared new generic policy comes from a separately frozen `workspace-answer-uncertainty-v2` artifact. All three **fresh** arms use the same new prompt/policy; only their source contexts and derived identities differ. A fresh retrieval comparison therefore cannot attribute a gain to the policy independently. Its arm named `current` is the explicitly frozen **v5 experimental control**, not a claim that v5 is the active application retriever. V6 must improve over that v5 context; old v5-versus-index gains are not counted again. The original five-chunk index context is saved separately for diagnosis.
 
-Do not widen a v1 freeze in place. The new producer binds raw candidate, policy, old-live source-free exposure projection and development-protocol artifacts; the full historical inventory; and the complete code/import closure. The old prospective protocol directory is historical input for this new version. The new history union includes all public old cohorts, drafts, failures and both old live/exposed products and scoped source hashes. It never needs to publish the actual old answers, private mappings or reviewer prose.
+Do not widen a v1 freeze in place. The new producer binds raw candidate, policy, old-live source-free exposure projection and development-protocol artifacts; the full historical inventory; and the complete code/import closure. The old prospective protocol directory is historical input for this new version. The new history union includes all public old cohorts, drafts, failures and old live/exposed product/family/model identifiers plus both body-only and original-question-scoped source hashes. It derives these sets from bound records instead of adding cohort counts. The new projection and freeze remain private under `.data`; actual old answers, private mappings and reviewer prose are not published.
 
 ## Local finite-pool custodian
 
@@ -37,21 +37,21 @@ Insufficient candidates stop the fixed study. Do not enlarge the prefix, reseed 
 
 ## Pending concrete sequence
 
-All output filenames are new and exclusive. No passed source-access/pool qualification or fresh financial proposal currently exists.
+All output filenames are new and exclusive. Run these commands from the canonical report/uncertainty worktree root, with its existing private `.data` directory. No passed source-access/pool qualification or fresh financial proposal currently exists. The immediately available step is capture/freeze/verify; stop there before the custodian or screening commands until the independently reviewed new-development/human and source-access records actually exist.
 
 1. Capture only the old live exposure projection, after selecting its exact private plan, complete checkpoint journal and combined report. The output contains product/case IDs, normalized scoped source hashes, receipt/plan/report hashes, aggregate ledger state and unresolved-axis metadata. It contains no actual answer text, review prose or private mapping.
 
    ```sh
-   python3 scripts/prepare-fresh-validation-v2.py capture-exposure --plan /ABS/OLD-PRIVATE-PLAN.json --checkpoint /ABS/OLD-EXECUTION/checkpoint.jsonl --evaluation-report /ABS/OLD-COMBINED-REPORT.json --out /ABS/NEW-SOURCE-FREE-PROJECTION.json
+   python3 scripts/prepare-fresh-validation-v2.py capture-exposure --plan /Users/jayeshsuyal/Documents/ChatGPT/Ablatrix/product-qa-flow/.data/three-context-v5-reviewed-plan-2026-10-19-v7.json --checkpoint /Users/jayeshsuyal/Documents/ChatGPT/Ablatrix/product-qa-flow/.data/three-context-v5-reviewed-4e349ef53eea4c65-execution/checkpoint.jsonl --evaluation-report /Users/jayeshsuyal/Documents/ChatGPT/Ablatrix/product-qa-flow/.data/three-context-v5-live-combined-evaluation-2026-10-19-v1.json --out "$PWD/.data/old3-source-exposure-v3.json"
    ```
 
-   Review this projection before publishing it as an immutable source-free provenance artifact. The command validates old receipts against the canonical ledger. Old3 are marked `newV6DevelopmentQualified:false`.
+   Review this exact private projection before freezing it. Preserve the earlier v2 projection. The command validates old receipts against the canonical ledger. Old3 are marked `newV6DevelopmentQualified:false`.
 
 2. Once implementation and all new descriptor artifacts are final, create a new prospective freeze:
 
    ```sh
-   python3 scripts/prepare-fresh-validation-v2.py freeze --candidate docs/evidence/report-uncertainty-v6-2026-10-19/candidate-freeze-v1.json --policy docs/evidence/report-uncertainty-v6-2026-10-19/uncertainty-policy-freeze-v1.json --exposure-projection PUBLIC-SOURCE-FREE-PROJECTION.json --development-protocol NEW-DEVELOPMENT-PROTOCOL.json --out-dir /ABS/NEW-VERSIONED-FREEZE
-   python3 scripts/prepare-fresh-validation-v2.py verify --freeze-dir NEW-VERSIONED-FREEZE
+   python3 scripts/prepare-fresh-validation-v2.py freeze --candidate docs/evidence/report-uncertainty-v6-2026-10-19/candidate-freeze-v1.json --policy docs/evidence/report-uncertainty-v6-2026-10-19/uncertainty-policy-freeze-v1.json --exposure-projection .data/old3-source-exposure-v3.json --development-protocol docs/evidence/report-uncertainty-v6-2026-10-19/development-protocol-v1.json --out-dir "$PWD/.data/fresh-v6-prospective-freeze-v1"
+   python3 scripts/prepare-fresh-validation-v2.py verify --freeze-dir .data/fresh-v6-prospective-freeze-v1
    ```
 
    The new development artifact uses `ablatrix-report-calibration-development-protocol-v1` with its exact predeclared design. A pending prospective freeze may be prepared before the development run, but any subsequently added public history/code artifact invalidates its exact manifest: preserve it and create a new reviewed version before fresh access, rather than rewriting it. Candidate and policy artifacts bind the actual runtime/import bytes. The freeze writes a **pending** qualification with `paidPlan:null`; it reads no fresh source.
@@ -61,7 +61,7 @@ All output filenames are new and exclusive. No passed source-access/pool qualifi
 4. An independent source-access record can then enable the custodian only:
 
    ```sh
-   python3 scripts/prepare-fresh-validation-v2.py custodian --freeze-dir NEW-VERSIONED-FREEZE --source-access REVIEWED-SOURCE-ACCESS.json --train /Users/jayeshsuyal/Documents/ChatGPT/Ablatrix/repo/work/epqa/train.csv --out-dir /ABS/NEW-PRIVATE-CUSTODIAN-DIRECTORY
+   python3 scripts/prepare-fresh-validation-v2.py custodian --freeze-dir .data/fresh-v6-prospective-freeze-v1 --source-access .data/REVIEWED-SOURCE-ACCESS.json --train /Users/jayeshsuyal/Documents/ChatGPT/Ablatrix/repo/work/epqa/train.csv --out-dir "$PWD/.data/fresh-v6-custodian-v1"
    ```
 
    Source-access qualification binds exact frozen code/history and the new development/human proof. It grants no provider calls and has `paidPlan:null`.
@@ -69,10 +69,23 @@ All output filenames are new and exclusive. No passed source-access/pool qualifi
 5. Review the single resulting pool's exact raw SHA and the custodian provenance. A separate pool qualification retains the exact source-access record and finite pool commitment. Only then run:
 
    ```sh
-   python3 scripts/prepare-fresh-validation-v2.py screen --freeze-dir NEW-VERSIONED-FREEZE --qualification REVIEWED-POOL-QUALIFICATION.json --pool PRIVATE-CUSTODIAN/pool-v2.json --out /ABS/NEW-SCREENING.json
+   python3 scripts/prepare-fresh-validation-v2.py screen --freeze-dir .data/fresh-v6-prospective-freeze-v1 --qualification .data/REVIEWED-POOL-QUALIFICATION.json --pool .data/fresh-v6-custodian-v1/pool-v2.json --out "$PWD/.data/fresh-v6-screening-v1.json"
    ```
 
-   Every screened row remains visible. Subsequent baseline-only preparation computes both the original index context and frozen v5 control for all 24 packets, using cached local scoring. Independent full-source/v5-baseline/applicability/reference review, fixed eight-case selection and unchanged v6 scoring use the new TS version owned by the coordinating build. Gap/control/conflict/insufficient-evidence eligibility is assessed against the saved v5 control and must precede v6 selections; candidate misses never remove cases. Only exact query/document-bound saved v5 logits may be replayed for v6 after selection, without additional model inference. The existing minima remain one independently designated supported gap, two complete controls, one conflicting-report case and one insufficient-evidence case, with overlapping tags allowed. No mandatory model-gap quota is added.
+   Every screened row remains visible. Subsequent baseline-only preparation computes both the original index context and frozen v5 control for all 24 packets, using cached local scoring:
+
+   ```sh
+   node --import tsx scripts/fresh-validation-contexts-v2.ts --baseline --freeze-dir .data/fresh-v6-prospective-freeze-v1 --qualification .data/REVIEWED-POOL-QUALIFICATION.json --pool .data/fresh-v6-custodian-v1/pool-v2.json --screening .data/fresh-v6-screening-v1.json --out "$PWD/.data/fresh-v6-baseline-v1.json"
+   ```
+
+   An independent full-source/v5-baseline/applicability/reference review of all 24 rows must create `.data/REVIEWED-SOURCE-REVIEW.json` with format `ablatrix-fresh-validation-source-review-v2`. Then the deterministic selector fixes eight case IDs before v6 is computed:
+
+   ```sh
+   python3 scripts/prepare-fresh-validation-v2.py select --freeze-dir .data/fresh-v6-prospective-freeze-v1 --qualification .data/REVIEWED-POOL-QUALIFICATION.json --pool .data/fresh-v6-custodian-v1/pool-v2.json --screening .data/fresh-v6-screening-v1.json --baseline .data/fresh-v6-baseline-v1.json --review .data/REVIEWED-SOURCE-REVIEW.json --out "$PWD/.data/fresh-v6-selection-v1.json"
+   node --import tsx scripts/fresh-validation-contexts-v2.ts --contexts --freeze-dir .data/fresh-v6-prospective-freeze-v1 --qualification .data/REVIEWED-POOL-QUALIFICATION.json --pool .data/fresh-v6-custodian-v1/pool-v2.json --screening .data/fresh-v6-screening-v1.json --baseline .data/fresh-v6-baseline-v1.json --review .data/REVIEWED-SOURCE-REVIEW.json --selection .data/fresh-v6-selection-v1.json --out "$PWD/.data/fresh-v6-contexts-v1.json"
+   ```
+
+   Gap/control/conflict/insufficient-evidence eligibility is assessed against the saved v5 control and must precede v6 selections; candidate misses never remove cases. Only exact query/document-bound saved v5 logits may be replayed for v6 after selection, without additional model inference. The existing minima remain one independently designated supported gap, two complete controls, one conflicting-report case and one insufficient-evidence case, with overlapping tags allowed. No mandatory model-gap quota is added. Save exact recovered and lost designated fact units; any loss of a v5-delivered designated fact stops the source-benefit gate, with the full regression record retained.
 
 6. Replay and independently review exact fresh context outputs and all code/source bindings. Prepare a distinct new request manifest using the identical new prompt/model/answer budget/citation contract across current/v6/reference. No source benefit or failed gate means no paid plan. Refresh the canonical ledger only after source/code/outcome review, enumerate every exact provider request and present a **separate fresh financial scope** for approval. No previous approval is reusable.
 

@@ -44,6 +44,7 @@ test('v2 freezes all24 v5 control contexts before source-only eight-case selecti
   assert.equal(f.contexts.results.length, 8); assert.equal(f.contexts.sharedGenerationContract, 'workspace-answer-uncertainty-v2');
   assert.ok(f.contexts.cases.every(c => c.generationContract === f.contexts.sharedGenerationContract));
   assert.equal(f.contexts.sourceBenefit, false, 'Identical v5/v6 fixture must not credit historical v5 gains to v6.');
+  assert.deepEqual(f.contexts.sourceRegressions, []); assert.ok(f.contexts.results.every(r => r.lostBaselineUnits === 0 && r.baselineDeliveredUnits === r.candidateDeliveredUnits && r.baselineDeliveredFacts.length === r.baselineDeliveredUnits));
   assert.equal(f.contexts.stopReason, 'no_designated_missing_fact_delivered_by_semantic_context');
   await verifyFreshValidationBaseline(f.screening, f.baseline);
   await replayFreshValidationContexts(f.screening, f.baseline, f.review, f.selection, f.contexts, { baselineFileSha256: f.selection.baselineSha256, sourceReviewFileSha256: f.selection.sourceReviewSha256 });
@@ -61,4 +62,6 @@ test('v2 replay retains all selected misses and rejects source delivery or scope
   await assert.rejects(replayFreshValidationContexts(f.screening, f.baseline, f.review, f.selection, changed, { baselineFileSha256: f.selection.baselineSha256, sourceReviewFileSha256: f.selection.sourceReviewSha256 }));
   const selection = structuredClone(f.selection); selection.selectedCaseIds[0] = selection.selectedCaseIds[1]!;
   await assert.rejects(freshValidationContexts(f.screening, f.baseline, f.review, selection, { baselineFileSha256: selection.baselineSha256, sourceReviewFileSha256: selection.sourceReviewSha256 }));
+  const review = { ...f.review, screeningSha256: 'changed' };
+  await assert.rejects(freshValidationContexts(f.screening, f.baseline, review, f.selection, { baselineFileSha256: f.selection.baselineSha256, sourceReviewFileSha256: f.selection.sourceReviewSha256 }));
 });

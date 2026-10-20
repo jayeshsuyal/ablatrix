@@ -5,10 +5,11 @@ import { dirname, relative, resolve } from 'node:path';
 import { textHash } from './product-corpus.ts';
 import { reportDevelopmentFile } from './report-uncertainty-development.ts';
 import { buildReportCalibrationPreparation, reportCalibrationEvaluationMetadata, type ReportCalibrationPreparation } from '../scripts/prepare-report-calibration-v1.ts';
-import { DIAGNOSTIC_LEDGER, diagnosticHash, prepareThreeContext, type DiagnosticCheckpoint } from './three-context-diagnostic.ts';
+import { DIAGNOSTIC_LEDGER, diagnosticHash, prepareThreeContext, verifyDiagnosticCheckpoint, type DiagnosticCheckpoint } from './three-context-diagnostic.ts';
 import { checkThreeContextLiveFiles, verifyThreeContextLiveCheckpoints, type ThreeContextLiveManifest } from './three-context-live.ts';
 import { prepareThreeContextEvaluation, importThreeContextReview, reportThreeContextEvaluation, type ImportedThreeContextReview } from './three-context-evaluation.ts';
 import { readLedgerAnchor, readSourceCalibrationLedgerState } from './source-calibration-comparison.ts';
+import { normalizeReportCalibrationEvaluation, reportCalibrationNeutralComparisonPairs, verifyReportCalibrationComparisons } from './report-calibration-outcome.ts';
 
 type Json = Record<string, any>;
 export const REPORT_CODE_CHECKS = ['exact_source_and_question_scope', 'all12_replayed_and_two_product_denominator', 'instruction_and_context_factorial_parity', 'private_case_and_arm_identity', 'approval_before_credentials', 'durable_reservation_and_no_retry', 'receipt_unknown_and_failure_accounting', 'no_default_activation'] as const;
@@ -63,6 +64,27 @@ export async function reportCalibrationFinancialProposal(manifest: ThreeContextL
     limitation: 'Exact proposed24 local answer attempts, not a quality claim or approval. Both products were previously exposed. Exact fresh financial approval is required before dispatch.' };
 }
 
+/** The generic live result/review remain private. Export this normalized packet
+ * for reviewers so the public factorial execution order reveals no condition. */
+export async function reportCalibrationEvaluation(root: string, planPath: string, checkpointPath: string, resultPath: string, reviewPath: string, mappingPath: string) {
+  const manifest = read(root, planPath).document as ThreeContextLiveManifest;
+  checkThreeContextLiveFiles(manifest, resolve(root, planPath)); const p = await verifyQualifiedReportCalibration(manifest.preparation as QualifiedReportCalibration);
+  const raw = readFileSync(reportDevelopmentFile(root, checkpointPath), 'utf8'); assert.ok(raw.endsWith('\n'));
+  const checkpoints = raw.trimEnd().split('\n').map(line => JSON.parse(line) as DiagnosticCheckpoint), result = read(root, resultPath).document;
+  const packet = normalizeReportCalibrationEvaluation(prepareThreeContextEvaluation(manifest, checkpoints, result, read(root, reviewPath).document));
+  const mapping = read(root, mappingPath).document, observed = verifyDiagnosticCheckpoint(manifest.diagnostic, checkpoints.at(-1)!);
+  assert.ok(Array.isArray(mapping));
+  for (const row of mapping) {
+    const index = manifest.diagnostic.document.slots.findIndex(slot => slot.input.runId === row.operationRunId); assert.ok(index >= 0);
+    const answer = packet.answers.find(a => a.label === row.label); assert.ok(answer);
+    assert.equal(row.attemptId, checkpoints.at(-1)!.steps[index]!.attemptId); assert.equal(row.caseId, answer.caseId);
+    assert.equal(answer.status, observed.outputs[index]!.status); assert.deepEqual(answer.output, observed.outputs[index]!.output?.answer ?? null);
+  }
+  const pairs = packet.answers.every(a => a.status === 'completed') ? reportCalibrationNeutralComparisonPairs(p, packet, mapping)
+    : { format: 'ablatrix-report-calibration-neutral-pairs-v1', packetSha256: packet.sha256, withinInstancePairs: [], crossInstructionPairs: [], stopReason: 'incomplete_run_all24_outcomes_retained_in_packet', qualityClaimEligible: false };
+  return { packet, pairs };
+}
+
 /** This gate is intentionally unavailable until the real new24 and their
  * independent source reviews exist. JSON booleans never substitute for replay. */
 export async function verifyReportCalibrationOutcome(root: string, outcomePath: string) {
@@ -89,7 +111,7 @@ export async function verifyReportCalibrationOutcome(root: string, outcomePath: 
     for (const key of ['id', 'kind', 'status', 'error_code', 'receipt_json', 'model', 'input_tokens', 'output_tokens'] as const) assert.deepEqual(row[key], step.receipt[key]);
   }
   const review = bound(outcome.anonymousReviewPath, outcome.anonymousReviewFileSha256);
-  const packet = prepareThreeContextEvaluation(manifest, checkpoints, result, review);
+  const packet = normalizeReportCalibrationEvaluation(prepareThreeContextEvaluation(manifest, checkpoints, result, review));
   assert.deepEqual(bound(outcome.packetPath, outcome.packetFileSha256), packet);
   assert.ok(Array.isArray(outcome.reviewImports) && outcome.reviewImports.length >= 2);
   const imports = outcome.reviewImports.map((a: Json) => { const actual = bound(a.path, a.fileSha256) as ImportedThreeContextReview; assert.deepEqual(importThreeContextReview(packet, actual.review), actual); return actual; }) as ImportedThreeContextReview[];
@@ -97,6 +119,18 @@ export async function verifyReportCalibrationOutcome(root: string, outcomePath: 
   assert.ok(ai.length >= 2 && new Set(ai.map(r => r.review.reviewer)).size === ai.length);
   for (const r of ai) assert.deepEqual(r.review.entries.map(e => e.label).sort(), packet.answers.map(a => a.label).sort(), 'Two independent reviewers must judge all24, retaining every unknown, miss, unsupported claim and negative result.');
   const combined = reportThreeContextEvaluation(packet, imports); assert.deepEqual(bound(outcome.combinedEvaluationPath, outcome.combinedEvaluationFileSha256), combined);
+  const mapping = bound(outcome.armMappingPath, outcome.armMappingFileSha256);
+  assert.ok(Array.isArray(mapping)); const observed = verifyDiagnosticCheckpoint(manifest.diagnostic, last);
+  for (const row of mapping) {
+    const index = manifest.diagnostic.document.slots.findIndex(slot => slot.input.runId === row.operationRunId); assert.ok(index >= 0);
+    const slot = manifest.diagnostic.document.slots[index]!, answer = packet.answers.find(a => a.label === row.label); assert.ok(answer);
+    assert.equal(row.attemptId, last.steps[index]!.attemptId); assert.equal(row.caseId, slot.caseId); assert.equal(row.arm, slot.arm);
+    assert.equal(answer.caseId, slot.caseId); assert.equal(answer.status, observed.outputs[index]!.status);
+    assert.deepEqual(answer.output, observed.outputs[index]!.output?.answer ?? null, 'Private mapping must bind each neutral answer label to its actual replayed receipt output, not merely a multiset.');
+  }
+  assert.ok(Array.isArray(outcome.crossInstructionReviewArtifacts));
+  const crossReviews = outcome.crossInstructionReviewArtifacts.map((a: Json) => bound(a.path, a.fileSha256));
+  const comparisonProof = verifyReportCalibrationComparisons(p, packet, imports, mapping, crossReviews);
   const disagreementReport = reportThreeContextEvaluation(packet, ai);
   const humans = imports.filter(r => r.review.provenance === 'source_checked_human');
   assert.ok(Array.isArray(outcome.humanResolutionArtifacts));
@@ -108,11 +142,16 @@ export async function verifyReportCalibrationOutcome(root: string, outcomePath: 
   const independent = bound(outcome.independentOutcomeReviewPath, outcome.independentOutcomeReviewFileSha256);
   assert.equal(independent.format, 'ablatrix-report-calibration-independent-outcome-review-v1'); assert.equal(independent.provenance, 'independent_source_code_review'); assert.equal(independent.reviewer, outcome.independentReviewer);
   assert.equal(independent.packetSha256, packet.sha256); assert.equal(independent.combinedEvaluationFileSha256, outcome.combinedEvaluationFileSha256); assert.equal(independent.rationale, outcome.independentRationale);
+  assert.equal(independent.comparisonProofSha256, diagnosticHash(comparisonProof), 'Independent outcome attestation must cover the exact matched instruction verdicts and substantive comparison proof.');
+  assert.deepEqual(independent.crossInstructionReviewArtifacts, outcome.crossInstructionReviewArtifacts);
   assert.equal(independent.noUnresolvedMaterialRegression, true); assert.equal(independent.outcome, outcome.status); assert.equal(independent.qualityClaimEligible, false);
   for (const key of ['candidateFreezeFileSha256', 'policyFreezeFileSha256', 'developmentProtocolFileSha256']) assert.match(outcome[key], /^[a-f0-9]{64}$/);
   const frozen = read(root, 'docs/evidence/report-uncertainty-v6-2026-10-19/candidate-freeze-v1.json'); assert.equal(outcome.candidateFreezeFileSha256, frozen.sha256);
   assert.equal(outcome.policyFreezeFileSha256, read(root, frozen.document.policyPath).sha256);
   assert.equal(outcome.developmentProtocolFileSha256, read(root, 'docs/evidence/report-uncertainty-v6-2026-10-19/development-protocol-v1.json').sha256);
   assert.equal(outcome.verifiedActualCompletedAttempts, 24); assert.equal(outcome.sourceAwareReviewsComplete, true); assert.equal(outcome.newHumanDisagreementsResolved, true); assert.deepEqual(outcome.unresolvedApplicableHumanAxes, []);
-  return { format: 'ablatrix-report-calibration-development-outcome-proof-v1', outcomeFileSha256: saved.sha256, planSha256: manifest.sha256, packetSha256: packet.sha256, verifiedActualCompletedAttempts: 24, sourceAwareReviewsComplete: true, newHumanDisagreementsResolved: true, actualProducts: 2, freshProducts: 0, humanSourceCheckedActualAnswers: combined.humanSourceCheckedActualAnswers, qualityClaimEligible: false, newProviderCalls: 0 };
+  return { format: 'ablatrix-report-calibration-development-outcome-proof-v1', outcomeFileSha256: saved.sha256, planSha256: manifest.sha256, packetSha256: packet.sha256, verifiedActualCompletedAttempts: 24, sourceAwareReviewsComplete: true, newHumanDisagreementsResolved: true,
+    comparisonProofSha256: diagnosticHash(comparisonProof), matchedWithinInstancePairs: comparisonProof.matchedWithinInstancePairs, matchedInstructionPairs: comparisonProof.matchedInstructionPairs,
+    retrievalBenefitPairs: comparisonProof.retrievalBenefitPairs.length, instructionBenefitPairs: comparisonProof.instructionBenefitPairs.length,
+    actualProducts: 2, freshProducts: 0, humanSourceCheckedActualAnswers: combined.humanSourceCheckedActualAnswers, qualityClaimEligible: false, newProviderCalls: 0 };
 }

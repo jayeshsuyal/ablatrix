@@ -91,6 +91,8 @@ export async function freshValidationContexts(screening: FreshScreening, baselin
   assert.equal(selection.candidateContextInspected, false); assert.equal(selection.candidateMissesRetained, true);
   assert.equal(selection.screeningSha256, screening.screeningSha256); assert.equal(baseline.screeningSha256, screening.screeningSha256); assert.equal(baseline.corpusSha256, freshSeal(corpus));
   assert.equal(selection.baselineSha256, bindings.baselineFileSha256); assert.equal(selection.sourceReviewSha256, bindings.sourceReviewFileSha256); assert.equal(sourceReview.baselineSha256, bindings.baselineFileSha256);
+  assert.equal(sourceReview.format, 'ablatrix-fresh-validation-source-review-v2'); assert.equal(sourceReview.screeningSha256, screening.screeningSha256);
+  assert.ok(['source_checked_human', 'independent_source_review_ai'].includes(sourceReview.provenance));
   assert.equal(sourceReview.candidateContextInspected, false); assert.equal(sourceReview.answerOutputsInspected, false); assert.ok(sourceReview.reviewer.trim());
   assert.deepEqual(sourceReview.cases.map(r => r.caseId), screening.decisions.map(r => r.caseId));
   assert.deepEqual(baseline.results.map(r => r.caseId), screening.acceptedCaseIds);
@@ -110,11 +112,19 @@ export async function freshValidationContexts(screening: FreshScreening, baselin
       referenceReview: { provenance: sourceReview.provenance === 'source_checked_human' ? 'source_checked_human' : 'source_checked_ai', reviewer: sourceReview.reviewer, sufficientFor: review.applicabilityNotes, unknowns: review.unknowns, sourcePoolSha256: textHash(JSON.stringify(completeSources)) } });
     const delivered = (context: RetrievedPassage[], fact: FreshSourceAssessment['designatedFacts'][number]) => context.some(s => fact.sourceIds.includes(s.id) && s.text.includes(fact.quote));
     const missing = review.designatedFacts.filter(f => !delivered(b.baseline, f));
-    results.push({ caseId, tags: review.tags, candidate, designatedUnits: review.designatedFacts.length, missingUnits: missing.length, recoveredMissingUnits: missing.filter(f => delivered(candidate.passages, f)).length, answerStatus: { current: 'not_attempted', semantic: 'not_attempted', reference: 'not_attempted' } });
+    const baselineDeliveredFacts = review.designatedFacts.filter(f => delivered(b.baseline, f));
+    const candidateDeliveredFacts = review.designatedFacts.filter(f => delivered(candidate.passages, f));
+    const lostBaselineFacts = baselineDeliveredFacts.filter(f => !delivered(candidate.passages, f));
+    const recoveredMissingFacts = missing.filter(f => delivered(candidate.passages, f));
+    results.push({ caseId, tags: review.tags, candidate, designatedUnits: review.designatedFacts.length,
+      baselineDeliveredUnits: baselineDeliveredFacts.length, candidateDeliveredUnits: candidateDeliveredFacts.length, lostBaselineUnits: lostBaselineFacts.length,
+      baselineDeliveredFacts, candidateDeliveredFacts, lostBaselineFacts, recoveredMissingFacts,
+      missingUnits: missing.length, recoveredMissingUnits: recoveredMissingFacts.length, answerStatus: { current: 'not_attempted', semantic: 'not_attempted', reference: 'not_attempted' } });
   }
-  const sourceBenefit = results.some(r => r.recoveredMissingUnits > 0);
-  return { format: 'ablatrix-fresh-validation-contexts-v2', controlContext: 'frozen_v5', sharedGenerationContract: WORKSPACE_UNCERTAINTY_CONTRACT, screeningSha256: screening.screeningSha256, selectionSha256: freshSeal(selection), cases, results, sourceBenefit,
-    stopReason: sourceBenefit ? 'fresh_validation_qualification_pending' : 'no_designated_missing_fact_delivered_by_semantic_context', providerCalls: 0, generatedAnswers: 0, qualityClaimEligible: false, paidExecutionAuthorized: false };
+  const anyDesignatedRecovery = results.some(r => r.recoveredMissingUnits > 0), sourceRegressions = results.filter(r => r.lostBaselineUnits > 0).map(r => r.caseId);
+  const sourceBenefit = anyDesignatedRecovery && sourceRegressions.length === 0;
+  return { format: 'ablatrix-fresh-validation-contexts-v2', controlContext: 'frozen_v5', sharedGenerationContract: WORKSPACE_UNCERTAINTY_CONTRACT, screeningSha256: screening.screeningSha256, selectionSha256: freshSeal(selection), cases, results, anyDesignatedRecovery, sourceRegressions, sourceBenefit,
+    stopReason: sourceRegressions.length ? 'designated_v5_fact_lost_requires_source_review' : sourceBenefit ? 'fresh_validation_qualification_pending' : 'no_designated_missing_fact_delivered_by_semantic_context', providerCalls: 0, generatedAnswers: 0, qualityClaimEligible: false, paidExecutionAuthorized: false };
 }
 
 /** Recompute literal selection with exact saved query/document-bound logits.

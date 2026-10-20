@@ -24,6 +24,20 @@ The initial private preparation has `codeReviewPassed:false` and a null paid pla
 
 Source-aware anonymous evaluation keeps completeness, unsupported claims, applicability, uncertainty, relevance and literal citation checks separate. Within-instance v5/v6 comparisons and all12 matched instruction pairs are explicit reviewer judgments. AI judgments stay provisional; actual focused human source review is required for applicable substantive disagreements. Neither a Boolean outcome flag nor a human-name field can waive a confirmed regression.
 
+After an approved run, use the calibration-specific packet exporter. The generic execution review, operation mapping and preparation remain private. The exporter sorts cases by opaque identity and pairs by neutral labels so the published factorial execution order cannot reveal prompt or context conditions. It verifies each neutral label against its actual receipt output before export. Failed and unattempted arms remain in the packet; an incomplete run cannot qualify the fresh gate.
+
+```sh
+node --import tsx scripts/qualify-report-calibration-v1.ts --evaluation \
+  --plan .data/EXACT-REVIEWED-PLAN.json \
+  --checkpoint .data/EXECUTION/checkpoint.jsonl \
+  --result .data/EXECUTION/result.json \
+  --review .data/EXECUTION/review.json \
+  --mapping .data/EXECUTION/arm-mapping.json \
+  --out .data/NEW-NORMALIZED-PACKET.json
+```
+
+The separate matched instruction record uses `ablatrix-report-calibration-cross-instruction-review-v1`, binds the normalized packet and the same reviewer's imported individual-axis review hash, and explicitly judges all12 neutral instruction pairs. Reviewers receive only the normalized packet and its `.pairs.json` companion. The outcome verifier binds all imported review bytes, includes supplied human negative/uncertain evidence, checks the actual canonical24 receipts and returns a metadata-only proof. It never creates a human review or authorizes another call.
+
 ## Fresh products
 
 [The fresh-product protocol](fresh-product-v6-protocol.md) freezes the new candidate, shared policy, code, complete historical exposure and the development design before any new source access. The original v5 prospective freeze remains historical. The new finite custodian has a fixed256-question prefix and24 complete source-only packets, retains exclusions and inspected-source protections, and stops on shortage. Independent source-access qualification precedes dataset access; a separate exact pool-byte review precedes screening. Source/baseline eligibility and eight-case selection precede v6 context selection.

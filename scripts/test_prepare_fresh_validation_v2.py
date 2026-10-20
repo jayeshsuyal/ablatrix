@@ -119,7 +119,7 @@ class V2Tests(unittest.TestCase):
         self.assertNotEqual(a[0]['id'],b[0]['id']);self.assertNotEqual(m.v1.scoped_fingerprint(a[0]),m.v1.scoped_fingerprint(b[0]))
 
     def test_old_projection_publishes_no_answer_text_or_arm_mapping_and_retains_human_gap(self):
-        cases=[{'id':'old-exposed-case','product':{'id':'B000000001','title':'Old exposed product'},'completeSources':[{'text':'OLD literal source','originalQuestion':None}]}]
+        cases=[{'id':'old-exposed-case','product':{'id':'B000000001','title':'Old exposed product'},'question':'Question about model ZQX-778899?', 'completeSources':[{'text':'OLD literal source with model YZX-554433','originalQuestion':'Does LMP-112233 operate?'}]}]
         rows_fixture=[];steps=[];slots=[]
         for i in range(3):
             row={'id':str(i),'run_id':'private-operation-'+str(i),'kind':'answer','status':'completed','model':'SYNTHETIC','input_tokens':1,'output_tokens':1,'allowance_usd':.1,'receipt_json':json.dumps({'output':'SYNTHETIC PRIVATE ANSWER MUST NOT PUBLISH','requestSha256':'x'*64}),'error_code':None}
@@ -132,6 +132,8 @@ class V2Tests(unittest.TestCase):
         result=m.exposure_projection(p,c,r,rows_fixture,{'attempts':141,'reservedUsd':14.1,'priorAdjustmentUsd':.200281,'pending':0,'owners':0})
         text=json.dumps(result);self.assertNotIn('PRIVATE ANSWER',text);self.assertNotIn('private-operation-',text);self.assertNotIn('OLD literal source',text)
         self.assertFalse(result['humanGatePassed']);self.assertFalse(result['newV6DevelopmentQualified']);self.assertEqual(result['oldStudy']['completedAttempts'],3)
+        self.assertTrue({'zqx778899','yzx554433','lmp112233'}<=set(result['modelIdentifiers']))
+        self.assertEqual(set(result['sourcePacketFingerprints']),{m.v1.packet.fingerprint(cases[0]['completeSources'][0]),m.v1.scoped_fingerprint(cases[0]['completeSources'][0])})
         rows_fixture[0]['receipt_json']='changed'
         with self.assertRaisesRegex(ValueError,'differs from saved'):m.exposure_projection(p,c,r,rows_fixture,{'attempts':141,'pending':0,'owners':0})
 
@@ -141,7 +143,7 @@ class V2Tests(unittest.TestCase):
         candidate={'candidate':{'contract':'workspace-semantic-supplement-v6-quantified-peer-dev','minimumDistinctAnchors':2},'implementationSha256':code,'policyPath':'policy.json'}
         instructions='SYNTHETIC generic source uncertainty rules without product identifiers.'
         policy={'contract':'workspace-answer-uncertainty-v2','prompt':{'contract':'workspace-answer-uncertainty-v2','systemInstructions':instructions,'systemInstructionsSha256':m.sha(instructions)},'implementationSha256':code}
-        projection={'format':'ablatrix-old3-source-exposure-projection-v2','oldStudy':{'completedAttempts':3},'newV6DevelopmentQualified':False,'actualAnswersPublished':False,'privateArmMappingPublished':False,'paidPlan':None,'productIds':['B000000001'],'canonicalFamilyTitles':['Prior family'],'sourcePacketFingerprints':[]}
+        projection={'format':'ablatrix-old3-source-exposure-projection-v2','oldStudy':{'completedAttempts':3},'newV6DevelopmentQualified':False,'actualAnswersPublished':False,'privateArmMappingPublished':False,'paidPlan':None,'productIds':['B000000001'],'canonicalFamilyTitles':['Prior family'],'modelIdentifiers':['private778899'],'sourcePacketFingerprints':[],'sourceFingerprintForms':['body_v1','body_and_original_question_v1']}
         projection['projectionSha256']=m.seal(projection)
         development={'format':'ablatrix-report-calibration-development-protocol-v1','design':{'actualProducts':2,'freshProducts':0,'caseInstances':8,'instructionVariants':2,'contextsPerInstance':3,'repetitions':2,'maximumNewAttempts':24,'selectedSourceCaseIds':['source-coverage-v2-train-12870','source-coverage-v2-train-13347'],'instructionContracts':['workspace-answer-flat-sources-v1','workspace-answer-uncertainty-v2'],'contexts':{'current':'v5','semantic':'v6','reference':'independent_curated'}}}
         for name,value in [('candidate.json',candidate),('policy.json',policy),('projection.json',projection),('development.json',development)]:
@@ -154,6 +156,7 @@ class V2Tests(unittest.TestCase):
             contracts=self.fixture_contracts(root)
             with mock.patch.object(m,'CODE',['implementation.py']),mock.patch.object(m,'historical_paths',return_value=['history.json','other.json']):
                 output=root/'freeze';m.freeze(root,output,contracts);m.verify_freeze(root,output)
+                self.assertIn('private778899',json.loads((output/'history-inventory-v2.json').read_text())['modelIdentifiers'])
                 pending=json.loads((output/'qualification-pending-v2.json').read_text());self.assertEqual(pending['status'],'review_pending');self.assertIsNone(pending['paidPlan'])
                 policy=json.loads((root/'policy.json').read_text());policy['prompt']['systemInstructions']+=' changed';policy['prompt']['systemInstructionsSha256']=m.sha(policy['prompt']['systemInstructions']);(root/'policy.json').write_text(json.dumps(policy))
                 with self.assertRaisesRegex(ValueError,'raw artifact bytes changed'):m.verify_freeze(root,output)
@@ -174,5 +177,14 @@ class V2Tests(unittest.TestCase):
     def test_raw_binding_conflicts_are_never_overwritten(self):
         self.assertEqual(m.merge_bindings({'x.json':'1'*64},{'x.json':'1'*64}),{'x.json':'1'*64})
         with self.assertRaisesRegex(ValueError,'Conflicting duplicate'):m.merge_bindings({'x.json':'1'*64},{'x.json':'2'*64})
+
+    def test_old_projection_cannot_omit_private_models_or_body_fingerprint_form(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=pathlib.Path(tmp).resolve();self.fixture_contracts(root)
+            for field in ['modelIdentifiers','sourceFingerprintForms']:
+                projection=json.loads((root/'projection.json').read_text());projection.pop(field);projection.pop('projectionSha256');projection['projectionSha256']=m.seal(projection)
+                (root/'projection.json').write_text(json.dumps(projection))
+                with self.assertRaisesRegex(ValueError,'private exposure'):m.contract_artifacts(root,'candidate.json','policy.json','projection.json','development.json')
+                self.fixture_contracts(root)
 
 if __name__=='__main__':unittest.main()
