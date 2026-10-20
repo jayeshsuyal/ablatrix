@@ -92,6 +92,7 @@ Open [Product QA](http://127.0.0.1:4173/ask), add source text you have permissio
 - [Source-aware review and revision](docs/workspace-answer-review.md)
 - [Automatic source checks](docs/automatic-source-checks.md)
 - [Workflow trace UI, local API and metadata-only preview](docs/workspace-observability-preview.md) and [next fresh-source candidate](docs/fresh-corpus-source-options.md)
+- [Amazon-PQA end-to-end offline validation](docs/amazon-pqa-validation.md): pinned custody, freshness/leakage screening, automatic review, fixed comparison and reporting
 - [Restricted hosted mode](docs/hosted-demo.md) and [backup/restore](docs/hosted-demo.md)
 - [Corpus provenance](docs/product-corpus.md), [legacy research accounting](docs/sapiom-accounting.md), and [historical search ablation](docs/search-ablation.md)
 

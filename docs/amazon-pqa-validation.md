@@ -1,0 +1,45 @@
+# Amazon-PQA exploratory validation
+
+This is a new prospective source experiment. The earlier fixed ePQA attempt remains an unsuccessful 0/24 pool; its products, rejected parents and unknowns remain protected. The new pipeline uses the publisher's **unpartitioned category release**, not a claimed publisher training split. Existing sealed test sets remain untouched.
+
+The [publisher registry](https://registry.opendata.aws/amazon-pqa/) describes product questions/answers and public product information. Its [readme](https://amazon-pqa.s3.amazonaws.com/readme.txt) documents question IDs/text, answer text, ASIN, bullet points, description, brand, title and classifier/prediction fields. The registry lists CDLA-Permissive-1.0; preserve the readme's notice and paper citation. Actual source bytes and source-aware review records stay private. Dataset answers and classifier labels are not independent correctness references.
+
+## What runs end to end
+
+1. **Reconstruct history.** The history command verifies the previous v3 freeze, unions its complete public/private source history with the actual failed custodian's rejected exposure, and retains the incidental documentation example and its unresolved family. Python NFKC/casefold and scoped/body-only fingerprints preserve historical normalization. Additional APQA semantic attempts can be included explicitly with `--additional-exposure`; unresolved or overlapping consumed source prefixes cannot be reused as fresh.
+2. **Freeze opaque custody.** Pin the first lexical category key from the complete metadata listing, immutable S3 version, opaque ETag, full size and exact first 16 MiB range, code closure and protected history. Two independent automatic source-access reviews and a third adjudicator approve only this finite acquisition. ETag is never called SHA-256.
+3. **Acquire and seal.** One conditional anonymous GET must return the exact 206 range, length, version and ETag, with no redirect or retry. Store the bytes without decoding records, then seal their SHA-256. Failed or partial custody is retained with byte count and checksum. Artifact download and semantic row inspection are separate counters.
+4. **Freeze semantic access.** Bind the exact sealed prefix, source schema, unchanged v5/v6 retrieval, shared uncertainty instructions, model cache hashes and all implementation inputs. Two independent AI reviews and a third adjudicator check the exact source/history/code metadata before any record is parsed.
+5. **Import and screen.** Decode only the frozen physical prefix, at most 4,096 records. Preserve complete same-ASIN product information and other-question customer answers. Exclude all target-question aliases, their answer bodies and conservative duplicate answers from retrieval. Prediction/classifier fields are discarded. Product information retains its own labels; genuine customer answers retain `cqa`, their source ASIN and complete original question. Oversized parents and inconsistent scope are rejected rather than clipped. Every inspected rejection remains in the exposure union.
+6. **Review and select.** Seek a fixed pool of 32 mechanically eligible packets, then select 16 unique products using the frozen order after two independent complete source reviews and third adjudication. Reviewers inspect literal quotes, scope, applicability and remaining uncertainty before candidate contexts. A short pool stops without enlarging the prefix, changing category or replacing cases after outcomes.
+7. **Prepare and replay.** Run the actual cached BGE retriever and MiniLM cross-encoder locally, with prospectively pinned asset hashes and downloads disabled. Compare v5 and v6 under the same uncertainty instructions. Retain every selected miss, lost fact, unchanged context and unresolved source assessment. A lack of applicable peer evidence or source benefit remains a negative result.
+8. **Report.** Export exact unique-product/question denominators, exclusions, uncertainty, preparation results and limitations. A source-only benefit is not generated-answer improvement. The offline CLI has no provider dispatch mode, credential read or spending authorization.
+
+The proposed selected cohort would have 16 products × two arms × one answer repetition = 32 answers. This is a design count, not completed calls or a qualified fresh count. A separately qualified execution plan, refreshed shared ledger and exact financial authorization would be required before any paid answer calls. Retries, graders and web operations are not implicitly authorized.
+
+## Failure and review provenance
+
+A malformed complete row or unsupported envelope stops semantic preparation. The pipeline saves a distinct immutable failure artifact containing inspected/decoded counts, recognized source exposure hashes, exact raw-prefix commitment and `wholePrefixConsumed: true`. It does not print source text, infer a replacement schema or return a nominal eligible screening. A later protocol must carry that exposure forward.
+
+Automatic review is the workflow: no human answer-review queue is required for exploratory preparation. Each record identifies its AI reviewer, exact source/artifact bindings, literal evidence, disagreements, adjudication and retained unknowns. Every outcome retains `humanSourceCheckedAnswers: 0`, `qualityClaimEligible: false`, `activationAuthorized: false`, and no paid plan. These local consistency checks do not attest reviewer identity, provider authenticity or factual correctness.
+
+The frozen v6 peer mechanism applies to appropriately scoped customer reports. APQA descriptions and bullet points do not automatically satisfy it. A fully functioning pipeline can truthfully end with no applicable peers, a short pool, no source benefit, or a source parse failure.
+
+## Reproduce the offline contracts
+
+```sh
+python3 -m unittest scripts/test_acquire_amazon_pqa_v1.py scripts/test_prepare_amazon_pqa_history_v1.py
+node --import tsx --test server/amazon-pqa-source-v1.test.ts server/amazon-pqa-validation-v1.test.ts
+node --import tsx scripts/amazon-pqa-validation-v1.ts
+python3 scripts/acquire-amazon-pqa-v1.py --help
+```
+
+Tests use labeled synthetic data, temporary files and intercepted transport. They cover exact raw bindings, failed/partial custody, no access before qualification, immutable output, Unicode normalization, target-answer leakage, finite prefix limits, rejected/failing exposure, disagreement retention, fixed selection and actual retrieval replay. Synthetic success does not establish real APQA eligibility.
+
+The source importer is `server/amazon-pqa-source-v1.ts`; the pure workflow is `server/amazon-pqa-validation-v1.ts`. `scripts/amazon-pqa-validation-v1.ts` exposes `--freeze`, `--access-request`, `--screen`, `--review-request`, `--select`, `--prepare`, `--report` and `--verify`, with private JSON artifact references and new canonical output files. The custody and history commands are separate to keep network acquisition outside semantic preparation. Runtime and historical files from prior freezes remain unchanged.
+
+## Current execution status
+
+The first real versioned attempt acquired exactly16MiB from the immutable accessories object after two independent automatic custody reviews and adjudication, then passed a separate exact semantic-access review. Its first record failed the strict readme-based schema: one record inspected, zero valid decoded records, zero eligible packets. The immutable failure retains recognized exposure and commits the entire prefix as consumed. No selected cohort, candidate contexts, generated answers or paid calls exist for that attempt.
+
+A consumed-record field-type diagnostic found the release uses `asin`, five separate `bullet_point` fields and `answers: [{answer_text: ...}]`, rather than the readme-style flat field layout. A separate v2 compatibility implementation is being prepared. The original attempt stays failed; its prefix can be replayed only as exposed development/history data and cannot be rescued into a fresh result.

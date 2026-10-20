@@ -96,6 +96,11 @@ jobs:
         run: |
           node --import tsx scripts/workspace-observability-preview-v1.ts
           npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/workspace-observability-preview-v1.ts
+      - name: Amazon-PQA offline custody and preparation guards
+        run: |
+          python3 -m unittest scripts/test_acquire_amazon_pqa_v1.py scripts/test_prepare_amazon_pqa_history_v1.py
+          node --import tsx scripts/amazon-pqa-validation-v1.ts
+          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/amazon-pqa-validation-v1.ts
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
