@@ -1,0 +1,59 @@
+{
+  "format": "ablatrix-retrieval-v7-development-public-report-v1",
+  "candidateContract": "workspace-semantic-supplement-v7-small-packet-dev",
+  "controlContract": "workspace-semantic-supplement-v6-quantified-peer-dev",
+  "exposure": "All 28 products were exposed before candidate design; this is development replay, not fresh validation.",
+  "summary": {
+    "legacy": {
+      "cases": 12,
+      "designatedUnits": 13,
+      "controlDelivered": 13,
+      "candidateDelivered": 13,
+      "recoveredUnits": 0,
+      "lostUnits": 0,
+      "v6PrefixesRetained": 12,
+      "completedPackets": 0,
+      "changedCases": 0,
+      "appendedParents": 0,
+      "appendedBodyCharacters": 0
+    },
+    "apqa": {
+      "cases": 16,
+      "designatedUnits": 24,
+      "controlDelivered": 20,
+      "candidateDelivered": 24,
+      "recoveredUnits": 4,
+      "lostUnits": 0,
+      "v6PrefixesRetained": 16,
+      "completedPackets": 14,
+      "changedCases": 9,
+      "appendedParents": 13,
+      "appendedBodyCharacters": 840
+    },
+    "combined": {
+      "cases": 28,
+      "designatedUnits": 37,
+      "controlDelivered": 33,
+      "candidateDelivered": 37,
+      "recoveredUnits": 4,
+      "lostUnits": 0,
+      "v6PrefixesRetained": 28,
+      "completedPackets": 14,
+      "changedCases": 9,
+      "appendedParents": 13,
+      "appendedBodyCharacters": 840
+    }
+  },
+  "matching": "Unchanged designated-source-ID and exact literal quote checks. One recovered bow-dimension bullet repeats dimensions already available in the description.",
+  "scoreMode": "Input-bound saved BGE dense observations and MiniLM logits, with genuine lexical/fusion/selection replay; not independent fresh inference.",
+  "privateResultFileSha256": "3bf962d7ac866176deb1d61fb5fed6e80a370dcb5778e6f823d40c553022d6eb",
+  "freezeFileSha256": "83927d75f1c70112391921bb64d981b469438cf968013709a89b71cb06476c3d",
+  "providerCalls": 0,
+  "generatedAnswers": 0,
+  "freshCases": 0,
+  "humanSourceCheckedAnswers": 0,
+  "qualityClaimEligible": false,
+  "activationAuthorized": false,
+  "paidExecutionAuthorized": false,
+  "paidPlan": null
+}
