@@ -1,0 +1,61 @@
+{
+  "format": "ablatrix-retrieval-v7-development-public-report-v1",
+  "candidateContract": "workspace-semantic-supplement-v7-small-packet-dev",
+  "controlContract": "workspace-semantic-supplement-v6-quantified-peer-dev",
+  "exposure": "All 28 products were exposed before candidate design; this is development replay, not fresh validation.",
+  "summary": {
+    "legacy": {
+      "cases": 12,
+      "designatedUnits": 13,
+      "controlDelivered": 13,
+      "candidateDelivered": 13,
+      "recoveredUnits": 0,
+      "lostUnits": 0,
+      "v6PrefixesRetained": 12,
+      "completedPackets": 0,
+      "changedCases": 0,
+      "appendedParents": 0,
+      "appendedBodyCharacters": 0
+    },
+    "apqa": {
+      "cases": 16,
+      "designatedUnits": 24,
+      "controlDelivered": 20,
+      "candidateDelivered": 24,
+      "recoveredUnits": 4,
+      "lostUnits": 0,
+      "v6PrefixesRetained": 16,
+      "completedPackets": 14,
+      "changedCases": 9,
+      "appendedParents": 13,
+      "appendedBodyCharacters": 840
+    },
+    "combined": {
+      "cases": 28,
+      "designatedUnits": 37,
+      "controlDelivered": 33,
+      "candidateDelivered": 37,
+      "recoveredUnits": 4,
+      "lostUnits": 0,
+      "v6PrefixesRetained": 28,
+      "completedPackets": 14,
+      "changedCases": 9,
+      "appendedParents": 13,
+      "appendedBodyCharacters": 840
+    }
+  },
+  "matching": "Unchanged designated-source-ID and exact literal quote checks. One recovered bow-dimension bullet repeats dimensions already available in the description.",
+  "scoreMode": "Input-bound saved BGE dense observations and MiniLM logits, with genuine lexical/fusion/selection replay; not independent fresh inference.",
+  "privateResultFileSha256": "95ea704ae2bdc994914422e31d5058ac00c7c5ac9179c87d1128b3a45479015d",
+  "freezeFileSha256": "e5fba7e630e6b5002e3827fc5c1cf0e6de0dfa7702fe30809c6a71674ae03840",
+  "providerCalls": 0,
+  "generatedAnswers": 0,
+  "freshCases": 0,
+  "humanSourceCheckedAnswers": 0,
+  "qualityClaimEligible": false,
+  "activationAuthorized": false,
+  "paidExecutionAuthorized": false,
+  "paidPlan": null,
+  "sourceAssessmentRetention": "Every older source-review assessment, including uncertain-case notes, is copied into the private result; all APQA unknowns and applicability qualifications remain.",
+  "supersedes": "development-report-v1.json; same contexts and counts, fuller retention of older source-assessment metadata."
+}

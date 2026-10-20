@@ -1,0 +1,122 @@
+{
+  "format": "ablatrix-amazon-pqa-offline-report-v4",
+  "freezeSha256": "b259901ee2da42880bddb955928b9e62a965e0d2a6c7abff2a7c905acbfa1d68",
+  "control": "workspace-semantic-supplement-v6-quantified-peer-dev",
+  "candidate": "workspace-semantic-supplement-v7-small-packet-dev",
+  "status": "no_designated_missing_fact_delivered_by_candidate",
+  "inspectedQuestions": 4096,
+  "inspectedUniqueProducts": 734,
+  "automaticEligibleQuestions": 32,
+  "sourceEligibleQuestions": 18,
+  "selectedUniqueProducts": 16,
+  "rejectedOrUncertainQuestions": 4078,
+  "rejectionReasons": {
+    "historical_or_within_prefix_product": 3365,
+    "historical_or_within_prefix_family": 3902,
+    "historical_or_within_prefix_model": 3081,
+    "historical_or_within_prefix_body": 3826,
+    "historical_or_within_prefix_body_and_original_question": 3690,
+    "complete_parent_out_of_bounds": 526,
+    "no_target_free_source_parents": 78,
+    "parent_count_overflow": 6,
+    "fixed_pool_capacity_reached": 43,
+    "missing_or_out_of_bounds_title": 2
+  },
+  "adjudicatedUncertainQuestions": 1,
+  "selectedCasesWithUnknowns": 16,
+  "designatedSourceUnits": 47,
+  "controlDeliveredUnits": 38,
+  "candidateDeliveredUnits": 38,
+  "recoveredUnits": 0,
+  "lostUnits": 0,
+  "completePacketCases": 12,
+  "casesExactlyV6Fallback": 12,
+  "casesAllDesignatedUnitsDeliveredByControl": 12,
+  "casesAllDesignatedUnitsDeliveredByCandidate": 12,
+  "proposedAnswers": 32,
+  "generatedAnswers": 0,
+  "providerCalls": 0,
+  "humanSourceCheckedAnswers": 0,
+  "qualityClaimEligible": false,
+  "activationAuthorized": false,
+  "paidExecutionAuthorized": false,
+  "paidPlan": null,
+  "limitation": "Freshness is relative to the bound exposure inventory. Exact designated source/quote delivery is not semantic answer correctness. AI-only source review and offline retrieval do not establish answer-quality improvement; model pretraining overlap is unknown.",
+  "publicAggregateFormat": "ablatrix-amazon-pqa-fresh-v7-public-report-v1",
+  "implementationCommit": "3a455ffccba424ade5af5a7722fa8e94d7ccb70e",
+  "sourceBenefit": false,
+  "mechanicalPool": {
+    "packets": 32,
+    "parents": 226,
+    "bodyUtf16Characters": 33043
+  },
+  "sourceReview": {
+    "independentEligibleCounts": [
+      19,
+      18
+    ],
+    "adjudicatedEligible": 18,
+    "adjudicatedRejectsWithinMechanicalPool": 13,
+    "adjudicatedUncertainWithinMechanicalPool": 1,
+    "all4096RowsRetained": true,
+    "selectedProducts": 16,
+    "selectedParents": 125,
+    "selectedSourceBodyUtf16Characters": 21537,
+    "selectedUnknownEntriesRetained": 111,
+    "finalUnitsFixedBeforeContexts": 47,
+    "preliminarySelectedUnitsBeforeSourceUnitAudit": 55,
+    "preliminaryAndFinalAssessmentsPreserved": true,
+    "productSelectionChangedByUnitAudit": false,
+    "humanReviewQueueCreated": false
+  },
+  "contextChanges": {
+    "reasonCounts": {
+      "complete_small_source_packet": 4,
+      "three_supplement_limit": 4,
+      "packet_already_complete": 8
+    },
+    "completePacketCases": 12,
+    "exactV6Fallbacks": 12,
+    "changedCases": 4,
+    "appendedParents": 5,
+    "appendedUtf16Characters": 600,
+    "fullV6PrefixesPreserved": 16,
+    "allNineMissesInOversizedFallbacks": true,
+    "postContextExploratoryUsefulAdditionalUnitsFound": 0,
+    "postContextAssessmentChangesToFrozenEndpoints": 0
+  },
+  "officialReplay": {
+    "verified": true,
+    "freezeSha256": "b259901ee2da42880bddb955928b9e62a965e0d2a6c7abff2a7c905acbfa1d68",
+    "comparisonVerified": true,
+    "providerCalls": 0,
+    "paidExecutionAuthorized": false
+  },
+  "sourceCustody": {
+    "actualAnonymousGets": 1,
+    "sealedBytes": 16777216,
+    "range": {
+      "start": 33554432,
+      "endInclusive": 50331647
+    },
+    "excludedOldBoundaryRowsDecoded": 1,
+    "newCompleteRowsDecodedDuringBoundaryRepair": 0,
+    "entireThirdFrameConsumed": true,
+    "freshReuseEligible": false
+  },
+  "paidGate": {
+    "status": "closed_no_source_benefit",
+    "newPaidPlanCreated": false,
+    "newPaidCalls": 0,
+    "designAnswerSlotsUnexecuted": 32
+  },
+  "cohortLimits": [
+    "A fixed source-order exploratory slice of an unpartitioned publisher release, not a random or population accuracy sample.",
+    "Freshness is relative to the pinned exposure inventory; model pretraining overlap and source truth are unknown.",
+    "AI-only source review permits useful qualified partial evidence; every selected case retains unknowns.",
+    "Distinct released customer replies do not establish independent authors or verified observations.",
+    "Exact source-ID/quote delivery can miss information already present in a title or paraphrase; it is not semantic correctness or answer accuracy.",
+    "The preliminary unit audit preceded all contexts and scores; the final 47 units were unchanged after inference.",
+    "Exposed development 37-unit results and the earlier 24-unit v5/v6 study are separate cohorts."
+  ]
+}

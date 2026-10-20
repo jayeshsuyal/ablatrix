@@ -1,0 +1,347 @@
+{
+  "format": "ablatrix-amazon-pqa-fresh-v7-public-provenance-v1",
+  "publishedAt": "2026-10-20T08:25:31.999784+00:00",
+  "implementationCommit": "3a455ffccba424ade5af5a7722fa8e94d7ccb70e",
+  "implementationCi": {
+    "url": "https://github.com/jayeshsuyal/ablatrix/actions/runs/39386787907",
+    "conclusion": "success"
+  },
+  "pullRequest": "https://github.com/jayeshsuyal/ablatrix/pull/55",
+  "semanticFreezeFileSha256": "d3acf6b7f18df92abc9412e1f4c80c45f94183bccf8f1476ff6c22c9c6d4fe79",
+  "semanticFreezeSha256": "b259901ee2da42880bddb955928b9e62a965e0d2a6c7abff2a7c905acbfa1d68",
+  "publicProspectiveFreeze": {
+    "path": "docs/results/bounded-source-completion-v7-2026-10-20/fresh-freeze-v1.json",
+    "fileSha256": "8d872f20eaa806b741aa44f1732c0b5299386b23a1873909b254b66278fc5d76",
+    "bytes": 16341
+  },
+  "publicReport": {
+    "path": "docs/results/bounded-source-completion-v7-2026-10-20/fresh-report-v1.json",
+    "fileSha256": "eb2c96f67d86ead085eaf7321908c1a3b2295c989493e157a8f1c2245600c9cc",
+    "bytes": 4894
+  },
+  "actualModelInference": "Cached BGE and MiniLM inference ran locally on the fixed16 cases with pinned assets and fetch disabled; final replay reuses the exact saved dense observations and input-bound logits.",
+  "ordering": {
+    "rootPreassessmentBeforeIndependentLabels": true,
+    "twoIndependentSourceReviewsBeforeContexts": true,
+    "sourceOnlyUnitAuditBeforeContexts": true,
+    "finalDesignatedUnits": 47,
+    "allFinalLabelsAndUnitsUnchangedAfterContexts": true,
+    "sameFirst16ProductsBeforeAndAfterUnitAudit": true,
+    "noApplicabilityOrOutcomeSelection": true,
+    "preliminaryArtifactsPreserved": true
+  },
+  "validation": {
+    "officialCliReplay": {
+      "verified": true,
+      "freezeSha256": "b259901ee2da42880bddb955928b9e62a965e0d2a6c7abff2a7c905acbfa1d68",
+      "comparisonVerified": true,
+      "providerCalls": 0,
+      "paidExecutionAuthorized": false
+    },
+    "officialCliExitCode": 0,
+    "fullServerTests": {
+      "command": "npm test",
+      "tests": 825,
+      "passed": 824,
+      "failed": 0,
+      "skipped": 1,
+      "logSha256": "01846107228514dd6fbde90de9f179ce2f06fcff41bef9783623a8d7e8f1ad98",
+      "environmentNote": "The permitted rerun supports localhost test listeners; the initial sandbox rerun could not bind them."
+    },
+    "productionBuild": {
+      "command": "npm run build",
+      "passed": true,
+      "logSha256": "5d811cd1ff8f4725601d0e26e2e06e6f0ecd0145e83007644532fc9a652f5bc6"
+    },
+    "focusedV7HistoryValidationChecks": 18,
+    "acquisitionHistoryPythonTests": 33,
+    "strictScriptTypesPassed": true,
+    "currentImplementationPinsMatched": 74,
+    "cachedAssetPinsMatched": 9,
+    "olderRuntimePinsMatched": 68,
+    "protectedHistoricalFilesUnchanged": 269,
+    "sourceAwareResultAudit": {
+      "path": ".data/apqa-fresh-result-audit-v4.json",
+      "fileSha256": "945738fc10ba7a804746c4e30d9f2a53913cf3b216faf02fa98370ea94306a0a",
+      "bytes": 15384
+    },
+    "sourceAwareResultAuditIsAIOnly": true,
+    "noNewQuestionRelevantInformationFoundInFiveAppendedParents": true
+  },
+  "privateArtifacts": [
+    {
+      "path": ".data/apqa-access-request-input-v4.json",
+      "fileSha256": "57cf446a7db34614d869ea887e8f7ba50258265535f59c3b6a05b64ed40f40a0",
+      "bytes": 210
+    },
+    {
+      "path": ".data/apqa-acquisition-adjudication-v4.json",
+      "fileSha256": "af26d1697910eadcd96a3a8ad80f2b05c142775d5b0d372b5ae4b3664177423a",
+      "bytes": 3884
+    },
+    {
+      "path": ".data/apqa-acquisition-pin-v4.json",
+      "fileSha256": "4191cd598dcb6b0b2e6be8761eea462bc9425d80c7059b35b809ae99ebae5676",
+      "bytes": 17513
+    },
+    {
+      "path": ".data/apqa-acquisition-qualified-v4.json",
+      "fileSha256": "4380d08874215804192fccef9c2bd51b85e0cb4e6b4421fabfb0d2d289295228",
+      "bytes": 1217
+    },
+    {
+      "path": ".data/apqa-acquisition-review-one-v4.json",
+      "fileSha256": "70b5511f1b5693bd05dd37a1cd5a6d99c34cb4b09225032f313aaa80552719bf",
+      "bytes": 3492
+    },
+    {
+      "path": ".data/apqa-acquisition-review-two-v4.json",
+      "fileSha256": "5946831c9d6c2e403772d8f43531e90751a9b3cf449b0d15371032d073770b29",
+      "bytes": 3095
+    },
+    {
+      "path": ".data/apqa-boundary-adjudication-v4.json",
+      "fileSha256": "c529a716073d4f8e2adc11149ab88a61ee7d6fe11b4dc29d794958aa58a0133b",
+      "bytes": 3813
+    },
+    {
+      "path": ".data/apqa-boundary-execute-input-v4.json",
+      "fileSha256": "db19ecbe4b43771841fec93f5e6744eb91777de86ad08a702866937ac802ad7f",
+      "bytes": 1108
+    },
+    {
+      "path": ".data/apqa-boundary-input-v4.json",
+      "fileSha256": "bca97f7b985e408f2081437dcd29976ef92197bae823247f0ec62d7f5855377a",
+      "bytes": 613
+    },
+    {
+      "path": ".data/apqa-boundary-repair-v4.json",
+      "fileSha256": "683d0cf0a5b7d59a41dff72fccde3d0cd53f19051135096789f93fe8cb982133",
+      "bytes": 12635
+    },
+    {
+      "path": ".data/apqa-boundary-request-v4.json",
+      "fileSha256": "673a868ae65e1834237e43d3f0ac9426e4d30a638f753efea1d6573011ea6e47",
+      "bytes": 10880644
+    },
+    {
+      "path": ".data/apqa-boundary-review-one-v4.json",
+      "fileSha256": "20a5301f4ce9ee2d9b07536e0ede016cff9d376cc20320fd5e9044aaac36783a",
+      "bytes": 3681
+    },
+    {
+      "path": ".data/apqa-boundary-review-two-v4.json",
+      "fileSha256": "ceed9a6984217b2ee133199490c6ca72deb79275338ca1295bf8579ecac26be5",
+      "bytes": 2692
+    },
+    {
+      "path": ".data/apqa-comparison-v4.json",
+      "fileSha256": "1125e3d7fe20faddcfc9a1898d69206c919d5132e906029cafe49364794f9d12",
+      "bytes": 1046902
+    },
+    {
+      "path": ".data/apqa-consumed-frame-input-v4.json",
+      "fileSha256": "4ac569422e7dc330ea814eefd3e045d43d8e175ef6682b07dc6fa4e084b03bca",
+      "bytes": 1302
+    },
+    {
+      "path": ".data/apqa-consumed-frame-replay-v4.json",
+      "fileSha256": "e8e0c0c903fbca9db58ffee280bbb7515c8127edbf317f913c16ebb945522bc5",
+      "bytes": 5467973
+    },
+    {
+      "path": ".data/apqa-consumed-fresh-frame-v4.json",
+      "fileSha256": "22c6b52c0d36c3a87da8e04616b64884633ef775585895d1bec4a0b1a55d0236",
+      "bytes": 2447958
+    },
+    {
+      "path": ".data/apqa-custody-v4/attempt.json",
+      "fileSha256": "07b85519e2e747359ad83a82f46da408dde19ffb93a0919a1e087a40658b6c75",
+      "bytes": 817
+    },
+    {
+      "path": ".data/apqa-custody-v4/custody.json",
+      "fileSha256": "2d42b9748427e5a8fef19adada842e73f6171ab974e4c337ae49b887b17930b3",
+      "bytes": 3382
+    },
+    {
+      "path": ".data/apqa-custody-v4/source-prefix.bin",
+      "fileSha256": "40ae70dd7e4092d13fa6de441964f8c7a2c7628bc630b9827b4122dd849d1e6b",
+      "bytes": 16777216
+    },
+    {
+      "path": ".data/apqa-final-input-v4.json",
+      "fileSha256": "633cae7ed735677938660298ff05a1d65830db07f87cb8f3d00ce083ab18d5e1",
+      "bytes": 1898
+    },
+    {
+      "path": ".data/apqa-final-proof-v4.json",
+      "fileSha256": "1dc86b706740a44812f224a49c34c61cc1d1918fd32e3bb2acfe4a75f9fdb849",
+      "bytes": 817
+    },
+    {
+      "path": ".data/apqa-fresh-result-audit-v4.json",
+      "fileSha256": "945738fc10ba7a804746c4e30d9f2a53913cf3b216faf02fa98370ea94306a0a",
+      "bytes": 15384
+    },
+    {
+      "path": ".data/apqa-prepare-input-v4.json",
+      "fileSha256": "b153119baecf575ef0af8a4395f95a8bcc811e7269e066eeadfc4aa189a46572",
+      "bytes": 1745
+    },
+    {
+      "path": ".data/apqa-protected-history-pending-v4.json",
+      "fileSha256": "b6b188f04987383ce7f59026150639f880afe6f8a0b89717f6f0da413a363b3d",
+      "bytes": 10266523
+    },
+    {
+      "path": ".data/apqa-protected-history-resolved-v4.json",
+      "fileSha256": "f7c2ad27a0c09e9ed7ed0a45bd63966f547858fc4a9b8930dd8bc92ae700daed",
+      "bytes": 10267946
+    },
+    {
+      "path": ".data/apqa-protocol-v4.json",
+      "fileSha256": "b3eb1f34243a8f748b2046448611460c5da6d34509f47f16127327b12a8bddd6",
+      "bytes": 6243
+    },
+    {
+      "path": ".data/apqa-report-v4.json",
+      "fileSha256": "1a4b0a948d667a13011dcd69ca6d64d045f5beb3ee0b0d28c107d1bed1e62822",
+      "bytes": 1908
+    },
+    {
+      "path": ".data/apqa-root-source-preassessment-v4.json",
+      "fileSha256": "d08c8d84611cc9607d6214e9e264e97a7a4972acc0554cac280e15bb20d89d75",
+      "bytes": 38560
+    },
+    {
+      "path": ".data/apqa-screen-input-v4.json",
+      "fileSha256": "b75faf62b4d872596d3bfdabae59bbf04f4b7e0b1a671e61ed01f3842af8f1c0",
+      "bytes": 937
+    },
+    {
+      "path": ".data/apqa-screening-v4.json",
+      "fileSha256": "8922f0ca0460cc1fd84b367da21643d8384363a97067c65c955cc38231e276fc",
+      "bytes": 16220487
+    },
+    {
+      "path": ".data/apqa-screening-v4.json.semantic-attempt.json",
+      "fileSha256": "3d313437da4e4641d2107150467a147f9fb3257cb0d93e364685193ad746d1e1",
+      "bytes": 2022
+    },
+    {
+      "path": ".data/apqa-selection-final-v4.json",
+      "fileSha256": "48e8cea90ff6316a8f2e0a6f67b4807a6d858355efee953ec4c1b9b1d70e4e20",
+      "bytes": 10264991
+    },
+    {
+      "path": ".data/apqa-selection-v4.json",
+      "fileSha256": "c98086a4d0e44da27c3c9f4b7ce2a9aa93a8be3d3dfa0da0d3fd1cf06ea651e9",
+      "bytes": 10269072
+    },
+    {
+      "path": ".data/apqa-semantic-access-adjudication-v4.json",
+      "fileSha256": "3310dc1c6e6ebeac3d381c5d74af0906c46be2504d981c344acaec05d1ed3395",
+      "bytes": 8922
+    },
+    {
+      "path": ".data/apqa-semantic-access-request-v4.json",
+      "fileSha256": "b5a3682c8f168580d1f1793a2056c7dd2a97203a5be2b0559041f2426b392672",
+      "bytes": 36358175
+    },
+    {
+      "path": ".data/apqa-semantic-access-review-one-v4.json",
+      "fileSha256": "72e9b2bd3fffa8df85724c24080ea86702aedd41d8676fb085eb5284398fef8f",
+      "bytes": 14120
+    },
+    {
+      "path": ".data/apqa-semantic-access-review-two-v4.json",
+      "fileSha256": "c3741d59d3d574ee893808c84980c7bb92253170fdb27f33fc6f3ae3650a0e19",
+      "bytes": 9962
+    },
+    {
+      "path": ".data/apqa-semantic-freeze-input-v4.json",
+      "fileSha256": "f00befc21b054044910f79cb452996cdc059766fe5e2bc212216f94cfd97e3d8",
+      "bytes": 2042
+    },
+    {
+      "path": ".data/apqa-semantic-freeze-v4.json",
+      "fileSha256": "d3acf6b7f18df92abc9412e1f4c80c45f94183bccf8f1476ff6c22c9c6d4fe79",
+      "bytes": 35353839
+    },
+    {
+      "path": ".data/apqa-source-adjudication-final-v4.json",
+      "fileSha256": "7d1c0761c4ffb0fa6eba9700718089ad3435c98fb274aea050941dc57f4767ea",
+      "bytes": 7660429
+    },
+    {
+      "path": ".data/apqa-source-adjudication-v4.json",
+      "fileSha256": "0ee7a19d1e1780fbce89c352f894dfc1fb03e5933d1fc53fb72be9605a5128bf",
+      "bytes": 7661704
+    },
+    {
+      "path": ".data/apqa-source-assessment-policy-v4.json",
+      "fileSha256": "795b9eac44a082c35c7657259d8539953bb915c2424ea6f0519e6637bcc8b28d",
+      "bytes": 2527
+    },
+    {
+      "path": ".data/apqa-source-eligibility-request-v4.json",
+      "fileSha256": "34dbe2770b4d064f12b8b394682b77db4a17093b1dba78d9469d90840be99139",
+      "bytes": 13706741
+    },
+    {
+      "path": ".data/apqa-source-metadata-v4.json",
+      "fileSha256": "735bc95f49eb3ce842aeab35ebfe518ff6a55b088645c100834eeb4fc279aadf",
+      "bytes": 2024
+    },
+    {
+      "path": ".data/apqa-source-packets-v4.json",
+      "fileSha256": "f256607b47eac2463877cf9cfccb306f10e44a64573cda9ed39ecf40f919f473",
+      "bytes": 128447
+    },
+    {
+      "path": ".data/apqa-source-review-one-v4.json",
+      "fileSha256": "89361673e74e1f690cabe37291f3849e97beab60185ac0699f53038c495694d7",
+      "bytes": 5377776
+    },
+    {
+      "path": ".data/apqa-source-review-two-v4.json",
+      "fileSha256": "47f2962af55e4d7d2651460469553ec1ffc9278878df7dc5c117ce199aec557b",
+      "bytes": 4802119
+    },
+    {
+      "path": ".data/apqa-source-unit-audit-v4.json",
+      "fileSha256": "548140c043e7020d38176c19ae3e19f51cffecf8f46a4fc268071789c3652e79",
+      "bytes": 11355
+    },
+    {
+      "path": ".data/apqa-third-native-source-pin-v4.json",
+      "fileSha256": "25117381c7ee6796d42dc2628b26ce6c50534e4eaf81b28f3b716957268e5d35",
+      "bytes": 589
+    }
+  ],
+  "privateBackup": {
+    "canonicalRepositoryRelativeManifest": ".data/apqa-v4-private-2026-10-20-v1/checkpoint-v3.json",
+    "fileSha256": "dcf872516ec0d8e7bf24fb882895453eac2bb9cdff5f598d762f0f1cc4ffe839",
+    "priorCheckpointsPreserved": true,
+    "payloadsPrivate": true,
+    "modelsCredentialsAndLedgerNotCopied": true
+  },
+  "paidExecution": {
+    "newProviderCalls": 0,
+    "generatedAnswers": 0,
+    "humanSourceCheckedAnswers": 0,
+    "newPaidPlan": null,
+    "gate": "closed_no_source_benefit",
+    "sharedLedgerAttemptsReadOnlySnapshot": 165,
+    "sharedLedgerPending": 0,
+    "sharedLedgerOwners": 0,
+    "planningAllowancesAreNotSettledCharges": true
+  },
+  "entireNewFrameConsumed": true,
+  "freshReuseEligible": false,
+  "qualityClaimEligible": false,
+  "activationAuthorized": false,
+  "paidExecutionAuthorized": false,
+  "limitation": "Local raw-file bindings, replay and AI-only source review do not authenticate independent model execution, human correctness references or external source truth. Offline source delivery is not answer accuracy. All original failures, source disputes, unknowns and later candidate misses remain retained."
+}
