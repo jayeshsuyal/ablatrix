@@ -1,0 +1,93 @@
+{
+  "format": "ablatrix-amazon-pqa-e2e-public-provenance-v1",
+  "implementationCommit": "bad472c1e06591ef8dc6f00a1fff89535a574ea0",
+  "executionRuntime": "native-release-runtime-v3",
+  "nativeSemanticContract": "native-release-v2",
+  "implementationFiles": 68,
+  "localModelAssetFilesVerified": 9,
+  "dataset": {
+    "name": "Amazon-PQA",
+    "publisherSplit": "unpartitioned_release",
+    "use": "prospective_exploratory_validation",
+    "sourceBytesPublished": false
+  },
+  "denominators": {
+    "inspectedPhysicalQuestionRows": 4096,
+    "inspectedProducts": 603,
+    "mechanicalPackets": 32,
+    "sourceEligibleSelectedProducts": 16,
+    "selectedDesignatedSourceUnits": 24
+  },
+  "review": {
+    "independentEligiblePackets": [
+      14,
+      17
+    ],
+    "adjudicatedEligiblePackets": 16,
+    "adjudicatedUncertainPackets": 15,
+    "sourceLeakageRejections": 1,
+    "mechanicalRejections": 4064,
+    "selectedCasesWithIndependentEligibilityDisagreement": 2,
+    "allSelectedCasesRetainUnknowns": true,
+    "humanSourceCheckedAnswers": 0,
+    "fullyAnswerableCasesEstablished": false
+  },
+  "result": {
+    "controlDeliveredUnits": 20,
+    "candidateDeliveredUnits": 20,
+    "missingUnitsEach": 4,
+    "casesWithMissesEach": 4,
+    "recoveredUnits": 0,
+    "lostUnits": 0,
+    "exactV5FallbackCases": 16,
+    "applicablePeerAnchorCases": 0,
+    "freshRetrievalGainEstablished": false,
+    "answerAccuracyMeasured": false
+  },
+  "execution": {
+    "unexecutedDesignAnswerSlots": 32,
+    "financialExecutionPlanQualified": false,
+    "generatedAnswers": 0,
+    "providerCalls": 0,
+    "canonicalLedgerAttemptsUnchanged": 165,
+    "paidPlan": null,
+    "qualityClaimEligible": false,
+    "activationAuthorized": false
+  },
+  "verification": {
+    "officialCliReplay": {
+      "verified": true,
+      "freezeSha256": "7a7aaedad279f0c168f49a55e6fb8c7f0ebfd1fa7574fbe6bc01be545a320179",
+      "nativeSchema": "amazon-pqa-released-fields-v2-jsonl",
+      "comparisonVerified": true,
+      "providerCalls": 0,
+      "paidExecutionAuthorized": false
+    },
+    "ciRun": "https://github.com/jayeshsuyal/ablatrix/actions/runs/39379361921",
+    "ciImplementationCommit": "bad472c1e06591ef8dc6f00a1fff89535a574ea0",
+    "serverTestsPassedInCI": 807,
+    "apqaPythonTestsPassed": 23,
+    "productionBuild": "passed"
+  },
+  "privateArtifactSha256": {
+    ".data/apqa-semantic-freeze-runtime-v3.json": "ebc41b137e39660cbb49f1d724b10763a6441d3a05c2fb335dd80fd4c963bca6",
+    ".data/apqa-protected-history-runtime-v3.json": "ad5ffb4af0cec204dab45c78ef6f7593f7ef9e9ede8dcfe2ae892787c2926380",
+    ".data/apqa-screening-runtime-v3.json": "f9a6c9365844962fac93b9c006fbca6b13239e418d7ef45228a2d36e5315a50a",
+    ".data/apqa-source-review-one-runtime-v3.json": "40ee56941541584c04e67e8753f6ceca5d19cfc1d7516fafd0d52f6bf4505452",
+    ".data/apqa-source-review-two-runtime-v3.json": "52833d7e6f52a4ee086eb5f762ccf11af5004f725fcdf4e5407e6cfa7409fedb",
+    ".data/apqa-source-adjudication-runtime-v3.json": "17c5a483ed6e293b3d87ffa8e489e83ae1d8c7b10b1b2ee42a539e9cb0259ea5",
+    ".data/apqa-selection-runtime-v3.json": "b54029f26bdeb9e6815fe6cdd0870ed6c7af1520c086cd014fbde2c6577bee83",
+    ".data/apqa-comparison-runtime-v3.json": "149815d302dfb7ec1c5ae4050e803e1fdee126f6cc79c963f4930ffdc81fc448",
+    ".data/apqa-report-runtime-v3.json": "a1a887619c9aa0fd988e75050f2c7aadf01d57ecbbfa055c6fd6d0664bee3388",
+    ".data/apqa-official-verification-runtime-v3.json": "4d84eaf49ae6fa4a14fe7b3b17d640a68946ee500a1d97a04b2c9cc5de96132c",
+    ".data/apqa-consumed-fresh-frame-runtime-v3.json": "5f62d652a5add54cf6a48d934ff41c0c07692890b0c54ae58b7422cb521cb47f"
+  },
+  "publicReportFileSha256": "a1a887619c9aa0fd988e75050f2c7aadf01d57ecbbfa055c6fd6d0664bee3388",
+  "limitations": [
+    "AI-only source review and source delivery do not establish answer quality.",
+    "Qualified partial facts do not establish complete answerability; all selected cases retain unknowns.",
+    "Freshness is relative to the bound exposure inventory; model pretraining overlap is unknown.",
+    "The fixed next category interval is exploratory and not a representative random sample.",
+    "The original failed attempt and consumed development interval remain separate and cannot become fresh successes."
+  ]
+}

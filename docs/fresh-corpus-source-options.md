@@ -2,7 +2,7 @@
 
 The previous fixed ePQA train attempt remains a failed experiment: its 256-question prefix supplied zero eligible packets, and every distinct product in that prefix had a direct historical metadata origin. Changing the seed or replacing its rejected products would not complete that frozen attempt.
 
-The next source investigation is metadata-only. No new dataset payload, product page or manual body has been downloaded, and no new paid comparison is authorized.
+This page records the metadata-only investigation before the [separate Amazon-PQA implementation](amazon-pqa-validation.md). The later pipeline uses a fixed versioned byte prefix and an honestly unpartitioned release; its current execution status is in that guide. No new paid comparison is authorized.
 
 ## Preferred candidate: Amazon-PQA
 
@@ -20,4 +20,4 @@ The [publisher repository](https://github.com/amazonqa/amazonqa) describes answe
 
 ## Current status
 
-These are source options, not a qualified fresh pool. The unresolved work is exact source-object pinning, source-only schema mapping, historical overlap checks and finite-pool feasibility under a separately frozen protocol. Counts, source benefit, generated answers, provider usage and quality outcomes for the next corpus are all unmeasured.
+Amazon-PQA now has a separately versioned offline custody/import/review/preparation/report workflow; see its [protocol and current status](amazon-pqa-validation.md). Source-option metadata alone remains insufficient to qualify a fresh pool or establish answer quality. AmazonQA remains the unintegrated backup option. Preserve the original investigation and failed ePQA attempt as historical evidence.
