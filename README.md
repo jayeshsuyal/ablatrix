@@ -89,6 +89,7 @@ Open [Product QA](http://127.0.0.1:4173/ask), add source text you have permissio
 - [Six-slice release plan](docs/next-release-plan.md)
 - [Source-aware review and revision](docs/workspace-answer-review.md)
 - [Automatic source checks](docs/automatic-source-checks.md)
+- [Metadata-only workspace trace preview](docs/workspace-observability-preview.md) and [next fresh-source candidate](docs/fresh-corpus-source-options.md)
 - [Restricted hosted mode](docs/hosted-demo.md) and [backup/restore](docs/hosted-demo.md)
 - [Corpus provenance](docs/product-corpus.md), [legacy research accounting](docs/sapiom-accounting.md), and [historical search ablation](docs/search-ablation.md)
 
