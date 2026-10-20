@@ -1,6 +1,7 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { DatabaseSync } from 'node:sqlite';
 import { extname, join, resolve } from 'node:path';
 import { ZodError, z } from 'zod';
 import { researchInput } from './contracts.ts';
@@ -18,17 +19,18 @@ import { loadFinalProductCorpus, loadProductCorpus } from './product-corpus.ts';
 import { ProductRetriever } from './product-retrieval.ts';
 import { SapiomFeedbackProvider } from './feedback-provider.ts';
 import { LoopTelemetry } from './loop-telemetry.ts';
-import { ProductWorkspace } from './product-workspace.ts';
+import { ProductWorkspace, type WorkspaceRun } from './product-workspace.ts';
 import { PaidAnswerReview } from './paid-answer-review.ts';
 import { AnswerRevisions } from './answer-revisions.ts';
 import { ContextComparisonStore, createContextComparisonFixture } from './context-comparison.ts';
 import { DemoAccess, DemoAccessError, type DemoActor } from './demo-access.ts';
 import { SyntheticAnswerProvider } from './synthetic-answer-provider.ts';
-import { AutomaticSupport } from './automatic-support.ts';
+import { AutomaticSupport, type AutomaticSupportJob } from './automatic-support.ts';
 import { RuntimeAnswerPolicyStore, type RuntimePolicyActor } from './runtime-answer-policy.ts';
 import { createRuntimeGraderBinding } from './runtime-grader.ts';
 import { CITED_APPLICABILITY_GRADER_VERSION } from './claim-support-v4.ts';
 import { buildWorkspaceProof, verifyWorkspaceProof } from './workspace-proof.ts';
+import { buildWorkspaceObservabilityPreview } from './workspace-observability-v1.ts';
 import { AnswerPolicyWorker } from './answer-policy-worker.ts';
 
 function json(res: ServerResponse, status: number, value: unknown): void {
@@ -41,6 +43,11 @@ function download(res: ServerResponse, filename: string, value: string, mime: st
     'cache-control': 'no-store', 'x-content-type-options': 'nosniff'
   });
   res.end(value);
+}
+function readSavedDatabase<T>(path: string, read: (db: DatabaseSync) => T, missing: () => T): T {
+  if (path === ':memory:' || !existsSync(path)) return missing();
+  const db = new DatabaseSync(path, { readOnly: true });
+  try { return read(db); } finally { db.close(); }
 }
 
 async function body(req: IncomingMessage, maxLength = 16_384): Promise<unknown> {
@@ -157,6 +164,43 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
     }
     return feedback;
   };
+  const savedAutomaticChecks = (): AutomaticSupportJob[] => {
+    if (supportChecks) return supportChecks.verifiedOverview();
+    // Constructing a worker would reconcile expired leases. A trace GET must
+    // project the saved state without advancing or reconciling that state.
+    return readSavedDatabase(reviewDbPath ?? '.data/paid-answer-review.sqlite', db => {
+      if (!db.prepare("SELECT 1 FROM sqlite_schema WHERE type='table' AND name='automatic_support_jobs'").get()) return [];
+      return (db.prepare('SELECT document FROM automatic_support_jobs ORDER BY rowid DESC').all() as { document: string }[]).map(row => JSON.parse(row.document) as AutomaticSupportJob);
+    }, () => []);
+  };
+  const currentWorkspaceProof = () => {
+    try {
+      const packet = buildWorkspaceProof(productWorkspace().proofRuns(), automaticSupport().verifiedOverview(), runId => localAnswerProvider().receipt(runId));
+      verifyWorkspaceProof(packet);
+      return packet;
+    } catch { throw new Error('Automatic check: Paired evidence could not be verified against its exact saved sources, requests and receipts.'); }
+  };
+  const savedWorkspaceProof = () => {
+    if ((localOptions.demoAccess || localOptions.localDemo) && (!workspace || !feedbackProvider)) throw new Error('Synthetic demo evidence stores must be explicitly configured.');
+    const runs = workspace ? workspace.proofRuns() : readSavedDatabase(process.env.ABLATRIX_WORKSPACE_DB ?? '.data/product-workspace.sqlite', db => {
+      if (!db.prepare("SELECT 1 FROM sqlite_schema WHERE type='table' AND name='workspace_runs'").get()) return [];
+      return (db.prepare('SELECT document FROM workspace_runs ORDER BY created_at DESC, id').all() as { document: string }[]).map(row => JSON.parse(row.document) as WorkspaceRun);
+    }, () => []);
+    const checks = savedAutomaticChecks();
+    const verified = (receipt: Parameters<typeof buildWorkspaceProof>[2]) => {
+      const packet = buildWorkspaceProof(runs, checks, receipt);
+      verifyWorkspaceProof(packet);
+      return packet;
+    };
+    if (feedbackProvider) return verified(runId => feedbackProvider!.receipt(runId));
+    // The default live provider constructor can migrate its ledger and read a
+    // credential file. Saved trace inspection needs only existing receipt rows.
+    return readSavedDatabase(process.env.ABLATRIX_LOOP_BUDGET_DB ?? '.data/feedback-budget.sqlite', db => {
+      if (!db.prepare("SELECT 1 FROM sqlite_schema WHERE type='table' AND name='loop_provider_calls'").get()) return verified(() => undefined);
+      const query = db.prepare('SELECT id,kind,status,model,input_tokens,output_tokens,error_code,receipt_json,allowance_usd FROM loop_provider_calls WHERE run_id=? ORDER BY created_at DESC LIMIT 1');
+      return verified(runId => query.get(runId) as ReturnType<SapiomFeedbackProvider['receipt']>);
+    }, () => verified(() => undefined));
+  };
   let stopping = false;
   const server = createServer(async (req, res) => {
     try {
@@ -243,13 +287,16 @@ export function createApp(store: RunStore, mode: 'fixture' | 'live' = 'fixture',
         return json(res, 200, { checks: check ? [check] : [], readiness: automaticSupport().readiness() });
       }
       if (req.method === 'GET' && ['/api/workspace/proof', '/api/workspace/proof/export'].includes(path)) {
-        let packet;
-        try {
-          packet = buildWorkspaceProof(productWorkspace().proofRuns(), automaticSupport().verifiedOverview(), runId => localAnswerProvider().receipt(runId));
-          verifyWorkspaceProof(packet);
-        } catch { throw new Error('Automatic check: Paired evidence could not be verified against its exact saved sources, requests and receipts.'); }
+        const packet = currentWorkspaceProof();
         if (path.endsWith('/export')) return download(res, 'ablatrix-paired-proof.json', JSON.stringify(packet, null, 2) + '\n', 'application/json');
         return json(res, 200, packet);
+      }
+      if (req.method === 'GET' && ['/api/workspace/observability', '/api/workspace/observability/export'].includes(path)) {
+        let preview;
+        try { preview = buildWorkspaceObservabilityPreview(savedWorkspaceProof()); }
+        catch { throw new Error('Automatic check: Paired evidence could not be verified against its exact saved sources, requests and receipts.'); }
+        if (path.endsWith('/export')) return download(res, 'ablatrix-workspace-observability-preview.json', JSON.stringify(preview, null, 2) + '\n', 'application/json');
+        return json(res, 200, preview);
       }
       if (req.method === 'GET' && path === '/api/workspace/reviews/export') {
         const first = answerRevisions().overview('workspace');

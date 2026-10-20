@@ -22,9 +22,10 @@ Open [the local demo](http://127.0.0.1:4184). Each launch creates fresh SQLite f
 3. Select the Aster box question to inspect an uncertain-check safe stop. The unsupported original remains available as a saved version.
 4. Ask the Thistle flask question with automatic checking enabled, then inspect the final delivery. A browser retry reuses its request identity after a lost response.
 5. Open **Workflow proof**, switch between paired outcomes and quality/time/allowance, and export exact evidence. The denominator includes unresolved requests.
-6. Expand **Answer policy** to inspect a separately evaluated blanket-abstention candidate: its actual 13-phase synthetic trial is rejected and the baseline remains active.
+6. Select **Workflow trace**, choose a case, and follow its saved generation/check/repair/recheck stages. Status, recorded time, token usage and uncertainty remain visible; missing measurements stay **Unknown**. **Download trace metadata** saves a separate metadata-only file with no questions, answers or source bodies.
+7. Expand **Answer policy** to inspect a separately evaluated blanket-abstention candidate: its actual 13-phase synthetic trial is rejected and the baseline remains active.
 
-Everything in this journey is visibly **synthetic**. Scripted outcome labels verify engineering behavior; they are not model-quality measurements or human judgments. The read-only live replay below the proof view is separately labeled and never executes a new call.
+Everything in this journey is visibly **synthetic**. Scripted outcome labels verify engineering behavior; they are not model-quality measurements or human judgments. The read-only live replay below the proof view is separately labeled and never executes a new call. Workflow traces load on demand from verified local evidence, preserve failed/unresolved records and make no cloud upload. The Langfuse-compatible preview has not been tested against remote ingestion.
 
 [Walkthrough and artifact guide](docs/product-workflow-demo.md) · [Current results and limitations](docs/current-results.md)
 
@@ -51,6 +52,7 @@ flowchart LR
   F --> G
   C --> H[Immutable source/version history]
   G --> I[Paired proof + offline verification]
+  I --> J[Read-only workflow trace + metadata download]
 ```
 
 `/` and `/ask` open the product workspace. `/review` exposes original versions, source-aware feedback and bounded background revision. `/research` retains the older research UI; `/loop`, `/compare`, `/pilot` and `/paid-review` remain secondary research tools. The isolated demo blocks legacy experiment dispatch and does not load pinned evaluation answers.
@@ -89,7 +91,7 @@ Open [Product QA](http://127.0.0.1:4173/ask), add source text you have permissio
 - [Six-slice release plan](docs/next-release-plan.md)
 - [Source-aware review and revision](docs/workspace-answer-review.md)
 - [Automatic source checks](docs/automatic-source-checks.md)
-- [Metadata-only workspace trace preview](docs/workspace-observability-preview.md) and [next fresh-source candidate](docs/fresh-corpus-source-options.md)
+- [Workflow trace UI, local API and metadata-only preview](docs/workspace-observability-preview.md) and [next fresh-source candidate](docs/fresh-corpus-source-options.md)
 - [Restricted hosted mode](docs/hosted-demo.md) and [backup/restore](docs/hosted-demo.md)
 - [Corpus provenance](docs/product-corpus.md), [legacy research accounting](docs/sapiom-accounting.md), and [historical search ablation](docs/search-ablation.md)
 
