@@ -1,0 +1,42 @@
+{
+  "format": "ablatrix-report-calibration-source-review-v1",
+  "provenance": "independent_ai_source_review",
+  "reviewer": "Codex independent AI source reviewer; source-only review, 2026-10-19",
+  "candidateResultsInspected": false,
+  "generatedAnswersInspected": false,
+  "sourceEligibilityReviewFileSha256": "cc10964003f98c7ab141f70c69588949802852fc6434761040b34510484efffe",
+  "selectionRule": "all_old_specification_or_model_detail_gaps_plus_first_lexicographic_baseline_complete_control",
+  "cases": [
+    {
+      "sourceCaseId": "source-coverage-v2-train-12870",
+      "sourcePoolSha256": "870f7f747be11d3d8af84de7b27d555692c4000bf012d1c47193780328fd124d",
+      "referenceContextSha256": "dc70f4f955427110429f8aa2ff072ad85a77dfea43a65e1e901a983b20d04190",
+      "designatedFactsSha256": "b62373a79359cebda07b5a6a59c1793dd2b4229a51a173743f78fda71322b560",
+      "questionScopeSha256": "75a62b02dbe502968513ca2693e427ea146f08bdf869d190703ebbb8f812ac95",
+      "unknowns": [
+        "Population average, initial fill and fuel/wick/weather conditions are unknown.",
+        "Nearly eight hours ended by manual extinguishing; it is not a fuel exhaustion time."
+      ],
+      "sufficientFor": "The reference is sufficient for a qualified account of the supplied runtime evidence in response to the question about average duration after filling: the description claims more than six hours per fill, one customer reports five to six hours after lighting, and another reports nearly eight hours before manually extinguishing the torches. These are distinct claims and reports, not samples establishing a population average; the nearly eight-hour report is not an exhaustion limit. Every literal complete-source body was reviewed. The only originalQuestion concerns a stand versus ground placement, so its answer about poles does not supply runtime evidence. The other sources concern appearance, mounting, storage, durability, canister capacity, fuel suggestions or nonspecific use/refilling and burning until extinguished; none establishes an average duration, initial fill, or operating conditions. The three designated facts and their qualifications faithfully reflect their literal source bodies, and all three are present in the reference. The reference therefore supports an attributed, uncertainty-preserving answer, while the requested true average remains unknown.",
+      "sourceScopeReviewed": true,
+      "originalQuestionsReviewed": true,
+      "referenceSufficient": true
+    },
+    {
+      "sourceCaseId": "source-coverage-v2-train-13347",
+      "sourcePoolSha256": "1a0306ed1781f97e174de96815c219172e09fc0e176f246dd6716541c09c85ae",
+      "referenceContextSha256": "776e53742dd7829bf4a93b01e9ad47512ada463491980f8e4248ca167eef7545",
+      "designatedFactsSha256": "5c2ce9def0b46972d61915a8dc35090e24509f71f168d25d3c3b8f67cc5934ad",
+      "questionScopeSha256": "b65bebb1b33ba24c709ad0e8cd33bed8f5f2dc98e96331c2a2604fec3dc12640",
+      "unknowns": [
+        "The listed 65-inch maximum extended strap length has not been independently physically verified; the physical measurement method and tolerance are unknown."
+      ],
+      "sufficientFor": "The reference is sufficient to answer the maximum-strap-length question at the level of the listing: the bullet literally states that the adjustable strap extends to 65 inches. The designated fact and qualification accurately preserve that listed extended length, its attribution, and the absence of physical verification. Every literal complete-source body was reviewed; none has an originalQuestion. The remaining bodies concern an adjustable crossbody strap, mini wristlet dimensions, bag dimensions, package dimensions, care, appearance, model identity or customer impressions of the bag and pouch. They neither establish a different strap maximum nor add an independent measurement. In particular, the 6.5-by-4.5-inch wristlet, 12-by-12-by-6-inch bag dimensions and package dimensions are outside the requested strap measurement and cannot substitute for it; a strap drop is not supplied. The baseline-derived reference already includes the literal 65-inch statement. This supports the listed maximum as an answer, with uncertainty about independent physical measurement rather than uncertainty about what the listing says.",
+      "sourceScopeReviewed": true,
+      "originalQuestionsReviewed": true,
+      "referenceSufficient": true
+    }
+  ],
+  "paidExecutionAuthorized": false,
+  "qualityClaimEligible": false
+}

@@ -3,12 +3,13 @@ import { z } from 'zod';
 import { flatSourceIdAnswerRequestBody, flatSourceIdAnswerPromptIdentity } from './feedback-provider.ts';
 import { resolveSourceCitationIds, sourceCitationOptions, stripSourceIdMarkers, type SourceCitationScope } from './citation-options.ts';
 import type { LoopProvider, LoopUsage } from './loop-types.ts';
+import { WORKSPACE_UNCERTAINTY_CONTRACT, WORKSPACE_UNCERTAINTY_TOOL, workspaceUncertaintyInstructions } from './workspace-uncertainty-policy.ts';
 
 export const WORKSPACE_GENERATION_CONTRACT = 'workspace-answer-flat-sources-v1' as const;
 export const WORKSPACE_GENERATION_TOOL = 'workspace_answer_flat_sources_v1' as const;
 export const WORKSPACE_SOURCE_CALIBRATION_CONTRACT = 'workspace-answer-source-calibration-v2' as const;
 export const WORKSPACE_SOURCE_CALIBRATION_TOOL = 'workspace_answer_source_calibration_v2' as const;
-export type WorkspaceGenerationContract = typeof WORKSPACE_GENERATION_CONTRACT | typeof WORKSPACE_SOURCE_CALIBRATION_CONTRACT;
+export type WorkspaceGenerationContract = typeof WORKSPACE_GENERATION_CONTRACT | typeof WORKSPACE_SOURCE_CALIBRATION_CONTRACT | typeof WORKSPACE_UNCERTAINTY_CONTRACT;
 export const WORKSPACE_ANSWER_CHARACTERS = 1500;
 export type WorkspaceGenerationInput = Parameters<LoopProvider['answer']>[0] & { runId: string; generationContract?: WorkspaceGenerationContract };
 export type WorkspaceGenerationReceipt = { id: string; kind: string; status: string; error_code: string | null; receipt_json: string | null; model: string | null;
@@ -17,19 +18,20 @@ const hash = (value: unknown) => createHash('sha256').update(typeof value === 's
 const outputSchema = z.object({ answer: z.string().trim().min(1).max(WORKSPACE_ANSWER_CHARACTERS), status: z.enum(['answered', 'insufficient_evidence']), citations: z.array(z.string().min(1).max(32)).max(5) }).strict();
 
 export function workspaceGenerationContract(value: unknown = WORKSPACE_GENERATION_CONTRACT): WorkspaceGenerationContract {
-  if (value !== WORKSPACE_GENERATION_CONTRACT && value !== WORKSPACE_SOURCE_CALIBRATION_CONTRACT) throw new Error('Unknown workspace generation contract.');
+  if (value !== WORKSPACE_GENERATION_CONTRACT && value !== WORKSPACE_SOURCE_CALIBRATION_CONTRACT && value !== WORKSPACE_UNCERTAINTY_CONTRACT) throw new Error('Unknown workspace generation contract.');
   return value;
 }
 /** Experimental instructions, frozen before selecting the separate evaluation
  * packet. V1 and every historical provider prompt remain byte-for-byte intact. */
 const sourceCalibrationRules = 'Lead with the direct supported answer, normally in two or three concise sentences. Avoid stock wording such as "the supplied evidence", repeated disclaimers, and unrelated specifications. Prioritize sources about the exact requested product, model, variant and relationship over broader or neighboring-model reports. Report explicit listing specifications, capacities and configurations as attributed listing claims; independent physical testing is not required to report what the listing documents. A configuration absent from a listing is not thereby physically impossible, and a different listed configuration does not establish the requested one. Attribute customer observations as reports, preserving tentative words, conditions and limits; never turn a tentative opinion into a definite yes or no. Distinguish genuinely incompatible claims about the same scope from compatible descriptions or differences in certainty; do not invent a conflict merely because wording differs. State relevant supported facts first, then the specific unresolved relationship when needed. Ask for a model identifier only if it is absent from the question and supplied context; otherwise identify the missing compatibility documentation. Do not infer anything about an image that was not supplied. Keep source quotations in structured citations unless quoting a short phrase is necessary to explain a real conflict. Put answered or insufficient_evidence only in the structured status field, never as answer prose.';
 export function workspaceGenerationPromptIdentity(value: WorkspaceGenerationContract = WORKSPACE_GENERATION_CONTRACT) {
-  const contract = workspaceGenerationContract(value), tool = contract === WORKSPACE_GENERATION_CONTRACT ? WORKSPACE_GENERATION_TOOL : WORKSPACE_SOURCE_CALIBRATION_TOOL;
+  const contract = workspaceGenerationContract(value), tool = contract === WORKSPACE_GENERATION_CONTRACT ? WORKSPACE_GENERATION_TOOL : contract === WORKSPACE_SOURCE_CALIBRATION_CONTRACT ? WORKSPACE_SOURCE_CALIBRATION_TOOL : WORKSPACE_UNCERTAINTY_TOOL;
   let systemInstructions = flatSourceIdAnswerPromptIdentity().systemInstructions.replaceAll('product_answer_source_ids_v3', tool);
   if (contract === WORKSPACE_SOURCE_CALIBRATION_CONTRACT) {
     systemInstructions = systemInstructions.replace('When that relationship is missing, return insufficient_evidence, state the supported facts, and ask for the specific missing model number or compatibility documentation.', 'When the exact requested relationship is not supported, return status insufficient_evidence and explain that specific gap without inventing a relationship.');
     systemInstructions += ` ${sourceCalibrationRules}`;
   }
+  if (contract === WORKSPACE_UNCERTAINTY_CONTRACT) systemInstructions = workspaceUncertaintyInstructions(systemInstructions);
   systemInstructions += ` Keep the answer at most ${WORKSPACE_ANSWER_CHARACTERS} characters.`;
   return Object.freeze({ contract, tool, systemInstructions, systemInstructionsSha256: hash(systemInstructions) });
 }
