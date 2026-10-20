@@ -85,6 +85,13 @@ jobs:
           node --import tsx scripts/report-calibration-mock.ts
           node --import tsx scripts/fresh-validation-contexts-v2.ts
           npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/retrieval-diagnosis-v6.ts scripts/prepare-report-calibration-v1.ts scripts/qualify-report-calibration-v1.ts scripts/report-calibration-mock.ts scripts/fresh-validation-contexts-v2.ts server/report-calibration-qualification.ts server/report-calibration-outcome.ts server/fresh-validation-v2.ts server/fresh-validation-v2.test.ts
+      - name: Automatic source review and fresh v3 offline guards
+        run: |
+          python3 -m unittest scripts/test_prepare_fresh_validation_v3.py
+          python3 scripts/prepare-fresh-validation-v3.py metadata
+          node --import tsx scripts/automatic-source-review-v1.ts
+          node --import tsx scripts/fresh-validation-contexts-v3.ts
+          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/automatic-source-review-v1.ts scripts/fresh-validation-contexts-v3.ts server/automatic-review-v1.ts
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e
