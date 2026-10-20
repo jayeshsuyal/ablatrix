@@ -70,11 +70,21 @@ jobs:
       - name: Prospective validation source and review gates (synthetic fixtures only)
         run: |
           python3 -m unittest discover -s scripts -p 'test_prepare_fresh_validation_v1.py'
-          npm run validation:prospective -- verify --freeze-dir docs/evidence/retrieval-validation-prospective-2026-10-19/freeze-v2
+          python3 scripts/replay-prospective-v1.py
           npm run validation:mock
           npm run validation:contexts
           npm run validation:prepare
           npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/fresh-validation-contexts-v1.ts scripts/fresh-validation-mock.ts scripts/prepare-three-context-fresh-v1.ts server/fresh-validation-v1.ts
+      - name: V6 uncertainty development and prospective v2 offline guards
+        run: |
+          python3 -m unittest scripts/test_replay_prospective_v1.py scripts/test_prepare_fresh_validation_v2.py
+          python3 scripts/prepare-fresh-validation-v2.py metadata
+          node --import tsx scripts/retrieval-diagnosis-v6.ts --verify docs/evidence/report-uncertainty-v6-2026-10-19/candidate-freeze-v1.json docs/evidence/report-uncertainty-v6-2026-10-19/development-result-v1.json
+          node --import tsx scripts/prepare-report-calibration-v1.ts
+          node --import tsx scripts/qualify-report-calibration-v1.ts
+          node --import tsx scripts/report-calibration-mock.ts
+          node --import tsx scripts/fresh-validation-contexts-v2.ts
+          npx tsc --noEmit --allowImportingTsExtensions --module nodenext --moduleResolution nodenext --target es2023 --strict --skipLibCheck scripts/retrieval-diagnosis-v6.ts scripts/prepare-report-calibration-v1.ts scripts/qualify-report-calibration-v1.ts scripts/report-calibration-mock.ts scripts/fresh-validation-contexts-v2.ts server/report-calibration-qualification.ts server/report-calibration-outcome.ts server/fresh-validation-v2.ts server/fresh-validation-v2.test.ts
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e

@@ -1,7 +1,7 @@
 /** Source-only future workflow. Python verifier runs before fresh artifact reads. */
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { existsSync, lstatSync, readFileSync, realpathSync, writeFileSync } from 'node:fs';
+import { existsSync, lstatSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, isAbsolute, relative, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { textHash } from '../server/product-corpus.ts';
@@ -17,6 +17,12 @@ function input(name: string) {
 }
 export function assertFreshSnapshotBindings(snapshots: { path: string; fileSha256: string; document: unknown }[], bindings: Record<string, string>) {
   for (const snapshot of snapshots) assert.equal(snapshot.fileSha256, bindings[snapshot.path], 'Loaded parsed snapshot differs from exact verified raw bytes.');
+}
+/** An unsuccessful replay must leave the requested output available for retry. */
+export async function withFreshSelectionReplay<T>(parent: string, use: (path: string) => T | Promise<T>): Promise<T> {
+  const directory = mkdtempSync(resolve(parent, '.fresh-v6-selection-'));
+  try { return await use(resolve(directory, 'selection.json')); }
+  finally { rmSync(directory, { recursive: true, force: true }); }
 }
 export async function freshValidationCli(argv: string[]) {
   if (!argv.length) return { usage: ['--baseline --freeze-dir DIR --qualification FILE --pool FILE --screening FILE --out NEW', '--contexts --freeze-dir DIR --qualification FILE --pool FILE --screening FILE --baseline FILE --review FILE --selection FILE --out NEW'], providerCalls: 0, freshInputReads: 0 };
@@ -48,11 +54,13 @@ export async function freshValidationCli(argv: string[]) {
     } else {
       const baselineArtifact = input(flags.get('--baseline')!), reviewArtifact = input(flags.get('--review')!), selectionArtifact = input(flags.get('--selection')!);
       const baseline = baselineArtifact.document, review = reviewArtifact.document, selection = selectionArtifact.document;
-      const checked = JSON.parse(execFileSync('python3', ['-I', 'scripts/prepare-fresh-validation-v2.py', 'select', ...base, '--baseline', flags.get('--baseline')!, '--review', flags.get('--review')!, '--out', `${output}.selection-replay`], { cwd: root, env: { PATH: process.env.PATH ?? '' }, encoding: 'utf8', timeout: 30_000, maxBuffer: 1_048_576 }));
-      assert.equal(checked.stopReason, null);
-      assertFreshSnapshotBindings([screeningArtifact, baselineArtifact, reviewArtifact], checked.artifactSha256);
-      const replay = JSON.parse(readFileSync(`${output}.selection-replay`, 'utf8')); assert.deepEqual(selection, replay, 'Review denominator/selection must replay before any candidate model score.');
-      document = await freshValidationContexts(screening, baseline, review, selection, { baselineFileSha256: baselineArtifact.fileSha256, sourceReviewFileSha256: reviewArtifact.fileSha256 });
+      document = await withFreshSelectionReplay(dirname(output), async replayPath => {
+        const checked = JSON.parse(execFileSync('python3', ['-I', 'scripts/prepare-fresh-validation-v2.py', 'select', ...base, '--baseline', flags.get('--baseline')!, '--review', flags.get('--review')!, '--out', replayPath], { cwd: root, env: { PATH: process.env.PATH ?? '' }, encoding: 'utf8', timeout: 30_000, maxBuffer: 1_048_576 }));
+        assert.equal(checked.stopReason, null);
+        assertFreshSnapshotBindings([screeningArtifact, baselineArtifact, reviewArtifact], checked.artifactSha256);
+        const replay = JSON.parse(readFileSync(replayPath, 'utf8')); assert.deepEqual(selection, replay, 'Review denominator/selection must replay before any candidate model score.');
+        return freshValidationContexts(screening, baseline, review, selection, { baselineFileSha256: baselineArtifact.fileSha256, sourceReviewFileSha256: reviewArtifact.fileSha256 });
+      });
     }
     writeFileSync(output, JSON.stringify(document, null, 2) + '\n', { flag: 'wx', mode: 0o600 });
     return { mode, output, providerCalls: 0, generatedAnswers: 0, paidExecutionAuthorized: false };

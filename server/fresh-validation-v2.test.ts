@@ -1,6 +1,10 @@
 /** SYNTHETIC source mechanics only; no fresh product data, inference or network. */
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { withFreshSelectionReplay } from '../scripts/fresh-validation-contexts-v2.ts';
 import { textHash } from './product-corpus.ts';
 import { ProductRetriever } from './product-retrieval.ts';
 import { freshSeal, freshValidationBaseline, freshValidationContexts, freshValidationCorpus, verifyFreshValidationBaseline, replayFreshValidationContexts, type FreshPacket, type FreshScreening, type FreshSourceReview, type FreshSelection } from './fresh-validation-v2.ts';
@@ -64,4 +68,15 @@ test('v2 replay retains all selected misses and rejects source delivery or scope
   await assert.rejects(freshValidationContexts(f.screening, f.baseline, f.review, selection, { baselineFileSha256: selection.baselineSha256, sourceReviewFileSha256: selection.sourceReviewSha256 }));
   const review = { ...f.review, screeningSha256: 'changed' };
   await assert.rejects(freshValidationContexts(f.screening, f.baseline, review, f.selection, { baselineFileSha256: f.selection.baselineSha256, sourceReviewFileSha256: f.selection.sourceReviewSha256 }));
+});
+test('failed selection and later context validation clean temporary replay files so a corrected retry succeeds', async () => {
+  const parent = mkdtempSync(join(tmpdir(), 'ablatrix-fresh-selection-cleanup-'));
+  try {
+    for (const failure of ['selection differs', 'later context validation']) {
+      await assert.rejects(withFreshSelectionReplay(parent, async replayPath => { writeFileSync(replayPath, '{"synthetic":true}', { flag: 'wx' }); throw new Error(failure); }), new RegExp(failure));
+      assert.deepEqual(readdirSync(parent), []);
+    }
+    const replayed = await withFreshSelectionReplay(parent, replayPath => { writeFileSync(replayPath, '{"synthetic":true}', { flag: 'wx' }); return JSON.parse(readFileSync(replayPath, 'utf8')); });
+    assert.deepEqual(replayed, { synthetic: true }); assert.deepEqual(readdirSync(parent), []);
+  } finally { rmSync(parent, { recursive: true, force: true }); }
 });
