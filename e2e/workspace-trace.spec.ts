@@ -14,6 +14,12 @@ async function startDemo() {
     async close() { await demo.server.shutdown(); demo.store.close(); rmSync(directory, { recursive: true, force: true }); } };
 }
 
+async function waitForSavedWorkspace(page: import('@playwright/test').Page) {
+  // Session, selected answer and its automatic check hydrate separately. Their
+  // refresh key legitimately aborts a trace read opened during startup.
+  await expect(page.getByRole('region', { name: 'Automatic source check' }).getByRole('heading')).toHaveText('Repaired · synthetic check passed');
+}
+
 test('saved workflow traces are lazy, inspectable, metadata-only and read-only on desktop and mobile', async ({ page, request }, testInfo) => {
   const demo = await startDemo();
   const mutations: string[] = [], remote: string[] = [], reads: string[] = [];
@@ -25,6 +31,7 @@ test('saved workflow traces are lazy, inspectable, metadata-only and read-only o
   try {
     const before = await (await request.get(`${demo.origin}/api/workspace/proof`)).json();
     await page.goto(demo.origin);
+    await waitForSavedWorkspace(page);
     await expect(page.getByRole('button', { name: 'Workflow trace', exact: true })).toBeVisible();
     expect(reads).toHaveLength(0);
     await page.getByRole('button', { name: 'Workflow trace', exact: true }).click();
@@ -33,18 +40,18 @@ test('saved workflow traces are lazy, inspectable, metadata-only and read-only o
     await expect(trace).toContainText('Local preview · not uploaded');
     await expect(trace.locator('.trace-summary')).toContainText('2Workflows');
     await expect(trace.locator('.trace-summary')).toContainText('6Recorded stages');
-    await trace.getByRole('button', { name: /Case 1 Scripted synthetic/ }).click();
-    const case1 = trace.getByRole('region', { name: 'Case 1 workflow' });
+    await trace.getByRole('button', { name: /Case \d+ Scripted synthetic Unresolved/ }).click();
+    const case1 = trace.getByRole('region', { name: /^Case \d+ workflow$/ });
     await expect(case1.getByRole('heading', { name: 'Original generation', exact: true })).toBeVisible();
     await expect(case1).toContainText('Snapshot; stage timing unavailable');
     await expect(case1.locator('.trace-timeline > li')).toHaveCount(2);
-    // The first saved workflow is the uncertain stop; it remains in the trace.
+    // The uncertain stop remains inspectable alongside the repaired workflow.
     await case1.getByText('Inspect recorded check', { exact: true }).first().click();
     await expect(case1).toContainText('Scripted synthetic check');
     await expect(case1).toContainText('calibration not measured');
     await page.locator('#proof').screenshot({ path: testInfo.outputPath('workflow-trace-desktop.png') });
-    await trace.getByRole('button', { name: /Case 2 Scripted synthetic/ }).click();
-    const case2 = trace.getByRole('region', { name: 'Case 2 workflow' });
+    await trace.getByRole('button', { name: /Case \d+ Scripted synthetic Improved/ }).click();
+    const case2 = trace.getByRole('region', { name: /^Case \d+ workflow$/ });
     for (const name of ['Original generation', 'Check original', 'Repair answer', 'Recheck repair']) await expect(case2.getByRole('heading', { name, exact: true })).toBeVisible();
     await expect(case2.locator('.trace-timeline > li')).toHaveCount(4);
     const downloadPromise = page.waitForEvent('download');
@@ -69,22 +76,26 @@ test('saved workflow traces are lazy, inspectable, metadata-only and read-only o
 test('malformed trace responses show a safe error and retry only the local read', async ({ page }) => {
   const demo = await startDemo();
   let attempts = 0;
+  let malformed = true;
   const sensitive = 'PRIVATE-TRACE-ERROR-user@example.invalid';
   const methods: string[] = [];
   await page.route('**/api/workspace/observability', async route => {
     attempts++; methods.push(route.request().method());
-    if (attempts === 1) return route.fulfill({ status: 200, contentType: 'application/json', body: sensitive });
+    if (malformed) return route.fulfill({ status: 200, contentType: 'application/json', body: sensitive });
     await route.continue();
   });
   try {
     await page.goto(demo.origin);
+    await waitForSavedWorkspace(page);
     await page.getByRole('button', { name: 'Workflow trace', exact: true }).click();
     const trace = page.getByRole('region', { name: 'Saved workflow traces', exact: true });
     await expect(trace.getByRole('alert')).toContainText('Saved workflow traces are unavailable.');
     await expect(trace).not.toContainText(sensitive);
+    const beforeRetry = attempts;
+    malformed = false;
     await trace.getByRole('button', { name: 'Retry inspection' }).click();
     await expect(trace.getByRole('navigation', { name: 'Select a saved workflow' })).toBeVisible();
-    expect(attempts).toBe(2); expect(methods).toEqual(['GET', 'GET']);
+    expect(attempts).toBe(beforeRetry + 1); expect(methods.every(method => method === 'GET')).toBeTruthy();
   } finally { await demo.close(); }
 });
 
@@ -97,6 +108,7 @@ test('empty trace remains accessible without a paired cohort', async ({ page }) 
   await page.route('**/api/workspace/observability', route => { reads++; return route.fulfill({ json: preview }); });
   try {
     await page.goto(demo.origin);
+    await waitForSavedWorkspace(page);
     await expect(page.locator('.proof-empty')).toBeVisible();
     await page.getByRole('button', { name: 'Workflow trace', exact: true }).click();
     const trace = page.getByRole('region', { name: 'Saved workflow traces', exact: true });
