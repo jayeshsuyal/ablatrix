@@ -1,0 +1,79 @@
+{
+  "format": "ablatrix-report-calibration-development-protocol-v1",
+  "scope": "exposed_development_only",
+  "design": {
+    "actualProducts": 2,
+    "freshProducts": 0,
+    "caseInstances": 8,
+    "instructionVariants": 2,
+    "contextsPerInstance": 3,
+    "repetitions": 2,
+    "maximumNewAttempts": 24,
+    "selectedSourceCaseIds": [
+      "source-coverage-v2-train-12870",
+      "source-coverage-v2-train-13347"
+    ],
+    "instructionContracts": [
+      "workspace-answer-flat-sources-v1",
+      "workspace-answer-uncertainty-v2"
+    ],
+    "selectionRule": "all_old_specification_or_model_detail_gaps_plus_first_lexicographic_baseline_complete_control",
+    "selectionBasis": "Exact historical source-only review; all eligible old gaps plus the lexicographically first old complete control, without filtering on new candidate or answer success.",
+    "contexts": {
+      "current": "v5",
+      "semantic": "v6",
+      "reference": "independent_curated"
+    },
+    "contextDefinitions": {
+      "current": "Exact independently reviewed additive v5 context",
+      "semantic": "Independently reviewed full-twelve-case v6 replay context",
+      "reference": "Independently source-reviewed sufficient reference preserving qualifications and unknowns"
+    },
+    "repeatsMeaning": "Two repeated outputs per source-case/instruction/context cell, not independent product samples.",
+    "executionOrder": "Repeat, old source-only case order, alternating instruction-contract order; existing adapter rotates context order by opaque case instance.",
+    "controls": "Within a source case/repetition/context, both instruction contracts receive identical literal context and runtime policy; model route, settings, citation/schema interface and answer budget remain fixed.",
+    "anonymity": "Opaque instance IDs use a private keyed derivation; keys, generation-contract mappings and operation identities are excluded from reviewer packets."
+  },
+  "review": {
+    "axes": [
+      "usefulFactCompleteness",
+      "unsupportedClaims",
+      "exactApplicability",
+      "appropriateUncertainty",
+      "directRelevance",
+      "literalCitationMatching"
+    ],
+    "comparisons": "Explicit anonymous source-aware reviewer verdicts; within-instance retrieval comparisons and separate across-instruction pairs at fixed source case/repetition/context. Keep each reviewer and disagreements; no algorithmic composite winner.",
+    "retention": "Keep every planned arm, candidate miss, complete control, tie, disagreement, uncertain judgment, failed and unattempted answer. No replacement or resampling based on outcomes.",
+    "calibration": "AI judgments remain provisional; source-checked human judgments exist only when actually saved and bound. Agreement is not ground truth."
+  },
+  "gates": {
+    "independentSourceScopeAndReferenceSufficiency": true,
+    "independentlyReviewedFullTwelveCaseResult": true,
+    "exactIndependentCodeQualification": true,
+    "separateExactFinancialApproval": true,
+    "initialPreparationCodeReviewPassed": false,
+    "initialPreparationPaidPlan": null,
+    "futureFreshValidationRequiresOwnFrozenProtocolAndApproval": true
+  },
+  "expectedPlanningScope": {
+    "canonicalStartingAttempts": 141,
+    "canonicalStartingCombinedPlanningUsd": 14.300281,
+    "maximumNewAttempts": 24,
+    "addedPlanningAllowanceUsd": 2.4,
+    "absoluteCallLimit": 165,
+    "cumulativePlanningLimitUsd": 16.700281,
+    "localCapUsd": 20,
+    "retries": 0,
+    "graderCalls": 0,
+    "webCalls": 0,
+    "actualProviderCharges": "unavailable",
+    "providerEnforcedCap": false
+  },
+  "paidExecutionAuthorized": false,
+  "freshInputReads": 0,
+  "humanAnswerQualityJudgments": 0,
+  "qualityClaimEligible": false,
+  "activationAllowed": false,
+  "sha256": "973058ac7994b078081b6aa9299322ff04b19e8117835e58212c9071c00843c0"
+}

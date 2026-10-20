@@ -3,15 +3,16 @@ import { createHash } from 'node:crypto';
 import type { SourceCalibrationLedgerState } from './source-calibration-comparison.ts';
 import type { LoopPolicy, Product, RetrievedPassage } from './loop-types.ts';
 import { textHash } from './product-corpus.ts';
-import { workspaceGenerationParts, replayWorkspaceGenerationReceipt, type WorkspaceGenerationInput, type WorkspaceGenerationReceipt } from './workspace-generation.ts';
+import { workspaceGenerationContract, workspaceGenerationParts, replayWorkspaceGenerationReceipt, type WorkspaceGenerationContract, type WorkspaceGenerationInput, type WorkspaceGenerationReceipt } from './workspace-generation.ts';
 import type { DesignatedFact } from './retrieval-diagnosis.ts';
 export const DIAGNOSTIC_LEDGER = '/Users/jayeshsuyal/Documents/ChatGPT/Ablatrix/repo/.data/feedback-budget.sqlite';
 export const diagnosticHash = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
-export type DiagnosticCase = { id: string; product: Product; question: string; completeSources: RetrievedPassage[]; contexts: { current: RetrievedPassage[]; semantic: RetrievedPassage[]; reference: RetrievedPassage[] }; designatedFacts: DesignatedFact[]; referenceReview: { provenance: 'source_checked_human' | 'source_checked_ai'; reviewer: string; sufficientFor: string; unknowns: string[]; sourcePoolSha256: string } };
+export type DiagnosticCase = { id: string; product: Product; question: string; completeSources: RetrievedPassage[]; contexts: { current: RetrievedPassage[]; semantic: RetrievedPassage[]; reference: RetrievedPassage[] }; designatedFacts: DesignatedFact[]; referenceReview: { provenance: 'source_checked_human' | 'source_checked_ai'; reviewer: string; sufficientFor: string; unknowns: string[]; sourcePoolSha256: string }; generationContract?: WorkspaceGenerationContract };
 export type FreshValidationQualification = { contract: 'ablatrix-fresh-validation-v1'; protocolSha256: string; candidateFreezeSha256: string; historyInventorySha256: string; sourceReviewSha256: string; developmentOutcomeReviewSha256: string | null; selectedDenominator: number; screeningDenominator: number; qualificationPassed: boolean };
-export type DiagnosticPreparation = { cases: DiagnosticCase[]; policy: LoopPolicy; implementationSha256: Record<string, string>; artifactSha256: Record<string, string>; ledger: { canonicalPath: string; historicalRowsSha256: string; attempts: number; reservedUsd: number; priorSpendUsd: number; pending: number; owners: number }; codeReviewPassed: boolean; validation?: FreshValidationQualification };
+export type DiagnosticPreparation = { cases: DiagnosticCase[]; policy: LoopPolicy; implementationSha256: Record<string, string>; artifactSha256: Record<string, string>; ledger: { canonicalPath: string; historicalRowsSha256: string; attempts: number; reservedUsd: number; priorSpendUsd: number; pending: number; owners: number }; codeReviewPassed: boolean; validation?: FreshValidationQualification; generationContract?: WorkspaceGenerationContract };
 export function prepareThreeContext(preparation: DiagnosticPreparation) {
   const p = structuredClone(preparation); assert.ok(p.cases.length > 0 && p.cases.length <= 8); assert.equal(new Set(p.cases.map(c => c.id)).size, p.cases.length);
+  workspaceGenerationContract(p.generationContract);
   assert.equal(p.ledger.canonicalPath, DIAGNOSTIC_LEDGER); assert.equal(p.ledger.pending, 0); assert.equal(p.ledger.owners, 0); assert.ok(p.ledger.attempts >= 138 && p.ledger.reservedUsd + p.ledger.priorSpendUsd >= 14.00028);
   assert.ok(p.policy.mode === 'live' && p.policy.instructions.length >= 40);
   for (const bindings of [p.implementationSha256, p.artifactSha256]) { assert.ok(Object.keys(bindings).length); for (const [path, hash] of Object.entries(bindings)) { assert.ok(!path.startsWith('/') && !path.split('/').includes('..')); assert.match(hash, /^[a-f0-9]{64}$/); } }
@@ -24,6 +25,8 @@ export function prepareThreeContext(preparation: DiagnosticPreparation) {
   }
   const identity = diagnosticHash(p), deliveries: string[] = [];
   const slots = p.cases.flatMap((item, caseIndex) => {
+    const selectedGenerationContract = item.generationContract !== undefined ? item.generationContract : p.generationContract;
+    workspaceGenerationContract(selectedGenerationContract);
     assert.ok(item.id && item.question.trim() && item.product.split === (p.validation ? 'validation' : 'development'));
     assert.equal(new Set(item.completeSources.map(s => s.id)).size, item.completeSources.length);
     assert.equal(item.referenceReview.sourcePoolSha256, diagnosticHash(item.completeSources));
@@ -48,7 +51,7 @@ export function prepareThreeContext(preparation: DiagnosticPreparation) {
     const arms = ['current', 'semantic', 'reference'] as const;
     const order = [...arms.slice(caseIndex % 3), ...arms.slice(0, caseIndex % 3)];
     const rows = order.map(arm => {
-      const input: WorkspaceGenerationInput = { runId: `three-context-${identity.slice(0, 20)}-${caseIndex}-${arm}`, question: item.question, product: item.product, policy: p.policy, passages: item.contexts[arm] };
+      const input: WorkspaceGenerationInput = { runId: `three-context-${identity.slice(0, 20)}-${caseIndex}-${arm}`, question: item.question, product: item.product, policy: p.policy, passages: item.contexts[arm], ...(selectedGenerationContract !== undefined ? { generationContract: selectedGenerationContract } : {}) };
       const parts = workspaceGenerationParts(input); return { caseId: item.id, arm, input, body: parts.body, binding: parts.binding };
     });
     const neutral = (row: typeof rows[number]) => { const body = structuredClone(row.body), payload = JSON.parse(body.messages[1]!.content); delete payload.operationRunId; delete payload.evidence; delete payload.quoteOptions; body.messages[1]!.content = JSON.stringify(payload); (body.tools[0]!.function.parameters as any).properties.citations.items.enum = []; return body; };

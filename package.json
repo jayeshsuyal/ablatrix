@@ -41,7 +41,12 @@
     "validation:prospective": "python3 scripts/prepare-fresh-validation-v1.py",
     "validation:contexts": "node --import tsx scripts/fresh-validation-contexts-v1.ts",
     "validation:prepare": "node --import tsx scripts/prepare-three-context-fresh-v1.ts",
-    "validation:mock": "node --import tsx scripts/fresh-validation-mock.ts"
+    "validation:mock": "node --import tsx scripts/fresh-validation-mock.ts",
+    "diagnosis:v6": "node --import tsx scripts/retrieval-diagnosis-v6.ts",
+    "diagnosis:prepare-report-calibration": "node --import tsx scripts/prepare-report-calibration-v1.ts",
+    "diagnosis:qualify-report-calibration": "node --import tsx scripts/qualify-report-calibration-v1.ts",
+    "diagnosis:mock-report-calibration": "node --import tsx scripts/report-calibration-mock.ts",
+    "validation:v2": "python3 scripts/prepare-fresh-validation-v2.py"
   },
   "dependencies": {
     "@huggingface/transformers": "4.3.0",

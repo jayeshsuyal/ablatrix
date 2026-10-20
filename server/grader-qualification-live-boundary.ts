@@ -24,7 +24,7 @@ export const QUALIFICATION_LIVE_CODE_FILES = Object.freeze([...new Set([
   'server/feedback-provider.ts', 'server/grader-calibration-boundary.ts',
   'server/grader-calibration.ts', 'server/grader-calibration-fixtures.ts',
   'server/revision-policy.ts', 'server/answer-policy-protocol.ts',
-  'server/claim-support-v4.ts', 'server/workspace-generation.ts',
+  'server/claim-support-v4.ts', 'server/workspace-generation.ts', 'server/workspace-uncertainty-policy.ts',
   'server/answer-review-source.ts', 'server/context-comparison.ts'
 ])]);
 
